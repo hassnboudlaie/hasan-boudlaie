@@ -476,7 +476,7 @@ function setLang(lang){
   document.documentElement.lang=isFa?'fa':'en';
   document.documentElement.dir=isFa?'rtl':'ltr';
   document.body.classList.toggle('rtl',isFa);
-  document.querySelectorAll('[data-en][data-fa]').forEach(el=>{
+  document.querySelectorAll('[data-en][data-fa]').forEach(function(el){
     const value=el.getAttribute(isFa?'data-fa':'data-en')||'';
     if(value.includes('<')) el.innerHTML=value; else el.textContent=value;
   });
@@ -484,59 +484,76 @@ function setLang(lang){
   document.getElementById('faBtn').classList.toggle('active',isFa);
   localStorage.setItem('hb-lang',lang);
 }
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function escapeAttr(v){return escapeHtml(v)}
+function escapeHtml(v){
+  return String(v??'').replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
 function renderProducts(items){
   const box=document.querySelector('.work-list');
   if(!box||!Array.isArray(items))return;
-  box.innerHTML=items.map((p,i)=>\`
-    <a class="work" href="\${p.url||'#'}" target="_blank" rel="noopener">
-      <div class="n">\${String(i+1).padStart(2,'0')}</div>
-      <div>
-        <h3 data-en="\${escapeAttr(p.title?.en)}" data-fa="\${escapeAttr(p.title?.fa)}">\${escapeHtml(p.title?.[currentLang]||'')}</h3>
-        <div class="org" data-en="\${escapeAttr(p.org?.en)}" data-fa="\${escapeAttr(p.org?.fa)}">\${escapeHtml(p.org?.[currentLang]||'')}</div>
-      </div>
-      <div class="type" data-en="\${escapeAttr(p.type?.en)}" data-fa="\${escapeAttr(p.type?.fa)}">\${escapeHtml(p.type?.[currentLang]||'')}</div>
-      <div class="go">↗</div>
-    </a>\`).join('');
+  box.innerHTML=items.map(function(p,i){
+    const titleEn=escapeHtml(p.title&&p.title.en);
+    const titleFa=escapeHtml(p.title&&p.title.fa);
+    const orgEn=escapeHtml(p.org&&p.org.en);
+    const orgFa=escapeHtml(p.org&&p.org.fa);
+    const typeEn=escapeHtml(p.type&&p.type.en);
+    const typeFa=escapeHtml(p.type&&p.type.fa);
+    const title=escapeHtml((p.title&&p.title[currentLang])||'');
+    const org=escapeHtml((p.org&&p.org[currentLang])||'');
+    const type=escapeHtml((p.type&&p.type[currentLang])||'');
+    const url=escapeHtml(p.url||'#');
+    return '<a class="work" href="'+url+'" target="_blank" rel="noopener">'+
+      '<div class="n">'+String(i+1).padStart(2,'0')+'</div>'+
+      '<div><h3 data-en="'+titleEn+'" data-fa="'+titleFa+'">'+title+'</h3>'+
+      '<div class="org" data-en="'+orgEn+'" data-fa="'+orgFa+'">'+org+'</div></div>'+
+      '<div class="type" data-en="'+typeEn+'" data-fa="'+typeFa+'">'+type+'</div>'+
+      '<div class="go">↗</div></a>';
+  }).join('');
 }
 function applyContent(d){
   siteData=d;
   pair(document.querySelector('.brand strong'),d.brand);
   const hero=document.querySelector('.hero');
-  pair(hero.querySelector('.eyebrow'),d.hero?.eyebrow);
-  pair(hero.querySelector('h1'),d.hero?.title,true);
-  pair(hero.querySelector(':scope > div > p'),d.hero?.description);
-  pair(document.querySelector('.art-label'),d.hero?.artLabel);
-  pair(document.querySelector('.art-title'),d.hero?.artTitle);
-  document.querySelectorAll('.art-row').forEach((row,i)=>pair(row.querySelector('span:first-child'),d.hero?.artItems?.[i]));
-  document.querySelectorAll('.focus-item').forEach((el,i)=>{
-    pair(el.querySelector('strong'),d.focus?.[i]?.title);
-    pair(el.querySelector('span'),d.focus?.[i]?.text);
+  pair(hero.querySelector('.eyebrow'),d.hero&&d.hero.eyebrow);
+  pair(hero.querySelector('h1'),d.hero&&d.hero.title,true);
+  pair(hero.querySelector(':scope > div > p'),d.hero&&d.hero.description);
+  pair(document.querySelector('.art-label'),d.hero&&d.hero.artLabel);
+  pair(document.querySelector('.art-title'),d.hero&&d.hero.artTitle);
+  document.querySelectorAll('.art-row').forEach(function(row,i){
+    pair(row.querySelector('span:first-child'),d.hero&&d.hero.artItems&&d.hero.artItems[i]);
+  });
+  document.querySelectorAll('.focus-item').forEach(function(el,i){
+    pair(el.querySelector('strong'),d.focus&&d.focus[i]&&d.focus[i].title);
+    pair(el.querySelector('span'),d.focus&&d.focus[i]&&d.focus[i].text);
   });
   const work=document.getElementById('work');
-  pair(work.querySelector('.section-head .eyebrow'),d.productsIntro?.eyebrow);
-  pair(work.querySelector('.section-head h2'),d.productsIntro?.title);
-  pair(work.querySelector('.section-head p'),d.productsIntro?.text);
+  pair(work.querySelector('.section-head .eyebrow'),d.productsIntro&&d.productsIntro.eyebrow);
+  pair(work.querySelector('.section-head h2'),d.productsIntro&&d.productsIntro.title);
+  pair(work.querySelector('.section-head p'),d.productsIntro&&d.productsIntro.text);
   renderProducts(d.products);
   const adv=document.getElementById('advisory');
-  pair(adv.querySelector('.dark .eyebrow'),d.advisory?.eyebrow);
-  pair(adv.querySelector('.dark h3'),d.advisory?.title);
-  pair(adv.querySelector('.dark p'),d.advisory?.text);
-  adv.querySelectorAll('.service').forEach((el,i)=>pair(el,d.advisory?.services?.[i]));
-  pair(adv.querySelector('.note h3'),d.advisory?.principleTitle);
-  pair(adv.querySelector('.note p'),d.advisory?.principleText);
-  pair(adv.querySelector('.quote'),d.advisory?.quote);
+  pair(adv.querySelector('.dark .eyebrow'),d.advisory&&d.advisory.eyebrow);
+  pair(adv.querySelector('.dark h3'),d.advisory&&d.advisory.title);
+  pair(adv.querySelector('.dark p'),d.advisory&&d.advisory.text);
+  adv.querySelectorAll('.service').forEach(function(el,i){
+    pair(el,d.advisory&&d.advisory.services&&d.advisory.services[i]);
+  });
+  pair(adv.querySelector('.note h3'),d.advisory&&d.advisory.principleTitle);
+  pair(adv.querySelector('.note p'),d.advisory&&d.advisory.principleText);
+  pair(adv.querySelector('.quote'),d.advisory&&d.advisory.quote);
   const about=document.getElementById('about');
-  pair(about.querySelector('h2'),d.about?.title);
+  pair(about.querySelector('h2'),d.about&&d.about.title);
   const ps=about.querySelectorAll('.about-copy p');
-  pair(ps[0],d.about?.p1); pair(ps[1],d.about?.p2);
-  pair(about.querySelector('.signature'),d.about?.signature);
-  if(d.contact?.email){
-    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.href='mailto:'+d.contact.email);
+  pair(ps[0],d.about&&d.about.p1);
+  pair(ps[1],d.about&&d.about.p2);
+  pair(about.querySelector('.signature'),d.about&&d.about.signature);
+  if(d.contact&&d.contact.email){
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function(a){a.href='mailto:'+d.contact.email});
   }
-  if(d.contact?.scholar){
-    const scholar=[...document.querySelectorAll('a')].find(a=>a.href.includes('scholar.google.com'));
+  if(d.contact&&d.contact.scholar){
+    const links=[].slice.call(document.querySelectorAll('a'));
+    const scholar=links.find(function(a){return a.href.indexOf('scholar.google.com')>-1});
     if(scholar)scholar.href=d.contact.scholar;
   }
   setLang(currentLang);
@@ -546,7 +563,10 @@ async function loadContent(){
     const res=await fetch('content.json?v='+Date.now(),{cache:'no-store'});
     if(!res.ok)throw new Error('content load failed');
     applyContent(await res.json());
-  }catch(e){setLang(currentLang)}
+  }catch(e){
+    console.warn(e);
+    setLang(currentLang);
+  }
 }
 setLang(currentLang);
 loadContent();
