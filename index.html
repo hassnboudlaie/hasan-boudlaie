@@ -3,373 +3,441 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f6f4ef">
-<title>Dr. Hasan Boudlaie | Management, Leadership & Organizational Development</title>
-<meta name="description" content="Dr. Hasan Boudlaie — Management Consultant & Leadership Advisor. Strategy execution, organizational transformation, people & culture, executive education, and applied leadership research.">
+<meta name="theme-color" content="#f4f1eb">
+<title>Dr. Hasan Boudlaie | Management, Leadership & Organization</title>
+<meta name="description" content="Dr. Hasan Boudlaie — Management Consultant & Leadership Advisor. Strategy execution, organizational transformation, people & culture, executive education, and applied research.">
 <style>
 :root{
-  --paper:#f6f4ef;
-  --white:#ffffff;
-  --ink:#182025;
-  --muted:#697178;
-  --line:#ddd9d0;
-  --soft:#ece8df;
-  --accent:#274c4a;
-  --accent2:#b68858;
-  --shadow:0 18px 50px rgba(24,32,37,.07);
-  --radius:22px;
+  --bg:#f4f1eb;
+  --paper:#fbfaf7;
+  --ink:#151b1f;
+  --muted:#697077;
+  --line:#d8d3c8;
+  --deep:#183b3a;
+  --deep2:#224f4d;
+  --sand:#d7c5a4;
+  --warm:#a8794d;
+  --white:#fff;
+  --radius:24px;
+  --shadow:0 22px 70px rgba(19,27,31,.08);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;background:var(--paper);color:var(--ink);
+  margin:0;background:var(--bg);color:var(--ink);
   font-family:Inter,"Segoe UI",Arial,Tahoma,sans-serif;
-  -webkit-font-smoothing:antialiased;line-height:1.65
+  line-height:1.6;-webkit-font-smoothing:antialiased
 }
+body.rtl{font-family:Tahoma,"Segoe UI",Arial,sans-serif}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
 .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-.rtl{direction:rtl;text-align:right;font-family:Tahoma,"Segoe UI",Arial,sans-serif}
-.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}
-.muted{color:var(--muted)}
-
+.eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--deep)
+}
+body.rtl .eyebrow{letter-spacing:0;text-transform:none}
 header{
-  position:sticky;top:0;z-index:30;
-  background:rgba(246,244,239,.88);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(221,217,208,.72)
+  position:sticky;top:0;z-index:50;
+  background:rgba(244,241,235,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(216,211,200,.72)
 }
 .nav{
-  min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:28px
+  height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px
 }
-.brand{display:flex;align-items:center;gap:13px;white-space:nowrap}
-.monogram{
-  width:40px;height:40px;border-radius:50%;
-  border:1px solid var(--ink);display:grid;place-items:center;
-  font:700 13px/1 Georgia,serif
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{
+  width:42px;height:42px;border-radius:50%;border:1px solid #222b30;
+  display:grid;place-items:center;font:700 13px Georgia,serif;flex:0 0 auto
 }
-.brand strong{font-size:14px;letter-spacing:.01em}
-.links{display:flex;align-items:center;gap:26px;font-size:12px;color:#475057}
-.links a{position:relative}
-.links a:after{content:"";position:absolute;left:0;right:100%;bottom:-5px;height:1px;background:var(--ink);transition:.2s}
-.links a:hover:after{right:0}
-.nav-cta{
+.brand strong{font-size:14px;white-space:nowrap}
+.navlinks{display:flex;align-items:center;gap:24px;font-size:12px;color:#4e575d}
+.navlinks a{position:relative}
+.navlinks a:after{
+  content:"";position:absolute;height:1px;background:var(--ink);
+  left:0;right:100%;bottom:-6px;transition:.2s
+}
+.navlinks a:hover:after{right:0}
+.actions{display:flex;align-items:center;gap:10px}
+.lang{
+  display:flex;align-items:center;padding:3px;border:1px solid var(--line);
+  border-radius:999px;background:rgba(255,255,255,.45)
+}
+.lang button{
+  border:0;background:transparent;border-radius:999px;min-width:37px;
+  height:30px;padding:0 8px;font-size:10px;font-weight:800;cursor:pointer;color:#697077
+}
+.lang button.active{background:var(--ink);color:#fff}
+.contact{
   border:1px solid var(--ink);border-radius:999px;padding:9px 14px;
-  font-size:11px;font-weight:700
+  font-size:11px;font-weight:800
 }
 
 .hero{
-  min-height:620px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);
-  gap:70px;align-items:center;padding:84px 0 70px
+  display:grid;grid-template-columns:minmax(0,1.18fr) minmax(330px,.82fr);
+  gap:64px;align-items:center;padding:88px 0 72px;min-height:650px
 }
 .hero h1{
-  font:500 clamp(48px,7vw,92px)/.98 Georgia,"Times New Roman",serif;
-  letter-spacing:-.045em;margin:18px 0 24px;max-width:830px
+  font:500 clamp(52px,7vw,88px)/.98 Georgia,"Times New Roman",serif;
+  letter-spacing:-.045em;margin:18px 0 26px;max-width:820px
 }
-.hero h1 em{font-style:italic;color:var(--accent)}
-.hero-copy>p{
-  max-width:760px;font-size:18px;color:#515a60;margin:0
+body.rtl .hero h1{
+  font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:800;
+  letter-spacing:-.025em;line-height:1.22
 }
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.hero h1 span{color:var(--deep);font-style:italic}
+body.rtl .hero h1 span{font-style:normal}
+.hero p{
+  max-width:720px;font-size:18px;color:#505a60;margin:0
+}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}
 .btn{
-  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
-  gap:8px;border-radius:999px;padding:10px 17px;font-size:12px;font-weight:800;
-  border:1px solid var(--ink);transition:.18s
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  padding:10px 17px;border-radius:999px;border:1px solid var(--ink);
+  font-size:11px;font-weight:800;transition:.18s
 }
 .btn.primary{background:var(--ink);color:#fff}
 .btn:hover{transform:translateY(-1px)}
-.hero-side{
-  border-left:1px solid var(--line);padding-left:34px;display:grid;gap:30px
+.hero-art{
+  min-height:455px;border-radius:32px;background:
+  radial-gradient(circle at 82% 18%,rgba(255,255,255,.12),transparent 24%),
+  linear-gradient(145deg,var(--deep),#102928 74%);
+  color:#fff;padding:32px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow)
 }
-.proof strong{
-  display:block;font:500 34px/1 Georgia,serif;margin-bottom:5px
+.hero-art:before,.hero-art:after{
+  content:"";position:absolute;border:1px solid rgba(255,255,255,.16);border-radius:50%
 }
-.proof span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.hero-art:before{width:290px;height:290px;right:-88px;top:-92px}
+.hero-art:after{width:410px;height:410px;left:-210px;bottom:-250px}
+.art-label{
+  position:relative;z-index:2;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:#cfe0dc
+}
+body.rtl .art-label{letter-spacing:0;text-transform:none}
+.art-title{
+  position:relative;z-index:2;font:500 33px/1.15 Georgia,serif;
+  margin:90px 0 28px;max-width:360px
+}
+body.rtl .art-title{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:700;line-height:1.5}
+.art-list{position:relative;z-index:2;display:grid;gap:0;margin-top:auto}
+.art-row{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:14px 0;border-top:1px solid rgba(255,255,255,.16);font-size:12px
+}
+.art-row span:last-child{color:#c7d8d4;font-size:10px}
+.art-index{
+  position:absolute;right:28px;bottom:22px;font:500 72px/1 Georgia,serif;
+  color:rgba(255,255,255,.08)
+}
+body.rtl .art-index{right:auto;left:28px}
 
-.strip{
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  padding:17px 0
+.focus{
+  padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)
 }
-.strip-inner{display:flex;gap:25px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.strip span{font-size:11px;color:#596168;letter-spacing:.03em}
+.focus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.focus-item{padding:12px 28px;border-left:1px solid var(--line)}
+body.rtl .focus-item{border-left:0;border-right:1px solid var(--line)}
+.focus-item:first-child{border-left:0}
+body.rtl .focus-item:first-child{border-right:0}
+.focus-item strong{display:block;font:500 21px Georgia,serif;margin-bottom:5px}
+body.rtl .focus-item strong{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:700}
+.focus-item span{font-size:11px;color:var(--muted)}
 
-.section{padding:92px 0}
+section{padding:94px 0}
 .section-head{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:34px
+  display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:34px
 }
 .section-head h2{
-  font:500 clamp(36px,5vw,60px)/1.05 Georgia,"Times New Roman",serif;
-  letter-spacing:-.035em;margin:7px 0 0
+  font:500 clamp(36px,5vw,58px)/1.05 Georgia,"Times New Roman",serif;
+  margin:7px 0 0;letter-spacing:-.035em
 }
+body.rtl .section-head h2{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.3}
 .section-head p{max-width:500px;margin:0;color:var(--muted);font-size:13px}
 
-.products{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px
+.work-list{border-top:1px solid var(--line)}
+.work{
+  display:grid;grid-template-columns:64px minmax(0,1fr) 210px 44px;
+  gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line);
+  transition:.18s
 }
-.product{
-  min-height:265px;background:var(--white);border:1px solid var(--line);
-  border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;
-  transition:.2s;box-shadow:0 0 0 rgba(0,0,0,0)
+.work:hover{padding-left:10px;padding-right:10px;background:rgba(255,255,255,.35)}
+.work .n{font:500 13px Georgia,serif;color:var(--warm)}
+.work h3{font:500 24px/1.2 Georgia,serif;margin:0 0 6px}
+body.rtl .work h3{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:700}
+.work .org{font-size:11px;color:var(--muted)}
+.work .type{
+  font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#5d666c
 }
-.product:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#cbc5b9}
-.product-top{display:flex;align-items:center;justify-content:space-between;gap:14px}
-.product-index{font:500 12px Georgia,serif;color:var(--accent2)}
-.product-type{
-  font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
-  border:1px solid var(--line);border-radius:999px;padding:5px 8px
+body.rtl .work .type{letter-spacing:0;text-transform:none}
+.go{
+  width:40px;height:40px;border:1px solid var(--line);border-radius:50%;
+  display:grid;place-items:center;transition:.18s
 }
-.product h3{font:500 24px/1.22 Georgia,"Times New Roman",serif;margin:33px 0 8px}
-.product .fa{
-  direction:rtl;text-align:left;font-family:Tahoma,"Segoe UI",Arial,sans-serif;
-  font-size:13px;font-weight:700;margin-bottom:8px
-}
-.product p{font-size:12px;color:var(--muted);margin:0}
-.open{
-  margin-top:auto;padding-top:26px;display:flex;align-items:center;justify-content:space-between;
-  font-size:11px;font-weight:800;color:var(--accent)
-}
-.arrow{
-  width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
-  display:grid;place-items:center;font-size:14px;transition:.2s
-}
-.product:hover .arrow{background:var(--ink);color:#fff;border-color:var(--ink)}
+.work:hover .go{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-.services{
-  display:grid;grid-template-columns:1.15fr .85fr;gap:14px
+.advisory-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+.dark{
+  background:var(--ink);color:#fff;border-radius:30px;padding:36px;
+  min-height:390px
 }
-.service-main,.service-note{
-  border-radius:28px;padding:34px;border:1px solid var(--line)
-}
-.service-main{background:var(--ink);color:#fff}
-.service-main h3{font:500 36px/1.15 Georgia,serif;margin:0 0 18px}
-.service-main p{color:#cfd4d6;max-width:650px;font-size:14px}
-.service-list{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:30px;border-top:1px solid #3b4347}
-.service-list div{padding:15px 0;border-bottom:1px solid #3b4347;font-size:12px}
-.service-list div:nth-child(odd){padding-right:16px}
-.service-list div:nth-child(even){padding-left:16px}
-.service-note{background:#ece8df}
-.service-note h3{font:500 31px/1.2 Georgia,serif;margin:0 0 15px}
-.service-note p{font-size:13px;color:#5c6469}
+.dark h3{font:500 40px/1.08 Georgia,serif;margin:12px 0 18px}
+body.rtl .dark h3{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:700;line-height:1.4}
+.dark p{color:#cfd4d6;font-size:14px;max-width:640px}
+.services{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #394145}
+.service{padding:14px 0;border-bottom:1px solid #394145;font-size:12px}
+.service:nth-child(odd){padding-right:18px}
+.service:nth-child(even){padding-left:18px}
+body.rtl .service:nth-child(odd){padding-right:0;padding-left:18px}
+body.rtl .service:nth-child(even){padding-left:0;padding-right:18px}
 
-.about-grid{
-  display:grid;grid-template-columns:.8fr 1.2fr;gap:70px;align-items:start
+.note{
+  border-radius:30px;border:1px solid var(--line);padding:36px;background:#e9e4da
 }
-.about-grid h2{font:500 42px/1.1 Georgia,serif;margin:0}
-.about-copy{font-size:16px;color:#4d565c}
-.about-copy p{margin-top:0}
-.signature{
-  margin-top:24px;padding-top:20px;border-top:1px solid var(--line);
-  font-size:11px;color:var(--muted)
+.note h3{font:500 34px/1.15 Georgia,serif;margin:12px 0 16px}
+body.rtl .note h3{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:700;line-height:1.45}
+.note p{font-size:13px;color:#596167}
+.note .quote{
+  margin-top:70px;border-top:1px solid #cbc4b7;padding-top:18px;
+  font:italic 19px/1.45 Georgia,serif;color:#2b3438
 }
+body.rtl .note .quote{font:700 16px/1.9 Tahoma,"Segoe UI",Arial,sans-serif;font-style:normal}
 
-footer{padding:34px 0 42px;border-top:1px solid var(--line)}
-.footer{
-  display:flex;justify-content:space-between;gap:25px;align-items:flex-end;flex-wrap:wrap
-}
+.about{display:grid;grid-template-columns:.72fr 1.28fr;gap:80px;align-items:start}
+.about h2{font:500 45px/1.08 Georgia,serif;margin:7px 0 0}
+body.rtl .about h2{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:800;line-height:1.35}
+.about-copy{font-size:16px;color:#4b555b}
+.about-copy p{margin:0 0 18px}
+.signature{padding-top:20px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);padding:34px 0 42px}
+.footer{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;flex-wrap:wrap}
 .footer strong{font:500 22px Georgia,serif}
+body.rtl .footer strong{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weight:700}
 .footer small{display:block;color:var(--muted);margin-top:5px}
 .footer-links{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;font-weight:700}
 
-@media(max-width:900px){
-  .links{display:none}
-  .hero{grid-template-columns:1fr;gap:45px;min-height:auto;padding:70px 0}
-  .hero-side{border-left:0;border-top:1px solid var(--line);padding:30px 0 0;grid-template-columns:repeat(3,1fr)}
-  .products{grid-template-columns:1fr 1fr}
-  .services,.about-grid{grid-template-columns:1fr}
+@media(max-width:920px){
+  .navlinks{display:none}
+  .hero{grid-template-columns:1fr;gap:40px;min-height:auto;padding:70px 0 56px}
+  .hero-art{min-height:390px}
+  .focus-grid{grid-template-columns:1fr}
+  .focus-item,.focus-item:first-child{border-left:0;border-right:0;border-bottom:1px solid var(--line);padding:16px 0}
+  .focus-item:last-child{border-bottom:0}
+  .work{grid-template-columns:48px 1fr 40px}
+  .work .type{display:none}
+  .advisory-grid,.about{grid-template-columns:1fr}
 }
 @media(max-width:620px){
   .wrap{padding:0 18px}
-  .nav{min-height:64px}
+  .nav{height:64px}
   .brand strong{font-size:12px}
-  .nav-cta{display:none}
-  .hero{padding:52px 0 44px}
-  .hero h1{font-size:52px}
-  .hero-copy>p{font-size:15px}
-  .hero-side{grid-template-columns:1fr 1fr}
-  .products{grid-template-columns:1fr}
-  .section{padding:66px 0}
+  .contact{display:none}
+  .hero{padding:48px 0 40px}
+  .hero h1{font-size:50px}
+  body.rtl .hero h1{font-size:42px}
+  .hero p{font-size:15px}
+  .hero-art{min-height:330px;padding:24px}
+  .art-title{margin-top:55px;font-size:28px}
+  section{padding:68px 0}
   .section-head{display:block}
   .section-head p{margin-top:14px}
-  .service-list{grid-template-columns:1fr}
-  .service-list div:nth-child(odd),.service-list div:nth-child(even){padding-left:0;padding-right:0}
+  .work{grid-template-columns:36px 1fr 36px;gap:14px;padding:20px 0}
+  .work h3{font-size:20px}
+  .services{grid-template-columns:1fr}
+  .service,.service:nth-child(odd),.service:nth-child(even){padding-left:0;padding-right:0}
+  .dark,.note{padding:27px}
 }
 </style>
 </head>
 <body>
-
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top" aria-label="Hasan Boudlaie home">
-      <span class="monogram">HB</span>
-      <strong>Dr. Hasan Boudlaie</strong>
+      <span class="mark">HB</span>
+      <strong data-en="Dr. Hasan Boudlaie" data-fa="دکتر حسن بودلایی">Dr. Hasan Boudlaie</strong>
     </a>
-    <nav class="links" aria-label="Primary navigation">
-      <a href="#products">Products & Services</a>
-      <a href="#advisory">Advisory</a>
-      <a href="#about">About</a>
-      <a href="mailto:hasanboudlaie@ut.ac.ir">Contact</a>
+
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a href="#work" data-en="Products & Services" data-fa="محصولات و خدمات">Products & Services</a>
+      <a href="#advisory" data-en="Advisory" data-fa="مشاوره">Advisory</a>
+      <a href="#about" data-en="About" data-fa="درباره من">About</a>
     </nav>
-    <a class="nav-cta" href="#products">Explore the work ↓</a>
+
+    <div class="actions">
+      <div class="lang" aria-label="Language switcher">
+        <button id="enBtn" class="active" type="button" onclick="setLang('en')">EN</button>
+        <button id="faBtn" type="button" onclick="setLang('fa')">FA</button>
+      </div>
+      <a class="contact" href="mailto:hasanboudlaie@ut.ac.ir" data-en="Contact" data-fa="تماس">Contact</a>
+    </div>
   </div>
 </header>
 
 <main id="top">
   <section class="wrap hero">
-    <div class="hero-copy">
-      <div class="eyebrow">Management · Leadership · Organization</div>
-      <h1>Turning management ideas into <em>working systems.</em></h1>
-      <p>
-        Management Consultant & Leadership Advisor working across strategy execution,
-        organizational transformation, people & culture, executive development,
-        and applied management research.
+    <div>
+      <div class="eyebrow" data-en="Management · Leadership · Organization" data-fa="مدیریت · رهبری · سازمان">Management · Leadership · Organization</div>
+      <h1 data-en="I turn management thinking into <span>working systems.</span>" data-fa="ایده‌های مدیریتی را به <span>سیستم‌های قابل اجرا</span> تبدیل می‌کنم.">
+        I turn management thinking into <span>working systems.</span>
+      </h1>
+      <p data-en="Management Consultant & Leadership Advisor working across strategy execution, organizational transformation, people & culture, executive development, and applied research."
+         data-fa="مشاور مدیریت و راهبر توسعه رهبری؛ با تمرکز بر اجرای راهبرد، تحول سازمانی، سرمایه انسانی و فرهنگ، توسعه مدیران و پژوهش کاربردی.">
+        Management Consultant & Leadership Advisor working across strategy execution, organizational transformation, people & culture, executive development, and applied research.
       </p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#products">Products & Services</a>
-        <a class="btn" href="mailto:hasanboudlaie@ut.ac.ir">Start a conversation ↗</a>
+      <div class="hero-cta">
+        <a class="btn primary" href="#work" data-en="Explore products & services" data-fa="مشاهده محصولات و خدمات">Explore products & services</a>
+        <a class="btn" href="#about" data-en="About my work" data-fa="درباره رویکرد من">About my work</a>
       </div>
     </div>
-    <aside class="hero-side" aria-label="Profile highlights">
-      <div class="proof"><strong>15+</strong><span>Years across consulting & executive education</span></div>
-      <div class="proof"><strong>3</strong><span>Core lenses: strategy, organization, people</span></div>
-      <div class="proof"><strong>1</strong><span>Focus: turning insight into implementation</span></div>
+
+    <aside class="hero-art">
+      <div class="art-label" data-en="Current practice" data-fa="حوزه‌های اصلی فعالیت">Current practice</div>
+      <div class="art-title" data-en="Strategy, organization and people — designed as one management system."
+           data-fa="راهبرد، سازمان و انسان؛ در قالب یک سیستم مدیریتی منسجم.">
+        Strategy, organization and people — designed as one management system.
+      </div>
+      <div class="art-list">
+        <div class="art-row"><span data-en="Strategy & Execution" data-fa="راهبرد و اجرا">Strategy & Execution</span><span>01</span></div>
+        <div class="art-row"><span data-en="Leadership & Capability" data-fa="رهبری و توسعه قابلیت">Leadership & Capability</span><span>02</span></div>
+        <div class="art-row"><span data-en="People & Culture" data-fa="سرمایه انسانی و فرهنگ">People & Culture</span><span>03</span></div>
+        <div class="art-row"><span data-en="Digital Management Products" data-fa="محصولات دیجیتال مدیریتی">Digital Management Products</span><span>04</span></div>
+      </div>
+      <div class="art-index">HB</div>
     </aside>
   </section>
 
-  <div class="strip">
-    <div class="wrap strip-inner">
-      <span>Strategy Execution</span>
-      <span>Leadership Development</span>
-      <span>People & Culture</span>
-      <span>Organizational Development</span>
-      <span>Applied Research</span>
+  <div class="focus">
+    <div class="wrap focus-grid">
+      <div class="focus-item">
+        <strong data-en="15+ years" data-fa="بیش از ۱۵ سال">15+ years</strong>
+        <span data-en="Consulting, executive education and applied management work" data-fa="مشاوره، آموزش مدیران و پروژه‌های کاربردی مدیریت">Consulting, executive education and applied management work</span>
+      </div>
+      <div class="focus-item">
+        <strong data-en="Scholar–practitioner" data-fa="پژوهشگر–عمل‌گرا">Scholar–practitioner</strong>
+        <span data-en="Research translated into tools, decisions and operating systems" data-fa="تبدیل پژوهش به ابزار، تصمیم و سیستم‌های قابل استفاده">Research translated into tools, decisions and operating systems</span>
+      </div>
+      <div class="focus-item">
+        <strong data-en="Implementation first" data-fa="تمرکز بر اجرا">Implementation first</strong>
+        <span data-en="Less presentation, more usable management architecture" data-fa="کمتر ارائه، بیشتر معماری مدیریتی قابل استفاده">Less presentation, more usable management architecture</span>
+      </div>
     </div>
   </div>
 
-  <section class="section" id="products">
+  <section id="work">
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="eyebrow">Selected digital products</div>
-          <h2>Products & Services</h2>
+          <div class="eyebrow" data-en="Selected work" data-fa="نمونه محصولات">Selected work</div>
+          <h2 data-en="Products & Services" data-fa="محصولات و خدمات">Products & Services</h2>
         </div>
-        <p>
-          Interactive learning, strategy and organizational-development products
-          built around real management problems — each opens as a live application.
+        <p data-en="Live digital products created around real organizational challenges. Each link opens the independent application."
+           data-fa="محصولات دیجیتال زنده که بر مبنای مسائل واقعی سازمانی طراحی شده‌اند. هر لینک، اپلیکیشن مستقل همان پروژه را باز می‌کند.">
+          Live digital products created around real organizational challenges. Each link opens the independent application.
         </p>
       </div>
 
-      <div class="products">
-
-        <a class="product" href="https://hassnboudlaie.github.io/hosco-leadership-experience/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">01</span><span class="product-type">Leadership OS</span></div>
-          <h3>Frontline Leadership Experience</h3>
-          <div class="fa">فولاد هرمزگان</div>
-          <p>Interactive leadership-development journey for supervisors and frontline leaders.</p>
-          <div class="open"><span>Open live application</span><span class="arrow">↗</span></div>
+      <div class="work-list">
+        <a class="work" href="https://hassnboudlaie.github.io/hosco-leadership-experience/" target="_blank" rel="noopener">
+          <div class="n">01</div>
+          <div><h3 data-en="Frontline Leadership Experience" data-fa="تجربه توسعه رهبری خط مقدم">Frontline Leadership Experience</h3><div class="org" data-en="Hormozgan Steel" data-fa="فولاد هرمزگان">Hormozgan Steel</div></div>
+          <div class="type" data-en="Leadership OS" data-fa="سیستم توسعه رهبری">Leadership OS</div>
+          <div class="go">↗</div>
         </a>
 
-        <a class="product" href="https://hassnboudlaie.github.io/naavsanat-culture-app/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">02</span><span class="product-type">Culture Lab</span></div>
-          <h3>Organizational Behavior & Culture</h3>
-          <div class="fa">ناوصنعت مس</div>
-          <p>A practical workshop environment connecting culture, behavior and managerial action.</p>
-          <div class="open"><span>Open live application</span><span class="arrow">↗</span></div>
+        <a class="work" href="https://hassnboudlaie.github.io/naavsanat-culture-app/" target="_blank" rel="noopener">
+          <div class="n">02</div>
+          <div><h3 data-en="Organizational Behavior & Culture" data-fa="مدیریت رفتار سازمانی و فرهنگ">Organizational Behavior & Culture</h3><div class="org" data-en="Naavsanat Mes" data-fa="ناوصنعت مس">Naavsanat Mes</div></div>
+          <div class="type" data-en="Culture Lab" data-fa="آزمایشگاه فرهنگ">Culture Lab</div>
+          <div class="go">↗</div>
         </a>
 
-        <a class="product" href="https://hassnboudlaie.github.io/alborz-communication-academy/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">03</span><span class="product-type">Academy</span></div>
-          <h3>Effective Communication Academy</h3>
-          <div class="fa">بیمه البرز</div>
-          <p>Ten-session communication and professional-behavior architecture for branch leaders.</p>
-          <div class="open"><span>Open live application</span><span class="arrow">↗</span></div>
+        <a class="work" href="https://hassnboudlaie.github.io/alborz-communication-academy/" target="_blank" rel="noopener">
+          <div class="n">03</div>
+          <div><h3 data-en="Effective Communication Academy" data-fa="آکادمی ارتباطات اثربخش">Effective Communication Academy</h3><div class="org" data-en="Alborz Insurance" data-fa="بیمه البرز">Alborz Insurance</div></div>
+          <div class="type" data-en="Executive Academy" data-fa="آکادمی مدیران">Executive Academy</div>
+          <div class="go">↗</div>
         </a>
 
-        <a class="product" href="https://hassnboudlaie.github.io/kish-ports-airports-strategy/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">04</span><span class="product-type">Strategy OS</span></div>
-          <h3>Strategy Execution Platform</h3>
-          <div class="fa">مدیریت بنادر و فرودگاه‌های کیش</div>
-          <p>Interactive strategy-execution and workshop platform for organization-wide participation.</p>
-          <div class="open"><span>Open live application</span><span class="arrow">↗</span></div>
+        <a class="work" href="https://hassnboudlaie.github.io/kish-ports-airports-strategy/" target="_blank" rel="noopener">
+          <div class="n">04</div>
+          <div><h3 data-en="Strategy Execution Platform" data-fa="سامانه اجرای راهبرد">Strategy Execution Platform</h3><div class="org" data-en="Kish Ports & Airports" data-fa="مدیریت بنادر و فرودگاه‌های کیش">Kish Ports & Airports</div></div>
+          <div class="type" data-en="Strategy OS" data-fa="سیستم اجرای راهبرد">Strategy OS</div>
+          <div class="go">↗</div>
         </a>
 
-        <a class="product" href="https://hassnboudlaie.github.io/behparvar-leadership-lab/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">05</span><span class="product-type">Leadership Lab</span></div>
-          <h3>Leadership Lab</h3>
-          <div class="fa">آزمایشگاه رهبری بهپرور</div>
-          <p>Non-linear leadership learning with self-assessment, reflection and applied exercises.</p>
-          <div class="open"><span>Open live application</span><span class="arrow">↗</span></div>
+        <a class="work" href="https://hassnboudlaie.github.io/behparvar-leadership-lab/" target="_blank" rel="noopener">
+          <div class="n">05</div>
+          <div><h3 data-en="Leadership Lab" data-fa="آزمایشگاه رهبری">Leadership Lab</h3><div class="org" data-en="Behparvar" data-fa="بهپرور">Behparvar</div></div>
+          <div class="type" data-en="Leadership Lab" data-fa="آزمایشگاه رهبری">Leadership Lab</div>
+          <div class="go">↗</div>
         </a>
 
-        <a class="product" href="https://hassnboudlaie.github.io/reflective-leader/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">06</span><span class="product-type">Reflection Tool</span></div>
-          <h3>Reflective Leader</h3>
-          <div class="fa">رهبر بازتابی</div>
-          <p>A guided reflective-leadership application for making sense of experience and choosing the next best step.</p>
-          <div class="open"><span>Open live application</span><span class="arrow">↗</span></div>
+        <a class="work" href="https://hassnboudlaie.github.io/reflective-leader/" target="_blank" rel="noopener">
+          <div class="n">06</div>
+          <div><h3 data-en="Reflective Leader" data-fa="رهبر بازتابی">Reflective Leader</h3><div class="org" data-en="Reflective Leadership Application" data-fa="اپلیکیشن رهبری بازتابی">Reflective Leadership Application</div></div>
+          <div class="type" data-en="Reflection Tool" data-fa="ابزار بازاندیشی">Reflection Tool</div>
+          <div class="go">↗</div>
         </a>
 
-        <a class="product" href="https://hassnboudlaie.github.io/afra-tejarat-mad/" target="_blank" rel="noopener">
-          <div class="product-top"><span class="product-index">07</span><span class="product-type">Business Platform</span></div>
-          <h3>Afra Tejarat Mad</h3>
-          <div class="fa">افرا تجارت ماد</div>
-          <p>Corporate business-development and international sourcing platform.</p>
-          <div class="open"><span>Open platform</span><span class="arrow">↗</span></div>
+        <a class="work" href="https://hassnboudlaie.github.io/afra-tejarat-mad/" target="_blank" rel="noopener">
+          <div class="n">07</div>
+          <div><h3 data-en="Afra Tejarat Mad" data-fa="افرا تجارت ماد">Afra Tejarat Mad</h3><div class="org" data-en="International sourcing & business development" data-fa="تأمین بین‌الملل و توسعه کسب‌وکار">International sourcing & business development</div></div>
+          <div class="type" data-en="Business Platform" data-fa="پلتفرم کسب‌وکار">Business Platform</div>
+          <div class="go">↗</div>
         </a>
-
       </div>
     </div>
   </section>
 
-  <section class="section" id="advisory">
-    <div class="wrap services">
-      <div class="service-main">
-        <div class="eyebrow" style="color:#d8b48d">Advisory work</div>
-        <h3>From diagnosis to implementation.</h3>
-        <p>
-          Advisory engagements are designed to move beyond reports and workshops.
-          The work combines diagnosis, management dialogue, capability building,
-          digital tools and follow-through.
+  <section id="advisory">
+    <div class="wrap advisory-grid">
+      <div class="dark">
+        <div class="eyebrow" style="color:#d8c2a4" data-en="Advisory" data-fa="خدمات مشاوره">Advisory</div>
+        <h3 data-en="From diagnosis to implementation." data-fa="از تشخیص تا اجرا.">From diagnosis to implementation.</h3>
+        <p data-en="My advisory work combines organizational diagnosis, management dialogue, capability building, digital tools and follow-through — so the outcome is not just a report."
+           data-fa="در پروژه‌های مشاوره، تشخیص سازمانی، گفت‌وگوی مدیریتی، توسعه قابلیت، ابزارهای دیجیتال و پیگیری اجرا با هم ترکیب می‌شوند؛ تا خروجی صرفاً یک گزارش نباشد.">
+          My advisory work combines organizational diagnosis, management dialogue, capability building, digital tools and follow-through — so the outcome is not just a report.
         </p>
-        <div class="service-list">
-          <div>Strategy & execution architecture</div>
-          <div>Leadership & executive development</div>
-          <div>People, culture & organization</div>
-          <div>Management academies & learning journeys</div>
-          <div>Organizational diagnosis & redesign</div>
-          <div>Applied research & evidence-based management</div>
+        <div class="services">
+          <div class="service" data-en="Strategy & execution architecture" data-fa="معماری راهبرد و اجرا">Strategy & execution architecture</div>
+          <div class="service" data-en="Leadership & executive development" data-fa="توسعه رهبری و مدیران">Leadership & executive development</div>
+          <div class="service" data-en="People, culture & organization" data-fa="سرمایه انسانی، فرهنگ و سازمان">People, culture & organization</div>
+          <div class="service" data-en="Management academies & learning journeys" data-fa="آکادمی‌های مدیریتی و مسیرهای یادگیری">Management academies & learning journeys</div>
+          <div class="service" data-en="Organizational diagnosis & redesign" data-fa="آسیب‌شناسی و بازطراحی سازمان">Organizational diagnosis & redesign</div>
+          <div class="service" data-en="Applied research & evidence-based management" data-fa="پژوهش کاربردی و مدیریت مبتنی بر شواهد">Applied research & evidence-based management</div>
         </div>
       </div>
-      <div class="service-note">
-        <div class="eyebrow">Working principle</div>
-        <h3>Useful before impressive.</h3>
-        <p>
-          The strongest management product is one people can actually use:
-          a decision, a conversation, a dashboard, a learning journey,
-          or a system that changes how work gets done.
+
+      <aside class="note">
+        <div class="eyebrow" data-en="Working principle" data-fa="اصل کاری">Working principle</div>
+        <h3 data-en="Useful before impressive." data-fa="اول مفید؛ بعد چشمگیر.">Useful before impressive.</h3>
+        <p data-en="The strongest management product is one people can actually use — in a decision, a conversation, a dashboard, a workshop, or a real operating routine."
+           data-fa="بهترین محصول مدیریتی چیزی است که واقعاً قابل استفاده باشد؛ در یک تصمیم، یک گفت‌وگو، یک داشبورد، یک کارگاه یا یک روتین واقعی مدیریتی.">
+          The strongest management product is one people can actually use — in a decision, a conversation, a dashboard, a workshop, or a real operating routine.
         </p>
-      </div>
+        <div class="quote" data-en="“Make management knowledge usable.”" data-fa="«دانش مدیریت باید قابل استفاده باشد.»">“Make management knowledge usable.”</div>
+      </aside>
     </div>
   </section>
 
-  <section class="section" id="about">
-    <div class="wrap about-grid">
+  <section id="about">
+    <div class="wrap about">
       <div>
-        <div class="eyebrow">About</div>
-        <h2>Scholar-practitioner by design.</h2>
+        <div class="eyebrow" data-en="About" data-fa="درباره من">About</div>
+        <h2 data-en="Scholar–practitioner by design." data-fa="پژوهشگر و مشاور؛ هم‌زمان.">Scholar–practitioner by design.</h2>
       </div>
       <div class="about-copy">
-        <p>
-          Dr. Hasan Boudlaie works at the intersection of management consulting,
-          leadership development, human resource management and organizational research.
-          His work is built around a simple question: how can management knowledge become
-          usable enough to improve real decisions, real behavior and real organizations?
+        <p data-en="Dr. Hasan Boudlaie works at the intersection of management consulting, leadership development, human resource management and organizational research."
+           data-fa="دکتر حسن بودلایی در تقاطع مشاوره مدیریت، توسعه رهبری، مدیریت منابع انسانی و پژوهش سازمانی فعالیت می‌کند.">
+          Dr. Hasan Boudlaie works at the intersection of management consulting, leadership development, human resource management and organizational research.
         </p>
-        <p>
-          That question shapes both the advisory work and the digital products above:
-          diagnose clearly, design deliberately, build capability, and keep the work close
-          to the operating reality.
+        <p data-en="His work is organized around one question: how can management knowledge become practical enough to improve real decisions, real behavior and real organizations?"
+           data-fa="محور اصلی کار او یک پرسش است: چگونه می‌توان دانش مدیریت را آن‌قدر کاربردی کرد که به بهبود تصمیم‌های واقعی، رفتارهای واقعی و سازمان‌های واقعی منجر شود؟">
+          His work is organized around one question: how can management knowledge become practical enough to improve real decisions, real behavior and real organizations?
         </p>
-        <div class="signature">
+        <div class="signature" data-en="Management Consultant & Leadership Advisor · Executive Educator · HRM & Leadership Researcher"
+             data-fa="مشاور مدیریت و رهبری · مدرس مدیران · پژوهشگر مدیریت منابع انسانی و رهبری">
           Management Consultant & Leadership Advisor · Executive Educator · HRM & Leadership Researcher
         </div>
       </div>
@@ -380,16 +448,33 @@ footer{padding:34px 0 42px;border-top:1px solid var(--line)}
 <footer>
   <div class="wrap footer">
     <div>
-      <strong>Dr. Hasan Boudlaie</strong>
-      <small>Management · Leadership · Organizational Development</small>
+      <strong data-en="Dr. Hasan Boudlaie" data-fa="دکتر حسن بودلایی">Dr. Hasan Boudlaie</strong>
+      <small data-en="Management · Leadership · Organization" data-fa="مدیریت · رهبری · سازمان">Management · Leadership · Organization</small>
     </div>
     <div class="footer-links">
-      <a href="mailto:hasanboudlaie@ut.ac.ir">Academic Email ↗</a>
-      <a href="https://scholar.google.com/citations?user=02nxEDYAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
-      <a href="#products">Products & Services ↑</a>
+      <a href="mailto:hasanboudlaie@ut.ac.ir" data-en="Email ↗" data-fa="ایمیل ↗">Email ↗</a>
+      <a href="https://scholar.google.com/citations?user=02nxEDYAAAAJ&hl=en" target="_blank" rel="noopener" data-en="Google Scholar ↗" data-fa="گوگل اسکالر ↗">Google Scholar ↗</a>
+      <a href="#work" data-en="Products & Services ↑" data-fa="محصولات و خدمات ↑">Products & Services ↑</a>
     </div>
   </div>
 </footer>
 
+<script>
+function setLang(lang){
+  const isFa=lang==='fa';
+  document.documentElement.lang=isFa?'fa':'en';
+  document.documentElement.dir=isFa?'rtl':'ltr';
+  document.body.classList.toggle('rtl',isFa);
+  document.querySelectorAll('[data-en][data-fa]').forEach(el=>{
+    const value=el.getAttribute(isFa?'data-fa':'data-en');
+    if(value.includes('<')) el.innerHTML=value; else el.textContent=value;
+  });
+  document.getElementById('enBtn').classList.toggle('active',!isFa);
+  document.getElementById('faBtn').classList.toggle('active',isFa);
+  localStorage.setItem('hb-lang',lang);
+}
+const saved=localStorage.getItem('hb-lang');
+setLang(saved==='fa'?'fa':'en');
+</script>
 </body>
 </html>
