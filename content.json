@@ -1,0 +1,273 @@
+{
+  "brand": {
+    "en": "Dr. Hasan Boudlaie",
+    "fa": "دکتر حسن بودلایی"
+  },
+  "hero": {
+    "eyebrow": {
+      "en": "Management · Leadership · Organization",
+      "fa": "مدیریت · رهبری · سازمان"
+    },
+    "title": {
+      "en": "I turn management thinking into <span>working systems.</span>",
+      "fa": "ایده‌های مدیریتی را به <span>سیستم‌های قابل اجرا</span> تبدیل می‌کنم."
+    },
+    "description": {
+      "en": "Management Consultant & Leadership Advisor working across strategy execution, organizational transformation, people & culture, executive development, and applied research.",
+      "fa": "مشاور مدیریت و راهبر توسعه رهبری؛ با تمرکز بر اجرای راهبرد، تحول سازمانی، سرمایه انسانی و فرهنگ، توسعه مدیران و پژوهش کاربردی."
+    },
+    "artLabel": {
+      "en": "Current practice",
+      "fa": "حوزه‌های اصلی فعالیت"
+    },
+    "artTitle": {
+      "en": "Strategy, organization and people — designed as one management system.",
+      "fa": "راهبرد، سازمان و انسان؛ در قالب یک سیستم مدیریتی منسجم."
+    },
+    "artItems": [
+      {
+        "en": "Strategy & Execution",
+        "fa": "راهبرد و اجرا"
+      },
+      {
+        "en": "Leadership & Capability",
+        "fa": "رهبری و توسعه قابلیت"
+      },
+      {
+        "en": "People & Culture",
+        "fa": "سرمایه انسانی و فرهنگ"
+      },
+      {
+        "en": "Digital Management Products",
+        "fa": "محصولات دیجیتال مدیریتی"
+      }
+    ]
+  },
+  "focus": [
+    {
+      "title": {
+        "en": "15+ years",
+        "fa": "بیش از ۱۵ سال"
+      },
+      "text": {
+        "en": "Consulting, executive education and applied management work",
+        "fa": "مشاوره، آموزش مدیران و پروژه‌های کاربردی مدیریت"
+      }
+    },
+    {
+      "title": {
+        "en": "Scholar–practitioner",
+        "fa": "پژوهشگر–عمل‌گرا"
+      },
+      "text": {
+        "en": "Research translated into tools, decisions and operating systems",
+        "fa": "تبدیل پژوهش به ابزار، تصمیم و سیستم‌های قابل استفاده"
+      }
+    },
+    {
+      "title": {
+        "en": "Implementation first",
+        "fa": "تمرکز بر اجرا"
+      },
+      "text": {
+        "en": "Less presentation, more usable management architecture",
+        "fa": "کمتر ارائه، بیشتر معماری مدیریتی قابل استفاده"
+      }
+    }
+  ],
+  "productsIntro": {
+    "eyebrow": {
+      "en": "Selected work",
+      "fa": "نمونه محصولات"
+    },
+    "title": {
+      "en": "Products & Services",
+      "fa": "محصولات و خدمات"
+    },
+    "text": {
+      "en": "Live digital products created around real organizational challenges. Each link opens the independent application.",
+      "fa": "محصولات دیجیتال زنده که بر مبنای مسائل واقعی سازمانی طراحی شده‌اند. هر لینک، اپلیکیشن مستقل همان پروژه را باز می‌کند."
+    }
+  },
+  "products": [
+    {
+      "title": {
+        "en": "Frontline Leadership Experience",
+        "fa": "تجربه توسعه رهبری خط مقدم"
+      },
+      "org": {
+        "en": "Hormozgan Steel",
+        "fa": "فولاد هرمزگان"
+      },
+      "type": {
+        "en": "Leadership OS",
+        "fa": "سیستم توسعه رهبری"
+      },
+      "url": "https://hassnboudlaie.github.io/hosco-leadership-experience/"
+    },
+    {
+      "title": {
+        "en": "Organizational Behavior & Culture",
+        "fa": "مدیریت رفتار سازمانی و فرهنگ"
+      },
+      "org": {
+        "en": "Naavsanat Mes",
+        "fa": "ناوصنعت مس"
+      },
+      "type": {
+        "en": "Culture Lab",
+        "fa": "آزمایشگاه فرهنگ"
+      },
+      "url": "https://hassnboudlaie.github.io/naavsanat-culture-app/"
+    },
+    {
+      "title": {
+        "en": "Effective Communication Academy",
+        "fa": "آکادمی ارتباطات اثربخش"
+      },
+      "org": {
+        "en": "Alborz Insurance",
+        "fa": "بیمه البرز"
+      },
+      "type": {
+        "en": "Executive Academy",
+        "fa": "آکادمی مدیران"
+      },
+      "url": "https://hassnboudlaie.github.io/alborz-communication-academy/"
+    },
+    {
+      "title": {
+        "en": "Strategy Execution Platform",
+        "fa": "سامانه اجرای راهبرد"
+      },
+      "org": {
+        "en": "Kish Ports & Airports",
+        "fa": "مدیریت بنادر و فرودگاه‌های کیش"
+      },
+      "type": {
+        "en": "Strategy OS",
+        "fa": "سیستم اجرای راهبرد"
+      },
+      "url": "https://hassnboudlaie.github.io/kish-ports-airports-strategy/"
+    },
+    {
+      "title": {
+        "en": "Leadership Lab",
+        "fa": "آزمایشگاه رهبری"
+      },
+      "org": {
+        "en": "Behparvar",
+        "fa": "بهپرور"
+      },
+      "type": {
+        "en": "Leadership Lab",
+        "fa": "آزمایشگاه رهبری"
+      },
+      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/"
+    },
+    {
+      "title": {
+        "en": "Reflective Leader",
+        "fa": "رهبر بازتابی"
+      },
+      "org": {
+        "en": "Reflective Leadership Application",
+        "fa": "اپلیکیشن رهبری بازتابی"
+      },
+      "type": {
+        "en": "Reflection Tool",
+        "fa": "ابزار بازاندیشی"
+      },
+      "url": "https://hassnboudlaie.github.io/reflective-leader/"
+    },
+    {
+      "title": {
+        "en": "Afra Tejarat Mad",
+        "fa": "افرا تجارت ماد"
+      },
+      "org": {
+        "en": "International sourcing & business development",
+        "fa": "تأمین بین‌الملل و توسعه کسب‌وکار"
+      },
+      "type": {
+        "en": "Business Platform",
+        "fa": "پلتفرم کسب‌وکار"
+      },
+      "url": "https://hassnboudlaie.github.io/afra-tejarat-mad/"
+    }
+  ],
+  "advisory": {
+    "eyebrow": {
+      "en": "Advisory",
+      "fa": "خدمات مشاوره"
+    },
+    "title": {
+      "en": "From diagnosis to implementation.",
+      "fa": "از تشخیص تا اجرا."
+    },
+    "text": {
+      "en": "My advisory work combines organizational diagnosis, management dialogue, capability building, digital tools and follow-through — so the outcome is not just a report.",
+      "fa": "در پروژه‌های مشاوره، تشخیص سازمانی، گفت‌وگوی مدیریتی، توسعه قابلیت، ابزارهای دیجیتال و پیگیری اجرا با هم ترکیب می‌شوند؛ تا خروجی صرفاً یک گزارش نباشد."
+    },
+    "services": [
+      {
+        "en": "Strategy & execution architecture",
+        "fa": "معماری راهبرد و اجرا"
+      },
+      {
+        "en": "Leadership & executive development",
+        "fa": "توسعه رهبری و مدیران"
+      },
+      {
+        "en": "People, culture & organization",
+        "fa": "سرمایه انسانی، فرهنگ و سازمان"
+      },
+      {
+        "en": "Management academies & learning journeys",
+        "fa": "آکادمی‌های مدیریتی و مسیرهای یادگیری"
+      },
+      {
+        "en": "Organizational diagnosis & redesign",
+        "fa": "آسیب‌شناسی و بازطراحی سازمان"
+      },
+      {
+        "en": "Applied research & evidence-based management",
+        "fa": "پژوهش کاربردی و مدیریت مبتنی بر شواهد"
+      }
+    ],
+    "principleTitle": {
+      "en": "Useful before impressive.",
+      "fa": "اول مفید؛ بعد چشمگیر."
+    },
+    "principleText": {
+      "en": "The strongest management product is one people can actually use — in a decision, a conversation, a dashboard, a workshop, or a real operating routine.",
+      "fa": "بهترین محصول مدیریتی چیزی است که واقعاً قابل استفاده باشد؛ در یک تصمیم، یک گفت‌وگو، یک داشبورد، یک کارگاه یا یک روتین واقعی مدیریتی."
+    },
+    "quote": {
+      "en": "“Make management knowledge usable.”",
+      "fa": "«دانش مدیریت باید قابل استفاده باشد.»"
+    }
+  },
+  "about": {
+    "title": {
+      "en": "Scholar–practitioner by design.",
+      "fa": "پژوهشگر و مشاور؛ هم‌زمان."
+    },
+    "p1": {
+      "en": "Dr. Hasan Boudlaie works at the intersection of management consulting, leadership development, human resource management and organizational research.",
+      "fa": "دکتر حسن بودلایی در تقاطع مشاوره مدیریت، توسعه رهبری، مدیریت منابع انسانی و پژوهش سازمانی فعالیت می‌کند."
+    },
+    "p2": {
+      "en": "His work is organized around one question: how can management knowledge become practical enough to improve real decisions, real behavior and real organizations?",
+      "fa": "محور اصلی کار او یک پرسش است: چگونه می‌توان دانش مدیریت را آن‌قدر کاربردی کرد که به بهبود تصمیم‌های واقعی، رفتارهای واقعی و سازمان‌های واقعی منجر شود؟"
+    },
+    "signature": {
+      "en": "Management Consultant & Leadership Advisor · Executive Educator · HRM & Leadership Researcher",
+      "fa": "مشاور مدیریت و رهبری · مدرس مدیران · پژوهشگر مدیریت منابع انسانی و رهبری"
+    }
+  },
+  "contact": {
+    "email": "hasanboudlaie@ut.ac.ir",
+    "scholar": "https://scholar.google.com/citations?user=02nxEDYAAAAJ&hl=en"
+  }
+}
