@@ -454,27 +454,102 @@ body.rtl .footer strong{font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-weig
     <div class="footer-links">
       <a href="mailto:hasanboudlaie@ut.ac.ir" data-en="Email ↗" data-fa="ایمیل ↗">Email ↗</a>
       <a href="https://scholar.google.com/citations?user=02nxEDYAAAAJ&hl=en" target="_blank" rel="noopener" data-en="Google Scholar ↗" data-fa="گوگل اسکالر ↗">Google Scholar ↗</a>
-      <a href="#work" data-en="Products & Services ↑" data-fa="محصولات و خدمات ↑">Products & Services ↑</a>
+      <a href="#work" data-en="Products & Services ↑" data-fa="محصولات و خدمات ↑">Products & Services ↑</a><a href="admin.html" data-en="Admin" data-fa="مدیریت">Admin</a>
     </div>
   </div>
 </footer>
 
 <script>
+let siteData=null;
+let currentLang=localStorage.getItem('hb-lang')==='fa'?'fa':'en';
+
+function pair(el,obj,html=false){
+  if(!el||!obj)return;
+  el.setAttribute('data-en',obj.en??'');
+  el.setAttribute('data-fa',obj.fa??'');
+  const val=obj[currentLang]??obj.en??'';
+  if(html) el.innerHTML=val; else el.textContent=val;
+}
 function setLang(lang){
+  currentLang=lang;
   const isFa=lang==='fa';
   document.documentElement.lang=isFa?'fa':'en';
   document.documentElement.dir=isFa?'rtl':'ltr';
   document.body.classList.toggle('rtl',isFa);
   document.querySelectorAll('[data-en][data-fa]').forEach(el=>{
-    const value=el.getAttribute(isFa?'data-fa':'data-en');
+    const value=el.getAttribute(isFa?'data-fa':'data-en')||'';
     if(value.includes('<')) el.innerHTML=value; else el.textContent=value;
   });
   document.getElementById('enBtn').classList.toggle('active',!isFa);
   document.getElementById('faBtn').classList.toggle('active',isFa);
   localStorage.setItem('hb-lang',lang);
 }
-const saved=localStorage.getItem('hb-lang');
-setLang(saved==='fa'?'fa':'en');
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function escapeAttr(v){return escapeHtml(v)}
+function renderProducts(items){
+  const box=document.querySelector('.work-list');
+  if(!box||!Array.isArray(items))return;
+  box.innerHTML=items.map((p,i)=>\`
+    <a class="work" href="\${p.url||'#'}" target="_blank" rel="noopener">
+      <div class="n">\${String(i+1).padStart(2,'0')}</div>
+      <div>
+        <h3 data-en="\${escapeAttr(p.title?.en)}" data-fa="\${escapeAttr(p.title?.fa)}">\${escapeHtml(p.title?.[currentLang]||'')}</h3>
+        <div class="org" data-en="\${escapeAttr(p.org?.en)}" data-fa="\${escapeAttr(p.org?.fa)}">\${escapeHtml(p.org?.[currentLang]||'')}</div>
+      </div>
+      <div class="type" data-en="\${escapeAttr(p.type?.en)}" data-fa="\${escapeAttr(p.type?.fa)}">\${escapeHtml(p.type?.[currentLang]||'')}</div>
+      <div class="go">↗</div>
+    </a>\`).join('');
+}
+function applyContent(d){
+  siteData=d;
+  pair(document.querySelector('.brand strong'),d.brand);
+  const hero=document.querySelector('.hero');
+  pair(hero.querySelector('.eyebrow'),d.hero?.eyebrow);
+  pair(hero.querySelector('h1'),d.hero?.title,true);
+  pair(hero.querySelector(':scope > div > p'),d.hero?.description);
+  pair(document.querySelector('.art-label'),d.hero?.artLabel);
+  pair(document.querySelector('.art-title'),d.hero?.artTitle);
+  document.querySelectorAll('.art-row').forEach((row,i)=>pair(row.querySelector('span:first-child'),d.hero?.artItems?.[i]));
+  document.querySelectorAll('.focus-item').forEach((el,i)=>{
+    pair(el.querySelector('strong'),d.focus?.[i]?.title);
+    pair(el.querySelector('span'),d.focus?.[i]?.text);
+  });
+  const work=document.getElementById('work');
+  pair(work.querySelector('.section-head .eyebrow'),d.productsIntro?.eyebrow);
+  pair(work.querySelector('.section-head h2'),d.productsIntro?.title);
+  pair(work.querySelector('.section-head p'),d.productsIntro?.text);
+  renderProducts(d.products);
+  const adv=document.getElementById('advisory');
+  pair(adv.querySelector('.dark .eyebrow'),d.advisory?.eyebrow);
+  pair(adv.querySelector('.dark h3'),d.advisory?.title);
+  pair(adv.querySelector('.dark p'),d.advisory?.text);
+  adv.querySelectorAll('.service').forEach((el,i)=>pair(el,d.advisory?.services?.[i]));
+  pair(adv.querySelector('.note h3'),d.advisory?.principleTitle);
+  pair(adv.querySelector('.note p'),d.advisory?.principleText);
+  pair(adv.querySelector('.quote'),d.advisory?.quote);
+  const about=document.getElementById('about');
+  pair(about.querySelector('h2'),d.about?.title);
+  const ps=about.querySelectorAll('.about-copy p');
+  pair(ps[0],d.about?.p1); pair(ps[1],d.about?.p2);
+  pair(about.querySelector('.signature'),d.about?.signature);
+  if(d.contact?.email){
+    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.href='mailto:'+d.contact.email);
+  }
+  if(d.contact?.scholar){
+    const scholar=[...document.querySelectorAll('a')].find(a=>a.href.includes('scholar.google.com'));
+    if(scholar)scholar.href=d.contact.scholar;
+  }
+  setLang(currentLang);
+}
+async function loadContent(){
+  try{
+    const res=await fetch('content.json?v='+Date.now(),{cache:'no-store'});
+    if(!res.ok)throw new Error('content load failed');
+    applyContent(await res.json());
+  }catch(e){setLang(currentLang)}
+}
+setLang(currentLang);
+loadContent();
 </script>
 </body>
 </html>
