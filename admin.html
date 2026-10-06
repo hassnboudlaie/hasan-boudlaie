@@ -58,7 +58,7 @@ button,input,textarea{font:inherit}.wrap{max-width:1080px;margin:auto;padding:0 
         <div class="field"><label class="label">توضیح انگلیسی</label><textarea id="heroDescEn"></textarea></div>
         <div class="field"><label class="label">توضیح فارسی</label><textarea id="heroDescFa"></textarea></div>
         <div class="field"><label class="label">عنوان پنل تصویری انگلیسی</label><textarea id="artTitleEn"></textarea></div>
-        <div class="field"><label class="label">عنوان پنل تصویری فارسی</label><textarea id="artTitleFa"></textarea></div>
+        <div class="field"><label class="label">عنوان پنل تصویری فارسی</label><textarea id="artTitleFa"></textarea></div><div class="field full"><label class="label">Profile Photo URL</label><input id="photoUrl" dir="ltr" placeholder="https://..."><div class="note">آدرس تصویر نمایش‌داده‌شده در صفحه اول.</div></div>
       </div>
     </section>
 
@@ -149,7 +149,7 @@ async function connectGitHub(){
 function fillForm(){
   setv('heroTitleEn',data.hero.title.en);setv('heroTitleFa',data.hero.title.fa);
   setv('heroDescEn',data.hero.description.en);setv('heroDescFa',data.hero.description.fa);
-  setv('artTitleEn',data.hero.artTitle.en);setv('artTitleFa',data.hero.artTitle.fa);
+  setv('artTitleEn',data.hero.artTitle.en);setv('artTitleFa',data.hero.artTitle.fa);setv('photoUrl',(data.profile&&data.profile.photoUrl)||'');
   setv('advTitleEn',data.advisory.title.en);setv('advTitleFa',data.advisory.title.fa);
   setv('advTextEn',data.advisory.text.en);setv('advTextFa',data.advisory.text.fa);
   setv('principleEn',data.advisory.principleTitle.en);setv('principleFa',data.advisory.principleTitle.fa);
@@ -207,7 +207,7 @@ function moveProduct(i,d){
 function readForm(){
   data.hero.title={en:v('heroTitleEn'),fa:v('heroTitleFa')};
   data.hero.description={en:v('heroDescEn'),fa:v('heroDescFa')};
-  data.hero.artTitle={en:v('artTitleEn'),fa:v('artTitleFa')};
+  data.hero.artTitle={en:v('artTitleEn'),fa:v('artTitleFa')};data.profile=data.profile||{};data.profile.photoUrl=v('photoUrl');
   data.advisory.title={en:v('advTitleEn'),fa:v('advTitleFa')};
   data.advisory.text={en:v('advTextEn'),fa:v('advTextFa')};
   data.advisory.principleTitle={en:v('principleEn'),fa:v('principleFa')};
