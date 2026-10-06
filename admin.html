@@ -117,6 +117,9 @@ function showStatus(msg,type='info'){
 }
 function v(id){return document.getElementById(id).value.trim()}
 function setv(id,val){document.getElementById(id).value=val??''}
+function esc(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
 async function connectGitHub(){
   token=document.getElementById('token').value.trim();
@@ -129,7 +132,8 @@ async function connectGitHub(){
       headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
     });
     if(!res.ok) throw new Error('GitHub access failed ('+res.status+')');
-    const file=await res.json(); sha=file.sha;
+    const file=await res.json();
+    sha=file.sha;
     const text=decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
     data=JSON.parse(text);
     fillForm();
@@ -137,7 +141,9 @@ async function connectGitHub(){
     showStatus('اتصال برقرار شد. آخرین نسخه محتوا بارگذاری شد.','ok');
   }catch(err){
     showStatus('اتصال انجام نشد: '+err.message+' — دسترسی token به repository و Contents: Read & Write را بررسی کن.','bad');
-  }finally{document.getElementById('connectBtn').disabled=false}
+  }finally{
+    document.getElementById('connectBtn').disabled=false;
+  }
 }
 
 function fillForm(){
@@ -154,36 +160,49 @@ function fillForm(){
   renderProducts();
 }
 
-function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function renderProducts(){
   const box=document.getElementById('products');
-  box.innerHTML=data.products.map((p,i)=>\`
-    <div class="product">
-      <div class="product-head">
-        <b>محصول \${String(i+1).padStart(2,'0')}</b>
-        <div class="product-actions">
-          <button class="mini" type="button" title="بالا" onclick="moveProduct(\${i},-1)">↑</button>
-          <button class="mini" type="button" title="پایین" onclick="moveProduct(\${i},1)">↓</button>
-          <button class="mini" type="button" title="حذف" onclick="deleteProduct(\${i})">×</button>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field"><label class="label">عنوان انگلیسی</label><input value="\${esc(p.title.en)}" oninput="data.products[\${i}].title.en=this.value"></div>
-        <div class="field"><label class="label">عنوان فارسی</label><input value="\${esc(p.title.fa)}" oninput="data.products[\${i}].title.fa=this.value"></div>
-        <div class="field"><label class="label">سازمان انگلیسی</label><input value="\${esc(p.org.en)}" oninput="data.products[\${i}].org.en=this.value"></div>
-        <div class="field"><label class="label">سازمان فارسی</label><input value="\${esc(p.org.fa)}" oninput="data.products[\${i}].org.fa=this.value"></div>
-        <div class="field"><label class="label">نوع انگلیسی</label><input value="\${esc(p.type.en)}" oninput="data.products[\${i}].type.en=this.value"></div>
-        <div class="field"><label class="label">نوع فارسی</label><input value="\${esc(p.type.fa)}" oninput="data.products[\${i}].type.fa=this.value"></div>
-        <div class="field full"><label class="label">لینک فعال</label><input dir="ltr" value="\${esc(p.url)}" oninput="data.products[\${i}].url=this.value"></div>
-      </div>
-    </div>\`).join('');
+  box.innerHTML=data.products.map(function(p,i){
+    return '<div class="product">'+
+      '<div class="product-head"><b>محصول '+String(i+1).padStart(2,'0')+'</b>'+
+      '<div class="product-actions">'+
+      '<button class="mini" type="button" title="بالا" onclick="moveProduct('+i+',-1)">↑</button>'+
+      '<button class="mini" type="button" title="پایین" onclick="moveProduct('+i+',1)">↓</button>'+
+      '<button class="mini" type="button" title="حذف" onclick="deleteProduct('+i+')">×</button>'+
+      '</div></div>'+
+      '<div class="grid2">'+
+      '<div class="field"><label class="label">عنوان انگلیسی</label><input value="'+esc(p.title.en)+'" oninput="data.products['+i+'].title.en=this.value"></div>'+
+      '<div class="field"><label class="label">عنوان فارسی</label><input value="'+esc(p.title.fa)+'" oninput="data.products['+i+'].title.fa=this.value"></div>'+
+      '<div class="field"><label class="label">سازمان انگلیسی</label><input value="'+esc(p.org.en)+'" oninput="data.products['+i+'].org.en=this.value"></div>'+
+      '<div class="field"><label class="label">سازمان فارسی</label><input value="'+esc(p.org.fa)+'" oninput="data.products['+i+'].org.fa=this.value"></div>'+
+      '<div class="field"><label class="label">نوع انگلیسی</label><input value="'+esc(p.type.en)+'" oninput="data.products['+i+'].type.en=this.value"></div>'+
+      '<div class="field"><label class="label">نوع فارسی</label><input value="'+esc(p.type.fa)+'" oninput="data.products['+i+'].type.fa=this.value"></div>'+
+      '<div class="field full"><label class="label">لینک فعال</label><input dir="ltr" value="'+esc(p.url)+'" oninput="data.products['+i+'].url=this.value"></div>'+
+      '</div></div>';
+  }).join('');
 }
 function addProduct(){
   data.products.push({title:{en:'New Product',fa:'محصول جدید'},org:{en:'Organization',fa:'سازمان'},type:{en:'Digital Product',fa:'محصول دیجیتال'},url:'https://'});
-  renderProducts();window.scrollTo({top:document.getElementById('products').lastElementChild.offsetTop-100,behavior:'smooth'});
+  renderProducts();
+  setTimeout(function(){
+    const last=document.getElementById('products').lastElementChild;
+    if(last)window.scrollTo({top:last.offsetTop-100,behavior:'smooth'});
+  },0);
 }
-function deleteProduct(i){if(confirm('این محصول از فهرست حذف شود؟')){data.products.splice(i,1);renderProducts()}}
-function moveProduct(i,d){const j=i+d;if(j<0||j>=data.products.length)return;[data.products[i],data.products[j]]=[data.products[j],data.products[i]];renderProducts()}
+function deleteProduct(i){
+  if(confirm('این محصول از فهرست حذف شود؟')){
+    data.products.splice(i,1);
+    renderProducts();
+  }
+}
+function moveProduct(i,d){
+  const j=i+d;
+  if(j<0||j>=data.products.length)return;
+  const temp=data.products[i];
+  data.products[i]=data.products[j];
+  data.products[j]=temp;
+  renderProducts();
+}
 
 function readForm(){
   data.hero.title={en:v('heroTitleEn'),fa:v('heroTitleFa')};
@@ -195,28 +214,44 @@ function readForm(){
   data.about.title={en:v('aboutTitleEn'),fa:v('aboutTitleFa')};
   data.about.p1={en:v('aboutP1En'),fa:v('aboutP1Fa')};
   data.about.p2={en:v('aboutP2En'),fa:v('aboutP2Fa')};
-  data.contact.email=v('email');data.contact.scholar=v('scholar');
+  data.contact.email=v('email');
+  data.contact.scholar=v('scholar');
 }
-
 function utf8b64(str){return btoa(unescape(encodeURIComponent(str)))}
+
 async function saveContent(){
   if(!token||!sha||!data){showStatus('ابتدا به GitHub متصل شو.','bad');return}
   readForm();
-  const btn=document.getElementById('saveBtn');btn.disabled=true;btn.textContent='در حال ذخیره…';
+  const btn=document.getElementById('saveBtn');
+  btn.disabled=true;btn.textContent='در حال ذخیره…';
   showStatus('در حال ثبت تغییرات در GitHub…','info');
   try{
-    const body={message:'Update website content from admin panel',content:utf8b64(JSON.stringify(data,null,2)),sha,branch:'main'};
+    const body={
+      message:'Update website content from admin panel',
+      content:utf8b64(JSON.stringify(data,null,2)),
+      sha:sha,
+      branch:'main'
+    };
     const res=await fetch('https://api.github.com/repos/'+owner+'/'+repo+'/contents/'+path,{
       method:'PUT',
-      headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},
+      headers:{
+        Authorization:'Bearer '+token,
+        Accept:'application/vnd.github+json',
+        'Content-Type':'application/json',
+        'X-GitHub-Api-Version':'2022-11-28'
+      },
       body:JSON.stringify(body)
     });
     const out=await res.json();
     if(!res.ok) throw new Error(out.message||('GitHub save failed ('+res.status+')'));
     sha=out.content.sha;
     showStatus('ذخیره شد ✅ GitHub Pages معمولاً طی چند دقیقه نسخه جدید را منتشر می‌کند.','ok');
-  }catch(err){showStatus('ذخیره انجام نشد: '+err.message,'bad')}
-  finally{btn.disabled=false;btn.textContent='ذخیره و انتشار تغییرات'}
+  }catch(err){
+    showStatus('ذخیره انجام نشد: '+err.message,'bad');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='ذخیره و انتشار تغییرات';
+  }
 }
 
 const saved=sessionStorage.getItem('hb-admin-token');
