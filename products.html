@@ -1,0 +1,20 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Products | Dr. Hasan Boudlaie</title><link rel="stylesheet" href="site.css"></head><body>
+<header><div class="wrap nav">
+<a class="brand" href="index.html"><span class="mark">HB</span><b data-en="Dr. Hasan Boudlaie" data-fa="دکتر حسن بودلایی">Dr. Hasan Boudlaie</b></a>
+<nav class="navlinks">
+<a href="index.html"  data-en="Home" data-fa="خانه">Home</a>
+<a href="products.html" class="active" data-en="Products" data-fa="محصولات">Products</a>
+<a href="advisory.html"  data-en="Advisory" data-fa="مشاوره">Advisory</a>
+<a href="about.html"  data-en="About" data-fa="درباره من">About</a>
+<a href="research.html"  data-en="Research" data-fa="پژوهش">Research</a>
+</nav>
+<div class="actions"><div class="lang"><button data-lang="en" onclick="setLang('en')">EN</button><button data-lang="fa" onclick="setLang('fa')">FA</button></div><a class="contact" href="contact.html" data-en="Contact" data-fa="تماس">Contact</a></div>
+</div></header>
+<main><section class="page-hero"><div class="wrap"><div class="eyebrow" data-en="Selected work" data-fa="نمونه کارها">Selected work</div><h1 data-en="Products & Applications" data-fa="محصولات و اپلیکیشن‌ها">Products & Applications</h1><p data-en="Live management products built around real organizational challenges." data-fa="محصولات مدیریتی زنده که بر مبنای مسائل واقعی سازمانی طراحی شده‌اند.">Live management products built around real organizational challenges.</p></div></section>
+<section class="section"><div class="wrap"><div id="productsList" class="products-list"></div></div></section></main>
+<footer><div class="wrap footer"><div><b data-en="Dr. Hasan Boudlaie" data-fa="دکتر حسن بودلایی">Dr. Hasan Boudlaie</b><small data-en="Management Consultant & Leadership Advisor" data-fa="مشاور مدیریت و راهبر توسعه رهبری">Management Consultant & Leadership Advisor</small></div><div class="footer-links"><a href="index.html" data-en="Home" data-fa="خانه">Home</a><a href="contact.html" data-en="Contact" data-fa="تماس">Contact</a><a href="admin.html" data-en="Admin" data-fa="مدیریت">Admin</a></div></div></footer>
+<script>
+window.renderDynamic=function(d,lang){
+ const box=document.getElementById('productsList'); if(!d||!d.products)return;
+ box.innerHTML=d.products.map((p,i)=>'<a class="product-row" href="'+esc(p.url)+'" target="_blank" rel="noopener"><div class="num">'+String(i+1).padStart(2,'0')+'</div><div><h3>'+esc((p.title&&p.title[lang])||'')+'</h3><div class="org">'+esc((p.org&&p.org[lang])||'')+'</div></div><div class="type">'+esc((p.type&&p.type[lang])||'')+'</div><div class="circle">↗</div></a>').join('');
+};</script><script src="site.js"></script></body></html>
