@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5fafb">
-<title>OKR Implementation System | Public App</title>
+<title>سامانه استقرار OKR | بنادر و فرودگاه‌های کیش</title>
 <meta name="description" content="سیستم تعاملی استقرار و مدیریت OKR؛ راهبرد، Company OKRs، Group OKRs، Check-in و Review.">
 <style>
 :root{
-  --navy:#0b1f3a;--navy2:#163653;--teal:#22b8b0;--teal2:#67cdd1;--cyan:#dff5f7;
+  --navy:#1e3d6c;--navy2:#24578a;--teal:#24578a;--teal2:#3b78a9;--cyan:#edf4fa;
   --orange:#ff875f;--green:#2fb992;--red:#e45d67;--amber:#e9aa3c;
   --bg:#f5fafb;--paper:#fff;--muted:#677887;--line:#d9ecef;--soft:#edf7f8;
   --shadow:0 18px 45px rgba(11,31,58,.07);--r:18px;
@@ -168,6 +168,13 @@ tr:last-child td{border-bottom:0}
 .demo-banner{border:1px solid #bee6e9;background:linear-gradient(135deg,#eefafb,#fff);border-radius:15px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.demo-banner b{font-size:10px}.demo-banner span{font-size:8px;color:var(--muted)}
 @media(max-width:700px){.logo-editor{grid-template-columns:1fr}.kpi-snapshot{grid-template-columns:1fr 50px 50px 50px 70px}.demo-banner{display:block}.demo-banner .btn{margin-top:8px}}
 
+
+.source-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:8px;font-weight:900;margin-top:7px}
+.source-badge.real{background:#e8f1f9;color:#1e3d6c;border:1px solid #c7dbea}
+.source-badge.demo{background:#fff5df;color:#98670f;border:1px solid #f1dca8}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.value-pill{border:1px solid var(--line);background:#f8fbfd;border-radius:12px;padding:10px;font-size:9px;font-weight:800}
+.unit-origin{font-size:8px;color:#7b8993;margin:7px 0 2px}.unit-origin b{color:var(--navy)}
+@media(max-width:700px){.values-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -175,9 +182,9 @@ tr:last-child td{border-bottom:0}
 <section class="auth-screen" id="authScreen">
   <div class="auth-card">
     <div class="auth-side">
-      <div class="auth-logo">OKR</div>
-      <h1>OKR Implementation System</h1>
-      <p>یک workspace مرحله‌به‌مرحله برای Prepare → Introduce → Set up → Announce → Educate → Create → Integrate → Learn & Repeat.</p>
+      <div class="auth-logo" style="width:150px;height:72px;background:#fff;padding:9px;border-radius:16px"><img src="https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg" alt="لوگوی شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش" style="width:100%;height:100%;object-fit:contain"></div>
+      <h1>سامانه استقرار و مدیریت OKR</h1>
+      <p>شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش · Strategy Execution Workspace<br>Prepare → Introduce → Set up → Announce → Educate → Create → Integrate → Learn & Repeat</p>
       <div class="module-note" style="margin-top:22px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#d9e7ed">Public demo · داده‌های هر کاربر روی همین browser نگهداری می‌شود.</div>
     </div>
     <div class="auth-main">
@@ -186,7 +193,7 @@ tr:last-child td{border-bottom:0}
       <div class="fields">
         <div class="field"><label>نام و نام خانوادگی</label><input id="loginName" autocomplete="name" placeholder="نام شما"></div>
         <div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
-        <div class="field"><label>سازمان</label><input id="loginOrg" placeholder="Organization"></div>
+        <div class="field"><label>سازمان</label><input id="loginOrg" value="شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش" placeholder="Organization"></div>
         <div class="field"><label>Role</label><select id="loginRole"><option>Executive / Sponsor</option><option>OKR Ambassador</option><option>Manager</option><option>Team Member</option><option>Consultant / Facilitator</option></select></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn teal" id="loginBtn">ورود به Workspace</button><button class="btn" id="guestLoginBtn">Demo Login</button></div>
@@ -221,7 +228,7 @@ tr:last-child td{border-bottom:0}
       <div class="top-actions">
         <button class="btn mobile-menu" id="menuBtn">☰</button>
 <select class="mobile-stage" id="mobileStage"><option value="dashboard">داشبورد</option><option value="setup">1. Prepare</option><option value="introduce">2. Introduce</option><option value="strategy">3. Set up</option><option value="announce">4. Announce</option><option value="educate">5. Educate</option><option value="teams">6. Create</option><option value="checkins">7. Integrate</option><option value="review">8. Learn & Repeat</option></select>
-        <button class="btn optional" id="demoBtn">داده نمونه</button>
+        <button class="btn optional" id="demoBtn">داده نمونه کیش</button>
         <button class="btn optional" id="exportBtn">Export JSON</button>
         <button class="btn optional" id="importBtn">Import</button>
         <button class="btn primary" id="saveBtn">ذخیره</button>
@@ -232,8 +239,8 @@ tr:last-child td{border-bottom:0}
 
     <div class="content">
       <section class="view active" id="view-dashboard">
-        <div class="demo-banner"><div><b>Demo Workspace فعال است</b><span>تمام مقادیر، statusها، trendها و check-inها نمونه‌اند و می‌توانید همه را ویرایش کنید.</span></div><button class="btn" id="refreshDemoBtn">بازنشانی داده نمونه</button></div>
-        <div class="page-head"><div><div class="eyebrow">EXECUTION OVERVIEW</div><h1>داشبورد استقرار OKR</h1><p>یک نمای مدیریتی از میزان پیشرفت، تعداد Objectiveها، Key Resultها و وضعیت آخرین Check-inها.</p></div><button class="btn teal no-print" data-go-btn="checkins">ثبت Check-in جدید</button></div>
+        <div class="demo-banner"><div><b>نسخه Kish Ports & Airports فعال است</b><span>Vision، Mission، Values، Ultimate Goal، ۶ Strategic Pillar، ۱۳ Objective و Targetهای سطح شرکت از سند راهبردی وارد شده‌اند؛ Previous/Current values و داده‌های معاونت‌ها/مدیریت‌ها/ادارات برای نمایش کامل نرم‌افزار، نمونه اجرایی و قابل ویرایش‌اند.</span></div><button class="btn" id="refreshDemoBtn">بازنشانی نسخه نمونه کیش</button></div>
+        <div class="page-head"><div><div class="eyebrow">EXECUTION OVERVIEW</div><h1>داشبورد استقرار OKR · بنادر و فرودگاه‌های کیش</h1><p>نمای مدیریتی از ۱۳ هدف راهبردی، Key Results، KPI Health و وضعیت اجرای نمونه در سطوح سازمانی.</p></div><button class="btn teal no-print" data-go-btn="checkins">ثبت Check-in جدید</button></div>
         <div class="grid grid-4" id="stats"></div>
 
         <div class="grid grid-2" style="margin-top:16px">
@@ -257,13 +264,13 @@ tr:last-child td{border-bottom:0}
         <div class="page-head"><div><div class="eyebrow">STEP 1 · PREPARE</div><h1>آماده‌سازی و Governance</h1><p>Ambassador، participating groups، cadenceها و قواعد rollout را مشخص کنید.</p></div><button class="btn primary" data-go-btn="introduce">مرحله بعد ←</button></div>
         
         <div class="card" style="margin-bottom:16px">
-          <div class="section-title"><div><h2>لوگوی سازمان</h2><p>در تمام صفحات App نمایش داده می‌شود و قابل تغییر است.</p></div></div>
+          <div class="section-title"><div><h2>لوگوی سازمان</h2><p>لوگوی رسمی شرکت به‌صورت پیش‌فرض در تمام صفحات App نمایش داده می‌شود و در صورت نیاز قابل تغییر است.</p></div></div>
           <div class="logo-editor">
             <div class="logo-preview"><img id="logoPreview" alt="Company logo preview"></div>
             <div>
               <div class="field"><label>Upload logo</label><input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></div>
               <div class="hint" style="margin-top:6px">برای حجم مناسب Local Storage، تصویر به‌صورت خودکار resize می‌شود.</div>
-              <div style="margin-top:9px"><button class="btn" id="resetLogoBtn">بازگرداندن لوگوی نمونه</button></div>
+              <div style="margin-top:9px"><button class="btn" id="resetLogoBtn">بازگرداندن لوگوی رسمی شرکت</button></div>
             </div>
           </div>
         </div>
@@ -352,11 +359,29 @@ tr:last-child td{border-bottom:0}
       </section>
 
 <section class="view" id="view-strategy">
-        <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP</div><h1>Ultimate Goal، Strategic Pillars و KPIs</h1><p>ابتدا strategy context را روشن کنید و سپس Company OKRs را بسازید.</p></div><div class="step-actions"><button class="btn" data-go-btn="company">Company OKRs</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP</div><h1>Vision، Mission، Values و Strategy Architecture</h1><p>معماری واقعی سطح شرکت از سند راهبردی تحول و پیشرفت بارگذاری شده است؛ همه فیلدها برای refinement قابل ویرایش‌اند.</p><span class="source-badge real">● REAL STRATEGY DATA · سند راهبردی شرکت</span></div><div class="step-actions"><button class="btn" data-go-btn="company">Company OKRs</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
 
-        <div class="card">
-          <div class="section-title"><div><h2>Ultimate Goal</h2><p>جهت‌گیری بلندمدت؛ ترکیبی از mission و vision</p></div></div>
-          <div class="field"><textarea data-bind="strategy.ultimateGoal" placeholder="Ultimate Goal سازمان را اینجا بنویسید..."></textarea></div>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="section-title"><div><h2>Vision 1410</h2><p>چشم‌انداز رسمی شرکت</p></div></div>
+            <div class="field"><textarea data-bind="strategy.vision" style="min-height:170px"></textarea></div>
+          </div>
+          <div class="card">
+            <div class="section-title"><div><h2>Mission</h2><p>مأموریت رسمی شرکت</p></div></div>
+            <div class="field"><textarea data-bind="strategy.mission" style="min-height:170px"></textarea></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="section-title"><div><h2>Core Values</h2><p>شش ارزش بنیادین مصوب در سند</p></div></div>
+          <div class="values-grid">
+            <div class="value-pill">تعهد به کیفیت و بهره‌وری</div><div class="value-pill">مشتری‌مداری و پاسخ‌گویی سازمانی</div><div class="value-pill">نوآوری و تحول دیجیتال</div>
+            <div class="value-pill">توسعه پایدار و مسئولیت اجتماعی</div><div class="value-pill">همکاری راهبردی و مشارکت‌پذیری</div><div class="value-pill">حرفه‌ای‌گرایی، اخلاق‌مداری و یادگیری مستمر</div>
+          </div>
+          <div class="field" style="margin-top:12px"><label>نسخه قابل ویرایش Values</label><textarea data-bind="strategy.valuesText"></textarea></div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="section-title"><div><h2>Ultimate Goal / North Star</h2><p>هدف نهایی واقعی در معماری Perdoo سند</p></div></div>
+          <div class="field"><textarea data-bind="strategy.ultimateGoal"></textarea></div>
         </div>
 
         <div class="card" style="margin-top:16px">
@@ -371,12 +396,12 @@ tr:last-child td{border-bottom:0}
       </section>
 
       <section class="view" id="view-company">
-        <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP · COMPANY LEVEL</div><h1>Company OKRs</h1><p>Company OKRs strategy را به outcomes سالانه / high-level تبدیل می‌کنند.</p></div><div class="step-actions"><button class="btn teal no-print" data-action="add-company-okr">+ Objective جدید</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP · COMPANY LEVEL</div><h1>۱۳ هدف راهبردی و Key Results سطح شرکت</h1><p>Objectiveها و Targetهای این بخش از سند راهبردی شرکت آمده‌اند؛ Baseline / Current / Status برای فعال‌سازی دمو نمونه‌اند و قابل ویرایش.</p><span class="source-badge real">● REAL OBJECTIVES & TARGETS</span></div><div class="step-actions"><button class="btn teal no-print" data-action="add-company-okr">+ Objective جدید</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
         <div id="companyOkrs" class="list-stack"></div>
       </section>
 
       <section class="view" id="view-teams">
-        <div class="page-head"><div><div class="eyebrow">STEP 6 · CREATE</div><h1>Group KPIs، Group OKRs و Alignment</h1><p>تیم‌ها business-as-usual KPIs و quarterly OKRs را تعریف می‌کنند، interdependencyها را مشخص و approval می‌گیرند.</p></div><div class="step-actions"><button class="btn teal no-print" data-action="add-team">+ گروه جدید</button><button class="btn primary" data-go-btn="checkins">مرحله بعد ←</button></div></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 6 · CREATE</div><h1>آبشاری‌سازی در معاونت‌ها، مدیریت‌ها و ادارات</h1><p>نام و لایه سازمانی واحدها بر مبنای ساختار مندرج در سند است؛ KPI/OKR/Current valueهای واحدی، نمونه اجرایی برای نمایش همه حالت‌ها هستند و کاملاً قابل ویرایش‌اند.</p><span class="source-badge demo">◆ SAMPLE OPERATIONAL DATA · قابل ویرایش</span></div><div class="step-actions"><button class="btn teal no-print" data-action="add-team">+ گروه جدید</button><button class="btn primary" data-go-btn="checkins">مرحله بعد ←</button></div></div>
         <div id="teams" class="list-stack"></div>
       </section>
 
@@ -437,11 +462,10 @@ tr:last-child td{border-bottom:0}
 const AUTH='hb_okr_public_auth_v2';
 let auth=null;try{auth=JSON.parse(localStorage.getItem(AUTH)||'null')}catch(e){}
 function hashKey(v){let h=0;for(let i=0;i<v.length;i++){h=((h<<5)-h)+v.charCodeAt(i);h|=0}return Math.abs(h).toString(36)}
-let KEY='hb_okr_system_v2_'+hashKey((auth&&auth.email?auth.email:'guest').toLowerCase());
+let KEY='hb_okr_kish_v1_'+hashKey((auth&&auth.email?auth.email:'guest').toLowerCase());
 const clone=o=>JSON.parse(JSON.stringify(o));
 function sampleLogo(){
-  const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="38" fill="#0b1f3a"/><path d="M38 119V61h20l32 35 32-35h20v58h-19V88l-33 36-33-36v31z" fill="#22b8b0"/><circle cx="90" cy="90" r="67" fill="none" stroke="#fff" stroke-opacity=".23" stroke-width="4"/></svg>';
-  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)
+  return 'https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg'
 }
 function isFilled(v){return String(v??'').trim()!==''}
 function kpiTrend(k){
@@ -461,7 +485,7 @@ const emptyState={
   announce:{date:'',allHandsDate:'',ceoMessage:'',channels:'',strategyShared:'',deadlinesShared:'',faqReady:'',emailSent:'',notes:''},
   educate:{executives:'Not started',managers:'Not started',teamMembers:'Not started',deadline:'',notes:'',resource1:'',resource2:'',resource3:''},
   integrate:{oneToOneCadence:'',nextOneToOne:'',oneToOneNotes:'',nextLeadershipReview:'',health:'',leadershipNotes:'',directReports:[]},
-  strategy:{ultimateGoal:'',pillars:[],kpis:[]},
+  strategy:{vision:'',mission:'',valuesText:'',ultimateGoal:'',pillars:[],kpis:[]},
   companyOkrs:[],
   teams:[],
   review:{allHands:'',lessons:'',nextFocus:''}
@@ -584,13 +608,15 @@ function renderTeamKpis(t,ti){
 }
 function renderTeams(){
   const box=document.getElementById('teams');
-  if(!state.teams.length){box.innerHTML='<div class="empty">هنوز Group / Team تعریف نشده است.</div>';return}
+  if(!state.teams.length){box.innerHTML='<div class="empty">هنوز Group / Unit تعریف نشده است.</div>';return}
   box.innerHTML=state.teams.map((t,ti)=>'<div class="team-box">'+
-    '<div class="team-title"><input data-team="'+ti+'" data-f="name" value="'+esc(t.name)+'" placeholder="نام گروه / واحد"><input data-team="'+ti+'" data-f="lead" value="'+esc(t.lead)+'" placeholder="Team Lead"><button class="icon-btn" data-del-team="'+ti+'">×</button></div>'+
-    '<div class="team-meta"><div class="field"><label>Core responsibilities</label><input data-team="'+ti+'" data-f="responsibilities" value="'+esc(t.responsibilities)+'" placeholder="مسئولیت‌های اصلی"></div><div class="field"><label>Interdependencies / Notes</label><input data-team="'+ti+'" data-f="interdependencies" value="'+esc(t.interdependencies)+'" placeholder="وابستگی به سایر تیم‌ها / منابع"></div></div>'+
-    '<div class="section-title"><div><h2 style="font-size:13px">Group KPIs</h2><p>Business-as-usual health indicators</p></div><button class="btn no-print" data-add-team-kpi="'+ti+'">+ KPI</button></div>'+renderTeamKpis(t,ti)+
-    '<div class="section-title" style="margin-top:14px"><div><h2 style="font-size:13px">Group OKRs</h2><p>Quarterly outcomes + manager approval</p></div><button class="btn no-print" data-add-team-okr="'+ti+'">+ Objective</button></div>'+
-    '<div class="list-stack">'+((t.okrs||[]).length?(t.okrs||[]).map((o,oi)=>objectiveHtml(o,oi,'team:'+ti)).join(''):'<div class="empty">برای این گروه هنوز OKR ثبت نشده است.</div>')+'</div>'+
+    '<div class="team-title"><input data-team="'+ti+'" data-f="name" value="'+esc(t.name)+'" placeholder="نام معاونت / مدیریت / اداره"><input data-team="'+ti+'" data-f="lead" value="'+esc(t.lead)+'" placeholder="Owner / مسئول"><button class="icon-btn" data-del-team="'+ti+'">×</button></div>'+
+    '<div class="unit-origin"><b>لایه سازمانی:</b> '+esc(t.unitType||'واحد')+' · <b>واحد بالادست:</b> '+esc(t.parent||'—')+' · داده عملکردی این بخش: نمونه اجرایی</div>'+
+    '<div class="fields" style="grid-template-columns:1fr 1fr;margin-top:10px"><div class="field"><label>Unit type</label><input data-team="'+ti+'" data-f="unitType" value="'+esc(t.unitType||'')+'"></div><div class="field"><label>Parent unit</label><input data-team="'+ti+'" data-f="parent" value="'+esc(t.parent||'')+'"></div></div>'+
+    '<div class="team-meta"><div class="field"><label>Core responsibilities</label><input data-team="'+ti+'" data-f="responsibilities" value="'+esc(t.responsibilities)+'"></div><div class="field"><label>Interdependencies / Notes</label><input data-team="'+ti+'" data-f="interdependencies" value="'+esc(t.interdependencies)+'"></div></div>'+
+    '<div class="section-title"><div><h2 style="font-size:13px">Unit KPIs</h2><p>Business-as-usual indicators · sample values</p></div><button class="btn no-print" data-add-team-kpi="'+ti+'">+ KPI</button></div>'+renderTeamKpis(t,ti)+
+    '<div class="section-title" style="margin-top:14px"><div><h2 style="font-size:13px">Unit OKRs</h2><p>Sample outcomes + manager approval</p></div><button class="btn no-print" data-add-team-okr="'+ti+'">+ Objective</button></div>'+
+    '<div class="list-stack">'+((t.okrs||[]).length?(t.okrs||[]).map((o,oi)=>objectiveHtml(o,oi,'team:'+ti)).join(''):'<div class="empty">برای این واحد هنوز OKR ثبت نشده است.</div>')+'</div>'+
   '</div>').join('');
 }
 function blankObjective(){return {id:id(),objective:'',owner:'',status:'draft',why:'',urgent:'',krs:[]}}
@@ -607,7 +633,7 @@ document.addEventListener('click',e=>{
     if(a.dataset.action==='add-pillar'){state.strategy.pillars.push({id:id(),title:'',description:''});renderPillars();save(true)}
     if(a.dataset.action==='add-kpi'){state.strategy.kpis.push({id:id(),name:'',pillar:'',owner:'',previous:'',current:'',target:'',direction:'up',unit:''});renderKpis();save(true)}
     if(a.dataset.action==='add-company-okr'){state.companyOkrs.push(blankObjective());renderCompany();save(true)}
-    if(a.dataset.action==='add-team'){state.teams.push({id:id(),name:'',lead:'',responsibilities:'',interdependencies:'',kpis:[],okrs:[]});renderTeams();save(true)}
+    if(a.dataset.action==='add-team'){state.teams.push({id:id(),name:'',unitType:'',parent:'',lead:'',responsibilities:'',interdependencies:'',kpis:[],okrs:[]});renderTeams();save(true)}
   }
   if(e.target.matches('[data-del-pillar]')){state.strategy.pillars.splice(+e.target.dataset.delPillar,1);renderPillars();renderKpis();save(true)}
   if(e.target.matches('[data-del-kpi]')){state.strategy.kpis.splice(+e.target.dataset.delKpi,1);renderKpis();save(true)}
@@ -763,78 +789,201 @@ document.getElementById('importFile').addEventListener('change',e=>{if(e.target.
 document.getElementById('resetBtn').addEventListener('click',()=>{if(confirm('همه داده‌های این مرورگر پاک شود؟')){state=clone(emptyState);localStorage.removeItem(KEY);renderAll();bindStatic();toast('داده‌ها پاک شدند')}});
 
 function makeDemoState(){
- const now=new Date(),d=(days)=>{const x=new Date(now);x.setDate(x.getDate()+days);return x.toISOString().slice(0,10)},iso=(days)=>{const x=new Date(now);x.setDate(x.getDate()+days);return x.toISOString()};
+ const logo=sampleLogo(),now=new Date('2026-10-07T12:00:00+03:30');
+ const d=(days)=>{const x=new Date(now);x.setDate(x.getDate()+days);return x.toISOString().slice(0,10)};
+ const iso=(days)=>{const x=new Date(now);x.setDate(x.getDate()+days);return x.toISOString()};
+ const kr=(idv,text,baseline,target,current,unit,owner,confidence,note,days)=>({id:idv,text,baseline,target,current,unit,owner,confidence,lastNote:note,lastUpdate:iso(days)});
+ const okr=(idv,objective,owner,status,why,urgent,krs)=>({id:idv,objective,owner,status,why,urgent,krs});
+ const kpi=(idv,name,pillar,owner,previous,current,target,direction,unit)=>({id:idv,name,pillar,owner,previous,current,target,direction,unit});
+ const ukpi=(idv,name,owner,previous,current,target,direction,unit)=>({id:idv,name,owner,previous,current,target,direction,unit});
+ const u=(idv,name,unitType,parent,lead,responsibilities,interdependencies,kpis,okrs)=>({id:idv,name,unitType,parent,lead,responsibilities,interdependencies,kpis,okrs});
+ const vision='تا سال ۱۴۱۰، شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش با حفظ جایگاه برتر خود در سطح ملی، به عنوان الگوی تخصصی در حوزه حمل‌ونقل و لجستیک هوایی و دریایی، در پی آن است که دامنه اثربخشی، نوآوری و اعتبار خود را در سطح منطقه‌ای نیز گسترش دهد و به یکی از سازمان‌های خوشنام، پیشرو و قابل اتکای این حوزه بدل شود. این چشم‌انداز با اتکاء به سرمایه انسانی توانمند، ارتقای زیرساخت‌ها، توسعه پایدار و تعامل هدفمند با ذی‌نفعان دنبال می‌شود؛ به گونه‌ای که شرکت بتواند به عنوان نیروی محرکه‌ای در ارتقای برند جزیره کیش، بهبود تجربه ذی‌نفعان و شکل‌دهی به الگوهای جدید در توسعه، مدیریت و بهره‌برداری بندری و فرودگاهی ایفای نقش کند.';
+ const mission='شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش، با بهره‌گیری از موقعیت استراتژیک جزیره کیش و تعامل سازنده با نهادهای داخلی و بین‌المللی، مأموریت دارد زیرساخت‌ها و خدمات حمل‌ونقل هوایی و دریایی کیش را به صورت ایمن، کارآمد و نوآورانه مدیریت و توسعه دهد. این شرکت متعهد به ارتقای کیفیت خدمات، رعایت استانداردهای بین‌المللی ICAO و IMO و بهره‌گیری از فناوری‌های روز و هوشمندسازی برای پاسخ‌گویی مؤثر به نیازهای ذی‌نفعان است. در چارچوب این مأموریت، شرکت با تکیه بر سرمایه انسانی متخصص، به توسعه مدل‌های پایدار درآمدزایی، بهینه‌سازی فرآیندها و جذب مشارکت‌های راهبردی می‌پردازد تا ضمن ایجاد ارزش افزوده برای جزیره کیش، خدمات رقابت‌پذیر و تجربه‌ای رضایت‌بخش برای کاربران، سرمایه‌گذاران و شرکای تجاری فراهم آورد.';
+ const values='تعهد به کیفیت و بهره‌وری\nمشتری‌مداری و پاسخ‌گویی سازمانی\nنوآوری و تحول دیجیتال\nتوسعه پایدار و مسئولیت اجتماعی\nهمکاری راهبردی و مشارکت‌پذیری\nحرفه‌ای‌گرایی، اخلاق‌مداری و یادگیری مستمر';
+ const ultimate='تبدیل‌شدن به سازمانی پیشرو، ایمن و نوآور در مدیریت حمل‌ونقل هوایی و دریایی که به‌عنوان دروازه بین‌المللی جزیره کیش، الگویی برای توسعه پایدار، سرمایه‌گذاری راهبردی و ارتقاء برند ملی و منطقه‌ای ایران باشد.';
+ const pillars=[
+  {id:'p1',title:'ایمنی و کیفیت | Safety & Quality',description:'ارتقاء مستمر استانداردهای ایمنی، کیفیت خدمات و انطباق با مقررات بین‌المللی ICAO، IMO و ISO.'},
+  {id:'p2',title:'بهره‌وری و مدیریت هزینه | Efficiency & Cost Optimization',description:'بهبود فرآیندها، کاهش هزینه‌های عملیاتی و افزایش بهره‌وری منابع انسانی و تجهیزاتی.'},
+  {id:'p3',title:'نوآوری و هوشمندسازی | Innovation & Digitalization',description:'توسعه خدمات نوآورانه، فناوری‌های دیجیتال و هوشمندسازی عملیات بندری و فرودگاهی.'},
+  {id:'p4',title:'سرمایه‌گذاری و توسعه پایدار | Investment & Sustainability',description:'جذب سرمایه‌گذاری راهبردی، PPP و حرکت به سمت درآمدهای پایدار و متنوع.'},
+  {id:'p5',title:'سرمایه انسانی و فرهنگ سازمانی | Human Capital & Culture',description:'ارتقاء شایستگی‌های حرفه‌ای، اخلاق، شایسته‌سالاری و یادگیری مستمر.'},
+  {id:'p6',title:'جایگاه و برند ملی/منطقه‌ای | Positioning & Branding',description:'تقویت اعتبار شرکت در سطح ملی و منطقه‌ای و ایفای نقش پیشرو در حمل‌ونقل و لجستیک.'}
+ ];
+ const pkpis=[
+  kpi('pk1','Accident Rate','ایمنی و کیفیت | Safety & Quality','اداره کل فرودگاه / بنادر',3.0,2.1,2.3,'down','per 1M ops'),
+  kpi('pk2','RFFS Response Time','ایمنی و کیفیت | Safety & Quality','معاونت عملیات هوانوردی',4.2,3.8,3.5,'down','min'),
+  kpi('pk3','Compliance Closure Rate','ایمنی و کیفیت | Safety & Quality','بازرسی / HSE',79,84,85,'up','%'),
+  kpi('pk4','Operational Productivity','بهره‌وری و مدیریت هزینه | Efficiency & Cost Optimization','عملیات',720,780,900,'up','ops/FTE'),
+  kpi('pk5','Unit Cost per Operation','بهره‌وری و مدیریت هزینه | Efficiency & Cost Optimization','مدیریت مالی',3720,3500,3200,'down','USD/flight'),
+  kpi('pk6','Resource Utilization Efficiency','بهره‌وری و مدیریت هزینه | Efficiency & Cost Optimization','فنی و مهندسی',57,59,70,'up','%'),
+  kpi('pk7','Digitalization Rate','نوآوری و هوشمندسازی | Innovation & Digitalization','فناوری / عملیات',44,52,55,'up','%'),
+  kpi('pk8','Digital Service Usage','نوآوری و هوشمندسازی | Innovation & Digitalization','فرودگاه / بنادر',41,50,48,'up','%'),
+  kpi('pk9','Service Time Reduction','نوآوری و هوشمندسازی | Innovation & Digitalization','عملیات',11,14,24,'up','%'),
+  kpi('pk10','Infrastructure Investment Volume','سرمایه‌گذاری و توسعه پایدار | Investment & Sustainability','مدیریت عالی',430,620,1000,'up','USD m / 5y'),
+  kpi('pk11','PPP Share','سرمایه‌گذاری و توسعه پایدار | Investment & Sustainability','مالی و قراردادها',34,42,40,'up','%'),
+  kpi('pk12','Non-Aeronautical & Non-Port Revenues Share','سرمایه‌گذاری و توسعه پایدار | Investment & Sustainability','مدیریت مالی',25,27,32,'up','%'),
+  kpi('pk13','Training Hours per Employee','سرمایه انسانی و فرهنگ سازمانی | Human Capital & Culture','مدیریت منابع انسانی',24,32,30,'up','h/employee'),
+  kpi('pk14','Employee Engagement Index','سرمایه انسانی و فرهنگ سازمانی | Human Capital & Culture','مدیریت منابع انسانی',23,27,30,'up','%'),
+  kpi('pk15','Values Alignment Index','سرمایه انسانی و فرهنگ سازمانی | Human Capital & Culture','مدیریت منابع انسانی',49,55,55,'up','%'),
+  kpi('pk16','Customer Satisfaction Index','جایگاه و برند ملی/منطقه‌ای | Positioning & Branding','روابط عمومی / عملیات',71,74,75,'up','/100'),
+  kpi('pk17','Reputation / Brand Index','جایگاه و برند ملی/منطقه‌ای | Positioning & Branding','روابط عمومی',59,62,65,'up','/100'),
+  kpi('pk18','Positive Media Coverage Share','جایگاه و برند ملی/منطقه‌ای | Positioning & Branding','روابط عمومی',52,49,55,'up','%')
+ ];
+ const companyOkrs=[
+  okr('o1','ارتقاء مستمر کیفیت و ایمنی خدمات حمل‌ونقل هوایی و دریایی','مدیریت عالی / واحدهای عملیاتی','active','انطباق با استانداردها و افزایش ایمنی و رضایت ذی‌نفعان','شاخص‌های ایمنی در زمره الزامات Shall سند هستند',[
+   kr('o1k1','کاهش نرخ حادثه به ≤ ۲.۳ در هر یک میلیون پرواز/حرکت',4.2,2.3,2.1,'حادثه/1M','عملیات','on-track','Target واقعی سند؛ Current مقدار نمونه و بهتر از هدف است.',-2),
+   kr('o1k2','کاهش RFFS Response Time به ≤ ۳.۵ دقیقه',5.0,3.5,3.8,'min','عملیات هوانوردی','attention','Current نمونه کمی بالاتر از Target است.',-3),
+   kr('o1k3','بستن ≥ ۸۵٪ Findings ایمنی/کیفی در مهلت مقرر',72,85,84,'%','بازرسی / HSE','attention','نزدیک هدف؛ نیازمند follow-through.',-6),
+   kr('o1k4','پوشش ≥ ۷۰٪ واحدهای عملیاتی با حداقل یک گواهی مدیریتی',45,70,58,'%','مدیریت کیفیت','off-track','نمونه وضعیت عقب‌تر از برنامه.',-18)
+  ]),
+  okr('o2','افزایش بهره‌وری و بهینه‌سازی هزینه‌ها در فرآیندهای سازمانی','معاونت مالی و اداری / عملیات','active','آزادسازی منابع و افزایش کارایی','هزینه و بهره‌وری مستقیماً بر رقابت‌پذیری اثر دارند',[
+   kr('o2k1','دستیابی به حدود ۸۰۰–۱۰۰۰ عملیات به ازای هر کارمند',650,900,780,'ops/FTE','عملیات','attention','Target میانی ۹۰۰ برای نمایش دمو انتخاب شده است.',-4),
+   kr('o2k2','کاهش Unit Cost به ۳۲۰۰ دلار/پرواز',4100,3200,3500,'USD/flight','مدیریت مالی','attention','روند کاهشی مثبت ولی هنوز به هدف نرسیده.',-5),
+   kr('o2k3','حذف/ساده‌سازی حداقل ۱۰٪ فعالیت‌های زائد',2,10,10,'%','بهبود فرآیند','on-track','نمونه حالت مساوی Target.',-1),
+   kr('o2k4','دستیابی به ≥ ۷۰٪ Resource Utilization Efficiency',55,70,59,'%','فنی و مهندسی','off-track','نمونه وضعیت قرمز.',-20)
+  ]),
+  okr('o3','توسعه خدمات نوآورانه و هوشمندسازی عملیات کلیدی','فنی و مهندسی / واحدهای عملیاتی','active','تحول دیجیتال خدمات بندری و فرودگاهی','رقابت منطقه‌ای و تجربه ذی‌نفعان',[
+   kr('o3k1','دستیابی به ۵۵٪ Digitalization Rate',32,55,52,'%','تحول دیجیتال','attention','نزدیک Target واقعی سند.',-3),
+   kr('o3k2','دستیابی به ۴۸٪ Digital Service Usage',28,48,50,'%','خدمات دیجیتال','on-track','نمونه بالاتر از Target.',-2),
+   kr('o3k3','کاهش ۲۴٪ زمان سرویس‌دهی با فناوری',0,24,14,'%','عملیات','off-track','نمونه پایین‌تر از برنامه.',-15),
+   kr('o3k4','دستیابی به Digital Satisfaction = ۶۴/۱۰۰',54,64,64,'/100','خدمات مشتری','on-track','نمونه مساوی Target.',-1)
+  ]),
+  okr('o4','تقویت مدل‌های پایدار درآمدزایی و کاهش وابستگی به منابع سنتی','معاونت مالی و اداری','draft','افزایش تاب‌آوری مالی','تنوع درآمد برای پایداری در شوک‌های تقاضا',[
+   kr('o4k1','افزایش سهم درآمدهای غیرهوانوردی/غیربندری به ۳۲٪',22,32,27,'%','مدیریت مالی','attention','Current نمونه.',-4),
+   kr('o4k2','تأمین مالی حداقل ۴۰٪ پروژه‌های توسعه‌ای از طریق PPP',18,40,42,'%','قراردادها / سرمایه‌گذاری','on-track','نمونه بالاتر از هدف.',-2),
+   kr('o4k3','ایجاد حداقل ۳ منبع جدید و متنوع درآمدی',0,3,1,'source','توسعه کسب‌وکار','off-track','نمونه یک منبع از سه منبع.',-17),
+   kr('o4k4','دستیابی به ۹۶۰ USD/m²/year درآمد تجاری',720,960,860,'USD/m²/y','مدیریت مالی','attention','Target جدول سند استفاده شده است.',-7)
+  ]),
+  okr('o5','جذب و هدایت سرمایه‌گذاری‌های راهبردی در پروژه‌های زیرساختی','مدیریت عالی / مالی و قراردادها','active','تأمین منابع توسعه زیرساخت','پروژه‌های توسعه‌ای نیازمند منابع پایدارند',[
+   kr('o5k1','جذب حداقل ۱ میلیارد دلار سرمایه‌گذاری زیرساختی در ۵ سال',0,1000,620,'USD m','مدیریت عالی','attention','Current نمونه.',-5),
+   kr('o5k2','اجرای حداقل ۴۰٪ پروژه‌های توسعه‌ای با مدل PPP',20,40,40,'%','حقوقی و قراردادها','on-track','نمونه مساوی Target.',-1),
+   kr('o5k3','استفاده از حداقل ۳ منبع متنوع تأمین مالی',1,3,2,'source','مدیریت مالی','attention','دو منبع از سه منبع.',-4),
+   kr('o5k4','کاهش Project Kick-off Time به ≤ ۲۴ ماه',30,24,28,'month','فنی / قراردادها','off-track','نمونه بالاتر از حد هدف.',-19)
+  ]),
+  okr('o6','حفظ و تقویت جایگاه شرکت در سطح ملی و ارتقاء اعتبار منطقه‌ای','مدیریت عالی / روابط عمومی','closed','تثبیت جایگاه ملی و توسعه اعتبار منطقه‌ای','برند سازمان و اعتبار صنعت حمل‌ونقل',[
+   kr('o6k1','دستیابی به Top 3 ملی و ورود به رتبه‌بندی معتبر منطقه‌ای',6,3,3,'rank','مدیریت عالی','on-track','برای دمو، rank=3 به‌عنوان تحقق Target نمایش داده شده.',-2),
+   kr('o6k2','دستیابی به Stakeholder Satisfaction ≥ ۸۰/۱۰۰',72,80,77,'/100','روابط عمومی','attention','Current نمونه.',-4),
+   kr('o6k3','دستیابی به ≥ ۶۵٪ Positive Media Coverage',52,65,68,'%','روابط عمومی','on-track','نمونه بالاتر از هدف.',-1),
+   kr('o6k4','کسب حداقل ۲ جایزه/گواهی بین‌المللی معتبر',0,2,1,'count','مدیریت کیفیت','attention','یک مورد از دو مورد.',-8)
+  ]),
+  okr('o7','ارتقاء تجربه ذی‌نفعان و ایفای نقش در توسعه برند ملی جزیره کیش','فرودگاه / بنادر / روابط عمومی','active','ساخت تجربه ممتاز و اعتماد پایدار','رضایت و NPS محرک برند کیش هستند',[
+   kr('o7k1','دستیابی به Customer Satisfaction Index ≥ ۷۵/۱۰۰',68,75,74,'/100','خدمات مشتری','attention','نمونه نزدیک هدف.',-2),
+   kr('o7k2','دستیابی به NPS = +۲۵ یا بیشتر',12,25,29,'NPS','خدمات مشتری','on-track','نمونه بالاتر از Target.',-3),
+   kr('o7k3','دستیابی به Reputation / Brand Index ≥ ۶۵/۱۰۰',58,65,62,'/100','روابط عمومی','attention','Current نمونه.',-5),
+   kr('o7k4','دستیابی به ≥ ۵۵٪ پوشش رسانه‌ای مثبت',47,55,49,'%','روابط عمومی','off-track','نمونه قرمز.',-16)
+  ]),
+  okr('o8','افزایش تعاملات راهبردی با نهادهای کلیدی داخلی و بین‌المللی','مدیریت عالی / حقوقی','active','دسترسی به دانش، منابع و فرصت‌های مشترک','تعامل بین‌المللی برای جایگاه منطقه‌ای',[
+   kr('o8k1','دستیابی به حداقل ۱۰ توافق همکاری معتبر',3,10,8,'agreement','حقوقی / مدیریت عالی','attention','هشت توافق نمونه.',-4),
+   kr('o8k2','شروع حداقل ۵ پروژه مشترک فعال',1,5,5,'project','مدیریت پروژه','on-track','نمونه مساوی Target.',-1),
+   kr('o8k3','عضویت فعال در حداقل ۳ نهاد کلیدی و ≥۵ رویداد بین‌المللی سالانه',1,3,2,'body','امور بین‌الملل','attention','دو عضویت؛ حضور در ۴ رویداد به‌صورت نمونه.',-6),
+   kr('o8k4','دستیابی به Strategic Partner Satisfaction ≥ ۷۰/۱۰۰',62,70,58,'/100','مدیریت عالی','off-track','نمونه افت نسبت به baseline.',-21)
+  ]),
+  okr('o9','نهادینه‌سازی فرهنگ سازمانی مبتنی بر اخلاق، پاسخگویی و حرفه‌ای‌گرایی','معاونت مالی و اداری / منابع انسانی','active','پایداری فرهنگ و شایسته‌سالاری','کیفیت execution به رفتار و culture وابسته است',[
+   kr('o9k1','دستیابی به Values Alignment ≥ ۵۵٪',42,55,55,'%','منابع انسانی','on-track','نمونه مساوی Target.',-2),
+   kr('o9k2','دستیابی به ۲۵ ساعت Continuous Learning به ازای هر کارمند',14,25,20,'h/employee','منابع انسانی','attention','Target جدول سند.',-5),
+   kr('o9k3','انجام ≥ ۴۵٪ ارتقاءها بر اساس شایستگی مستند',30,45,38,'%','منابع انسانی','attention','نمونه.',-7),
+   kr('o9k4','دستیابی به Ethics & Accountability Index ≥ ۵۰٪',44,50,39,'%','بازرسی / منابع انسانی','off-track','نمونه وضعیت نامطلوب.',-18)
+  ]),
+  okr('o10','توسعه زیرساخت‌های داده‌محور برای تصمیم‌سازی و پایش عملکرد','مدیریت عالی / تحول دیجیتال','active','تصمیم‌گیری سریع، شفاف و مبتنی بر داده','پایش OKR و KPI نیازمند داده قابل اتکاست',[
+   kr('o10k1','دستیابی به Analytics Maturity Level ≥ ۳',1.8,3,2.6,'level','تحول دیجیتال','attention','نمونه نزدیک Level 3.',-3),
+   kr('o10k2','دستیابی به ≥ ۵۰٪ Data-Driven Decisions',31,50,53,'%','مدیریت عالی','on-track','نمونه بالاتر از هدف.',-1),
+   kr('o10k3','کاهش Critical Data Availability Time به ≤ ۱۲ ساعت',36,12,18,'hour','فناوری اطلاعات','attention','روند کاهشی، هنوز بالاتر از هدف.',-4),
+   kr('o10k4','دستیابی به Organizational Transparency ≥ ۶۰/۱۰۰',45,60,52,'/100','مدیریت عالی','attention','Current نمونه.',-8)
+  ]),
+  okr('o11','پایش و ارتقاء اثربخشی اجتماعی و زیست‌محیطی فعالیت‌های شرکت','فنی و مهندسی / HSE','active','توسعه پایدار و مسئولیت اجتماعی','تعهد به محیط زیست و جامعه محلی',[
+   kr('o11k1','کاهش ۲۰٪ شدت انتشار کربن نسبت به baseline',100,80,88,'index','HSE','attention','Baseline index=100؛ Current نمونه 88.',-4),
+   kr('o11k2','کاهش مصرف انرژی فرودگاهی به ≤ ۳ kWh/pax',4.2,3,2.9,'kWh/pax','فنی و مهندسی','on-track','نمونه بهتر از Target.',-2),
+   kr('o11k3','افزایش سهم انرژی تجدیدپذیر به ≥ ۲۵٪',12,25,21,'%','فنی و مهندسی','attention','Current نمونه.',-6),
+   kr('o11k4','دستیابی به CSR Index ≥ ۷۰/۱۰۰',57,70,52,'/100','مسئولیت اجتماعی','off-track','نمونه کاهش عملکرد.',-20)
+  ]),
+  okr('o12','افزایش تاب‌آوری سازمانی در برابر تحولات محیطی، اقتصادی و فناورانه','مدیریت عالی / حراست / فنی','active','تداوم خدمات حیاتی در شرایط اختلال','کیش باید در بحران عملکرد پایدار داشته باشد',[
+   kr('o12k1','پوشش ≥ ۷۰٪ فرآیندهای حیاتی با BCP تست‌شده',52,70,68,'%','مدیریت ریسک','attention','نزدیک هدف.',-3),
+   kr('o12k2','کاهش MTTR / RTO سرویس‌های حیاتی به ≤ ۲۴ ساعت',36,24,20,'hour','فناوری / فنی','on-track','نمونه بهتر از هدف.',-1),
+   kr('o12k3','دستیابی به Supply Chain Resilience ≥ ۶۰٪',41,60,50,'%','پشتیبانی / تدارکات','attention','Current نمونه.',-5),
+   kr('o12k4','دستیابی به Innovation in Resilience ≥ ۳۰٪',18,30,10,'%','مدیریت ریسک','off-track','نمونه قرمز.',-22)
+  ]),
+  okr('o13','توسعه سرمایه انسانی با تأکید بر توانمندسازی تخصصی، ارتقاء دانش فنی و تقویت شایستگی‌های رفتاری','مدیریت منابع انسانی','active','توانمندسازی تخصصی و رفتاری کارکنان','سرمایه انسانی زیربنای همه Pillarهاست',[
+   kr('o13k1','دستیابی به ≥ ۳۰ ساعت آموزش سالانه به ازای هر کارمند',16,30,32,'h/employee','منابع انسانی','on-track','نمونه بالاتر از هدف.',-2),
+   kr('o13k2','دستیابی به Professional Certification Rate ≥ ۲۰٪',9,20,20,'%','منابع انسانی','on-track','نمونه مساوی Target.',-3),
+   kr('o13k3','دستیابی به Employee Engagement ≥ ۳۰٪',18,30,27,'%','منابع انسانی','attention','Current نمونه.',-5),
+   kr('o13k4','دستیابی به Succession Planning Coverage ≥ ۳۵٪',12,35,21,'%','منابع انسانی','off-track','نمونه عقب از برنامه.',-17),
+   kr('o13k5','دستیابی به Employee Wellbeing Index ≥ ۶۰/۱۰۰',58,60,63,'/100','منابع انسانی','on-track','نمونه بهتر از هدف.',-1)
+  ])
+ ];
+
+ const units=[
+  u('u1','معاونت فنی و مهندسی','معاونت ستادی','مدیرعامل','معاون فنی و مهندسی','پروژه‌های توسعه‌ای، زیرساخت و هماهنگی فنی','فرودگاه، بنادر، مالی و قراردادها',[
+   ukpi('u1k1','On-time Project Milestones','PMO',68,76,80,'up','%'),ukpi('u1k2','Technical Backlog Age','Engineering',18,12,10,'down','day')
+  ],[okr('u1o1','قابلیت اطمینان دارایی‌های زیرساختی را افزایش دهیم','معاون فنی','active','کاهش توقف و ریسک فنی','تأخیر نگهداری روی خدمت اثر دارد',[kr('u1r1','کاهش توقف دارایی بحرانی',14,8,7,'hour/month','فنی','on-track','نمونه بهتر از هدف.',-2),kr('u1r2','تکمیل PM بحرانی در موعد',72,95,88,'%','فنی','attention','نمونه نیازمند توجه.',-4)])]),
+  u('u2','معاونت مالی و اداری','معاونت ستادی','مدیرعامل','معاون مالی و اداری','بودجه، سرمایه انسانی و پشتیبانی سازمان','تمام واحدها',[
+   ukpi('u2k1','Budget Utilization Quality','Finance',82,91,90,'up','%'),ukpi('u2k2','Support SLA Compliance','Admin',76,81,90,'up','%')
+  ],[okr('u2o1','تخصیص منابع را شفاف‌تر و سریع‌تر کنیم','معاون مالی و اداری','draft','پشتیبانی اجرای راهبرد','چرخه‌های تخصیص طولانی است',[kr('u2r1','کاهش زمان تخصیص بودجه',18,10,14,'day','مالی','attention','نمونه.',-7),kr('u2r2','افزایش درخواست‌های پشتیبانی حل‌شده در SLA',76,90,81,'%','اداری','off-track','نمونه کمتر از برنامه.',-16)])]),
+  u('u3','مدیریت امور مالی','مدیریت','معاونت مالی و اداری','مدیر امور مالی','بودجه، گزارش مالی، کنترل هزینه و درآمد','عملیات، قراردادها',[
+   ukpi('u3k1','Budget Variance','Finance',6,3,5,'down','%'),ukpi('u3k2','Receivable Aging','Finance',58,50,45,'down','day')
+  ],[okr('u3o1','کیفیت و سرعت گزارشگری مالی را ارتقا دهیم','مدیر امور مالی','closed','تصمیم‌گیری داده‌محور','نیاز به گزارش به‌موقع',[kr('u3r1','کاهش زمان بستن ماه مالی',9,5,5,'day','مالی','on-track','نمونه مساوی هدف.',-1),kr('u3r2','کاهش خطای گزارش‌های مدیریتی',4,1,0.8,'%','مالی','on-track','نمونه بهتر از هدف.',-2)])]),
+  u('u4','مدیریت منابع انسانی','مدیریت','معاونت مالی و اداری','مدیر منابع انسانی','آموزش، شایستگی، فرهنگ و جانشین‌پروری','همه واحدها',[
+   ukpi('u4k1','Training Hours / Employee','L&D',18,22,30,'up','h'),ukpi('u4k2','Vacancy Fill Time','HR',49,55,45,'down','day')
+  ],[okr('u4o1','پوشش توسعه‌ای مشاغل کلیدی را افزایش دهیم','مدیر منابع انسانی','active','حمایت از هدف ۱۳','شکاف جانشین‌پروری وجود دارد',[kr('u4r1','پست‌های کلیدی دارای جانشین',12,35,21,'%','Talent','off-track','نمونه قرمز.',-18),kr('u4r2','کارکنان دارای IDP فعال',30,70,54,'%','L&D','attention','نمونه.',-5)])]),
+  u('u5','مدیریت حراست','مدیریت ستادی','مدیرعامل','مدیر حراست','حفاظت، کنترل دسترسی و پشتیبانی تاب‌آوری','فرودگاه، بندر، IT',[
+   ukpi('u5k1','Security Incident Closure Time','Security',31,24,24,'down','hour'),ukpi('u5k2','Access Audit Compliance','Security',93,96,95,'up','%')
+  ],[okr('u5o1','آمادگی امنیتی نقاط حیاتی را افزایش دهیم','مدیر حراست','active','تاب‌آوری و امنیت عملیات','ریسک‌های محیطی متغیرند',[kr('u5r1','تکمیل مانورهای امنیتی برنامه‌ریزی‌شده',50,100,100,'%','حراست','on-track','نمونه ۱۰۰٪.',-1),kr('u5r2','کاهش findings باز امنیتی',14,5,8,'count','حراست','attention','نمونه.',-6)])]),
+  u('u6','مدیریت اداری و پشتیبانی','مدیریت','مدیرعامل','مدیر اداری و پشتیبانی','تدارکات، خدمات عمومی و پشتیبانی','مالی، همه واحدها',[
+   ukpi('u6k1','Procurement Cycle Time','Procurement',24,21,18,'down','day'),ukpi('u6k2','Internal Service SLA','Admin',82,78,90,'up','%')
+  ],[okr('u6o1','چرخه تأمین داخلی را کوتاه کنیم','مدیر اداری و پشتیبانی','active','پشتیبانی بهره‌وری','تاخیر تأمین روی عملیات اثر دارد',[kr('u6r1','کاهش متوسط زمان خرید',24,18,21,'day','تدارکات','attention','نمونه.',-4),kr('u6r2','افزایش درخواست‌های بدون بازگشت/اصلاح',70,90,72,'%','پشتیبانی','off-track','نمونه قرمز.',-15)])]),
+  u('u7','اداره بازرسی و پاسخگویی به شکایات','اداره','مدیرعامل','رئیس اداره','بازرسی، شکایات، پاسخگویی و کنترل انحراف','همه واحدها',[
+   ukpi('u7k1','Complaint Closure within SLA','Inspection',85,92,90,'up','%'),ukpi('u7k2','Average Complaint Response Time','Inspection',3.6,4.1,3,'down','day')
+  ],[okr('u7o1','پاسخگویی به ذی‌نفعان را سریع و قابل ردیابی کنیم','رئیس اداره','active','ارزش پاسخگویی','تجربه ذی‌نفعان به زمان پاسخ وابسته است',[kr('u7r1','شکایات دارای root-cause analysis',45,80,82,'%','بازرسی','on-track','نمونه بالاتر از هدف.',-2),kr('u7r2','کاهش شکایات تکرارشونده',20,10,14,'%','بازرسی','attention','نمونه.',-7)])]),
+  u('u8','اداره حقوقی و امور قراردادها','اداره','مدیرعامل','سرپرست اداره','قراردادها، دعاوی و پشتیبانی حقوقی مشارکت‌ها','مالی، فنی، سرمایه‌گذاری',[
+   ukpi('u8k1','Contract Review Time','Legal',11,8,8,'down','day'),ukpi('u8k2','Contract Issues Resolved on Time','Legal',68,72,80,'up','%')
+  ],[okr('u8o1','چرخه قراردادهای توسعه‌ای را قابل پیش‌بینی کنیم','سرپرست حقوقی','draft','پشتیبانی PPP و سرمایه‌گذاری','تاخیر قرارداد پروژه را عقب می‌اندازد',[kr('u8r1','قراردادهای استانداردشده',35,75,61,'%','حقوقی','attention','نمونه.',-6),kr('u8r2','کاهش زمان بازنگری قرارداد',11,8,8,'day','حقوقی','on-track','نمونه مساوی هدف.',-2)])]),
+  u('u9','اداره کل فرودگاه بین‌المللی کیش','اداره کل عملیاتی','مدیرعامل','مدیرکل فرودگاه','اداره و بهره‌برداری عملیات فرودگاهی','عملیات هوانوردی، فنی و نگهداری',[
+   ukpi('u9k1','Airport Service On-time Performance','Airport',86,88,90,'up','%'),ukpi('u9k2','Passenger Satisfaction','Airport',73,77,75,'up','/100')
+  ],[okr('u9o1','تجربه سفر را روان‌تر و ایمن‌تر کنیم','مدیرکل فرودگاه','active','اهداف ۱ و ۷','کیفیت و تجربه مسافر توأمان مهم‌اند',[kr('u9r1','کاهش متوسط صف نقاط کلیدی',14,9,10,'min','فرودگاه','on-track','نمونه بهتر از هدف.',-1),kr('u9r2','افزایش حل issue مسافر در تماس اول',68,85,78,'%','فرودگاه','attention','نمونه.',-5)])]),
+  u('u10','معاونت عملیات هوانوردی','معاونت عملیاتی','اداره کل فرودگاه بین‌المللی کیش','معاون عملیات هوانوردی','ایمنی پرواز، عملیات airside و واکنش اضطراری','فنی فرودگاه، حراست',[
+   ukpi('u10k1','RFFS Drill Response Time','Air Ops',3.7,3.2,3.5,'down','min'),ukpi('u10k2','Airside Finding Closure','Air Ops',79,82,85,'up','%')
+  ],[okr('u10o1','آمادگی واکنش اضطراری را ارتقا دهیم','معاون عملیات هوانوردی','closed','هدف ۱','ایمنی non-negotiable است',[kr('u10r1','مانورهای انجام‌شده طبق برنامه',75,100,100,'%','Air Ops','on-track','نمونه ۱۰۰٪.',-1),kr('u10r2','کاهش زمان response در سناریوی استاندارد',4.1,3.5,3.2,'min','RFFS','on-track','نمونه بهتر از هدف.',-2)])]),
+  u('u11','معاونت فنی و نگهداری فرودگاه','معاونت عملیاتی','اداره کل فرودگاه بین‌المللی کیش','معاون فنی و نگهداری','پایداری تجهیزات و نگهداری پیشگیرانه','عملیات هوانوردی، فنی و مهندسی',[
+   ukpi('u11k1','Critical Equipment Availability','Maintenance',93,96,95,'up','%'),ukpi('u11k2','Overdue Preventive Maintenance','Maintenance',6,8,5,'down','%')
+  ],[okr('u11o1','خرابی تجهیزات بحرانی را کاهش دهیم','معاون فنی فرودگاه','active','قابلیت اطمینان عملیات','PM overdue ریسک خدمت است',[kr('u11r1','افزایش PM on-time completion',84,96,91,'%','Maintenance','attention','نمونه.',-4),kr('u11r2','کاهش خرابی تکرارشونده تجهیزات',12,5,9,'count','Maintenance','off-track','نمونه قرمز.',-16)])]),
+  u('u12','اداره کل بنادر کیش','اداره کل عملیاتی','مدیرعامل','مدیرکل بنادر','اداره و بهره‌برداری عملیات بندری و دریایی','عملیات دریانوردی، فنی و پشتیبانی',[
+   ukpi('u12k1','Berth Utilization','Port',67,73,70,'up','%'),ukpi('u12k2','Vessel Turnaround Time','Port',11.2,10.5,9,'down','hour')
+  ],[okr('u12o1','گردش عملیات کشتی و خدمات بندری را بهبود دهیم','مدیرکل بنادر','active','بهره‌وری و تجربه ذی‌نفعان','زمان توقف روی هزینه مشتری اثر دارد',[kr('u12r1','کاهش vessel turnaround',11.2,9,10.5,'hour','Port Ops','attention','نمونه.',-4),kr('u12r2','افزایش عملیات بدون delay ناشی از تجهیزات',80,94,95,'%','Port Tech','on-track','نمونه بهتر از هدف.',-2)])]),
+  u('u13','معاونت عملیات دریانوردی','معاونت عملیاتی','اداره کل بنادر کیش','معاون عملیات دریانوردی','ایمنی شناورها و مدیریت ترافیک دریایی','فنی بنادر، حراست',[
+   ukpi('u13k1','Marine Incident Rate','Marine Ops',2.3,1.8,2.0,'down','rate'),ukpi('u13k2','Vessel Waiting Time','Marine Ops',2.1,2.4,2.0,'down','hour')
+  ],[okr('u13o1','ایمنی و روانی ترافیک دریایی را ارتقا دهیم','معاون عملیات دریانوردی','active','هدف ۱ و ۲','ازدحام و incident risk باید کاهش یابد',[kr('u13r1','کاهش near-miss ثبت‌شده',18,10,9,'count','Marine Ops','on-track','نمونه بهتر از هدف.',-2),kr('u13r2','کاهش waiting time',2.8,2,2.4,'hour','Marine Ops','attention','نمونه.',-5)])]),
+  u('u14','معاونت فنی و پشتیبانی بنادر','معاونت عملیاتی','اداره کل بنادر کیش','معاون فنی و پشتیبانی','نگهداری پایانه‌ها، زیرساخت‌ها و لجستیک پشتیبان','عملیات دریانوردی، مالی',[
+   ukpi('u14k1','Crane / Equipment Availability','Port Tech',87,89,92,'up','%'),ukpi('u14k2','Maintenance Cost Variance','Port Tech',6,4,5,'down','%')
+  ],[okr('u14o1','آمادگی تجهیزات بندری را پایدار کنیم','معاون فنی بنادر','active','بهره‌وری و ایمنی','availability تجهیزات روی throughput اثر دارد',[kr('u14r1','افزایش availability تجهیزات کلیدی',87,92,89,'%','Port Tech','attention','نمونه.',-4),kr('u14r2','کاهش maintenance cost variance',6,5,4,'%','Port Tech','on-track','نمونه بهتر از هدف.',-1)])])
+ ];
+
  return {
-  meta:{orgName:'آریانووا | AryaNova',logoData:sampleLogo(),cycle:'2026 Q4',sponsor:'لیلا فرهمند — CEO',ambassador:'سامان کیانی — OKR Ambassador',startDate:d(-6),endDate:d(84),companyCadence:'Annual',teamCadence:'Quarterly',checkinFreq:'Weekly',leadershipReviewFreq:'Monthly',processNotes:'Company OKRs annual; Group OKRs quarterly; weekly check-in every Monday; monthly leadership health review; OKRs close 5 working days after quarter end.'},
-  prepare:{rolloutApproach:'Gradual / Pilot',groupDesign:'Hybrid',approvalDeadline:d(10),closeDeadline:d(90),processNotes:'Pilot starts with Commercial, Operations and People. Draft → manager review → interdependency meeting → Active. Weekly check-in is mandatory.'},
-  introduce:{why:'برای تبدیل strategy به priorities شفاف، outcomeهای قابل اندازه‌گیری و ایجاد alignment بین واحدها.',companyBenefits:'تمرکز، شفافیت، هم‌راستایی افقی و عمودی، و visibility روی execution.',peopleBenefits:'وضوح بیشتر درباره اولویت‌ها، ownership روشن و feedback سریع‌تر.',ambassadorIntro:'سامان کیانی مالک فرایند استقرار، quality review، coaching تیم‌ها و پیگیری cadenceهاست.',trainingDate:d(3),okrDeadline:d(12),ceoApproved:'Approved',allHandsStatus:'Completed',nextSteps:'Leadership training → team workshops → draft OKRs → alignment session → activation.'},
-  announce:{date:d(-2),allHandsDate:d(-1),ceoMessage:'از این فصل، OKR زبان مشترک ما برای تبدیل راهبرد به نتایج خواهد بود. انتظار داریم هر تیم روی outcomes محدود و قابل سنجش تمرکز کند.',channels:'CEO Email, All Hands, Teams, Intranet',strategyShared:'Yes',deadlinesShared:'Yes',faqReady:'Yes',emailSent:'Yes',notes:'FAQ منتشر شد؛ جلسه پرسش و پاسخ برای مدیران برگزار شد.'},
-  educate:{executives:'Completed',managers:'Completed',teamMembers:'In progress',deadline:d(5),notes:'Executive session 2h; manager workshop 3h; team learning 90min. تمرین distinction بین KPI / Objective / KR / Initiative.',resource1:'https://www.perdoo.com/resources/',resource2:'https://www.perdoo.com/okr-guide/',resource3:'https://www.perdoo.com/okr/'},
-  integrate:{oneToOneCadence:'Biweekly',nextOneToOne:d(6),oneToOneNotes:'تمرکز 1:1ها روی progress، blocker، support needed و next best step.',nextLeadershipReview:d(18),health:'Needs attention',leadershipNotes:'دو interdependency بین Operations و IT نیازمند resource decision است.',directReports:[
-   {id:id(),name:'مریم آقایی',role:'Commercial Lead',last1on1:d(-4),status:'On track'},
-   {id:id(),name:'امیر رضایی',role:'Operations Lead',last1on1:d(-8),status:'Needs attention'},
-   {id:id(),name:'نازنین مرادی',role:'People Lead',last1on1:d(-5),status:'On track'}
+  meta:{orgName:'شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش',logoData:logo,cycle:'چرخه پایلوت ۱۴۰۵ · 2026 Q4',sponsor:'مدیرعامل و رئیس هیأت‌مدیره',ambassador:'دفتر راهبرد / OKR Ambassador',startDate:'2026-10-01',endDate:'2026-12-31',companyCadence:'Annual',teamCadence:'Quarterly',checkinFreq:'Weekly',leadershipReviewFreq:'Monthly',processNotes:'معماری راهبرد واقعی از سند؛ اجرای OKR به‌صورت چرخه فصلی در واحدها، review ماهانه مدیریت و بازبینی‌های فصلی/شش‌ماهه/سالانه.'},
+  prepare:{rolloutApproach:'Gradual / Pilot',groupDesign:'Hybrid',approvalDeadline:d(10),closeDeadline:'2027-01-07',processNotes:'سطح شرکت → ادارات کل → معاونت‌ها/مدیریت‌ها → ابتکارات و برنامه اقدام. Draft → Manager Review → Interdependency Review → Active. داده‌های عملکردی واحدها در این نسخه Demo هستند.'},
+  introduce:{why:'تبدیل چشم‌انداز و ۱۳ هدف راهبردی به outcomes قابل سنجش و ایجاد alignment عمودی و افقی بین ستاد، فرودگاه و بنادر.',companyBenefits:'تمرکز، شفافیت، پاسخگویی، پایش KPI/OKR و اتصال تصمیم‌های مدیریتی به داده.',peopleBenefits:'هر مدیر و کارشناس می‌بیند فعالیت روزمره او چگونه به هدف راهبردی متصل می‌شود.',ambassadorIntro:'OKR Ambassador مسئول quality assurance، آموزش، cadence، alignment و follow-through فرایند است.',trainingDate:d(4),okrDeadline:d(14),ceoApproved:'Approved',allHandsStatus:'Scheduled',nextSteps:'Leadership alignment → آموزش مدیران → تدوین Group OKRs → جلسه interdependency → approval → weekly check-ins.'},
+  announce:{date:d(2),allHandsDate:d(5),ceoMessage:'استقرار OKR باید سند راهبردی را به یک operating rhythm زنده تبدیل کند؛ هر واحد باید بداند چه outcomeای را مالک است و چگونه پیشرفت را گزارش می‌کند.',channels:'CEO Email, All Hands, Internal Portal, Management Meetings',strategyShared:'Yes',deadlinesShared:'Yes',faqReady:'Yes',emailSent:'No',notes:'نمونه اجرایی برای نمایش readiness و statusهای مختلف.'},
+  educate:{executives:'Completed',managers:'In progress',teamMembers:'Scheduled',deadline:d(12),notes:'Executive: strategy & OKR logic; Managers: KPI vs KR, cascading, interdependencies; Teams: check-in, confidence, initiatives and action plans.',resource1:'https://www.perdoo.com/resources/',resource2:'https://www.perdoo.com/okr-guide/',resource3:'https://hassnboudlaie.github.io/kish-ports-airports-strategy/'},
+  integrate:{oneToOneCadence:'Biweekly',nextOneToOne:d(7),oneToOneNotes:'در 1:1ها progress، blocker، support needed و next best step مرور شود.',nextLeadershipReview:d(21),health:'Needs attention',leadershipNotes:'نمونه: Resource alignment بین فنی، عملیات و مالی؛ بررسی KRs قرمز و stale؛ تصمیم درباره dependencies.',directReports:[
+   {id:'dr1',name:'مدیر نمونه ۱',role:'مدیرکل فرودگاه',last1on1:d(-5),status:'On track'},
+   {id:'dr2',name:'مدیر نمونه ۲',role:'مدیرکل بنادر',last1on1:d(-9),status:'Needs attention'},
+   {id:'dr3',name:'مدیر نمونه ۳',role:'معاون مالی و اداری',last1on1:d(-18),status:'Off track'},
+   {id:'dr4',name:'مدیر نمونه ۴',role:'معاون فنی و مهندسی',last1on1:d(-4),status:'On track'}
   ]},
-  strategy:{ultimateGoal:'تا پایان 2028، آریانووا به قابل‌اعتمادترین ارائه‌دهنده خدمات دیجیتال B2B در بازار هدف تبدیل شود؛ با رشد سودآور و تجربه مشتری متمایز.',pillars:[
-   {id:id(),title:'Customer Value',description:'خلق تجربه‌ای ساده، سریع و قابل اعتماد برای مشتریان B2B'},
-   {id:id(),title:'Operational Excellence',description:'کاهش اصطکاک، زمان چرخه و خطا در فرایندهای کلیدی'},
-   {id:id(),title:'People & Capability',description:'ساخت قابلیت‌های رهبری، داده و execution discipline'}
-  ],kpis:[
-   {id:id(),name:'Customer Satisfaction',pillar:'Customer Value',owner:'Commercial',previous:78,current:82,target:85,direction:'up',unit:'%'},
-   {id:id(),name:'Customer Churn',pillar:'Customer Value',owner:'Commercial',previous:7.2,current:6.4,target:5,direction:'down',unit:'%'},
-   {id:id(),name:'Order Cycle Time',pillar:'Operational Excellence',owner:'Operations',previous:12,current:10.5,target:9,direction:'down',unit:'days'},
-   {id:id(),name:'Leadership Capability Index',pillar:'People & Capability',owner:'People',previous:68,current:73,target:80,direction:'up',unit:'/100'}
-  ]},
-  companyOkrs:[
-   {id:id(),objective:'تجربه مشتری را به شکل محسوسی بهبود دهیم',owner:'CEO',status:'active',why:'برای رشد پایدار و کاهش churn',urgent:'رضایت مشتری پایین‌تر از ambition راهبردی است',krs:[
-    {id:id(),text:'افزایش Customer Satisfaction',baseline:78,target:85,current:82,unit:'%',owner:'Commercial',confidence:'on-track',lastNote:'دو pain point اصلی journey بازطراحی شد.',lastUpdate:iso(-2)},
-    {id:id(),text:'کاهش Churn',baseline:7.2,target:5,current:6.4,unit:'%',owner:'Customer Success',confidence:'attention',lastNote:'ریسک در segment SME هنوز بالاست.',lastUpdate:iso(-4)},
-    {id:id(),text:'کاهش متوسط زمان پاسخ‌گویی',baseline:10,target:4,current:6.2,unit:'hours',owner:'Service',confidence:'on-track',lastNote:'SLA جدید فعال شد.',lastUpdate:iso(-1)}
-   ]},
-   {id:id(),objective:'execution را سریع‌تر و قابل پیش‌بینی‌تر کنیم',owner:'COO',status:'active',why:'برای کاهش هزینه و افزایش reliability',urgent:'Cycle time بالا مانع scale است',krs:[
-    {id:id(),text:'کاهش Order Cycle Time',baseline:12,target:9,current:10.5,unit:'days',owner:'Operations',confidence:'attention',lastNote:'گلوگاه approval حذف شد؛ integration با IT عقب است.',lastUpdate:iso(-3)},
-    {id:id(),text:'افزایش First-Time-Right',baseline:84,target:94,current:90,unit:'%',owner:'Quality',confidence:'on-track',lastNote:'checklist کنترل کیفیت rollout شد.',lastUpdate:iso(-2)}
-   ]},
-   {id:id(),objective:'قابلیت رهبری و ownership مدیران را تقویت کنیم',owner:'CHRO',status:'draft',why:'OKR بدون manager capability پایدار نمی‌شود',urgent:'کیفیت coaching managers نابرابر است',krs:[
-    {id:id(),text:'افزایش Leadership Capability Index',baseline:68,target:80,current:73,unit:'/100',owner:'People',confidence:'attention',lastNote:'Assessment baseline تکمیل شد.',lastUpdate:iso(-7)},
-    {id:id(),text:'تکمیل 1:1 coaching cadence توسط مدیران',baseline:42,target:90,current:61,unit:'%',owner:'HRBP',confidence:'off-track',lastNote:'دو واحد هنوز cadence منظم ندارند.',lastUpdate:iso(-16)}
-   ]}
-  ],
-  teams:[
-   {id:id(),name:'Commercial',lead:'مریم آقایی',responsibilities:'Growth, customer value, retention',interdependencies:'Customer Success, Product, IT',kpis:[
-    {id:id(),name:'Win Rate',owner:'Sales',previous:31,current:35,target:38,direction:'up',unit:'%'},
-    {id:id(),name:'Churn',owner:'Customer Success',previous:7.2,current:6.4,target:5,direction:'down',unit:'%'}
-   ],okrs:[{id:id(),objective:'Retention مشتریان کلیدی را افزایش دهیم',owner:'Commercial Lead',status:'active',why:'اثر مستقیم بر profitable growth',urgent:'Churn در SME بالاست',krs:[
-    {id:id(),text:'افزایش renewal rate',baseline:84,target:92,current:88,unit:'%',owner:'CS Lead',confidence:'on-track',lastNote:'برنامه proactive renewal فعال شد.',lastUpdate:iso(-2)},
-    {id:id(),text:'کاهش churn مشتریان SME',baseline:9,target:6,current:8.2,unit:'%',owner:'CS Lead',confidence:'off-track',lastNote:'نیاز به pricing intervention دارد.',lastUpdate:iso(-5)}
-   ]}]},
-   {id:id(),name:'Operations',lead:'امیر رضایی',responsibilities:'Delivery, quality, process reliability',interdependencies:'IT, Commercial',kpis:[
-    {id:id(),name:'Cycle Time',owner:'Process Excellence',previous:12,current:10.5,target:9,direction:'down',unit:'days'},
-    {id:id(),name:'First-Time-Right',owner:'Quality',previous:84,current:90,target:94,direction:'up',unit:'%'}
-   ],okrs:[{id:id(),objective:'فرایند تحویل را سریع‌تر و بدون دوباره‌کاری کنیم',owner:'Operations Lead',status:'active',why:'customer experience و cost',urgent:'دوباره‌کاری و delay بالاست',krs:[
-    {id:id(),text:'کاهش Cycle Time',baseline:12,target:9,current:10.5,unit:'days',owner:'Process Lead',confidence:'attention',lastNote:'گلوگاه handoff در IT باز مانده.',lastUpdate:iso(-3)},
-    {id:id(),text:'افزایش First-Time-Right',baseline:84,target:94,current:90,unit:'%',owner:'Quality Lead',confidence:'on-track',lastNote:'QA checklist adoption = 87%.',lastUpdate:iso(-1)}
-   ]}]},
-   {id:id(),name:'People & Culture',lead:'نازنین مرادی',responsibilities:'Leadership capability, talent, culture',interdependencies:'All functions',kpis:[
-    {id:id(),name:'Engagement Index',owner:'People Analytics',previous:72,current:75,target:78,direction:'up',unit:'/100'}
-   ],okrs:[{id:id(),objective:'Manager effectiveness را ارتقا دهیم',owner:'People Lead',status:'active',why:'quality execution به manager behavior وابسته است',urgent:'1:1 discipline پایین است',krs:[
-    {id:id(),text:'افزایش regular 1:1 completion',baseline:42,target:90,current:61,unit:'%',owner:'HRBP',confidence:'off-track',lastNote:'دو واحد نیازمند follow-through هستند.',lastUpdate:iso(-16)},
-    {id:id(),text:'افزایش manager coaching score',baseline:3.1,target:4.2,current:3.6,unit:'/5',owner:'L&D',confidence:'attention',lastNote:'coaching lab دوره اول تکمیل شد.',lastUpdate:iso(-6)}
-   ]}]}
-  ],
-  review:{allHands:'پیشرفت Company OKRs، سه achievement اصلی و دو dependency بحرانی مرور شد. تیم Operations بهترین improvement را ثبت کرد.',lessons:'۱) KRها باید outcome-basedتر نوشته شوند. ۲) check-in هفتگی adoption را بالا برد. ۳) interdependencyها باید زودتر surface شوند.',nextFocus:'Cycle بعد: کیفیت KRها، manager 1:1 discipline و resource alignment بین Operations و IT.'}
+  strategy:{vision,mission,valuesText:values,ultimateGoal:ultimate,pillars,kpis:pkpis},
+  companyOkrs,
+  teams:units,
+  review:{allHands:'نمونه: مرور ۱۳ Objective، وضعیت چراغ راهنمایی، KRs خارج از مسیر، dependencies بین فرودگاه/بنادر/ستاد و تصمیم‌های موردنیاز.',lessons:'نمونه: ۱) Targetهای سند باید از Current performance تفکیک شوند. ۲) KPI و KR نباید یکی فرض شوند. ۳) interdependency review قبل از activation ضروری است. ۴) stale data باید در dashboard flag شود.',nextFocus:'نمونه: تثبیت ownerها، اتصال Initiatives به KRs، افزایش data quality و اجرای review فصلی/شش‌ماهه.'}
  }
 }
 function setDemoState(force){
  if(!force){const meaningful=state.companyOkrs.length||state.teams.length||isFilled(state.strategy.ultimateGoal);if(meaningful)return}
  state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));renderAll();bindStatic();updateHeader()
 }
-document.getElementById('demoBtn').addEventListener('click',()=>{if(confirm('داده نمونه کامل جایگزین داده فعلی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
-document.getElementById('refreshDemoBtn').addEventListener('click',()=>{if(confirm('همه داده‌ها با نمونه کامل بازنشانی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
+document.getElementById('demoBtn').addEventListener('click',()=>{if(confirm('نسخه نمونه کیش جایگزین داده فعلی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
+document.getElementById('refreshDemoBtn').addEventListener('click',()=>{if(confirm('همه داده‌ها با نسخه نمونه کیش بازنشانی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
 document.getElementById('mobileStage').addEventListener('change',e=>showView(e.target.value));
 document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem(AUTH);location.reload()});
 document.getElementById('loginBtn').addEventListener('click',()=>{const name=document.getElementById('loginName').value.trim(),email=document.getElementById('loginEmail').value.trim().toLowerCase(),org=document.getElementById('loginOrg').value.trim(),role=document.getElementById('loginRole').value;if(!name||!email||!org){alert('نام، ایمیل و سازمان را وارد کنید.');return}localStorage.setItem(AUTH,JSON.stringify({name,email,org,role}));location.reload()});
-document.getElementById('guestLoginBtn').addEventListener('click',()=>{localStorage.setItem(AUTH,JSON.stringify({name:'Demo User',email:'demo@okr.local',org:'شرکت نمونه',role:'Consultant / Facilitator'}));location.reload()});
+document.getElementById('guestLoginBtn').addEventListener('click',()=>{localStorage.setItem(AUTH,JSON.stringify({name:'Demo User',email:'demo@kishports.local',org:'شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش',role:'Consultant / Facilitator'}));location.reload()});
 if(auth){document.getElementById('authScreen').classList.add('hidden')}else{document.getElementById('authScreen').classList.remove('hidden')}
 if(!localStorage.getItem(KEY)){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state))}
 bindStatic();renderAll();
