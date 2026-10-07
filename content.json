@@ -182,6 +182,21 @@
     },
     {
       "title": {
+        "en": "OKR Implementation System",
+        "fa": "سامانه استقرار و مدیریت OKR"
+      },
+      "org": {
+        "en": "Public OKR Application",
+        "fa": "اپلیکیشن عمومی استقرار OKR"
+      },
+      "type": {
+        "en": "Strategy Execution OS",
+        "fa": "سیستم اجرای راهبرد"
+      },
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/"
+    },
+    {
+      "title": {
         "en": "Afra Tejarat Mad",
         "fa": "افرا تجارت ماد"
       },
