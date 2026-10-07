@@ -137,24 +137,66 @@ tr:last-child td{border-bottom:0}
   .sidebar,.topbar,.no-print{display:none!important}.app{display:block}.content{max-width:none;padding:0}.view{display:none!important}#view-review{display:block!important}
   body{background:#fff}.card,.report-block{box-shadow:none;break-inside:avoid}
 }
+
+/* v2 upgrade: login, 8-step journey, mobile-first */
+.auth-screen{position:fixed;inset:0;z-index:999;background:radial-gradient(circle at 80% 15%,#dff5f7 0,transparent 30%),var(--bg);display:grid;place-items:center;padding:20px}
+.auth-screen.hidden{display:none!important}.auth-card{width:min(900px,100%);display:grid;grid-template-columns:.88fr 1.12fr;background:#fff;border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.auth-side{background:var(--navy);color:#fff;padding:34px}.auth-logo{width:54px;height:54px;border-radius:16px;background:var(--teal);display:grid;place-items:center;font-weight:900}.auth-side h1{font-size:34px;line-height:1.2;margin:24px 0 10px}.auth-side p{font-size:11px;color:#bdd0dc}.auth-main{padding:34px}.auth-main h2{font-size:24px;margin:0 0 5px}.auth-main>p{font-size:9px;color:var(--muted);margin:0 0 20px}.auth-note{font-size:7px;color:#607785;background:#f1f9fa;border:1px solid #cfe9ec;border-radius:11px;padding:10px;margin-top:12px}
+.user-mini{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 8px}.user-mini i{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--cyan);color:var(--teal);font-style:normal;font-size:8px;font-weight:900}.user-mini b{font-size:8px;display:block}.user-mini small{font-size:6px;color:var(--muted);display:block}
+.mobile-stage{display:none;max-width:175px;padding:7px 8px}
+.timeline{grid-template-columns:repeat(8,minmax(108px,1fr));overflow:auto;padding-bottom:5px}.phase{min-width:108px;cursor:pointer;transition:.15s}.phase:hover{transform:translateY(-2px);border-color:var(--teal)}.phase .step-pct{display:block;margin-top:5px;font-size:7px;color:var(--teal);font-weight:900}
+.module-note{font-size:8px;color:#5b7480;background:#f2fafb;border:1px solid #cfeaec;border-radius:12px;padding:10px}.step-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.resource-row{display:grid;grid-template-columns:1fr 130px;gap:8px;align-items:end}.resource-open{white-space:nowrap}
+@media(max-width:1200px){
+  .app{display:block!important}.sidebar{position:fixed!important;z-index:80!important;right:0!important;top:0!important;width:280px!important;height:100vh!important;transform:translateX(110%)!important;transition:.2s!important;box-shadow:-20px 0 50px rgba(11,31,58,.2)!important}.sidebar.open{transform:none!important}
+  .mobile-menu{display:inline-flex!important}.mobile-stage{display:block!important}.topbar{padding:0 14px!important}.content{padding:22px 14px 50px!important}.optional{display:none!important}
+}
+@media(max-width:700px){.auth-card{grid-template-columns:1fr}.auth-side{padding:24px}.auth-side h1{font-size:27px}.auth-main{padding:24px}.timeline{grid-template-columns:repeat(8,130px)}.user-mini small{display:none}.top-title{display:none}}
+
 </style>
 </head>
 <body>
+
+<section class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-side">
+      <div class="auth-logo">OKR</div>
+      <h1>OKR Implementation System</h1>
+      <p>یک workspace مرحله‌به‌مرحله برای Prepare → Introduce → Set up → Announce → Educate → Create → Integrate → Learn & Repeat.</p>
+      <div class="module-note" style="margin-top:22px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#d9e7ed">Public demo · داده‌های هر کاربر روی همین browser نگهداری می‌شود.</div>
+    </div>
+    <div class="auth-main">
+      <div class="eyebrow">WORKSPACE LOGIN</div><h2>ورود / ایجاد فضای کاری</h2>
+      <p>اگر قبلاً با همین ایمیل روی این دستگاه وارد شده باشید، داده‌های Workspace شما بازیابی می‌شود.</p>
+      <div class="fields">
+        <div class="field"><label>نام و نام خانوادگی</label><input id="loginName" autocomplete="name" placeholder="نام شما"></div>
+        <div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
+        <div class="field"><label>سازمان</label><input id="loginOrg" placeholder="Organization"></div>
+        <div class="field"><label>Role</label><select id="loginRole"><option>Executive / Sponsor</option><option>OKR Ambassador</option><option>Manager</option><option>Team Member</option><option>Consultant / Facilitator</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn teal" id="loginBtn">ورود به Workspace</button><button class="btn" id="guestLoginBtn">Demo Login</button></div>
+      <div class="auth-note"><b>توجه:</b> این login در نسخه GitHub Pages، local workspace login است و secure cloud authentication نیست. برای production multi-user، backend/auth جدا لازم است.</div>
+    </div>
+  </div>
+</section>
+
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><div class="mark">OKR</div><div><b>OKR Implementation System</b><span>Public Demo · v1</span></div></div>
     <nav class="nav">
-      <a href="#dashboard" data-go="dashboard" class="active"><span class="ico">▦</span> داشبورد</a>
-      <a href="#setup" data-go="setup"><span class="ico">⚙</span> آماده‌سازی</a>
-      <a href="#strategy" data-go="strategy"><span class="ico">◎</span> راهبرد و KPI</a>
-      <a href="#company" data-go="company"><span class="ico">◆</span> Company OKRs</a>
-      <a href="#teams" data-go="teams"><span class="ico">◇</span> Group OKRs</a>
-      <a href="#checkins" data-go="checkins"><span class="ico">↗</span> Check-in</a>
-      <a href="#review" data-go="review"><span class="ico">↻</span> Review & Learn</a>
-    </nav>
+<a href="#dashboard" data-go="dashboard" class="active"><span class="ico">▦</span> داشبورد</a>
+<a href="#setup" data-go="setup"><span class="ico">1</span> Prepare</a>
+<a href="#introduce" data-go="introduce"><span class="ico">2</span> Introduce</a>
+<a href="#strategy" data-go="strategy"><span class="ico">3</span> Set up</a>
+<a href="#announce" data-go="announce"><span class="ico">4</span> Announce</a>
+<a href="#educate" data-go="educate"><span class="ico">5</span> Educate</a>
+<a href="#teams" data-go="teams"><span class="ico">6</span> Create</a>
+<a href="#checkins" data-go="checkins"><span class="ico">7</span> Integrate</a>
+<a href="#review" data-go="review"><span class="ico">8</span> Learn & Repeat</a>
+</nav>
     <div class="side-foot">
       <p>داده‌های این نسخه در مرورگر شما ذخیره می‌شوند. برای جابه‌جایی بین دستگاه‌ها از Export / Import استفاده کنید.</p>
-      <div class="side-link">Public Standalone Version</div>
+      <button class="side-link" id="logoutBtn" style="width:100%;background:transparent;color:#fff">خروج / تغییر کاربر</button>
     </div>
   </aside>
 
@@ -163,11 +205,13 @@ tr:last-child td{border-bottom:0}
       <div class="top-title"><b id="topOrg">سازمان شما</b><span id="topCycle">OKR Cycle</span></div>
       <div class="top-actions">
         <button class="btn mobile-menu" id="menuBtn">☰</button>
+<select class="mobile-stage" id="mobileStage"><option value="dashboard">داشبورد</option><option value="setup">1. Prepare</option><option value="introduce">2. Introduce</option><option value="strategy">3. Set up</option><option value="announce">4. Announce</option><option value="educate">5. Educate</option><option value="teams">6. Create</option><option value="checkins">7. Integrate</option><option value="review">8. Learn & Repeat</option></select>
         <button class="btn optional" id="demoBtn">داده نمونه</button>
         <button class="btn optional" id="exportBtn">Export JSON</button>
         <button class="btn optional" id="importBtn">Import</button>
         <button class="btn primary" id="saveBtn">ذخیره</button>
-        <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+        <div class="user-mini"><i id="userInitial">U</i><div><b id="userDisplay">User</b><small id="userRoleDisplay">Role</small></div></div>
+<input type="file" id="importFile" accept=".json,application/json" class="hidden">
       </div>
     </div>
 
@@ -179,13 +223,7 @@ tr:last-child td{border-bottom:0}
         <div class="grid grid-2" style="margin-top:16px">
           <div class="card">
             <div class="section-title"><div><h2>Implementation Timeline</h2><p>Prepare → Introduce → Train → Create → Launch</p></div></div>
-            <div class="timeline">
-              <div class="phase"><i>1</i><h4>Prepare</h4><small>Foundation</small></div>
-              <div class="phase"><i>2</i><h4>Introduce</h4><small>Communication</small></div>
-              <div class="phase"><i>3</i><h4>Train</h4><small>Capability</small></div>
-              <div class="phase"><i>4</i><h4>Create</h4><small>OKRs + KPIs</small></div>
-              <div class="phase"><i>5</i><h4>Launch</h4><small>Execution</small></div>
-            </div>
+            <div class="timeline" id="journeySteps"></div>
           </div>
           <div class="card">
             <div class="section-title"><div><h2>Objective Progress</h2><p>میانگین progress بر اساس Key Results</p></div></div>
@@ -200,7 +238,7 @@ tr:last-child td{border-bottom:0}
       </section>
 
       <section class="view" id="view-setup">
-        <div class="page-head"><div><div class="eyebrow">PREPARE</div><h1>آماده‌سازی و Governance</h1><p>Ambassador، گروه‌های مشارکت‌کننده، cadenceها و قواعد rollout را مشخص کنید.</p></div></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 1 · PREPARE</div><h1>آماده‌سازی و Governance</h1><p>Ambassador، participating groups، cadenceها و قواعد rollout را مشخص کنید.</p></div><button class="btn primary" data-go-btn="introduce">مرحله بعد ←</button></div>
         <div class="card">
           <div class="section-title"><div><h2>مشخصات سازمان و Cycle</h2><p>اطلاعات پایه این دوره OKR</p></div></div>
           <div class="fields">
@@ -217,11 +255,76 @@ tr:last-child td{border-bottom:0}
             <div class="field full"><label>قواعد و توضیحات rollout</label><textarea data-bind="meta.processNotes" placeholder="Deadlineها، روش approval، زمان close کردن OKRها، قواعد گزارش‌دهی و ..."></textarea></div>
           </div>
         </div>
-        <div class="note" style="margin-top:14px">پیشنهاد اجرایی این دمو: برای Quarterly OKRs، progress را weekly یا حداکثر biweekly به‌روزرسانی کنید و leadership review را در یک cadence مشخص نگه دارید.</div>
+        <div class="card" style="margin-top:14px"><div class="section-title"><div><h2>Rollout Design & Process Document</h2><p>تصمیم‌های مرحله Prepare</p></div></div><div class="fields">
+<div class="field"><label>Rollout approach</label><select data-bind="prepare.rolloutApproach"><option value="">—</option><option>Gradual / Pilot</option><option>All groups simultaneously</option></select></div>
+<div class="field"><label>Group design</label><select data-bind="prepare.groupDesign"><option value="">—</option><option>Functional</option><option>Cross-functional</option><option>Hybrid</option></select></div>
+<div class="field"><label>OKR approval deadline</label><input type="date" data-bind="prepare.approvalDeadline"></div>
+<div class="field"><label>OKR close deadline</label><input type="date" data-bind="prepare.closeDeadline"></div>
+<div class="field full"><label>Documented process</label><textarea data-bind="prepare.processNotes" placeholder="Approval، check-in، progress review، closing rules..."></textarea></div>
+</div></div>
+<div class="note" style="margin-top:14px">پیشنهاد اجرایی این دمو: برای Quarterly OKRs، progress را weekly یا حداکثر biweekly به‌روزرسانی کنید و leadership review را در یک cadence مشخص نگه دارید.</div>
       </section>
 
-      <section class="view" id="view-strategy">
-        <div class="page-head"><div><div class="eyebrow">SET UP · STRATEGY FIRST</div><h1>Ultimate Goal، Strategic Pillars و KPIs</h1><p>پیش از Company OKRs، context راهبردی را روشن کنید تا alignment واقعی شکل بگیرد.</p></div></div>
+      
+      <section class="view" id="view-introduce">
+        <div class="page-head"><div><div class="eyebrow">STEP 2 · INTRODUCE</div><h1>معرفی OKR به سازمان</h1><p>WHY، benefits، Ambassador و next steps را روشن کنید؛ این مرحله change communication را پایه‌گذاری می‌کند.</p></div><button class="btn primary" data-go-btn="strategy">مرحله بعد ←</button></div>
+        <div class="grid grid-2">
+          <div class="card"><div class="section-title"><div><h2>Core Narrative</h2><p>پیام اصلی معرفی</p></div></div><div class="fields">
+            <div class="field full"><label>Why OKR? چرا الان؟</label><textarea data-bind="introduce.why"></textarea></div>
+            <div class="field full"><label>Benefits for the organization</label><textarea data-bind="introduce.companyBenefits"></textarea></div>
+            <div class="field full"><label>Benefits for individuals</label><textarea data-bind="introduce.peopleBenefits"></textarea></div>
+            <div class="field full"><label>معرفی Ambassador و نحوه حمایت</label><textarea data-bind="introduce.ambassadorIntro"></textarea></div>
+          </div></div>
+          <div class="card"><div class="section-title"><div><h2>Next Steps & Deadlines</h2><p>آنچه همه باید بدانند</p></div></div><div class="fields">
+            <div class="field"><label>Training date</label><input type="date" data-bind="introduce.trainingDate"></div>
+            <div class="field"><label>Team OKR deadline</label><input type="date" data-bind="introduce.okrDeadline"></div>
+            <div class="field"><label>CEO approval</label><select data-bind="introduce.ceoApproved"><option value="">—</option><option>Pending</option><option>Approved</option></select></div>
+            <div class="field"><label>All Hands status</label><select data-bind="introduce.allHandsStatus"><option value="">—</option><option>Not scheduled</option><option>Scheduled</option><option>Completed</option></select></div>
+            <div class="field full"><label>Next steps</label><textarea data-bind="introduce.nextSteps"></textarea></div>
+          </div></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-announce">
+        <div class="page-head"><div><div class="eyebrow">STEP 4 · ANNOUNCE</div><h1>اعلام رسمی rollout</h1><p>پیام CEO/Leadership، کانال‌ها، All Hands و deadlines را نهایی کنید.</p></div><button class="btn primary" data-go-btn="educate">مرحله بعد ←</button></div>
+        <div class="grid grid-2">
+          <div class="card"><div class="section-title"><div><h2>Launch Communication</h2><p>Leadership signal</p></div></div><div class="fields">
+            <div class="field"><label>Announcement date</label><input type="date" data-bind="announce.date"></div>
+            <div class="field"><label>All Hands date</label><input type="date" data-bind="announce.allHandsDate"></div>
+            <div class="field full"><label>CEO / Leadership message</label><textarea data-bind="announce.ceoMessage"></textarea></div>
+            <div class="field full"><label>Channels</label><input data-bind="announce.channels" placeholder="Email, All Hands, Teams/Slack, Portal..."></div>
+          </div></div>
+          <div class="card"><div class="section-title"><div><h2>Launch Readiness</h2><p>قبل از ارسال رسمی</p></div></div><div class="fields">
+            <div class="field"><label>Strategy shared?</label><select data-bind="announce.strategyShared"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+            <div class="field"><label>Deadlines shared?</label><select data-bind="announce.deadlinesShared"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+            <div class="field"><label>Q&A / FAQ ready?</label><select data-bind="announce.faqReady"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+            <div class="field"><label>CEO email sent?</label><select data-bind="announce.emailSent"><option value="">—</option><option>No</option><option>Yes</option></select></div>
+            <div class="field full"><label>Communication notes</label><textarea data-bind="announce.notes"></textarea></div>
+          </div></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-educate">
+        <div class="page-head"><div><div class="eyebrow">STEP 5 · EDUCATE</div><h1>آموزش و Capability Building</h1><p>Executives، managers و team members باید یک زبان مشترک درباره Objective، Key Result، KPI و Initiative داشته باشند.</p></div><button class="btn primary" data-go-btn="teams">مرحله بعد ←</button></div>
+        <div class="grid grid-2">
+          <div class="card"><div class="section-title"><div><h2>Training Status</h2><p>Audience-specific completion</p></div></div><div class="fields">
+            <div class="field"><label>Executives</label><select data-bind="educate.executives"><option>Not started</option><option>Scheduled</option><option>In progress</option><option>Completed</option></select></div>
+            <div class="field"><label>Managers</label><select data-bind="educate.managers"><option>Not started</option><option>Scheduled</option><option>In progress</option><option>Completed</option></select></div>
+            <div class="field"><label>Team members</label><select data-bind="educate.teamMembers"><option>Not started</option><option>Scheduled</option><option>In progress</option><option>Completed</option></select></div>
+            <div class="field"><label>Training deadline</label><input type="date" data-bind="educate.deadline"></div>
+            <div class="field full"><label>Curriculum / workshop notes</label><textarea data-bind="educate.notes" placeholder="OKR methodology, KPI vs OKR, writing KRs, initiatives..."></textarea></div>
+          </div></div>
+          <div class="card"><div class="section-title"><div><h2>Resources & Active Links</h2><p>Reading / video / internal materials</p></div></div>
+            <div class="resource-row"><div class="field"><label>Leadership resource</label><input id="resource1" data-bind="educate.resource1" placeholder="https://..."></div><button class="btn resource-open" data-open-url="resource1">باز کردن ↗</button></div>
+            <div class="resource-row" style="margin-top:9px"><div class="field"><label>Team training resource</label><input id="resource2" data-bind="educate.resource2" placeholder="https://..."></div><button class="btn resource-open" data-open-url="resource2">باز کردن ↗</button></div>
+            <div class="resource-row" style="margin-top:9px"><div class="field"><label>Internal guide / policy</label><input id="resource3" data-bind="educate.resource3" placeholder="https://..."></div><button class="btn resource-open" data-open-url="resource3">باز کردن ↗</button></div>
+            <div class="module-note" style="margin-top:12px">در handbook، آموزش جداگانه برای executives، managers و team members و reading material برای Leadership توصیه شده است.</div>
+          </div>
+        </div>
+      </section>
+
+<section class="view" id="view-strategy">
+        <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP</div><h1>Ultimate Goal، Strategic Pillars و KPIs</h1><p>ابتدا strategy context را روشن کنید و سپس Company OKRs را بسازید.</p></div><div class="step-actions"><button class="btn" data-go-btn="company">Company OKRs</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
 
         <div class="card">
           <div class="section-title"><div><h2>Ultimate Goal</h2><p>جهت‌گیری بلندمدت؛ ترکیبی از mission و vision</p></div></div>
@@ -240,22 +343,34 @@ tr:last-child td{border-bottom:0}
       </section>
 
       <section class="view" id="view-company">
-        <div class="page-head"><div><div class="eyebrow">CREATE · COMPANY LEVEL</div><h1>Company OKRs</h1><p>Objectiveهای سطح شرکت باید به‌اندازه کافی high-level باشند و بخش بزرگی از سازمان بتواند بر آن‌ها اثر بگذارد.</p></div><button class="btn teal no-print" data-action="add-company-okr">+ Objective جدید</button></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP · COMPANY LEVEL</div><h1>Company OKRs</h1><p>Company OKRs strategy را به outcomes سالانه / high-level تبدیل می‌کنند.</p></div><div class="step-actions"><button class="btn teal no-print" data-action="add-company-okr">+ Objective جدید</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
         <div id="companyOkrs" class="list-stack"></div>
       </section>
 
       <section class="view" id="view-teams">
-        <div class="page-head"><div><div class="eyebrow">CREATE · GROUP LEVEL</div><h1>Groups، KPIs و Group OKRs</h1><p>تیم‌ها و دپارتمان‌ها OKRهای دوره‌ای خود را با Company priorities هم‌راستا می‌کنند و interdependencyها را آشکار می‌سازند.</p></div><button class="btn teal no-print" data-action="add-team">+ گروه جدید</button></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 6 · CREATE</div><h1>Group KPIs، Group OKRs و Alignment</h1><p>تیم‌ها business-as-usual KPIs و quarterly OKRs را تعریف می‌کنند، interdependencyها را مشخص و approval می‌گیرند.</p></div><div class="step-actions"><button class="btn teal no-print" data-action="add-team">+ گروه جدید</button><button class="btn primary" data-go-btn="checkins">مرحله بعد ←</button></div></div>
         <div id="teams" class="list-stack"></div>
       </section>
 
       <section class="view" id="view-checkins">
-        <div class="page-head"><div><div class="eyebrow">LAUNCH · EXECUTION</div><h1>Weekly / Biweekly Check-in</h1><p>Current value، confidence و توضیح آخرین پیشرفت یا مانع را ثبت کنید. این بخش progress را خودکار محاسبه می‌کند.</p></div></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 7 · INTEGRATE</div><h1>Check-in، 1:1 و Management Rhythm</h1><p>OKR را وارد کار روزمره کنید: progress update، 1:1، leadership review و accountability.</p></div><button class="btn primary" data-go-btn="review">مرحله بعد ←</button></div>
         <div id="checkins" class="checkin-list"></div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="card"><div class="section-title"><div><h2>1:1 Review</h2><p>مدیر ↔ فرد؛ progress، blockers و support</p></div></div><div class="fields">
+            <div class="field"><label>1:1 cadence</label><select data-bind="integrate.oneToOneCadence"><option value="">—</option><option>Weekly</option><option>Biweekly</option><option>Monthly</option></select></div>
+            <div class="field"><label>Next 1:1 date</label><input type="date" data-bind="integrate.nextOneToOne"></div>
+            <div class="field full"><label>1:1 notes / support / next best step</label><textarea data-bind="integrate.oneToOneNotes"></textarea></div>
+          </div></div>
+          <div class="card"><div class="section-title"><div><h2>Leadership Review</h2><p>Health of execution + interdependencies</p></div></div><div class="fields">
+            <div class="field"><label>Next leadership review</label><input type="date" data-bind="integrate.nextLeadershipReview"></div>
+            <div class="field"><label>Overall health</label><select data-bind="integrate.health"><option value="">—</option><option>On track</option><option>Needs attention</option><option>Off track</option></select></div>
+            <div class="field full"><label>Decisions / resource allocation / issues</label><textarea data-bind="integrate.leadershipNotes"></textarea></div>
+          </div></div>
+        </div>
       </section>
 
       <section class="view" id="view-review">
-        <div class="page-head"><div><div class="eyebrow">LEARN & REPEAT</div><h1>Review، Lessons Learned و Cycle بعد</h1><p>نتایج را ببندید، یادگیری را capture کنید و process را برای دوره بعد بهبود دهید.</p></div><button class="btn primary no-print" onclick="window.print()">چاپ / PDF گزارش</button></div>
+        <div class="page-head"><div><div class="eyebrow">STEP 8 · LEARN & REPEAT</div><h1>Review، Lessons Learned و Cycle بعد</h1><p>نتایج را ببندید، یادگیری را capture کنید و process را برای دوره بعد بهبود دهید.</p></div><button class="btn primary no-print" onclick="window.print()">چاپ / PDF گزارش</button></div>
 
         <div class="grid grid-3" id="reviewStats"></div>
 
@@ -287,16 +402,24 @@ tr:last-child td{border-bottom:0}
 
 <script>
 (function(){
-const KEY='hb_okr_system_v1';
+const AUTH='hb_okr_public_auth_v2';
+let auth=null;try{auth=JSON.parse(localStorage.getItem(AUTH)||'null')}catch(e){}
+function hashKey(v){let h=0;for(let i=0;i<v.length;i++){h=((h<<5)-h)+v.charCodeAt(i);h|=0}return Math.abs(h).toString(36)}
+let KEY='hb_okr_system_v2_'+hashKey((auth&&auth.email?auth.email:'guest').toLowerCase());
 const clone=o=>JSON.parse(JSON.stringify(o));
 const emptyState={
   meta:{orgName:'',cycle:'',sponsor:'',ambassador:'',startDate:'',endDate:'',companyCadence:'Annual',teamCadence:'Quarterly',checkinFreq:'Weekly',leadershipReviewFreq:'Monthly',processNotes:''},
+  prepare:{rolloutApproach:'',groupDesign:'',approvalDeadline:'',closeDeadline:'',processNotes:''},
+  introduce:{why:'',companyBenefits:'',peopleBenefits:'',ambassadorIntro:'',trainingDate:'',okrDeadline:'',ceoApproved:'',allHandsStatus:'',nextSteps:''},
+  announce:{date:'',allHandsDate:'',ceoMessage:'',channels:'',strategyShared:'',deadlinesShared:'',faqReady:'',emailSent:'',notes:''},
+  educate:{executives:'Not started',managers:'Not started',teamMembers:'Not started',deadline:'',notes:'',resource1:'',resource2:'',resource3:''},
+  integrate:{oneToOneCadence:'',nextOneToOne:'',oneToOneNotes:'',nextLeadershipReview:'',health:'',leadershipNotes:''},
   strategy:{ultimateGoal:'',pillars:[],kpis:[]},
   companyOkrs:[],
   teams:[],
   review:{allHands:'',lessons:'',nextFocus:''}
 };
-let state=load();
+let state=load();if(auth&&auth.org&&!state.meta.orgName)state.meta.orgName=auth.org;
 function id(){return Math.random().toString(36).slice(2,9)}
 function load(){try{const raw=localStorage.getItem(KEY);return raw?Object.assign(clone(emptyState),JSON.parse(raw)):clone(emptyState)}catch(e){return clone(emptyState)}}
 function save(silent){
@@ -342,12 +465,13 @@ function bindStatic(){
 function updateHeader(){
   document.getElementById('topOrg').textContent=state.meta.orgName||'سازمان شما';
   document.getElementById('topCycle').textContent=state.meta.cycle||'OKR Cycle';
+  if(auth){document.getElementById('userDisplay').textContent=auth.name||auth.email||'User';document.getElementById('userRoleDisplay').textContent=auth.role||'';document.getElementById('userInitial').textContent=(auth.name||auth.email||'U').trim().charAt(0).toUpperCase()}
 }
 function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
   document.querySelectorAll('[data-go]').forEach(a=>a.classList.toggle('active',a.dataset.go===name));
   history.replaceState(null,'','#'+name);
-  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar').classList.remove('open');if(document.getElementById('mobileStage'))document.getElementById('mobileStage').value=name;
   if(name==='dashboard')renderDashboard();
   if(name==='checkins')renderCheckins();
   if(name==='review')renderReview();
@@ -402,13 +526,20 @@ function renderCompany(){
   const box=document.getElementById('companyOkrs');
   box.innerHTML=state.companyOkrs.length?state.companyOkrs.map((o,i)=>objectiveHtml(o,i,'company')).join(''):'<div class="empty">هنوز Company Objective ثبت نشده است. با «Objective جدید» شروع کنید.</div>';
 }
+function renderTeamKpis(t,ti){
+ if(!(t.kpis||[]).length)return '<div class="empty">هنوز Group KPI ثبت نشده است.</div>';
+ return '<div class="table-wrap"><table><thead><tr><th>KPI</th><th>Owner</th><th>Current</th><th>Target</th><th>Unit</th><th></th></tr></thead><tbody>'+
+ (t.kpis||[]).map((k,ki)=>'<tr><td><input data-team-kpi="'+ti+'" data-k="'+ki+'" data-f="name" value="'+esc(k.name||'')+'"></td><td><input data-team-kpi="'+ti+'" data-k="'+ki+'" data-f="owner" value="'+esc(k.owner||'')+'"></td><td><input type="number" step="any" data-team-kpi="'+ti+'" data-k="'+ki+'" data-f="current" value="'+esc(k.current||'')+'"></td><td><input type="number" step="any" data-team-kpi="'+ti+'" data-k="'+ki+'" data-f="target" value="'+esc(k.target||'')+'"></td><td><input data-team-kpi="'+ti+'" data-k="'+ki+'" data-f="unit" value="'+esc(k.unit||'')+'"></td><td><button class="icon-btn" data-del-team-kpi="'+ti+'" data-k="'+ki+'">×</button></td></tr>').join('')+
+ '</tbody></table></div>'
+}
 function renderTeams(){
   const box=document.getElementById('teams');
   if(!state.teams.length){box.innerHTML='<div class="empty">هنوز Group / Team تعریف نشده است.</div>';return}
   box.innerHTML=state.teams.map((t,ti)=>'<div class="team-box">'+
     '<div class="team-title"><input data-team="'+ti+'" data-f="name" value="'+esc(t.name)+'" placeholder="نام گروه / واحد"><input data-team="'+ti+'" data-f="lead" value="'+esc(t.lead)+'" placeholder="Team Lead"><button class="icon-btn" data-del-team="'+ti+'">×</button></div>'+
-    '<div class="team-meta"><div class="field"><label>Core responsibilities</label><input data-team="'+ti+'" data-f="responsibilities" value="'+esc(t.responsibilities)+'" placeholder="مسئولیت‌های اصلی"></div><div class="field"><label>Interdependencies / Notes</label><input data-team="'+ti+'" data-f="interdependencies" value="'+esc(t.interdependencies)+'" placeholder="وابستگی به سایر تیم‌ها"></div></div>'+
-    '<div class="section-title"><div><h2 style="font-size:13px">Group OKRs</h2><p>Quarterly priorities</p></div><button class="btn no-print" data-add-team-okr="'+ti+'">+ Objective</button></div>'+
+    '<div class="team-meta"><div class="field"><label>Core responsibilities</label><input data-team="'+ti+'" data-f="responsibilities" value="'+esc(t.responsibilities)+'" placeholder="مسئولیت‌های اصلی"></div><div class="field"><label>Interdependencies / Notes</label><input data-team="'+ti+'" data-f="interdependencies" value="'+esc(t.interdependencies)+'" placeholder="وابستگی به سایر تیم‌ها / منابع"></div></div>'+
+    '<div class="section-title"><div><h2 style="font-size:13px">Group KPIs</h2><p>Business-as-usual health indicators</p></div><button class="btn no-print" data-add-team-kpi="'+ti+'">+ KPI</button></div>'+renderTeamKpis(t,ti)+
+    '<div class="section-title" style="margin-top:14px"><div><h2 style="font-size:13px">Group OKRs</h2><p>Quarterly outcomes + manager approval</p></div><button class="btn no-print" data-add-team-okr="'+ti+'">+ Objective</button></div>'+
     '<div class="list-stack">'+((t.okrs||[]).length?(t.okrs||[]).map((o,oi)=>objectiveHtml(o,oi,'team:'+ti)).join(''):'<div class="empty">برای این گروه هنوز OKR ثبت نشده است.</div>')+'</div>'+
   '</div>').join('');
 }
@@ -416,11 +547,15 @@ function blankObjective(){return {id:id(),objective:'',owner:'',status:'draft',w
 function blankKr(){return {id:id(),text:'',baseline:'',target:'',current:'',unit:'',owner:'',confidence:'on-track',lastNote:'',lastUpdate:''}}
 
 document.addEventListener('click',e=>{
+  const sg=e.target.closest('[data-stage-go]');if(sg){showView(sg.dataset.stageGo);return}
+  const op=e.target.closest('[data-open-url]');if(op){const u=document.getElementById(op.dataset.openUrl).value.trim();try{const x=new URL(u);if(/^https?:$/.test(x.protocol))window.open(x.href,'_blank','noopener');else toast('لینک معتبر نیست')}catch(err){toast('لینک معتبر نیست')}return}
+  if(e.target.matches('[data-add-team-kpi]')){const ti=+e.target.dataset.addTeamKpi;if(!state.teams[ti].kpis)state.teams[ti].kpis=[];state.teams[ti].kpis.push({id:id(),name:'',owner:'',current:'',target:'',unit:''});renderTeams();save(true);return}
+  if(e.target.matches('[data-del-team-kpi]')){const ti=+e.target.dataset.delTeamKpi,ki=+e.target.dataset.k;state.teams[ti].kpis.splice(ki,1);renderTeams();save(true);return}
   const a=e.target.closest('[data-action]');if(a){
     if(a.dataset.action==='add-pillar'){state.strategy.pillars.push({id:id(),title:'',description:''});renderPillars();save(true)}
     if(a.dataset.action==='add-kpi'){state.strategy.kpis.push({id:id(),name:'',pillar:'',owner:'',current:'',target:'',unit:''});renderKpis();save(true)}
     if(a.dataset.action==='add-company-okr'){state.companyOkrs.push(blankObjective());renderCompany();save(true)}
-    if(a.dataset.action==='add-team'){state.teams.push({id:id(),name:'',lead:'',responsibilities:'',interdependencies:'',okrs:[]});renderTeams();save(true)}
+    if(a.dataset.action==='add-team'){state.teams.push({id:id(),name:'',lead:'',responsibilities:'',interdependencies:'',kpis:[],okrs:[]});renderTeams();save(true)}
   }
   if(e.target.matches('[data-del-pillar]')){state.strategy.pillars.splice(+e.target.dataset.delPillar,1);renderPillars();renderKpis();save(true)}
   if(e.target.matches('[data-del-kpi]')){state.strategy.kpis.splice(+e.target.dataset.delKpi,1);renderKpis();save(true)}
@@ -472,6 +607,7 @@ document.addEventListener('input',e=>{
     k[f]=e.target.value;save(true)
   }
   if(e.target.dataset.team){state.teams[+e.target.dataset.team][e.target.dataset.f]=e.target.value;save(true)}
+  if(e.target.dataset.teamKpi){const ti=+e.target.dataset.teamKpi,ki=+e.target.dataset.k;if(!state.teams[ti].kpis)state.teams[ti].kpis=[];state.teams[ti].kpis[ki][e.target.dataset.f]=e.target.value;save(true)}
   if(e.target.dataset.check){
     const item=allKrs().find(x=>x.kr.id===e.target.dataset.check);if(item){item.kr[e.target.dataset.f]=e.target.value;save(true)}
   }
@@ -490,7 +626,23 @@ function renderCheckins(){
       '<button class="btn teal" data-check-save="'+k.id+'">ثبت Check-in · '+Math.round(progress(k))+'%</button></div></div>';
   }).join('');
 }
-function renderDashboard(){
+function stepPct(i){
+ const filled=v=>String(v||'').trim().length>0;
+ if(i===0)return Math.round(([state.meta.sponsor,state.meta.ambassador,state.meta.startDate,state.meta.endDate,state.prepare.rolloutApproach,state.prepare.groupDesign,state.meta.checkinFreq,state.prepare.processNotes].filter(filled).length/8)*100);
+ if(i===1)return Math.round(([state.introduce.why,state.introduce.companyBenefits,state.introduce.peopleBenefits,state.introduce.ambassadorIntro,state.introduce.trainingDate,state.introduce.okrDeadline,state.introduce.nextSteps].filter(filled).length/7)*100);
+ if(i===2)return Math.round(((filled(state.strategy.ultimateGoal)?1:0)+(state.strategy.pillars.length?1:0)+(state.strategy.kpis.length?1:0)+(state.companyOkrs.length?1:0))/4*100);
+ if(i===3)return Math.round(([state.announce.date,state.announce.allHandsDate,state.announce.ceoMessage,state.announce.channels,state.announce.strategyShared,state.announce.deadlinesShared].filter(filled).length/6)*100);
+ if(i===4)return Math.round(([state.educate.executives,state.educate.managers,state.educate.teamMembers,state.educate.deadline,state.educate.resource1].filter(v=>filled(v)&&v!=='Not started').length/5)*100);
+ if(i===5)return Math.round(((state.teams.length?1:0)+(state.teams.some(t=>(t.kpis||[]).length)?1:0)+(state.teams.some(t=>(t.okrs||[]).length)?1:0))/3*100);
+ if(i===6)return Math.round(((allKrs().some(x=>x.kr.lastUpdate)?1:0)+(filled(state.integrate.oneToOneNotes)?1:0)+(filled(state.integrate.leadershipNotes)?1:0))/3*100);
+ if(i===7)return Math.round(([state.review.allHands,state.review.lessons,state.review.nextFocus].filter(filled).length/3)*100);return 0
+}
+function renderJourney(){
+ const map=[['setup','Prepare','Foundation'],['introduce','Introduce','Communication'],['strategy','Set up','Strategy'],['announce','Announce','Launch'],['educate','Educate','Capability'],['teams','Create','Group OKRs'],['checkins','Integrate','Execution'],['review','Learn & Repeat','Improvement']];
+ const box=document.getElementById('journeySteps');if(!box)return;
+ box.innerHTML=map.map((x,i)=>'<div class="phase" data-stage-go="'+x[0]+'"><i>'+(i+1)+'</i><h4>'+x[1]+'</h4><small>'+x[2]+'</small><span class="step-pct">'+stepPct(i)+'% complete</span></div>').join('')
+}
+function renderDashboard(){renderJourney();
   const objs=allObjectives(),krs=allKrs(),avg=objs.length?Math.round(objs.reduce((s,x)=>s+objectiveProgress(x.objective),0)/objs.length):0;
   const active=objs.filter(x=>(x.objective.status||'draft')==='active').length;
   const recent=krs.filter(x=>x.kr.lastUpdate).sort((a,b)=>new Date(b.kr.lastUpdate)-new Date(a.kr.lastUpdate));
@@ -556,7 +708,13 @@ document.getElementById('demoBtn').addEventListener('click',()=>{
 });
 
 function renderAll(){updateHeader();renderPillars();renderKpis();renderCompany();renderTeams();renderCheckins();renderDashboard();renderReview()}
+document.getElementById('mobileStage').addEventListener('change',e=>showView(e.target.value));
+document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem(AUTH);location.reload()});
+document.getElementById('loginBtn').addEventListener('click',()=>{const name=document.getElementById('loginName').value.trim(),email=document.getElementById('loginEmail').value.trim().toLowerCase(),org=document.getElementById('loginOrg').value.trim(),role=document.getElementById('loginRole').value;if(!name||!email||!org){alert('نام، ایمیل و سازمان را وارد کنید.');return}localStorage.setItem(AUTH,JSON.stringify({name,email,org,role}));location.reload()});
+document.getElementById('guestLoginBtn').addEventListener('click',()=>{localStorage.setItem(AUTH,JSON.stringify({name:'Demo User',email:'demo@okr.local',org:'شرکت نمونه',role:'Consultant / Facilitator'}));location.reload()});
+if(auth){document.getElementById('authScreen').classList.add('hidden')}else{document.getElementById('authScreen').classList.remove('hidden')}
 bindStatic();renderAll();
+if(auth&&auth.org&&!state.meta.orgName){state.meta.orgName=auth.org;save(true)}
 const initial=(location.hash||'#dashboard').slice(1);if(document.getElementById('view-'+initial))showView(initial);
 })();
 </script>
