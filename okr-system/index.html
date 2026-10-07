@@ -175,36 +175,180 @@ tr:last-child td{border-bottom:0}
 .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.value-pill{border:1px solid var(--line);background:#f8fbfd;border-radius:12px;padding:10px;font-size:9px;font-weight:800}
 .unit-origin{font-size:8px;color:#7b8993;margin:7px 0 2px}.unit-origin b{color:var(--navy)}
 @media(max-width:700px){.values-grid{grid-template-columns:1fr 1fr}}
+
+/* v5 — executive visual audit + training edition + bilingual controls */
+:root{
+  --navy:#17385f;--navy2:#24578a;--teal:#2d6d96;--teal2:#5a91b7;--cyan:#edf4fa;
+  --bg:#f3f6f8;--paper:#ffffff;--muted:#667788;--line:#dfe7ee;--soft:#f5f8fb;
+  --shadow:0 18px 48px rgba(23,56,95,.08);--shadow-sm:0 8px 24px rgba(23,56,95,.055);--r:20px;
+}
+body{font-family:Vazirmatn,"Segoe UI",Tahoma,Arial,sans-serif;background:
+  radial-gradient(circle at 12% 0%,rgba(59,120,169,.05),transparent 28%),var(--bg)}
+.sidebar{background:linear-gradient(180deg,#17385f 0%,#1e4b76 62%,#17385f 100%);box-shadow:10px 0 36px rgba(18,48,82,.08)}
+.brand{padding-top:2px}.brand b{font-size:12px;line-height:1.7}.brand span{font-size:8px;letter-spacing:.03em}
+.nav a{min-height:44px;border:1px solid transparent}.nav a.active{box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.topbar{height:76px;background:rgba(250,252,253,.94);box-shadow:0 4px 20px rgba(23,56,95,.025)}
+.content{max-width:1460px;padding-top:27px}.card,.objective,.team-box,.report-block{box-shadow:var(--shadow-sm)}
+.card{border-color:#e2e9ef}.page-head{margin-bottom:20px}.page-head h1{font-size:29px;letter-spacing:-.02em}
+.btn{transition:.18s ease}.btn:hover{box-shadow:0 8px 18px rgba(23,56,95,.07)}
+.lang-switch{display:inline-flex;align-items:center;border:1px solid var(--line);background:#fff;border-radius:12px;padding:3px;gap:2px}
+.lang-switch button{border:0;background:transparent;color:#728291;border-radius:9px;padding:6px 9px;font-size:8px;font-weight:900;min-width:35px}
+.lang-switch button.active{background:var(--navy);color:#fff}
+.mode-btn{display:inline-flex;align-items:center;gap:6px}
+.mode-dot{width:7px;height:7px;border-radius:50%;background:#82bad8}
+
+/* Landing */
+.auth-screen{position:fixed;inset:0;z-index:999;background:
+  radial-gradient(circle at 85% 10%,rgba(68,137,177,.18),transparent 27%),
+  radial-gradient(circle at 10% 85%,rgba(36,87,138,.10),transparent 25%),
+  #f5f8fa;display:block;overflow:auto;padding:0}
+.entry-shell{width:min(1180px,calc(100% - 32px));margin:28px auto;min-height:calc(100vh - 56px);background:rgba(255,255,255,.96);border:1px solid #e0e8ee;border-radius:30px;box-shadow:0 30px 85px rgba(23,56,95,.12);overflow:hidden}
+.entry-head{height:86px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid #e7edf2;background:rgba(255,255,255,.88)}
+.entry-brand{display:flex;align-items:center;gap:14px}.entry-brand img{width:156px;height:58px;object-fit:contain}.entry-brand-line{width:1px;height:38px;background:#dde6ec}.entry-brand-copy b{display:block;font-size:12px}.entry-brand-copy span{font-size:8px;color:var(--muted)}
+.entry-hero{display:grid;grid-template-columns:1.04fr .96fr;min-height:500px}
+.entry-copy{padding:58px 52px 52px;position:relative;overflow:hidden;background:linear-gradient(145deg,#17385f 0%,#24578a 62%,#326c99 100%);color:#fff}
+.entry-copy:after{content:"";position:absolute;width:330px;height:330px;border-radius:50%;left:-150px;bottom:-170px;border:1px solid rgba(255,255,255,.12)}
+.entry-copy:before{content:"";position:absolute;inset:auto 38px 28px auto;width:155px;height:155px;background:url("https://kishports.com/wp-content/uploads/2023/02/airport_opration.svg") center/contain no-repeat;opacity:.055}
+.entry-kicker{font-size:9px;font-weight:900;letter-spacing:.11em;color:#cfe5f4}.entry-copy h1{font-size:39px;line-height:1.35;margin:15px 0 13px;max-width:600px}.entry-copy p{font-size:11px;line-height:2.05;color:#d9e8f2;max-width:640px;margin:0}
+.entry-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:22px}.entry-tag{border:1px solid rgba(255,255,255,.19);background:rgba(255,255,255,.08);border-radius:999px;padding:7px 10px;font-size:8px}
+.entry-choice{padding:42px;display:flex;flex-direction:column;justify-content:center}
+.entry-choice h2{font-size:23px;margin:0 0 6px}.entry-choice>p{font-size:9px;color:var(--muted);margin:0 0 18px}
+.version-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.version-card{border:1px solid #dfe8ee;background:#fff;border-radius:20px;padding:18px;text-align:inherit;transition:.2s;position:relative;overflow:hidden}
+.version-card:hover{transform:translateY(-3px);border-color:#a9c9dc;box-shadow:0 18px 34px rgba(23,56,95,.09)}
+.version-card .v-icon{width:43px;height:43px;border-radius:13px;background:#edf4fa;display:grid;place-items:center;font-size:18px;margin-bottom:12px}
+.version-card.training .v-icon{background:#fff4e5}.version-card h3{font-size:13px;margin:0 0 4px}.version-card p{font-size:8px;line-height:1.8;color:var(--muted);margin:0 0 11px}.version-card strong{font-size:9px;color:var(--teal)}
+.login-panel{margin-top:16px;border:1px solid #dfe8ee;background:#f9fbfc;border-radius:18px;padding:17px}.login-panel.hidden{display:none!important}
+.entry-foot{padding:12px 32px 18px;font-size:7px;color:#83909a;text-align:center}
+.entry-quality{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.quality-mini{border-top:1px solid #dfe8ee;padding-top:10px}.quality-mini b{display:block;font-size:9px}.quality-mini span{font-size:7px;color:var(--muted)}
+
+/* Dashboard visual hierarchy */
+.dashboard-hero{border-radius:22px;background:linear-gradient(135deg,#17385f,#24578a);color:#fff;padding:22px 24px;margin-bottom:16px;display:flex;justify-content:space-between;gap:18px;align-items:center;box-shadow:0 18px 42px rgba(23,56,95,.14)}
+.dashboard-hero h2{font-size:21px;margin:0 0 5px}.dashboard-hero p{font-size:9px;color:#d4e5f1;margin:0;max-width:760px;line-height:1.9}.dashboard-metrics{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.dash-chip{min-width:88px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);border-radius:13px;padding:9px 11px;text-align:center}.dash-chip b{display:block;font-size:16px}.dash-chip span{font-size:7px;color:#d5e3ed}
+
+/* Training edition */
+.training-screen{position:fixed;inset:0;z-index:1100;background:#f3f6f8;display:none;overflow:auto}.training-screen.show{display:block}
+.training-top{height:78px;position:sticky;top:0;z-index:5;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px}
+.training-brand{display:flex;align-items:center;gap:12px}.training-brand img{width:126px;height:48px;object-fit:contain}.training-brand b{display:block;font-size:11px}.training-brand span{display:block;font-size:7px;color:var(--muted)}
+.training-shell{width:min(1440px,100%);margin:auto;display:grid;grid-template-columns:272px minmax(0,1fr);min-height:calc(100vh - 78px)}
+.training-side{position:sticky;top:78px;height:calc(100vh - 78px);overflow:auto;padding:22px 15px;background:#18395f;color:#fff}
+.training-side h3{font-size:11px;margin:0 8px 13px}.training-nav{display:grid;gap:6px}.training-nav button{border:0;background:transparent;color:#cbd9e4;padding:10px 11px;border-radius:12px;text-align:inherit;font-size:9px;display:flex;gap:9px;align-items:center}
+.training-nav button i{font-style:normal;width:25px;height:25px;border-radius:8px;background:rgba(255,255,255,.08);display:grid;place-items:center;font-weight:900}
+.training-nav button.active,.training-nav button:hover{background:#fff;color:#17385f}.training-nav button.active i{background:#eaf2f8}
+.training-side-note{font-size:7px;line-height:1.8;color:#a9bfd0;margin:18px 8px;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+.training-main{padding:30px 32px 70px;min-width:0}.training-hero{border-radius:24px;background:linear-gradient(135deg,#fff,#f3f7fa);border:1px solid var(--line);padding:26px;box-shadow:var(--shadow-sm);margin-bottom:17px}
+.training-hero .eyebrow{color:#2d6d96}.training-hero h1{font-size:30px;margin:6px 0 8px}.training-hero p{font-size:10px;line-height:1.9;color:var(--muted);max-width:900px;margin:0}
+.training-legend{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.legend-pill{border-radius:999px;padding:6px 9px;font-size:7px;font-weight:900;border:1px solid var(--line);background:#fff}.legend-pill.real{color:#1e5b85}.legend-pill.sample{color:#9b6a11;background:#fff9ed}
+.training-module-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin:23px 2px 12px}.training-module-head h2{font-size:20px;margin:0}.training-module-head p{font-size:9px;color:var(--muted);margin:3px 0 0;max-width:820px}
+.lesson-stack{display:grid;gap:12px}.training-lesson{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow-sm);overflow:hidden}
+.lesson-head{padding:15px 17px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #edf1f4;background:linear-gradient(180deg,#fff,#fbfcfd)}.lesson-head h3{font-size:12px;margin:0}.lesson-no{font-size:8px;background:#eaf2f8;color:#24578a;border-radius:999px;padding:5px 8px;font-weight:900}
+.lesson-grid{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:0}.lesson-col{padding:16px;border-inline-start:1px solid #edf1f4}.lesson-col:first-child{border-inline-start:0}.lesson-col .mini-title{display:flex;align-items:center;gap:6px;font-size:8px;font-weight:900;margin-bottom:7px}.lesson-col .mini-title i{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-style:normal;background:#eef5fa}.lesson-col p{font-size:9px;line-height:1.95;color:#526575;margin:0}.lesson-col.example{background:#f7fbfd}.lesson-col.workshop{background:#fffaf1}.lesson-col.workshop .mini-title i{background:#fff0d7}
+.training-source{font-size:7px;color:#8795a0;margin-top:15px;padding-top:12px;border-top:1px solid var(--line)}
+.training-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* English mode */
+html[dir="ltr"] body{text-align:left}.lang-en .training-side,.lang-en .nav a,.lang-en th,.lang-en td{text-align:left}
+html[dir="ltr"] .sidebar{box-shadow:-10px 0 36px rgba(18,48,82,.08)}
+@media(max-width:1200px){html[dir="ltr"] .sidebar{left:0!important;right:auto!important;transform:translateX(-110%)!important}html[dir="ltr"] .sidebar.open{transform:none!important}}
+@media(max-width:920px){.entry-hero{grid-template-columns:1fr}.entry-copy{padding:36px 30px}.entry-choice{padding:30px}.training-shell{display:block}.training-side{position:relative;top:0;height:auto}.training-nav{grid-template-columns:repeat(4,1fr)}.training-nav button{display:block;text-align:center}.training-nav button i{margin:0 auto 4px}.lesson-grid{grid-template-columns:1fr}.lesson-col{border-inline-start:0;border-top:1px solid #edf1f4}.lesson-col:first-child{border-top:0}}
+@media(max-width:650px){.entry-shell{width:100%;min-height:100vh;margin:0;border-radius:0}.entry-head{padding:0 18px}.entry-brand img{width:126px}.entry-brand-copy{display:none}.entry-copy h1{font-size:30px}.version-grid{grid-template-columns:1fr}.entry-choice{padding:24px 20px}.entry-copy{padding:30px 22px}.entry-quality{grid-template-columns:1fr 1fr}.training-top{padding:0 12px}.training-brand div{display:none}.training-main{padding:20px 14px 55px}.training-nav{grid-template-columns:repeat(2,1fr)}.dashboard-hero{display:block}.dashboard-metrics{justify-content:flex-start;margin-top:13px}}
+
 </style>
 </head>
 <body>
 
+
 <section class="auth-screen" id="authScreen">
-  <div class="auth-card">
-    <div class="auth-side">
-      <div class="auth-logo" style="width:150px;height:72px;background:#fff;padding:9px;border-radius:16px"><img src="https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg" alt="لوگوی شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش" style="width:100%;height:100%;object-fit:contain"></div>
-      <h1>سامانه استقرار و مدیریت OKR</h1>
-      <p>شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش · Strategy Execution Workspace<br>Prepare → Introduce → Set up → Announce → Educate → Create → Integrate → Learn & Repeat</p>
-      <div class="module-note" style="margin-top:22px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#d9e7ed">Public demo · داده‌های هر کاربر روی همین browser نگهداری می‌شود.</div>
-    </div>
-    <div class="auth-main">
-      <div class="eyebrow">WORKSPACE LOGIN</div><h2>ورود / ایجاد فضای کاری</h2>
-      <p>اگر قبلاً با همین ایمیل روی این دستگاه وارد شده باشید، داده‌های Workspace شما بازیابی می‌شود.</p>
-      <div class="fields">
-        <div class="field"><label>نام و نام خانوادگی</label><input id="loginName" autocomplete="name" placeholder="نام شما"></div>
-        <div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
-        <div class="field"><label>سازمان</label><input id="loginOrg" value="شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش" placeholder="Organization"></div>
-        <div class="field"><label>Role</label><select id="loginRole"><option>Executive / Sponsor</option><option>OKR Ambassador</option><option>Manager</option><option>Team Member</option><option>Consultant / Facilitator</option></select></div>
+  <div class="entry-shell">
+    <div class="entry-head">
+      <div class="entry-brand">
+        <img src="https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg" alt="Kish Ports & Airports">
+        <span class="entry-brand-line"></span>
+        <div class="entry-brand-copy"><b data-fa="سامانه اجرای راهبرد و OKR" data-en="Strategy Execution & OKR System">سامانه اجرای راهبرد و OKR</b><span>Kish Ports & Airports Development & Management Co.</span></div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn teal" id="loginBtn">ورود به Workspace</button><button class="btn" id="guestLoginBtn">Demo Login</button></div>
-      <div class="auth-note"><b>توجه:</b> این login در نسخه GitHub Pages، local workspace login است و secure cloud authentication نیست. برای production multi-user، backend/auth جدا لازم است.</div>
+      <div class="lang-switch" aria-label="Language">
+        <button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button>
+      </div>
     </div>
+    <div class="entry-hero">
+      <div class="entry-copy">
+        <div class="entry-kicker">STRATEGY → EXECUTION → LEARNING</div>
+        <h1 data-fa="راهبرد را به یک سیستم زندهٔ اجرا تبدیل کنید." data-en="Turn strategy into a living execution system.">راهبرد را به یک سیستم زندهٔ اجرا تبدیل کنید.</h1>
+        <p data-fa="نسخه اختصاصی شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش؛ با داده‌های واقعی سطح راهبرد، نمونه‌های اجرایی کامل، مسیر آموزش و کارگاه، و فضای قابل ویرایش برای استقرار مرحله‌به‌مرحله OKR."
+           data-en="A dedicated edition for Kish Ports & Airports: real company-level strategy data, comprehensive execution examples, a guided learning/workshop path, and an editable workspace for staged OKR implementation.">نسخه اختصاصی شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش؛ با داده‌های واقعی سطح راهبرد، نمونه‌های اجرایی کامل، مسیر آموزش و کارگاه، و فضای قابل ویرایش برای استقرار مرحله‌به‌مرحله OKR.</p>
+        <div class="entry-tags">
+          <span class="entry-tag">13 Strategic Objectives</span><span class="entry-tag">6 Strategic Pillars</span><span class="entry-tag">14 Organizational Units</span><span class="entry-tag">Editable Demo</span>
+        </div>
+      </div>
+      <div class="entry-choice">
+        <div class="eyebrow" data-fa="انتخاب تجربه" data-en="CHOOSE YOUR EXPERIENCE">انتخاب تجربه</div>
+        <h2 data-fa="از کجا می‌خواهید شروع کنید؟" data-en="Where would you like to start?">از کجا می‌خواهید شروع کنید؟</h2>
+        <p data-fa="برای استفاده مدیریتی وارد Workspace شوید؛ برای تدریس و کارگاه، نسخه آموزشی را باز کنید." data-en="Enter the workspace for execution, or open the guided learning edition for teaching and workshops.">برای استفاده مدیریتی وارد Workspace شوید؛ برای تدریس و کارگاه، نسخه آموزشی را باز کنید.</p>
+        <div class="version-grid">
+          <button class="version-card" id="entryExecBtn">
+            <div class="v-icon">▦</div><h3 data-fa="نسخه اجرایی" data-en="Execution Workspace">نسخه اجرایی</h3>
+            <p data-fa="داشبورد، Strategy، Company OKRs، Unit OKRs، KPI Health، Check-in و Review." data-en="Dashboard, strategy, company OKRs, unit OKRs, KPI health, check-ins and review.">داشبورد، Strategy، Company OKRs، Unit OKRs، KPI Health، Check-in و Review.</p>
+            <strong data-fa="ورود به Workspace ←" data-en="Enter workspace →">ورود به Workspace ←</strong>
+          </button>
+          <button class="version-card training" id="entryTrainBtn">
+            <div class="v-icon">◫</div><h3 data-fa="نسخه آموزشی و کارگاهی" data-en="Learning & Workshop Edition">نسخه آموزشی و کارگاهی</h3>
+            <p data-fa="آموزش بندبه‌بند، جزوه، نمونه تکمیل‌شده کیش و تمرین برای هر مرحله." data-en="Step-by-step learning notes, completed Kish examples, and workshop exercises for every stage.">آموزش بندبه‌بند، جزوه، نمونه تکمیل‌شده کیش و تمرین برای هر مرحله.</p>
+            <strong data-fa="باز کردن نسخه آموزشی ←" data-en="Open learning edition →">باز کردن نسخه آموزشی ←</strong>
+          </button>
+        </div>
+        <div class="login-panel hidden" id="loginPanel">
+          <div class="section-title"><div><h2 style="font-size:14px" data-fa="ورود / ایجاد فضای کاری" data-en="Sign in / Create workspace">ورود / ایجاد فضای کاری</h2><p data-fa="داده‌ها در این نسخه روی همین مرورگر ذخیره می‌شوند." data-en="In this pilot, data is stored in this browser.">داده‌ها در این نسخه روی همین مرورگر ذخیره می‌شوند.</p></div></div>
+          <div class="fields">
+            <div class="field"><label data-fa="نام و نام خانوادگی" data-en="Full name">نام و نام خانوادگی</label><input id="loginName" autocomplete="name" placeholder="نام شما / Your name"></div>
+            <div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
+            <div class="field"><label data-fa="سازمان" data-en="Organization">سازمان</label><input id="loginOrg" value="شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش" placeholder="Organization"></div>
+            <div class="field"><label>Role</label><select id="loginRole"><option>Executive / Sponsor</option><option>OKR Ambassador</option><option>Manager</option><option>Team Member</option><option>Consultant / Facilitator</option></select></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:13px;flex-wrap:wrap"><button class="btn primary" id="loginBtn" data-fa="ورود به Workspace" data-en="Enter workspace">ورود به Workspace</button><button class="btn" id="guestLoginBtn" data-fa="ورود دمو" data-en="Demo login">ورود دمو</button></div>
+        </div>
+        <div class="entry-quality">
+          <div class="quality-mini"><b data-fa="راهبرد واقعی" data-en="Real strategy">راهبرد واقعی</b><span data-fa="Vision، Mission، Values، Pillars و ۱۳ Objective" data-en="Vision, mission, values, pillars and 13 objectives">Vision، Mission، Values، Pillars و ۱۳ Objective</span></div>
+          <div class="quality-mini"><b data-fa="داده اجرایی نمونه" data-en="Sample execution data">داده اجرایی نمونه</b><span data-fa="برای پوشش همه statusها و حالات" data-en="Designed to cover all states and statuses">برای پوشش همه statusها و حالات</span></div>
+          <div class="quality-mini"><b data-fa="قابل ویرایش" data-en="Editable">قابل ویرایش</b><span data-fa="برای کارگاه، پایلوت و refinement" data-en="For workshops, pilots and refinement">برای کارگاه، پایلوت و refinement</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="entry-foot" data-fa="Pilot / Workshop Edition · برای بهره‌برداری سازمانی چندکاربره، Backend، SSO، RBAC، Audit Trail و پایگاه داده مرکزی باید اضافه شود."
+      data-en="Pilot / Workshop Edition · Organization-wide production use still requires a backend, SSO, RBAC, audit trail and a central database.">Pilot / Workshop Edition · برای بهره‌برداری سازمانی چندکاربره، Backend، SSO، RBAC، Audit Trail و پایگاه داده مرکزی باید اضافه شود.</div>
   </div>
 </section>
 
+
+<section class="training-screen" id="trainingScreen">
+  <div class="training-top">
+    <div class="training-brand"><img src="https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg" alt="Kish Ports & Airports"><div><b data-fa="نسخه آموزشی استقرار OKR" data-en="OKR Implementation Learning Edition">نسخه آموزشی استقرار OKR</b><span>Handbook-guided · Kish completed examples</span></div></div>
+    <div class="training-actions">
+      <div class="lang-switch"><button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button></div>
+      <button class="btn" id="trainingExecBtn" data-fa="نسخه اجرایی" data-en="Execution workspace">نسخه اجرایی</button>
+      <button class="btn primary" id="trainingCloseBtn" data-fa="بستن" data-en="Close">بستن</button>
+    </div>
+  </div>
+  <div class="training-shell">
+    <aside class="training-side">
+      <h3 data-fa="مسیر یادگیری" data-en="LEARNING PATH">مسیر یادگیری</h3>
+      <div class="training-nav" id="trainingNav"></div>
+      <div class="training-side-note" data-fa="هر مرحله سه لایه دارد: «جزوه و منطق»، «نمونه تکمیل‌شده کیش»، و «تمرین کارگاهی». داده‌های Current/Status در مثال‌های واحدی، آموزشی و فرضی‌اند."
+        data-en="Each stage has three layers: learning notes, a completed Kish example, and a workshop exercise. Unit-level current/status values are instructional samples.">هر مرحله سه لایه دارد: «جزوه و منطق»، «نمونه تکمیل‌شده کیش»، و «تمرین کارگاهی». داده‌های Current/Status در مثال‌های واحدی، آموزشی و فرضی‌اند.</div>
+    </aside>
+    <main class="training-main">
+      <div class="training-hero">
+        <div class="eyebrow">OKR IMPLEMENTATION · FACILITATOR VIEW</div>
+        <h1 data-fa="از «فهم روش» تا «اجرای واقعی» در همان محیط" data-en="From understanding the method to seeing it executed in the same environment">از «فهم روش» تا «اجرای واقعی» در همان محیط</h1>
+        <p data-fa="این نسخه برای کلاس و کارگاه طراحی شده است: مدرس می‌تواند هر بند از فرایند استقرار را توضیح دهد، بلافاصله نمونه انجام‌شده متناسب با ساختار واقعی بنادر و فرودگاه‌های کیش را نشان دهد، و سپس تمرین همان مرحله را به شرکت‌کنندگان بسپارد."
+           data-en="This edition is built for training and workshops: explain each implementation step, immediately show a completed example tailored to the real Kish Ports & Airports structure, then hand participants the corresponding exercise.">این نسخه برای کلاس و کارگاه طراحی شده است: مدرس می‌تواند هر بند از فرایند استقرار را توضیح دهد، بلافاصله نمونه انجام‌شده متناسب با ساختار واقعی بنادر و فرودگاه‌های کیش را نشان دهد، و سپس تمرین همان مرحله را به شرکت‌کنندگان بسپارد.</p>
+        <div class="training-legend"><span class="legend-pill real" data-fa="● داده واقعی راهبردی شرکت" data-en="● Real company strategy data">● داده واقعی راهبردی شرکت</span><span class="legend-pill sample" data-fa="◆ نمونه آموزشی اجرای واحدها" data-en="◆ Instructional unit execution samples">◆ نمونه آموزشی اجرای واحدها</span><span class="legend-pill">Handbook-aligned</span></div>
+      </div>
+      <div id="trainingBody"></div>
+    </main>
+  </div>
+</section>
 <div class="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="company-logo"><img id="sideLogo" alt="Company logo"></div><div><b id="sideOrgName">OKR Implementation System</b><span>Public Demo · editable sample</span></div></div>
+    <div class="brand"><div class="company-logo"><img id="sideLogo" alt="Company logo"></div><div><b id="sideOrgName">OKR Implementation System</b><span>Strategy Execution · Pilot</span></div></div>
     <nav class="nav">
 <a href="#dashboard" data-go="dashboard" class="active"><span class="ico">▦</span> داشبورد</a>
 <a href="#setup" data-go="setup"><span class="ico">1</span> Prepare</a>
@@ -227,6 +371,8 @@ tr:last-child td{border-bottom:0}
       <div class="top-title" style="display:flex;align-items:center;gap:10px"><img id="topLogo" class="top-company-logo" alt="Company logo"><div><b id="topOrg">سازمان شما</b><span id="topCycle">OKR Cycle</span></div></div>
       <div class="top-actions">
         <button class="btn mobile-menu" id="menuBtn">☰</button>
+        <button class="btn mode-btn" id="topTrainingBtn"><span class="mode-dot"></span><span data-fa="آموزشی" data-en="Learning">آموزشی</span></button>
+        <div class="lang-switch"><button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button></div>
 <select class="mobile-stage" id="mobileStage"><option value="dashboard">داشبورد</option><option value="setup">1. Prepare</option><option value="introduce">2. Introduce</option><option value="strategy">3. Set up</option><option value="announce">4. Announce</option><option value="educate">5. Educate</option><option value="teams">6. Create</option><option value="checkins">7. Integrate</option><option value="review">8. Learn & Repeat</option></select>
         <button class="btn optional" id="demoBtn">داده نمونه کیش</button>
         <button class="btn optional" id="exportBtn">Export JSON</button>
@@ -240,6 +386,11 @@ tr:last-child td{border-bottom:0}
     <div class="content">
       <section class="view active" id="view-dashboard">
         <div class="demo-banner"><div><b>نسخه Kish Ports & Airports فعال است</b><span>Vision، Mission، Values، Ultimate Goal، ۶ Strategic Pillar، ۱۳ Objective و Targetهای سطح شرکت از سند راهبردی وارد شده‌اند؛ Previous/Current values و داده‌های معاونت‌ها/مدیریت‌ها/ادارات برای نمایش کامل نرم‌افزار، نمونه اجرایی و قابل ویرایش‌اند.</span></div><button class="btn" id="refreshDemoBtn">بازنشانی نسخه نمونه کیش</button></div>
+        <div class="dashboard-hero">
+          <div><div class="eyebrow" style="color:#bcd6e7">KISH STRATEGY EXECUTION OS</div><h2 data-fa="یک تصویر واحد از راهبرد، اجرا و یادگیری" data-en="One view of strategy, execution and learning">یک تصویر واحد از راهبرد، اجرا و یادگیری</h2><p data-fa="سطح شرکت بر مبنای سند راهبردی واقعی است؛ سطوح واحدی با داده‌های نمونه طراحی شده‌اند تا همه حالت‌های مدیریتی، انحراف، برابری با هدف، عبور از هدف، ریسک و stale data قابل نمایش و تمرین باشد."
+             data-en="Company-level strategy comes from the real strategic document. Unit-level sample values deliberately cover target gaps, target matches, over-performance, risk, and stale data for management practice.">سطح شرکت بر مبنای سند راهبردی واقعی است؛ سطوح واحدی با داده‌های نمونه طراحی شده‌اند تا همه حالت‌های مدیریتی، انحراف، برابری با هدف، عبور از هدف، ریسک و stale data قابل نمایش و تمرین باشد.</p></div>
+          <div class="dashboard-metrics"><div class="dash-chip"><b>13</b><span>Objectives</span></div><div class="dash-chip"><b>6</b><span>Pillars</span></div><div class="dash-chip"><b>14</b><span>Units</span></div><div class="dash-chip"><b>FA / EN</b><span>Bilingual</span></div></div>
+        </div>
         <div class="page-head"><div><div class="eyebrow">EXECUTION OVERVIEW</div><h1>داشبورد استقرار OKR · بنادر و فرودگاه‌های کیش</h1><p>نمای مدیریتی از ۱۳ هدف راهبردی، Key Results، KPI Health و وضعیت اجرای نمونه در سطوح سازمانی.</p></div><button class="btn teal no-print" data-go-btn="checkins">ثبت Check-in جدید</button></div>
         <div class="grid grid-4" id="stats"></div>
 
@@ -464,6 +615,58 @@ let auth=null;try{auth=JSON.parse(localStorage.getItem(AUTH)||'null')}catch(e){}
 function hashKey(v){let h=0;for(let i=0;i<v.length;i++){h=((h<<5)-h)+v.charCodeAt(i);h|=0}return Math.abs(h).toString(36)}
 let KEY='hb_okr_kish_v1_'+hashKey((auth&&auth.email?auth.email:'guest').toLowerCase());
 const clone=o=>JSON.parse(JSON.stringify(o));
+
+const LANG_KEY='hb_okr_lang_v1';
+let appLang=localStorage.getItem(LANG_KEY)||'fa';
+const _originalText=new WeakMap();
+const COMMON_TRANSLATIONS={
+ 'داشبورد':'Dashboard','آماده‌سازی و Governance':'Prepare & Governance','ثبت Check-in جدید':'New check-in','ذخیره':'Save',
+ 'داده نمونه کیش':'Kish sample data','خروج / تغییر کاربر':'Sign out / Change user','مرحله بعد ←':'Next stage →',
+ 'لوگوی سازمان':'Organization logo','مشخصات سازمان و Cycle':'Organization & cycle settings','نام سازمان':'Organization name','عنوان Cycle':'Cycle title',
+ 'تاریخ شروع':'Start date','تاریخ پایان':'End date','ورود / ایجاد فضای کاری':'Sign in / Create workspace',
+ 'اهداف و شاخص‌ها':'Objectives & metrics','آخرین Check-inها':'Latest check-ins','نسخه اجرایی':'Execution workspace',
+ 'نسخه آموزشی و کارگاهی':'Learning & Workshop Edition','بستن':'Close','مسیر یادگیری':'Learning path',
+ 'ستون‌های راهبردی':'Strategic Pillars','داده واقعی راهبردی شرکت':'Real company strategy data',
+ 'داده اجرایی نمونه':'Sample execution data','قابل ویرایش':'Editable','آموزشی':'Learning'
+};
+function translateKnownText(root){
+  const walker=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT);
+  let n;while(n=walker.nextNode()){
+    if(!n.parentElement||['SCRIPT','STYLE','TEXTAREA','OPTION'].includes(n.parentElement.tagName))continue;
+    const raw=n.nodeValue,trim=raw.trim();if(!trim)continue;
+    if(!_originalText.has(n))_originalText.set(n,raw);
+    const fa=_originalText.get(n),key=fa.trim();
+    if(appLang==='en'&&COMMON_TRANSLATIONS[key]) n.nodeValue=fa.replace(key,COMMON_TRANSLATIONS[key]);
+    else if(appLang==='fa') n.nodeValue=fa;
+  }
+}
+function applyLanguage(){
+  document.documentElement.lang=appLang;document.documentElement.dir=appLang==='fa'?'rtl':'ltr';
+  document.body.classList.toggle('lang-en',appLang==='en');
+  document.querySelectorAll('[data-fa][data-en]').forEach(el=>{el.textContent=appLang==='fa'?el.dataset.fa:el.dataset.en});
+  document.querySelectorAll('[data-set-lang]').forEach(b=>b.classList.toggle('active',b.dataset.setLang===appLang));
+  translateKnownText(document.body);
+  if(document.getElementById('trainingScreen')?.classList.contains('show'))renderTraining(window.__trainingModule||'prepare');
+}
+function setLanguage(lang){appLang=lang==='en'?'en':'fa';localStorage.setItem(LANG_KEY,appLang);applyLanguage()}
+const TRAINING_MODULES=[{"id":"prepare","n":"01","faTitle":"آماده‌سازی و Governance","enTitle":"Prepare & Governance","faIntro":"قبل از نوشتن OKR، باید قواعد بازی روشن باشد: مالک فرایند، گروه‌های مشارکت‌کننده، cadenceها، review rhythm و فرایند مستند.","enIntro":"Before writing OKRs, establish the operating rules: program ownership, participating groups, cadences, review rhythm and a documented process.","lessons":[{"faTitle":"انتخاب OKR Ambassador","enTitle":"Appoint the OKR Ambassador","faNote":"Ambassador مالک تغییر و مرجع روش است؛ اجرا را هدایت می‌کند، فرایند را نگه می‌دارد، تیم‌ها را در Create/Close کردن OKR حمایت می‌کند و adoption را پیگیری می‌کند.","enNote":"The Ambassador spearheads the change, owns the implementation process, supports teams in creating/closing OKRs, and reinforces adoption.","faExample":"نمونه کیش: «دفتر راهبرد / OKR Ambassador» به‌عنوان Program Owner تعریف شده و Sponsor در سطح مدیرعامل است.","enExample":"Kish example: the Strategy Office / OKR Ambassador is the program owner, with the CEO level as executive sponsor.","faWorkshop":"مشخص کنید یک نفر دقیقاً چه کسی Program Owner است، چه authority دارد و سه مسئولیت غیرقابل‌واگذاری او چیست.","enWorkshop":"Name the Program Owner, clarify their authority, and define three non-delegable responsibilities."},{"faTitle":"تعریف گروه‌های مشارکت‌کننده","enTitle":"Define participating groups","faNote":"گروه‌ها می‌توانند Functional، Cross-functional یا Hybrid باشند. برای شروع می‌توان rollout را تدریجی انجام داد و سپس گسترش داد.","enNote":"Groups can be functional, cross-functional or hybrid. A phased rollout can start with selected groups and expand as learning accumulates.","faExample":"نمونه کیش: ساختار Functional/Hybrid بر مبنای ۱۴ واحد شامل ستاد، اداره کل فرودگاه، اداره کل بنادر و معاونت‌ها/مدیریت‌های زیرمجموعه.","enExample":"Kish example: a functional/hybrid structure across 14 units covering HQ, Airport General Directorate, Ports General Directorate and their subordinate units.","faWorkshop":"سه واحد را برای Pilot انتخاب کنید و برای هرکدام دلیل strategic relevance بنویسید.","enWorkshop":"Choose three pilot units and write the strategic relevance of each."},{"faTitle":"Cadence و Timeframe","enTitle":"Define cadences & timeframes","faNote":"ترکیب رایج: Company OKRs سالانه و Group OKRs فصلی؛ هدف، ایجاد rhythm پیوسته بین افق بلندتر و outcomeهای کوتاه‌تر است.","enNote":"A common pattern is annual company OKRs with quarterly group OKRs, creating a continuous rhythm between longer-horizon goals and shorter outcomes.","faExample":"نمونه کیش: Company cadence = Annual، Unit cadence = Quarterly، Check-in = Weekly، Leadership Review = Monthly.","enExample":"Kish example: annual company cadence, quarterly unit cadence, weekly check-ins and monthly leadership reviews.","faWorkshop":"برای شرکت، واحد و فرد cadence مناسب را تعیین و دلیل انتخاب را ثبت کنید.","enWorkshop":"Set the appropriate cadence for company, unit and individual levels and document why."},{"faTitle":"Check-in و Review Frequency","enTitle":"Check-in & progress review frequency","faNote":"ریسک بزرگ OKR همان set-it-and-forget-it است. Progress باید هفتگی یا حداکثر دوهفته‌ای به‌روزرسانی شود؛ Leadership health review معمولاً ماهانه و Company review فصلی است.","enNote":"The major failure mode is set-it-and-forget-it. Progress should be updated weekly or at most biweekly; leadership health reviews are typically monthly and company reviews quarterly.","faExample":"نمونه کیش: stale updates عمداً در دمو وجود دارد تا مدیر ببیند کدام KR بیش از cadence مقرر بدون update مانده است.","enExample":"Kish example: the demo deliberately includes stale updates so managers can identify KRs that have missed the expected cadence.","faWorkshop":"قاعده stale data خود را تعریف کنید: بعد از چند روز یک KR باید Flag شود؟","enWorkshop":"Define your stale-data rule: after how many days should a KR be flagged?"},{"faTitle":"مستندسازی Process","enTitle":"Document the process","faNote":"Process document باید deadline تصویب OKR، frequency check-in، progress review و deadline close کردن cycle را شفاف کند.","enNote":"The process document should clarify OKR approval deadlines, check-in frequency, progress-review frequency and cycle-closing deadlines.","faExample":"نمونه کیش: Draft → Manager Review → Interdependency Review → Active؛ close تا ۵ روز کاری پس از پایان فصل.","enExample":"Kish example: Draft → Manager Review → Interdependency Review → Active; close within five working days after quarter-end.","faWorkshop":"یک Process Rule یک‌صفحه‌ای بنویسید که اگر فرد جدید وارد سازمان شد، بتواند بدون توضیح شفاهی آن را اجرا کند.","enWorkshop":"Draft a one-page process rule that a new employee could follow without verbal explanation."}]},{"id":"introduce","n":"02","faTitle":"معرفی و ایجاد Buy-in","enTitle":"Introduce & Build Buy-in","faIntro":"استقرار OKR یک change-management intervention است. باید WHY، benefit، ابزار، نقش Ambassador و next steps روشن و یکپارچه communicate شوند.","enIntro":"OKR rollout is a change-management intervention. Communicate the WHY, benefits, tool, Ambassador support and next steps consistently.","lessons":[{"faTitle":"چرا OKR؟","enTitle":"Explain why OKR","faNote":"به‌جای معرفی OKR به‌عنوان «سیستم ارزیابی»، آن را زبان مشترک برای alignment، transparency و تبدیل strategy به measurable outcomes معرفی کنید.","enNote":"Position OKR not as a performance-rating system but as a shared language for alignment, transparency and translating strategy into measurable outcomes.","faExample":"نمونه کیش: اتصال ۱۳ هدف راهبردی شرکت به outcomes فصلی واحدهای فرودگاه، بنادر و ستاد.","enExample":"Kish example: connect the 13 company strategic objectives to quarterly outcomes across airport, port and headquarters units.","faWorkshop":"یک جمله ۳۰ ثانیه‌ای بنویسید که یک مدیر بتواند WHY OKR را برای تیم خود توضیح دهد.","enWorkshop":"Write a 30-second message a manager can use to explain WHY OKR to their team."},{"faTitle":"معرفی ابزار","enTitle":"Explain the supporting tool","faNote":"افراد باید بدانند کجا KPI، Objective، KR، Check-in و Review را می‌بینند و ثبت می‌کنند. Tool باید execution را ساده کند، نه پیچیده.","enNote":"People need to know where KPIs, objectives, KRs, check-ins and reviews live. The tool should reduce execution friction, not add it.","faExample":"نمونه کیش: همین App یک workspace واحد برای Strategy، Company OKRs، Unit OKRs، Check-in و Review فراهم می‌کند.","enExample":"Kish example: this app provides one workspace for strategy, company OKRs, unit OKRs, check-ins and review.","faWorkshop":"از شرکت‌کنندگان بخواهید مسیر «دیدن یک هدف → پیدا کردن KR → ثبت Check-in» را در کمتر از ۶۰ ثانیه انجام دهند.","enWorkshop":"Ask participants to complete “find an objective → locate its KR → submit a check-in” in under 60 seconds."},{"faTitle":"نقش Ambassador و Next Steps","enTitle":"Ambassador support & next steps","faNote":"معرفی باید با نام/نقش support owner، تاریخ آموزش و deadline تدوین OKR تمام شود تا ابهام تبدیل به action شود.","enNote":"The introduction should end with a named support owner, training dates and OKR drafting deadlines so awareness turns into action.","faExample":"نمونه کیش: training → team workshops → draft OKRs → alignment meeting → activation.","enExample":"Kish example: training → team workshops → draft OKRs → alignment meeting → activation.","faWorkshop":"سه milestone بعدی rollout را با Owner و Deadline مشخص کنید.","enWorkshop":"Define the next three rollout milestones with an owner and deadline."}]},{"id":"setup","n":"03","faTitle":"Set up: Strategy Architecture","enTitle":"Set up: Strategy Architecture","faIntro":"OKR باید روی strategy سوار شود، نه جای آن را بگیرد. Ultimate Goal، Strategic Pillars و Health KPIs context لازم را برای همه OKRها می‌سازند.","enIntro":"OKR sits on top of strategy; it does not replace strategy. The Ultimate Goal, Strategic Pillars and health KPIs provide the context for all OKRs.","lessons":[{"faTitle":"Ultimate Goal","enTitle":"Ultimate Goal","faNote":"Ultimate Goal ترکیبی از mission و vision است؛ مقصد بلندمدتی که جهت حرکت و purpose را برای سازمان و ذی‌نفعان روشن می‌کند.","enNote":"The Ultimate Goal combines mission and vision into a long-term destination that clarifies purpose and direction for the organization and stakeholders.","faExample":"داده واقعی کیش: تبدیل‌شدن به سازمانی پیشرو، ایمن و نوآور در مدیریت حمل‌ونقل هوایی و دریایی و الگویی برای توسعه پایدار، سرمایه‌گذاری راهبردی و ارتقاء برند.","enExample":"Real Kish strategy: become a leading, safe and innovative air-and-sea transport management organization and a model for sustainable development, strategic investment and brand advancement.","faWorkshop":"Ultimate Goal را بخوانید و سه واژه‌ای که باید در تصمیم‌های روزمره دیده شوند استخراج کنید.","enWorkshop":"Read the Ultimate Goal and identify three words that should be visible in everyday decisions."},{"faTitle":"Strategic Pillars","enTitle":"Strategic Pillars","faNote":"Pillars حوزه‌های پایدار تمرکز هستند که نشان می‌دهند سازمان برای موفقیت در چه dimensions باید برتری بسازد.","enNote":"Strategic Pillars are enduring areas of focus that define the dimensions in which the organization must build strength to succeed.","faExample":"داده واقعی کیش: ۶ Pillar شامل Safety & Quality، Efficiency & Cost، Innovation & Digitalization، Investment & Sustainability، Human Capital & Culture، Positioning & Branding.","enExample":"Real Kish strategy: six pillars—Safety & Quality; Efficiency & Cost; Innovation & Digitalization; Investment & Sustainability; Human Capital & Culture; Positioning & Branding.","faWorkshop":"هر یک از ۱۳ Objective را زیر Pillar مناسب قرار دهید و موارد ambiguity را بحث کنید.","enWorkshop":"Place each of the 13 objectives under the most appropriate pillar and discuss ambiguous cases."},{"faTitle":"Health KPIs","enTitle":"Health KPIs","faNote":"KPI سلامت business-as-usual را پایش می‌کند؛ KR تغییر مورد انتظار در یک بازه را می‌سنجد. KPI ongoing است، KR time-bound و outcome-oriented.","enNote":"A KPI monitors business-as-usual health; a KR measures a time-bound change. KPIs are ongoing, while KRs are time-bound and outcome-oriented.","faExample":"نمونه: Accident Rate یک Health KPI پایدار است؛ «کاهش نرخ حادثه به ≤۲.۳ در cycle» یک نتیجه کلیدی هدف‌دار است.","enExample":"Example: Accident Rate is an ongoing health KPI; “reduce accident rate to ≤2.3 within the cycle” is a target-bound key result.","faWorkshop":"۱۰ شاخص فعلی واحد را به دو ستون KPI و KR تقسیم کنید و دلیل هر تصمیم را بگویید.","enWorkshop":"Sort 10 current unit metrics into KPI vs KR and explain each choice."}]},{"id":"announce","n":"04","faTitle":"اعلام رسمی و Communication","enTitle":"Announce & Communicate","faIntro":"پیام رسمی باید sponsorship را visible کند، expectation بسازد و resistance را با clarity کاهش دهد.","enIntro":"Formal communication should make sponsorship visible, set expectations and reduce resistance through clarity.","lessons":[{"faTitle":"پیام Sponsor / CEO","enTitle":"Sponsor / CEO message","faNote":"اعلام رسمی بهتر است از بالاترین سطح حمایت شود و توضیح دهد چرا این تغییر مهم است، چه چیزی تغییر می‌کند و چه چیزی قرار نیست تغییر کند.","enNote":"Formal launch should be visibly sponsored from the top and explain why the change matters, what will change, and what will not.","faExample":"نمونه کیش: «استقرار OKR باید سند راهبردی را به یک operating rhythm زنده تبدیل کند؛ هر واحد باید بداند چه outcomeای را مالک است.»","enExample":"Kish example: “OKR implementation should turn the strategic document into a living operating rhythm; every unit must know which outcome it owns.”","faWorkshop":"پیام CEO را در ۱۲۰ کلمه با سه جزء Why / Expectation / Support بازنویسی کنید.","enWorkshop":"Draft a 120-word CEO message with Why / Expectations / Support."},{"faTitle":"All Hands و FAQ","enTitle":"All Hands & FAQ","faNote":"Email به‌تنهایی کافی نیست. یک All Hands برای توضیح rollout، پاسخ سؤال‌ها و ساختن shared understanding برگزار کنید.","enNote":"Email alone is not enough. Hold an All Hands to explain the rollout, answer questions and build shared understanding.","faExample":"نمونه کیش: CEO Email + All Hands + Internal Portal + Management Meetings؛ FAQ به‌عنوان deliverable مستقل.","enExample":"Kish example: CEO Email + All Hands + Internal Portal + Management Meetings, with an FAQ as a separate deliverable.","faWorkshop":"۵ سؤال سختی را که کارکنان احتمالاً درباره OKR می‌پرسند آماده کنید و پاسخ کوتاه بدهید.","enWorkshop":"Prepare five difficult employee questions about OKR and concise answers."}]},{"id":"educate","n":"05","faTitle":"آموزش مشترک زبان OKR","enTitle":"Educate: Build a Shared OKR Language","faIntro":"قبل از Create کردن، افراد باید distinction بین KPI، Objective، Key Result و Initiative را بفهمند و متناسب با role خود آموزش ببینند.","enIntro":"Before creating OKRs, people must understand the distinction between KPIs, Objectives, Key Results and Initiatives, with role-appropriate training.","lessons":[{"faTitle":"KPI vs Objective vs KR vs Initiative","enTitle":"KPI vs Objective vs KR vs Initiative","faNote":"Objective جهت کیفی و الهام‌بخش است؛ KR نتیجه کمی قابل سنجش؛ Initiative کاری است که برای اثرگذاری بر KR انجام می‌دهیم؛ KPI سلامت مستمر را نشان می‌دهد.","enNote":"An Objective is qualitative direction; a KR is a measurable outcome; an Initiative is work intended to influence a KR; a KPI shows ongoing health.","faExample":"نمونه کیش: O1 ارتقاء ایمنی؛ KR = RFFS ≤3.5 min؛ Initiative نمونه = مانور واکنش اضطراری؛ KPI = RFFS Response Time.","enExample":"Kish example: O1 improve safety; KR = RFFS ≤3.5 min; sample initiative = emergency-response drill; KPI = RFFS Response Time.","faWorkshop":"برای یک مسئله واقعی واحد، یک Objective، دو KR، یک KPI و دو Initiative بنویسید.","enWorkshop":"For one real unit challenge, write one Objective, two KRs, one KPI and two Initiatives."},{"faTitle":"Training by Role","enTitle":"Train by role","faNote":"Executives، managers و team members یک نیاز آموزشی یکسان ندارند. Executives روی strategy/alignment، managers روی quality/coaching و teams روی update/execution تمرکز می‌کنند.","enNote":"Executives, managers and team members do not need identical training. Executives focus on strategy/alignment, managers on quality/coaching, teams on updating/execution.","faExample":"نمونه کیش: Executive session → Manager workshop → Team learning؛ deadline و status هر گروه در App ثبت می‌شود.","enExample":"Kish example: executive session → manager workshop → team learning, with deadline and status tracked in the app.","faWorkshop":"برای سه گروه Executive / Manager / Team Member یک learning outcome مشخص تعریف کنید.","enWorkshop":"Define one specific learning outcome for Executive, Manager and Team Member audiences."}]},{"id":"create","n":"06","faTitle":"Create: Company & Unit OKRs","enTitle":"Create: Company & Unit OKRs","faIntro":"Company OKRs strategy را به annual outcomes محدود می‌کنند؛ Unit OKRs نشان می‌دهند هر واحد در فصل چگونه به آن outcomeها کمک می‌کند.","enIntro":"Company OKRs narrow strategy into annual outcomes; unit OKRs explain how each unit will contribute within the quarter.","lessons":[{"faTitle":"Company OKRs","enTitle":"Company OKRs","faNote":"Company OKR باید high-level باشد، توسط چند واحد قابل influence باشد و status quo را بشکند. اگر فقط یک تیم می‌تواند آن را drive کند، احتمالاً Team OKR است.","enNote":"A company OKR should be high-level, influenceable by multiple teams and capable of moving the status quo. If only one team can drive it, it is likely a team OKR.","faExample":"داده واقعی کیش: ۱۳ Objective راهبردی شرکت؛ مثال O1 «ارتقاء مستمر کیفیت و ایمنی خدمات حمل‌ونقل هوایی و دریایی» با targetهای واقعی سند.","enExample":"Real Kish data: 13 strategic company objectives; e.g., O1 “continuously improve quality and safety of air and sea transport services” with targets from the strategic document.","faWorkshop":"یکی از ۱۳ Objective را انتخاب کنید و بررسی کنید آیا باید Company-level بماند یا به Unit-level تبدیل شود.","enWorkshop":"Choose one of the 13 objectives and test whether it truly belongs at company level or should be pushed to unit level."},{"faTitle":"Group / Unit KPIs","enTitle":"Group / Unit KPIs","faNote":"برای هر واحد ابتدا core responsibilities را بنویسید، سپس ۳–۵ KPI که health کار روزمره را نشان می‌دهند انتخاب کنید.","enNote":"For each unit, first clarify core responsibilities, then select 3–5 KPIs that reflect the health of business-as-usual.","faExample":"نمونه آموزشی معاونت عملیات هوانوردی: RFFS Drill Response Time و Airside Finding Closure. Currentها فرضی‌اند تا Healthy/Watch/At Risk نمایش داده شود.","enExample":"Instructional Air Operations example: RFFS Drill Response Time and Airside Finding Closure. Current values are synthetic to demonstrate Healthy/Watch/At Risk states.","faWorkshop":"برای واحد خود سه responsibility و KPI متناظر هرکدام را تعریف کنید.","enWorkshop":"Define three responsibilities for your unit and one corresponding KPI for each."},{"faTitle":"Unit OKRs و Why/Urgent","enTitle":"Unit OKRs & Why/Urgent","faNote":"Unit OKRهای فصلی impact واحد را نشان می‌دهند. پرسش‌های «Why is this important?» و «Why is this urgent?» کیفیت priority را challenge می‌کنند.","enNote":"Quarterly unit OKRs express the unit’s business impact. “Why is this important?” and “Why is this urgent?” challenge whether the priority is real.","faExample":"نمونه فرودگاه: «تجربه سفر را روان‌تر و ایمن‌تر کنیم»؛ KR نمونه: کاهش صف نقاط کلیدی و افزایش First Contact Resolution.","enExample":"Airport example: “make the travel experience smoother and safer”; sample KRs include reducing key queue times and increasing first-contact resolution.","faWorkshop":"برای Objective واحدتان دو پاسخ کوتاه به Important و Urgent بنویسید؛ اگر قانع‌کننده نیستند Objective را بازنویسی کنید.","enWorkshop":"Write concise answers to Important and Urgent for your unit Objective; if they are weak, rewrite the Objective."},{"faTitle":"Interdependencies و Approval","enTitle":"Interdependencies & approval","faNote":"قبل از Activate، مدیران OKRهای خود را cross-review می‌کنند تا overlap، dependency و resource conflict آشکار شود؛ سپس مدیر بالادست approval می‌دهد.","enNote":"Before activation, managers cross-review OKRs to surface overlap, dependencies and resource conflicts; then the direct manager approves them.","faExample":"نمونه کیش: Operations ↔ Technical ↔ Finance dependencies در Group cards ثبت می‌شوند؛ status از Draft به Active پس از review تغییر می‌کند.","enExample":"Kish example: Operations ↔ Technical ↔ Finance dependencies are captured in unit cards; status moves from Draft to Active after review.","faWorkshop":"برای هر KR حداقل یک dependency بالقوه را مشخص و capacity طرف مقابل را validate کنید.","enWorkshop":"Identify at least one potential dependency for each KR and validate the other unit’s capacity."}]},{"id":"integrate","n":"07","faTitle":"Integrate: Execution Rhythm","enTitle":"Integrate: Execution Rhythm","faIntro":"OKR زمانی زنده می‌ماند که داخل management rhythm روزمره بیاید: Check-in، 1:1، Weekly Progress و Leadership Review.","enIntro":"OKR stays alive only when it becomes part of the management rhythm: check-ins, 1:1s, weekly progress and leadership reviews.","lessons":[{"faTitle":"Weekly Check-in","enTitle":"Weekly check-in","faNote":"Check-in فقط update عدد نیست؛ progress، confidence، blocker و next step باید visible شوند تا تصمیم ایجاد شود.","enNote":"A check-in is more than a number update: progress, confidence, blockers and next steps should be visible so management can act.","faExample":"نمونه دمو: KR با ۸۴٪ Current مقابل Target ۸۵٪ = Needs Attention؛ note و next action در Check-in ثبت می‌شود.","enExample":"Demo example: a KR at 84% against an 85% target is flagged Needs Attention, with a note and next action captured in the check-in.","faWorkshop":"یک Check-in واقعی بنویسید که مدیر بعد از خواندن آن دقیقاً بداند چه support یا decision لازم است.","enWorkshop":"Write a real check-in that makes the required managerial support or decision immediately clear."},{"faTitle":"1:1 و Accountability","enTitle":"1:1s & accountability","faNote":"Manager در 1:1 باید مسئولیت‌های فرد و progress را مرور کند؛ هدف، policing نیست، بلکه clarity، support و follow-through است.","enNote":"Managers should review responsibilities and progress in 1:1s. The purpose is not policing; it is clarity, support and follow-through.","faExample":"نمونه کیش: Direct Reports tracker نشان می‌دهد آخرین 1:1 چه زمانی بوده و وضعیت هر مدیر چیست.","enExample":"Kish example: the Direct Reports tracker shows when the last 1:1 occurred and each manager’s current status.","faWorkshop":"سه سؤال coaching برای 1:1 بنویسید: What matters most? What is blocking progress? What is the next best step?","enWorkshop":"Use three coaching questions in the 1:1: What matters most? What is blocking progress? What is the next best step?"},{"faTitle":"Leadership Review و Stale Data","enTitle":"Leadership review & stale data","faNote":"Leadership review باید health execution، dependencies، resource allocation و outdated goals را ببیند؛ نه اینکه فقط درصدها را report کند.","enNote":"Leadership reviews should examine execution health, dependencies, resource allocation and outdated goals—not merely report percentages.","faExample":"نمونه دمو عمداً KRs با update قدیمی دارد تا Ambassador و مدیر بتوانند stale data را شناسایی کنند.","enExample":"The demo deliberately contains old KR updates so the Ambassador and managers can identify stale data.","faWorkshop":"یک agenda ۳۰ دقیقه‌ای Leadership Review طراحی کنید که با decisions تمام شود، نه صرفاً گزارش.","enWorkshop":"Design a 30-minute leadership review agenda that ends with decisions rather than reporting."}]},{"id":"repeat","n":"08","faTitle":"Learn & Repeat","enTitle":"Learn & Repeat","faIntro":"در پایان cycle، نتایج را close کنید، learnings را capture کنید و focus دوره بعد را بر اساس evidence بازطراحی کنید.","enIntro":"At cycle end, close results, capture learnings, and redesign the next cycle’s focus based on evidence.","lessons":[{"faTitle":"Quarterly All Hands","enTitle":"Quarterly All Hands","faNote":"All Hands فصلی برای شفاف‌سازی Company progress، sharing learnings/achievements، اعلام focus دوره بعد و تقویت accountability است.","enNote":"The quarterly All Hands communicates company progress, shares learnings and achievements, presents the next-cycle focus and reinforces accountability.","faExample":"نمونه کیش: مرور ۱۳ Objective، KRs قرمز، dependencies مهم، achievements واحدها و focus فصل بعد.","enExample":"Kish example: review all 13 objectives, red KRs, critical dependencies, unit achievements and next-quarter focus.","faWorkshop":"یک اسلاید All Hands بسازید: ۳ achievement، ۲ learning، ۳ next focus.","enWorkshop":"Build one All Hands slide with 3 achievements, 2 learnings and 3 next-focus items."},{"faTitle":"Close, Learn, Improve","enTitle":"Close, learn, improve","faNote":"کیفیت OKR در cycleهای اول کامل نیست. ابتدا process discipline را تثبیت کنید، feedback بگیرید و سپس quality اهداف را مرحله‌به‌مرحله ارتقا دهید.","enNote":"OKR quality will not be perfect in early cycles. First stabilize process discipline, gather feedback, then improve goal quality cycle by cycle.","faExample":"نمونه کیش: Lessons Learned در Review شامل distinction KPI/KR، early surfacing of dependencies و بهبود data quality است.","enExample":"Kish example: review lessons include stronger KPI/KR distinction, earlier surfacing of dependencies and improved data quality.","faWorkshop":"برای cycle بعد سه چیز را مشخص کنید: Stop / Start / Continue.","enWorkshop":"For the next cycle, define three things: Stop / Start / Continue."}]}];
+window.__trainingModule='prepare';
+function renderTraining(activeId){
+  window.__trainingModule=activeId||window.__trainingModule||'prepare';
+  const nav=document.getElementById('trainingNav'),body=document.getElementById('trainingBody');if(!nav||!body)return;
+  nav.innerHTML=TRAINING_MODULES.map(m=>'<button data-training-module="'+m.id+'" class="'+(m.id===window.__trainingModule?'active':'')+'"><i>'+m.n+'</i><span>'+(appLang==='fa'?m.faTitle:m.enTitle)+'</span></button>').join('');
+  const m=TRAINING_MODULES.find(x=>x.id===window.__trainingModule)||TRAINING_MODULES[0];
+  body.innerHTML='<div class="training-module-head"><div><div class="eyebrow">MODULE '+m.n+'</div><h2>'+(appLang==='fa'?m.faTitle:m.enTitle)+'</h2><p>'+(appLang==='fa'?m.faIntro:m.enIntro)+'</p></div><span class="source-badge real">'+(appLang==='fa'?'Handbook + نمونه کیش':'Handbook + Kish example')+'</span></div>'+
+  '<div class="lesson-stack">'+m.lessons.map((l,i)=>'<article class="training-lesson"><div class="lesson-head"><h3>'+(appLang==='fa'?l.faTitle:l.enTitle)+'</h3><span class="lesson-no">'+m.n+'.'+String(i+1).padStart(2,'0')+'</span></div><div class="lesson-grid">'+
+  '<div class="lesson-col handout"><div class="mini-title"><i>i</i>'+(appLang==='fa'?'جزوه و منطق':'Learning notes')+'</div><p>'+(appLang==='fa'?l.faNote:l.enNote)+'</p></div>'+
+  '<div class="lesson-col example"><div class="mini-title"><i>✓</i>'+(appLang==='fa'?'نمونه انجام‌شده':'Completed example')+'</div><p>'+(appLang==='fa'?l.faExample:l.enExample)+'</p></div>'+
+  '<div class="lesson-col workshop"><div class="mini-title"><i>↗</i>'+(appLang==='fa'?'تمرین کارگاهی':'Workshop exercise')+'</div><p>'+(appLang==='fa'?l.faWorkshop:l.enWorkshop)+'</p></div>'+
+  '</div></article>').join('')+'</div><div class="training-source">'+(appLang==='fa'?'مبنای آموزشی: The OKR Implementation Handbook (Prepare, Introduce, Train, Create, Launch)؛ مثال‌های سازمانی با معماری و داده‌های راهبردی شرکت کیش تطبیق داده شده‌اند.':'Learning basis: The OKR Implementation Handbook (Prepare, Introduce, Train, Create, Launch); organizational examples are adapted to the Kish strategy architecture.')+'</div>';
+  nav.querySelectorAll('[data-training-module]').forEach(b=>b.addEventListener('click',()=>renderTraining(b.dataset.trainingModule)));
+}
+function openTraining(){document.getElementById('trainingScreen').classList.add('show');document.body.style.overflow='hidden';renderTraining(window.__trainingModule);applyLanguage()}
+function closeTraining(){document.getElementById('trainingScreen').classList.remove('show');document.body.style.overflow='';}
+
 function sampleLogo(){
   return 'https://kishports.com/wp-content/uploads/2023/02/kishports_main.svg'
 }
@@ -980,6 +1183,13 @@ function setDemoState(force){
 }
 document.getElementById('demoBtn').addEventListener('click',()=>{if(confirm('نسخه نمونه کیش جایگزین داده فعلی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
 document.getElementById('refreshDemoBtn').addEventListener('click',()=>{if(confirm('همه داده‌ها با نسخه نمونه کیش بازنشانی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
+
+document.querySelectorAll('[data-set-lang]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.setLang)));
+document.getElementById('entryExecBtn').addEventListener('click',()=>{document.getElementById('loginPanel').classList.remove('hidden');document.getElementById('loginPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
+document.getElementById('entryTrainBtn').addEventListener('click',openTraining);
+document.getElementById('topTrainingBtn').addEventListener('click',openTraining);
+document.getElementById('trainingCloseBtn').addEventListener('click',closeTraining);
+document.getElementById('trainingExecBtn').addEventListener('click',()=>{closeTraining();if(!auth){document.getElementById('authScreen').classList.remove('hidden');document.getElementById('loginPanel').classList.remove('hidden');}});
 document.getElementById('mobileStage').addEventListener('change',e=>showView(e.target.value));
 document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem(AUTH);location.reload()});
 document.getElementById('loginBtn').addEventListener('click',()=>{const name=document.getElementById('loginName').value.trim(),email=document.getElementById('loginEmail').value.trim().toLowerCase(),org=document.getElementById('loginOrg').value.trim(),role=document.getElementById('loginRole').value;if(!name||!email||!org){alert('نام، ایمیل و سازمان را وارد کنید.');return}localStorage.setItem(AUTH,JSON.stringify({name,email,org,role}));location.reload()});
@@ -989,6 +1199,7 @@ if(!localStorage.getItem(KEY)){state=makeDemoState();localStorage.setItem(KEY,JS
 bindStatic();renderAll();
 if(auth&&auth.org&&!state.meta.orgName){state.meta.orgName=auth.org;save(true)}
 const initial=(location.hash||'#dashboard').slice(1);if(document.getElementById('view-'+initial))showView(initial);
+applyLanguage();
 })();
 </script>
 </body>
