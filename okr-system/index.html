@@ -371,6 +371,7 @@ html[dir="ltr"] .sidebar{box-shadow:-10px 0 36px rgba(18,48,82,.08)}
       <div class="top-title" style="display:flex;align-items:center;gap:10px"><img id="topLogo" class="top-company-logo" alt="Company logo"><div><b id="topOrg">سازمان شما</b><span id="topCycle">OKR Cycle</span></div></div>
       <div class="top-actions">
         <button class="btn mobile-menu" id="menuBtn">☰</button>
+        <button class="btn" id="homePortalBtn"><span data-fa="صفحه اول" data-en="Home">صفحه اول</span></button>
         <button class="btn mode-btn" id="topTrainingBtn"><span class="mode-dot"></span><span data-fa="آموزشی" data-en="Learning">آموزشی</span></button>
         <div class="lang-switch"><button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button></div>
 <select class="mobile-stage" id="mobileStage"><option value="dashboard">داشبورد</option><option value="setup">1. Prepare</option><option value="introduce">2. Introduce</option><option value="strategy">3. Set up</option><option value="announce">4. Announce</option><option value="educate">5. Educate</option><option value="teams">6. Create</option><option value="checkins">7. Integrate</option><option value="review">8. Learn & Repeat</option></select>
@@ -1185,16 +1186,17 @@ document.getElementById('demoBtn').addEventListener('click',()=>{if(confirm('ن�
 document.getElementById('refreshDemoBtn').addEventListener('click',()=>{if(confirm('همه داده‌ها با نسخه نمونه کیش بازنشانی شود؟')){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state));location.reload()}});
 
 document.querySelectorAll('[data-set-lang]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.setLang)));
-document.getElementById('entryExecBtn').addEventListener('click',()=>{document.getElementById('loginPanel').classList.remove('hidden');document.getElementById('loginPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
+document.getElementById('entryExecBtn').addEventListener('click',()=>{if(auth){sessionStorage.setItem('hb_okr_mode','execution');document.getElementById('authScreen').classList.add('hidden');showView('dashboard')}else{document.getElementById('loginPanel').classList.remove('hidden');document.getElementById('loginPanel').scrollIntoView({behavior:'smooth',block:'nearest'})}});
 document.getElementById('entryTrainBtn').addEventListener('click',openTraining);
+document.getElementById('homePortalBtn').addEventListener('click',()=>{sessionStorage.removeItem('hb_okr_mode');document.getElementById('authScreen').classList.remove('hidden');document.getElementById('loginPanel').classList.add('hidden');window.scrollTo({top:0,behavior:'smooth'});applyLanguage()});
 document.getElementById('topTrainingBtn').addEventListener('click',openTraining);
 document.getElementById('trainingCloseBtn').addEventListener('click',closeTraining);
 document.getElementById('trainingExecBtn').addEventListener('click',()=>{closeTraining();if(!auth){document.getElementById('authScreen').classList.remove('hidden');document.getElementById('loginPanel').classList.remove('hidden');}});
 document.getElementById('mobileStage').addEventListener('change',e=>showView(e.target.value));
-document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem(AUTH);location.reload()});
-document.getElementById('loginBtn').addEventListener('click',()=>{const name=document.getElementById('loginName').value.trim(),email=document.getElementById('loginEmail').value.trim().toLowerCase(),org=document.getElementById('loginOrg').value.trim(),role=document.getElementById('loginRole').value;if(!name||!email||!org){alert('نام، ایمیل و سازمان را وارد کنید.');return}localStorage.setItem(AUTH,JSON.stringify({name,email,org,role}));location.reload()});
-document.getElementById('guestLoginBtn').addEventListener('click',()=>{localStorage.setItem(AUTH,JSON.stringify({name:'Demo User',email:'demo@kishports.local',org:'شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش',role:'Consultant / Facilitator'}));location.reload()});
-if(auth){document.getElementById('authScreen').classList.add('hidden')}else{document.getElementById('authScreen').classList.remove('hidden')}
+document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem(AUTH);sessionStorage.removeItem('hb_okr_mode');location.reload()});
+document.getElementById('loginBtn').addEventListener('click',()=>{const name=document.getElementById('loginName').value.trim(),email=document.getElementById('loginEmail').value.trim().toLowerCase(),org=document.getElementById('loginOrg').value.trim(),role=document.getElementById('loginRole').value;if(!name||!email||!org){alert(appLang==='fa'?'نام، ایمیل و سازمان را وارد کنید.':'Enter your name, email and organization.');return}localStorage.setItem(AUTH,JSON.stringify({name,email,org,role}));sessionStorage.setItem('hb_okr_mode','execution');location.reload()});
+document.getElementById('guestLoginBtn').addEventListener('click',()=>{localStorage.setItem(AUTH,JSON.stringify({name:'Demo User',email:'demo@kishports.local',org:'شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش',role:'Consultant / Facilitator'}));sessionStorage.setItem('hb_okr_mode','execution');location.reload()});
+if(auth&&sessionStorage.getItem('hb_okr_mode')==='execution'){document.getElementById('authScreen').classList.add('hidden')}else{document.getElementById('authScreen').classList.remove('hidden')}
 if(!localStorage.getItem(KEY)){state=makeDemoState();localStorage.setItem(KEY,JSON.stringify(state))}
 bindStatic();renderAll();
 if(auth&&auth.org&&!state.meta.orgName){state.meta.orgName=auth.org;save(true)}
