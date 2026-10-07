@@ -776,6 +776,7 @@ function showView(name){
   if(name==='checkins')renderCheckins();
   if(name==='review')renderReview();
   window.scrollTo({top:0,behavior:'smooth'});
+  if(typeof applyLanguage==='function')applyLanguage();
 }
 document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showView(a.dataset.go)}));
 document.querySelectorAll('[data-go-btn]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.goBtn)));
