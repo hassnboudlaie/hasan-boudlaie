@@ -31,6 +31,7 @@ function renderPublications(items){
 }
 function renderSite(data){
  document.querySelectorAll('[data-content]').forEach(el=>{const value=dataAt(data,el.dataset.content);if(value!==undefined)el.textContent=textOf(value)});
+ document.querySelectorAll('.brand').forEach(el=>el.setAttribute('aria-label',textOf(data.brand)));
  const photo=document.getElementById('profilePhoto');const photoURL=imageURL(data.profile?.photoUrl);if(photo&&photoURL&&photo.src!==photoURL)photo.src=photoURL;
  renderProducts(data.products);renderServices(data.advisory?.services);renderList('aboutCredentials',data.about?.credentials);renderList('researchTopics',data.research?.topics);renderPublications(data.research?.publications);
  document.querySelectorAll('[data-contact]').forEach(el=>{const url=webURL(data.contact?.[el.dataset.contact]);if(url){el.href=url;el.hidden=false}else el.hidden=true});
