@@ -1,5 +1,6 @@
 'use strict';
 let currentLang='en';
+let isPreview=false;
 try{currentLang=localStorage.getItem('hb-lang')==='fa'?'fa':'en'}catch(e){}
 function esc(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function textOf(value,lang=currentLang){return typeof value==='string'?value:(value?.[lang]??value?.en??'')}
@@ -40,7 +41,9 @@ function renderSite(data){
  if(email)document.querySelectorAll('[data-inquiry]').forEach(el=>el.href='mailto:'+email+'?subject='+encodeURIComponent(subjects[el.dataset.inquiry]||''));
  const page=document.body?.dataset.page;const labels={index:{en:'Management & Leadership',fa:'مدیریت و رهبری'},products:{en:'Applications & learning tools',fa:'اپلیکیشن‌ها و ابزارهای یادگیری'},advisory:{en:'Advisory',fa:'مشاوره'},about:{en:'About',fa:'دربارهٔ من'},research:{en:'Research',fa:'پژوهش'},contact:{en:'Contact',fa:'تماس'}};
  if(labels[page])document.title=textOf(labels[page])+' | '+textOf(data.brand);
+ if(isPreview)previewLinks();
 }
+function previewLinks(){document.querySelectorAll('a[href]').forEach(el=>{try{const url=new URL(el.getAttribute('href'),location.href);if(url.origin===location.origin&&/\/hasan-boudlaie\/(?:index|products|advisory|about|research|contact)\.html$/.test(url.pathname)){url.searchParams.set('preview','1');el.href=url.href}}catch(e){}})}
 function closeMenu(focus=false){document.querySelector('.site-header')?.classList.remove('menu-open');const button=document.querySelector('.menu-toggle');button?.setAttribute('aria-expanded','false');if(focus)button?.focus()}
 async function loadSiteData(){
  const status=document.getElementById('loadStatus');
@@ -55,6 +58,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.addEventListener('click',e=>{if(!e.target.closest('.site-header'))closeMenu()});document.querySelectorAll('.navlinks a').forEach(el=>el.addEventListener('click',()=>closeMenu()));
  const photo=document.getElementById('profilePhoto');const fallbackPhoto=photo?.getAttribute('src');photo?.addEventListener('error',()=>{if(photo.src!==fallbackPhoto)photo.src=fallbackPhoto;else photo.closest('.portrait-card').hidden=true});
  setLang(currentLang);
- let preview=false;try{if(new URLSearchParams(location.search).get('preview')==='1'){const d=JSON.parse(sessionStorage.getItem('hb-site-preview')||'null');if(d&&Array.isArray(d.products)){window.siteData=d;renderSite(d);document.getElementById('previewBanner').hidden=false;preview=true}}}catch(e){}
+ let preview=false;try{if(new URLSearchParams(location.search).get('preview')==='1'){const d=JSON.parse(sessionStorage.getItem('hb-site-preview')||'null');if(d&&Array.isArray(d.products)){isPreview=true;window.siteData=d;renderSite(d);document.getElementById('previewBanner').hidden=false;preview=true}}}catch(e){}
  if(!preview)loadSiteData();
 });
