@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7fbfc">
+<title>استقرار نظام OKR | Dr. Hasan Boudlaie</title>
+<meta name="description" content="دموی عمومی و تعاملی استقرار نظام OKR؛ از آماده‌سازی و معرفی تا یکپارچه‌سازی، یادگیری و تکرار.">
+<style>
+:root{
+  --ink:#0b1f3a;--muted:#5f6f7e;--teal:#27b8b0;--teal2:#69cbd0;--cyan:#dff5f7;
+  --orange:#ff875f;--paper:#fff;--bg:#f8fbfc;--line:#cce9ed;--soft:#eef8f9;--shadow:0 18px 55px rgba(11,31,58,.08);
+  --r:22px;--r2:30px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+.wrap{max-width:1180px;margin:auto;padding:0 28px}
+.grid-bg{
+  background-image:linear-gradient(rgba(76,180,194,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(76,180,194,.10) 1px,transparent 1px);
+  background-size:52px 52px;
+}
+header{position:sticky;top:0;z-index:50;background:rgba(248,251,252,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(204,233,237,.9)}
+.nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;font-size:13px;font-weight:800}
+.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:900}
+.navlinks{display:flex;gap:24px;font-size:12px;color:#526271}
+.navlinks a:hover{color:var(--ink)}
+.nav-actions{display:flex;gap:10px}
+.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-size:11px;font-weight:800;cursor:pointer}
+.pill.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.hero{padding:72px 0 64px;display:grid;grid-template-columns:1.02fr .98fr;gap:58px;align-items:center}
+.kicker{font-size:11px;font-weight:900;color:var(--teal);letter-spacing:.02em}
+h1{font-size:clamp(48px,6vw,76px);line-height:1.08;margin:14px 0 18px;letter-spacing:-.04em}
+.highlight{display:inline;position:relative;z-index:1}
+.highlight:after{content:"";position:absolute;right:-5px;left:-5px;bottom:9px;height:18px;background:#b9eef0;z-index:-1}
+.lead{font-size:18px;color:#445769;max-width:670px;margin:0}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.btn{border:1px solid var(--ink);border-radius:12px;padding:12px 16px;font-size:12px;font-weight:900;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn.primary{background:var(--ink);color:#fff}
+.btn:hover{transform:translateY(-2px)}
+.hero-visual{min-height:430px;position:relative}
+.scene-card{height:100%;min-height:430px;border:1px solid var(--line);border-radius:36px;background:rgba(255,255,255,.85);box-shadow:var(--shadow);display:grid;place-items:center;padding:24px;overflow:hidden}
+.scene-card:before{content:"";position:absolute;width:270px;height:270px;border-radius:50%;background:#dff4ff;left:12%;top:10%;z-index:0}
+.scene-card svg{position:relative;z-index:1;width:95%;max-height:360px}
+.section{padding:74px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:30px}
+.section-head h2{font-size:38px;line-height:1.25;margin:0}
+.section-head p{max-width:640px;margin:0;color:var(--muted);font-size:14px}
+.title-mark{display:inline;position:relative;z-index:1}
+.title-mark:after{content:"";position:absolute;right:-4px;left:-4px;bottom:5px;height:12px;background:#c8f1f2;z-index:-1}
+.intro{background:#fff;border-top:1px solid #e6f1f3;border-bottom:1px solid #e6f1f3}
+.intro-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px;align-items:start}
+.intro-card{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:linear-gradient(180deg,#fff,#f5fbfc)}
+.intro-card b{display:block;font-size:13px;margin-bottom:8px}
+.intro-card p{margin:0;color:var(--muted);font-size:13px}
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:start;margin-top:28px}
+.phase{text-align:center;position:relative}
+.phase:not(:last-child):after{content:"";position:absolute;left:-10%;right:58%;top:45px;border-top:2px dashed #bfe8ec;z-index:0}
+.phase-circle{width:92px;height:92px;margin:0 auto 13px;border-radius:50%;display:grid;place-items:center;color:#fff;position:relative;z-index:1}
+.phase:nth-child(odd) .phase-circle{background:var(--teal2)}
+.phase:nth-child(even) .phase-circle{background:#39c4a7}
+.phase:nth-child(3) .phase-circle{background:var(--orange)}
+.phase-circle svg{width:44px;height:44px;stroke:currentColor;fill:none;stroke-width:1.8}
+.phase .num{font-size:14px;font-weight:900;color:var(--teal);margin-bottom:5px}
+.phase h3{font-size:14px;margin:0}.phase small{display:block;color:var(--muted);font-size:10px}.phase .duration{margin-top:8px;font-size:10px;color:#6a7884}
+.roadmap{position:relative;padding:34px 0 4px}
+.roadmap:before{content:"";position:absolute;left:4%;right:4%;top:50%;border-top:2px dashed #8edbe0;z-index:0}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 22px;position:relative;z-index:1}
+.step{background:#fff;border:1px solid #9ddfe3;border-radius:18px;padding:16px 16px 14px;min-height:204px;box-shadow:0 12px 26px rgba(11,31,58,.04);position:relative;cursor:pointer;transition:.2s}
+.step:hover,.step.active{transform:translateY(-4px);box-shadow:0 20px 42px rgba(11,31,58,.09);border-color:var(--teal)}
+.step:nth-child(5),.step:nth-child(6),.step:nth-child(7),.step:nth-child(8){margin-top:24px}
+.step-num{position:absolute;top:-14px;right:14px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font-size:13px;font-weight:900}
+.step h3{font-size:15px;margin:9px 0 3px}.step h3 span{font-size:10px;color:#738391;font-weight:700}
+.meta{display:flex;gap:12px;color:#657482;font-size:9px;margin:8px 0 10px}
+.meta span{display:flex;align-items:center;gap:4px}
+.step ul{margin:0;padding:0 17px 0 0;color:#405260;font-size:11px}
+.step-scene{height:78px;margin-top:10px;display:grid;place-items:center}
+.step-scene svg{height:72px;width:100%;max-width:150px}
+.detail-panel{margin-top:30px;border:1px solid var(--line);background:#fff;border-radius:24px;padding:25px;display:grid;grid-template-columns:.8fr 1.2fr;gap:28px;box-shadow:var(--shadow)}
+.detail-panel h3{font-size:22px;margin:0 0 8px}.detail-panel p{margin:0;color:var(--muted);font-size:13px}
+.detail-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.detail-box{background:var(--soft);border-radius:15px;padding:14px}.detail-box b{display:block;font-size:10px;color:#58707c;margin-bottom:6px}.detail-box span{font-size:11px;font-weight:800}
+.support-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.support{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;min-height:280px}
+.support h3{font-size:19px;margin:0 0 5px}.support p{font-size:11px;color:var(--muted);margin:0 0 18px}
+.list{display:grid;gap:9px}.list-row{border:1px solid #e0eff1;background:#f9fcfd;border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:10px}
+.ico{width:34px;height:34px;border-radius:10px;background:#dff5f7;display:grid;place-items:center;flex:0 0 auto;color:var(--teal)}
+.list-row b{font-size:11px;display:block}.list-row span{font-size:9px;color:#71818f;display:block}
+.mini-quote{margin-top:15px;background:var(--ink);color:#fff;border-radius:15px;padding:14px;font-size:11px}
+.cta-band{margin-top:20px;border:1px solid #c9edf0;border-radius:26px;background:linear-gradient(135deg,#eafafb,#dff4ff);padding:30px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.cta-band h3{font-size:25px;margin:0 0 4px}.cta-band p{margin:0;color:#536673;font-size:12px}
+footer{padding:34px 0 46px;border-top:1px solid #dcecef;color:#60717f;font-size:10px}
+.footer{display:flex;justify-content:space-between;gap:20px;align-items:center}
+@media(max-width:940px){
+  .navlinks{display:none}.hero{grid-template-columns:1fr}.hero-visual{min-height:340px}.scene-card{min-height:340px}
+  .intro-grid{grid-template-columns:1fr}.timeline{grid-template-columns:repeat(3,1fr)}.phase:not(:last-child):after{display:none}
+  .steps-grid{grid-template-columns:repeat(2,1fr)}.roadmap:before{display:none}.detail-panel{grid-template-columns:1fr}.support-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .wrap{padding:0 18px}.nav{height:62px}.brand b{display:none}.hero{padding:48px 0 44px;gap:28px}h1{font-size:44px}
+  .lead{font-size:15px}.section{padding:54px 0}.section-head{display:block}.section-head h2{font-size:30px}.section-head p{margin-top:9px}
+  .timeline{grid-template-columns:1fr 1fr}.steps-grid{grid-template-columns:1fr}.step:nth-child(n){margin-top:0}.detail-cols{grid-template-columns:1fr}.cta-band{display:block}.cta-band .btn{margin-top:14px}
+  .footer{display:block}.footer div+div{margin-top:8px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><span class="brand-mark">HB</span><b>Dr. Hasan Boudlaie</b></a>
+    <nav class="navlinks">
+      <a href="#overview">نمای کلی</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#steps">۸ گام اجرا</a>
+      <a href="#rhythm">ریتم مدیریت</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="pill" href="products.html">بازگشت به محصولات</a>
+      <a class="pill primary" href="#steps">شروع دمو</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="grid-bg">
+  <div class="wrap hero">
+    <div>
+      <div class="kicker">OKR IMPLEMENTATION DEMO</div>
+      <h1><span class="highlight">استقرار نظام OKR</span></h1>
+      <p class="lead">یک راهنمای عمومی و تعاملی برای طراحی rollout، هم‌راستاسازی تیم‌ها، ساخت OKRها و تبدیل آن‌ها به یک management rhythm پایدار.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#steps">مشاهده مسیر ۸ گام ←</a>
+        <a class="btn" href="#timeline">Implementation Timeline</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scene-card">
+        <svg viewBox="0 0 560 390" aria-label="Strategy execution illustration">
+          <defs><style>.s{stroke:#0b1f3a;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}.t{fill:#4fc7bd}.o{fill:#ff8a61}.b{fill:#dff4ff}.w{fill:#fff}</style></defs>
+          <circle cx="110" cy="85" r="46" class="b"/>
+          <circle cx="455" cy="78" r="26" fill="#ffe1b7"/>
+          <path d="M80 318h95v-58h88v-62h88v-68h92v188H80z" class="w" stroke="#0b1f3a" stroke-width="3"/>
+          <path d="M119 318v-58m97 0v-62m91 0v-68m90 0V90" class="s"/>
+          <path d="M395 90v-48l58 13-58 15" fill="#ff8a61" stroke="#0b1f3a" stroke-width="3"/>
+          <circle cx="180" cy="239" r="14" class="t"/><path d="M176 253l-18 44m20-44 17 45m-14-31 34-16m-37 15-28-10" class="s"/>
+          <circle cx="278" cy="177" r="14" class="o"/><path d="M275 191l-14 45m17-44 19 45m-18-29 43-29m-43 29-32 3" class="s"/>
+          <circle cx="376" cy="109" r="14" class="t"/><path d="M372 123l-11 43m15-43 20 43m-18-30 28-32m-32 33-36 8" class="s"/>
+          <path d="M138 244c33-26 69-32 105-39m66-36c27-22 47-34 66-39" stroke="#67cdd1" stroke-width="3" stroke-dasharray="7 7" fill="none"/>
+          <circle cx="147" cy="244" r="5" fill="#67cdd1"/><circle cx="242" cy="205" r="5" fill="#67cdd1"/><circle cx="309" cy="169" r="5" fill="#67cdd1"/>
+          <path d="M487 323c-8-40 9-64 34-78-3 34-14 58-34 78z" class="t"/><path d="M502 325c7-25 22-37 42-45-2 24-13 39-42 45z" fill="#87ddd5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="overview" class="section intro">
+  <div class="wrap intro-grid">
+    <div>
+      <div class="kicker">INTRODUCTION</div>
+      <h2 style="font-size:38px;margin:8px 0 16px"><span class="title-mark">منطق استقرار</span></h2>
+      <p style="color:var(--muted);font-size:14px;margin:0">OKR فقط یک فرم هدف‌گذاری نیست. استقرار موفق، به planning، communication، training، governance و یک cadence مشخص برای مرور پیشرفت نیاز دارد.</p>
+    </div>
+    <div class="intro-card">
+      <b>منطق این دمو</b>
+      <p>ابتدا foundation ساخته می‌شود؛ سپس OKR به سازمان معرفی و آموزش داده می‌شود؛ بعد Company و Group OKRs شکل می‌گیرند؛ و در نهایت check-in، 1:1 و review cycles آن را وارد کار روزمره می‌کنند.</p>
+    </div>
+  </div>
+</section>
+
+<section id="timeline" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="kicker">IMPLEMENTATION TIMELINE</div><h2><span class="title-mark">مسیر اجرا در یک نگاه</span></h2></div>
+      <p>ساختار کلان handbook را در پنج مرحله نگه داشته‌ایم؛ هر مرحله به یکی از بخش‌های اصلی rollout متصل است.</p>
+    </div>
+    <div class="timeline">
+      <div class="phase"><div class="num">1.</div><div class="phase-circle"><svg viewBox="0 0 48 48"><path d="M12 7h22v31H12z"/><path d="M17 14h12M17 20h12M17 26h8"/><path d="M28 33l8-8 4 4-8 8-6 1z"/></svg></div><h3>آماده‌سازی</h3><small>Prepare</small><div class="duration">Week 1</div></div>
+      <div class="phase"><div class="num">2.</div><div class="phase-circle"><svg viewBox="0 0 48 48"><circle cx="14" cy="17" r="5"/><circle cx="34" cy="17" r="5"/><circle cx="24" cy="12" r="5"/><path d="M7 36c1-8 5-12 11-12m23 12c-1-8-5-12-11-12M15 38c1-10 4-16 9-16s8 6 9 16"/></svg></div><h3>معرفی</h3><small>Introduce</small><div class="duration">Week 1</div></div>
+      <div class="phase"><div class="num">3.</div><div class="phase-circle"><svg viewBox="0 0 48 48"><path d="M7 8h34v23H7z"/><path d="M14 16h14M14 22h10"/><circle cx="32" cy="18" r="4"/><path d="M27 31l-5 9m4-9 6 9"/></svg></div><h3>آموزش</h3><small>Train</small><div class="duration">Weeks 2–3</div></div>
+      <div class="phase"><div class="num">4.</div><div class="phase-circle"><svg viewBox="0 0 48 48"><rect x="18" y="5" width="12" height="9"/><rect x="5" y="33" width="12" height="9"/><rect x="31" y="33" width="12" height="9"/><path d="M24 14v9M11 33v-5h26v5"/></svg></div><h3>تدوین</h3><small>Create</small><div class="duration">Weeks 3–4</div></div>
+      <div class="phase"><div class="num">5.</div><div class="phase-circle"><svg viewBox="0 0 48 48"><path d="M18 31l-5 8 8-5M30 31l5 8-8-5"/><path d="M24 6c9 7 12 18 7 27H17C12 24 15 13 24 6z"/><circle cx="24" cy="20" r="4"/></svg></div><h3>راه‌اندازی</h3><small>Launch</small><div class="duration">Execution rhythm</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="steps" class="section grid-bg" style="border-top:1px solid #dff0f2;border-bottom:1px solid #dff0f2">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="kicker">8-STEP IMPLEMENTATION JOURNEY</div><h2><span class="title-mark">۸ گام برای استقرار موفق OKR</span></h2></div>
+      <p>کارت‌ها interactive هستند. روی هر گام کلیک کنید تا focus، deliverable و cadence آن در پنل زیر نمایش داده شود.</p>
+    </div>
+
+    <div class="roadmap">
+      <div class="steps-grid">
+        <article class="step active" data-step="0">
+          <span class="step-num">1</span><h3>آماده‌سازی <span>(Prepare)</span></h3>
+          <div class="meta"><span>◷ حدود ۱ هفته</span><span>▣ Foundation</span></div>
+          <ul><li>تعیین Ambassador / Owner</li><li>تعریف گروه‌ها و cadenceها</li><li>مستندسازی فرایند اجرا</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><rect x="27" y="17" width="72" height="45" rx="3" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M40 49h45M40 40h37M40 31h26" stroke="#62cbd0" stroke-width="3"/><circle cx="112" cy="49" r="16" fill="#ffe0a8" stroke="#0b1f3a" stroke-width="2"/><path d="M106 49l5 5 10-12" stroke="#0b1f3a" stroke-width="2.5" fill="none"/></svg></div>
+        </article>
+
+        <article class="step" data-step="1">
+          <span class="step-num">2</span><h3>معرفی <span>(Introduce)</span></h3>
+          <div class="meta"><span>◷ حدود ۱ هفته</span><span>▣ Communication</span></div>
+          <ul><li>توضیح WHY و ارزش OKR</li><li>معرفی نقش حامی و Ambassador</li><li>اعلام next steps و deadlines</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><rect x="19" y="13" width="60" height="40" rx="4" fill="#dff5f7" stroke="#0b1f3a" stroke-width="2"/><circle cx="103" cy="28" r="8" fill="#62cbd0"/><circle cx="122" cy="31" r="7" fill="#ff8a61"/><path d="M92 61c2-14 7-21 14-21s12 7 14 21M112 62c2-12 7-19 13-19 5 0 9 6 10 19" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M29 25h37M29 34h26" stroke="#0b1f3a" stroke-width="2"/></svg></div>
+        </article>
+
+        <article class="step" data-step="2">
+          <span class="step-num">3</span><h3>تنظیم بستر <span>(Set up)</span></h3>
+          <div class="meta"><span>◷ حدود ۲ هفته</span><span>▣ Strategy</span></div>
+          <ul><li>Ultimate Goal</li><li>Strategic Pillars و KPIs</li><li>Company OKRs</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><path d="M13 60h124" stroke="#0b1f3a" stroke-width="2"/><rect x="22" y="38" width="24" height="22" fill="#dff5f7" stroke="#0b1f3a" stroke-width="2"/><rect x="60" y="27" width="28" height="33" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><rect x="103" y="17" width="25" height="43" fill="#ffe0a8" stroke="#0b1f3a" stroke-width="2"/><path d="M36 38l39-11 39-10" stroke="#62cbd0" stroke-width="3" stroke-dasharray="5 5"/></svg></div>
+        </article>
+
+        <article class="step" data-step="3">
+          <span class="step-num">4</span><h3>اطلاع‌رسانی <span>(Announce)</span></h3>
+          <div class="meta"><span>◷ حدود ۱ هفته</span><span>▣ Leadership signal</span></div>
+          <ul><li>پیام رسمی CEO / Leadership</li><li>All Hands معرفی rollout</li><li>اشتراک اولویت‌ها و deadlines</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><path d="M24 26h54v31H24z" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M78 33l31-14v45L78 50z" fill="#62cbd0" stroke="#0b1f3a" stroke-width="2"/><path d="M111 29l15-7m-15 35 15 7" stroke="#ff8a61" stroke-width="3"/></svg></div>
+        </article>
+
+        <article class="step" data-step="4">
+          <span class="step-num">5</span><h3>آموزش تیم‌ها <span>(Educate)</span></h3>
+          <div class="meta"><span>◷ حدود ۱ هفته</span><span>▣ Capability</span></div>
+          <ul><li>OKR methodology و KPI</li><li>زبان مشترک برای تیم‌ها</li><li>تمرین نوشتن Objective و KR</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><rect x="17" y="11" width="73" height="40" rx="3" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M28 23h32M28 32h22" stroke="#62cbd0" stroke-width="3"/><circle cx="108" cy="27" r="8" fill="#ff8a61"/><path d="M95 63c2-17 7-27 14-27 8 0 13 10 15 27" fill="#dff5f7" stroke="#0b1f3a" stroke-width="2"/></svg></div>
+        </article>
+
+        <article class="step" data-step="5">
+          <span class="step-num">6</span><h3>تدوین OKR <span>(Create)</span></h3>
+          <div class="meta"><span>◷ حدود ۲ هفته</span><span>▣ Alignment</span></div>
+          <ul><li>Group KPIs و Group OKRs</li><li>شناسایی interdependencies</li><li>Review و approval مدیران</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><rect x="19" y="18" width="33" height="26" fill="#ffe0a8" stroke="#0b1f3a" stroke-width="2"/><rect x="59" y="30" width="34" height="28" fill="#dff5f7" stroke="#0b1f3a" stroke-width="2"/><rect x="101" y="15" width="30" height="43" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M36 44v16h82M76 30V18h40" stroke="#0b1f3a" stroke-width="2" fill="none"/></svg></div>
+        </article>
+
+        <article class="step" data-step="6">
+          <span class="step-num">7</span><h3>یکپارچه‌سازی <span>(Integrate)</span></h3>
+          <div class="meta"><span>◷ ۲ تا ۴ هفته</span><span>▣ Operating rhythm</span></div>
+          <ul><li>Weekly / biweekly check-in</li><li>1:1 و team reviews</li><li>اتصال OKR به کار روزمره</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><path d="M18 55h114" stroke="#0b1f3a" stroke-width="2"/><rect x="26" y="31" width="29" height="24" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M22 31l19-14 19 14" fill="#dff5f7" stroke="#0b1f3a" stroke-width="2"/><rect x="75" y="22" width="45" height="33" fill="#fff" stroke="#0b1f3a" stroke-width="2"/><path d="M80 22l17-13 28 13" fill="#62cbd0" stroke="#0b1f3a" stroke-width="2"/><circle cx="66" cy="57" r="9" fill="#ff8a61"/></svg></div>
+        </article>
+
+        <article class="step" data-step="7">
+          <span class="step-num">8</span><h3>یادگیری و تکرار <span>(Learn & Repeat)</span></h3>
+          <div class="meta"><span>◷ پایان هر cycle</span><span>▣ Improvement</span></div>
+          <ul><li>Close و review نتایج</li><li>دریافت feedback</li><li>بهبود process و کیفیت OKRها</li></ul>
+          <div class="step-scene"><svg viewBox="0 0 150 78"><circle cx="75" cy="39" r="27" fill="#dff5f7" stroke="#0b1f3a" stroke-width="2"/><path d="M57 35c3-13 12-20 25-19l-7-8m18 33c-3 13-12 20-25 19l7 8" fill="none" stroke="#0b1f3a" stroke-width="2.5"/><path d="M82 16l-7-8M68 60l7 8" stroke="#ff8a61" stroke-width="3"/></svg></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+      <div><div class="kicker" id="detailKicker">STEP 1 · PREPARE</div><h3 id="detailTitle">آماده‌سازی foundation اجرای OKR</h3><p id="detailText">قبل از هر rollout باید owner، گروه‌های مشارکت‌کننده، cadenceها و قواعد اجرا روشن شوند تا process از همان ابتدا قابل پیگیری باشد.</p></div>
+      <div class="detail-cols">
+        <div class="detail-box"><b>FOCUS</b><span id="detailFocus">Governance + Process</span></div>
+        <div class="detail-box"><b>DELIVERABLE</b><span id="detailDeliverable">OKR rollout playbook</span></div>
+        <div class="detail-box"><b>CADENCE</b><span id="detailCadence">قبل از شروع cycle</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rhythm" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="kicker">FROM STRATEGY TO EXECUTION</div><h2><span class="title-mark">سه لایه مکمل</span></h2></div>
+      <p>این بخش سه جزء کلیدی handbook را به شکل یک operating model ساده برای دمو جمع می‌کند.</p>
+    </div>
+    <div class="support-grid">
+      <div class="support">
+        <h3>تنظیم راهبرد</h3><p>OKR باید از context راهبردی تغذیه شود.</p>
+        <div class="list">
+          <div class="list-row"><div class="ico">◎</div><div><b>Ultimate Goal</b><span>purpose + direction</span></div></div>
+          <div class="list-row"><div class="ico">◇</div><div><b>Strategic Pillars</b><span>منطق تمایز و انتخاب</span></div></div>
+          <div class="list-row"><div class="ico">▥</div><div><b>KPIs</b><span>پایش health و performance</span></div></div>
+        </div>
+      </div>
+      <div class="support">
+        <h3>ریتم اجرا و Check-in</h3><p>هدف‌ها باید مرتب update و review شوند.</p>
+        <div class="list">
+          <div class="list-row"><div class="ico">7d</div><div><b>به‌روزرسانی هفتگی</b><span>Progress + blockers</span></div></div>
+          <div class="list-row"><div class="ico">M</div><div><b>Leadership Review</b><span>مرور health اجرای فصل</span></div></div>
+          <div class="list-row"><div class="ico">Q</div><div><b>Quarterly Review</b><span>نتایج + یادگیری + تمرکز بعدی</span></div></div>
+        </div>
+      </div>
+      <div class="support">
+        <h3>مدیریت از طریق 1:1</h3><p>گفت‌وگوهای مدیر و فرد، accountability را زنده نگه می‌دهد.</p>
+        <div class="list">
+          <div class="list-row"><div class="ico">↗</div><div><b>پیشرفت</b><span>What moved?</span></div></div>
+          <div class="list-row"><div class="ico">!</div><div><b>موانع</b><span>What sits behind the gap?</span></div></div>
+          <div class="list-row"><div class="ico">→</div><div><b>Next best step</b><span>What will help you follow through?</span></div></div>
+        </div>
+        <div class="mini-quote">OKR وقتی جا می‌افتد که از «فرم» به «گفت‌وگوی مدیریتی» تبدیل شود.</div>
+      </div>
+    </div>
+
+    <div class="cta-band">
+      <div><h3>دموی عمومی استقرار OKR</h3><p>این نسخه عمداً generic است و به هیچ سازمان یا پروژه خاصی وابسته نیست.</p></div>
+      <a class="btn primary" href="#steps">برگشت به مسیر ۸ گام ↑</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap footer">
+    <div><b>Dr. Hasan Boudlaie</b> · Management & Leadership</div>
+    <div>OKR Implementation Demo · Public prototype</div>
+  </div>
+</footer>
+
+<script>
+const details = [
+ {k:"STEP 1 · PREPARE",t:"آماده‌سازی foundation اجرای OKR",x:"قبل از rollout، owner، گروه‌های مشارکت‌کننده، cadenceها و قواعد اجرا روشن می‌شوند تا فرایند از ابتدا قابل پیگیری باشد.",f:"Governance + Process",d:"OKR rollout playbook",c:"قبل از شروع cycle"},
+ {k:"STEP 2 · INTRODUCE",t:"معرفی OKR و چرایی تغییر",x:"سازمان باید بداند چرا OKR وارد می‌شود، چه ارزشی برای شرکت و افراد دارد و چه کسی این تغییر را راهبری می‌کند.",f:"Why + Communication",d:"Launch narrative",c:"پیش از training"},
+ {k:"STEP 3 · SET UP",t:"قرار دادن strategy قبل از OKR",x:"Ultimate Goal، Strategic Pillars و KPIها context لازم را می‌سازند تا Company OKRs از دل اولویت‌های واقعی سازمان شکل بگیرند.",f:"Strategy context",d:"Roadmap + Company OKRs",c:"Leadership sessions"},
+ {k:"STEP 4 · ANNOUNCE",t:"ارسال signal روشن از سوی leadership",x:"اعلام رسمی، All Hands و sharing of priorities باعث می‌شود rollout از یک initiative فنی به یک تصمیم مدیریتی تبدیل شود.",f:"Leadership alignment",d:"Official launch communication",c:"قبل از team creation"},
+ {k:"STEP 5 · EDUCATE",t:"ساخت زبان مشترک OKR",x:"Executives، managers و team members باید تفاوت KPI، Objective، Key Result و Initiative را بفهمند و در عمل تمرین کنند.",f:"Capability building",d:"Training + practice",c:"قبل از تدوین تیمی"},
+ {k:"STEP 6 · CREATE",t:"تدوین Group OKRs و alignment",x:"تیم‌ها KPIها و OKRهای خود را می‌سازند، interdependencyها را آشکار می‌کنند و managers روی اولویت‌ها review و approval انجام می‌دهند.",f:"Vertical + horizontal alignment",d:"Approved Group OKRs",c:"هر quarter"},
+ {k:"STEP 7 · INTEGRATE",t:"وارد کردن OKR به operating rhythm",x:"Check-inهای منظم، team reviews، 1:1ها و leadership reviews از set-and-forget جلوگیری می‌کنند و accountability را بالا می‌برند.",f:"Execution discipline",d:"Weekly management rhythm",c:"Weekly / biweekly"},
+ {k:"STEP 8 · LEARN & REPEAT",t:"یادگیری از cycle و بهبود کیفیت",x:"در پایان دوره، نتایج بسته می‌شوند، lessons learned و feedback جمع می‌شود و process برای cycle بعدی اصلاح می‌گردد.",f:"Learning + iteration",d:"Retrospective + improvements",c:"پایان هر cycle"}
+];
+const cards=[...document.querySelectorAll('.step')];
+cards.forEach((card,i)=>card.addEventListener('click',()=>{
+  cards.forEach(c=>c.classList.remove('active')); card.classList.add('active');
+  const d=details[i];
+  document.getElementById('detailKicker').textContent=d.k;
+  document.getElementById('detailTitle').textContent=d.t;
+  document.getElementById('detailText').textContent=d.x;
+  document.getElementById('detailFocus').textContent=d.f;
+  document.getElementById('detailDeliverable').textContent=d.d;
+  document.getElementById('detailCadence').textContent=d.c;
+  document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}));
+</script>
+</body>
+</html>
