@@ -252,6 +252,84 @@ html[dir="ltr"] .sidebar{box-shadow:-10px 0 36px rgba(18,48,82,.08)}
 @media(max-width:920px){.entry-hero{grid-template-columns:1fr}.entry-copy{padding:36px 30px}.entry-choice{padding:30px}.training-shell{display:block}.training-side{position:relative;top:0;height:auto}.training-nav{grid-template-columns:repeat(4,1fr)}.training-nav button{display:block;text-align:center}.training-nav button i{margin:0 auto 4px}.lesson-grid{grid-template-columns:1fr}.lesson-col{border-inline-start:0;border-top:1px solid #edf1f4}.lesson-col:first-child{border-top:0}}
 @media(max-width:650px){.entry-shell{width:100%;min-height:100vh;margin:0;border-radius:0}.entry-head{padding:0 18px}.entry-brand img{width:126px}.entry-brand-copy{display:none}.entry-copy h1{font-size:30px}.version-grid{grid-template-columns:1fr}.entry-choice{padding:24px 20px}.entry-copy{padding:30px 22px}.entry-quality{grid-template-columns:1fr 1fr}.training-top{padding:0 12px}.training-brand div{display:none}.training-main{padding:20px 14px 55px}.training-nav{grid-template-columns:repeat(2,1fr)}.dashboard-hero{display:block}.dashboard-metrics{justify-content:flex-start;margin-top:13px}}
 
+
+/* v6 — Perdoo-inspired UX simplification (original Kish implementation) */
+:root{
+  --navy:#101b2d;--navy2:#18263d;--teal:#2e74b5;--teal2:#4e94cf;--cyan:#edf5fb;
+  --bg:#f6f8fb;--paper:#fff;--muted:#6f7d8c;--line:#e4e9ef;--soft:#f8fafc;
+  --green:#25a56a;--amber:#d99a2b;--red:#d94f5c;--shadow:none;--r:14px;
+}
+body{background:var(--bg);color:#17263a}
+.app{grid-template-columns:224px minmax(0,1fr)}
+.sidebar{background:linear-gradient(180deg,#101b2d,#15243a);padding:16px 12px;box-shadow:none}
+.brand{padding:3px 5px 15px;margin-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand b{font-size:11px;line-height:1.45;max-width:140px}.brand span{font-size:7px;color:#8fa3b8}
+.company-logo{width:38px;height:38px;border-radius:9px}
+.nav{gap:3px}.nav-label{font-size:7px;color:#778ca2;font-weight:900;letter-spacing:.12em;padding:12px 10px 5px;text-transform:uppercase}
+.nav a{min-height:40px;padding:8px 10px;border-radius:9px;color:#b8c5d2;font-size:10px;gap:8px}
+.nav a .ico{font-size:11px;width:22px}.nav a:hover{background:rgba(255,255,255,.055)}.nav a.active{background:#243550;color:#fff;box-shadow:none}
+.nav-divider{height:1px;background:rgba(255,255,255,.08);margin:10px 8px}
+.guide-toggle{width:100%;border:0;background:transparent;color:#b8c5d2;padding:9px 10px;border-radius:9px;display:flex;align-items:center;justify-content:space-between;font-size:9px;font-weight:800}
+.guide-toggle:hover{background:rgba(255,255,255,.055)}.guide-toggle i{font-style:normal;font-size:11px;transition:.18s}.guide-toggle.open i{transform:rotate(180deg)}
+.guide-panel{display:none;padding:4px 0 0}.guide-panel.open{display:grid;gap:2px}.guide-panel button{border:0;background:transparent;color:#91a5b9;padding:7px 10px 7px 16px;border-radius:8px;text-align:inherit;font-size:8px}.guide-panel button:hover{background:rgba(255,255,255,.045);color:#fff}
+.side-foot{margin-top:16px;padding-top:12px}.side-foot p{font-size:7px;line-height:1.7}.side-link{font-size:8px;padding:7px}
+.topbar{height:64px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);padding:0 22px;box-shadow:none}
+.top-title b{font-size:11px}.top-title span{font-size:8px}.top-company-logo{width:30px;height:30px;border-radius:8px}
+.top-actions{gap:6px}.btn{border-color:#dfe5eb;border-radius:9px;padding:8px 10px;font-size:9px;background:#fff;box-shadow:none}.btn:hover{transform:none;border-color:#b8c9d8;background:#f9fbfd}
+.btn.primary{background:#17263a;border-color:#17263a}.btn.teal{background:#2e74b5;border-color:#2e74b5}.btn.danger{background:#fff;color:#c43f4c}
+.action-wrap{position:relative}.action-menu{position:absolute;top:42px;left:0;min-width:190px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 16px 36px rgba(16,27,45,.13);display:none;z-index:80}.action-menu.open{display:grid}.action-menu .btn{border:0;text-align:inherit;justify-content:flex-start;background:transparent}.action-menu .btn:hover{background:#f3f6f9}
+.content{max-width:1380px;padding:24px 26px 56px}
+.page-head{align-items:flex-start;margin-bottom:18px}.page-head h1{font-size:25px;letter-spacing:-.018em;margin-top:2px}.page-head p{font-size:9px;line-height:1.8;max-width:720px}.eyebrow{font-size:7px;color:#2e74b5;letter-spacing:.11em}
+.card,.objective,.team-box,.report-block,.training-lesson{box-shadow:none;border:1px solid var(--line);border-radius:14px}
+.card{padding:15px}.section-title h2{font-size:14px}.section-title p{font-size:8px}
+.stat{min-height:102px}.stat:after{display:none}.stat .label{font-size:8px;text-transform:uppercase;letter-spacing:.06em}.stat .value{font-size:25px;margin-top:4px}.stat .sub{font-size:7px}
+.progress{height:6px;background:#edf1f4}.progress>i{background:#2e74b5}
+input,textarea,select{border-color:#e2e7ec;background:#fff;border-radius:9px;padding:8px 9px;font-size:10px}
+input:focus,textarea:focus,select:focus{border-color:#7ba9cf;box-shadow:0 0 0 3px rgba(46,116,181,.08)}
+.table-wrap{border-color:var(--line);border-radius:11px;background:#fff}th{background:#fafbfc;color:#7a8794;font-size:7px;text-transform:uppercase;letter-spacing:.04em}
+th,td{border-bottom:1px solid #edf0f3;padding:8px 7px}table input,table select{border-color:transparent;background:transparent;padding:6px 4px}table input:hover,table select:hover{background:#f7f9fb}table input:focus,table select:focus{background:#fff;border-color:#b9cddd}
+.source-badge{padding:4px 7px;font-size:7px;border-radius:999px}
+.demo-banner{border:0;background:#edf5fb;border-radius:10px;padding:9px 11px;margin-bottom:13px}.demo-banner b{font-size:8px}.demo-banner span{font-size:7px}.demo-banner .btn{font-size:7px;padding:6px 8px}
+.workspace-strip{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px;padding:10px 12px;border:1px solid var(--line);background:#fff;border-radius:12px}.workspace-strip b{font-size:9px}.workspace-strip span{font-size:7px;color:var(--muted)}.workspace-tags{display:flex;gap:6px;flex-wrap:wrap}.workspace-tag{font-size:7px;border:1px solid #dfe5eb;border-radius:999px;padding:5px 8px;background:#fafbfc}.workspace-tag.real{color:#245f8f;background:#eef6fb}.workspace-tag.sample{color:#936413;background:#fff8ea}
+.attention-bar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}.attention-item{min-width:128px;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}.attention-item i{width:8px;height:8px;border-radius:50%;background:#2e74b5}.attention-item.warn i{background:var(--amber)}.attention-item.bad i{background:var(--red)}.attention-item.good i{background:var(--green)}.attention-item b{font-size:10px}.attention-item span{font-size:7px;color:var(--muted)}
+.timeline{display:flex;gap:6px;overflow:auto}.phase{min-width:105px;border:0;background:#f7f9fb;border-radius:10px;padding:10px}.phase i{width:28px;height:28px;border-radius:8px;background:#e8f1f8;color:#2e74b5;font-size:9px}.phase h4{font-size:8px;margin:6px 0 0}.phase small{font-size:6px}.phase .step-pct{font-size:6px}
+.dash-row{grid-template-columns:minmax(0,1fr) 50px 90px;padding:8px 0}.dash-row b{font-size:9px}.dash-row span{font-size:7px}
+.kpi-snapshot{grid-template-columns:minmax(0,1fr) 65px 40px 60px 76px;padding:8px 0}.kpi-snapshot b{font-size:8px}.kpi-snapshot span{font-size:7px}
+.health{font-size:7px;padding:3px 6px}.trend{font-size:8px}.report-item b{font-size:8px}.report-item span{font-size:7px}
+.status{font-size:7px;padding:4px 7px}.status.active{background:#eaf7f0}.status.draft{background:#f0f2f5}.status.closed{background:#edf2f7}
+
+/* Strategy map */
+.strategy-map-card{padding:16px;margin-bottom:16px;overflow:hidden}.strategy-map-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.strategy-map-head h2{font-size:14px;margin:0}.strategy-map-head p{font-size:7px;color:var(--muted);margin:2px 0 0}
+.strategy-map-top{max-width:760px;margin:0 auto 18px;border:1px solid #cfddea;background:#f8fbfd;border-radius:11px;padding:12px 14px;text-align:center}.strategy-map-top small{font-size:7px;text-transform:uppercase;color:#65829d;font-weight:900}.strategy-map-top b{display:block;font-size:11px;line-height:1.8;margin-top:4px}
+.strategy-map-connector{width:1px;height:15px;background:#cbd8e3;margin:auto}.pillar-map{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.pillar-node{border:1px solid var(--line);border-radius:11px;background:#fff;padding:11px;min-height:102px}.pillar-node b{font-size:9px;display:block;line-height:1.55}.pillar-node p{font-size:7px;color:var(--muted);line-height:1.65;margin:4px 0}.pillar-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.pillar-meta span{font-size:6px;border-radius:999px;padding:3px 6px;background:#f2f5f8;color:#637485}
+
+/* Collapsed OKR rows */
+.list-stack{gap:8px}.objective{overflow:hidden}.objective-summary{display:grid;grid-template-columns:30px minmax(0,1fr) 135px 90px 145px;gap:9px;align-items:center;padding:10px 12px;background:#fff}.objective-summary:hover{background:#fbfcfd}.toggle-row{border:0;background:#f2f5f8;width:28px;height:28px;border-radius:8px;font-size:12px;color:#5a6d7e}.objective-summary .objective-title input{border-color:transparent;background:transparent;padding:5px;font-weight:800;font-size:10px}.objective-summary .objective-title input:focus{border-color:#b8cddd;background:#fff}.obj-meta{font-size:7px;color:var(--muted);line-height:1.5}.obj-progress{display:grid;grid-template-columns:42px 1fr;gap:6px;align-items:center}.obj-progress strong{font-size:9px}.objective-body{display:none;border-top:1px solid #edf0f3;background:#fbfcfd;padding:12px}.objective.open .objective-body{display:block}.objective-body .kr-list{padding:0}.objective-body .fields{margin-bottom:10px}.objective-head{display:none}
+.kr-row{grid-template-columns:minmax(190px,2fr) 78px 78px 78px 65px 105px 72px 30px;padding:8px 0;gap:6px}.kr-progress b{font-size:10px}
+
+/* Compact units */
+.unit-list{display:grid;gap:8px}.team-box{padding:0;overflow:hidden}.unit-summary{display:grid;grid-template-columns:30px minmax(0,1fr) 155px 80px 110px;gap:10px;align-items:center;padding:11px 12px;background:#fff}.unit-summary:hover{background:#fbfcfd}.unit-summary h3{font-size:10px;margin:0}.unit-summary p{font-size:7px;color:var(--muted);margin:2px 0 0}.unit-metric{font-size:7px;color:var(--muted)}.unit-metric b{display:block;font-size:9px;color:#26384b}.unit-body{display:none;border-top:1px solid #edf0f3;background:#fbfcfd;padding:13px}.team-box.open .unit-body{display:block}.unit-origin{margin:0 0 9px}.team-title{grid-template-columns:1fr 180px 34px}
+.team-meta{margin:9px 0}.unit-progress{display:flex;align-items:center;gap:7px}.unit-progress .progress{width:72px;margin:0}.unit-progress strong{font-size:9px}
+
+/* Landing simplified further */
+.entry-shell{border-radius:20px;box-shadow:0 20px 60px rgba(16,27,45,.10)}.entry-copy{background:linear-gradient(145deg,#101b2d,#1a2d47);padding:50px 44px}.entry-copy:before,.entry-copy:after{display:none}.entry-copy h1{font-size:34px}.entry-choice{padding:36px}.version-card{border-radius:13px;box-shadow:none}.version-card:hover{box-shadow:none;border-color:#9cb8cf}.version-card .v-icon{border-radius:9px}
+.entry-head{height:74px}.entry-brand img{width:140px;height:50px}
+
+/* mobile */
+@media(max-width:1200px){
+ .app{display:block!important}.sidebar{width:238px!important}.optional{display:none!important}
+}
+@media(max-width:900px){
+ .pillar-map{grid-template-columns:1fr 1fr}.objective-summary{grid-template-columns:30px minmax(0,1fr) 70px 90px}.objective-summary .obj-owner{display:none}.unit-summary{grid-template-columns:30px minmax(0,1fr) 80px 90px}.unit-summary .unit-owner{display:none}
+}
+@media(max-width:700px){
+ .content{padding:18px 12px 44px}.page-head h1{font-size:21px}.grid-4{grid-template-columns:1fr 1fr}.pillar-map{grid-template-columns:1fr}
+ .objective-summary{grid-template-columns:28px minmax(0,1fr) 70px}.objective-summary .obj-owner,.objective-summary .obj-status{display:none}.obj-progress{grid-template-columns:34px 1fr}
+ .unit-summary{grid-template-columns:28px minmax(0,1fr) 80px}.unit-summary .unit-owner,.unit-summary .unit-okrs{display:none}
+ .top-actions .lang-switch{display:none}.top-actions .user-mini{display:none}.workspace-strip{display:block}.workspace-tags{margin-top:8px}
+ .kr-row{display:block}.kr-row>*{margin-top:5px}.kpi-snapshot{grid-template-columns:1fr 55px 35px 70px}
+}
+
 </style>
 </head>
 <body>
@@ -350,16 +428,26 @@ html[dir="ltr"] .sidebar{box-shadow:-10px 0 36px rgba(18,48,82,.08)}
   <aside class="sidebar" id="sidebar">
     <div class="brand"><div class="company-logo"><img id="sideLogo" alt="Company logo"></div><div><b id="sideOrgName">OKR Implementation System</b><span>Strategy Execution · Pilot</span></div></div>
     <nav class="nav">
-<a href="#dashboard" data-go="dashboard" class="active"><span class="ico">▦</span> داشبورد</a>
-<a href="#setup" data-go="setup"><span class="ico">1</span> Prepare</a>
-<a href="#introduce" data-go="introduce"><span class="ico">2</span> Introduce</a>
-<a href="#strategy" data-go="strategy"><span class="ico">3</span> Set up</a>
-<a href="#announce" data-go="announce"><span class="ico">4</span> Announce</a>
-<a href="#educate" data-go="educate"><span class="ico">5</span> Educate</a>
-<a href="#teams" data-go="teams"><span class="ico">6</span> Create</a>
-<a href="#checkins" data-go="checkins"><span class="ico">7</span> Integrate</a>
-<a href="#review" data-go="review"><span class="ico">8</span> Learn & Repeat</a>
-</nav>
+      <div class="nav-label">Workspace</div>
+      <a href="#dashboard" data-go="dashboard" class="active"><span class="ico">⌂</span> <span data-fa="نمای کلی" data-en="Overview">نمای کلی</span></a>
+      <a href="#strategy" data-go="strategy"><span class="ico">◇</span> <span data-fa="راهبرد" data-en="Strategy">راهبرد</span></a>
+      <a href="#company" data-go="company"><span class="ico">◎</span> <span data-fa="OKRهای شرکت" data-en="Company OKRs">OKRهای شرکت</span></a>
+      <a href="#teams" data-go="teams"><span class="ico">◫</span> <span data-fa="واحدها" data-en="Units">واحدها</span></a>
+      <a href="#checkins" data-go="checkins"><span class="ico">↗</span> <span data-fa="Check-in" data-en="Check-ins">Check-in</span></a>
+      <a href="#review" data-go="review"><span class="ico">▤</span> <span data-fa="گزارش و مرور" data-en="Review & Reports">گزارش و مرور</span></a>
+      <div class="nav-divider"></div>
+      <button class="guide-toggle" id="guideToggle"><span data-fa="راهنمای استقرار" data-en="Implementation guide">راهنمای استقرار</span><i>⌄</i></button>
+      <div class="guide-panel" id="guidePanel">
+        <button data-stage-go="setup">01 · Prepare</button>
+        <button data-stage-go="introduce">02 · Introduce</button>
+        <button data-stage-go="strategy">03 · Set up</button>
+        <button data-stage-go="announce">04 · Announce</button>
+        <button data-stage-go="educate">05 · Educate</button>
+        <button data-stage-go="teams">06 · Create</button>
+        <button data-stage-go="checkins">07 · Integrate</button>
+        <button data-stage-go="review">08 · Learn & Repeat</button>
+      </div>
+    </nav>
     <div class="side-foot">
       <p>داده‌های این نسخه در مرورگر شما ذخیره می‌شوند. برای جابه‌جایی بین دستگاه‌ها از Export / Import استفاده کنید.</p>
       <button class="side-link" id="logoutBtn" style="width:100%;background:transparent;color:#fff">خروج / تغییر کاربر</button>
@@ -371,44 +459,40 @@ html[dir="ltr"] .sidebar{box-shadow:-10px 0 36px rgba(18,48,82,.08)}
       <div class="top-title" style="display:flex;align-items:center;gap:10px"><img id="topLogo" class="top-company-logo" alt="Company logo"><div><b id="topOrg">سازمان شما</b><span id="topCycle">OKR Cycle</span></div></div>
       <div class="top-actions">
         <button class="btn mobile-menu" id="menuBtn">☰</button>
-        <button class="btn" id="homePortalBtn"><span data-fa="صفحه اول" data-en="Home">صفحه اول</span></button>
-        <button class="btn mode-btn" id="topTrainingBtn"><span class="mode-dot"></span><span data-fa="آموزشی" data-en="Learning">آموزشی</span></button>
+        <button class="btn primary" data-go-btn="checkins"><span data-fa="+ Check-in" data-en="+ Check-in">+ Check-in</span></button>
+        <button class="btn mode-btn" id="topTrainingBtn"><span class="mode-dot"></span><span data-fa="آموزش" data-en="Learning">آموزش</span></button>
         <div class="lang-switch"><button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button></div>
-<select class="mobile-stage" id="mobileStage"><option value="dashboard">داشبورد</option><option value="setup">1. Prepare</option><option value="introduce">2. Introduce</option><option value="strategy">3. Set up</option><option value="announce">4. Announce</option><option value="educate">5. Educate</option><option value="teams">6. Create</option><option value="checkins">7. Integrate</option><option value="review">8. Learn & Repeat</option></select>
-        <button class="btn optional" id="demoBtn">داده نمونه کیش</button>
-        <button class="btn optional" id="exportBtn">Export JSON</button>
-        <button class="btn optional" id="importBtn">Import</button>
-        <button class="btn primary" id="saveBtn">ذخیره</button>
+        <select class="mobile-stage" id="mobileStage">
+          <option value="dashboard">Overview</option><option value="strategy">Strategy</option><option value="company">Company OKRs</option><option value="teams">Units</option><option value="checkins">Check-ins</option><option value="review">Reports</option>
+        </select>
+        <button class="btn" id="saveBtn"><span data-fa="ذخیره" data-en="Save">ذخیره</span></button>
+        <div class="action-wrap"><button class="btn" id="moreBtn">•••</button><div class="action-menu" id="actionMenu">
+          <button class="btn" id="homePortalBtn"><span data-fa="صفحه اول" data-en="Home">صفحه اول</span></button>
+          <button class="btn" id="demoBtn"><span data-fa="بازنشانی داده نمونه کیش" data-en="Reset Kish sample">بازنشانی داده نمونه کیش</span></button>
+          <button class="btn" id="exportBtn">Export JSON</button>
+          <button class="btn" id="importBtn">Import JSON</button>
+        </div></div>
         <div class="user-mini"><i id="userInitial">U</i><div><b id="userDisplay">User</b><small id="userRoleDisplay">Role</small></div></div>
-<input type="file" id="importFile" accept=".json,application/json" class="hidden">
-      </div>
+        <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+      </div></div>
     </div>
 
     <div class="content">
       <section class="view active" id="view-dashboard">
-        <div class="demo-banner"><div><b>نسخه Kish Ports & Airports فعال است</b><span>Vision، Mission، Values، Ultimate Goal، ۶ Strategic Pillar، ۱۳ Objective و Targetهای سطح شرکت از سند راهبردی وارد شده‌اند؛ Previous/Current values و داده‌های معاونت‌ها/مدیریت‌ها/ادارات برای نمایش کامل نرم‌افزار، نمونه اجرایی و قابل ویرایش‌اند.</span></div><button class="btn" id="refreshDemoBtn">بازنشانی نسخه نمونه کیش</button></div>
-        <div class="dashboard-hero">
-          <div><div class="eyebrow" style="color:#bcd6e7">KISH STRATEGY EXECUTION OS</div><h2 data-fa="یک تصویر واحد از راهبرد، اجرا و یادگیری" data-en="One view of strategy, execution and learning">یک تصویر واحد از راهبرد، اجرا و یادگیری</h2><p data-fa="سطح شرکت بر مبنای سند راهبردی واقعی است؛ سطوح واحدی با داده‌های نمونه طراحی شده‌اند تا همه حالت‌های مدیریتی، انحراف، برابری با هدف، عبور از هدف، ریسک و stale data قابل نمایش و تمرین باشد."
-             data-en="Company-level strategy comes from the real strategic document. Unit-level sample values deliberately cover target gaps, target matches, over-performance, risk, and stale data for management practice.">سطح شرکت بر مبنای سند راهبردی واقعی است؛ سطوح واحدی با داده‌های نمونه طراحی شده‌اند تا همه حالت‌های مدیریتی، انحراف، برابری با هدف، عبور از هدف، ریسک و stale data قابل نمایش و تمرین باشد.</p></div>
-          <div class="dashboard-metrics"><div class="dash-chip"><b>13</b><span>Objectives</span></div><div class="dash-chip"><b>6</b><span>Pillars</span></div><div class="dash-chip"><b>14</b><span>Units</span></div><div class="dash-chip"><b>FA / EN</b><span>Bilingual</span></div></div>
+        <div class="workspace-strip">
+          <div><b data-fa="Kish Strategy Execution Workspace" data-en="Kish Strategy Execution Workspace">Kish Strategy Execution Workspace</b><span data-fa="راهبرد سطح شرکت واقعی است؛ داده عملکردی واحدها برای Pilot نمونه و قابل ویرایش است." data-en="Company-level strategy is real; unit performance data is editable pilot sample data.">راهبرد سطح شرکت واقعی است؛ داده عملکردی واحدها برای Pilot نمونه و قابل ویرایش است.</span></div>
+          <div class="workspace-tags"><span class="workspace-tag real">● Real strategy</span><span class="workspace-tag sample">◆ Sample execution</span><span class="workspace-tag">FA / EN</span></div>
         </div>
-        <div class="page-head"><div><div class="eyebrow">EXECUTION OVERVIEW</div><h1>داشبورد استقرار OKR · بنادر و فرودگاه‌های کیش</h1><p>نمای مدیریتی از ۱۳ هدف راهبردی، Key Results، KPI Health و وضعیت اجرای نمونه در سطوح سازمانی.</p></div><button class="btn teal no-print" data-go-btn="checkins">ثبت Check-in جدید</button></div>
+        <div class="page-head"><div><div class="eyebrow">EXECUTION OVERVIEW</div><h1>داشبورد استقرار OKR · بنادر و فرودگاه‌های کیش</h1><p>نمای مدیریتی از اهداف، پیشرفت، سلامت KPIها و موارد نیازمند اقدام.</p></div><button class="btn primary no-print" data-go-btn="checkins">+ Check-in</button></div>
         <div class="grid grid-4" id="stats"></div>
-
-        <div class="grid grid-2" style="margin-top:16px">
-          <div class="card">
-            <div class="section-title"><div><h2>Implementation Timeline</h2><p>Prepare → Introduce → Train → Create → Launch</p></div></div>
-            <div class="timeline" id="journeySteps"></div>
-          </div>
-          <div class="card">
-            <div class="section-title"><div><h2>Objective Progress</h2><p>میانگین progress بر اساس Key Results</p></div></div>
-            <div class="dashboard-list" id="dashObjectives"></div>
-          </div>
+        <div class="attention-bar" id="attentionBar"></div>
+        <div class="grid grid-2">
+          <div class="card"><div class="section-title"><div><h2 data-fa="اولویت‌های جاری" data-en="Current priorities">اولویت‌های جاری</h2><p data-fa="Company + Unit OKRs" data-en="Company + Unit OKRs">Company + Unit OKRs</p></div><button class="btn" data-go-btn="company">View all</button></div><div class="dashboard-list" id="dashObjectives"></div></div>
+          <div class="card"><div class="section-title"><div><h2 data-fa="آخرین به‌روزرسانی‌ها" data-en="Latest updates">آخرین به‌روزرسانی‌ها</h2><p data-fa="آخرین Check-inهای ثبت‌شده" data-en="Recent check-ins">آخرین Check-inهای ثبت‌شده</p></div><button class="btn" data-go-btn="checkins">Open</button></div><div id="recentUpdates"></div></div>
         </div>
-
-        <div class="grid grid-2" style="margin-top:16px">
-          <div class="card"><div class="section-title"><div><h2>آخرین Check-inها</h2><p>آخرین تغییرات ثبت‌شده روی Key Results</p></div></div><div id="recentUpdates"></div></div>
-          <div class="card"><div class="section-title"><div><h2>KPI Health Snapshot</h2><p>جهت، trend و وضعیت شاخص‌ها</p></div></div><div id="kpiSnapshot"></div></div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="card"><div class="section-title"><div><h2>KPI Health</h2><p data-fa="شاخص‌های کلیدی نیازمند توجه" data-en="Key indicators requiring attention">شاخص‌های کلیدی نیازمند توجه</p></div><button class="btn" data-go-btn="strategy">Strategy</button></div><div id="kpiSnapshot"></div></div>
+          <div class="card"><div class="section-title"><div><h2 data-fa="راهنمای استقرار" data-en="Implementation guide">راهنمای استقرار</h2><p>8-step rollout</p></div><button class="btn" id="openGuideFromDash">Open guide</button></div><div class="timeline" id="journeySteps"></div></div>
         </div>
       </section>
 
@@ -512,6 +596,11 @@ html[dir="ltr"] .sidebar{box-shadow:-10px 0 36px rgba(18,48,82,.08)}
 
 <section class="view" id="view-strategy">
         <div class="page-head"><div><div class="eyebrow">STEP 3 · SET UP</div><h1>Vision، Mission، Values و Strategy Architecture</h1><p>معماری واقعی سطح شرکت از سند راهبردی تحول و پیشرفت بارگذاری شده است؛ همه فیلدها برای refinement قابل ویرایش‌اند.</p><span class="source-badge real">● REAL STRATEGY DATA · سند راهبردی شرکت</span></div><div class="step-actions"><button class="btn" data-go-btn="company">Company OKRs</button><button class="btn primary" data-go-btn="announce">مرحله بعد ←</button></div></div>
+        <div class="card strategy-map-card">
+          <div class="strategy-map-head"><div><h2 data-fa="Strategy Map" data-en="Strategy Map">Strategy Map</h2><p data-fa="Ultimate Goal → Strategic Pillars → KPI health" data-en="Ultimate Goal → Strategic Pillars → KPI health">Ultimate Goal → Strategic Pillars → KPI health</p></div><button class="btn" data-go-btn="company">Company OKRs →</button></div>
+          <div id="strategyMapMini"></div>
+        </div>
+
 
         <div class="grid grid-2">
           <div class="card">
@@ -654,12 +743,12 @@ const VIEW_COPY={
  review:{fa:['Review، Lessons Learned و Cycle بعد','نتایج را ببندید، یادگیری را capture کنید و process را برای دوره بعد بهبود دهید.'],en:['Review, Lessons Learned & Next Cycle','Close results, capture learning and improve the process for the next cycle.']}
 };
 const NAV_COPY={
- dashboard:['داشبورد','Dashboard'],setup:['Prepare','Prepare'],introduce:['Introduce','Introduce'],strategy:['Set up','Set up'],announce:['Announce','Announce'],educate:['Educate','Educate'],teams:['Create','Create'],checkins:['Integrate','Integrate'],review:['Learn & Repeat','Learn & Repeat']
+ dashboard:['نمای کلی','Overview'],strategy:['راهبرد','Strategy'],company:['OKRهای شرکت','Company OKRs'],teams:['واحدها','Units'],checkins:['Check-in','Check-ins'],review:['گزارش و مرور','Review & Reports']
 };
 function localizeViewChrome(){
  Object.entries(VIEW_COPY).forEach(([id,v])=>{const root=document.getElementById('view-'+id);if(!root)return;const h=root.querySelector('.page-head h1'),p=root.querySelector('.page-head p');const pair=appLang==='fa'?v.fa:v.en;if(h)h.textContent=pair[0];if(p)p.textContent=pair[1]});
  document.querySelectorAll('[data-go]').forEach(a=>{const key=a.dataset.go,lab=NAV_COPY[key];if(!lab)return;const ico=a.querySelector('.ico');a.innerHTML='';if(ico)a.appendChild(ico);a.appendChild(document.createTextNode(' '+(appLang==='fa'?lab[0]:lab[1])));});
- const stages={dashboard:['داشبورد','Dashboard'],setup:['1. Prepare','1. Prepare'],introduce:['2. Introduce','2. Introduce'],strategy:['3. Set up','3. Set up'],announce:['4. Announce','4. Announce'],educate:['5. Educate','5. Educate'],teams:['6. Create','6. Create'],checkins:['7. Integrate','7. Integrate'],review:['8. Learn & Repeat','8. Learn & Repeat']};
+ const stages={dashboard:['نمای کلی','Overview'],strategy:['راهبرد','Strategy'],company:['OKRهای شرکت','Company OKRs'],teams:['واحدها','Units'],checkins:['Check-in','Check-ins'],review:['گزارش و مرور','Review & Reports']};
  const ms=document.getElementById('mobileStage');if(ms)[...ms.options].forEach(o=>{if(stages[o.value])o.textContent=appLang==='fa'?stages[o.value][0]:stages[o.value][1]});
 }
 function applyLanguage(){
@@ -773,6 +862,9 @@ function showView(name){
   history.replaceState(null,'','#'+name);
   document.getElementById('sidebar').classList.remove('open');if(document.getElementById('mobileStage'))document.getElementById('mobileStage').value=name;
   if(name==='dashboard')renderDashboard();
+  if(name==='strategy'){renderPillars();renderKpis();renderStrategyMap()}
+  if(name==='company')renderCompany();
+  if(name==='teams')renderTeams();
   if(name==='checkins')renderCheckins();
   if(name==='review')renderReview();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -781,8 +873,43 @@ function showView(name){
 document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showView(a.dataset.go)}));
 document.querySelectorAll('[data-go-btn]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.goBtn)));
 document.getElementById('menuBtn').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+document.getElementById('guideToggle').addEventListener('click',()=>{document.getElementById('guidePanel').classList.toggle('open');document.getElementById('guideToggle').classList.toggle('open')});
+document.getElementById('moreBtn').addEventListener('click',e=>{e.stopPropagation();document.getElementById('actionMenu').classList.toggle('open')});
+document.addEventListener('click',e=>{if(!e.target.closest('.action-wrap'))document.getElementById('actionMenu')?.classList.remove('open')});
+document.getElementById('openGuideFromDash').addEventListener('click',()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('guidePanel').classList.add('open');document.getElementById('guideToggle').classList.add('open')});
 document.getElementById('saveBtn').addEventListener('click',()=>save(false));
 
+const openObjectives=new Set();
+const openTeams=new Set();
+function lastUpdateOf(o){const a=(o.krs||[]).map(k=>k.lastUpdate).filter(Boolean).sort();return a.length?a[a.length-1]:''}
+function objectiveRisk(o){
+ const ks=o.krs||[];if(ks.some(k=>k.confidence==='off-track'))return 'bad';
+ if(ks.some(k=>k.confidence==='attention'))return 'warn';
+ return ks.length?'good':'neutral'
+}
+function teamProgress(t){return (t.okrs||[]).length?Math.round((t.okrs||[]).reduce((a,o)=>a+objectiveProgress(o),0)/(t.okrs||[]).length):0}
+function renderAttentionBar(){
+ const box=document.getElementById('attentionBar');if(!box)return;
+ const krs=allKrs(),off=krs.filter(x=>x.kr.confidence==='off-track').length,attention=krs.filter(x=>x.kr.confidence==='attention').length;
+ const stale=krs.filter(x=>!x.kr.lastUpdate||(Date.now()-new Date(x.kr.lastUpdate).getTime())>14*86400000).length;
+ const healthy=krs.filter(x=>x.kr.confidence==='on-track').length;
+ box.innerHTML='<div class="attention-item good"><i></i><div><b>'+healthy+'</b><span>'+(appLang==='fa'?' روی مسیر':' On track')+'</span></div></div>'+
+ '<div class="attention-item warn"><i></i><div><b>'+attention+'</b><span>'+(appLang==='fa'?' نیازمند توجه':' Need attention')+'</span></div></div>'+
+ '<div class="attention-item bad"><i></i><div><b>'+off+'</b><span>'+(appLang==='fa'?' خارج از مسیر':' Off track')+'</span></div></div>'+
+ '<div class="attention-item '+(stale?'warn':'good')+'"><i></i><div><b>'+stale+'</b><span>'+(appLang==='fa'?' به‌روزرسانی قدیمی':' Stale updates')+'</span></div></div>';
+}
+function renderStrategyMap(){
+ const box=document.getElementById('strategyMapMini');if(!box)return;
+ const ug=state.strategy.ultimateGoal||'Ultimate Goal';
+ const nodes=(state.strategy.pillars||[]).map(p=>{
+   const ks=(state.strategy.kpis||[]).filter(k=>k.pillar===p.title),bad=ks.filter(k=>kpiHealth(k).cls==='bad').length,warn=ks.filter(k=>kpiHealth(k).cls==='warn').length;
+   return '<div class="pillar-node"><b>'+esc((p.title||'Strategic Pillar').split('|')[0].trim())+'</b><p>'+esc(p.description||'')+'</p><div class="pillar-meta"><span>'+ks.length+' KPI</span>'+(bad?'<span style="color:#b9444e">'+bad+' at risk</span>':'')+(warn?'<span style="color:#9a6a14">'+warn+' watch</span>':'')+'</div></div>'
+ }).join('');
+ box.innerHTML='<div class="strategy-map-top"><small>Ultimate Goal</small><b>'+esc(ug)+'</b></div><div class="strategy-map-connector"></div><div class="pillar-map">'+nodes+'</div>';
+}
+function renderAll(){
+ updateHeader();renderPillars();renderKpis();renderCompany();renderTeams();renderCheckins();renderStrategyMap();renderDashboard();renderReview();
+}
 function renderPillars(){
   const box=document.getElementById('pillars');
   if(!state.strategy.pillars.length){box.innerHTML='<div class="empty">هنوز Strategic Pillar ثبت نشده است.</div>';return}
@@ -810,22 +937,27 @@ function krRow(k,oi,ki,prefix){
   '</div>';
 }
 function objectiveHtml(o,oi,prefix){
-  const st=o.status||'draft';
-  return '<div class="objective">'+
-   '<div class="objective-head">'+
-    '<div class="objective-title"><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="objective" value="'+esc(o.objective)+'" placeholder="Objective الهام‌بخش و نتیجه‌محور"></div>'+
-    '<input data-obj="'+prefix+'" data-o="'+oi+'" data-f="owner" value="'+esc(o.owner)+'" placeholder="Owner">'+
-    '<select data-obj="'+prefix+'" data-o="'+oi+'" data-f="status"><option value="draft" '+(st==='draft'?'selected':'')+'>Draft</option><option value="active" '+(st==='active'?'selected':'')+'>Active</option><option value="closed" '+(st==='closed'?'selected':'')+'>Closed</option></select>'+
-    '<div style="display:flex;gap:6px;align-items:center"><span class="status '+st+'">'+Math.round(objectiveProgress(o))+'%</span><button class="icon-btn" data-del-obj="'+prefix+'" data-o="'+oi+'">×</button></div>'+
+  const st=o.status||'draft',key=prefix+':'+oi,open=openObjectives.has(key),p=Math.round(objectiveProgress(o)),risk=objectiveRisk(o),last=lastUpdateOf(o);
+  return '<div class="objective '+(open?'open':'')+'">'+
+   '<div class="objective-summary">'+
+    '<button class="toggle-row" data-toggle-obj="'+key+'" aria-label="Toggle">'+(open?'−':'+')+'</button>'+
+    '<div class="objective-title"><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="objective" value="'+esc(o.objective)+'" placeholder="Objective"><div class="obj-meta">'+((o.krs||[]).length)+' KRs · '+(last?(appLang==='fa'?'آخرین update ':'Last update ')+new Date(last).toLocaleDateString(appLang==='fa'?'fa-IR':'en-GB'):(appLang==='fa'?'بدون update':'No update'))+'</div></div>'+
+    '<div class="obj-owner"><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="owner" value="'+esc(o.owner)+'" placeholder="Owner"></div>'+
+    '<div class="obj-status"><span class="health '+(risk==='bad'?'bad':risk==='warn'?'warn':risk==='good'?'good':'neutral')+'">'+(risk==='bad'?'At risk':risk==='warn'?'Watch':risk==='good'?'On track':'No KRs')+'</span></div>'+
+    '<div class="obj-progress"><strong>'+p+'%</strong><div class="progress"><i style="width:'+p+'%"></i></div></div>'+
    '</div>'+
-   '<div style="padding:0 14px 10px"><div class="fields" style="grid-template-columns:1fr 1fr"><div class="field"><label>Why is this important?</label><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="why" value="'+esc(o.why)+'"></div><div class="field"><label>Why is this urgent?</label><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="urgent" value="'+esc(o.urgent)+'"></div></div></div>'+
-   '<div class="kr-list">'+(o.krs||[]).map((k,ki)=>krRow(k,oi,ki,prefix)).join('')+
-   '<button class="add-row no-print" data-add-kr="'+prefix+'" data-o="'+oi+'">+ Key Result</button></div>'+
-  '</div>';
+   '<div class="objective-body">'+
+    '<div class="fields" style="grid-template-columns:1fr 1fr 150px"><div class="field"><label>Why is this important?</label><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="why" value="'+esc(o.why)+'"></div><div class="field"><label>Why is this urgent?</label><input data-obj="'+prefix+'" data-o="'+oi+'" data-f="urgent" value="'+esc(o.urgent)+'"></div><div class="field"><label>Status</label><select data-obj="'+prefix+'" data-o="'+oi+'" data-f="status"><option value="draft" '+(st==='draft'?'selected':'')+'>Draft</option><option value="active" '+(st==='active'?'selected':'')+'>Active</option><option value="closed" '+(st==='closed'?'selected':'')+'>Closed</option></select></div></div>'+
+    '<div class="kr-list">'+(o.krs||[]).map((k,ki)=>krRow(k,oi,ki,prefix)).join('')+
+    '<div style="display:flex;justify-content:space-between;gap:8px;margin-top:8px"><button class="add-row no-print" data-add-kr="'+prefix+'" data-o="'+oi+'">+ Key Result</button><button class="btn danger no-print" data-del-obj="'+prefix+'" data-o="'+oi+'">'+(appLang==='fa'?'حذف Objective':'Delete objective')+'</button></div></div>'+
+   '</div></div>';
 }
 function renderCompany(){
   const box=document.getElementById('companyOkrs');
-  box.innerHTML=state.companyOkrs.length?state.companyOkrs.map((o,i)=>objectiveHtml(o,i,'company')).join(''):'<div class="empty">هنوز Company Objective ثبت نشده است. با «Objective جدید» شروع کنید.</div>';
+  if(!state.companyOkrs.length){box.innerHTML='<div class="empty">هنوز Company Objective ثبت نشده است.</div>';return}
+  const active=state.companyOkrs.filter(o=>o.status==='active').length,draft=state.companyOkrs.filter(o=>o.status==='draft').length,risk=state.companyOkrs.filter(o=>objectiveRisk(o)==='bad').length;
+  box.innerHTML='<div class="attention-bar" style="margin-top:0"><div class="attention-item"><i></i><div><b>'+state.companyOkrs.length+'</b><span> Objectives</span></div></div><div class="attention-item good"><i></i><div><b>'+active+'</b><span> Active</span></div></div><div class="attention-item"><i></i><div><b>'+draft+'</b><span> Draft</span></div></div><div class="attention-item '+(risk?'bad':'good')+'"><i></i><div><b>'+risk+'</b><span> At risk</span></div></div></div>'+
+  state.companyOkrs.map((o,i)=>objectiveHtml(o,i,'company')).join('');
 }
 function renderTeamKpis(t,ti){
  if(!(t.kpis||[]).length)return '<div class="empty">هنوز Group KPI ثبت نشده است.</div>';
@@ -835,21 +967,29 @@ function renderTeamKpis(t,ti){
 }
 function renderTeams(){
   const box=document.getElementById('teams');
-  if(!state.teams.length){box.innerHTML='<div class="empty">هنوز Group / Unit تعریف نشده است.</div>';return}
-  box.innerHTML=state.teams.map((t,ti)=>'<div class="team-box">'+
-    '<div class="team-title"><input data-team="'+ti+'" data-f="name" value="'+esc(t.name)+'" placeholder="نام معاونت / مدیریت / اداره"><input data-team="'+ti+'" data-f="lead" value="'+esc(t.lead)+'" placeholder="Owner / مسئول"><button class="icon-btn" data-del-team="'+ti+'">×</button></div>'+
-    '<div class="unit-origin"><b>لایه سازمانی:</b> '+esc(t.unitType||'واحد')+' · <b>واحد بالادست:</b> '+esc(t.parent||'—')+' · داده عملکردی این بخش: نمونه اجرایی</div>'+
-    '<div class="fields" style="grid-template-columns:1fr 1fr;margin-top:10px"><div class="field"><label>Unit type</label><input data-team="'+ti+'" data-f="unitType" value="'+esc(t.unitType||'')+'"></div><div class="field"><label>Parent unit</label><input data-team="'+ti+'" data-f="parent" value="'+esc(t.parent||'')+'"></div></div>'+
-    '<div class="team-meta"><div class="field"><label>Core responsibilities</label><input data-team="'+ti+'" data-f="responsibilities" value="'+esc(t.responsibilities)+'"></div><div class="field"><label>Interdependencies / Notes</label><input data-team="'+ti+'" data-f="interdependencies" value="'+esc(t.interdependencies)+'"></div></div>'+
-    '<div class="section-title"><div><h2 style="font-size:13px">Unit KPIs</h2><p>Business-as-usual indicators · sample values</p></div><button class="btn no-print" data-add-team-kpi="'+ti+'">+ KPI</button></div>'+renderTeamKpis(t,ti)+
-    '<div class="section-title" style="margin-top:14px"><div><h2 style="font-size:13px">Unit OKRs</h2><p>Sample outcomes + manager approval</p></div><button class="btn no-print" data-add-team-okr="'+ti+'">+ Objective</button></div>'+
-    '<div class="list-stack">'+((t.okrs||[]).length?(t.okrs||[]).map((o,oi)=>objectiveHtml(o,oi,'team:'+ti)).join(''):'<div class="empty">برای این واحد هنوز OKR ثبت نشده است.</div>')+'</div>'+
-  '</div>').join('');
+  if(!state.teams.length){box.innerHTML='<div class="empty">هنوز Unit تعریف نشده است.</div>';return}
+  box.className='unit-list';
+  box.innerHTML=state.teams.map((t,ti)=>{
+    const open=openTeams.has(ti),p=teamProgress(t),okrs=(t.okrs||[]).length,kpis=(t.kpis||[]),bad=kpis.filter(k=>kpiHealth(k).cls==='bad').length,warn=kpis.filter(k=>kpiHealth(k).cls==='warn').length;
+    return '<div class="team-box '+(open?'open':'')+'">'+
+      '<div class="unit-summary"><button class="toggle-row" data-toggle-team="'+ti+'">'+(open?'−':'+')+'</button><div><h3>'+esc(t.name||'Unit')+'</h3><p>'+esc(t.unitType||'')+' · '+esc(t.parent||'—')+'</p></div>'+
+      '<div class="unit-owner unit-metric"><span>Owner</span><b>'+esc(t.lead||'—')+'</b></div>'+
+      '<div class="unit-okrs unit-metric"><span>OKRs / KPIs</span><b>'+okrs+' / '+kpis.length+'</b></div>'+
+      '<div class="unit-progress"><strong>'+p+'%</strong><div class="progress"><i style="width:'+p+'%"></i></div>'+(bad?'<span class="health bad">'+bad+' risk</span>':warn?'<span class="health warn">'+warn+' watch</span>':'')+'</div></div>'+
+      '<div class="unit-body"><div class="team-title"><input data-team="'+ti+'" data-f="name" value="'+esc(t.name)+'" placeholder="نام واحد"><input data-team="'+ti+'" data-f="lead" value="'+esc(t.lead)+'" placeholder="Owner / مسئول"><button class="icon-btn" data-del-team="'+ti+'">×</button></div>'+
+      '<div class="fields" style="grid-template-columns:1fr 1fr;margin-top:9px"><div class="field"><label>Unit type</label><input data-team="'+ti+'" data-f="unitType" value="'+esc(t.unitType||'')+'"></div><div class="field"><label>Parent unit</label><input data-team="'+ti+'" data-f="parent" value="'+esc(t.parent||'')+'"></div></div>'+
+      '<div class="team-meta"><div class="field"><label>Core responsibilities</label><input data-team="'+ti+'" data-f="responsibilities" value="'+esc(t.responsibilities)+'"></div><div class="field"><label>Interdependencies</label><input data-team="'+ti+'" data-f="interdependencies" value="'+esc(t.interdependencies)+'"></div></div>'+
+      '<div class="section-title"><div><h2>Unit KPIs</h2><p>Business-as-usual health · sample values</p></div><button class="btn no-print" data-add-team-kpi="'+ti+'">+ KPI</button></div>'+renderTeamKpis(t,ti)+
+      '<div class="section-title" style="margin-top:13px"><div><h2>Unit OKRs</h2><p>Quarterly outcomes</p></div><button class="btn no-print" data-add-team-okr="'+ti+'">+ Objective</button></div>'+
+      '<div class="list-stack">'+((t.okrs||[]).length?(t.okrs||[]).map((o,oi)=>objectiveHtml(o,oi,'team:'+ti)).join(''):'<div class="empty">OKR ثبت نشده است.</div>')+'</div></div></div>'
+  }).join('');
 }
 function blankObjective(){return {id:id(),objective:'',owner:'',status:'draft',why:'',urgent:'',krs:[]}}
 function blankKr(){return {id:id(),text:'',baseline:'',target:'',current:'',unit:'',owner:'',confidence:'on-track',lastNote:'',lastUpdate:''}}
 
 document.addEventListener('click',e=>{
+  const tg=e.target.closest('[data-toggle-obj]');if(tg){const k=tg.dataset.toggleObj;openObjectives.has(k)?openObjectives.delete(k):openObjectives.add(k);renderCompany();renderTeams();return}
+  const tt=e.target.closest('[data-toggle-team]');if(tt){const i=+tt.dataset.toggleTeam;openTeams.has(i)?openTeams.delete(i):openTeams.add(i);renderTeams();return}
   const sg=e.target.closest('[data-stage-go]');if(sg){showView(sg.dataset.stageGo);return}
   const op=e.target.closest('[data-open-url]');if(op){const u=document.getElementById(op.dataset.openUrl).value.trim();try{const x=new URL(u);if(/^https?:$/.test(x.protocol))window.open(x.href,'_blank','noopener');else toast('لینک معتبر نیست')}catch(err){toast('لینک معتبر نیست')}return}
   if(e.target.matches('[data-add-team-kpi]')){const ti=+e.target.dataset.addTeamKpi;if(!state.teams[ti].kpis)state.teams[ti].kpis=[];state.teams[ti].kpis.push({id:id(),name:'',owner:'',previous:'',current:'',target:'',direction:'up',unit:''});renderTeams();save(true);return}
@@ -980,7 +1120,7 @@ function renderDashboard(){renderJourney();
   const dash=document.getElementById('dashObjectives');
   dash.innerHTML=objs.length?objs.slice(0,8).map(x=>{const p=objectiveProgress(x.objective);return '<div class="dash-row"><div><b>'+esc(x.objective.objective||'Objective بدون عنوان')+'</b><span>'+esc(x.scope+(x.team?' · '+x.team:''))+'</span></div><strong>'+p+'%</strong><div class="progress"><i style="width:'+p+'%"></i></div></div>'}).join(''):'<div class="empty">Objective ثبت نشده است.</div>';
   document.getElementById('recentUpdates').innerHTML=recent.length?recent.slice(0,6).map(x=>'<div class="report-item"><div><b>'+esc(x.kr.text||'KR')+'</b><span>'+esc(x.kr.lastNote||'بدون توضیح')+'</span></div><div>'+new Date(x.kr.lastUpdate).toLocaleDateString('fa-IR')+'</div></div>').join(''):'<div class="empty">هنوز Check-in ثبت نشده است.</div>';
-  renderKpiSnapshot();
+  renderKpiSnapshot();renderAttentionBar();renderStrategyMap();
   renderDirectReports();renderWeeklyReport();
 }
 function renderReview(){
