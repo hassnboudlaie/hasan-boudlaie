@@ -641,12 +641,34 @@ function translateKnownText(root){
     else if(appLang==='fa') n.nodeValue=fa;
   }
 }
+const VIEW_COPY={
+ dashboard:{fa:['داشبورد استقرار OKR · بنادر و فرودگاه‌های کیش','نمای مدیریتی از ۱۳ هدف راهبردی، Key Results، KPI Health و وضعیت اجرای نمونه در سطوح سازمانی.'],en:['OKR Implementation Dashboard · Kish Ports & Airports','Management view of the 13 strategic objectives, Key Results, KPI Health and sample execution status across organizational levels.']},
+ setup:{fa:['آماده‌سازی و Governance','Ambassador، participating groups، cadenceها و قواعد rollout را مشخص کنید.'],en:['Prepare & Governance','Define the Ambassador, participating groups, cadences and rollout rules.']},
+ introduce:{fa:['معرفی OKR به سازمان','WHY، benefits، Ambassador و next steps را روشن کنید؛ این مرحله change communication را پایه‌گذاری می‌کند.'],en:['Introduce OKR to the Organization','Clarify the WHY, benefits, Ambassador role and next steps; this stage establishes change communication.']},
+ announce:{fa:['اعلام رسمی rollout','پیام CEO/Leadership، کانال‌ها، All Hands و deadlines را نهایی کنید.'],en:['Announce the Rollout','Finalize the CEO/leadership message, channels, All Hands and deadlines.']},
+ educate:{fa:['آموزش و Capability Building','Executives، managers و team members باید یک زبان مشترک درباره Objective، Key Result، KPI و Initiative داشته باشند.'],en:['Educate & Build Capability','Executives, managers and team members need a shared language for Objectives, Key Results, KPIs and Initiatives.']},
+ strategy:{fa:['Vision، Mission، Values و Strategy Architecture','معماری واقعی سطح شرکت از سند راهبردی تحول و پیشرفت بارگذاری شده است؛ همه فیلدها برای refinement قابل ویرایش‌اند.'],en:['Vision, Mission, Values & Strategy Architecture','The real company-level architecture is loaded from the strategic document; all fields remain editable for refinement.']},
+ company:{fa:['۱۳ هدف راهبردی و Key Results سطح شرکت','Objectiveها و Targetهای این بخش از سند راهبردی شرکت آمده‌اند؛ Baseline / Current / Status برای فعال‌سازی دمو نمونه‌اند و قابل ویرایش.'],en:['13 Strategic Objectives & Company Key Results','Objectives and Targets come from the company strategy; Baseline, Current and Status values are editable instructional samples.']},
+ teams:{fa:['آبشاری‌سازی در معاونت‌ها، مدیریت‌ها و ادارات','نام و لایه سازمانی واحدها بر مبنای ساختار مندرج در سند است؛ KPI/OKR/Current valueهای واحدی، نمونه اجرایی برای نمایش همه حالت‌ها هستند و کاملاً قابل ویرایش‌اند.'],en:['Cascade to Directorates, Departments & Units','Unit names and layers follow the documented structure; unit KPI/OKR/current values are editable execution samples designed to demonstrate all states.']},
+ checkins:{fa:['Check-in، 1:1 و Management Rhythm','OKR را وارد کار روزمره کنید: progress update، 1:1، leadership review و accountability.'],en:['Check-ins, 1:1s & Management Rhythm','Embed OKR into everyday work through progress updates, 1:1s, leadership reviews and accountability.']},
+ review:{fa:['Review، Lessons Learned و Cycle بعد','نتایج را ببندید، یادگیری را capture کنید و process را برای دوره بعد بهبود دهید.'],en:['Review, Lessons Learned & Next Cycle','Close results, capture learning and improve the process for the next cycle.']}
+};
+const NAV_COPY={
+ dashboard:['داشبورد','Dashboard'],setup:['Prepare','Prepare'],introduce:['Introduce','Introduce'],strategy:['Set up','Set up'],announce:['Announce','Announce'],educate:['Educate','Educate'],teams:['Create','Create'],checkins:['Integrate','Integrate'],review:['Learn & Repeat','Learn & Repeat']
+};
+function localizeViewChrome(){
+ Object.entries(VIEW_COPY).forEach(([id,v])=>{const root=document.getElementById('view-'+id);if(!root)return;const h=root.querySelector('.page-head h1'),p=root.querySelector('.page-head p');const pair=appLang==='fa'?v.fa:v.en;if(h)h.textContent=pair[0];if(p)p.textContent=pair[1]});
+ document.querySelectorAll('[data-go]').forEach(a=>{const key=a.dataset.go,lab=NAV_COPY[key];if(!lab)return;const ico=a.querySelector('.ico');a.innerHTML='';if(ico)a.appendChild(ico);a.appendChild(document.createTextNode(' '+(appLang==='fa'?lab[0]:lab[1])));});
+ const stages={dashboard:['داشبورد','Dashboard'],setup:['1. Prepare','1. Prepare'],introduce:['2. Introduce','2. Introduce'],strategy:['3. Set up','3. Set up'],announce:['4. Announce','4. Announce'],educate:['5. Educate','5. Educate'],teams:['6. Create','6. Create'],checkins:['7. Integrate','7. Integrate'],review:['8. Learn & Repeat','8. Learn & Repeat']};
+ const ms=document.getElementById('mobileStage');if(ms)[...ms.options].forEach(o=>{if(stages[o.value])o.textContent=appLang==='fa'?stages[o.value][0]:stages[o.value][1]});
+}
 function applyLanguage(){
   document.documentElement.lang=appLang;document.documentElement.dir=appLang==='fa'?'rtl':'ltr';
   document.body.classList.toggle('lang-en',appLang==='en');
   document.querySelectorAll('[data-fa][data-en]').forEach(el=>{el.textContent=appLang==='fa'?el.dataset.fa:el.dataset.en});
   document.querySelectorAll('[data-set-lang]').forEach(b=>b.classList.toggle('active',b.dataset.setLang===appLang));
   translateKnownText(document.body);
+  localizeViewChrome();
   if(document.getElementById('trainingScreen')?.classList.contains('show'))renderTraining(window.__trainingModule||'prepare');
 }
 function setLanguage(lang){appLang=lang==='en'?'en':'fa';localStorage.setItem(LANG_KEY,appLang);applyLanguage()}
