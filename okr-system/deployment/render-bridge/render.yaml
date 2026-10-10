@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: kish-okr-access
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: okr-system/deployment/render-bridge
+    buildCommand: node --check gateway.mjs
+    startCommand: node gateway.mjs
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: SKIP_INSTALL_DEPS
+        value: "true"
+      - key: UPSTREAM_ORIGIN
+        value: https://kish-okr-execution.hasanboudlaie.chatgpt.site
