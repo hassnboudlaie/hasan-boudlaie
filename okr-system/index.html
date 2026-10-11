@@ -426,11 +426,11 @@ body{font-size:16px;line-height:1.75}h1,h2,h3,p{overflow-wrap:anywhere}button,a,
     </div>
 <div class="launchpad">
 <div class="launch-title"><div><small>KISH · STRATEGY EXECUTION</small><h1 data-fa="از راهبرد تا اجرای روزانه" data-en="From strategy to everyday execution">از راهبرد تا اجرای روزانه</h1><p data-fa="برای شروع، مسئول استقرار و تیم‌ها را مشخص کنید؛ سپس راهبرد، هدف‌ها، پیگیری و یادگیری را در یک مسیر پیش ببرید." data-en="Begin with a program owner and participating teams. Then connect strategy, goals, progress and learning through one clear journey.">برای شروع، مسئول استقرار و تیم‌ها را مشخص کنید؛ سپس راهبرد، هدف‌ها، پیگیری و یادگیری را در یک مسیر پیش ببرید.</p></div><button class="btn" id="quickStartGuide" data-fa="راهنمای شروع" data-en="Getting-started guide">راهنمای شروع</button></div>
-<div class="launch-actions"><article class="execution-choice"><small data-fa="مدیریت و اجرای OKR" data-en="MANAGE & EXECUTE OKR">مدیریت و اجرای OKR</small><h2 data-fa="فضای اجرایی سازمان" data-en="Organization workspace">فضای اجرایی سازمان</h2><p data-fa="هدف بسازید، هم‌راستایی را تعیین کنید، تأیید بگیرید و پیشرفت را با Check-in ثبت کنید." data-en="Create goals, align them to strategy, get approval and record progress through check-ins.">هدف بسازید، هم‌راستایی را تعیین کنید، تأیید بگیرید و پیشرفت را با Check-in ثبت کنید.</p><button id="entryExecBtn" class="btn primary" data-fa="ورود به میز کار ←" data-en="Open workspace →">ورود به میز کار ←</button><small data-fa="ذخیره مرکزی · ورود امن · دسترسی بر اساس نقش" data-en="Central storage · Secure sign-in · Role-based access">ذخیره مرکزی · ورود امن · دسترسی بر اساس نقش</small><button id="startExecution" class="hidden">Open workspace</button></article>
+<p class="note" id="practiceNotice" data-fa="نسخه رایگان نمایش و تمرین · تمرین‌ها در همین مرورگر ذخیره می‌شوند؛ همگام‌سازی خودکار بین دستگاه‌ها فعال نیست." data-en="Free demonstration & practice · Work is saved in this browser; automatic cross-device synchronization is not enabled.">نسخه رایگان نمایش و تمرین · تمرین‌ها در همین مرورگر ذخیره می‌شوند؛ همگام‌سازی خودکار بین دستگاه‌ها فعال نیست.</p><div class="launch-actions"><article class="execution-choice"><small data-fa="مدیریت و اجرای OKR" data-en="MANAGE & EXECUTE OKR">مدیریت و اجرای OKR</small><h2 data-fa="فضای اجرایی سازمان" data-en="Organization workspace">فضای اجرایی سازمان</h2><p data-fa="هدف بسازید، هم‌راستایی را تعیین کنید، تأیید بگیرید و پیشرفت را با Check-in ثبت کنید." data-en="Create goals, align them to strategy, get approval and record progress through check-ins.">هدف بسازید، هم‌راستایی را تعیین کنید، تأیید بگیرید و پیشرفت را با Check-in ثبت کنید.</p><button id="entryExecBtn" class="btn primary" data-fa="ورود به میز کار ←" data-en="Open workspace →">ورود به میز کار ←</button><small data-fa="ذخیره مرکزی · ورود امن · دسترسی بر اساس نقش" data-en="Central storage · Secure sign-in · Role-based access">ذخیره مرکزی · ورود امن · دسترسی بر اساس نقش</small><button id="startExecution" class="hidden">Open workspace</button></article>
 <article class="learning-choice"><small data-fa="آموزش و کارگاه" data-en="LEARN & PRACTICE">آموزش و کارگاه</small><h2 data-fa="روش را با یک مثال یاد بگیرید" data-en="Learn the method with an example">روش را با یک مثال یاد بگیرید</h2><p data-fa="جزوه، نمونهٔ فرضی تکمیل‌شده و تمرین هر مرحله؛ از یادگیری مستقیم به کار داخل اپ بروید." data-en="Notes, completed fictional examples and an exercise for every phase, with a direct path into the workspace.">جزوه، نمونهٔ فرضی تکمیل‌شده و تمرین هر مرحله؛ از یادگیری مستقیم به کار داخل اپ بروید.</p><button class="btn" id="entryTrainBtn" data-fa="باز کردن آموزش و تمرین ←" data-en="Open learning & exercises →">باز کردن آموزش و تمرین ←</button><small data-fa="۵ فصل هندبوک · ۸ گام اجرایی" data-en="5 handbook chapters · 8 execution steps">۵ فصل هندبوک · ۸ گام اجرایی</small></article></div>
 <div class="login-panel hidden" id="loginPanel"><h2 id="accountTitle">ورود با حساب سازمانی · Organization account sign-in</h2><p id="loginMessage" role="status">با ایمیل و رمز عبور سازمانی وارد شوید. حساب جدید فقط با دعوت مدیر فعال می‌شود.</p><form id="accountForm"><div class="fields"><div class="field" id="loginEmailField"><label for="loginEmail" data-fa="ایمیل" data-en="Email">ایمیل</label><input id="loginEmail" type="email" autocomplete="username" dir="ltr" required maxlength="254"></div><div class="field hidden" id="activationNameField"><label for="activationName" data-fa="نام شما" data-en="Your name">نام شما</label><input id="activationName" autocomplete="name" maxlength="120"></div><div class="field"><label for="loginPassword" data-fa="رمز عبور" data-en="Password">رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" minlength="12" maxlength="256" required></div><div class="field hidden" id="confirmPasswordField"><label for="confirmPassword" data-fa="تکرار رمز عبور" data-en="Confirm password">تکرار رمز عبور</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="256"></div></div><button class="btn primary" id="secureLogin" type="submit" data-fa="ورود امن" data-en="Secure sign-in">ورود امن</button></form><p class="hint" data-fa="ورود به GitHub، Replit یا ChatGPT لازم نیست. برای بازیابی رمز با مدیر سازمان تماس بگیرید." data-en="No GitHub, Replit or ChatGPT account is required. Ask your organization administrator for a password reset.">ورود به GitHub، Replit یا ChatGPT لازم نیست. برای بازیابی رمز با مدیر سازمان تماس بگیرید.</p></div>
 <section class="landing-map"><div class="section-title"><div><h2 data-fa="مسیر شما، از شروع تا چرخهٔ بعد" data-en="Your path, from setup to the next cycle">مسیر شما، از شروع تا چرخهٔ بعد</h2><p data-fa="روی راهنما بزنید تا خروجی هر گام را ببینید؛ «انجام گام» شما را به کار مربوط در فضای اجرایی می‌برد. زمان‌ها پیشنهادی و قابل هم‌پوشانی‌اند." data-en="Open a guide to understand the output of each step. Open a step to work on it in the workspace. Suggested durations are flexible and may overlap.">روی راهنما بزنید تا خروجی هر گام را ببینید؛ «انجام گام» شما را به کار مربوط در فضای اجرایی می‌برد. زمان‌ها پیشنهادی و قابل هم‌پوشانی‌اند.</p></div></div><div class="landing-steps" id="landingRoadmap"></div></section></div>
-    <div class="entry-foot"><span data-fa="نسخه اختصاصی بنادر و فرودگاه‌های کیش · راهنمای مستقل با اقتباس از روش Perdoo" data-en="Kish Ports & Airports edition · Independent guide inspired by the Perdoo method">نسخه اختصاصی بنادر و فرودگاه‌های کیش · راهنمای مستقل با اقتباس از روش Perdoo</span> · <a href="https://www.perdoo.com/resources/online-guides/getting-started-with-perdoo" target="_blank" rel="noopener">Perdoo guide ↗</a></div>
+    <div class="entry-foot"><a href="offline.html" download="Kish-OKR-Offline.html" data-fa="دانلود همین اپ برای استفاده آفلاین" data-en="Download this app for offline use">دانلود همین اپ برای استفاده آفلاین</a> · <span data-fa="نسخه اختصاصی بنادر و فرودگاه‌های کیش · راهنمای مستقل با اقتباس از روش Perdoo" data-en="Kish Ports & Airports edition · Independent guide inspired by the Perdoo method">نسخه اختصاصی بنادر و فرودگاه‌های کیش · راهنمای مستقل با اقتباس از روش Perdoo</span> · <a href="https://www.perdoo.com/resources/online-guides/getting-started-with-perdoo" target="_blank" rel="noopener">Perdoo guide ↗</a></div>
   </div>
 </section>
 
@@ -730,6 +730,9 @@ body{font-size:16px;line-height:1.75}h1,h2,h3,p{overflow-wrap:anywhere}button,a,
 <script>
 (function(){
 const AUTH='hb_okr_public_auth_v2';
+const PRACTICE_MODE=true;
+const PRACTICE_KEY='kish_okr_free_practice_v1';
+let practiceSnapshot=null;
 let auth=null;
 function hashKey(v){let h=0;for(let i=0;i<v.length;i++){h=((h<<5)-h)+v.charCodeAt(i);h|=0}return Math.abs(h).toString(36)}
 const KEY='unused-legacy-key';
@@ -1204,17 +1207,20 @@ const fa=()=>appLang==='fa',txt=(a,b)=>fa()?a:b;
 const manage=()=>auth&&['admin','manager'].includes(auth.role);
 function syncLabel(t){document.getElementById('syncStatus').textContent=t;}
 async function api(action,method='GET',body){
+ if(PRACTICE_MODE)return practiceApi(action,method,body);
  const r=await fetch('/api/okr/'+action,{method,credentials:'same-origin',headers:{'Content-Type':'application/json',...(auth?.csrf?{'X-CSRF-Token':auth.csrf}:{})},body:body?JSON.stringify(body):undefined});
  const data=await r.json().catch(()=>({error:'Server unavailable'}));if(!r.ok){const e=new Error(data.error||'Request failed');e.status=r.status;throw e;}return data;
 }
-function load(){return clone(emptyState);}
+function load(){return PRACTICE_MODE?loadPractice():clone(emptyState);}
 function save(silent,action='Workspace updated'){
+ if(PRACTICE_MODE){savePractice(silent,action);return;}
  if(!cloudReady){if(!silent)toast(txt('ابتدا وارد فضای اجرایی شوید.','Sign in to the workspace first.'));return;}
  if(auth.role==='viewer'){toast(txt('دسترسی شما فقط مشاهده است.','Your access is read-only.'));return;}
  dirty=true;changeSeq++;syncLabel(txt('در انتظار ذخیره…','Pending save…'));clearTimeout(saveTimer);
  saveTimer=setTimeout(()=>flushSave(action),silent?700:0);updateHeader();renderDashboard();renderReview();
 }
 async function flushSave(action='Workspace updated'){
+ if(PRACTICE_MODE)return !dirty||savePractice(true,action);
  if(saving||!dirty||conflict)return false;
  saving=true;let canRetry=true;const seq=changeSeq,payload=clone(state);syncLabel(txt('در حال ذخیره…','Saving…'));
  try{const r=await api('state','PUT',{state:payload,revision:cloudRevision,action});cloudRevision=r.revision;dirty=seq!==changeSeq;refreshWork();syncLabel(txt('ذخیره مرکزی · نسخه ','Cloud saved · v')+cloudRevision);return true;}
@@ -1230,7 +1236,7 @@ function makeLiveState(){
  s.teams=sample.teams.map(t=>({...t,kpis:[],okrs:[],participating:false}));s.history=[];s.archives=[];s.initiatives=[];s.exercises={};return s;
 }
 async function initializeCloud(){
- if(location.hostname==='hassnboudlaie.github.io'){document.getElementById('entryExecBtn').onclick=()=>location.assign(CLOUD_ORIGIN+'/okr.html'+(location.hash||'#start'));return;}
+ if(PRACTICE_MODE){await Promise.resolve();initializePractice();return;}
  try{
   auth=await api('me');const r=await api('state');cloudRevision=r.revision;state=r.state?mergeDefaults(clone(emptyState),r.state):makeLiveState();
   cloudReady=true;state.history ||= [];state.initiatives ||= [];state.archives ||= [];state.exercises ||= {};
@@ -1292,6 +1298,7 @@ function renderInitiatives(){const box=document.getElementById('initiativesBody'
 async function renderHistory(){const box=document.getElementById('historyBody');if(!box||!cloudReady)return;try{const rows=await api('audit');box.innerHTML=rows.map(r=>'<div class="report-item"><div><b>'+esc(r.action)+'</b><span>'+esc(r.actor)+' · v'+r.revision+'</span><small>'+esc(JSON.parse(r.details).join?.(', ')||r.details)+'</small></div><time>'+new Date(r.created).toLocaleString(fa()?'fa-IR':'en-GB')+'</time></div>').join('')||txt('تغییری ثبت نشده است.','No changes recorded.');}catch(e){box.textContent=e.message;}}
 async function renderMembers(){
  const box=document.getElementById('membersBody');if(!box||!cloudReady)return;if(auth.role!=='admin'){box.textContent=txt('این بخش برای مدیر سامانه است.','Administrator access required.');return;}
+ if(PRACTICE_MODE){renderPracticeAccess(box);return;}
  const roleOptions=selected=>['super_admin','org_admin','department_manager','employee','viewer'].filter(r=>auth.accessRole==='super_admin'||r!=='super_admin'||selected==='super_admin').map(r=>'<option value="'+r+'" '+(selected===r?'selected':'')+'>'+esc(roleText(r))+'</option>').join('');
  const departments=selected=>'<option value="">'+txt('سطح سازمان','Organization-wide')+'</option>'+state.teams.map(t=>'<option value="'+esc(t.id)+'" '+(selected===t.id?'selected':'')+'>'+esc(t.name)+'</option>').join('');
  try{const rows=await api('members');box.innerHTML='<article class="card"><h2>'+txt('دعوت کاربر مجاز','Invite an authorized user')+'</h2><form id="inviteMemberForm"><div class="fields"><div class="field"><label>'+txt('نام','Name')+'</label><input name="name" required maxlength="120"></div><div class="field"><label>Email</label><input name="email" type="email" dir="ltr" required></div><div class="field"><label>'+txt('نقش','Role')+'</label><select name="role">'+roleOptions('employee')+'</select></div><div class="field"><label>'+txt('واحد','Department')+'</label><select name="departmentId">'+departments('')+'</select></div></div><button class="btn primary">'+txt('ساخت لینک فعال‌سازی','Create activation link')+'</button></form><p class="hint">'+txt('لینک فقط برای همین کاربر است و ۷۲ ساعت اعتبار دارد. برای واگذاری KR از ایمیل مسئول استفاده کنید.','The link is bound to this user and expires in 72 hours. Assign KR ownership using the owner’s email.')+'</p></article>'+rows.map(m=>'<form class="card" data-member-form="'+esc(m.id)+'"><h3>'+esc(m.name)+'</h3><p dir="ltr">'+esc(m.email)+'</p><p class="hint">'+txt(m.active?'حساب فعال':'در انتظار فعال‌سازی',m.active?'Account active':'Awaiting activation')+'</p><div class="fields"><div class="field"><label>'+txt('نقش','Role')+'</label><select name="role">'+roleOptions(m.accessRole)+'</select></div><div class="field"><label>'+txt('واحد','Department')+'</label><select name="departmentId">'+departments(m.departmentId)+'</select></div><div class="field"><label>'+txt('دسترسی','Access')+'</label><select name="enabled"><option value="1" '+(m.enabled?'selected':'')+'>'+txt('فعال','Enabled')+'</option><option value="0" '+(!m.enabled?'selected':'')+'>'+txt('غیرفعال','Disabled')+'</option></select></div></div><button class="btn primary" '+(m.id===auth.id?'disabled':'')+'>'+txt('ذخیره مجوزها','Save permissions')+'</button> <button type="button" class="btn" data-password-reset="'+esc(m.id)+'" '+(m.id===auth.id?'disabled':'')+'>'+txt('بازنشانی رمز / لینک جدید','Reset password / new link')+'</button></form>').join('');}catch(e){box.textContent=e.message;}
@@ -1327,8 +1334,8 @@ document.addEventListener('click',async e=>{
 });
 document.getElementById('retrySaveBtn').onclick=()=>flushSave('Save retried');
 document.getElementById('conflictExport').onclick=()=>downloadJson(state,'OKR-Unsaved-Work.json');
-document.getElementById('conflictReload').onclick=async()=>{if(!confirm(txt('ابتدا از ورودی خود خروجی بگیرید. نسخه مرکزی بارگذاری شود؟','Export your work first. Load the central version?')))return;try{const r=await api('state');state=mergeDefaults(clone(emptyState),r.state);cloudRevision=r.revision;dirty=false;conflict=false;document.getElementById('conflictBox').classList.add('hidden');renderAll();bindStatic();renderExtras();renderNewSurfaces();route();syncLabel('Cloud saved · v'+cloudRevision);}catch(e){toast(e.message);}};
-document.getElementById('entryExecBtn').onclick=()=>{if(location.hostname==='hassnboudlaie.github.io')location.assign(CLOUD_ORIGIN+'/okr.html'+(location.hash||'#start'));else if(cloudReady){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';showView('start');}else showLogin('#start');};
+document.getElementById('conflictReload').onclick=async()=>{if(!confirm(txt('ابتدا از ورودی خود خروجی بگیرید. آخرین نسخه همین مرورگر بارگذاری شود؟','Export your work first. Load this browser’s latest saved version?')))return;try{const r=await api('state');state=mergeDefaults(clone(emptyState),r.state);cloudRevision=r.revision;dirty=false;conflict=false;document.getElementById('conflictBox').classList.add('hidden');renderAll();bindStatic();renderExtras();renderNewSurfaces();route();syncLabel(txt('ذخیره در همین مرورگر · نسخه ','Saved in this browser · v')+cloudRevision);}catch(e){toast(e.message);}};
+document.getElementById('entryExecBtn').onclick=()=>{if(cloudReady){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';showView('start');}else showLogin('#start');};
 document.getElementById('accountForm').addEventListener('submit',submitAccount);
 document.getElementById('profileBtn').onclick=async()=>{const r=await askForm(txt('پروفایل من','My profile'),[{name:'name',label:txt('نام','Name'),value:auth.name}]);if(!r)return;try{auth=await api('profile','POST',r);updateHeader();toast(txt('پروفایل ذخیره شد','Profile saved'));}catch(e){toast(e.message);}};
 document.getElementById('changePasswordBtn').onclick=async()=>{const r=await askForm(txt('تغییر رمز عبور','Change password'),[{name:'currentPassword',label:txt('رمز فعلی','Current password'),type:'password'},{name:'newPassword',label:txt('رمز جدید؛ حداقل ۱۲ نویسه','New password; at least 12 characters'),type:'password'}]);if(!r)return;try{auth=await api('profile','POST',r);toast(txt('رمز تغییر کرد؛ نشست‌های دیگر بسته شدند.','Password changed; other sessions revoked.'));}catch(e){toast(e.message);}};
@@ -1336,7 +1343,7 @@ document.getElementById('logoutBtn').onclick=async()=>{if(dirty&&!confirm(txt('�
 document.getElementById('demoBtn').onclick=openTraining;
 document.getElementById('resetBtn').onclick=()=>{if(auth?.role!=='admin'||!confirm(txt('کل فضای کاری پاک شود؟ ابتدا خروجی بگیرید.','Clear the workspace? Export your data first.')))return;state=makeLiveState();save(false,'Workspace reset');renderAll();bindStatic();renderExtras();};
 document.getElementById('globalSearch').oninput=e=>{const q=e.target.value.trim().toLowerCase(),box=document.getElementById('searchResults');box.innerHTML=q?allObjectives().filter(x=>(x.objective.objective+' '+x.objective.owner+' '+x.team).toLowerCase().includes(q)).map(x=>goalLink(x.objective)).join(''):'';};
-function importData(file){if(!cloudReady||auth.role!=='admin'){toast(txt('Import فقط برای مدیر سامانه است.','Only the administrator can import data.'));return;}const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!Array.isArray(data.companyOkrs)||!Array.isArray(data.teams)||!data.strategy)throw new Error('Invalid workspace file');if(!confirm(txt('داده مرکزی با این فایل جایگزین شود؟','Replace the central workspace with this file?')))return;state=mergeDefaults(clone(emptyState),data);state.history ||= [];state.archives ||= [];state.initiatives ||= [];state.exercises ||= {};allObjectives().forEach(x=>{x.objective.status='draft';x.objective.parentId ||= '';});save(false,'Workspace imported');renderAll();bindStatic();renderExtras();}catch(e){toast(txt('فایل فضای کاری معتبر نیست.','Invalid workspace file.'));}};r.readAsText(file);}
+function importData(file){if(!cloudReady||auth.role!=='admin'){toast(txt('Import فقط برای مدیر سامانه است.','Only the administrator can import data.'));return;}const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!validPracticeState(data))throw new Error('Invalid workspace file');if(!confirm(txt('تمرین همین مرورگر با این فایل جایگزین شود؟','Replace this browser’s practice with this file?')))return;state=mergeDefaults(clone(emptyState),data);state.history ||= [];state.archives ||= [];state.initiatives ||= [];state.exercises ||= {};allObjectives().forEach(x=>{if(!PRACTICE_MODE)x.objective.status='draft';x.objective.parentId ||= '';});save(false,'Workspace imported');renderAll();bindStatic();renderExtras();}catch(e){toast(txt('فایل فضای کاری معتبر نیست.','Invalid workspace file.'));}};r.readAsText(file);}
 
 document.querySelectorAll('[data-journey-go]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showView(a.dataset.journeyGo);}));
 document.querySelectorAll('[data-landing-stage]').forEach(b=>b.addEventListener('click',()=>{const map={prepare:'prepare',introduce:'introduce',setup:'create',announce:'introduce',educate:'train',create:'create',integrate:'launch',repeat:'launch'};window.__trainingModule=map[b.dataset.landingStage];openTraining();}));
@@ -1345,6 +1352,7 @@ document.getElementById('trainingExecBtn').onclick=()=>{closeTraining();document
 let loginReturnHash='#start',activationToken='';
 function roleText(r){return ({super_admin:txt('مالک سیستم','Super Admin'),org_admin:txt('مدیر سازمان','Organization Admin'),department_manager:txt('مدیر واحد','Department Manager'),employee:txt('کارمند / مشارکت‌کننده','Employee / Participant'),viewer:txt('مشاهده‌گر','Viewer')})[r]||r;}
 function showLogin(hash='#start'){
+ if(PRACTICE_MODE){document.getElementById('loginPanel').classList.add('hidden');return;}
  loginReturnHash=hash.startsWith('#activate/')?'#start':hash;
  document.getElementById('loginPanel').classList.remove('hidden');
  document.getElementById('loginEmailField').classList.toggle('hidden',!!activationToken);
@@ -1382,7 +1390,7 @@ document.addEventListener('click',async e=>{
 });
 function applyScope(){
  if(!auth)return;document.querySelectorAll('[data-go="admin"]').forEach(a=>a.hidden=auth.role!=='admin');
- const role=document.getElementById('userRoleDisplay');if(role)role.textContent=roleText(auth.accessRole||auth.role);
+ const role=document.getElementById('userRoleDisplay');if(role)role.textContent=PRACTICE_MODE?txt('نسخه تمرینی','Practice edition'):roleText(auth.accessRole||auth.role);
  if(auth.role==='admin')return;
  document.querySelectorAll('#view-strategy,#view-company,#view-setup,#view-introduce,#view-announce,#view-educate,#view-review,#view-cycles,#view-admin').forEach(view=>view.querySelectorAll('input,textarea,select,button:not([data-help-stage])').forEach(el=>el.disabled=true));
  if(auth.accessRole==='employee')document.querySelectorAll('[data-objective-id]').forEach(el=>{
@@ -1392,16 +1400,74 @@ function applyScope(){
  });
 }
 async function refreshFromCloud(){
+ if(PRACTICE_MODE)return;
  if(!cloudReady||dirty||saving||conflict||document.hidden)return;
  if(document.activeElement?.matches?.('input,textarea,select'))return;
  try{const r=await api('state');if(r.revision>cloudRevision){state=mergeDefaults(clone(emptyState),r.state);cloudRevision=r.revision;renderAll();bindStatic();renderExtras();renderNewSurfaces();route();syncLabel(txt('همگام‌سازی شد · نسخه ','Synced · v')+cloudRevision);}}
  catch(e){if(e.status===401){cloudReady=false;auth=null;document.getElementById('authScreen').classList.remove('hidden');document.getElementById('executionApp').inert=true;showLogin();}else syncLabel(txt('ارتباط موقتاً قطع شده؛ دوباره تلاش می‌کنیم','Temporarily offline; reconnecting'));}
 }
-if(typeof setInterval==='function')setInterval(refreshFromCloud,15000);
+if(!PRACTICE_MODE&&typeof setInterval==='function')setInterval(refreshFromCloud,15000);
 window.addEventListener('online',()=>{if(dirty)flushSave();else refreshFromCloud();});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshFromCloud();});
 window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#activate/')){activationToken=location.hash.slice(10);showLogin();}});
 if(location.hash.startsWith('#activate/')){activationToken=location.hash.slice(10);history.replaceState(null,'','#activate');showLogin();}
+
+// This adapter is used only by the public free Pages edition.
+// The existing authenticated Workers/D1 application is left unchanged.
+function validPracticeState(s){
+ const object=v=>v&&typeof v==='object'&&!Array.isArray(v);
+ const objective=o=>object(o)&&typeof o.objective==='string'&&Array.isArray(o.krs)&&o.krs.every(object);
+ return object(s)&&object(s.meta)&&object(s.strategy)&&Array.isArray(s.strategy.pillars)&&Array.isArray(s.strategy.kpis)&&Array.isArray(s.companyOkrs)&&s.companyOkrs.every(objective)&&Array.isArray(s.teams)&&s.teams.every(t=>object(t)&&Array.isArray(t.okrs)&&t.okrs.every(objective));
+}
+function loadPractice(){
+ try{const p=JSON.parse(localStorage.getItem(PRACTICE_KEY)||'null');if(p?.version===1&&validPracticeState(p.state)){practiceSnapshot=p;return mergeDefaults(clone(emptyState),p.state);}}
+ catch{}
+ return makeDemoState();
+}
+function savePractice(silent,action='Practice updated'){
+ if(!cloudReady)return false;
+ if(conflict)return false;
+ try{const current=JSON.parse(localStorage.getItem(PRACTICE_KEY)||'null');if(current?.version===1&&validPracticeState(current.state)&&current.revision>cloudRevision){dirty=true;conflict=true;document.getElementById('conflictBox').classList.remove('hidden');syncLabel(txt('تمرین در تب دیگری تغییر کرده؛ ورودی شما حفظ شده است.','Another tab changed this practice; your input is preserved.'));return false;}}catch{}
+ const previous=practiceSnapshot;
+ const next={version:1,revision:cloudRevision+1,name:auth.name,state:clone(state),audit:[...(previous?.audit||[]),{id:id(),created:new Date().toISOString(),action,actor:auth.name,revision:cloudRevision+1,details:'[]'}].slice(-50)};
+ try{localStorage.setItem(PRACTICE_KEY,JSON.stringify(next));practiceSnapshot=next;cloudRevision=next.revision;dirty=false;syncLabel(txt('ذخیره در همین مرورگر · نسخه ','Saved in this browser · v')+cloudRevision);if(!silent)toast(txt('در همین مرورگر ذخیره شد.','Saved in this browser.'));updateHeader();renderDashboard();renderReview();return true;}
+ catch{dirty=true;syncLabel(txt('ذخیره مرورگر در دسترس نیست؛ فایل خروجی بگیرید.','Browser storage unavailable; export your work.'));toast(txt('تمرین شما باز است؛ برای نگهداری آن Export JSON را بزنید.','Your work is still open; use Export JSON to keep it.'));return false;}
+}
+async function practiceApi(action,method,body){
+ if(action==='me')return auth;
+ if(action==='audit'&&method==='GET')return practiceSnapshot?.audit||[];
+ if(action==='state'&&method==='GET'){try{const p=JSON.parse(localStorage.getItem(PRACTICE_KEY)||'null');if(p?.version===1&&validPracticeState(p.state)){practiceSnapshot=p;return {state:clone(p.state),revision:p.revision};}}catch{}return {state:clone(state),revision:cloudRevision};}
+ if(action==='profile'&&method==='POST'&&typeof body?.name==='string'&&!body.newPassword){auth.name=body.name.trim().slice(0,120)||txt('کاربر تمرینی','Practice participant');savePractice(true,'Practice name updated');return auth;}
+ throw new Error(txt('این قابلیت به حساب سازمانی و سرور مرکزی نیاز دارد؛ نسخه رایگان برای نمایش و تمرین مستقل است.','This feature needs an organization account and central server. The free edition is for independent demonstration and practice.'));
+}
+function practiceCopy(el,faText,enText){if(!el)return;el.dataset.fa=faText;el.dataset.en=enText;el.textContent=txt(faText,enText);}
+function initializePractice(){
+ auth={id:'practice-user',name:practiceSnapshot?.name||txt('کاربر تمرینی','Practice participant'),email:'participant@example.invalid',role:'admin',accessRole:'super_admin'};
+ cloudRevision=practiceSnapshot?.revision||0;cloudReady=true;dirty=false;
+ state.history ||= [];state.initiatives ||= [];state.archives ||= [];state.exercises ||= {};workDefaults();
+ practiceCopy(document.querySelector('.execution-choice h2'),'میز کار رایگان OKR','Free OKR workspace');
+ practiceCopy(document.getElementById('entryExecBtn'),'باز کردن اپ و تمرین ←','Open app & practice →');
+ practiceCopy(document.querySelector('.execution-choice > small:last-of-type'),'بدون ثبت‌نام · ذخیره در همین مرورگر','No sign-up · Saved in this browser');
+ practiceCopy(document.querySelector('.training-side-note'),'جزوه، مثال فرضی و تمرین همه مراحل در دسترس است؛ پاسخ‌های شما در همین مرورگر ذخیره می‌شوند.','Learning notes, fictional examples and every exercise are available; your answers stay in this browser.');
+ practiceCopy(document.getElementById('profileBtn'),'نام من در تمرین','My practice name');
+ practiceCopy(document.getElementById('logoutBtn'),'بازگشت به صفحه اول','Back to home');
+ document.getElementById('logoutBtn').onclick=()=>document.getElementById('homePortalBtn').click();
+ document.getElementById('changePasswordBtn').classList.add('hidden');
+ document.getElementById('loginPanel').classList.add('hidden');
+ document.getElementById('accountForm').inert=true;
+ renderAll();bindStatic();renderExtras();renderNewSurfaces();applyLanguage();
+ syncLabel(txt('نسخه رایگان · ذخیره در همین مرورگر','Free edition · Saved in this browser'));
+ if(location.hash&&!location.hash.startsWith('#activate')&&!location.hash.startsWith('#guide')){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';route();}
+ else if(location.hash.startsWith('#guide'))stageHelp(location.hash.split('/')[1]);
+}
+function renderPracticeAccess(box){
+ box.innerHTML='<article class="card"><h2>'+txt('دسترسی در نسخه رایگان','Access in the free edition')+'</h2><p>'+txt('همه می‌توانند همین اپ، جزوه‌ها، داشبورد و ابزارهای OKR را بدون ثبت‌نام باز و تمرین کنند. هر مرورگر فضای تمرین جداگانه دارد؛ تغییرات افراد برای دیگران فرستاده نمی‌شود.','Anyone can open and practice with this app, learning notes, dashboard and OKR tools without signing up. Each browser has its own practice workspace; edits are not sent to other people.')+'</p><p>'+txt('ورود امن، دعوت همکار و مجوزهای واقعی سازمان در نسخه سرور مرکزی باقی است؛ این صفحه برای مشاهده طراحی نقش‌هاست.','Secure sign-in, invitations and real organization permissions remain in the central-server edition. This page presents the role design.')+'</p><div class="table-wrap"><table><thead><tr><th>'+txt('نقش','Role')+'</th><th>'+txt('دامنه اختیار در نسخه سازمانی','Authority in the organization edition')+'</th></tr></thead><tbody>'+[['super_admin','مالکیت و مدیریت کامل سیستم','System ownership and full administration'],['org_admin','مدیریت کاربران و محتوای سازمان','Organization users and content'],['department_manager','مدیریت OKRهای واحد مربوط','The assigned department’s OKRs'],['employee','مشاهده و تکمیل کارهای مجاز خود','Own permitted work'],['viewer','مشاهده بخش‌های مجاز','Read permitted content']].map(([role,a,b])=>'<tr><td>'+esc(roleText(role))+'</td><td>'+txt(a,b)+'</td></tr>').join('')+'</tbody></table></div><h3>'+txt('ادامه تمرین در دستگاه دیگر','Continue practice on another device')+'</h3><p>'+txt('از منوی سه‌نقطه Export JSON را بزنید؛ فایل را به دستگاه دیگر بفرستید و در همان منو Import JSON را انتخاب کنید. این انتقال دستی است و همگام‌سازی خودکار نیست.','Choose Export JSON from the three-dot menu, send the file to the other device, then choose Import JSON there. This is a manual transfer, not automatic synchronization.')+'</p><button class="btn" data-practice-sample>'+txt('بازگرداندن مثال آموزشی اولیه','Restore the initial learning example')+'</button></article>';
+}
+document.addEventListener('click',e=>{
+ if(!e.target.closest('[data-practice-sample]'))return;
+ if(!confirm(txt('تمرین فعلی با مثال اولیه جایگزین شود؟ ابتدا فایل خروجی بگیرید.','Replace current practice with the initial example? Export your work first.')))return;
+ state=makeDemoState();workDefaults();save(false,'Learning example restored');renderAll();bindStatic();renderExtras();renderNewSurfaces();route();
+});
 
 initializeCloud();
 
@@ -1442,7 +1508,7 @@ function getRolloutTasks(sid){
 function stageProgress(s){const tasks=getRolloutTasks(s.id);return tasks.length?Math.round(tasks.filter(t=>t.done).length/tasks.length*100):0;}
 function firstPendingStage(){return ROLLOUT_STAGES.find(s=>stageProgress(s)<100)||ROLLOUT_STAGES[6];}
 function stageLink(s){return '#roadmap/'+s.id;}
-function goWorkspace(hash){if(cloudReady){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';jump(hash);}else if(location.hostname==='hassnboudlaie.github.io')location.assign(CLOUD_ORIGIN+'/okr.html'+hash);else showLogin(hash);}
+function goWorkspace(hash){if(cloudReady){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';jump(hash);}else if(PRACTICE_MODE)toast(txt('اپ در حال آماده‌شدن است.','The app is preparing.'));else showLogin(hash);}
 function stageHelp(sid){
  const s=ROLLOUT_STAGES.find(s=>s.id===sid)||ROLLOUT_STAGES[0],modal=document.getElementById('helpModal');
  modal.innerHTML='<div class="help-head"><span class="stage-number">'+s.n+'</span><div><small>'+s.en+'</small><h2>'+esc(stageText(s))+'</h2></div><button class="icon-btn" data-help-close aria-label="'+txt('بستن راهنما','Close guide')+'">×</button></div><p>'+esc(pair(s.hint))+'</p><div class="help-output"><b>'+txt('خروجی این گام','Expected output')+'</b><p>'+esc(pair(s.output))+'</p></div><ol class="guide-checks">'+getRolloutTasks(s.id).map(t=>'<li><a href="'+t.href+'" data-workspace-link="'+t.href+'">'+esc(t.label)+'</a></li>').join('')+'</ol><div class="workflow-actions"><button class="btn primary" data-workspace-link="#'+s.route+'">'+txt('انجام این گام','Work on this step')+'</button><button class="btn" data-learn-module="'+s.module+'">'+txt('جزوه، مثال و تمرین','Notes, example & exercise')+'</button></div><p class="hint">'+txt('زمان پیشنهادی: ','Suggested duration: ')+pair(s.duration)+' · '+txt('برخی گام‌ها می‌توانند هم‌زمان پیش بروند.','Some steps can overlap.')+'</p>';modal.showModal();
