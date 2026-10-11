@@ -23,7 +23,7 @@ async function boot(storage=new Map(),input=html,blocked=false){
   matches(s){return s.split(',').some(sel=>{sel=sel.trim();const m=sel.match(/^\[data-([a-z-]+)(?:="([^"]*)")?\]$/);if(m)return Object.hasOwn(this.dataset,dataKey(m[1]))&&(m[2]===undefined||this.dataset[dataKey(m[1])]===m[2]);return sel.startsWith('#')?this.id===sel.slice(1):sel.startsWith('.')?this.classes.has(sel.slice(1)):false;});}
   closest(s){return this.matches(s)?this:null;}
   hasAttribute(a){return a.startsWith('data-')&&Object.hasOwn(this.dataset,dataKey(a.slice(5)));}
-  querySelectorAll(){return [];}querySelector(){return null;}appendChild(){}setAttribute(){}showModal(){this.open=true;}close(){this.open=false;}scrollIntoView(){}
+  querySelectorAll(){return [];}querySelector(s){if(s==='form'){return this._form ||= Object.assign(new Element(),{reportValidity:()=>true});}if(s==='[data-modal-cancel]')return this._cancel ||= new Element();return null;}appendChild(){}setAttribute(){}showModal(){this.open=true;}close(){this.open=false;}scrollIntoView(){}
   click(){if(this.href?.startsWith('blob:'))downloads.push(blobs.get(this.href));this.onclick?.({target:this,preventDefault(){}});for(const f of this.listeners.get('click')||[])f({target:this,preventDefault(){}});}
  }
  for(const m of input.matchAll(/id="([^"]+)"/g))registry.set(m[1],new Element(m[1]));
@@ -36,7 +36,7 @@ async function boot(storage=new Map(),input=html,blocked=false){
  class TestFileReader{readAsText(file){this.result=file.text;this.onload();}}
  const ctx={document,NodeFilter:{SHOW_TEXT:4},window:{addEventListener:(t,f)=>add(windows,t,f),scrollTo(){}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{if(blocked)throw new Error('Storage blocked');storage.set(k,v);}},sessionStorage:{getItem:()=>null,removeItem(){}},location,history:{pushState:(_s,_t,h)=>{location.hash=h;},replaceState:(_s,_t,h)=>{location.hash=h;}},CSS:{escape:x=>x},setTimeout:()=>0,clearTimeout(){},setInterval(){throw new Error('No polling in practice edition');},console,structuredClone,Date,URL:TestURL,Blob,FormData:TestFormData,FileReader:TestFileReader,confirm:()=>true,fetch(){fetches++;throw new Error('Practice must not contact the Cloud backend');}};
  let code=input.match(/<script>([\s\S]*?)<\/script>/)[1];
- code=code.replace(/\}\)\(\);\s*$/,`globalThis.appTest={getState:()=>state,save,flushSave,exportData,importData,goWorkspace,openTraining,closeTraining,route,setLanguage,progress,validateObjective,renderMembers,renderStart,renderRollout,renderExplore,renderEngagement,renderReports,renderMeetings,renderAlignment,renderParticipants,renderInitiatives,renderCycles,renderHistory,training:()=>TRAINING_MODULES,api,getDirty:()=>dirty,getConflict:()=>conflict};})();`);
+ code=code.replace(/\}\)\(\);\s*$/,`globalThis.appTest={getState:()=>state,save,flushSave,exportData,importData,goWorkspace,openTraining,closeTraining,route,setLanguage,progress,validateObjective,renderMembers,renderStart,renderRollout,renderExplore,renderEngagement,renderReports,renderMeetings,renderAlignment,renderParticipants,renderInitiatives,renderCycles,renderHistory,renderTeams,reportData,filteredKrs,orgSelectOptions,orgFieldOptions,orgDescendantIds,orgChart:()=>ORG_CHART,training:()=>TRAINING_MODULES,api,getDirty:()=>dirty,getConflict:()=>conflict};})();`);
  vm.createContext(ctx);vm.runInContext(code,ctx,{timeout:4000});await tick();
  return {app:ctx.appTest,registry,storage,location,downloads,Element,document,ctx,network:()=>({fetches,redirects}),event:async(t,dataset,values={})=>{const el=new Element('',dataset);Object.assign(el,values);for(const f of handlers.get(t)||[])await f({target:el,preventDefault(){},stopPropagation(){}});await tick();return el;}};
 }
@@ -46,6 +46,38 @@ assert.equal((a.registry.get('landingRoadmap').innerHTML.match(/class="landing-s
 a.registry.get('entryExecBtn').click();assert.ok(a.registry.get('authScreen').classList.contains('hidden'));assert.equal(a.registry.get('executionApp').inert,false);
 assert.equal(a.app.training().length,5);
 if(source){assert.deepEqual([...source.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]),[...html.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]));assert.equal(source.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1],html.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1]);}
+const chart=plain(a.app.orgChart());
+assert.equal(chart.length,65);assert.equal(new Set(chart.map(n=>n.id)).size,65);
+assert.equal(chart.filter(n=>n.level==='deputy').length,7);
+for(const node of chart){assert.ok(node.page>=2&&node.page<=10);assert.ok(node.fa&&node.en);const seen=new Set();let cursor=node;while(cursor){assert.ok(!seen.has(cursor.id),'No cyclic reporting lines');seen.add(cursor.id);if(cursor.parentId)assert.ok(chart.some(n=>n.id===cursor.parentId));cursor=chart.find(n=>n.id===cursor.parentId);}}
+assert.equal(chart.find(n=>n.id==='org-human-resources').parentId,'org-finance-admin');
+assert.equal(chart.find(n=>n.id==='org-training').parentId,'org-human-resources');
+assert.equal(chart.find(n=>n.id==='org-charak-maritime').parentId,'org-charak');
+assert.equal(chart.find(n=>n.id==='org-hendorabi-airport').parentId,'org-airports');
+const choices=a.app.orgSelectOptions('org-training');
+for(const node of chart)assert.ok(choices.includes('value="'+node.id+'"'),'Unit missing from dropdown: '+node.id);
+assert.ok(choices.includes('<optgroup'));assert.ok(choices.includes('مدیریت منابع انسانی / اداره آموزش'));
+a.app.renderTeams();assert.ok(a.registry.get('teams').innerHTML.includes('orgUnitJump'));
+a.registry.get('orgUnitLevel').value='deputy';a.registry.get('orgUnitLevel').onchange();
+assert.equal((a.registry.get('orgUnitRows').innerHTML.match(/data-org-team=/g)||[]).length,7);
+a.registry.get('orgUnitLevel').value='all';a.registry.get('orgUnitLevel').onchange();
+a.registry.get('orgUnitSearch').value='چارک';a.registry.get('orgUnitSearch').oninput();
+assert.equal((a.registry.get('orgUnitRows').innerHTML.match(/data-org-team=/g)||[]).length,3);
+a.registry.get('orgUnitJump').value='org-training';a.registry.get('orgUnitJump').onchange();
+assert.ok(a.registry.get('orgUnitRows').innerHTML.includes('data-org-team="org-training" class="team-box open"'));
+async function unitGoal(client,unitId,title){
+ const pending=client.event('click',{quickObjective:''});await tick();
+ const modal=client.registry.get('okrModal');assert.ok(modal.innerHTML.includes('value="'+unitId+'"'));const form=modal.querySelector('form');form.values={scope:unitId,title};form.onsubmit({preventDefault(){}});await pending;
+ const ti=client.app.getState().teams.findIndex(t=>t.id===unitId),team=client.app.getState().teams[ti],oi=team.okrs.length-1,o=team.okrs[oi];
+ for(const [f,value] of Object.entries({parentId:'demo-company-0',why:'Synthetic department evidence',urgent:'This quarter'}))await client.event('input',{obj:'team:'+ti,o:String(oi),f},{value});
+ for(const [f,value] of Object.entries({text:'Synthetic department result',owner:'Practice owner',unit:'minutes',baseline:'100',target:'50',current:'75'}))await client.event('input',{kr:'team:'+ti,o:String(oi),k:'0',f},{value});
+ for(const workflow of ['review','alignment','active'])await client.event('click',{workflow,id:o.id});assert.equal(o.status,'active');return o;
+}
+const trainingGoal=await unitGoal(a,'org-training','هدف آزمایشی اداره آموزش');
+assert.ok(a.app.reportData('org-human-resources').objs.some(o=>o.id===trainingGoal.id));
+assert.ok(a.app.reportData('org-finance-admin').objs.some(o=>o.id===trainingGoal.id));
+assert.ok(!a.app.reportData('org-airports').objs.some(o=>o.id===trainingGoal.id));
+assert.ok(a.app.filteredKrs({q:'',team:'org-finance-admin',status:'all',owner:'all',freshness:'all'}).some(x=>x.objective.id===trainingGoal.id));
 const before=a.app.getState().companyOkrs.length;
 const objectiveTitle='هدف آزمایشی: کاهش زمان انتظار';
 await a.event('click',{action:'add-company-okr'});
@@ -74,6 +106,7 @@ assert.ok(a.registry.get('membersBody').innerHTML.includes('همگام‌ساز�
 assert.ok(!a.registry.get('membersBody').innerHTML.includes('inviteMemberForm'));
 a.app.openTraining();assert.ok(a.registry.get('trainingBody').innerHTML.includes('Synthetic workshop answer'));a.app.closeTraining();
 a.app.setLanguage('en');assert.equal(a.document.documentElement.dir,'ltr');assert.ok(a.registry.get('landingRoadmap').innerHTML.includes('Learn &amp; Repeat'));a.app.setLanguage('fa');assert.equal(a.document.documentElement.dir,'rtl');
+ a.app.setLanguage('en');assert.ok(a.app.orgSelectOptions('org-training').includes('Human Resources Management / Training Office'));a.app.setLanguage('fa');
 const b=await boot(storage);assert.equal(b.app.getState().companyOkrs[index].objective,objectiveTitle);assert.equal(b.app.getState().companyOkrs[index].status,'active');assert.equal(b.app.getState().exercises['prepare-0'],'Synthetic workshop answer');
 assert.deepEqual(plain(b.app.getState()),saved.state,'A fresh execution must restore the entire saved workspace');
 assert.equal(b.app.getState().companyOkrs[index].krs[0].current,65);
@@ -88,5 +121,20 @@ oldTab.registry.get('conflictReload').onclick();await tick();assert.equal(oldTab
 const quota=await boot(new Map(),html,true);quota.app.save(true);assert.equal(quota.app.getDirty(),true);assert.ok(quota.registry.get('syncStatus').textContent.includes('Export')||quota.registry.get('syncStatus').textContent.includes('خروجی'));
 const damaged=await boot(new Map([['kish_okr_free_practice_v1','not JSON']]));assert.equal(damaged.app.getState().companyOkrs.length,before);
 const off=await boot(new Map(),offline);off.registry.get('entryExecBtn').click();assert.equal(off.registry.get('executionApp').inert,false);assert.ok(offline.includes('data:image/svg+xml;base64,'));assert.ok(!offline.includes('src="assets/'));assert.ok(!offline.includes('href="favicon.svg"'));
-for(const instance of [a,b,other,oldTab,quota,damaged,off])assert.deepEqual(instance.network(),{fetches:0,redirects:0});
+// A pre-update workspace must retain identifiers, custom units, OKRs and history.
+const legacy=plain(saved);delete legacy.state.orgChartVersion;
+legacy.state.teams=legacy.state.teams.filter(t=>t.id==='org-training');const originalTeam=legacy.state.teams[0];originalTeam.id='existing-training-id';delete originalTeam.orgChartId;delete originalTeam.orgParentId;delete originalTeam.orgLevel;
+legacy.state.teams.push({id:'old-custom-unit',name:'واحد ثبت‌شده کاربر',okrs:[],kpis:[],parent:'Custom parent'});
+legacy.state.companyOkrs[index].dependencies=[{id:'legacy-dependency',teamId:'existing-training-id',commitment:'Keep reference',accepted:true}];
+const originalText=JSON.stringify(legacy),legacyStorage=new Map([['kish_okr_free_practice_v1',originalText]]),migrated=await boot(legacyStorage);
+assert.equal(migrated.app.getState().teams.find(t=>t.orgChartId==='org-training').id,'existing-training-id');
+assert.equal(migrated.app.getState().teams.find(t=>t.id==='existing-training-id').okrs[0].id,trainingGoal.id);
+assert.equal(migrated.app.getState().teams.find(t=>t.id==='old-custom-unit').parent,'Custom parent');
+assert.equal(migrated.app.getState().companyOkrs[index].dependencies[0].teamId,'existing-training-id');
+assert.equal(migrated.app.getState().history.length,legacy.state.history.length);
+assert.equal(legacyStorage.get('kish_okr_before_org_chart_v1'),originalText);
+const again=await boot(legacyStorage);assert.equal(again.app.getState().teams.length,66,'Migration must be idempotent');
+assert.ok(again.app.orgSelectOptions('existing-training-id').includes('value="existing-training-id" selected'));
+for(const instance of [a,b,other,oldTab,quota,damaged,off,migrated,again])assert.deepEqual(instance.network(),{fetches:0,redirects:0});
+console.log('PASS: 65 source-backed organization units, seven deputy directorates, complete grouped dropdowns, hierarchy/search/level filters, actual unit selection and goal creation, parent-branch reporting, FA/EN names, non-destructive legacy migration, reference preservation, local rollback copy and repeated-load deduplication.');
 console.log('PASS: full public startup, original sections/handbook retained, no Cloud fetch/redirect/polling, actual goal/KR/check-in/exercise handlers, immediate save and refresh restore, independent browser isolation, JSON export/import continuity, all view routes, RTL/English, stale-tab conflict protection, storage failure feedback and self-contained offline startup. VM DOM checks; physical browser layout and Iran network are not covered.');
