@@ -6,9 +6,9 @@ function validPracticeState(s){
  return object(s)&&object(s.meta)&&object(s.strategy)&&Array.isArray(s.strategy.pillars)&&Array.isArray(s.strategy.kpis)&&Array.isArray(s.companyOkrs)&&s.companyOkrs.every(objective)&&Array.isArray(s.teams)&&s.teams.every(t=>object(t)&&Array.isArray(t.okrs)&&t.okrs.every(objective));
 }
 function loadPractice(){
- try{const raw=localStorage.getItem(PRACTICE_KEY)||'null',p=JSON.parse(raw);if(p?.version===1&&validPracticeState(p.state)){practiceSnapshot=p;if(p.state.orgChartVersion!==ORG_CHART_VERSION){try{if(!localStorage.getItem('kish_okr_before_org_chart_v1'))localStorage.setItem('kish_okr_before_org_chart_v1',raw);}catch{}}return ensureOrganizationUnits(mergeDefaults(clone(emptyState),p.state));}}
+ try{const raw=localStorage.getItem(PRACTICE_KEY)||'null',p=JSON.parse(raw);if(p?.version===1&&validPracticeState(p.state)){practiceSnapshot=p;if(p.state.orgChartVersion!==ORG_CHART_VERSION){try{if(!localStorage.getItem('kish_okr_before_org_chart_v1'))localStorage.setItem('kish_okr_before_org_chart_v1',raw);}catch{}}if(p.state.companyDocumentVersion!==COMPANY_STRATEGY.version){try{if(!localStorage.getItem('kish_okr_before_company_document_v1'))localStorage.setItem('kish_okr_before_company_document_v1',raw);}catch{}}return ensureCompanyDocument(ensureOrganizationUnits(mergeDefaults(clone(emptyState),p.state)));}}
  catch{}
- return makeDemoState();
+ return makeCompanyState();
 }
 function savePractice(silent,action='Practice updated'){
  if(!cloudReady)return false;
@@ -31,7 +31,8 @@ function initializePractice(){
  auth={id:'practice-user',name:practiceSnapshot?.name||txt('کاربر تمرینی','Practice participant'),email:'participant@example.invalid',role:'admin',accessRole:'super_admin'};
  cloudRevision=practiceSnapshot?.revision||0;cloudReady=true;dirty=false;
  state.history ||= [];state.initiatives ||= [];state.archives ||= [];state.exercises ||= {};workDefaults();
- ensureOrganizationUnits(state);
+ ensureOrganizationUnits(state);ensureCompanyDocument(state);
+ document.getElementById('documentEntryBtn').onclick=()=>goWorkspace('#document/foundation');
  practiceCopy(document.querySelector('.execution-choice h2'),'میز کار رایگان OKR','Free OKR workspace');
  practiceCopy(document.getElementById('entryExecBtn'),'باز کردن اپ و تمرین ←','Open app & practice →');
  practiceCopy(document.querySelector('.execution-choice > small:last-of-type'),'بدون ثبت‌نام · ذخیره در همین مرورگر','No sign-up · Saved in this browser');
@@ -44,7 +45,7 @@ function initializePractice(){
  document.getElementById('accountForm').inert=true;
  renderAll();bindStatic();renderExtras();renderNewSurfaces();applyLanguage();
  syncLabel(txt('نسخه رایگان · ذخیره در همین مرورگر','Free edition · Saved in this browser'));
- if(practiceSnapshot&&practiceSnapshot.state.orgChartVersion!==ORG_CHART_VERSION)savePractice(true,'Company organization chart added; existing data preserved');
+ if(practiceSnapshot&&(practiceSnapshot.state.orgChartVersion!==ORG_CHART_VERSION||practiceSnapshot.state.companyDocumentVersion!==COMPANY_STRATEGY.version))savePractice(true,'Company organization chart added; existing data preserved');
  if(location.hash&&!location.hash.startsWith('#activate')&&!location.hash.startsWith('#guide')){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';route();}
  else if(location.hash.startsWith('#guide'))stageHelp(location.hash.split('/')[1]);
 }
