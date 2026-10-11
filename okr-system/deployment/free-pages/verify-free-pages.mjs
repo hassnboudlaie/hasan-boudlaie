@@ -23,7 +23,7 @@ async function boot(storage=new Map(),input=html,blocked=false){
   matches(s){return s.split(',').some(sel=>{sel=sel.trim();const m=sel.match(/^\[data-([a-z-]+)(?:="([^"]*)")?\]$/);if(m)return Object.hasOwn(this.dataset,dataKey(m[1]))&&(m[2]===undefined||this.dataset[dataKey(m[1])]===m[2]);return sel.startsWith('#')?this.id===sel.slice(1):sel.startsWith('.')?this.classes.has(sel.slice(1)):false;});}
   closest(s){return this.matches(s)?this:null;}
   hasAttribute(a){return a.startsWith('data-')&&Object.hasOwn(this.dataset,dataKey(a.slice(5)));}
-  querySelectorAll(){return [];}querySelector(s){if(s==='form'){return this._form ||= Object.assign(new Element(),{reportValidity:()=>true});}if(s==='[data-modal-cancel]')return this._cancel ||= new Element();return null;}appendChild(){}setAttribute(){}showModal(){this.open=true;}close(){this.open=false;}scrollIntoView(){}
+  dispatchEvent(e){for(const f of handlers.get(e.type)||[])f({target:this,preventDefault(){},stopPropagation(){}});return true;}querySelectorAll(){return [];}querySelector(s){if(s==='form'){return this._form ||= Object.assign(new Element(),{reportValidity:()=>true});}if(s==='[data-modal-cancel]')return this._cancel ||= new Element();return null;}appendChild(){}setAttribute(){}showModal(){this.open=true;}close(){this.open=false;}scrollIntoView(){}
   click(){if(this.href?.startsWith('blob:'))downloads.push(blobs.get(this.href));this.onclick?.({target:this,preventDefault(){}});for(const f of this.listeners.get('click')||[])f({target:this,preventDefault(){}});}
  }
  for(const m of input.matchAll(/id="([^"]+)"/g))registry.set(m[1],new Element(m[1]));
@@ -34,9 +34,9 @@ async function boot(storage=new Map(),input=html,blocked=false){
  class TestURL extends URL{static createObjectURL(blob){const key='blob:'+blobs.size;blobs.set(key,blob);return key;}static revokeObjectURL(){}}
  class TestFormData{constructor(form){this.values=form.values||{};}get(k){return this.values[k];}*[Symbol.iterator](){yield* Object.entries(this.values);}}
  class TestFileReader{readAsText(file){this.result=file.text;this.onload();}}
- const ctx={document,NodeFilter:{SHOW_TEXT:4},window:{addEventListener:(t,f)=>add(windows,t,f),scrollTo(){}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{if(blocked)throw new Error('Storage blocked');storage.set(k,v);}},sessionStorage:{getItem:()=>null,removeItem(){}},location,history:{pushState:(_s,_t,h)=>{location.hash=h;},replaceState:(_s,_t,h)=>{location.hash=h;}},CSS:{escape:x=>x},setTimeout:()=>0,clearTimeout(){},setInterval(){throw new Error('No polling in practice edition');},console,structuredClone,Date,URL:TestURL,Blob,FormData:TestFormData,FileReader:TestFileReader,confirm:()=>true,fetch(){fetches++;throw new Error('Practice must not contact the Cloud backend');}};
+ const ctx={Event:class{constructor(type,options={}){this.type=type;Object.assign(this,options);}},document,NodeFilter:{SHOW_TEXT:4},window:{addEventListener:(t,f)=>add(windows,t,f),scrollTo(){}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{if(blocked)throw new Error('Storage blocked');storage.set(k,v);}},sessionStorage:{getItem:()=>null,removeItem(){}},location,history:{pushState:(_s,_t,h)=>{location.hash=h;},replaceState:(_s,_t,h)=>{location.hash=h;}},CSS:{escape:x=>x},setTimeout:()=>0,clearTimeout(){},setInterval(){throw new Error('No polling in practice edition');},console,structuredClone,Date,URL:TestURL,Blob,FormData:TestFormData,FileReader:TestFileReader,confirm:()=>true,fetch(){fetches++;throw new Error('Practice must not contact the Cloud backend');}};
  let code=input.match(/<script>([\s\S]*?)<\/script>/)[1];
- code=code.replace(/\}\)\(\);\s*$/,`globalThis.appTest={getState:()=>state,save,flushSave,exportData,importData,goWorkspace,openTraining,closeTraining,route,setLanguage,progress,validateObjective,renderMembers,renderStart,renderRollout,renderExplore,renderEngagement,renderReports,renderMeetings,renderAlignment,renderParticipants,renderInitiatives,renderCycles,renderHistory,renderTeams,reportData,filteredKrs,orgSelectOptions,orgFieldOptions,orgDescendantIds,orgChart:()=>ORG_CHART,training:()=>TRAINING_MODULES,api,getDirty:()=>dirty,getConflict:()=>conflict};})();`);
+ code=code.replace(/\}\)\(\);\s*$/,`globalThis.appTest={getState:()=>state,save,flushSave,exportData,importData,goWorkspace,openTraining,closeTraining,route,setLanguage,progress,validateObjective,renderMembers,renderStart,renderRollout,renderExplore,renderEngagement,renderReports,renderMeetings,renderAlignment,renderParticipants,renderInitiatives,renderCycles,renderHistory,renderTeams,reportData,filteredKrs,orgSelectOptions,orgFieldOptions,orgDescendantIds,orgChart:()=>ORG_CHART,sourceDocument:()=>COMPANY_STRATEGY,renderCompanyDocument,sourceInitiatives,ensureCompanyDocument,adoptSourceInitiative,documentFilters:()=>documentFilters,training:()=>TRAINING_MODULES,api,getDirty:()=>dirty,getConflict:()=>conflict};})();`);
  vm.createContext(ctx);vm.runInContext(code,ctx,{timeout:4000});await tick();
  return {app:ctx.appTest,registry,storage,location,downloads,Element,document,ctx,network:()=>({fetches,redirects}),event:async(t,dataset,values={})=>{const el=new Element('',dataset);Object.assign(el,values);for(const f of handlers.get(t)||[])await f({target:el,preventDefault(){},stopPropagation(){}});await tick();return el;}};
 }
@@ -45,7 +45,41 @@ assert.deepEqual(a.network(),{fetches:0,redirects:0});
 assert.equal((a.registry.get('landingRoadmap').innerHTML.match(/class="landing-step"/g)||[]).length,8);
 a.registry.get('entryExecBtn').click();assert.ok(a.registry.get('authScreen').classList.contains('hidden'));assert.equal(a.registry.get('executionApp').inert,false);
 assert.equal(a.app.training().length,5);
-if(source){assert.deepEqual([...source.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]),[...html.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]));assert.equal(source.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1],html.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1]);}
+if(source){assert.deepEqual([...source.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]),[...html.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]).filter(x=>x!=='view-document'));assert.equal(source.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1],html.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1]);}
+// Exercise the actual source navigation, selectors, adoption and migration paths.
+const docClient=await boot(),d=plain(docClient.app.sourceDocument());
+assert.equal(d.source.pageCount,366);assert.equal(d.sourcePages.length,366);
+assert.equal(d.foundation.values.length,6);assert.equal(d.pillars.length,6);assert.equal(d.kpis.length,18);assert.equal(d.objectives.length,13);
+assert.equal(d.objectives.flatMap(o=>o.krs).length,53);
+assert.ok(d.initiatives.length>650);assert.ok(d.optionalBank.length>0);
+for(const o of d.objectives)for(const k of o.krs){assert.ok(k.fields['تعریف و روش محاسبه']);assert.ok(k.fields['نام شاخص']);assert.ok(k.targetLabel);assert.ok(k.page>=62&&k.page<=107);}
+assert.equal(new Set(d.initiatives.map(i=>i.id)).size,d.initiatives.length);
+for(const i of d.initiatives){assert.ok(d.objectives.some(o=>o.id===i.objectiveId&&o.krs.some(k=>k.id===i.krId)));assert.ok(!i.title.includes('ابتکار عملیاتی :'),'An extracted action must not swallow its next action');}
+const ss=docClient.app.getState();assert.equal(ss.companyOkrs.length,13);assert.equal(ss.strategy.kpis.length,18);
+for(const o of ss.companyOkrs){assert.equal(o.status,'draft');assert.equal(o.owner,'');for(const k of o.krs){assert.equal(k.baseline,'');assert.equal(k.current,'');assert.equal(docClient.app.progress(k),0);}}
+assert.equal(ss.companyOkrs[0].krs[1].target,'','Conflicting emergency response target stays unresolved');
+for(const k of ss.strategy.kpis){assert.equal(k.current,'');assert.equal(k.target,'');assert.equal(k.previous,'');}
+docClient.registry.get('documentEntryBtn').click();docClient.app.route();assert.ok(docClient.registry.get('authScreen').classList.contains('hidden'));assert.ok(docClient.registry.get('documentResults').innerHTML.includes('۱۴۱۰'));
+for(const tab of ['foundation','pillars','objectives','initiatives','review','reader']){docClient.location.hash='#document/'+tab;docClient.app.route();assert.ok(docClient.registry.get('documentResults').innerHTML.length>100);}
+docClient.location.hash='#document/reader/306';docClient.app.route();assert.ok(docClient.registry.get('documentResults').innerHTML.includes('ستاره شمالی'));
+docClient.registry.get('documentQuery').value='بانک ابتکارهای عملیاتی';docClient.registry.get('documentQuery').oninput();assert.ok(docClient.registry.get('documentResults').innerHTML.includes('#document/reader/348'));
+docClient.location.hash='#document/objectives';docClient.app.route();docClient.registry.get('documentPillar').value='doc-pillar-5';docClient.registry.get('documentPillar').onchange();assert.equal((docClient.registry.get('documentResults').innerHTML.match(/class="source-kr"/g)||[]).length,9);
+await docClient.event('click',{sourceUnit:'org-finance-admin'});docClient.app.route();const sf=docClient.app.sourceInitiatives();assert.ok(sf.length>0);assert.ok(sf.every(i=>['org-human-resources','org-finance','org-finance-admin'].includes(i.unitId)));
+assert.equal((docClient.registry.get('documentResults').innerHTML.match(/class="card source-initiative"/g)||[]).length,30,'Source actions are paginated');
+await docClient.event('click',{sourceOffset:'30'});assert.ok(docClient.registry.get('documentResults').innerHTML.includes('31–60'));
+const action=d.initiatives.find(i=>i.unitId==='org-human-resources');const originalCatalog=JSON.stringify(d);
+await docClient.event('click',{sourceAdopt:action.id});assert.equal(docClient.app.getState().initiatives.length,1);const adopted=docClient.app.getState().initiatives[0];assert.equal(adopted.objectiveId,action.objectiveId);assert.equal(adopted.krId,action.krId);assert.equal(adopted.status,'planned');
+await docClient.event('click',{sourceAdopt:action.id});assert.equal(docClient.app.getState().initiatives.length,1,'Adoption is idempotent');
+await docClient.event('change',{initiative:adopted.id,f:'unitId'},{value:'org-training'});
+await docClient.event('input',{initiative:adopted.id,f:'owner'},{value:'Synthetic training owner'});
+const resumed=await boot(docClient.storage);assert.equal(resumed.app.getState().initiatives[0].unitId,'org-training');assert.equal(resumed.app.getState().initiatives[0].owner,'Synthetic training owner');assert.equal(JSON.stringify(plain(resumed.app.sourceDocument())),originalCatalog,'Editing a plan must not alter the published reference');
+const preDocument=plain(JSON.parse(docClient.storage.get('kish_okr_free_practice_v1')));delete preDocument.state.companyDocumentVersion;
+preDocument.state.companyOkrs=preDocument.state.companyOkrs.filter(o=>o.id!==d.objectives[0].id);preDocument.state.strategy.mission='Keep my existing mission';preDocument.state.strategy.pillars.push({id:'keep-custom-pillar',title:'Keep custom pillar',description:'Prior user entry'});
+const prior=JSON.stringify(preDocument),priorStorage=new Map([['kish_okr_free_practice_v1',prior]]),upgraded=await boot(priorStorage);
+assert.equal(priorStorage.get('kish_okr_before_company_document_v1'),prior);assert.equal(upgraded.app.getState().strategy.mission,'Keep my existing mission');assert.ok(upgraded.app.getState().strategy.pillars.some(p=>p.id==='keep-custom-pillar'));assert.equal(upgraded.app.getState().initiatives[0].owner,'Synthetic training owner');assert.equal(upgraded.app.getState().companyOkrs.length,13);
+const docAgain=await boot(priorStorage);assert.equal(docAgain.app.getState().companyOkrs.length,13);assert.equal(docAgain.app.getState().strategy.kpis.length,18);
+docClient.app.setLanguage('en');assert.equal(docClient.document.documentElement.dir,'ltr');assert.ok(docClient.registry.get('companyDocumentBody').innerHTML.includes('Initiative bank'));docClient.app.setLanguage('fa');
+console.log('PASS: actual source navigation, full-text page search, source counts/links, pillar/department filtering, pagination, source-to-execution adoption, editable department assignment, save/refresh restoration, reference immutability, draft/no-measurement defaults and non-destructive idempotent document migration.');
 const chart=plain(a.app.orgChart());
 assert.equal(chart.length,65);assert.equal(new Set(chart.map(n=>n.id)).size,65);
 assert.equal(chart.filter(n=>n.level==='deputy').length,7);
@@ -69,7 +103,7 @@ async function unitGoal(client,unitId,title){
  const pending=client.event('click',{quickObjective:''});await tick();
  const modal=client.registry.get('okrModal');assert.ok(modal.innerHTML.includes('value="'+unitId+'"'));const form=modal.querySelector('form');form.values={scope:unitId,title};form.onsubmit({preventDefault(){}});await pending;
  const ti=client.app.getState().teams.findIndex(t=>t.id===unitId),team=client.app.getState().teams[ti],oi=team.okrs.length-1,o=team.okrs[oi];
- for(const [f,value] of Object.entries({parentId:'demo-company-0',why:'Synthetic department evidence',urgent:'This quarter'}))await client.event('input',{obj:'team:'+ti,o:String(oi),f},{value});
+ for(const [f,value] of Object.entries({parentId:'doc-okr-1',why:'Synthetic department evidence',urgent:'This quarter'}))await client.event('input',{obj:'team:'+ti,o:String(oi),f},{value});
  for(const [f,value] of Object.entries({text:'Synthetic department result',owner:'Practice owner',unit:'minutes',baseline:'100',target:'50',current:'75'}))await client.event('input',{kr:'team:'+ti,o:String(oi),k:'0',f},{value});
  for(const workflow of ['review','alignment','active'])await client.event('click',{workflow,id:o.id});assert.equal(o.status,'active');return o;
 }
@@ -83,7 +117,7 @@ const objectiveTitle='هدف آزمایشی: کاهش زمان انتظار';
 await a.event('click',{action:'add-company-okr'});
 assert.equal(a.app.getState().companyOkrs.length,before+1);
 const index=before;
-for(const [f,value] of Object.entries({objective:objectiveTitle,owner:'Practice owner',parentId:'demo-p1',why:'Improve reliability',urgent:'This quarter'}))await a.event('input',{obj:'company',o:String(index),f},{value});
+for(const [f,value] of Object.entries({objective:objectiveTitle,owner:'Practice owner',parentId:'doc-pillar-1',why:'Improve reliability',urgent:'This quarter'}))await a.event('input',{obj:'company',o:String(index),f},{value});
 await a.event('click',{addKr:'company',o:String(index)});
 for(const [f,value] of Object.entries({text:'Reduce synthetic waiting',owner:'Practice owner',unit:'minutes',baseline:'100',target:'50',current:'100'}))await a.event('input',{kr:'company',o:String(index),k:'0',f},{value});
 const o=a.app.getState().companyOkrs[index];assert.equal(a.app.validateObjective(o),'');
