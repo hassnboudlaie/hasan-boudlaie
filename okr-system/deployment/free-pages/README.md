@@ -17,6 +17,7 @@ From the repository root, with Node 22 or newer:
 ```sh
 node okr-system/deployment/free-pages/build-free-pages.mjs okr-system/deployment/free-pages/source.html okr-system okr-system
 node okr-system/deployment/free-pages/verify-free-pages.mjs okr-system/deployment/free-pages/source.html okr-system
+node okr-system/deployment/free-pages/verify-public-url.mjs free-20261011 okr-system
 ```
 
 `source.html` preserves the cloud frontend before this adaptation; `practice-adapter.js` supplies only the practice behavior. The builder checks source anchors before generating the two HTML files, so a changed source contract cannot silently omit an adaptation. Do not paste real organization records or activation tokens into source files.
@@ -26,3 +27,7 @@ node okr-system/deployment/free-pages/verify-free-pages.mjs okr-system/deploymen
 Node VM tests execute the actual frontend event handlers for goal/KR creation, approval workflow, check-ins, exercise entry and JSON transfer. Tests cover immediate persistence and refresh restoration, independent-browser isolation, all view routes, original handbook/sections, FA/EN direction, stale-tab conflict handling, storage failure, self-contained offline initialization, and zero cloud requests/redirects/polling. These are functional checks using a DOM shim, not rendered browser or physical-device tests. Anonymous HTTP verification of the deployed Pages files is performed after publishing. Reachability from the owner's Iran network and physical laptop remains pending until the owner opens the new link.
 
 Rollback point: branch `backup/okr-before-free-pages-20261011`, created from the existing `main` before these changes. Restore only `okr-system/index.html` from that branch if needed; preserve unrelated website edits made afterwards.
+
+## Verified release — 2026-10-11
+
+Entry release commit: `ea369370d6a574b8e07910c471f882de1d9c22eb`. Anonymous HTTP requests returned 200 for the public entry, offline HTML, favicon and both SVG assets. Both HTML bodies matched the local release SHA-256 exactly. The functional suite was then rerun on those downloaded, publicly deployed HTML bodies and passed. The unchanged central backend health endpoint still returned 200 with organization-account authentication. A commit comparison confirmed that every changed file is inside `okr-system/`; the personal homepage and unrelated applications were not edited. GitHub Pages deployment is verified from this environment. Physical laptop/mobile rendering and Iran-network reachability are still not verified.
