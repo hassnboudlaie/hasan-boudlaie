@@ -1,0 +1,40 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const here=path.dirname(fileURLToPath(import.meta.url));
+const source=process.argv[2];
+const output=process.argv[3]?path.resolve(process.argv[3]):here;
+if(!source)throw new Error('Pass the canonical public/okr.html path.');
+let html=fs.readFileSync(source,'utf8');
+function replace(a,b){if(!html.includes(a))throw new Error('Source contract changed: '+a.slice(0,100));html=html.replace(a,b);}
+replace("const AUTH='hb_okr_public_auth_v2';","const AUTH='hb_okr_public_auth_v2';\nconst PRACTICE_MODE=true;\nconst PRACTICE_KEY='kish_okr_free_practice_v1';\nlet practiceSnapshot=null;");
+replace("async function api(action,method='GET',body){","async function api(action,method='GET',body){\n if(PRACTICE_MODE)return practiceApi(action,method,body);");
+replace('function load(){return clone(emptyState);}','function load(){return PRACTICE_MODE?loadPractice():clone(emptyState);}');
+replace("function save(silent,action='Workspace updated'){","function save(silent,action='Workspace updated'){\n if(PRACTICE_MODE){savePractice(silent,action);return;}");
+replace("async function flushSave(action='Workspace updated'){","async function flushSave(action='Workspace updated'){\n if(PRACTICE_MODE)return !dirty||savePractice(true,action);");
+replace(" if(location.hostname==='hassnboudlaie.github.io'){document.getElementById('entryExecBtn').onclick=()=>location.assign(CLOUD_ORIGIN+'/okr.html'+(location.hash||'#start'));return;}"," if(PRACTICE_MODE){await Promise.resolve();initializePractice();return;}");
+replace("if(location.hostname==='hassnboudlaie.github.io')location.assign(CLOUD_ORIGIN+'/okr.html'+(location.hash||'#start'));else if(cloudReady)","if(cloudReady)");
+replace("else if(location.hostname==='hassnboudlaie.github.io')location.assign(CLOUD_ORIGIN+'/okr.html'+hash);else showLogin(hash);","else if(PRACTICE_MODE)toast(txt('اپ در حال آماده‌شدن است.','The app is preparing.'));else showLogin(hash);");
+replace('async function refreshFromCloud(){','async function refreshFromCloud(){\n if(PRACTICE_MODE)return;');
+replace("if(typeof setInterval==='function')setInterval(refreshFromCloud,15000);","if(!PRACTICE_MODE&&typeof setInterval==='function')setInterval(refreshFromCloud,15000);");
+replace(" const roleOptions=selected=>", " if(PRACTICE_MODE){renderPracticeAccess(box);return;}\n const roleOptions=selected=>");
+replace("function showLogin(hash='#start'){","function showLogin(hash='#start'){\n if(PRACTICE_MODE){document.getElementById('loginPanel').classList.add('hidden');return;}");
+replace(" const role=document.getElementById('userRoleDisplay');if(role)role.textContent=roleText(auth.accessRole||auth.role);", " const role=document.getElementById('userRoleDisplay');if(role)role.textContent=PRACTICE_MODE?txt('نسخه تمرینی','Practice edition'):roleText(auth.accessRole||auth.role);");
+replace("'داده مرکزی با این فایل جایگزین شود؟','Replace the central workspace with this file?'","'تمرین همین مرورگر با این فایل جایگزین شود؟','Replace this browser’s practice with this file?'");
+replace("if(!Array.isArray(data.companyOkrs)||!Array.isArray(data.teams)||!data.strategy)throw new Error('Invalid workspace file');","if(!validPracticeState(data))throw new Error('Invalid workspace file');");
+replace("allObjectives().forEach(x=>{x.objective.status='draft';x.objective.parentId ||= '';});","allObjectives().forEach(x=>{if(!PRACTICE_MODE)x.objective.status='draft';x.objective.parentId ||= '';});");
+replace("syncLabel('Cloud saved · v'+cloudRevision)","syncLabel(txt('ذخیره در همین مرورگر · نسخه ','Saved in this browser · v')+cloudRevision)");
+replace("'ابتدا از ورودی خود خروجی بگیرید. نسخه مرکزی بارگذاری شود؟','Export your work first. Load the central version?'","'ابتدا از ورودی خود خروجی بگیرید. آخرین نسخه همین مرورگر بارگذاری شود؟','Export your work first. Load this browser’s latest saved version?'");
+replace('\ninitializeCloud();', '\n'+fs.readFileSync(path.join(here,'practice-adapter.js'),'utf8')+'\ninitializeCloud();');
+replace('<div class="launch-actions">','<p class="note" id="practiceNotice" data-fa="نسخه رایگان نمایش و تمرین · تمرین‌ها در همین مرورگر ذخیره می‌شوند؛ همگام‌سازی خودکار بین دستگاه‌ها فعال نیست." data-en="Free demonstration & practice · Work is saved in this browser; automatic cross-device synchronization is not enabled.">نسخه رایگان نمایش و تمرین · تمرین‌ها در همین مرورگر ذخیره می‌شوند؛ همگام‌سازی خودکار بین دستگاه‌ها فعال نیست.</p><div class="launch-actions">');
+replace('<div class="entry-foot"><span','<div class="entry-foot"><a href="offline.html" download="Kish-OKR-Offline.html" data-fa="دانلود همین اپ برای استفاده آفلاین" data-en="Download this app for offline use">دانلود همین اپ برای استفاده آفلاین</a> · <span');
+fs.mkdirSync(output,{recursive:true});
+fs.writeFileSync(path.join(output,'index.html'),html);
+let offline=html;
+const assetDir=process.argv[4]?path.resolve(process.argv[4]):path.dirname(source);
+for(const asset of ['assets/kishports_main.svg','assets/airport_opration.svg','favicon.svg']){
+ const uri='data:image/svg+xml;base64,'+fs.readFileSync(path.join(assetDir,asset)).toString('base64');
+ offline=offline.replaceAll(asset,uri);
+}
+fs.writeFileSync(path.join(output,'offline.html'),offline);
+console.log('Built the complete Pages practice edition and self-contained offline HTML; canonical Cloud source untouched.');
