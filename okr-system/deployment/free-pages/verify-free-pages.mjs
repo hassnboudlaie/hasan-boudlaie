@@ -47,10 +47,11 @@ a.registry.get('entryExecBtn').click();assert.ok(a.registry.get('authScreen').cl
 assert.equal(a.app.training().length,5);
 if(source){assert.deepEqual([...source.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]),[...html.matchAll(/id="(view-[^"]+)"/g)].map(x=>x[1]));assert.equal(source.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1],html.match(/const TRAINING_MODULES=([\s\S]*?);\nfunction /)[1]);}
 const before=a.app.getState().companyOkrs.length;
+const objectiveTitle='هدف آزمایشی: کاهش زمان انتظار';
 await a.event('click',{action:'add-company-okr'});
 assert.equal(a.app.getState().companyOkrs.length,before+1);
 const index=before;
-for(const [f,value] of Object.entries({objective:'Synthetic practice objective',owner:'Practice owner',parentId:'demo-p1',why:'Improve reliability',urgent:'This quarter'}))await a.event('input',{obj:'company',o:String(index),f},{value});
+for(const [f,value] of Object.entries({objective:objectiveTitle,owner:'Practice owner',parentId:'demo-p1',why:'Improve reliability',urgent:'This quarter'}))await a.event('input',{obj:'company',o:String(index),f},{value});
 await a.event('click',{addKr:'company',o:String(index)});
 for(const [f,value] of Object.entries({text:'Reduce synthetic waiting',owner:'Practice owner',unit:'minutes',baseline:'100',target:'50',current:'100'}))await a.event('input',{kr:'company',o:String(index),k:'0',f},{value});
 const o=a.app.getState().companyOkrs[index];assert.equal(a.app.validateObjective(o),'');
@@ -61,12 +62,23 @@ assert.equal(a.app.progress(o.krs[0]),70);assert.equal(a.app.getState().history.
 await a.event('input',{exercise:'prepare-0'},{value:'Synthetic workshop answer'});
 assert.equal(JSON.parse(storage.get('kish_okr_free_practice_v1')).state.exercises['prepare-0'],'Synthetic workshop answer');
 assert.equal(a.app.getDirty(),false);
+const revisionBeforeSave=JSON.parse(storage.get('kish_okr_free_practice_v1')).revision;
+a.registry.get('saveBtn').click();await tick();
+const saved=JSON.parse(storage.get('kish_okr_free_practice_v1'));
+assert.equal(saved.revision,revisionBeforeSave+1,'The Save button must persist a new revision');
+assert.equal(saved.state.companyOkrs[index].objective,objectiveTitle);
+assert.equal(a.app.getDirty(),false);
+assert.ok(a.registry.get('syncStatus').textContent.includes('ذخیره در همین مرورگر'));
 for(const view of [...html.matchAll(/id="view-([^"]+)"/g)].map(x=>x[1])){a.location.hash='#'+view;a.app.route();}
 assert.ok(a.registry.get('membersBody').innerHTML.includes('همگام‌سازی خودکار نیست'));
 assert.ok(!a.registry.get('membersBody').innerHTML.includes('inviteMemberForm'));
 a.app.openTraining();assert.ok(a.registry.get('trainingBody').innerHTML.includes('Synthetic workshop answer'));a.app.closeTraining();
 a.app.setLanguage('en');assert.equal(a.document.documentElement.dir,'ltr');assert.ok(a.registry.get('landingRoadmap').innerHTML.includes('Learn &amp; Repeat'));a.app.setLanguage('fa');assert.equal(a.document.documentElement.dir,'rtl');
-const b=await boot(storage);assert.equal(b.app.getState().companyOkrs[index].objective,'Synthetic practice objective');assert.equal(b.app.getState().companyOkrs[index].status,'active');assert.equal(b.app.getState().exercises['prepare-0'],'Synthetic workshop answer');
+const b=await boot(storage);assert.equal(b.app.getState().companyOkrs[index].objective,objectiveTitle);assert.equal(b.app.getState().companyOkrs[index].status,'active');assert.equal(b.app.getState().exercises['prepare-0'],'Synthetic workshop answer');
+assert.deepEqual(plain(b.app.getState()),saved.state,'A fresh execution must restore the entire saved workspace');
+assert.equal(b.app.getState().companyOkrs[index].krs[0].current,65);
+assert.equal(b.app.progress(b.app.getState().companyOkrs[index].krs[0]),70);
+console.log(JSON.stringify({test:'published data-entry/save/reload',objective:objectiveTitle,keyResultCurrent:65,progress:70,manualSaveRevision:saved.revision,fullWorkspaceRestored:true}));
 const other=await boot();assert.equal(other.app.getState().companyOkrs.length,before,'Independent browser must not receive private practice data');
 a.app.exportData();const exported=await a.downloads.at(-1).text();assert.ok(JSON.parse(exported).exercises['prepare-0']);
 other.app.importData({text:exported});await tick();assert.equal(other.app.getState().companyOkrs[index].status,'active');assert.equal(other.app.progress(other.app.getState().companyOkrs[index].krs[0]),70);assert.equal(other.app.getState().exercises['prepare-0'],'Synthetic workshop answer');
