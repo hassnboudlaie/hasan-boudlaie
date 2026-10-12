@@ -1724,7 +1724,7 @@ initializeCloud();
 
 function renderKpiSnapshot(){const box=document.getElementById('kpiSnapshot');if(!box)return;const rows=[...state.strategy.kpis.map(k=>({k,href:'#strategy'})),...state.teams.flatMap(t=>(t.kpis||[]).map(k=>({k,href:'#team/'+t.id})))];box.innerHTML=rows.slice(0,8).map(({k,href})=>{const health=kpiHealth(k);return '<a href="'+href+'" class="kpi-snapshot"><div><b>'+esc(k.name)+'</b><span>'+esc(k.owner)+'</span></div><strong>'+esc(isFilled(k.current)?k.current:'—')+' '+esc(k.unit)+'</strong><span class="health '+health.cls+'">'+health.text+'</span></a>';}).join('')||'<a href="#strategy">'+txt('ثبت KPI','Add a KPI')+'</a>';}
 
-document.addEventListener("click",e=>{const b=e.target.closest("[data-training-workspace]");if(!b)return;const map={prepare:"setup",introduce:"introduce",train:"educate",create:"company",launch:"checkins"};closeTraining();goWorkspace('#'+map[b.dataset.trainingWorkspace]);});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-training-workspace]");if(!b)return;const map={prepare:"setup",introduce:"introduce",train:"educate",create:"company",launch:"checkins"};goWorkspace('#'+map[b.dataset.trainingWorkspace]);});
 
 // Handbook-led workbench. All reports are derived from persisted workspace data.
 const ROLLOUT_STAGES=[
