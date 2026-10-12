@@ -409,9 +409,46 @@ body{font-size:16px;line-height:1.75}h1,h2,h3,p{overflow-wrap:anywhere}button,a,
 .login-panel{max-width:720px;margin:24px auto;padding:24px;border:1px solid var(--line);border-radius:16px;background:#fff}.login-panel h2{font-size:24px}.login-panel p{font-size:15px}.login-panel .fields{margin:18px 0}.login-panel input{width:100%;font-size:16px;min-height:46px}#activationLink{width:100%;font-size:14px;min-height:48px}.nav a{font-size:14px}.top-actions{flex-wrap:wrap}.user-mini b,.user-mini small{font-size:12px}.side-foot>.side-link{width:100%;margin-block:8px;background:transparent;color:#fff}html[dir="ltr"] .sidebar{left:0;right:auto}@media(max-width:1200px){html[dir="ltr"] .sidebar{transform:translateX(-110%)!important}html[dir="ltr"] .sidebar.open{transform:none!important}}@media(max-width:700px){.login-panel{padding:18px}.topbar{height:auto;min-height:64px}.entry-shell{width:calc(100% - 24px);margin:12px auto}.landing-steps{grid-template-columns:1fr}.launch-actions{grid-template-columns:1fr}.launchpad{padding:22px 16px}}
 .document-entry{margin-block:18px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#edf4ff;border:1px solid #cedff5;border-radius:14px;padding:18px}.document-entry h2{font-size:19px;margin:0 0 4px}.document-entry p{font-size:14px;margin:0;color:var(--muted)}.document-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-block:18px}.document-summary>div{border:1px solid var(--line);background:#fff;border-radius:12px;padding:16px;display:grid;gap:5px}.document-summary strong{font-size:29px;color:var(--teal)}.document-summary span{font-size:13px;color:var(--muted)}.document-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-block:20px}.document-tabs a{padding:9px 14px;background:#fff;border:1px solid var(--line);border-radius:9px;font-size:14px}.document-tabs .selected{background:var(--navy);color:#fff}.document-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding:16px;background:#edf2f9;border-radius:12px;margin-block:18px}.document-controls label{display:grid;gap:5px;font-size:13px;flex:1 1 180px;min-width:0}.document-controls input,.document-controls select{width:100%;min-height:44px;border:1px solid #bccbe0;border-radius:8px;padding:8px;font:inherit;background:#fff;color:var(--navy)}.document-foundation{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}.document-foundation>article:last-child{grid-column:1/-1}.document-foundation .card+.card,.document-values .card+.card{margin-top:0}.document-foundation p,.document-values p{line-height:2}.document-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.document-values>div{padding:14px;border:1px solid var(--line);border-radius:10px}.document-values h3{font-size:16px}.source-link{font-size:12px;padding:3px 8px;border-radius:6px;background:#eaf2ff;color:#245aa6;display:inline-block;margin:4px;white-space:nowrap}.source-kr{margin-block:12px;padding:14px;border:1px solid var(--line);border-radius:10px}.source-kr summary{cursor:pointer;line-height:1.9}.source-kr summary b{display:inline-block;color:var(--teal);margin-inline-end:8px}.source-fields{display:grid;grid-template-columns:155px minmax(0,1fr);gap:10px;font-size:14px}.source-fields dt{font-weight:700}.source-fields dd{margin:0;line-height:1.9;overflow-wrap:anywhere}.source-target{background:#f2f7ff;padding:12px;border-radius:8px;line-height:1.9}.source-actions{display:flex;gap:10px;flex-wrap:wrap;margin-block:12px}.source-actions a{color:var(--teal)}.source-initiative h3{font-size:17px;line-height:1.9}.document-pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0}.source-page-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:2.1;max-width:100%}.document-chain{display:flex;flex-wrap:wrap;gap:12px;padding:0;list-style-position:inside}.document-chain li{padding:10px;border:1px solid var(--line);border-radius:8px;font-size:13px}.source-work-note{font-size:13px;padding:10px;background:#f4f8ff;border-radius:8px;margin-block:10px}@media(max-width:700px){.document-foundation,.document-values{grid-template-columns:1fr}.document-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.document-entry{align-items:start;flex-direction:column}.source-fields{grid-template-columns:1fr;gap:5px}.source-fields dd{margin-bottom:12px}.document-controls label{flex-basis:100%}.source-page-text{font-size:14px}.document-tabs a{flex:1 1 auto;text-align:center}}
 
+:root{--section-nav-height:60px}
+body{padding-block-start:var(--section-nav-height)}
+.section-navigation{position:fixed;inset:0 0 auto;z-index:1200;height:var(--section-nav-height);display:flex;align-items:center;gap:12px;padding:8px 24px;background:#fff;border-block-end:1px solid #dce5ec;box-shadow:0 2px 10px rgba(23,56,95,.04)}
+.section-navigation .btn{min-height:42px;font-size:14px;white-space:nowrap;gap:8px;display:inline-flex;align-items:center;justify-content:center;padding:8px 14px}
+.section-navigation .btn:disabled{opacity:.4;cursor:default}
+.section-navigation a{color:#17385f;background:#f1f5fa;text-decoration:none}
+.section-navigation .navigation-location{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#627487;font-size:14px;margin-inline-start:auto}
+html[dir="rtl"] .section-navigation .nav-arrow{transform:scaleX(-1)}
+.section-navigation :focus-visible,.home-guide summary:focus-visible{outline:3px solid #2e74b5;outline-offset:3px}
+.auth-screen,.training-screen{inset-block-start:var(--section-nav-height)}
+.auth-screen{padding:20px 12px;display:block;overflow:auto;background:#f4f7fa}
+.auth-screen .entry-shell{max-width:1060px;width:100%;min-height:0;margin:12px auto;border-radius:18px}
+.topbar{top:var(--section-nav-height)}
+.sidebar{top:var(--section-nav-height)!important;height:calc(100vh - var(--section-nav-height))!important}
+.training-top{top:0}
+.training-side{height:calc(100vh - var(--section-nav-height) - 78px)}
+.home-launchpad{padding:38px}
+.home-intro{max-width:650px;margin-block-end:30px}
+.home-intro small{font-size:12px;color:#2e74b5;letter-spacing:.05em}
+.home-intro h1{font-size:clamp(26px,3.2vw,38px);line-height:1.6;margin:10px 0 8px;color:#17385f}
+.home-intro p{color:#627487;font-size:16px;line-height:1.9;margin:0}
+.home-launchpad .launch-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+.home-launchpad .home-card,.home-launchpad .document-entry{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;background:#fff;color:#17385f;border:1px solid #dce5ec;border-radius:14px;padding:24px;margin:0;box-shadow:none}
+.home-card .home-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:#edf3f9;color:#24578a;font-size:22px;margin-block-end:16px}
+.home-launchpad .home-card h2{font-size:20px;line-height:1.7;margin:0 0 6px}
+.home-launchpad .home-card p{font-size:14px;line-height:1.9;color:#627487;margin:0 0 20px}
+.home-launchpad .home-card .btn{font-size:14px;min-height:44px;width:100%;margin-block-start:auto;text-align:center;white-space:normal}
+.home-card>small{font-size:12px;color:#627487;margin-block-start:10px}
+.home-launchpad #practiceNotice{font-size:13px;color:#627487;margin:20px 0 0}
+.home-guide{margin-block-start:22px;border-block-start:1px solid #e1e8ef;padding-block-start:16px}
+.home-guide>summary{font-size:14px;color:#24578a;list-style-position:inside;margin:0;cursor:pointer}
+.home-guide .landing-map{margin-top:20px}.home-guide .landing-map h2{font-size:22px}
+.home-launchpad .entry-foot{font-size:12px}
+@media(max-width:800px){.home-launchpad{padding:28px 22px}.home-launchpad .launch-actions{grid-template-columns:1fr}.home-launchpad .home-card{padding:20px}.home-card .home-icon{margin-block-end:8px}.home-launchpad .home-card p{margin-block-end:14px}.home-intro{margin-block-end:22px}.training-side{height:auto}.section-navigation{padding-inline:14px;gap:8px}}
+@media(max-width:480px){.section-navigation{padding-inline:10px;gap:6px}.section-navigation .btn{padding-inline:10px;font-size:13px}.section-navigation .navigation-location{font-size:12px}.auth-screen{padding:10px}.auth-screen .entry-shell{margin:0}.home-launchpad{padding:24px 16px}.home-intro p{font-size:14px}.home-launchpad .home-card h2{font-size:19px}}
+@media print{.section-navigation{display:none!important}body{padding-block-start:0}}
+
 </style>
 </head>
-<body>
+<body><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
 
 
 <section class="auth-screen" id="authScreen">
@@ -426,12 +463,8 @@ body{font-size:16px;line-height:1.75}h1,h2,h3,p{overflow-wrap:anywhere}button,a,
         <button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button>
       </div>
     </div>
-<div class="launchpad">
-<div class="launch-title"><div><small>KISH · STRATEGY EXECUTION</small><h1 data-fa="از راهبرد تا اجرای روزانه" data-en="From strategy to everyday execution">از راهبرد تا اجرای روزانه</h1><p data-fa="برای شروع، مسئول استقرار و تیم‌ها را مشخص کنید؛ سپس راهبرد، هدف‌ها، پیگیری و یادگیری را در یک مسیر پیش ببرید." data-en="Begin with a program owner and participating teams. Then connect strategy, goals, progress and learning through one clear journey.">برای شروع، مسئول استقرار و تیم‌ها را مشخص کنید؛ سپس راهبرد، هدف‌ها، پیگیری و یادگیری را در یک مسیر پیش ببرید.</p></div><button class="btn" id="quickStartGuide" data-fa="راهنمای شروع" data-en="Getting-started guide">راهنمای شروع</button></div>
-<p class="note" id="practiceNotice" data-fa="نسخه رایگان نمایش و تمرین · تمرین‌ها در همین مرورگر ذخیره می‌شوند؛ همگام‌سازی خودکار بین دستگاه‌ها فعال نیست." data-en="Free demonstration & practice · Work is saved in this browser; automatic cross-device synchronization is not enabled.">نسخه رایگان نمایش و تمرین · تمرین‌ها در همین مرورگر ذخیره می‌شوند؛ همگام‌سازی خودکار بین دستگاه‌ها فعال نیست.</p><div class="document-entry"><div><h2 data-fa="سند راهبردی شرکت" data-en="Company strategy document">سند راهبردی شرکت</h2><p data-fa="مأموریت، چشم‌انداز، ارزش‌ها، ۱۳ هدف و برنامه‌های اجرایی شرکت" data-en="Mission, vision, values, 13 objectives and execution plans">مأموریت، چشم‌انداز، ارزش‌ها، ۱۳ هدف و برنامه‌های اجرایی شرکت</p></div><button class="btn primary" id="documentEntryBtn" data-fa="مشاهده سند و اهداف ←" data-en="Open document & objectives →">مشاهده سند و اهداف ←</button></div><div class="launch-actions"><article class="execution-choice"><small data-fa="مدیریت و اجرای OKR" data-en="MANAGE & EXECUTE OKR">مدیریت و اجرای OKR</small><h2 data-fa="فضای اجرایی سازمان" data-en="Organization workspace">فضای اجرایی سازمان</h2><p data-fa="هدف بسازید، هم‌راستایی را تعیین کنید، تأیید بگیرید و پیشرفت را با Check-in ثبت کنید." data-en="Create goals, align them to strategy, get approval and record progress through check-ins.">هدف بسازید، هم‌راستایی را تعیین کنید، تأیید بگیرید و پیشرفت را با Check-in ثبت کنید.</p><button id="entryExecBtn" class="btn primary" data-fa="ورود به میز کار ←" data-en="Open workspace →">ورود به میز کار ←</button><small data-fa="ذخیره مرکزی · ورود امن · دسترسی بر اساس نقش" data-en="Central storage · Secure sign-in · Role-based access">ذخیره مرکزی · ورود امن · دسترسی بر اساس نقش</small><button id="startExecution" class="hidden">Open workspace</button></article>
-<article class="learning-choice"><small data-fa="آموزش و کارگاه" data-en="LEARN & PRACTICE">آموزش و کارگاه</small><h2 data-fa="روش را با یک مثال یاد بگیرید" data-en="Learn the method with an example">روش را با یک مثال یاد بگیرید</h2><p data-fa="جزوه، نمونهٔ فرضی تکمیل‌شده و تمرین هر مرحله؛ از یادگیری مستقیم به کار داخل اپ بروید." data-en="Notes, completed fictional examples and an exercise for every phase, with a direct path into the workspace.">جزوه، نمونهٔ فرضی تکمیل‌شده و تمرین هر مرحله؛ از یادگیری مستقیم به کار داخل اپ بروید.</p><button class="btn" id="entryTrainBtn" data-fa="باز کردن آموزش و تمرین ←" data-en="Open learning & exercises →">باز کردن آموزش و تمرین ←</button><small data-fa="۵ فصل هندبوک · ۸ گام اجرایی" data-en="5 handbook chapters · 8 execution steps">۵ فصل هندبوک · ۸ گام اجرایی</small></article></div>
-<div class="login-panel hidden" id="loginPanel"><h2 id="accountTitle">ورود با حساب سازمانی · Organization account sign-in</h2><p id="loginMessage" role="status">با ایمیل و رمز عبور سازمانی وارد شوید. حساب جدید فقط با دعوت مدیر فعال می‌شود.</p><form id="accountForm"><div class="fields"><div class="field" id="loginEmailField"><label for="loginEmail" data-fa="ایمیل" data-en="Email">ایمیل</label><input id="loginEmail" type="email" autocomplete="username" dir="ltr" required maxlength="254"></div><div class="field hidden" id="activationNameField"><label for="activationName" data-fa="نام شما" data-en="Your name">نام شما</label><input id="activationName" autocomplete="name" maxlength="120"></div><div class="field"><label for="loginPassword" data-fa="رمز عبور" data-en="Password">رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" minlength="12" maxlength="256" required></div><div class="field hidden" id="confirmPasswordField"><label for="confirmPassword" data-fa="تکرار رمز عبور" data-en="Confirm password">تکرار رمز عبور</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="256"></div></div><button class="btn primary" id="secureLogin" type="submit" data-fa="ورود امن" data-en="Secure sign-in">ورود امن</button></form><p class="hint" data-fa="ورود به GitHub، Replit یا ChatGPT لازم نیست. برای بازیابی رمز با مدیر سازمان تماس بگیرید." data-en="No GitHub, Replit or ChatGPT account is required. Ask your organization administrator for a password reset.">ورود به GitHub، Replit یا ChatGPT لازم نیست. برای بازیابی رمز با مدیر سازمان تماس بگیرید.</p></div>
-<section class="landing-map"><div class="section-title"><div><h2 data-fa="مسیر شما، از شروع تا چرخهٔ بعد" data-en="Your path, from setup to the next cycle">مسیر شما، از شروع تا چرخهٔ بعد</h2><p data-fa="روی راهنما بزنید تا خروجی هر گام را ببینید؛ «انجام گام» شما را به کار مربوط در فضای اجرایی می‌برد. زمان‌ها پیشنهادی و قابل هم‌پوشانی‌اند." data-en="Open a guide to understand the output of each step. Open a step to work on it in the workspace. Suggested durations are flexible and may overlap.">روی راهنما بزنید تا خروجی هر گام را ببینید؛ «انجام گام» شما را به کار مربوط در فضای اجرایی می‌برد. زمان‌ها پیشنهادی و قابل هم‌پوشانی‌اند.</p></div></div><div class="landing-steps" id="landingRoadmap"></div></section></div>
+<div class="launchpad home-launchpad"><div class="home-intro"><small>KISH PORTS &amp; AIRPORTS</small><h1 data-fa="سامانه راهبرد و OKR" data-en="Strategy & OKR workspace">سامانه راهبرد و OKR</h1><p data-fa="راهبرد شرکت را ببینید، برنامه اجرایی را پیش ببرید یا روش OKR را یاد بگیرید." data-en="Explore the company strategy, work on your execution plan or learn the OKR method.">راهبرد شرکت را ببینید، برنامه اجرایی را پیش ببرید یا روش OKR را یاد بگیرید.</p></div><div class="launch-actions"><article class="home-card document-entry"><span class="home-icon" aria-hidden="true">▤</span><h2 data-fa="سند راهبردی شرکت" data-en="Company strategy">سند راهبردی شرکت</h2><p data-fa="مبانی، اهداف و ابتکارهای شرکت." data-en="Foundations, objectives and company initiatives.">مبانی، اهداف و ابتکارهای شرکت.</p><button type="button" class="btn " id="documentEntryBtn" data-fa="مشاهده سند" data-en="Explore strategy">مشاهده سند</button></article><article class="home-card execution-choice"><span class="home-icon" aria-hidden="true">◎</span><h2 data-fa="میز کار OKR" data-en="OKR workspace">میز کار OKR</h2><p data-fa="هدف‌ها، واحدها و پیگیری پیشرفت." data-en="Goals, departments and progress tracking.">هدف‌ها، واحدها و پیگیری پیشرفت.</p><button type="button" class="btn primary" id="entryExecBtn" data-fa="ورود به میز کار" data-en="Open workspace">ورود به میز کار</button></article><article class="home-card learning-choice"><span class="home-icon" aria-hidden="true">◇</span><h2 data-fa="آموزش و تمرین" data-en="Learning & practice">آموزش و تمرین</h2><p data-fa="هندبوک، مثال‌ها و تمرین‌های استقرار." data-en="Handbook, examples and implementation exercises.">هندبوک، مثال‌ها و تمرین‌های استقرار.</p><button type="button" class="btn " id="entryTrainBtn" data-fa="شروع یادگیری" data-en="Start learning">شروع یادگیری</button></article></div><button id="startExecution" type="button" class="hidden">Open workspace</button><p class="note" id="practiceNotice" data-fa="نسخه رایگان · اطلاعات شما در همین مرورگر ذخیره می‌شوند." data-en="Free edition · Your work is saved in this browser.">نسخه رایگان · اطلاعات شما در همین مرورگر ذخیره می‌شوند.</p><div class="login-panel hidden" id="loginPanel"><h2 id="accountTitle">ورود با حساب سازمانی · Organization account sign-in</h2><p id="loginMessage" role="status">با ایمیل و رمز عبور سازمانی وارد شوید. حساب جدید فقط با دعوت مدیر فعال می‌شود.</p><form id="accountForm"><div class="fields"><div class="field" id="loginEmailField"><label for="loginEmail" data-fa="ایمیل" data-en="Email">ایمیل</label><input id="loginEmail" type="email" autocomplete="username" dir="ltr" required maxlength="254"></div><div class="field hidden" id="activationNameField"><label for="activationName" data-fa="نام شما" data-en="Your name">نام شما</label><input id="activationName" autocomplete="name" maxlength="120"></div><div class="field"><label for="loginPassword" data-fa="رمز عبور" data-en="Password">رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" minlength="12" maxlength="256" required></div><div class="field hidden" id="confirmPasswordField"><label for="confirmPassword" data-fa="تکرار رمز عبور" data-en="Confirm password">تکرار رمز عبور</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="256"></div></div><button class="btn primary" id="secureLogin" type="submit" data-fa="ورود امن" data-en="Secure sign-in">ورود امن</button></form><p class="hint" data-fa="ورود به GitHub، Replit یا ChatGPT لازم نیست. برای بازیابی رمز با مدیر سازمان تماس بگیرید." data-en="No GitHub, Replit or ChatGPT account is required. Ask your organization administrator for a password reset.">ورود به GitHub، Replit یا ChatGPT لازم نیست. برای بازیابی رمز با مدیر سازمان تماس بگیرید.</p></div>
+<details class="home-guide"><summary data-fa="مسیر استقرار و راهنمای شروع" data-en="Implementation path & getting started">مسیر استقرار و راهنمای شروع</summary><button class="btn" id="quickStartGuide" data-fa="راهنمای شروع" data-en="Getting-started guide">راهنمای شروع</button><section class="landing-map"><div class="section-title"><div><h2 data-fa="مسیر شما، از شروع تا چرخهٔ بعد" data-en="Your path, from setup to the next cycle">مسیر شما، از شروع تا چرخهٔ بعد</h2><p data-fa="روی راهنما بزنید تا خروجی هر گام را ببینید؛ «انجام گام» شما را به کار مربوط در فضای اجرایی می‌برد. زمان‌ها پیشنهادی و قابل هم‌پوشانی‌اند." data-en="Open a guide to understand the output of each step. Open a step to work on it in the workspace. Suggested durations are flexible and may overlap.">روی راهنما بزنید تا خروجی هر گام را ببینید؛ «انجام گام» شما را به کار مربوط در فضای اجرایی می‌برد. زمان‌ها پیشنهادی و قابل هم‌پوشانی‌اند.</p></div></div><div class="landing-steps" id="landingRoadmap"></div></section></details></div>
     <div class="entry-foot"><a href="offline.html" download="Kish-OKR-Offline.html" data-fa="دانلود همین اپ برای استفاده آفلاین" data-en="Download this app for offline use">دانلود همین اپ برای استفاده آفلاین</a> · <span data-fa="نسخه اختصاصی بنادر و فرودگاه‌های کیش · راهنمای مستقل با اقتباس از روش Perdoo" data-en="Kish Ports & Airports edition · Independent guide inspired by the Perdoo method">نسخه اختصاصی بنادر و فرودگاه‌های کیش · راهنمای مستقل با اقتباس از روش Perdoo</span> · <a href="https://www.perdoo.com/resources/online-guides/getting-started-with-perdoo" target="_blank" rel="noopener">Perdoo guide ↗</a></div>
   </div>
 </section>
@@ -443,7 +476,7 @@ body{font-size:16px;line-height:1.75}h1,h2,h3,p{overflow-wrap:anywhere}button,a,
     <div class="training-actions">
       <div class="lang-switch"><button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button></div>
       <button class="btn" id="trainingExecBtn" data-fa="نسخه اجرایی" data-en="Execution workspace">نسخه اجرایی</button>
-      <button class="btn primary" id="trainingCloseBtn" data-fa="بستن" data-en="Close">بستن</button>
+      <button class="btn primary" id="trainingCloseBtn" data-fa="خانه" data-en="Home">خانه</button>
     </div>
   </div>
   <div class="training-shell">
@@ -482,7 +515,7 @@ body{font-size:16px;line-height:1.75}h1,h2,h3,p{overflow-wrap:anywhere}button,a,
         <button class="btn primary" data-go-btn="checkins"><span data-fa="+ Check-in" data-en="+ Check-in">+ Check-in</span></button>
         <button class="btn mode-btn" id="topTrainingBtn"><span class="mode-dot"></span><span data-fa="آموزش" data-en="Learning">آموزش</span></button>
         <div class="lang-switch"><button data-set-lang="fa">FA</button><button data-set-lang="en">EN</button></div>
-        <select class="mobile-stage" id="mobileStage"><option value="document" data-fa="سند راهبردی شرکت" data-en="Company strategy">سند راهبردی شرکت</option><option value="start">Home & actions</option><option value="roadmap">Implementation</option><option value="dashboard">Overview</option><option value="alignment">Strategy roadmap</option><option value="strategy">Strategy & KPIs</option><option value="company">Company OKRs</option><option value="teams">Teams & OKRs</option><option value="checkins">Check-ins</option><option value="initiatives">Initiatives</option><option value="explore">Explore goals</option><option value="engagement">Engagement</option><option value="reports">Weekly report</option><option value="meetings">1:1 conversations</option><option value="review">Review & learning</option><option value="cycles">Cycles</option><option value="history">Audit trail</option><option value="admin">Access</option></select>
+        <select class="mobile-stage" id="mobileStage"><option value="home" data-fa="خانه" data-en="Home">خانه</option><option value="document" data-fa="سند راهبردی شرکت" data-en="Company strategy">سند راهبردی شرکت</option><option value="start">Home & actions</option><option value="roadmap">Implementation</option><option value="dashboard">Overview</option><option value="alignment">Strategy roadmap</option><option value="strategy">Strategy & KPIs</option><option value="company">Company OKRs</option><option value="teams">Teams & OKRs</option><option value="checkins">Check-ins</option><option value="initiatives">Initiatives</option><option value="explore">Explore goals</option><option value="engagement">Engagement</option><option value="reports">Weekly report</option><option value="meetings">1:1 conversations</option><option value="review">Review & learning</option><option value="cycles">Cycles</option><option value="history">Audit trail</option><option value="admin">Access</option></select>
         <button class="btn" id="saveBtn"><span data-fa="ذخیره" data-en="Save">ذخیره</span></button>
         <div class="action-wrap"><button class="btn" id="moreBtn">•••</button><div class="action-menu" id="actionMenu">
           <button class="btn" id="homePortalBtn"><span data-fa="صفحه اول" data-en="Home">صفحه اول</span></button>
@@ -1314,8 +1347,8 @@ function makeDemoState(){
 }
 
 document.getElementById('homePortalBtn').addEventListener('click',()=>{sessionStorage.removeItem('hb_okr_mode');document.getElementById('authScreen').classList.remove('hidden');document.getElementById('executionApp').inert=true;document.body.style.overflow='hidden';document.getElementById('loginPanel').classList.add('hidden');window.scrollTo({top:0,behavior:'smooth'});applyLanguage()});
-document.getElementById('topTrainingBtn').addEventListener('click',openTraining);
-document.getElementById('trainingCloseBtn').addEventListener('click',closeTraining);
+document.getElementById('topTrainingBtn').addEventListener('click',()=>openTraining());
+document.getElementById('trainingCloseBtn').addEventListener('click',()=>closeTraining());
 document.getElementById('mobileStage').addEventListener('change',e=>showView(e.target.value));
 // Operational layer: shared state, stable routes and the Perdoo handbook workflow.
 const CLOUD_ORIGIN='https://kish-okr-execution.hasanboudlaie.chatgpt.site';
@@ -1564,8 +1597,8 @@ function initializePractice(){
  state.history ||= [];state.initiatives ||= [];state.archives ||= [];state.exercises ||= {};workDefaults();
  ensureOrganizationUnits(state);ensureCompanyDocument(state);
  document.getElementById('documentEntryBtn').onclick=()=>goWorkspace('#document/foundation');
- practiceCopy(document.querySelector('.execution-choice h2'),'میز کار رایگان OKR','Free OKR workspace');
- practiceCopy(document.getElementById('entryExecBtn'),'باز کردن اپ و تمرین ←','Open app & practice →');
+ practiceCopy(document.querySelector('.execution-choice h2'),'میز کار OKR','OKR workspace');
+ practiceCopy(document.getElementById('entryExecBtn'),'ورود به میز کار','Open workspace');
  practiceCopy(document.querySelector('.execution-choice > small:last-of-type'),'بدون ثبت‌نام · ذخیره در همین مرورگر','No sign-up · Saved in this browser');
  practiceCopy(document.querySelector('.training-side-note'),'جزوه، مثال فرضی و تمرین همه مراحل در دسترس است؛ پاسخ‌های شما در همین مرورگر ذخیره می‌شوند.','Learning notes, fictional examples and every exercise are available; your answers stay in this browser.');
  practiceCopy(document.getElementById('profileBtn'),'نام من در تمرین','My practice name');
@@ -1577,8 +1610,7 @@ function initializePractice(){
  renderAll();bindStatic();renderExtras();renderNewSurfaces();applyLanguage();
  syncLabel(txt('نسخه رایگان · ذخیره در همین مرورگر','Free edition · Saved in this browser'));
  if(practiceSnapshot&&(practiceSnapshot.state.orgChartVersion!==ORG_CHART_VERSION||practiceSnapshot.state.companyDocumentVersion!==COMPANY_STRATEGY.version))savePractice(true,'Company organization chart added; existing data preserved');
- if(location.hash&&!location.hash.startsWith('#activate')&&!location.hash.startsWith('#guide')){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';route();}
- else if(location.hash.startsWith('#guide'))stageHelp(location.hash.split('/')[1]);
+ route();
 }
 function renderPracticeAccess(box){
  box.innerHTML='<article class="card"><h2>'+txt('دسترسی در نسخه رایگان','Access in the free edition')+'</h2><p>'+txt('همه می‌توانند همین اپ، جزوه‌ها، داشبورد و ابزارهای OKR را بدون ثبت‌نام باز و تمرین کنند. هر مرورگر فضای تمرین جداگانه دارد؛ تغییرات افراد برای دیگران فرستاده نمی‌شود.','Anyone can open and practice with this app, learning notes, dashboard and OKR tools without signing up. Each browser has its own practice workspace; edits are not sent to other people.')+'</p><p>'+txt('ورود امن، دعوت همکار و مجوزهای واقعی سازمان در نسخه سرور مرکزی باقی است؛ این صفحه برای مشاهده طراحی نقش‌هاست.','Secure sign-in, invitations and real organization permissions remain in the central-server edition. This page presents the role design.')+'</p><div class="table-wrap"><table><thead><tr><th>'+txt('نقش','Role')+'</th><th>'+txt('دامنه اختیار در نسخه سازمانی','Authority in the organization edition')+'</th></tr></thead><tbody>'+[['super_admin','مالکیت و مدیریت کامل سیستم','System ownership and full administration'],['org_admin','مدیریت کاربران و محتوای سازمان','Organization users and content'],['department_manager','مدیریت OKRهای واحد مربوط','The assigned department’s OKRs'],['employee','مشاهده و تکمیل کارهای مجاز خود','Own permitted work'],['viewer','مشاهده بخش‌های مجاز','Read permitted content']].map(([role,a,b])=>'<tr><td>'+esc(roleText(role))+'</td><td>'+txt(a,b)+'</td></tr>').join('')+'</tbody></table></div><h3>'+txt('ادامه تمرین در دستگاه دیگر','Continue practice on another device')+'</h3><p>'+txt('از منوی سه‌نقطه Export JSON را بزنید؛ فایل را به دستگاه دیگر بفرستید و در همان منو Import JSON را انتخاب کنید. این انتقال دستی است و همگام‌سازی خودکار نیست.','Choose Export JSON from the three-dot menu, send the file to the other device, then choose Import JSON there. This is a manual transfer, not automatic synchronization.')+'</p><button class="btn" data-practice-sample>'+txt('بازگرداندن مثال آموزشی اولیه','Restore the initial learning example')+'</button></article>';
@@ -1844,6 +1876,116 @@ function renderNewSurfaces(){workDefaults();renderLandingRoadmap();if(cloudReady
 renderNewSurfaces();if(!cloudReady)document.body.style.overflow='hidden';
 
 bindStatic();renderAll();applyLanguage();
+// Shared navigation for the free public and offline editions. No workspace data is changed.
+const NAV_SESSION_KEY='kish_okr_navigation_v1';
+const navigationBase={route,showView,renderTraining,applyLanguage};
+let navigationTrail={entries:[],index:-1},navigationRendering=false;
+const navigationPages={home:['خانه','Home'],start:['میز کار','Workspace'],document:['سند راهبردی شرکت','Company strategy'],roadmap:['مسیر استقرار','Implementation'],dashboard:['نمای مدیریتی','Overview'],alignment:['نقشه راهبرد','Strategy roadmap'],strategy:['راهبرد و KPI','Strategy & KPIs'],company:['OKRهای شرکت','Company OKRs'],teams:['واحدها و OKRها','Departments & OKRs'],setup:['آماده‌سازی','Prepare'],introduce:['معرفی','Introduce'],announce:['اعلام','Announce'],educate:['آموزش سازمان','Educate'],checkins:['ثبت پیشرفت','Check-ins'],initiatives:['ابتکارهای اجرایی','Execution initiatives'],explore:['کاوش هدف‌ها','Explore goals'],engagement:['سلامت پیگیری','Engagement'],reports:['گزارش هفتگی','Weekly report'],meetings:['گفت‌وگوی ۱:۱','1:1 conversations'],review:['مرور و یادگیری','Review & learning'],cycles:['چرخه‌ها','Cycles'],history:['تاریخچه تغییرات','Audit trail'],admin:['تنظیمات تمرین','Practice settings']};
+function navigationHash(hash){
+ let parts;try{parts=decodeURIComponent(String(hash||'#home').replace(/^#/,'' )).split('/');}catch{return '#home';}
+ const key=parts[0];
+ if(key==='learn')return '#learn/'+(TRAINING_MODULES.some(m=>m.id===parts[1])?parts[1]:'prepare');
+ if(['objective','team','guide'].includes(key)||navigationPages[key])return '#'+parts.join('/');
+ return '#home';
+}
+function navigationLabel(hash){
+ const [key,sub]=navigationHash(hash).slice(1).split('/');
+ if(key==='learn'){const m=TRAINING_MODULES.find(m=>m.id===sub);return txt('آموزش · ','Learning · ')+(m?txt(m.faTitle,m.enTitle):'');}
+ if(key==='document'&&documentTabs[sub])return txt(...navigationPages.document)+' / '+txt(...documentTabs[sub]);
+ if(key==='roadmap'&&sub){const s=ROLLOUT_STAGES.find(s=>s.id===sub);return txt(...navigationPages.roadmap)+(s?' / '+stageText(s):'');}
+ if(key==='objective')return txt('جزئیات هدف','Objective details');
+ if(key==='team')return txt('جزئیات واحد','Department details');
+ if(key==='guide')return txt('راهنمای گام','Step guide');
+ return txt(...(navigationPages[key]||navigationPages.home));
+}
+function navigationSaveTrail(){try{sessionStorage.setItem(NAV_SESSION_KEY,JSON.stringify(navigationTrail));}catch{}}
+function navigationRecord(hash){
+ const entries=navigationTrail.entries,token=history.state?.okrNavigationId;
+ const known=token?entries.findIndex(e=>e.id===token&&e.hash===hash):-1;
+ if(known>=0)navigationTrail.index=known;
+ else if(entries[navigationTrail.index]?.hash!==hash){
+  navigationTrail.entries=entries.slice(0,navigationTrail.index+1);
+  navigationTrail.entries.push({id:id(),hash});
+  if(navigationTrail.entries.length>80)navigationTrail.entries.shift();
+  navigationTrail.index=navigationTrail.entries.length-1;
+ }
+ const current=navigationTrail.entries[navigationTrail.index];
+ if(current)history.replaceState({...history.state,okrNavigationId:current.id},'',hash);
+ navigationSaveTrail();navigationChrome();
+}
+function navigationParent(hash){
+ const [key,sub,detail]=navigationHash(hash).slice(1).split('/');
+ if(key==='document')return detail?'#document/'+sub:sub&&sub!=='foundation'?'#document/foundation':'#home';
+ if(key==='roadmap'&&sub)return '#roadmap';
+ if(key==='objective'){const x=objectiveById(sub);return x&&state.companyOkrs.includes(x.objective)?'#company':'#teams';}
+ if(key==='team')return '#teams';
+ if(key==='checkins'&&sub)return '#checkins';
+ if(key==='guide')return '#roadmap';
+ return '#home';
+}
+function navigationChrome(){
+ const current=navigationHash(location.hash),home=current==='#home',back=document.getElementById('sectionBackBtn');
+ if(back){back.disabled=home&&navigationTrail.index<=0;back.setAttribute('aria-label',txt('برگشت به بخش قبلی','Back to the previous section'));}
+ const label=document.getElementById('navigationLocation');if(label)label.textContent=navigationLabel(current);
+ const homeLink=document.getElementById('sectionHomeLink');if(homeLink)homeLink.setAttribute('aria-current',home?'page':'false');
+ const mobile=document.getElementById('mobileStage');
+ if(mobile)[...mobile.options].forEach(o=>{if(navigationPages[o.value])o.textContent=txt(...navigationPages[o.value]);});
+}
+function navigateSection(hash,replace=false){
+ const next=navigationHash(hash);
+ if(next!==location.hash){const method=replace?'replaceState':'pushState';history[method](null,'',next);}
+ route();
+}
+function navigateBack(){
+ if(navigationTrail.index>0){
+  const previous=navigationTrail.entries[--navigationTrail.index];
+  history.replaceState({okrNavigationId:previous.id},'',previous.hash);route();
+ }else{navigationTrail={entries:[],index:-1};navigateSection(navigationParent(location.hash),true);}
+}
+route=function(){
+ if(!cloudReady)return;
+ const hash=navigationHash(location.hash),[key,sub]=hash.slice(1).split('/');
+ if(hash!==location.hash)history.replaceState(null,'',hash);
+ const home=document.getElementById('authScreen'),work=document.getElementById('executionApp'),learn=document.getElementById('trainingScreen');
+ document.getElementById('sidebar').classList.remove('open');document.getElementById('actionMenu').classList.remove('open');
+ learn.classList.remove('show');home.inert=false;
+ if(key==='home'){
+  home.classList.remove('hidden');work.inert=true;document.body.style.overflow='hidden';document.getElementById('loginPanel').classList.add('hidden');
+  applyLanguage();home.scrollTop=0;
+ }else if(key==='learn'){
+  home.classList.add('hidden');home.inert=true;work.inert=true;learn.classList.add('show');document.body.style.overflow='hidden';window.__trainingModule=sub;
+  navigationRendering=true;try{navigationBase.renderTraining(sub);applyLanguage();}finally{navigationRendering=false;}
+  learn.scrollTop=0;
+ }else{
+  home.classList.add('hidden');work.inert=false;document.body.style.overflow='';
+  if(key==='guide'){navigationBase.showView('roadmap',false);stageHelp(sub);}else navigationBase.route();
+ }
+ navigationRecord(hash);
+ const root=key==='home'?home:key==='learn'?learn:document.querySelector('.view.active');
+ const heading=root?.querySelector('h1,h2');if(heading){heading.setAttribute('tabindex','-1');heading.focus?.({preventScroll:true});}
+};
+showView=function(name,push=true){if(push)return navigateSection('#'+name);navigationBase.showView(name,false);navigationChrome();};
+goWorkspace=function(hash){if(cloudReady)navigateSection(hash);};
+openTraining=function(){navigateSection('#learn/'+(window.__trainingModule||'prepare'));};
+closeTraining=function(){if(document.getElementById('trainingScreen').classList.contains('show'))navigateBack();};
+renderTraining=function(module){
+ const target='#learn/'+(module||window.__trainingModule||'prepare');
+ if(!navigationRendering&&document.getElementById('trainingScreen').classList.contains('show')&&location.hash!==target)return navigateSection(target);
+ navigationBase.renderTraining(module);
+};
+applyLanguage=function(){navigationBase.applyLanguage();navigationChrome();};
+function initializeNavigation(){
+ try{const saved=JSON.parse(sessionStorage.getItem(NAV_SESSION_KEY)||'null');if(saved&&Array.isArray(saved.entries)&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<saved.entries.length&&saved.entries.every(e=>typeof e.id==='string'&&typeof e.hash==='string'&&navigationHash(e.hash)===e.hash))navigationTrail={entries:saved.entries.slice(-80),index:Math.min(saved.index,79)};}catch{}
+ document.getElementById('sectionBackBtn').onclick=navigateBack;
+ document.getElementById('sectionHomeLink').onclick=e=>{e.preventDefault();navigateSection('#home');};
+ document.getElementById('homePortalBtn').onclick=()=>navigateSection('#home');
+ document.getElementById('demoBtn').onclick=()=>openTraining();
+ document.getElementById('entryTrainBtn').onclick=()=>openTraining();
+ document.getElementById('trainingExecBtn').onclick=()=>goWorkspace('#start');
+ document.getElementById('trainingCloseBtn').onclick=()=>navigateSection('#home');
+}
+initializeNavigation();
+
 })();
 </script>
 </body>
