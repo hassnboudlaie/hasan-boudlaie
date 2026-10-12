@@ -12,7 +12,7 @@ const source=sourcePath?fs.readFileSync(sourcePath,'utf8'):null;
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const plain=x=>JSON.parse(JSON.stringify(x));
 const dataKey=x=>x.replace(/-([a-z])/g,(_,c)=>c.toUpperCase());
-async function boot(storage=new Map(),input=html,blocked=false){
+async function boot(storage=new Map(),input=html,blocked=false,options={}){
  const registry=new Map(),handlers=new Map(),windows=new Map(),blobs=new Map(),downloads=[];
  let fetches=0,redirects=0;
  class Element{
@@ -23,23 +23,68 @@ async function boot(storage=new Map(),input=html,blocked=false){
   matches(s){return s.split(',').some(sel=>{sel=sel.trim();const m=sel.match(/^\[data-([a-z-]+)(?:="([^"]*)")?\]$/);if(m)return Object.hasOwn(this.dataset,dataKey(m[1]))&&(m[2]===undefined||this.dataset[dataKey(m[1])]===m[2]);return sel.startsWith('#')?this.id===sel.slice(1):sel.startsWith('.')?this.classes.has(sel.slice(1)):false;});}
   closest(s){return this.matches(s)?this:null;}
   hasAttribute(a){return a.startsWith('data-')&&Object.hasOwn(this.dataset,dataKey(a.slice(5)));}
-  dispatchEvent(e){for(const f of handlers.get(e.type)||[])f({target:this,preventDefault(){},stopPropagation(){}});return true;}querySelectorAll(){return [];}querySelector(s){if(s==='form'){return this._form ||= Object.assign(new Element(),{reportValidity:()=>true});}if(s==='[data-modal-cancel]')return this._cancel ||= new Element();return null;}appendChild(){}setAttribute(){}showModal(){this.open=true;}close(){this.open=false;}scrollIntoView(){}
+  dispatchEvent(e){for(const f of [...this.listeners.get(e.type)||[],...handlers.get(e.type)||[]])f({target:this,preventDefault(){},stopPropagation(){}});return true;}querySelectorAll(){return [];}querySelector(s){if(s==='form'){return this._form ||= Object.assign(new Element(),{reportValidity:()=>true});}if(s==='[data-modal-cancel]')return this._cancel ||= new Element();return null;}appendChild(){}setAttribute(){}showModal(){this.open=true;}close(){this.open=false;}scrollIntoView(){}
   click(){if(this.href?.startsWith('blob:'))downloads.push(blobs.get(this.href));this.onclick?.({target:this,preventDefault(){}});for(const f of this.listeners.get('click')||[])f({target:this,preventDefault(){}});}
  }
  for(const m of input.matchAll(/id="([^"]+)"/g))registry.set(m[1],new Element(m[1]));
  for(const [id,el] of registry)if(id.startsWith('view-'))el.classes.add('view');
  const add=(map,t,f)=>{const a=map.get(t)||[];a.push(f);map.set(t,a);};
  const document={getElementById:id=>registry.get(id)||null,querySelectorAll:s=>s==='.view'?[...registry.values()].filter(e=>e.classes.has('view')):[],querySelector:s=>s==='.view.active'?[...registry.values()].find(e=>e.classes.has('view')&&e.classes.has('active')):null,addEventListener:(t,f)=>add(handlers,t,f),createTreeWalker:()=>({nextNode:()=>null}),documentElement:{},body:new Element(),createTextNode:s=>s,createElement:()=>new Element(),activeElement:null,hidden:false};
- const location={hostname:input===offline?'':'hassnboudlaie.github.io',protocol:input===offline?'file:':'https:',hash:'',assign(){redirects++;throw new Error('Unexpected redirect');}};
+ const location={hostname:input===offline?'':'hassnboudlaie.github.io',protocol:input===offline?'file:':'https:',hash:options.hash||'',assign(){redirects++;throw new Error('Unexpected redirect');}};
+ const session=options.session||new Map(),historyEntries=[{hash:location.hash,state:options.historyState||null}];let historyIndex=0;
+ const history={state:options.historyState||null,pushState:(s,_t,h)=>{location.hash=h;history.state=s;historyEntries.splice(historyIndex+1);historyEntries.push({hash:h,state:s});historyIndex++;},replaceState:(s,_t,h)=>{location.hash=h;history.state=s;historyEntries[historyIndex]={hash:h,state:s};}};
  class TestURL extends URL{static createObjectURL(blob){const key='blob:'+blobs.size;blobs.set(key,blob);return key;}static revokeObjectURL(){}}
  class TestFormData{constructor(form){this.values=form.values||{};}get(k){return this.values[k];}*[Symbol.iterator](){yield* Object.entries(this.values);}}
  class TestFileReader{readAsText(file){this.result=file.text;this.onload();}}
- const ctx={Event:class{constructor(type,options={}){this.type=type;Object.assign(this,options);}},document,NodeFilter:{SHOW_TEXT:4},window:{addEventListener:(t,f)=>add(windows,t,f),scrollTo(){}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{if(blocked)throw new Error('Storage blocked');storage.set(k,v);}},sessionStorage:{getItem:()=>null,removeItem(){}},location,history:{pushState:(_s,_t,h)=>{location.hash=h;},replaceState:(_s,_t,h)=>{location.hash=h;}},CSS:{escape:x=>x},setTimeout:()=>0,clearTimeout(){},setInterval(){throw new Error('No polling in practice edition');},console,structuredClone,Date,URL:TestURL,Blob,FormData:TestFormData,FileReader:TestFileReader,confirm:()=>true,fetch(){fetches++;throw new Error('Practice must not contact the Cloud backend');}};
+ const ctx={Event:class{constructor(type,options={}){this.type=type;Object.assign(this,options);}},document,NodeFilter:{SHOW_TEXT:4},window:{addEventListener:(t,f)=>add(windows,t,f),scrollTo(){}},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{if(blocked)throw new Error('Storage blocked');storage.set(k,v);}},sessionStorage:{getItem:k=>session.get(k)||null,setItem:(k,v)=>session.set(k,v),removeItem:k=>session.delete(k)},location,history,CSS:{escape:x=>x},setTimeout:()=>0,clearTimeout(){},setInterval(){throw new Error('No polling in practice edition');},console,structuredClone,Date,URL:TestURL,Blob,FormData:TestFormData,FileReader:TestFileReader,confirm:()=>true,fetch(){fetches++;throw new Error('Practice must not contact the Cloud backend');}};
  let code=input.match(/<script>([\s\S]*?)<\/script>/)[1];
- code=code.replace(/\}\)\(\);\s*$/,`globalThis.appTest={getState:()=>state,save,flushSave,exportData,importData,goWorkspace,openTraining,closeTraining,route,setLanguage,progress,validateObjective,renderMembers,renderStart,renderRollout,renderExplore,renderEngagement,renderReports,renderMeetings,renderAlignment,renderParticipants,renderInitiatives,renderCycles,renderHistory,renderTeams,reportData,filteredKrs,orgSelectOptions,orgFieldOptions,orgDescendantIds,orgChart:()=>ORG_CHART,sourceDocument:()=>COMPANY_STRATEGY,renderCompanyDocument,sourceInitiatives,ensureCompanyDocument,adoptSourceInitiative,documentFilters:()=>documentFilters,training:()=>TRAINING_MODULES,api,getDirty:()=>dirty,getConflict:()=>conflict};})();`);
+ code=code.replace(/\}\)\(\);\s*$/,`globalThis.appTest={getState:()=>state,save,flushSave,exportData,importData,goWorkspace,openTraining,closeTraining,route,setLanguage,renderTraining,progress,validateObjective,renderMembers,renderStart,renderRollout,renderExplore,renderEngagement,renderReports,renderMeetings,renderAlignment,renderParticipants,renderInitiatives,renderCycles,renderHistory,renderTeams,reportData,filteredKrs,orgSelectOptions,orgFieldOptions,orgDescendantIds,orgChart:()=>ORG_CHART,sourceDocument:()=>COMPANY_STRATEGY,renderCompanyDocument,sourceInitiatives,ensureCompanyDocument,adoptSourceInitiative,documentFilters:()=>documentFilters,training:()=>TRAINING_MODULES,api,getDirty:()=>dirty,getConflict:()=>conflict};})();`);
  vm.createContext(ctx);vm.runInContext(code,ctx,{timeout:4000});await tick();
- return {app:ctx.appTest,registry,storage,location,downloads,Element,document,ctx,network:()=>({fetches,redirects}),event:async(t,dataset,values={})=>{const el=new Element('',dataset);Object.assign(el,values);for(const f of handlers.get(t)||[])await f({target:el,preventDefault(){},stopPropagation(){}});await tick();return el;}};
+ return {app:ctx.appTest,registry,storage,session,history,location,downloads,Element,document,ctx,network:()=>({fetches,redirects}),browserMove:async delta=>{historyIndex=Math.max(0,Math.min(historyEntries.length-1,historyIndex+delta));const entry=historyEntries[historyIndex];location.hash=entry.hash;history.state=entry.state;for(const f of windows.get('popstate')||[])await f({state:entry.state});for(const f of windows.get('hashchange')||[])await f({});await tick();},event:async(t,dataset,values={})=>{const el=new Element('',dataset);Object.assign(el,values);for(const f of handlers.get(t)||[])await f({target:el,preventDefault(){},stopPropagation(){}});await tick();return el;}};
 }
+// Follow real app controls across landing, workspace, nested references and learning.
+const nav=await boot();
+assert.equal(nav.location.hash,'#home');assert.equal(nav.registry.get('executionApp').inert,true);
+assert.equal(nav.registry.get('sectionBackBtn').disabled,true);
+assert.ok(html.includes('<details class="home-guide">'),'Implementation guidance is available without crowding the landing page');
+assert.equal((html.match(/class="home-card /g)||[]).length,3);
+const navState=JSON.stringify(nav.app.getState());
+nav.registry.get('documentEntryBtn').click();assert.equal(nav.location.hash,'#document/foundation');
+nav.location.hash='#document/objectives';nav.app.route();
+nav.location.hash='#document/reader/62';nav.app.route();
+nav.registry.get('sectionBackBtn').click();assert.equal(nav.location.hash,'#document/objectives');
+nav.registry.get('sectionBackBtn').click();assert.equal(nav.location.hash,'#document/foundation');
+nav.registry.get('sectionBackBtn').click();assert.equal(nav.location.hash,'#home');
+assert.equal(nav.registry.get('executionApp').inert,true);assert.equal(nav.registry.get('authScreen').inert,false);
+nav.registry.get('entryExecBtn').click();assert.equal(nav.location.hash,'#start');
+nav.registry.get('mobileStage').value='teams';nav.registry.get('mobileStage').dispatchEvent({type:'change'});assert.equal(nav.location.hash,'#teams');
+nav.registry.get('sectionHomeLink').click();assert.equal(nav.location.hash,'#home');
+nav.registry.get('sectionBackBtn').click();assert.equal(nav.location.hash,'#teams');
+nav.registry.get('entryTrainBtn').click();assert.equal(nav.location.hash,'#learn/prepare');assert.ok(nav.registry.get('trainingScreen').classList.contains('show'));
+nav.app.renderTraining('create');assert.equal(nav.location.hash,'#learn/create');
+nav.registry.get('sectionBackBtn').click();assert.equal(nav.location.hash,'#learn/prepare');
+nav.registry.get('sectionBackBtn').click();assert.equal(nav.location.hash,'#teams');assert.ok(!nav.registry.get('trainingScreen').classList.contains('show'));
+nav.app.openTraining();nav.registry.get('trainingCloseBtn').click();assert.equal(nav.location.hash,'#home');
+assert.ok(!nav.registry.get('trainingScreen').classList.contains('show'));assert.equal(nav.registry.get('authScreen').inert,false);
+assert.equal(JSON.stringify(nav.app.getState()),navState,'Navigation must not change any entered workspace data');
+const direct=await boot(new Map(),html,false,{hash:'#document/reader/306'});
+assert.equal(direct.location.hash,'#document/reader/306');assert.ok(direct.registry.get('authScreen').classList.contains('hidden'));
+direct.registry.get('sectionBackBtn').click();assert.equal(direct.location.hash,'#document/reader');
+direct.registry.get('sectionBackBtn').click();assert.equal(direct.location.hash,'#document/foundation');
+direct.registry.get('sectionBackBtn').click();assert.equal(direct.location.hash,'#home');
+const learning=await boot(new Map(),html,false,{hash:'#learn/train'});assert.ok(learning.registry.get('trainingScreen').classList.contains('show'));
+learning.registry.get('trainingExecBtn').click();assert.equal(learning.location.hash,'#start');assert.equal(learning.registry.get('executionApp').inert,false);
+learning.registry.get('sectionBackBtn').click();assert.equal(learning.location.hash,'#learn/train');
+learning.app.setLanguage('en');assert.equal(learning.document.documentElement.dir,'ltr');assert.match(learning.registry.get('navigationLocation').textContent,/Learning/);
+learning.app.setLanguage('fa');assert.equal(learning.document.documentElement.dir,'rtl');
+const refreshed=await boot(learning.storage,html,false,{hash:learning.location.hash,session:learning.session,historyState:learning.history.state});
+assert.ok(refreshed.registry.get('trainingScreen').classList.contains('show'));refreshed.registry.get('sectionBackBtn').click();assert.equal(refreshed.location.hash,'#home');
+const native=await boot();native.registry.get('entryExecBtn').click();native.registry.get('mobileStage').value='reports';native.registry.get('mobileStage').dispatchEvent({type:'change'});
+await native.browserMove(-1);assert.equal(native.location.hash,'#start');await native.browserMove(-1);assert.equal(native.location.hash,'#home');
+await native.browserMove(1);assert.equal(native.location.hash,'#start');await native.browserMove(1);assert.equal(native.location.hash,'#reports');
+native.registry.get('sectionBackBtn').click();assert.equal(native.location.hash,'#start');
+const offNav=await boot(new Map(),offline,false,{hash:'#learn/create'});offNav.registry.get('sectionHomeLink').click();assert.equal(offNav.location.hash,'#home');assert.deepEqual(offNav.network(),{fetches:0,redirects:0});
+console.log('PASS: compact three-entry homepage; shared Back/Home controls; nested/deep links; learning-to-workspace transitions; refresh and native browser Back/Forward; Persian/English labels; unchanged workspace data; offline navigation.');
 const storage=new Map(),a=await boot(storage);
 assert.deepEqual(a.network(),{fetches:0,redirects:0});
 assert.equal((a.registry.get('landingRoadmap').innerHTML.match(/class="landing-step"/g)||[]).length,8);
