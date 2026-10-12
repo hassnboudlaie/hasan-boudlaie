@@ -77,6 +77,8 @@ learning.registry.get('trainingExecBtn').click();assert.equal(learning.location.
 learning.registry.get('sectionBackBtn').click();assert.equal(learning.location.hash,'#learn/train');
 learning.app.setLanguage('en');assert.equal(learning.document.documentElement.dir,'ltr');assert.match(learning.registry.get('navigationLocation').textContent,/Learning/);
 learning.app.setLanguage('fa');assert.equal(learning.document.documentElement.dir,'rtl');
+const lesson=await boot(new Map(),html,false,{hash:'#learn/train'});await lesson.event('click',{trainingWorkspace:'train'});
+assert.equal(lesson.location.hash,'#educate');lesson.registry.get('sectionBackBtn').click();assert.equal(lesson.location.hash,'#learn/train','Return from a lesson exercise to that same lesson');
 const refreshed=await boot(learning.storage,html,false,{hash:learning.location.hash,session:learning.session,historyState:learning.history.state});
 assert.ok(refreshed.registry.get('trainingScreen').classList.contains('show'));refreshed.registry.get('sectionBackBtn').click();assert.equal(refreshed.location.hash,'#home');
 const native=await boot();native.registry.get('entryExecBtn').click();native.registry.get('mobileStage').value='reports';native.registry.get('mobileStage').dispatchEvent({type:'change'});
