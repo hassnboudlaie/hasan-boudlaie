@@ -91,6 +91,7 @@ replace('</style>',fs.readFileSync(path.join(here,'navigation.css'),'utf8')+'\n<
 replace('<select class="mobile-stage" id="mobileStage">','<select class="mobile-stage" id="mobileStage"><option value="home" data-fa="خانه" data-en="Home">خانه</option>');
 replace("addEventListener('click',openTraining)","addEventListener('click',()=>openTraining())");
 replace("addEventListener('click',closeTraining)","addEventListener('click',()=>closeTraining())");
+replace("closeTraining();goWorkspace('#'+map[b.dataset.trainingWorkspace]);","goWorkspace('#'+map[b.dataset.trainingWorkspace]);");
 replace('<button class="btn primary" id="trainingCloseBtn" data-fa="بستن" data-en="Close">بستن</button>','<button class="btn primary" id="trainingCloseBtn" data-fa="خانه" data-en="Home">خانه</button>');
 replace('bindStatic();renderAll();applyLanguage();\n})();','bindStatic();renderAll();applyLanguage();\n'+fs.readFileSync(path.join(here,'navigation.js'),'utf8')+'\n})();');
 fs.mkdirSync(output,{recursive:true});
