@@ -33,8 +33,8 @@ function initializePractice(){
  state.history ||= [];state.initiatives ||= [];state.archives ||= [];state.exercises ||= {};workDefaults();
  ensureOrganizationUnits(state);ensureCompanyDocument(state);
  document.getElementById('documentEntryBtn').onclick=()=>goWorkspace('#document/foundation');
- practiceCopy(document.querySelector('.execution-choice h2'),'میز کار رایگان OKR','Free OKR workspace');
- practiceCopy(document.getElementById('entryExecBtn'),'باز کردن اپ و تمرین ←','Open app & practice →');
+ practiceCopy(document.querySelector('.execution-choice h2'),'میز کار OKR','OKR workspace');
+ practiceCopy(document.getElementById('entryExecBtn'),'ورود به میز کار','Open workspace');
  practiceCopy(document.querySelector('.execution-choice > small:last-of-type'),'بدون ثبت‌نام · ذخیره در همین مرورگر','No sign-up · Saved in this browser');
  practiceCopy(document.querySelector('.training-side-note'),'جزوه، مثال فرضی و تمرین همه مراحل در دسترس است؛ پاسخ‌های شما در همین مرورگر ذخیره می‌شوند.','Learning notes, fictional examples and every exercise are available; your answers stay in this browser.');
  practiceCopy(document.getElementById('profileBtn'),'نام من در تمرین','My practice name');
@@ -46,8 +46,7 @@ function initializePractice(){
  renderAll();bindStatic();renderExtras();renderNewSurfaces();applyLanguage();
  syncLabel(txt('نسخه رایگان · ذخیره در همین مرورگر','Free edition · Saved in this browser'));
  if(practiceSnapshot&&(practiceSnapshot.state.orgChartVersion!==ORG_CHART_VERSION||practiceSnapshot.state.companyDocumentVersion!==COMPANY_STRATEGY.version))savePractice(true,'Company organization chart added; existing data preserved');
- if(location.hash&&!location.hash.startsWith('#activate')&&!location.hash.startsWith('#guide')){document.getElementById('authScreen').classList.add('hidden');document.getElementById('executionApp').inert=false;document.body.style.overflow='';route();}
- else if(location.hash.startsWith('#guide'))stageHelp(location.hash.split('/')[1]);
+ route();
 }
 function renderPracticeAccess(box){
  box.innerHTML='<article class="card"><h2>'+txt('دسترسی در نسخه رایگان','Access in the free edition')+'</h2><p>'+txt('همه می‌توانند همین اپ، جزوه‌ها، داشبورد و ابزارهای OKR را بدون ثبت‌نام باز و تمرین کنند. هر مرورگر فضای تمرین جداگانه دارد؛ تغییرات افراد برای دیگران فرستاده نمی‌شود.','Anyone can open and practice with this app, learning notes, dashboard and OKR tools without signing up. Each browser has its own practice workspace; edits are not sent to other people.')+'</p><p>'+txt('ورود امن، دعوت همکار و مجوزهای واقعی سازمان در نسخه سرور مرکزی باقی است؛ این صفحه برای مشاهده طراحی نقش‌هاست.','Secure sign-in, invitations and real organization permissions remain in the central-server edition. This page presents the role design.')+'</p><div class="table-wrap"><table><thead><tr><th>'+txt('نقش','Role')+'</th><th>'+txt('دامنه اختیار در نسخه سازمانی','Authority in the organization edition')+'</th></tr></thead><tbody>'+[['super_admin','مالکیت و مدیریت کامل سیستم','System ownership and full administration'],['org_admin','مدیریت کاربران و محتوای سازمان','Organization users and content'],['department_manager','مدیریت OKRهای واحد مربوط','The assigned department’s OKRs'],['employee','مشاهده و تکمیل کارهای مجاز خود','Own permitted work'],['viewer','مشاهده بخش‌های مجاز','Read permitted content']].map(([role,a,b])=>'<tr><td>'+esc(roleText(role))+'</td><td>'+txt(a,b)+'</td></tr>').join('')+'</tbody></table></div><h3>'+txt('ادامه تمرین در دستگاه دیگر','Continue practice on another device')+'</h3><p>'+txt('از منوی سه‌نقطه Export JSON را بزنید؛ فایل را به دستگاه دیگر بفرستید و در همان منو Import JSON را انتخاب کنید. این انتقال دستی است و همگام‌سازی خودکار نیست.','Choose Export JSON from the three-dot menu, send the file to the other device, then choose Import JSON there. This is a manual transfer, not automatic synchronization.')+'</p><button class="btn" data-practice-sample>'+txt('بازگرداندن مثال آموزشی اولیه','Restore the initial learning example')+'</button></article>';
