@@ -1,5 +1,15 @@
 # Kish OKR — free public practice edition
 
+## Navigation and homepage update — 2026-10-12
+
+The existing public and offline app now has a compact homepage with three entries: company strategy, OKR workspace, and learning. The complete eight-step rollout remains available in a collapsed homepage guide and in its original workspace views. A persistent, responsive Back/Home bar is visible in every app section, including learning and nested document pages. Home is an explicit `#home` route; workspace start remains `#start`. Learning modules have direct, refreshable `#learn/<module>` links. The homepage learning button is explicitly connected to that route.
+
+Back follows visited app sections. A direct link without a previous app visit returns to its containing section, then home; it never sends the visitor to another website. Navigation history uses tab-local session storage, with an in-memory fallback, and native browser Back/Forward restore the correct screen. Homepage, sidebar, training, and workspace visibility/inert states stay consistent. Persian labels use RTL and English labels use LTR. Responsive CSS offsets the fixed navigation bar and collapses homepage cards to one column on narrow screens.
+
+This release changes navigation and presentation only. Company source content, the organization chart, handbook modules, existing participant data and browser save/export/import behavior are retained. The pre-change repository checkpoint is `backup/okr-before-navigation-20261012`, based on `8af93408dfb48c610eae11e213ee6bd456ea03a0`.
+
+Validation: the VM DOM checks exercise actual entry buttons, Back/Home controls, mobile section selection, nested references, direct learning/document links, refresh with saved navigation state, browser-history transitions, FA/EN switching, unchanged workspace data and offline navigation. The existing data-entry/save/reload, source-document, organization-chart and storage-conflict checks also pass. VM checks do not certify physical-browser visual layout or network access from Iran. Public deployment is checked separately after publication using `verify-public-url.mjs`.
+
 Public entry: https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/
 
 This is the existing application frontend with a narrowly scoped browser-storage adapter. It preserves the original pages, five handbook modules, eight-step rollout, strategy, objectives, KRs, alignment, initiatives, check-ins, review cycles, workshop exercises, dashboards and bilingual interface. It no longer redirects the public Pages visitor to the blocked `chatgpt.site` hostname. No hosting subscription, payment card or visitor account is required.
