@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123e72">
+<meta name="description" content="شعبه من؛ فضای یکپارچه مدیریت روزانه، کارکنان، مشتریان، نمایندگان، ستاد و عملکرد شعب بیمه البرز.">
+<title>شعبه من | مدیریت یکپارچه شعب بیمه البرز</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20261018-1">
+<script src="app.js?v=20261018-1" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#workspace">پرش به محتوا</a>
+<header class="topbar">
+  <a class="site-brand" href="#overview" aria-label="صفحه اصلی شعبه من">
+    <span class="brand-symbol" aria-hidden="true">◈</span>
+    <span class="brand-words"><strong>شعبه من</strong><small>MY BRANCH · ALBORZ INSURANCE</small></span>
+  </a>
+  <div class="header-actions">
+    <span class="demo-pill">● نسخه نمایشی مستقل</span>
+    <a class="header-link" href="../">سامانه عملکرد کارکنان <span aria-hidden="true">↗</span></a>
+    <a class="header-link back-site" href="../../products.html">اپلیکیشن‌های من <span aria-hidden="true">↗</span></a>
+  </div>
+</header>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="بخش‌های سامانه">
+    <div class="branch-panel">
+      <span class="label-cap">فضای مدیریت شعبه</span>
+      <strong id="branchLabel">شعبه نمونه مرکزی</strong>
+      <span class="branch-owner" id="branchOwner">مدیریت شعبه · بیمه البرز</span>
+    </div>
+    <div class="nav-group-label">مدیریت و تصمیم‌گیری</div>
+    <nav id="navigation">
+      <a href="#overview" data-view="overview" class="nav-item"><span class="nav-icon">◫</span> خانه و نمای امروز</a>
+      <a href="#tasks" data-view="tasks" class="nav-item"><span class="nav-icon">☑</span> کارها و پیگیری‌ها</a>
+      <a href="#people" data-view="people" class="nav-item"><span class="nav-icon">♙</span> کارکنان شعبه</a>
+      <a href="#customers" data-view="customers" class="nav-item"><span class="nav-icon">♡</span> مشتریان و خدمات</a>
+      <a href="#agents" data-view="agents" class="nav-item"><span class="nav-icon">♧</span> شبکه نمایندگان</a>
+      <a href="#hq" data-view="hq" class="nav-item"><span class="nav-icon">⇄</span> مکاتبات و ستاد</a>
+      <a href="#goals" data-view="goals" class="nav-item"><span class="nav-icon">◎</span> اهداف و عملکرد</a>
+      <a href="#reports" data-view="reports" class="nav-item"><span class="nav-icon">▤</span> گزارش مدیریتی</a>
+    </nav>
+    <div class="nav-group-label nav-second">سامانه و داده‌ها</div>
+    <nav><a class="nav-item" href="#settings" data-view="settings"><span class="nav-icon">⚙</span> راهنما و تنظیمات</a></nav>
+    <div class="sidebar-footer"><b>One Branch. One Workspace.</b><span>طراحی مدیریتی: دکتر حسن بودلایی</span><span>ثبت اطلاعات در مرورگر همین دستگاه</span></div>
+  </aside>
+  <div class="main-shell">
+    <div class="mobile-bar"><label for="mobileNav">بخش‌های سامانه</label><select id="mobileNav" aria-label="انتخاب بخش"></select></div>
+    <main id="workspace" tabindex="-1" aria-live="polite"></main>
+    <footer class="page-footer"><span>شعبه من · فضای نمایشی مدیریت شعبه</span><span>داده‌ها نمونه و غیررسمی هستند · مناسب ارزیابی و طراحی پیش از استقرار سازمانی</span></footer>
+  </div>
+</div>
+<dialog id="editorDialog" aria-labelledby="dialogTitle">
+  <div class="dialog-head"><div><small class="label-cap">ثبت و ویرایش اطلاعات</small><h2 id="dialogTitle">افزودن مورد جدید</h2></div><button class="icon-button" type="button" data-close aria-label="بستن فرم">×</button></div>
+  <form id="editorForm"><div id="formFields" class="form-fields"></div><div class="form-actions"><button type="button" class="button secondary" data-close>انصراف</button><button type="submit" class="button primary">ذخیره تغییرات</button></div></form>
+</dialog>
+<div id="toast" role="status" class="toast" hidden></div>
+<input id="importFile" type="file" accept=".json,application/json" hidden>
+</body>
+</html>
