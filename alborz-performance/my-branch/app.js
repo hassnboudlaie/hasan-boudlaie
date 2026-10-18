@@ -97,7 +97,7 @@ $('#dialogTitle').textContent=(id?'ویرایش ':'افزودن ')+title(type);
 $('#formFields').innerHTML=schema[type].map(f=>makeField(f,item?item[f[0]]:f[2]==='date'?today():f[2]==='number'?0:'')).join('');
 $('#editorDialog').showModal()}
 function actionButtons(type,id,extra){return '<div class="item-actions">'+(extra||'')+button('ویرایش','data-edit="'+type+'" data-id="'+esc(id)+'"','mini')+button('حذف','data-delete="'+type+'" data-id="'+esc(id)+'"','mini danger')+'</div>'}
-function rowActions(type,id){return actionButtons(type,id,type==='tasks'?button('✓','data-done="'+esc(id)+'" class="check-button" aria-label="تغییر وضعیت انجام کار"','mini'):'')}
+function rowActions(type,id){return actionButtons(type,id,type==='tasks'?button('✓','data-done="'+esc(id)+'" aria-label="تغییر وضعیت انجام کار"','mini'):'')}
 function cell(html){return '<td>'+html+'</td>'}
 function tableOf(headers,rows){return '<div class="table-wrap"><table><thead><tr>'+headers.map(x=>'<th scope="col">'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>'}
 function rowsFor(type,records){
@@ -116,7 +116,7 @@ function filtered(type){let records=data[type].filter(x=>!query||Object.values(x
 function listView(type){
 const statuses=[...new Set(data[type].map(x=>x.status).filter(Boolean))];
 let filters='<input id="search" type="search" placeholder="جست‌وجو در فهرست..." aria-label="جست‌وجو" value="'+esc(query)+'">'+(type!=='goals'?'<select id="filterStatus" aria-label="فیلتر وضعیت"><option value="همه">همه وضعیت‌ها</option>'+statuses.map(x=>'<option '+(condition===x?'selected':'')+'>'+esc(x)+'</option>').join('')+'</select>':'');
-if(type==='tasks')filters+='<select id="filterHorizon" aria-label="فیلتر افق زمانی">'+['همه','روزانه','هفتگی','ماهانه','فصلی'].map(x=>'<option '+(horizon===x?'selected':'')+'>'+esc(x==='همه'?'تمام بازه‌ها':x)+'</option>').join('')+'</select>';
+if(type==='tasks')filters+='<select id="filterHorizon" aria-label="فیلتر افق زمانی">'+['همه','روزانه','هفتگی','ماهانه','فصلی'].map(x=>'<option value="'+esc(x)+'" '+(horizon===x?'selected':'')+'>'+esc(x==='همه'?'تمام بازه‌ها':x)+'</option>').join('')+'</select>';
 let rows=rowsFor(type,filtered(type));
 let extra='';
 if(type==='people')extra='<div class="notice"><b>ارتباط با هم‌مسیر:</b> جزئیات ارزیابی کارکنان، هدف‌گذاری فردی و فرم بازخورد مشتریان با QR در <a href="../" style="text-decoration:underline;color:var(--navy)">سامانه مدیریت عملکرد کارکنان ↗</a> قرار دارد. این صفحه برای مدیریت کلی تیم و پیگیری جلسات است.</div>';
