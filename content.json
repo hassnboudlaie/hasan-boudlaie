@@ -96,6 +96,25 @@
   "products": [
     {
       "title": {
+        "fa": "سامانه مدیریت عملکرد کارکنان شعب",
+        "en": "Branch Employee Performance"
+      },
+      "org": {
+        "fa": "بیمه البرز · هم‌مسیر",
+        "en": "Alborz Insurance · Hammasir"
+      },
+      "description": {
+        "fa": "داشبورد عملکرد، اهداف فردی، گفت‌وگوی بازخورد و پیگیری برنامه توسعه؛ با داده نمونه، ذخیره در مرورگر و خروجی گزارش.",
+        "en": "A practical workspace for employee goals, performance check-ins and development actions, with sample data, browser-local storage and report exports."
+      },
+      "stage": {
+        "fa": "ابزار کاربردی · ذخیره محلی",
+        "en": "Practical tool · local storage"
+      },
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/alborz-performance/"
+    },
+    {
+      "title": {
         "en": "Frontline Leadership Experience",
         "fa": "تجربه توسعه رهبری خط مقدم"
       },
