@@ -96,6 +96,25 @@
   "products": [
     {
       "title": {
+        "fa": "زیلوکس | بوتیک طلا و جواهر",
+        "en": "Zilux Jewels | Digital Boutique"
+      },
+      "org": {
+        "fa": "زیلوکس · میکامال کیش",
+        "en": "Zilux · Mikamall, Kish"
+      },
+      "description": {
+        "fa": "ویترین لوکس دوزبانه، جزئیات محصول، علاقه‌مندی‌ها و ارتباط با بوتیک برای مشاوره و خرید؛ پیش‌نمایش با تصاویر و محصولات نمونه.",
+        "en": "A bilingual jewelry boutique with collections, product details, favorites and consultation enquiries. Design preview with illustrative products and imagery."
+      },
+      "stage": {
+        "fa": "وب‌سایت دوزبانه · پیش‌نمایش طراحی",
+        "en": "Bilingual boutique · design preview"
+      },
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/zilux-jewels/"
+    },
+    {
+      "title": {
         "fa": "سامانه مدیریت عملکرد کارکنان شعب",
         "en": "Branch Employee Performance"
       },

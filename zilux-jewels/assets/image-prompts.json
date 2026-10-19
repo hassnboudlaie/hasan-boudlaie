@@ -1,0 +1,26 @@
+{
+  "generator": "Built-in ImageGen",
+  "purpose": "Illustrative concept imagery, not actual Zilux products",
+  "prompts": [
+    {
+      "key": "hero",
+      "prompt": "Use case: ads-marketing. Asset type: luxury jewelry boutique website hero photograph, wide 1536x1024 landscape. An exquisite unbranded sculptural polished yellow-gold open oval ring with a small row of white diamonds on one side, standing angled on softly folded ivory silk beside a pale aqua translucent glass slab. Macro jewelry editorial, highly realistic gold reflections and detailed diamond facets, tranquil luxury house aesthetic, pale aqua, ivory and champagne palette. Ring is prominent in the middle-left of the photograph with breathing room. Soft directional daylight and beautiful diffuse shadow, art direction of a luxury fine jewelry campaign. No text, no logo, no watermark, no boxes, no hands. Conceptual illustrative piece, original design, do not reproduce a famous brand's identifiable design."
+    },
+    {
+      "key": "ring",
+      "prompt": "Use case: product-mockup. Asset type: square fine jewelry catalog image, 1024x1024. One elegant original design yellow-gold ring with a single oval brilliant white stone held by four fine prongs, three-quarter angle, isolated centered on a warm ivory seamless backdrop with subtle natural contact shadow. Jewelry occupies about 58% of the square. Superb realistic studio photography, fine polished gold and sparkling clear stone, exact geometry, quiet luxury, crisp details and soft lighting. No text, logo, watermark, hands or props. This is an illustrative conceptual ring, no famous brand designs."
+    },
+    {
+      "key": "necklace",
+      "prompt": "Use case: product-mockup. Asset type: square fine jewelry catalog image, 1024x1024. One elegant original design delicate yellow-gold chain necklace arranged as a graceful elongated oval, with a small pear-shaped clear white gemstone pendant at the lower center. All of the chain visible and uncluttered. Centered on a warm ivory seamless backdrop with a subtle natural contact shadow. Jewelry occupies about 65% of the square. Superb realistic luxury catalog studio photography, polished gold, precise delicate chain links, soft light, crisp details. No text, logo, watermark, hands or props. Conceptual illustrative necklace, no famous brand designs."
+    },
+    {
+      "key": "bracelet",
+      "prompt": "Use case: product-mockup. Asset type: square fine jewelry catalog image, 1024x1024. One elegant original design polished yellow-gold slender open cuff bracelet, with two small round white gemstone tips, three-quarter view arranged diagonally. Centered and isolated on a warm ivory seamless backdrop with subtle natural contact shadow. Jewelry occupies about 60% of the square. Superb realistic luxury jewelry catalog studio photography, beautiful polished metal reflections, precise form, soft light, crisp details. No text, logos, watermark, hands or props. Conceptual illustrative bracelet, no famous brand designs."
+    },
+    {
+      "key": "earrings",
+      "prompt": "Use case: product-mockup. Asset type: square fine jewelry catalog image, 1024x1024. A matching pair of elegant original design small yellow-gold hoop earrings with tiny round clear white stones pavé set along the front outside, shown side by side at slight three-quarter angles, both earrings fully visible. Isolated centered on a warm ivory seamless backdrop, subtle natural shadow. Jewelry occupies about 55% of square. Superb realistic fine jewelry luxury catalog studio photograph, polished gold and precise white stone detail, soft light. No text, logo, watermark, hands, props or boxes. Conceptual illustrative earrings, no famous brand designs."
+    }
+  ]
+}
