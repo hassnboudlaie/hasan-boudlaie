@@ -12,14 +12,22 @@
       "54",
       "56"
     ],
-    "price_mode": "demo_fixed",
+    "price_mode": "updated_confirm",
     "demo_price_toman": 72800000,
     "stock_status": "in_stock",
     "is_limited": false,
     "is_customizable": false,
     "club_early_access": false,
     "seo_title": "انگشتر اورو | R.F Gold",
-    "seo_description": "نمونه نمایشی انگشتر اورو در MVP فروشگاه R.F Gold."
+    "seo_description": "نمونه نمایشی انگشتر اورو در MVP فروشگاه R.F Gold.",
+    "price_last_updated_at": "demo",
+    "price_lock_minutes": 15,
+    "online_purchase_mode": "direct_demo",
+    "reservation_enabled": false,
+    "consultation_recommended": false,
+    "certificate_status": "required_before_live",
+    "after_sales_service": "policy_required",
+    "shipping_status": "pending_secure_shipping_policy"
   },
   {
     "sku": "RF-DEMO-002",
@@ -30,14 +38,22 @@
     "karat": 18,
     "weight_grams": 5.9,
     "size": [],
-    "price_mode": "demo_fixed",
+    "price_mode": "updated_confirm",
     "demo_price_toman": 64800000,
     "stock_status": "in_stock",
     "is_limited": false,
     "is_customizable": false,
     "club_early_access": false,
     "seo_title": "گوشواره اِلان | R.F Gold",
-    "seo_description": "نمونه نمایشی گوشواره اِلان در MVP فروشگاه R.F Gold."
+    "seo_description": "نمونه نمایشی گوشواره اِلان در MVP فروشگاه R.F Gold.",
+    "price_last_updated_at": "demo",
+    "price_lock_minutes": 15,
+    "online_purchase_mode": "direct_demo",
+    "reservation_enabled": false,
+    "consultation_recommended": false,
+    "certificate_status": "required_before_live",
+    "after_sales_service": "policy_required",
+    "shipping_status": "pending_secure_shipping_policy"
   },
   {
     "sku": "RF-DEMO-003",
@@ -50,13 +66,21 @@
     "size": [
       "استاندارد"
     ],
-    "price_mode": "demo_fixed",
+    "price_mode": "updated_confirm",
     "demo_price_toman": 138000000,
     "stock_status": "low_stock",
     "is_limited": true,
     "is_customizable": true,
     "club_early_access": true,
     "seo_title": "دستبند سیگنچر | R.F Gold",
-    "seo_description": "نمونه نمایشی دستبند سیگنچر در کالکشن خاص R.F Gold."
+    "seo_description": "نمونه نمایشی دستبند سیگنچر در کالکشن خاص R.F Gold.",
+    "price_last_updated_at": "demo",
+    "price_lock_minutes": 15,
+    "online_purchase_mode": "reserve_confirm",
+    "reservation_enabled": true,
+    "consultation_recommended": false,
+    "certificate_status": "required_before_live",
+    "after_sales_service": "policy_required",
+    "shipping_status": "pending_secure_shipping_policy"
   }
 ]
