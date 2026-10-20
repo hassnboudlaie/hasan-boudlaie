@@ -1,0 +1,263 @@
+/* Saba Naft reading hierarchy. Shared by the workshop and screen handout. */
+@media screen {
+  :root {
+    --ink: #24344f;
+    --muted: #536179;
+    --type-brand: #042ca5;
+    --type-emphasis: #b93600;
+    --type-action: #146268;
+    --type-key-bg: #fff5f7;
+    --type-action-bg: #eef7f5;
+    --type-dialogue-bg: #f0f4fc;
+    --type-body: 20px;
+    --type-lead: 21px;
+    --type-meta: 17px;
+    --type-label: 16px;
+    --type-section: 38px;
+    --type-topic: 30px;
+    --type-heading: 27px;
+    --type-subheading: 23px;
+    --type-card: 25px;
+    --type-key: 27px;
+    --type-option: 19px;
+    --type-dialogue: 20px;
+    --type-stat: 30px;
+    --type-home: clamp(38px, 4.3vw, 56px);
+    --type-home-message: 27px;
+  }
+
+  body {
+    font-family: Vazirmatn, Tahoma, Arial, sans-serif;
+    font-size: var(--type-body);
+    font-weight: 450;
+    line-height: 2;
+    color: var(--ink);
+    font-kerning: normal;
+  }
+  h1, h2, h3, h4 { color: var(--type-brand); letter-spacing: normal; }
+  h1 { font-size: var(--type-home); font-weight: 900; line-height: 1.5; }
+  h2 { font-size: var(--type-section); font-weight: 850; line-height: 1.6; }
+  h3 { font-size: var(--type-heading); font-weight: 800; line-height: 1.75; }
+  h4 { font-size: var(--type-subheading); font-weight: 800; line-height: 1.8; }
+  strong, b { font-weight: 750; }
+  p, li { line-height: 2; }
+  li::marker { color: var(--type-brand); font-weight: 750; }
+  button, input, textarea { font-family: inherit; }
+  button, a, input, textarea { letter-spacing: normal; }
+  :lang(en) { unicode-bidi: isolate; }
+
+  .page-heading { padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+  .page-heading h2, .assessment-heading h2 {
+    font-size: var(--type-section); font-weight: 900; line-height: 1.65; margin: 8px 0 14px;
+  }
+  .page-heading > p, .assessment-heading > p {
+    font-size: var(--type-lead); font-weight: 450; color: var(--muted); line-height: 2; max-width: 65ch;
+  }
+  .kicker { font-size: var(--type-label); font-weight: 750; line-height: 1.8; color: var(--type-brand); margin-bottom: 10px; }
+  .page-heading > .kicker { display: inline-block; padding: 3px 12px; background: var(--soft); border-radius: 8px; }
+  .small, .saved-note, .source, .source a, .book-title-en, .resource-links,
+  .tri-live-note, .tri-status, .quiz-review-source, .checkline {
+    font-size: var(--type-meta); font-weight: 450; line-height: 1.9;
+  }
+  .muted, .saved-note, .source { color: var(--muted); }
+  .book-title-en, .source a { overflow-wrap: anywhere; }
+  footer, .session-label, .brand span { font-size: var(--type-meta); line-height: 1.8; }
+
+  .card > h3, .leader-story > h3, .tri-question h3, .tri-report h3 {
+    font-size: var(--type-heading); font-weight: 800; line-height: 1.8; margin-bottom: 18px;
+  }
+  .card > h4, .illness-lesson .card > h4, .disease-pattern h4,
+  .technique-essentials h4, .technique-detail-body h4 {
+    font-size: var(--type-subheading); font-weight: 800; line-height: 1.85; margin-bottom: 14px;
+  }
+  .conversation-heading h3, .technique-heading h3, .disease-heading h3,
+  .leader-heading h3, .picture-page > h3 {
+    font-size: var(--type-topic); font-weight: 850; line-height: 1.75;
+  }
+  .technique-heading > p, .conversation-heading > p { color: var(--muted); font-size: var(--type-lead); }
+  .conversation-choice > strong, .illness-card > strong, .lesson-index strong {
+    font-size: var(--type-card); font-weight: 800; line-height: 1.75;
+  }
+  .conversation-choice > span:not(.kicker):not(.text-link), .illness-card > span,
+  .lesson-index small { font-size: var(--type-meta); line-height: 1.9; }
+  .illness-card > .kicker { font-size: var(--type-label); }
+  .text-link { color: var(--type-brand); font-size: var(--type-meta); font-weight: 800; line-height: 1.8; }
+  .step { font-size: var(--type-card); font-weight: 850; color: var(--type-emphasis); }
+  .step small { font-size: var(--type-label); font-weight: 550; }
+  .module-card h3 { font-size: var(--type-card); font-weight: 800; }
+  .module-card p { font-size: var(--type-meta); line-height: 1.95; }
+
+  .key-message { background: var(--type-key-bg); border-right-color: var(--type-emphasis); }
+  .key-message > span { font-size: var(--type-label); font-weight: 750; color: var(--type-emphasis); line-height: 1.8; }
+  .key-message > strong { font-size: var(--type-key); font-weight: 850; color: var(--type-emphasis); line-height: 1.8; }
+  .key-message p { font-size: var(--type-body); font-weight: 450; color: var(--ink); line-height: 2; }
+  .mini-key, .conversation-agreement, .roleplay-observe, .picture-discussion,
+  .technique-roleplay-prompt, .technique-action-practice {
+    background: var(--type-action-bg); border-right-color: var(--type-action);
+  }
+  .mini-key > strong, .conversation-agreement > strong, .roleplay-observe strong,
+  .picture-discussion > strong, .technique-roleplay-prompt > strong {
+    color: var(--type-action); font-size: var(--type-meta); font-weight: 800; line-height: 1.85;
+  }
+  .conversation-agreement p, .roleplay-observe, .picture-discussion p,
+  .technique-roleplay-prompt, .technique-action-practice p { font-size: var(--type-body); line-height: 2; }
+  .technique-action-practice h4, .disease-pattern h4:nth-of-type(3), .personal-analysis h4 { color: var(--type-action); }
+  .technique-essentials li, .disease-pattern li, .learning-notes li { font-size: var(--type-body); line-height: 2.05; margin-block: 14px; }
+  .technique-essentials li strong { font-weight: 750; }
+  .disease-pattern ol li::marker { color: var(--type-action); }
+  .personal-analysis h4 { font-size: var(--type-subheading); font-weight: 800; }
+  .personal-analysis p, .tri-story { font-size: var(--type-body); font-weight: 450; line-height: 2; }
+
+  .dialogue p, .conversation-dialogue p, .roleplay-dialogue p {
+    font-size: var(--type-dialogue); font-weight: 450; line-height: 2.05;
+    padding: 15px 18px; margin-block: 12px; border-right: 3px solid var(--type-brand); background: var(--type-dialogue-bg);
+  }
+  .dialogue p:nth-child(even), .conversation-dialogue p:nth-child(even) {
+    background: var(--type-action-bg); border-right-color: var(--type-action);
+  }
+  .dialogue p > b:first-child, .conversation-dialogue p > b:first-child {
+    display: block; font-size: var(--type-meta); font-weight: 850; color: var(--type-brand); margin-bottom: 4px; line-height: 1.8;
+  }
+  .dialogue p:nth-child(even) > b:first-child, .conversation-dialogue p:nth-child(even) > b:first-child { color: var(--type-action); }
+  .roleplay-roles { font-size: var(--type-meta); color: var(--muted); line-height: 1.9; }
+  .roleplay-roles strong { font-weight: 650; }
+
+  .btn { font-size: var(--type-option); font-weight: 750; line-height: 1.8; }
+  .option, .tri-option, .quiz-option { font-size: var(--type-option); font-weight: 500; line-height: 1.95; }
+  .option[aria-pressed=true], .tri-option[aria-pressed=true], .quiz-option[aria-pressed=true] { font-weight: 750; }
+  .option[aria-pressed=true]::before { font-weight: 850; }
+  .leader-switch button, .technique-switch button, .picture-switch button {
+    font-size: var(--type-meta); font-weight: 750; line-height: 1.8;
+  }
+  .feedback { background: #f1f5fc; }
+  .feedback strong { font-size: var(--type-subheading); font-weight: 800; line-height: 1.85; color: var(--type-brand); margin-bottom: 10px; }
+  .feedback p { font-size: var(--type-body); font-weight: 450; line-height: 2; }
+  .practice-field label { font-size: var(--type-heading); font-weight: 800; line-height: 1.8; }
+  .practice-field textarea { font-size: var(--type-body); font-weight: 450; line-height: 2; }
+  .scale-block strong { font-size: var(--type-option); font-weight: 650; line-height: 1.95; }
+  .scale-options button { font-size: var(--type-option); font-weight: 650; line-height: 1.7; }
+
+  .resources summary, .example summary, .source summary, .settings summary,
+  .course-details summary, .lesson-detail summary, .tri-navigation summary, .tri-method summary,
+  #workshopOverview > summary { font-size: var(--type-option); font-weight: 750; line-height: 1.9; }
+  .source summary, .settings summary { font-size: var(--type-meta); }
+  .technique-disclosure > summary strong { font-size: var(--type-subheading); font-weight: 800; line-height: 1.8; }
+  .technique-disclosure > summary small { font-size: var(--type-meta); font-weight: 450; line-height: 1.8; }
+  .lesson-detail p, .lesson-takeaway, .tri-method p { font-size: var(--type-body); line-height: 2; }
+  .tri-dash-heading strong { font-size: var(--type-subheading); font-weight: 800; line-height: 1.7; }
+  .tri-dash-heading > span, .tri-share span, .tri-model-caption { font-size: var(--type-meta); font-weight: 650; line-height: 1.8; }
+  .tri-share strong { font-size: var(--type-stat); font-weight: 900; line-height: 1.4; font-variant-numeric: tabular-nums; }
+  .tri-case-chip { font-size: var(--type-option); font-weight: 750; line-height: 1.7; }
+  .tri-entry strong { font-size: var(--type-card); font-weight: 800; }
+  .tri-entry p { font-size: var(--type-meta); line-height: 1.95; }
+
+  .quiz-guide { font-size: var(--type-meta); line-height: 1.95; }
+  .quiz-question h3 { font-size: var(--type-heading); font-weight: 800; line-height: 1.85; }
+  .quiz-letter { font-size: var(--type-option); font-weight: 850; color: var(--type-brand); line-height: 1.95; }
+  .quiz-score h3 { font-size: calc(var(--type-section) + 4px); font-weight: 900; line-height: 1.6; }
+  .quiz-key { font-size: var(--type-option); line-height: 1.9; }
+  .quiz-key th { font-size: var(--type-meta); font-weight: 750; line-height: 1.8; }
+  .quiz-key button { font-size: var(--type-option); font-weight: 800; }
+  .quiz-review summary { font-size: var(--type-option); font-weight: 800; line-height: 1.9; }
+  .quiz-review-body > h4 { font-size: var(--type-subheading); font-weight: 800; line-height: 1.85; }
+  .quiz-review-option p { font-size: var(--type-option); line-height: 2; }
+  .quiz-review-tag { font-size: var(--type-label); font-weight: 800; color: var(--type-action); line-height: 1.8; }
+  .quiz-controls .btn { font-size: var(--type-option); }
+  .quiz-explanation { background: var(--type-action-bg); border-right-color: var(--type-action); }
+
+  .home-title { font-size: var(--type-home); font-weight: 900; line-height: 1.5; letter-spacing: normal; }
+  .home-message { font-size: var(--type-home-message); font-weight: 500; line-height: 1.95; }
+  .home-message strong { font-weight: 850; }
+  .home-description { font-size: var(--type-body); font-weight: 450; line-height: 2; }
+  .home-eyebrow, .home-display { font-size: var(--type-label); font-weight: 750; line-height: 1.8; }
+  .home-entry-heading h2, .section-title h2, #workshopOverview .section-title h2 { font-size: var(--type-heading); font-weight: 850; line-height: 1.8; }
+  .home-entry-heading p, .section-title p { font-size: var(--type-meta); line-height: 1.95; }
+  #home .audience-entry > strong, #home .audience-entry .home-role-name { font-size: var(--type-card); font-weight: 850; line-height: 1.75; }
+  #home .audience-entry .home-role-description { font-size: var(--type-meta); font-weight: 450; line-height: 1.95; }
+  #home .audience-entry .home-role-start { font-size: var(--type-option); font-weight: 800; line-height: 1.8; }
+  .home-scene figcaption > span { font-size: var(--type-meta); line-height: 1.8; }
+  .home-scene figcaption > strong { font-size: var(--type-option); font-weight: 750; line-height: 1.8; }
+  .audience-status { font-size: var(--type-meta); line-height: 1.8; }
+  .at-home footer > span { font-size: var(--type-option); font-weight: 750; }
+  .english-line { font-size: var(--type-body); font-weight: 650; line-height: 1.9; }
+
+  .sidebar-heading h2 { font-size: 25px; font-weight: 850; line-height: 1.7; }
+  .sidebar-eyebrow, .sidebar-audience { font-size: 15px; font-weight: 550; line-height: 1.8; }
+  .site-nav a { font-size: 18px; font-weight: 650; line-height: 1.7; }
+  .site-nav a[aria-current=page] { font-weight: 850; }
+  .sidebar-step { font-size: 16px; font-weight: 800; line-height: 1.5; }
+  .sidebar-home { font-size: 17px; font-weight: 600; line-height: 1.8; }
+  .sidebar-close { font-size: 16px; font-weight: 650; line-height: 1.6; }
+  #sidebarToggle small { font-size: 15px; font-weight: 500; line-height: 1.7; }
+  #sidebarToggle strong { font-size: 19px; font-weight: 800; line-height: 1.8; }
+
+  body.presenting {
+    --type-body: 24px;
+    --type-lead: 25px;
+    --type-meta: 19px;
+    --type-label: 18px;
+    --type-section: 44px;
+    --type-topic: 36px;
+    --type-heading: 32px;
+    --type-subheading: 27px;
+    --type-card: 29px;
+    --type-key: 32px;
+    --type-option: 23px;
+    --type-dialogue: 23px;
+    --type-stat: 36px;
+    --type-home: clamp(42px, 4.7vw, 66px);
+    --type-home-message: 31px;
+  }
+  .presenting .site-nav a { font-size: 20px; }
+  .presenting .sidebar-heading h2 { font-size: 28px; }
+  .presenting #sidebarToggle strong { font-size: 22px; }
+
+  .sheet h1 { font-size: 36px; font-weight: 900; line-height: 1.6; }
+  .sheet h2 { font-size: 28px; font-weight: 850; line-height: 1.8; }
+  .sheet h3 { font-size: 23px; font-weight: 800; line-height: 1.85; margin-top: 22px; }
+  .sheet .key { color: var(--type-emphasis); background: var(--type-key-bg); font-size: 22px; font-weight: 800; line-height: 1.95; }
+  .sheet .source, .sheet .kicker, .sheet footer { font-size: var(--type-meta); line-height: 1.9; }
+}
+
+@media screen and (max-width: 600px) {
+  :root {
+    --type-body: 19px;
+    --type-lead: 19px;
+    --type-meta: 16px;
+    --type-label: 15px;
+    --type-section: 31px;
+    --type-topic: 27px;
+    --type-heading: 24px;
+    --type-subheading: 22px;
+    --type-card: 23px;
+    --type-key: 25px;
+    --type-option: 18px;
+    --type-dialogue: 19px;
+    --type-stat: 28px;
+    --type-home: 36px;
+    --type-home-message: 23px;
+  }
+  .page-heading { padding-bottom: 16px; margin-bottom: 24px; }
+  .dialogue p, .conversation-dialogue p, .roleplay-dialogue p { padding: 14px; }
+  body.presenting {
+    --type-body: 22px;
+    --type-lead: 22px;
+    --type-meta: 18px;
+    --type-label: 17px;
+    --type-section: 36px;
+    --type-topic: 31px;
+    --type-heading: 28px;
+    --type-subheading: 25px;
+    --type-card: 27px;
+    --type-key: 29px;
+    --type-option: 21px;
+    --type-dialogue: 21px;
+    --type-stat: 32px;
+    --type-home: 42px;
+    --type-home-message: 26px;
+  }
+  .sheet h1 { font-size: 31px; }
+  .sheet h2 { font-size: 26px; }
+  .sheet h3 { font-size: 22px; }
+  .sheet .key { font-size: 21px; }
+}
