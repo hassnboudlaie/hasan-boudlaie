@@ -126,8 +126,8 @@
     },
     {
       "title": {
-        "fa": "راهبرد و استقرار OKR",
-        "en": "Strategy & OKR Implementation"
+        "fa": "سامانه یکپارچه راهبرد و OKR",
+        "en": "Strategy & OKR Execution Platform"
       },
       "org": {
         "fa": "بنادر و فرودگاه‌های کیش",
@@ -137,14 +137,14 @@
         "en": "Strategy OS",
         "fa": "سیستم اجرای راهبرد"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/kish-ports-airports-strategy/",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/",
       "description": {
-        "fa": "یک ورودی برای مرور راهبرد و استفاده از سامانه استقرار و پیگیری OKR.",
-        "en": "One place to explore company strategy and access the OKR implementation workspace."
+        "fa": "ساختار سازمانی، اهداف و نتایج کلیدی، شاخص‌ها، پروژه‌ها، جلسات و گزارش‌های مدیریتی در یک سامانه.",
+        "en": "Organization, objectives and key results, KPIs, projects, meetings and management reports in one workspace."
       },
       "stage": {
-        "en": "Strategy workspace",
-        "fa": "فضای کاری راهبرد"
+        "fa": "نسخه ارتقایافته · ورود با رمز اختصاصی",
+        "en": "Upgraded platform · App-specific password"
       },
       "id": "kish",
       "logo": "assets/company-logos/kish.svg",
@@ -154,24 +154,13 @@
       "tools": [
         {
           "title": {
-            "fa": "سامانه اجرای راهبرد",
-            "en": "Strategy Execution Platform"
+            "fa": "سامانه یکپارچه راهبرد و OKR",
+            "en": "Strategy & OKR Execution Platform"
           },
-          "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/kish-ports-airports-strategy/",
+          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/",
           "stage": {
-            "en": "Strategy workspace",
-            "fa": "فضای کاری راهبرد"
-          }
-        },
-        {
-          "title": {
-            "en": "OKR Implementation & Strategy Execution System",
-            "fa": "سامانه استقرار OKR و اجرای راهبرد"
-          },
-          "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/hasan-boudlaie/okr-system/",
-          "stage": {
-            "en": "Execution & learning",
-            "fa": "اجرا و یادگیری"
+            "fa": "نسخه ارتقایافته · ورود با رمز اختصاصی",
+            "en": "Upgraded platform · App-specific password"
           }
         }
       ]
