@@ -94,6 +94,16 @@ replace("addEventListener('click',closeTraining)","addEventListener('click',()=>
 replace("closeTraining();goWorkspace('#'+map[b.dataset.trainingWorkspace]);","goWorkspace('#'+map[b.dataset.trainingWorkspace]);");
 replace('<button class="btn primary" id="trainingCloseBtn" data-fa="بستن" data-en="Close">بستن</button>','<button class="btn primary" id="trainingCloseBtn" data-fa="خانه" data-en="Home">خانه</button>');
 replace('bindStatic();renderAll();applyLanguage();\n})();','bindStatic();renderAll();applyLanguage();\n'+fs.readFileSync(path.join(here,'navigation.js'),'utf8')+'\n})();');
+// Add the hierarchy and execution modules without replacing source content or stored records.
+replace('</style>',fs.readFileSync(path.join(here,'platform.css'),'utf8')+'\n</style>');
+replace('<nav class="nav">','<nav class="p-sidebar-nav" id="platformNav" aria-label="Strategy execution modules"></nav><details class="p-sidebar-legacy"><summary data-fa="استقرار، آموزش و ابزارهای تکمیلی" data-en="Implementation, learning & more tools">استقرار، آموزش و ابزارهای تکمیلی</summary><nav class="nav">');
+replace('</nav>\n    <div class="side-foot">','</nav></details>\n    <div class="side-foot">');
+replace('<section class="view" id="view-start">','<section class="view" id="view-platform"><div id="platformBody"></div></section><section class="view" id="view-start">');
+replace('<div class="launch-actions">','<div id="platformHomeQuick" class="p-home-top"></div><div class="launch-actions">');
+replace('<div class="top-actions">','<form class="p-top-search" data-p-global-search><input name="query" type="search" aria-label="Search workspace" placeholder="Search / جست‌وجو"><button type="submit" aria-label="Search">⌕</button></form><div class="top-actions">');
+replace('<select class="mobile-stage" id="mobileStage">','<select class="p-mobile" id="platformMobile" aria-label="Strategy execution module"></select><select class="mobile-stage" id="mobileStage">');
+replace('<body>','<body><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog>');
+replace('initializeNavigation();','initializeNavigation();\n'+fs.readFileSync(path.join(here,'logistics-sources.js'),'utf8')+'\n'+fs.readFileSync(path.join(here,'platform.js'),'utf8'));
 fs.mkdirSync(output,{recursive:true});
 fs.writeFileSync(path.join(output,'index.html'),html);
 let offline=html;

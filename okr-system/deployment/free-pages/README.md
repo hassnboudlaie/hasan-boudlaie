@@ -1,3 +1,22 @@
+## Hierarchical execution platform — 2026-10-20
+
+The public app now adds separate Strategy, OKRs, KPIs, Projects & Tasks, Meetings, Reporting and Dashboards surfaces. The existing URL and all prior handbook, document, rollout, check-in and practice features remain available. The sidebar puts the main modules first and groups supplementary tools under an expandable section. Home offers direct module links and five organization-area entries.
+
+The official chart remains 65 units. Only Finance, Administration and Support and Economic and Technical are company-level deputies. The two directorates retain their internal deputies. Each unit has a refreshable profile with overview, goals, KPIs, projects/tasks, meetings, revision/rollout, documents and people tabs. Corporate goal-to-unit links derived from source initiatives are labeled as proposed relationships, rather than approved ownership.
+
+New forms use the existing browser workspace and JSON transfer path. They create/edit unit profiles, people, objectives, numeric KRs, KPI definitions/values, projects, tasks and meetings. Meeting next actions create linked tasks without duplicating unchanged lines. Projects/tasks link to objectives and departments; optional project-to-KR alignment is validated. Completing tasks does not fabricate KR progress. Draft logistics proposals can be adopted idempotently and remain unassigned until reviewed. The three supplied logistics Word documents have read-only extracted-text views; their original image/table layout is not reproduced. Historical source prices are not presented as current verified rates.
+
+Dashboards compute coverage from recorded unit statuses and show missing measurement as missing. Progress trends use dated check-ins; charts explain their denominator and current baseline/target interpretation. Work and coverage exports respect filters. CSV output neutralizes spreadsheet formula prefixes. Dialog validation is atomic, old records and source content remain preserved, and language switching preserves deep-link routes.
+
+Rebuild:
+
+```sh
+node okr-system/deployment/free-pages/build-free-pages.mjs okr-system/deployment/free-pages/source.html okr-system okr-system
+node okr-system/deployment/free-pages/verify-platform.mjs okr-system/deployment/free-pages/source.html okr-system
+```
+
+Validation executes the actual app event handlers and covers create/edit/check-in, source-correct hierarchy, all new module and unit-tab routes, complete refresh and JSON restoration, linked meeting tasks, source immutability, filtered exports and bilingual direction. The existing regression checks also run. Browser-based visual QA was unavailable in this environment; these checks do not certify rendered mobile layout or connectivity from Iran. The authenticated central Site and its database have not been changed. This public path continues to save independently in each browser and does not synchronize users or devices.
+
 # Kish OKR — free public practice edition
 
 ## Navigation and homepage update — 2026-10-12
