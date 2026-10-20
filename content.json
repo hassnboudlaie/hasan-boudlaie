@@ -143,8 +143,8 @@
         "en": "Organization, objectives and key results, KPIs, projects, meetings and management reports in one workspace."
       },
       "stage": {
-        "fa": "نسخه ارتقایافته · ورود با رمز اختصاصی",
-        "en": "Upgraded platform · App-specific password"
+        "fa": "نسخه ارتقایافته · ورود آزاد",
+        "en": "Upgraded platform · Open access"
       },
       "id": "kish",
       "logo": "assets/company-logos/kish.svg",
@@ -159,8 +159,8 @@
           },
           "url": "https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/",
           "stage": {
-            "fa": "نسخه ارتقایافته · ورود با رمز اختصاصی",
-            "en": "Upgraded platform · App-specific password"
+            "fa": "نسخه ارتقایافته · ورود آزاد",
+            "en": "Upgraded platform · Open access"
           }
         }
       ]
