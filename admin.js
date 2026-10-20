@@ -21,6 +21,11 @@ function validateContent(d){
  if(d.profile?.photoUrl&&!validURL(d.profile.photoUrl)&&!/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(d.profile.photoUrl))throw new Error('تصویر باید مسیر فایل، آدرس HTTP/HTTPS یا دادهٔ معتبر JPEG/PNG/WebP باشد.');
  if(!Array.isArray(d.products)||d.products.length>100)throw new Error('فهرست اپلیکیشن‌ها باید آرایه‌ای با حداکثر ۱۰۰ مورد باشد.');
  d.products.forEach((p,i)=>{paired(p.title,'اپلیکیشن '+(i+1));paired(p.org,'سازمان '+(i+1));paired(p.type,'نوع '+(i+1));if(!/^https?:\/\//i.test(p.url||'')||!validURL(p.url))throw new Error('لینک کامل و معتبر اپلیکیشن '+(i+1)+' را وارد کنید.');for(const key of ['description','stage'])if(p[key])paired(p[key],key+' '+(i+1))});
+ d.products.forEach((p,i)=>{
+  if(p.logo&&!validURL(p.logo))throw new Error('آدرس نشان شرکت '+(i+1)+' معتبر نیست.');
+  for(const key of ['brandColor','brandAccent','brandSoft'])if(p[key]&&!/^#[0-9a-f]{6}$/i.test(p[key]))throw new Error('رنگ شرکت باید کد شش‌رقمی مانند #153c39 باشد.');
+  if(p.tools!==undefined){if(!Array.isArray(p.tools)||p.tools.length>30)throw new Error('ابزارهای شرکت باید آرایه‌ای با حداکثر ۳۰ مورد باشند.');p.tools.forEach((tool,j)=>{paired(tool.title,'ابزار '+(j+1)+' شرکت '+(i+1));if(!externalURL(tool.url))throw new Error('لینک ابزار '+(j+1)+' شرکت '+(i+1)+' معتبر نیست.');if(tool.stage)paired(tool.stage,'محدوده ابزار '+(j+1))})}
+ });
  if(!Array.isArray(d.advisory.services))throw new Error('حوزه‌های مشاوره باید آرایه باشند.');
  d.advisory.services.forEach((s,i)=>{paired(s,'حوزهٔ '+(i+1));for(const key of ['description','outcome'])if(s[key])paired(s[key],key+' حوزهٔ '+(i+1))});
  for(const [items,label] of [[d.about.credentials,'پیشینه'],[d.research?.topics,'حوزه‌های پژوهشی']])if(items!==undefined){if(!Array.isArray(items))throw new Error(label+' باید آرایه باشد.');items.forEach(v=>paired(v,label))}
@@ -55,7 +60,17 @@ function renderArray(id,path,fields){
  items.forEach((item,i)=>{const details=document.createElement('details');details.className='editor-item';const summary=document.createElement('summary');summary.textContent=(i+1)+' · '+(item.title?.fa||item.fa||'مورد جدید');details.append(summary);const body=document.createElement('div');body.className='item-body';const toolbar=document.createElement('div');toolbar.className='item-toolbar';
   for(const [name,delta] of [['انتقال به بالا',-1],['انتقال به پایین',1]]){const b=document.createElement('button');b.type='button';b.textContent=name;b.disabled=(i+delta<0||i+delta>=items.length);b.addEventListener('click',()=>{[items[i],items[i+delta]]=[items[i+delta],items[i]];changed();renderArrayEditors()});toolbar.append(b)}
   const remove=document.createElement('button');remove.type='button';remove.className='remove';remove.textContent='حذف از فهرست';remove.addEventListener('click',()=>{if(confirm('این مورد از فهرست پیش‌نویس حذف شود؟ تا زمان انتشار، سایت تغییر نمی‌کند.')){items.splice(i,1);changed();renderArrayEditors()}});toolbar.append(remove);body.append(toolbar);
-  const grid=document.createElement('div');grid.className='editor-grid';for(const [key,label,type='text'] of fields){const base=path+'.'+i+(key?'.'+key:'');if(type==='url'){const f=makeField(base,label,type);f.classList.add('full');grid.append(f)}else addPairFields(grid,base,label,type)}body.append(grid);details.append(body);box.append(details);
+  const grid=document.createElement('div');grid.className='editor-grid';for(const [key,label,type='text'] of fields){const base=path+'.'+i+(key?'.'+key:'');if(type==='url'){const f=makeField(base,label,type);f.classList.add('full');grid.append(f)}else addPairFields(grid,base,label,type)}body.append(grid);
+  if(path==='products'){
+   const brandGrid=document.createElement('div');brandGrid.className='editor-grid';
+   for(const [key,label,type] of [['logo','آدرس لوگوی شرکت','url'],['wordmark','نام نوشتاری در نبود لوگو','text'],['brandColor','رنگ اصلی شرکت','text'],['brandAccent','رنگ نوار شرکت','text'],['brandSoft','رنگ زمینه شرکت','text']])brandGrid.append(makeField(path+'.'+i+'.'+key,label,type));
+   body.append(brandGrid);
+   if(Array.isArray(item.tools)&&item.tools.length){
+    const h=document.createElement('h3');h.textContent='ابزارهای داخل کارت شرکت';body.append(h);
+    item.tools.forEach((tool,j)=>{const toolGrid=document.createElement('div');toolGrid.className='editor-grid';const base=path+'.'+i+'.tools.'+j;addPairFields(toolGrid,base+'.title','عنوان ابزار '+(j+1));toolGrid.append(makeField(base+'.url','لینک ابزار '+(j+1),'url'));addPairFields(toolGrid,base+'.stage','محدوده ابزار '+(j+1));body.append(toolGrid)});
+   }
+  }
+  details.append(body);box.append(details);
  });
 }
 function githubHeaders(){return {Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}}
@@ -90,3 +105,4 @@ document.addEventListener('DOMContentLoaded',()=>{
  $('addService').addEventListener('click',()=>{data.advisory.services.push({en:'New advisory area',fa:'حوزهٔ مشاورهٔ جدید',description:{en:'Describe the work.',fa:'محدودهٔ کار را توضیح دهید.'},outcome:{en:'Describe an example deliverable.',fa:'نمونهٔ خروجی را توضیح دهید.'}});changed();renderArrayEditors();$('servicesEditor').lastElementChild.open=true});
  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});connectionStatus();loadPublic();
 });
+

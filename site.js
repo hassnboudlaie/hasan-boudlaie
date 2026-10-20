@@ -17,9 +17,27 @@ function setLang(lang){
  if(window.siteData)renderSite(window.siteData);
 }
 function cardLink(url,cls,inner){const safe=webURL(url);return safe?`<a class="${cls}" href="${esc(safe)}" target="_blank" rel="noopener">${inner}</a>`:`<article class="${cls}">${inner}</article>`}
+function brandColor(value,fallback){return /^#[0-9a-f]{6}$/i.test(value||'')?value:fallback}
+function productTools(product){
+ const items=Array.isArray(product.tools)&&product.tools.length?product.tools:[product];
+ return items.filter(tool=>webURL(tool.url));
+}
+function productCard(product,index,lang=currentLang,bilingual=false){
+ const label=(value,tag,cls='')=>`<${tag}${cls?` class="${cls}"`:''}${bilingual?` data-en="${esc(textOf(value,'en'))}" data-fa="${esc(textOf(value,'fa'))}"`:''}>${esc(textOf(value,lang))}</${tag}>`;
+ const tools=productTools(product),grouped=tools.length>1;
+ const color=brandColor(product.brandColor,'#153c39'),accent=brandColor(product.brandAccent,color),soft=brandColor(product.brandSoft,'#e9eee9');
+ const logo=imageURL(product.logo);
+ const mark=logo?`<img src="${esc(logo)}" alt="" width="168" height="64" loading="lazy" decoding="async">`:`<span class="company-wordmark" dir="auto">${esc(product.wordmark||textOf(product.org,lang))}</span>`;
+ const toolLink=(tool)=>`<a class="company-tool" href="${esc(webURL(tool.url))}" target="_blank" rel="noopener">${label(tool.title,'span','tool-title')}<span class="tool-arrow" aria-hidden="true">↗</span>${tool.stage?label(tool.stage,'small','tool-stage'):''}</a>`;
+ const action=grouped?`<details class="company-tools"><summary>${label({fa:'مشاهده ابزارها',en:'Explore applications'},'span')}<span class="tool-count" aria-hidden="true">${new Intl.NumberFormat(lang).format(tools.length)}</span></summary><div class="company-tool-list">${tools.map(toolLink).join('')}</div></details>`:tools.length?`<a class="company-open" href="${esc(webURL(tools[0].url))}" target="_blank" rel="noopener">${label({fa:'ورود به اپلیکیشن',en:'Open application'},'span')}<span aria-hidden="true">↗</span></a>`:'';
+ return `<article class="product-card company-card" data-company="${esc(product.id||String(index))}" style="--company-color:${color};--company-accent:${accent};--company-soft:${soft}"><header class="company-heading"><div class="company-logo">${mark}</div>${label(product.org,'h2','company-name')}</header><div class="company-body">${label(product.title,'h3','company-topic')}${product.description?label(product.description,'p','card-description'):''}</div>${action}</article>`;
+}
 function renderProducts(products){
  const box=document.getElementById('productsList');if(!box||!Array.isArray(products))return;
- box.innerHTML=products.map((p,i)=>cardLink(p.url,'product-card',`<div class="card-meta"><span class="index" aria-hidden="true">${String(i+1).padStart(2,'0')}</span>${p.stage?`<span class="tag">${esc(textOf(p.stage))}</span>`:''}</div><h2>${esc(textOf(p.title))}</h2><p class="organization">${esc(textOf(p.org))}</p><p class="card-description">${esc(textOf(p.description))}</p>${webURL(p.url)?`<span class="card-action">${currentLang==='fa'?'باز کردن اپلیکیشن':'Open application'}</span>`:''}`)).join('');
+ // Preserve expanded groups while switching language or refreshing content.
+ const expanded=new Set([...box.querySelectorAll('.company-tools[open]')].map(el=>el.closest('[data-company]').dataset.company));
+ box.innerHTML=products.map((product,index)=>productCard(product,index)).join('');
+ box.querySelectorAll('[data-company]').forEach(card=>{const details=card.querySelector('.company-tools');if(details&&expanded.has(card.dataset.company))details.open=true});
 }
 function renderServices(services){
  const box=document.getElementById('services');if(!box||!Array.isArray(services))return;
@@ -61,3 +79,4 @@ document.addEventListener('DOMContentLoaded',()=>{
  let preview=false;try{if(new URLSearchParams(location.search).get('preview')==='1'){const d=JSON.parse(sessionStorage.getItem('hb-site-preview')||'null');if(d&&Array.isArray(d.products)){isPreview=true;window.siteData=d;renderSite(d);document.getElementById('previewBanner').hidden=false;preview=true}}}catch(e){}
  if(!preview)loadSiteData();
 });
+
