@@ -10,4 +10,4 @@ Retrieved from the official sabanaft.com website on 2026-10-20.
 
 Official logo colours: blue `#042CA5`, orange `#FF4202`. Darker orange `#B93600` is used for readable text and emphasis.
 
-Generic management images and diagrams are retained from the user’s Behparvar workshop and are labelled as educational, not Saba Naft photography. Vazirmatn is retained with its OFL license.
+The book-aligned course uses the official company assets above. Earlier generic management illustrations have been retired. Vazirmatn is retained with its OFL license. All instructional cases are fictional and are not reports of the photographed events.
