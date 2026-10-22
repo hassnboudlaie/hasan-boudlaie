@@ -1,0 +1,41 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>پیش‌نمایش بازطراحی فرم دوره OKR</title><style>html,body{margin:0;height:100%;background:#071e30;font:14px Tahoma,Arial,sans-serif}iframe{width:100%;height:100%;border:0}.notice{position:fixed;bottom:8px;left:8px;z-index:9999;background:#07374e;color:#fff;padding:8px 12px;border:1px solid #54acee;border-radius:9px;pointer-events:none;font-size:11px;opacity:.9}</style></head><body><iframe id="app" title="پیش‌نمایش سامانه OKR" src="./index.html#program"></iframe><div class="notice">پیش‌نمایش رابط کاربری · داده‌ها و عملکرد سامانه اصلی حفظ شده‌اند</div><script>
+const extra=`
+#platformDialog:has(form[data-platform-form="gp-cycle"]){width:min(900px,calc(100% - 12px));max-width:900px;max-height:96dvh;border-radius:18px;background:#0a273c;color:#f0f7ff;overflow:hidden}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-head{background:#09273a;color:#fff;border-color:#2e5872;padding:15px 19px}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-head h2{color:#fff;font-size:20px;line-height:1.6}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-body{background:linear-gradient(145deg,#103a53,#071f34);padding:16px 18px;max-height:calc(96dvh - 70px);overflow-y:auto}
+#platformDialog form[data-platform-form="gp-cycle"]>.p-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps{display:flex;gap:7px;justify-content:space-between}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps span{flex:1;text-align:center;border:1px solid #387391;background:#11384e;border-radius:10px;padding:12px 4px;color:#eef8ff;font-size:12px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps b{display:inline-grid;place-items:center;background:#1984df;color:#fff;border-radius:50%;width:25px;height:25px;margin-left:6px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details{grid-column:1/-1;background:#0c2c42;border:1px solid #44738b;border-radius:14px;margin:0;padding:2px 14px 14px;min-width:0}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details>summary{font-size:17px;color:#fff;padding:15px 3px;font-weight:800}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details>p{color:#bcd4e4;font-size:13px;line-height:1.9}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details .p-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-date-pair{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-date{grid-template-columns:minmax(0,.8fr) minmax(0,1.35fr) minmax(0,1fr);gap:5px;background:#10354c;border:1px solid #426b82;border-radius:11px;padding:10px;min-width:0}
+#platformDialog form[data-platform-form="gp-cycle"] .p-field label,#platformDialog form[data-platform-form="gp-cycle"] .gp-date legend{color:#e9f6ff;font-size:13px;font-weight:750;line-height:1.5}
+#platformDialog form[data-platform-form="gp-cycle"] .p-field input,#platformDialog form[data-platform-form="gp-cycle"] .p-field select,#platformDialog form[data-platform-form="gp-cycle"] .p-field textarea{width:100%;max-width:100%;min-width:0;box-sizing:border-box;background:#14384f;color:#fff;border:1px solid #527d95;border-radius:9px;min-height:46px;padding:9px;font-size:14px}
+#platformDialog form[data-platform-form="gp-cycle"] option{background:#102e46;color:white}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-date .p-field label{font-size:11px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-date .p-field select,#platformDialog form[data-platform-form="gp-cycle"] .gp-date .p-field input{font-size:12px;padding:6px 3px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-guide{background:#143b52;color:#eaf5ff;border:1px solid #3e7593;border-radius:11px;padding:10px 14px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-guide summary{font-size:14px;font-weight:700}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-goal-picker{color:#fff;background:#102f46;border-color:#4c7b94}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-preview{border-color:#507c93;color:#fff;background:#0d344b;border-radius:12px}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot{position:sticky;bottom:0;margin:8px -18px -16px;padding:12px 18px;background:#08283d;border-top:1px solid #46718b}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot button{min-height:46px;border-radius:10px;background:#218de7;color:#fff;font-weight:750}
+@media(max-width:700px){#platformDialog:has(form[data-platform-form="gp-cycle"]){max-height:calc(100dvh - 12px);width:calc(100% - 10px)}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-body{max-height:calc(100dvh - 73px);padding:12px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-date-pair{grid-template-columns:1fr}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details .p-fields{grid-template-columns:1fr}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details .p-field{grid-column:1/-1}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps span{font-size:10px;padding:9px 2px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps b{display:block;margin:0 auto 4px}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot{margin:6px -12px -12px;padding:10px 12px}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot button{width:100%}}
+@media(max-width:370px){#platformDialog form[data-platform-form="gp-cycle"]>.p-fields{grid-template-columns:1fr}}
+`;
+function decorate(d){const el=d.querySelector('#platformDialog');if(!el)return;const f=el.querySelector('form[data-platform-form="gp-cycle"]');if(!f||f.dataset.previewDecorated)return;f.dataset.previewDecorated='1';const container=f.querySelector('.p-fields');const first=container?.firstElementChild;if(!first)return;const head=d.createElement('div');head.className='wide gp-cycle-steps';head.innerHTML='<span><b>۱</b> اطلاعات دوره</span><span><b>۲</b> نقش‌ها و افراد</span><span><b>۳</b> اهداف و سنجش</span>';container.insertBefore(head,first);const goal=Array.from(f.querySelectorAll('.gp-details')).find(x=>x.textContent.includes('انتخاب اهداف'));if(goal)goal.open=true}
+document.getElementById('app').addEventListener('load',()=>{const d=document.getElementById('app').contentDocument;if(!d)return;const style=d.createElement('style');style.textContent=extra;d.head.appendChild(style);const obs=new MutationObserver(()=>decorate(d));obs.observe(d.body,{subtree:true,childList:true});decorate(d);});
+</script></body></html>
