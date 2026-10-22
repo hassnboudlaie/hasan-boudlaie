@@ -1144,6 +1144,46 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 #platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot{position:sticky;bottom:0}
 #platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot button[type="submit"]{min-width:0;width:100%}
 }
+
+/* OKR objectives: accessible responsive cards, data-preserving table semantics on desktop */
+.pd-cascade .pd-units-mobile{display:none}
+.pd-cascade .pd-units-desktop{display:block}
+@media(max-width:760px){
+ .kish-perdoo .pd-tools{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+ .kish-perdoo .pd-tools>*{max-width:100%;min-width:0}
+ .kish-perdoo .pd-tools select,.kish-perdoo .pd-tools input{font-size:14px;min-height:42px;max-width:100%}
+ .kish-perdoo .pd-cascade.p-table-wrap{border:0;background:transparent;overflow:visible;border-radius:0}
+ .kish-perdoo .pd-cascade .p-table{min-width:0!important;width:100%;display:block;border:0;border-collapse:separate;background:transparent}
+ .kish-perdoo .pd-cascade .p-table thead{display:none}
+ .kish-perdoo .pd-cascade .p-table tbody{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;width:100%}
+ .kish-perdoo .pd-cascade .p-table tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:0 8px;width:100%;border:1px solid #446c86;border-radius:14px;overflow:hidden;background:#12364d;box-shadow:0 4px 12px #05172535}
+ .kish-perdoo .pd-cascade .p-table tr.pd-kr-row{background:#0c2739;border-color:#34596f;margin-inline-start:12px;width:calc(100% - 12px);border-inline-start:3px solid #3998da}
+ .kish-perdoo .pd-cascade .p-table tr td,
+ .kish-perdoo .pd-cascade .p-table tr td:first-child,
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child){display:block;min-width:0!important;max-width:none!important;width:auto!important;padding:10px 12px!important;margin:0;border:0;background:transparent!important;overflow-wrap:anywhere;font-size:13px;line-height:1.7;vertical-align:top}
+ .kish-perdoo .pd-cascade .p-table tr td:first-child{grid-column:1/-1;border-bottom:1px solid #345b74!important;padding:13px 11px!important;background:#194059!important}
+ .kish-perdoo .pd-cascade .p-table tr.pd-kr-row td:first-child{background:#14364a!important}
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child){border-bottom:1px solid #294a60!important}
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child):before{content:attr(data-pd-label);display:block;color:#92bbd4;font-weight:700;font-size:11px;margin-bottom:4px}
+ .kish-perdoo .pd-cascade .p-table tr td[data-pd-key="unit"]{grid-column:1/-1}
+ .kish-perdoo .pd-cascade .p-table tr td[data-pd-key="progress"] .p-progress{max-width:100%;width:100%}
+ .kish-perdoo .pd-cascade .pd-tree-cell{padding-inline-start:0!important;display:flex;align-items:flex-start;flex-wrap:wrap;gap:7px;line-height:1.7}
+ .kish-perdoo .pd-cascade .pd-tree-cell>a{display:block;-webkit-line-clamp:unset;overflow:visible;white-space:normal;min-width:0;flex:1 1 160px;font-size:15px;line-height:1.8;font-weight:750;word-break:normal}
+ .kish-perdoo .pd-cascade .pd-kr-row .pd-tree-cell>a{font-size:14px;font-weight:600}
+ .kish-perdoo .pd-cascade .pd-tree-cell .pd-chevron{width:36px;min-width:36px;min-height:36px}
+ .kish-perdoo .pd-cascade .pd-tree-cell .ds-row-checkin{min-width:40px;width:40px;height:40px;margin-inline-start:auto}
+ .kish-perdoo .pd-cascade .p-table td>div>small{display:block}
+ .kish-perdoo .pd-cascade .pd-units-desktop{display:none}
+ .kish-perdoo .pd-cascade .pd-units-mobile{display:block;border:1px solid #3f718d;border-radius:10px;padding:7px 10px;background:#11334a}
+ .kish-perdoo .pd-cascade .pd-units-mobile summary{cursor:pointer;color:#91d1ff;line-height:1.8;font-size:13px;font-weight:750;padding:3px}
+ .kish-perdoo .pd-cascade .pd-units-mobile[open] summary{margin-bottom:8px;border-bottom:1px solid #365e75;padding-bottom:9px}
+ .kish-perdoo .pd-cascade .pd-units-list{display:flex;gap:6px;flex-wrap:wrap}
+ .kish-perdoo .pd-cascade .pd-units-list br{display:none}
+ .kish-perdoo .pd-cascade .pd-units-list a{display:inline-block;border:1px solid #436a82;border-radius:8px;padding:5px 9px;font-size:13px;line-height:1.5;min-height:30px}
+ .kish-perdoo .pd-table-foot{padding:12px 5px;gap:8px}
+ .kish-perdoo .pd-table-foot .p-btn{min-height:42px;font-size:12px}
+}
+
 </style>
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
@@ -3150,12 +3190,21 @@ function pdDelta(value,unit='',direction='up'){
 function pdGoalUpdate(o){const hs=(o.krs||[]).flatMap(k=>pdHistory('kr',k.id).map(h=>({...h,kr:k}))).sort((a,b)=>String(a.at).localeCompare(String(b.at))),h=hs.at(-1);if(!h)return '<span class="p-muted">—</span>';const prev=pdHistory('kr',h.krId).at(-2);return pdDelta(prev?Number(h.current)-Number(prev.current):null,h.kr.unit,Number(h.kr.target)<Number(h.kr.baseline)?'down':'up')+'<small>'+pDate(h.at)+'</small>';}
 function pdGoalsInScope(){return allObjectives().filter(x=>pMatches(x.objective.objective+' '+x.objective.owner)&&(pFilter.status==='all'||x.objective.status===pFilter.status)&&(pFilter.owner==='all'||x.objective.owner===pFilter.owner)&&(pFilter.unit==='all'||pUnitGoals(pFilter.unit).some(y=>y.objective.id===x.objective.id)));}
 function pdSort(items,getName=x=>x.objective.objective){return items.slice().sort((a,b)=>pd.sort==='progress'?(pGoalScore(b.objective).value??-1)-(pGoalScore(a.objective).value??-1):pd.sort==='due'?String(a.objective.due||'9999').localeCompare(String(b.objective.due||'9999')):pd.sort==='updated'?String((b.objective.krs||[]).map(k=>k.lastUpdate||'').sort().at(-1)||'').localeCompare(String((a.objective.krs||[]).map(k=>k.lastUpdate||'').sort().at(-1)||'')):getName(a).localeCompare(getName(b),fa()?'fa':'en'));}
+function pdGoalUnitMarkup(o){
+ const units=pGoalUnits(o.id),list=units.length?units:['company'],links=list.map(pUnitLink).join('<br>');
+ if(list.length<=2)return links;
+ return '<div class="pd-units-desktop">'+links+'</div><details class="pd-units-mobile"><summary>'+pNum(list.length)+' '+txt('واحد مرتبط ـ مشاهده همه','units · show all')+'</summary><div class="pd-units-list">'+links+'</div></details>';
+}
+function pdGoalTd(key,content){
+ const captions={owner:txt('مسئول','Owner'),unit:txt('واحد','Unit'),progress:txt('پیشرفت','Progress'),update:txt('آخرین تغییر','Last update'),due:txt('موعد','Due'),status:txt('وضعیت','Status')};
+ return '<td data-pd-key="'+esc(key)+'" data-pd-label="'+esc(captions[key]||key)+'">'+content+'</td>';
+}
 function pdGoalTable(){
  const gs=pdGoalsInScope(),visible=new Set(gs.map(x=>x.objective.id)),rows=[],seen=new Set();
- const cell=(o,key)=>key==='owner'?pOwner(o.owner):key==='unit'?pGoalUnits(o.id).map(pUnitLink).join('<br>')||pUnitLink('company'):key==='progress'?pGoalProgress(o):key==='update'?pdGoalUpdate(o):key==='due'?pDate(o.due):pStatus(o.status);
+ const cell=(o,key)=>key==='owner'?pOwner(o.owner):key==='unit'?pdGoalUnitMarkup(o):key==='progress'?pGoalProgress(o):key==='update'?pdGoalUpdate(o):key==='due'?pDate(o.due):pStatus(o.status);
  function add(x,depth){const o=x.objective;if(seen.has(o.id))return;seen.add(o.id);const kids=pdSort(gs.filter(y=>y.objective.parentId===o.id)),open=!pd.closed.includes(o.id),expand=(o.krs||[]).length||kids.length;
-  rows.push('<tr class="pd-objective" data-pd-row="'+esc(o.id)+'"><td><div class="pd-tree-cell" style="--depth:'+depth+'">'+(expand?pdButton(open?'⌄':'‹','goal-fold',o.id,'pd-chevron'):'<span class="pd-spacer"></span>')+'<span class="pd-symbol">⚑</span>'+pAnchor(pGoalTitle(o),'#goals/'+o.id,'')+'</div></td>'+pd.columns.map(c=>'<td>'+cell(o,c)+'</td>').join('')+'</tr>');
-  if(pd.view==='cascade'&&open){for(const k of o.krs||[]){const hs=pdHistory('kr',k.id),last=hs.at(-1),previous=hs.at(-2);rows.push('<tr class="pd-kr-row"><td><div class="pd-tree-cell" style="--depth:'+(depth+1)+'"><span class="pd-spacer"></span><span class="pd-symbol">↗</span>'+pAnchor(k.text,'#results/'+k.id,'')+pButton(txt('ثبت پیشرفت','Check in'),'checkin',k.id).replace('class="p-btn ','class="p-btn ds-row-checkin ')+'</div></td>'+pd.columns.map(c=>'<td>'+(c==='owner'?pOwner(k.owner):c==='progress'?(pKrKnown(k)?'<b>'+pNum(Math.round(progress(k)))+'%</b>'+pProgress(progress(k)):pTag(txt('نیازمند داده','Needs data'),'warn')):c==='update'?pdDelta(last&&previous?Number(last.current)-Number(previous.current):null,k.unit,Number(k.target)<Number(k.baseline)?'down':'up')+(last?'<small>'+pDate(last.at)+'</small>':''):c==='unit'?esc(k.unit||'—'):c==='status'?pTag(k.confidence||'—'):c==='due'?pDate(o.due):'')+'</td>').join('')+'</tr>');}for(const child of kids)add(child,depth+1);}
+  rows.push('<tr class="pd-objective" data-pd-row="'+esc(o.id)+'"><td><div class="pd-tree-cell" style="--depth:'+depth+'">'+(expand?pdButton(open?'⌄':'‹','goal-fold',o.id,'pd-chevron'):'<span class="pd-spacer"></span>')+'<span class="pd-symbol">⚑</span>'+pAnchor(pGoalTitle(o),'#goals/'+o.id,'')+'</div></td>'+pd.columns.map(c=>pdGoalTd(c,cell(o,c))).join('')+'</tr>');
+  if(pd.view==='cascade'&&open){for(const k of o.krs||[]){const hs=pdHistory('kr',k.id),last=hs.at(-1),previous=hs.at(-2);rows.push('<tr class="pd-kr-row"><td><div class="pd-tree-cell" style="--depth:'+(depth+1)+'"><span class="pd-spacer"></span><span class="pd-symbol">↗</span>'+pAnchor(k.text,'#results/'+k.id,'')+pButton(txt('ثبت پیشرفت','Check in'),'checkin',k.id).replace('class="p-btn ','class="p-btn ds-row-checkin ')+'</div></td>'+pd.columns.map(c=>pdGoalTd(c,(c==='owner'?pOwner(k.owner):c==='progress'?(pKrKnown(k)?'<b>'+pNum(Math.round(progress(k)))+'%</b>'+pProgress(progress(k)):pTag(txt('نیازمند داده','Needs data'),'warn')):c==='update'?pdDelta(last&&previous?Number(last.current)-Number(previous.current):null,k.unit,Number(k.target)<Number(k.baseline)?'down':'up')+(last?'<small>'+pDate(last.at)+'</small>':''):c==='unit'?esc(k.unit||'—'):c==='status'?pTag(k.confidence||'—'):c==='due'?pDate(o.due):''))).join('')+'</tr>');}for(const child of kids)add(child,depth+1);}
  }
  const roots=pd.view==='list'?pdSort(gs):pdSort(gs.filter(x=>!visible.has(x.objective.parentId)));
  for(const x of roots)add(x,0);
