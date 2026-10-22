@@ -1118,6 +1118,32 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 #platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot button{width:100%}
 }
 @media(max-width:390px){#platformDialog form[data-platform-form="gp-cycle"]>.p-fields{grid-template-columns:1fr}#platformDialog form[data-platform-form="gp-cycle"]>.p-fields>.p-field{grid-column:1/-1}}
+
+/* Final OKR cycle mobile-first refinement: operational form, not demo. */
+#platformDialog:has(form[data-platform-form="gp-cycle"]){width:min(1040px,100%);max-width:1040px;height:min(100dvh,1020px);max-height:100dvh;border-radius:18px}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-body{max-height:calc(100dvh - 76px)}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps .gp-cycle-navbtn{font:inherit;cursor:pointer;flex:1;border:1px solid #47768d;background:#133a51;color:#e3f2ff;border-radius:11px;text-align:center;padding:11px 5px;font-size:12px;min-width:0}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps .gp-cycle-navbtn:first-child,
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps .gp-cycle-navbtn[aria-current="step"]{background:#164d76;border-color:#55adff;color:white}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-section-title{display:flex;flex-direction:column;gap:2px;padding:14px 13px 4px;border-top:1px solid #396881}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-section-title strong{font-size:17px;color:#fff}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-section-title small{color:#bdd8e8;font-size:12px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details,
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-section-title{scroll-margin-top:22px}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details .p-field{min-width:0}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details .p-field small{display:block}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details>summary{cursor:pointer}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-details:focus-within{border-color:#5eb6ef}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot button[type="submit"]{background:#208eea;min-width:190px}
+@media(max-width:700px){
+#platformDialog:has(form[data-platform-form="gp-cycle"]){inset:0;width:100%;height:100dvh;max-width:100%;max-height:100dvh;margin:0;border-radius:0}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-head{min-height:66px}
+#platformDialog:has(form[data-platform-form="gp-cycle"]) .p-dialog-body{max-height:calc(100dvh - 66px);height:calc(100dvh - 66px);overflow-y:auto}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps .gp-cycle-navbtn{font-size:10px;padding:8px 3px;line-height:1.6}
+#platformDialog form[data-platform-form="gp-cycle"] .gp-cycle-steps .gp-cycle-navbtn b{display:block;margin:0 auto 4px}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot{position:sticky;bottom:0}
+#platformDialog form[data-platform-form="gp-cycle"] .p-dialog-foot button[type="submit"]{min-width:0;width:100%}
+}
 </style>
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
@@ -3483,7 +3509,7 @@ pForm=function(kind,recordId='',context={}){
  if(kind==='gp-announce'&&c&&!c.closedAt){title=txt('اعلام اهداف شرکت در فضای کار','Publish objectives in workspace');fields=pField(txt('پیام مدیریت درباره اولویت‌ها و اهداف این فصل','Leadership message on this cycle’s priorities'),'announcement',c.announcement||'','textarea',true,true);}
  if(kind==='gp-close'&&c&&!c.closedAt){title=txt('جمع‌بندی و بستن فصل','Review and close cycle');fields='<p class="wide">'+txt('فقط ','Only ')+pNum(c.goalIds.length)+txt(' هدف منتخب این فصل بسته می‌شود. KPIها و داده‌های جاری حذف نمی‌شوند.',' selected objectives will be closed. KPIs and measurements are retained.')+'</p>'+pField(txt('دستاوردها، آموخته‌ها و دلایل انحراف','Wins, learnings and reasons for gaps'),'learning','','textarea',true,true)+pField(txt('تصمیم‌ها و اولویت‌های فصل بعد','Next-cycle decisions and priorities'),'nextPlan','','textarea',true,true)+'<label class="wide"><input type="checkbox" name="confirmed" value="yes" required> '+txt('جمع‌بندی و بستن اهداف منتخب را تأیید می‌کنم.','I confirm closing the selected objectives.')+'</label>';}
  if(kind==='gp-event'&&c&&!c.closedAt){title=txt('ثبت جلسه برنامه اهداف','Schedule a goals-program meeting');fields=pField(txt('مسئول جلسه','Meeting owner'),'owner',gpRule(context.key,c).owner||c.roles?.lead||g.owner,'text',true)+pField(txt('شرکت‌کنندگان','Participants'),'participants',c.roles?.members||'','text',true)+pSelect(txt('هدف مرتبط (اختیاری)','Related objective (optional)'),'objectiveId',[['',txt('مرور کل فصل','Whole-cycle review')],...c.goalIds.map(oid=>[oid,pGoalTitle(pGoal(oid))])],'')+pField(txt('دستور جلسه','Agenda'),'points',gpAgenda(context.key),'textarea',true,true)+'<p>'+gpDisplay(context.date)+'</p>';}
- if(!fields)return;pModalContext={kind,recordId,context};const el=document.getElementById('platformDialog');el.innerHTML='<div class="p-dialog-head"><h2>'+title+'</h2>'+pButton(txt('بستن','Close'),'close-dialog')+'</div><div class="p-dialog-body"><form data-platform-form="'+kind+'"><div class="p-fields">'+fields+'</div><div id="p-form-error" class="p-form-error" role="alert"></div><div class="p-dialog-foot"><button class="p-btn primary" type="submit">'+txt('ذخیره','Save')+'</button></div></form></div>';el.showModal();if(kind==='gp-cycle')gpPreviewForm();
+ if(!fields)return;pModalContext={kind,recordId,context};const el=document.getElementById('platformDialog');el.innerHTML='<div class="p-dialog-head"><h2>'+title+'</h2>'+pButton(txt('بستن','Close'),'close-dialog')+'</div><div class="p-dialog-body"><form data-platform-form="'+kind+'"><div class="p-fields">'+fields+'</div><div id="p-form-error" class="p-form-error" role="alert"></div><div class="p-dialog-foot"><button class="p-btn primary" type="submit">'+txt('ذخیره','Save')+'</button></div></form></div>';el.showModal();if(kind==='gp-cycle'){gpPreviewForm();gpEnhanceCycleUI();}
 };
 const gpSubmitBase=pSubmit;
 pSubmit=function(kind,values,recordId='',context={}){if(!kind.startsWith('gp-'))return gpSubmitBase(kind,values,recordId,context);const before=clone(state);try{
@@ -3525,6 +3551,40 @@ function gpReadiness(c){const issues=[];for(const [k,fa] of GP_ROLES)if(!c.roles
 function gpSaveCycle(v,c){if(c?.closedAt)throw Error('دوره بسته‌شده قابل ویرایش نیست.');const nc=gpDraft(v,c);if(!nc.name||!nc.roles.lead)throw Error('نام دوره و راهبر دوره الزامی است.');if(nc.teamId!=='company'&&!pTeam(nc.teamId))throw Error('واحد معتبر انتخاب کنید.');if(nc.goalIds.some(oid=>!pGoal(oid)||pGoal(oid).status==='closed'))throw Error('حداقل یک هدف باز انتخاب کنید.');if(gpEnsure().cycles.some(x=>x.id!==c?.id&&!x.closedAt&&x.goalIds.some(oid=>nc.goalIds.includes(oid))))throw Error('یک هدف در دوره باز دیگری است. ابتدا آن دوره را جمع‌بندی کنید.');if(nc.phase==='active'){const missing=gpReadiness(nc);if(missing.length)throw Error('آماده اجرا نیست: '+missing.join('؛ '));}if(c){nc.planHistory=[...(c.planHistory||[]),{at:new Date().toISOString(),start:c.start,end:c.end,rules:clone(c.rules||{}),calendar:c.calendar}];Object.assign(c,nc);}else{nc.id=id();nc.createdAt=new Date().toISOString();gpEnsure().cycles.push(nc);}return nc;}
 function gpStats(c){const days=Math.round((gpDate(c.end)-gpDate(c.start))/86400000)+1;return {days,weeks:Math.floor(days/7),remaining:days%7};}
 function gpPlanMarkup(c){const s=gpStats(c);return '<p><b>'+pNum(s.days)+' روز · '+pNum(s.weeks)+' هفته کامل'+(s.remaining?' و '+pNum(s.remaining)+' روز':'')+'</b></p><p>تعدادها نوبت تقویمی‌اند: چک‌این برای هر مسئول نتیجه کلیدی و گفت‌وگوی فردی برای هر زوج مدیر–مسئول تکرار می‌شود. تعداد کل جلسات فردی به تعداد این زوج‌ها بستگی دارد.</p><div class="gp-counts">'+GP_RULES.map(([key,a,b])=>{const dates=gpDates(c,key);return '<details><summary><b>'+pNum(dates.length)+'</b> '+txt(a,b)+'</summary><p>'+gpCadence(key,c)+'</p><p class="gp-lines">'+esc(gpAgenda(key))+'</p>'+dates.map(d=>'<div>'+gpDisplay(d)+'</div>').join('')+(dates.length?'':'<p>در این بازه نوبتی وجود ندارد.</p>')+'</details>';}).join('')+'</div>';}
+
+function gpEnhanceCycleUI(){
+ const form=document.querySelector('#platformDialog form[data-platform-form="gp-cycle"]');
+ if(!form)return;
+ const root=form.querySelector(':scope > .p-fields');if(!root)return;
+ const nav=form.querySelector('.gp-cycle-steps');
+ const blocks=Array.from(root.querySelectorAll(':scope > .gp-details'));
+ const nameField=form.querySelector('[name="name"]')?.closest('.p-field');
+ const targets=[nameField,blocks[0],blocks[1]];
+ if(nav){
+  nav.querySelectorAll('span').forEach((span,i)=>{
+   if(!targets[i])return;
+   const btn=document.createElement('button');
+   btn.type='button';btn.className='gp-cycle-navbtn';
+   btn.innerHTML=span.innerHTML;btn.setAttribute('aria-label',span.textContent.trim());
+   btn.addEventListener('click',()=>{
+    const section=targets[i];if(section.tagName==='DETAILS')section.open=true;
+    section.scrollIntoView({behavior:'smooth',block:'start'});
+    nav.querySelectorAll('button').forEach(b=>b.removeAttribute('aria-current'));
+    btn.setAttribute('aria-current','step');
+   });
+   span.replaceWith(btn);
+  });
+ }
+ if(!root.querySelector('.gp-cycle-section-title')){
+  const h=document.createElement('div');h.className='wide gp-cycle-section-title';h.innerHTML='<strong>۱ · اطلاعات دوره</strong><small>بازه زمانی، واحد سازمانی و وضعیت آماده‌سازی</small>';
+  if(nameField)root.insertBefore(h,nameField);
+ }
+ // Keep goals and all operational sections, plus existing input names, references and save handlers.
+ blocks.forEach((d,i)=>{d.classList.add('gp-cycle-section-'+(i+2));});
+ const btn=form.querySelector('.p-dialog-foot button[type="submit"]');
+ if(btn)btn.textContent=txt('ذخیره دوره','Save cycle');
+}
+
 function gpPreviewForm(){const form=document.querySelector('[data-platform-form="gp-cycle"]'),box=document.getElementById('gp-live-preview');if(!form||!box)return;try{const c=gpDraft(Object.fromEntries(new FormData(form)),gpCycle(pModalContext?.recordId)),issues=gpReadiness(c);box.innerHTML='<h3>۵ · پیش‌نمایش تقویم و آمادگی</h3>'+gpPlanMarkup(c)+'<details><summary>'+pNum(issues.length)+' مورد باقی‌مانده تا آمادگی اجرا</summary>'+issues.map(x=>'<p>'+esc(x)+'</p>').join('')+'</details><p>با تغییر تاریخ یا روزهای برنامه، شمارش همین‌جا به‌روز می‌شود. ذخیره پیش‌نویس الزامات تکمیل‌نشده را پنهان نمی‌کند.</p>';}catch(e){box.innerHTML='<p role="status">'+esc(e.message)+'</p>';}}
 function gpCyclePlan(c){const issues=gpReadiness(c),events=gpEvents(c),linked=state.meetings.filter(m=>m.goalsProgramCycle===c.id),outdated=linked.filter(m=>!events.some(e=>e.key===m.goalsProgramKey&&e.date===m.date?.slice(0,10)));return '<section class="p-card gp-guide"><h2>برنامه اجرایی دوره</h2>'+ (c.calendar==='gregorian'?'<p>این دوره با تقویم قبلی ثبت شده است. برای تبدیل به ماه‌های شمسی، «ویرایش برنامه دوره» را بزنید.</p>':'')+gpPlanMarkup(c)+'<details><summary>نقش‌ها و مسئولیت‌ها</summary>'+GP_ROLES.map(([k,fa,en,help])=>'<p><b>'+txt(fa,en)+': </b>'+esc(c.roles?.[k]||'تعیین نشده')+'<br>'+help+'</p>').join('')+'<p>'+esc(c.agreements||'توافق‌های اجرایی هنوز ثبت نشده است.')+'</p></details>'+(!c.closedAt?'<details><summary>'+pNum(issues.length)+' مورد در چک‌لیست آمادگی · '+(c.phase==='active'?'آماده اجرا':'پیش‌نویس')+'</summary>'+issues.map(x=>'<p>'+esc(x)+'</p>').join('')+'</details>':'')+(outdated.length?'<details><summary>جلسات ثبت‌شده خارج از تقویم فعلی ('+pNum(outdated.length)+')</summary><p>با تغییر برنامه، جلسات قبلی حذف نمی‌شوند. در صفحه هر جلسه موعد و وضعیت را بررسی کنید.</p>'+outdated.map(m=>'<p>'+pAnchor(m.title+' · '+gpDisplay(m.date.slice(0,10)),'#sessions/'+m.id)+'</p>').join('')+'</details>':'')+'</section>';}
 const gpOriginalAgenda=gpAgenda;
