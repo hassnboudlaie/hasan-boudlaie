@@ -35,7 +35,14 @@
 .s1-test-intro{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.s1-target{background:#eef7f0;border:1px solid #d3e7d7;border-radius:18px;padding:18px}.s1-target label{font-size:16px;font-weight:800;color:#315b49;display:block;margin-bottom:8px}.s1-target select{width:100%;font:inherit;font-size:17px;padding:11px;border-radius:12px;border:1px solid #bfd6c5;background:#fff}
 .s1-q{border:1px solid #dde9e1;border-radius:16px;padding:17px;margin:12px 0;background:#fff}.s1-q-title{font-size:18px;font-weight:700;line-height:1.9;margin-bottom:10px}.s1-scale{display:flex;gap:7px;flex-wrap:wrap}.s1-scale label{cursor:pointer;border:1px solid #cbded0;border-radius:10px;padding:7px 11px;background:#f9fcfa;font-size:15px}.s1-scale input{margin-left:4px}
 .s1-submit{border:0;background:linear-gradient(135deg,#0d6d4b,#0a503c);color:#fff;border-radius:14px;padding:12px 22px;font:inherit;font-size:18px;font-weight:800;cursor:pointer;margin-top:10px}
-.s1-result{display:none;margin-top:22px}.s1-result.show{display:block}.s1-scores{display:grid;grid-template-columns:1fr 1fr;gap:12px}.s1-score{background:#f4faf6;border:1px solid #d4e6d8;border-radius:16px;padding:16px;text-align:center}.s1-score b{display:block;font-size:28px;color:#0c6044}.s1-score span{font-size:15px}
+.s1-result{display:none;margin-top:22px}.s1-result.show{display:block}
+.s1-coach{margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.s1-coach-card{border-radius:18px;padding:18px;border:1px solid #d9e6dc;background:#fff;box-shadow:0 5px 16px rgba(16,62,45,.04)}
+.s1-coach-card.strength{background:#eef8f1;border-color:#cfe4d5}.s1-coach-card.risk{background:#fff6eb;border-color:#ead9bd}.s1-coach-card.practice{background:#f0f5ff;border-color:#d6def0}
+.s1-coach-card h4{font-size:20px;margin:0 0 10px;color:#174d3c}.s1-coach-card ul{margin:0;padding-right:20px}.s1-coach-card li{font-size:16px;line-height:1.95;margin:5px 0}
+.s1-dev-plan{margin-top:16px;border:1px solid #dbe6df;border-radius:18px;padding:18px;background:linear-gradient(135deg,#f8fbf9,#fff)}
+.s1-dev-plan h4{font-size:21px;color:#154936;margin:0 0 10px}.s1-dev-plan .step{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:16px;line-height:1.9}.s1-dev-plan .num{width:28px;height:28px;flex:0 0 28px;display:grid;place-items:center;border-radius:50%;background:#0d6d4b;color:#fff;font-weight:800}
+@media(max-width:900px){.s1-coach{grid-template-columns:1fr}}.s1-scores{display:grid;grid-template-columns:1fr 1fr;gap:12px}.s1-score{background:#f4faf6;border:1px solid #d4e6d8;border-radius:16px;padding:16px;text-align:center}.s1-score b{display:block;font-size:28px;color:#0c6044}.s1-score span{font-size:15px}
 .s1-matrix{margin-top:16px;position:relative;height:360px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;border:2px solid #1b5a43;border-radius:20px;overflow:hidden;background:#fff}.s1-cell{padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-size:16px;line-height:1.8}.s1-cell b{font-size:19px}.s1-cell:nth-child(1){background:#eef8ef}.s1-cell:nth-child(2){background:#f1f8f4}.s1-cell:nth-child(3){background:#fff8eb}.s1-cell:nth-child(4){background:#f7f3ef}.s1-dot{position:absolute;width:24px;height:24px;background:#d44432;border:4px solid #fff;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.25);transform:translate(50%,50%);transition:.35s}.s1-axis-x,.s1-axis-y{font-size:13px;color:#566b60;font-weight:800}.s1-axis-x{text-align:center;margin-top:6px}.s1-axis-y{position:absolute;right:-90px;top:50%;transform:rotate(-90deg)}
 .s1-case{border:1px solid #d9e7dd;border-radius:18px;padding:20px;margin:14px 0;background:#fff}.s1-case h3{font-size:21px;margin:0 0 8px;color:#184c3b}.s1-case p{font-size:18px;line-height:1.95}.s1-options{display:flex;gap:8px;flex-wrap:wrap}.s1-option{border:1px solid #c7dccd;background:#f8fcf9;border-radius:12px;padding:9px 13px;font:inherit;font-size:16px;cursor:pointer}.s1-option:hover{background:#e8f5eb}
 .s1-feedback{display:none;margin-top:10px;padding:12px;border-radius:12px;background:#eef8f1;border-right:4px solid #168353;font-size:16px;line-height:1.9}.s1-feedback.show{display:block}
@@ -298,7 +305,131 @@ function session1Page(){
 }
 function openS1(id,btn){document.getElementById("s1-content").innerHTML=s1SectionHtml(id);document.querySelectorAll(".s1-nav-btn").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");window.scrollTo({top:0,behavior:"smooth"});}
 function s1Feedback(btn,correct){const box=btn.closest(".s1-case");const fb=box.querySelector(".s1-feedback");box.querySelectorAll(".s1-option").forEach(b=>{b.style.opacity=".55";b.style.borderColor="#c7dccd"});btn.style.opacity="1";btn.style.borderColor=correct?"#168353":"#cf654f";fb.innerHTML=correct?fb.innerHTML:"↩️ این گزینه قابل دفاع است، اما بهترین Signal را نمی‌فرستد. دوباره Context، احترام و کنترل موقعیت را هم‌زمان ببینید.";fb.classList.add("show");}
-function scoreS1(){let w=0,c=0,wc=0,cc=0,missing=0;s1Questions.forEach((q,i)=>{const el=document.querySelector('input[name="s1q'+i+'"]:checked');if(!el){missing++;return}const v=Number(el.value);if(q.d==="w"){w+=v;wc++}else{c+=v;cc++}});if(missing){alert("لطفاً به هر ۱۰ عبارت پاسخ دهید.");return}w=w/wc;c=c/cc;document.getElementById("s1-wscore").textContent=w.toFixed(1);document.getElementById("s1-cscore").textContent=c.toFixed(1);const dot=document.getElementById("s1-dot");dot.style.right=((c-1)/4*92+3)+"%";dot.style.bottom=((w-1)/4*92+3)+"%";let profile="",focus="";if(w>=3&&c>=3){profile="🌟 الگوی غالب: حضور ارتباطی حرفه‌ای";focus="تمرکز توسعه: حفظ این تعادل در موقعیت‌های پرفشار و با ذی‌نفعان متفاوت."}else if(w>=3){profile="😊 الگوی غالب: خوش‌برخورد اما نیازمند تقویت Competence Signal";focus="تمرکز توسعه: روشن‌کردن مسیر، قدم بعد و مالکیت ارتباط."}else if(c>=3){profile="🧊 الگوی غالب: مسلط اما نسبتاً سرد";focus="تمرکز توسعه: Recognition، Warm Opening و توجه آشکار به تجربه مخاطب."}else{profile="⚠️ الگوی غالب: ارتباط کم‌اعتماد";focus="تمرکز توسعه: ابتدا ثبات رفتاری و وضوح، سپس گرمی و شخصی‌سازی ارتباط."}document.getElementById("s1-profile").innerHTML="<b>"+profile+"</b><br>"+focus+"<br><small>این نتیجه خودارزیابی است، نه آزمون شخصیت یا ارزیابی رسمی.</small>";document.getElementById("s1-result").classList.add("show");}
+function scoreS1(){
+ let w=0,c=0,wc=0,cc=0,missing=0;
+ s1Questions.forEach((q,i)=>{
+   const el=document.querySelector('input[name="s1q'+i+'"]:checked');
+   if(!el){missing++;return}
+   const v=Number(el.value);
+   if(q.d==="w"){w+=v;wc++}else{c+=v;cc++}
+ });
+ if(missing){alert("لطفاً به هر ۱۰ عبارت پاسخ دهید.");return}
+ w=w/wc;c=c/cc;
+ document.getElementById("s1-wscore").textContent=w.toFixed(1);
+ document.getElementById("s1-cscore").textContent=c.toFixed(1);
+ const dot=document.getElementById("s1-dot");
+ dot.style.right=((c-1)/4*92+3)+"%";
+ dot.style.bottom=((w-1)/4*92+3)+"%";
+
+ let profile="",focus="",strengths=[],risks=[],practices=[],steps=[];
+
+ if(w>=3&&c>=3){
+   profile="🌟 الگوی غالب: حضور ارتباطی حرفه‌ای";
+   focus="تمرکز توسعه: حفظ تعادل گرمی و شایستگی، به‌ویژه در موقعیت‌های پرفشار و با ذی‌نفعان متفاوت.";
+   strengths=[
+     "مخاطب معمولاً هم احساس احترام می‌کند و هم احساس می‌کند شما بر موقعیت مسلط هستید.",
+     "احتمال بیشتری دارد که در شروع تعامل، اعتماد و همکاری شکل بگیرد.",
+     "می‌توانید به‌صورت هم‌زمان Relationship و Result را مدیریت کنید."
+   ];
+   risks=[
+     "ممکن است در فشار کاری، یکی از دو بُعد افت کند؛ معمولاً گرمی در شرایط شلوغی و Competence Signal در شرایط ابهام.",
+     "اعتماد به الگوی فعلی می‌تواند باعث شود تفاوت Context مشتری، نماینده، کارکنان و ستاد کمتر دیده شود.",
+     "خطر روتین‌شدن رفتار حرفه‌ای وجود دارد؛ یعنی حضور خوب، اما بدون توجه کافی به فرد مقابل."
+   ];
+   practices=[
+     "تمرین «۳۰ ثانیه اول»: هفته‌ای سه تعامل مهم را مرور کنید و ببینید در ۳۰ ثانیه اول چه Signalهایی فرستادید.",
+     "تمرین «تغییر ذی‌نفع»: یک پیام واحد را برای مشتری، نماینده و مدیر ستادی با سه Opening متفاوت بازنویسی کنید.",
+     "تمرین «فشار»: در یک سناریوی شلوغ شعبه، آگاهانه Warmth را بدون افت سرعت حفظ کنید."
+   ];
+   steps=[
+     "یک رفتار قوی خود را که بیشترین اعتماد می‌سازد مشخص و آگاهانه تثبیت کنید.",
+     "در موقعیت‌های پراسترس، قبل از پاسخ فقط ۳ ثانیه روی لحن و اولین جمله تمرکز کنید.",
+     "ماهانه از یک همکار قابل اعتماد بخواهید فقط درباره «گرمی» و «تسلط» شما بازخورد بدهد."
+   ];
+ }else if(w>=3){
+   profile="😊 الگوی غالب: خوش‌برخورد اما کم‌اثر";
+   focus="تمرکز توسعه: حفظ گرمی فعلی و تقویت وضوح، قاطعیت و Competence Signal.";
+   strengths=[
+     "مخاطب احتمالاً شما را خوش‌برخورد، در دسترس و قابل صحبت می‌بیند.",
+     "فضای اولیه برای همکاری و بیان مسئله به‌خوبی شکل می‌گیرد.",
+     "در کاهش تنش اولیه و ایجاد رابطه مزیت دارید."
+   ];
+   risks=[
+     "اگر مسیر، تصمیم یا قدم بعد روشن نباشد، گرمی می‌تواند به‌اشتباه به ضعف مدیریتی تعبیر شود.",
+     "توضیح زیاد، تعارف یا تأخیر در جمع‌بندی ممکن است قدرت Positioning شما را کم کند.",
+     "ممکن است برای حفظ رابطه، از تعیین مرز یا گفتن «نه حرفه‌ای» اجتناب کنید."
+   ];
+   practices=[
+     "تمرین «یک جمله نتیجه»: پایان هر گفت‌وگو را با یک جمله روشن درباره اقدام بعدی جمع‌بندی کنید.",
+     "تمرین «۳۰ ثانیه تصمیم»: بعد از شنیدن مسئله، در ۳۰ ثانیه مسیر اولیه را مشخص کنید: بررسی، ارجاع، تصمیم یا زمان پاسخ.",
+     "تمرین «نه حرفه‌ای»: سه موقعیت واقعی را تمرین کنید که باید محدودیت را محترمانه اما قاطع بیان کنید."
+   ];
+   steps=[
+     "در هر تعامل مهم، قبل از شروع مشخص کنید «نتیجه مطلوب این گفت‌وگو چیست؟».",
+     "از عبارات مبهم مثل «ببینیم چی می‌شود» یا «دست من نیست» فاصله بگیرید.",
+     "گرمی خود را نگه دارید، اما آن را با زمان، مسئول و قدم بعد همراه کنید."
+   ];
+ }else if(c>=3){
+   profile="🧊 الگوی غالب: مسلط اما نسبتاً سرد";
+   focus="تمرکز توسعه: حفظ شایستگی و افزودن Recognition، Warm Opening و توجه آشکار به تجربه مخاطب.";
+   strengths=[
+     "مخاطب معمولاً شما را مسلط، جدی و قابل اتکا در تصمیم‌گیری می‌بیند.",
+     "احتمالاً در ساختاردهی، کنترل زمان و هدایت گفتگو قوی هستید.",
+     "در شرایط پیچیده یا فشرده، Competence Signal خوبی منتقل می‌کنید."
+   ];
+   risks=[
+     "تسلط بالا بدون Warmth ممکن است به سردی، فاصله یا دسترس‌ناپذیری تعبیر شود.",
+     "مخاطب ممکن است قبل از اینکه مسئله‌اش کامل بیان شود، احساس کند شما تصمیم خود را گرفته‌اید.",
+     "در کارکنان و نمایندگان، این الگو می‌تواند سکوت، احتیاط زیاد یا کاهش بیان مسائل واقعی ایجاد کند."
+   ];
+   practices=[
+     "تمرین «Recognition»: قبل از ورود به اصل موضوع، یک جمله کوتاه برای به‌رسمیت‌شناختن حضور یا نگرانی مخاطب بگویید.",
+     "تمرین «Warm Opening»: سه Opening حرفه‌ای برای مشتری، نماینده و کارمند طراحی و در هفته استفاده کنید.",
+     "تمرین «یک سؤال قبل از پاسخ»: قبل از ارائه راه‌حل، حداقل یک سؤال روشن‌کننده بپرسید."
+   ];
+   steps=[
+     "در شروع تعامل، سرعت ورود به راه‌حل را کمی کم و کیفیت Connection را کمی بالا ببرید.",
+     "به‌جای فقط انتقال تصمیم، دلیل یا منطق کوتاه آن را نیز توضیح دهید.",
+     "هفته‌ای یک‌بار از خود بپرسید: آیا مخاطب فقط فهمید من چه می‌خواهم، یا احساس کرد او را هم فهمیده‌ام؟"
+   ];
+ }else{
+   profile="⚠️ الگوی غالب: ارتباط کم‌اعتماد";
+   focus="تمرکز توسعه: ابتدا ثبات، وضوح و کنترل تعامل؛ سپس تقویت گرمی و شخصی‌سازی.";
+   strengths=[
+     "مزیت این جایگاه این است که فرصت توسعه در هر دو بُعد واضح و قابل اندازه‌گیری است.",
+     "با چند رفتار کوچک و منظم، تغییر ادراک مخاطب می‌تواند نسبتاً سریع اتفاق بیفتد.",
+     "خودآگاهی ایجادشده از همین تست، نقطه شروع مهمی برای رشد است."
+   ];
+   risks=[
+     "مخاطب ممکن است هم نسبت به میزان توجه شما و هم نسبت به تسلط شما تردید داشته باشد.",
+     "در موقعیت‌های پرفشار، واکنش‌های دفاعی، مبهم یا عجولانه می‌تواند این برداشت را تقویت کند.",
+     "نبود الگوی ثابت در شروع و پایان گفتگو باعث می‌شود کیفیت ارتباط وابسته به حال و شرایط روز شود."
+   ];
+   practices=[
+     "تمرین «الگوی ثابت شروع»: سلام + Recognition + سؤال روشن‌کننده + اعلام مسیر بعد.",
+     "تمرین «یک اقدام مشخص»: در پایان هر تعامل فقط یک اقدام بعدی شفاف، همراه با مسئول و زمان تعیین کنید.",
+     "تمرین «مرور روزانه ۵ دقیقه‌ای»: هر روز یک تعامل ضعیف را بازنویسی کنید و جمله شروع و پایان بهتر بسازید."
+   ];
+   steps=[
+     "اول روی ثبات رفتاری کار کنید؛ یک Opening و Closing استاندارد برای خود بسازید.",
+     "در هفته اول فقط روی وضوح و قدم بعد تمرکز کنید؛ هم‌زمان همه چیز را تغییر ندهید.",
+     "بعد از ایجاد ثبات، گرمی را با تماس چشمی، Recognition و لحن متناسب اضافه کنید."
+   ];
+ }
+
+ const target=document.getElementById("s1-target").value;
+ document.getElementById("s1-profile").innerHTML=
+   "<b>"+profile+"</b><br>"+focus+
+   "<br><small>مبنای تحلیل: "+target+" | این نتیجه خودارزیابی است، نه آزمون شخصیت یا ارزیابی رسمی.</small>"+
+   '<div class="s1-coach">'+
+     '<div class="s1-coach-card strength"><h4>💪 نقاط قوت قابل تثبیت</h4><ul>'+strengths.map(x=>"<li>"+x+"</li>").join("")+'</ul></div>'+
+     '<div class="s1-coach-card risk"><h4>⚠️ ریسک‌ها و نقاط قابل مراقبت</h4><ul>'+risks.map(x=>"<li>"+x+"</li>").join("")+'</ul></div>'+
+     '<div class="s1-coach-card practice"><h4>🏋️ تمرین‌های پیشنهادی</h4><ul>'+practices.map(x=>"<li>"+x+"</li>").join("")+'</ul></div>'+
+   '</div>'+
+   '<div class="s1-dev-plan"><h4>🎯 برنامه توسعه کوتاه‌مدت</h4>'+steps.map((x,i)=>'<div class="step"><span class="num">'+(i+1)+'</span><span>'+x+'</span></div>').join("")+'</div>';
+
+ document.getElementById("s1-result").classList.add("show");
+}
 
 function sessionPage(id){
 if(id===1){session1Page();return}
