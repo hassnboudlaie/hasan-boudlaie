@@ -3966,7 +3966,7 @@ pSubmit=function(kind,values,recordId='',context={}){
  const v=Object.fromEntries(Object.entries(values).map(([k,val])=>[k,String(val).trim()]));
  if(kind==='pd-cadence'){
   if(!v.name||!pdFaTypes[v.type])throw Error(txt('نام و نوع تناوب الزامی است.','Name and type required.'));
-  const months=Number(v.months),startMonth=Number(v.startMonth),startDay=Number(v.startDay);
+  const months=v.type==='annual'?12:v.type==='quarterly'?3:v.type==='monthly'?1:Number(v.months),startMonth=Number(v.startMonth),startDay=Number(v.startDay);
   if(!Number.isInteger(months)||months<1||months>24||startMonth<1||startMonth>12||startDay<1||startDay>28)throw Error(txt('مقادیر تناوب معتبر نیستند.','Invalid cadence values.'));
   const values2={name:v.name.slice(0,120),nameEn:v.nameEn.slice(0,120),type:v.type,months,startMonth,startDay,updateFrequency:v.updateFrequency||'weekly'};
   const list=pdCadences(),c=pdFindCadence(recordId);
@@ -4018,6 +4018,7 @@ gpPage=function(rid=''){
  if(i===-1)return html;
  let top=html.slice(0,i),legacy=html.slice(i);
  top=top.replace(/data-gp-action="gp-cycle" data-gp-cycle="([^"]*)"/g,(m,id)=>'data-pd-action="'+(id?'timeframe-edit':'timeframe-new')+'" data-gp-cycle="'+id+'"');
+ top=top.replace(/data-p-action="gp-cycle" data-p-id="([^"]*)"/g,(m,id)=>'data-pd-action="'+(id?'timeframe-edit':'timeframe-new')+'" data-pd-id="'+id+'"');
  top=top.replace('<div class="pd-config-breadcrumb">CONFIGURE <span aria-hidden="true">›</span> CADENCES &amp; TIMEFRAMES</div>','<div class="pd-config-breadcrumb">CONFIGURE › TIMEFRAMES</div>');
  top=top.replace(txt('تناوب و بازه‌های زمانی','Cadences & Timeframes'),txt('Timeframes · بازه‌های زمانی','Timeframes'));
  top=top.replace('<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('Cadences · تناوب هدف‌گذاری','Goal-setting cadences')+'</h2>','<section class="pd-config-section pd-cadence-summary"><div class="pd-section-head"><h2>'+txt('Cadences · تناوب هدف‌گذاری','Goal-setting cadences')+'</h2>');
