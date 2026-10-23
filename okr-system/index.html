@@ -3760,6 +3760,82 @@ function dsInitialize(){
  if(KISH_QA_NAMESPACE){const badge=document.getElementById('dsQaBadge');if(badge){badge.classList.remove('hidden');badge.textContent=txt('QA · داده مستقل','QA · isolated data');}}
  dsPaintTools();pInstallNav();if(cloudReady)route();
 }
+
+/* PERDOO-ALIGNED NAVIGATION & TIMEFRAME WORKSPACE — additive upgrade, 2026-10-23.
+   Existing business objects, legacy tools, storage and submit handlers are preserved. */
+const pdNavBase=pInstallNav;
+pInstallNav=function(){
+  pdNavBase();
+  const target=document.getElementById('platformNav');
+  const current=location.hash.slice(1).split('/')[0]||'start';
+  const navGroups=[
+    [txt('خانه','HOME'),[['start','⌂',txt('میز کار','Home')]]],
+    [txt('کاوش','EXPLORE'),[['map','◇',txt('نقشه راهبرد','Strategy Map')],['goals','◎',txt('اهداف و نتایج کلیدی','Objectives & KRs')],['kpis','▥',txt('شاخص‌ها','KPIs')],['analytics','▦',txt('داشبوردها','Dashboards')],['organization','▤',txt('تیم‌ها و دپارتمان‌ها','Teams')]]],
+    [txt('اجرا و پیگیری','PERFORM'),[['projects','▣',txt('ابتکارات و وظایف','Initiatives & Tasks')],['sessions','◷',txt('جلسات','Meetings')],['reporting','≡',txt('گزارش‌ها','Reporting')]]],
+    [txt('پیکربندی','CONFIGURE'),[['program','▦',txt('تناوب و بازه‌های زمانی','Cadences & Timeframes')],['people','◉',txt('افراد و مسئولان','People')],['revision','↻',txt('بازنگری و استقرار','Revision & Rollout')],['resources','▧',txt('اسناد و مراجع','Documents')]]]
+  ];
+  if(target)target.innerHTML=navGroups.map(([label,items])=>'<div class="pd-nav-group"><div class="nav-label">'+label+'</div>'+items.map(([key,icon,name])=>'<a href="#'+key+'" '+(current===key?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">'+icon+'</span><span>'+name+'</span></a>').join('')+'</div>').join('');
+  const mobile=document.getElementById('platformMobile');
+  if(mobile)mobile.innerHTML=pOptions(navGroups.flatMap(([,items])=>items.map(([key,,label])=>[key,label])),current);
+};
+const pdCycleFieldsBase=gpCycleFields;
+gpCycleFields=function(c){
+  const original=pdCycleFieldsBase(c);
+  const field=pSelect(txt('Cadence · تناوب هدف‌گذاری','Goal-setting cadence'),'goalCadence',[
+    ['annual',txt('سالانه · Annual','Annual')],
+    ['quarterly',txt('فصلی · Quarterly','Quarterly')],
+    ['monthly',txt('ماهانه · Monthly','Monthly')],
+    ['custom',txt('سفارشی · Custom','Custom')]
+  ],c?.goalCadence||'quarterly',true);
+  return original.replace('<div class="wide gp-date-pair">',field+'<div class="wide gp-date-pair">');
+};
+const pdCycleDraftBase=gpDraft;
+gpDraft=function(v,c){
+  const draft=pdCycleDraftBase(v,c);
+  draft.goalCadence=['annual','quarterly','monthly','custom'].includes(v.goalCadence)?v.goalCadence:(c?.goalCadence||'quarterly');
+  return draft;
+};
+function pdCadenceLabel(c){
+  if(!c?.goalCadence)return txt('ثبت نشده','Not specified');
+  return ({annual:txt('سالانه','Annual'),quarterly:txt('فصلی','Quarterly'),monthly:txt('ماهانه','Monthly'),custom:txt('سفارشی','Custom')})[c.goalCadence]||txt('ثبت نشده','Not specified');
+}
+function pdTimeframeCard(c,selected){
+  const goals=(c.goalIds||[]).length,events=gpEvents(c);
+  return '<a class="pd-tf-card'+(selected?' selected':'')+'" href="#program/'+c.id+'"><div class="pd-tf-card-head"><span class="pd-tf-label">'+esc(pdCadenceLabel(c))+'</span>'+pStatus(c.closedAt?'closed':c.phase==='active'?'active':'draft')+'</div><strong>'+esc(c.name)+'</strong><span class="pd-tf-dates">'+gpDisplay(c.start)+' — '+gpDisplay(c.end)+'</span><span class="pd-tf-info">'+pNum(goals)+' '+txt('هدف','Objectives')+' · '+pNum(events.length)+' '+txt('نوبت برنامه','Scheduled occurrences')+'</span></a>';
+}
+function pdGoalDetails(c){
+ if(!c.goalIds?.length)return pEmpty(txt('هنوز هدفی به این بازه اختصاص داده نشده است.','No objectives assigned to this timeframe yet.'),pAnchor(txt('مشاهده اهداف','Browse objectives'),'#goals','p-btn'));
+ const projects=state.initiatives||[];
+ return '<div class="pd-goal-lines">'+c.goalIds.map(oid=>{
+  const o=pGoal(oid);if(!o)return '<div class="pd-linked-goal">'+txt('هدف قبلی در دسترس نیست','Linked objective unavailable')+'</div>';
+  const all=allObjectives().find(x=>x.objective.id===oid);
+  const unit=all?.teamId||(state.teams.find(t=>t.okrs?.some(y=>y.id===oid))?.id)||c.teamId||'company';
+  const initiatives=projects.filter(i=>i.objectiveId===oid);
+  return '<article class="pd-linked-goal"><div class="pd-linked-title"><span class="pd-type-dot objective" aria-hidden="true"></span>'+pAnchor(pGoalTitle(o),'#goals/'+oid,'p-link')+'</div><div class="pd-goal-meta">'+pUnitLink(unit)+' · '+pOwner(o.owner)+' · '+pNum(o.krs?.length||0)+' KR · '+pNum(initiatives.length)+' '+txt('ابتکار','Initiatives')+'</div><details class="pd-goal-sub"><summary>'+txt('مشاهده نتایج کلیدی و ابتکارات','Show key results & initiatives')+'</summary><div class="pd-sub-list">'+(o.krs||[]).map(k=>'<div><span class="pd-type-dot kr" aria-hidden="true"></span>'+pAnchor(k.text||txt('نتیجه کلیدی','Key result'),'#results/'+k.id,'p-link')+'</div>').join('')+initiatives.map(i=>'<div><span class="pd-type-dot initiative" aria-hidden="true"></span>'+pAnchor(i.title,'#projects/'+i.id,'p-link')+'</div>').join('')+'</div></details></article>';
+ }).join('')+'</div>';
+}
+function pdSchedule(c){
+ const rules=GP_RULES.map(([key,faName,enName])=>({key,label:txt(faName,enName),dates:gpDates(c,key)}));
+ const events=gpEvents(c),today=pToday(),next=events.filter(e=>e.date>=today).slice(0,6);
+ return '<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('ریتم اجرا و جلسات','Execution rhythm & meetings')+'</h2><span class="pd-subtle">'+txt('زمان‌بندی داخلی کیش؛ نه الزام ثابت Perdoo','Kish operational scheduling; not a Perdoo-mandated cadence')+'</span></div><div class="pd-cadence-stats">'+rules.map(r=>'<div class="pd-rhythm-item"><strong>'+pNum(r.dates.length)+'</strong><span>'+r.label+'</span></div>').join('')+'</div><details class="pd-schedule-more"><summary>'+txt('مشاهده نوبت‌ها، تقویم کامل و ثبت جلسات','View calendar occurrences and schedule meetings')+'</summary>'+(next.length?'<div class="pd-upcoming-list">'+next.map(e=>{const rule=GP_RULES.find(r=>r[0]===e.key);return '<div><span>'+gpDisplay(e.date)+'</span><b>'+txt(rule?.[1]||e.key,rule?.[2]||e.key)+'</b>'+(e.meeting?pAnchor(txt('باز کردن جلسه','Open meeting'),'#sessions/'+e.meeting.id,'p-link'):e.key==='checkin'?pAnchor(txt('ثبت پیشرفت','Check in'),'#checkins','p-link'):gpButton(txt('ثبت جلسه','Schedule meeting'),'meeting',c.id,e.key,e.date))+'</div>';}).join('')+'</div>':'<p class="p-muted">'+txt('نوبت آینده‌ای در بازه ثبت نشده است.','No upcoming occurrences in this timeframe.')+'</p>')+'</details></section>';
+}
+const pdLegacyProgramPage=gpPage;
+gpPage=function(rid=''){
+ const g=gpEnsure(),cycles=g.cycles||[],c=gpCycle(rid)||cycles.find(x=>!x.closedAt)||cycles[cycles.length-1],issues=c&&!c.closedAt?gpReadiness(c):[];
+ let out='<div class="pd-config-shell"><div class="pd-config-breadcrumb">CONFIGURE <span aria-hidden="true">›</span> CADENCES &amp; TIMEFRAMES</div>';
+ out+='<header class="pd-config-header"><div><span class="p-kicker">'+txt('ساختار دوره‌های هدف‌گذاری','GOAL-SETTING TIMEFRAMES')+'</span><h1>'+txt('تناوب و بازه‌های زمانی','Cadences & Timeframes')+'</h1><p>'+txt('Cadence تناوب ایجاد اهداف است؛ Timeframe یک بازه زمانی مشخص است. اهداف، نتایج کلیدی و ابتکارات در فضای اهداف مدیریت می‌شوند.','A cadence is the frequency of goal setting; a timeframe is an individual date range. Goals and results are managed separately.')+'</p></div><div class="pd-header-actions">'+pButton(txt('افزودن بازه زمانی','Add timeframe'),'gp-cycle','',true)+'</div></header>';
+ out+='<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('Cadences · تناوب هدف‌گذاری','Goal-setting cadences')+'</h2><a target="_blank" rel="noopener noreferrer" class="pd-doc-link" href="https://support.perdoo.com/en/articles/4515060-cadences-and-timeframes">'+txt('راهنمای رسمی Perdoo ↗','Official Perdoo guide ↗')+'</a></div><div class="pd-cadence-intro"><span class="pd-cadence-chip">'+txt('سالانه · Annual','Annual')+'</span><span class="pd-cadence-chip">'+txt('فصلی · Quarterly','Quarterly')+'</span><p>'+txt('Perdoo ترکیب سالانه و فصلی را برای شروع پیشنهاد می‌کند. این برچسب‌ها الگوی مرجع هستند، نه دوره‌های ثبت‌شده شرکت. Cadence هر بازه هنگام ایجاد یا ویرایش آن تعیین می‌شود.','Perdoo recommends annual and quarterly planning. These are reference types, not fabricated company records. Select a cadence when creating or editing a timeframe.')+'</p></div></section>';
+ out+='<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('Timeframes · بازه‌های ثبت‌شده','Recorded timeframes')+'</h2><span class="pd-subtle">'+pNum(cycles.length)+' '+txt('بازه واقعی','stored timeframes')+'</span></div>'+(cycles.length?'<div class="pd-timeframe-list">'+cycles.map(x=>pdTimeframeCard(x,c?.id===x.id)).join('')+'</div>':pEmpty(txt('هنوز بازه زمانی ثبت نشده است.','No timeframes created yet.'),pButton(txt('تعریف بازه زمانی','Create timeframe'),'gp-cycle','',true)))+'</section>';
+ if(c){
+  out+='<section class="pd-config-section pd-current-timeframe"><div class="pd-section-head"><div><span class="p-kicker">'+txt('بازه انتخاب‌شده','SELECTED TIMEFRAME')+'</span><h2>'+esc(c.name)+'</h2></div>'+pStatus(c.closedAt?'closed':c.phase==='active'?'active':'draft')+'</div><div class="pd-metadata-grid"><div><small>'+txt('شروع و پایان','Start & end')+'</small><b>'+gpDisplay(c.start)+' — '+gpDisplay(c.end)+'</b></div><div><small>Cadence</small><b>'+esc(pdCadenceLabel(c))+'</b></div><div><small>'+txt('واحد / تیم','Team')+'</small><b>'+pUnitLink(c.teamId)+'</b></div><div><small>'+txt('راهبر دوره','Lead')+'</small><b>'+pOwner(c.roles?.lead||g.owner)+'</b></div></div><div class="pd-inline-actions">'+(!c.closedAt?pButton(txt('ویرایش بازه و مسئولیت‌ها','Edit timeframe & roles'),'gp-cycle',c.id):'')+pAnchor(txt('مشاهده اهداف در Cascade','Open goals in Cascade'),'#goals','p-btn')+pAnchor(txt('جلسات','Meetings'),'#sessions','p-btn')+'</div>'+(!c.closedAt&&issues.length?'<p class="pd-readiness-notice">'+pNum(issues.length)+' '+txt('مورد در چک‌لیست آمادگی اجرای چرخه تکمیل نشده است.','cycle-readiness items need attention.')+'</p>':'')+'</section>';
+  out+='<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('Objectives · Key Results · Initiatives','Objectives · Key Results · Initiatives')+'</h2><span class="pd-subtle">'+pNum(c.goalIds?.length||0)+' '+txt('هدف متصل','linked objectives')+'</span></div>'+pdGoalDetails(c)+'</section>';
+  out+=pdSchedule(c);
+ }
+ out+='<details class="pd-legacy-tools"><summary>'+txt('ابزارهای موجود برنامه مدیریت اهداف و تقویم تفصیلی','Existing program tools, calendars & advanced operations')+'</summary><div class="pd-legacy-body"><p class="pd-retained-note">'+txt('تمام ابزارهای قبلی، تنظیم جلسات، خروجی برنامه، پیش‌نمایش و بستن فصل در این بخش حفظ شده‌اند.','Existing scheduling, export, review and legacy controls remain available here.')+'</p>'+pdLegacyProgramPage(rid)+'</div></details></div>';
+ return out;
+};
+/* END PERDOO-ALIGNED NAVIGATION & TIMEFRAME WORKSPACE */
+
 Promise.resolve().then(dsInitialize);
 
 })();
