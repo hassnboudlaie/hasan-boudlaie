@@ -1185,6 +1185,7 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 }
 
 </style>
+<link rel="stylesheet" href="assets/okr-visual-upgrade-20261023.css?v=1">
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
 
@@ -3191,9 +3192,10 @@ function pdGoalUpdate(o){const hs=(o.krs||[]).flatMap(k=>pdHistory('kr',k.id).ma
 function pdGoalsInScope(){return allObjectives().filter(x=>pMatches(x.objective.objective+' '+x.objective.owner)&&(pFilter.status==='all'||x.objective.status===pFilter.status)&&(pFilter.owner==='all'||x.objective.owner===pFilter.owner)&&(pFilter.unit==='all'||pUnitGoals(pFilter.unit).some(y=>y.objective.id===x.objective.id)));}
 function pdSort(items,getName=x=>x.objective.objective){return items.slice().sort((a,b)=>pd.sort==='progress'?(pGoalScore(b.objective).value??-1)-(pGoalScore(a.objective).value??-1):pd.sort==='due'?String(a.objective.due||'9999').localeCompare(String(b.objective.due||'9999')):pd.sort==='updated'?String((b.objective.krs||[]).map(k=>k.lastUpdate||'').sort().at(-1)||'').localeCompare(String((a.objective.krs||[]).map(k=>k.lastUpdate||'').sort().at(-1)||'')):getName(a).localeCompare(getName(b),fa()?'fa':'en'));}
 function pdGoalUnitMarkup(o){
- const units=pGoalUnits(o.id),list=units.length?units:['company'],links=list.map(pUnitLink).join('<br>');
- if(list.length<=2)return links;
- return '<div class="pd-units-desktop">'+links+'</div><details class="pd-units-mobile"><summary>'+pNum(list.length)+' '+txt('واحد مرتبط ـ مشاهده همه','units · show all')+'</summary><div class="pd-units-list">'+links+'</div></details>';
+ const units=pGoalUnits(o.id),list=units.length?units:['company'];
+ if(list.length<=2)return '<div class="pd-unit-few">'+list.map(pUnitLink).join('')+'</div>';
+ const links=list.map(pUnitLink).join('');
+ return '<details class="pd-unit-disclosure"><summary>'+pNum(list.length)+' '+txt('واحد مرتبط · مشاهده همه','related units · show all')+'</summary><div class="pd-units-list">'+links+'</div></details>';
 }
 function pdGoalTd(key,content){
  const captions={owner:txt('مسئول','Owner'),unit:txt('واحد','Unit'),progress:txt('پیشرفت','Progress'),update:txt('آخرین تغییر','Last update'),due:txt('موعد','Due'),status:txt('وضعیت','Status')};

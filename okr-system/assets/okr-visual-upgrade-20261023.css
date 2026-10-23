@@ -1,0 +1,71 @@
+
+/* Kish OKR Visual System v2026.10.23 – presentation-only. All records and event handlers stay in index.html. */
+:root{--okr-cyan:#67d5ec;--okr-panel:#122f44;--okr-border:#375d76;--okr-ink:#edf7ff}
+.kish-perdoo .pd-cascade{color:var(--okr-ink)}
+.kish-perdoo .pd-cascade .p-table{border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums}
+.kish-perdoo .pd-cascade .p-table th{font-weight:700;font-size:13px;letter-spacing:0}
+.kish-perdoo .pd-cascade .pd-unit-few,.kish-perdoo .pd-cascade .pd-units-list{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.kish-perdoo .pd-cascade .pd-unit-few a,.kish-perdoo .pd-cascade .pd-units-list a{color:#b8e5ff;text-decoration:none;display:inline-flex;align-items:center;min-height:32px;max-width:100%;padding:5px 9px;border:1px solid #42708c;border-radius:8px;background:#173d55;line-height:1.65;font-size:13px}
+.kish-perdoo .pd-cascade .pd-unit-few a:hover,.kish-perdoo .pd-cascade .pd-units-list a:hover{border-color:#78c8f5;background:#1d4b68}
+.kish-perdoo .pd-cascade .pd-unit-disclosure{width:100%;max-width:100%;border:1px solid #41758f;background:#153d56;border-radius:10px;padding:7px 10px}
+.kish-perdoo .pd-cascade .pd-unit-disclosure>summary{cursor:pointer;list-style:none;color:#a9dcff;font-size:13px;font-weight:750;min-height:33px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.kish-perdoo .pd-cascade .pd-unit-disclosure>summary::-webkit-details-marker{display:none}
+.kish-perdoo .pd-cascade .pd-unit-disclosure>summary::after{content:"⌄";font-size:18px;line-height:1;color:#7ed0f6}
+.kish-perdoo .pd-cascade .pd-unit-disclosure[open]>summary::after{transform:rotate(180deg)}
+.kish-perdoo .pd-cascade .pd-unit-disclosure[open]>.pd-units-list{padding-top:10px;border-top:1px solid #426e87}
+.kish-perdoo .pd-cascade .pd-unit-disclosure:focus-within{border-color:#8bcbf4}
+.kish-perdoo .pd-cascade .p-table td[data-pd-key="unit"]{min-width:160px}
+.kish-perdoo .pd-cascade .p-table .pd-tree-cell{min-width:0}
+.kish-perdoo .pd-cascade .p-table .pd-tree-cell>a{overflow-wrap:normal;word-break:normal;line-height:1.8}
+.kish-perdoo .pd-cascade .p-table .pd-kr-row td:first-child a{color:#c1dff2}
+
+/* All controls remain present; responsive presentation only. */
+@media screen and (max-width:1250px),screen and (pointer:coarse){
+ .kish-perdoo .pd-module-tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scroll-snap-type:x proximity;max-width:100%;padding-block:3px 8px;gap:5px}
+ .kish-perdoo .pd-module-tabs a{min-width:max-content;flex:0 0 auto;scroll-snap-align:start;font-size:13px;min-height:46px;padding:10px 11px;line-height:1.5}
+ .kish-perdoo .pd-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;align-items:stretch;z-index:10;margin-bottom:14px}
+ .kish-perdoo .pd-tools>*{width:100%;max-width:100%;min-width:0}
+ .kish-perdoo .pd-tools .pd-pick{max-width:100%;width:100%;min-width:0}
+ .kish-perdoo .pd-tools .pd-pick select,.kish-perdoo .pd-tools select,.kish-perdoo .pd-tools input{min-width:0;width:100%;max-width:100%;font-size:14px;min-height:43px;padding:8px 9px;border-radius:11px}
+ .kish-perdoo .pd-tools .pd-filter-panel,.kish-perdoo .pd-tools .pd-columns{z-index:12}
+ .kish-perdoo .pd-cascade.p-table-wrap{overflow:visible!important;border:0!important;background:transparent!important;border-radius:0!important}
+ .kish-perdoo .pd-cascade .p-table{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;border:0!important;background:transparent!important;border-spacing:0!important}
+ .kish-perdoo .pd-cascade .p-table thead{display:none!important}
+ .kish-perdoo .pd-cascade .p-table tbody{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px;width:100%;min-width:0}
+ .kish-perdoo .pd-cascade .p-table tr{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch;gap:0 10px;min-width:0!important;max-width:100%!important;width:100%!important;border:1px solid #456d87!important;border-radius:15px!important;background:#122f43!important;box-shadow:0 6px 16px rgba(0,10,23,.15);overflow:hidden}
+ .kish-perdoo .pd-cascade .p-table tr.pd-objective{border-inline-start:3px solid #42a4d9!important}
+ .kish-perdoo .pd-cascade .p-table tr.pd-kr-row{width:calc(100% - 12px)!important;max-width:calc(100% - 12px)!important;margin-inline-start:12px!important;border-inline-start:3px solid #1cae9f!important;background:#102a3d!important}
+ .kish-perdoo .pd-cascade .p-table tr td,
+ .kish-perdoo .pd-cascade .p-table tr td:first-child,
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child){display:block!important;min-width:0!important;max-width:100%!important;width:auto!important;height:auto!important;padding:11px 13px!important;border:0!important;margin:0!important;box-sizing:border-box!important;background:transparent!important;color:#e6f2fa!important;text-align:start!important;white-space:normal!important;overflow-wrap:anywhere;line-height:1.7!important;font-size:13px!important}
+ .kish-perdoo .pd-cascade .p-table tr td:first-child{grid-column:1/-1!important;border-bottom:1px solid #3b5a70!important;padding:14px 12px!important;background:#194158!important}
+ .kish-perdoo .pd-cascade .p-table tr.pd-kr-row td:first-child{background:#143448!important}
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child){border-bottom:1px solid #274b60!important}
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child)::before{content:attr(data-pd-label)!important;display:block!important;font-size:12px!important;font-weight:750;color:#9ebdd0!important;line-height:1.5;margin:0 0 5px}
+ .kish-perdoo .pd-cascade .p-table tr td[data-pd-key="unit"]{grid-column:1/-1!important;border-bottom:0!important;min-width:0!important;padding-top:10px!important}
+ .kish-perdoo .pd-cascade .p-table tr td[data-pd-key="unit"] .pd-unit-disclosure{width:100%}
+ .kish-perdoo .pd-cascade .p-table tr td[data-pd-key="progress"] .p-progress{max-width:100%;width:100%}
+ .kish-perdoo .pd-cascade .pd-tree-cell{display:flex!important;align-items:center!important;flex-wrap:wrap!important;min-width:0!important;gap:7px!important;padding-inline-start:0!important;line-height:1.75}
+ .kish-perdoo .pd-cascade .pd-tree-cell>a{display:block!important;min-width:0!important;flex:1 1 160px!important;font-size:16px!important;line-height:1.85!important;font-weight:750!important;color:#bde7ff!important;-webkit-line-clamp:unset!important;overflow:visible!important;white-space:normal!important}
+ .kish-perdoo .pd-cascade .pd-kr-row .pd-tree-cell>a{font-size:14px!important;font-weight:600!important;color:#d2e6f3!important}
+ .kish-perdoo .pd-cascade .pd-chevron{height:38px!important;min-height:38px!important;width:38px!important;min-width:38px!important;background:#254c63!important;border:1px solid #49738c!important;border-radius:9px!important}
+ .kish-perdoo .pd-cascade .ds-row-checkin{min-width:44px!important;width:44px!important;min-height:44px!important;height:44px!important;margin-inline-start:auto!important}
+ .kish-perdoo .pd-cascade .p-table tr td>div>small{display:block!important}
+ .kish-perdoo .pd-cascade .pd-unit-few{gap:6px}
+ .kish-perdoo .pd-table-foot{display:flex;flex-wrap:wrap;gap:9px;padding:12px 0}
+ .kish-perdoo .pd-table-foot button{min-height:44px;font-size:13px}
+ .kish-perdoo .p-table-wrap:not(.pd-cascade){max-width:100%;overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch}
+ .kish-perdoo .p-table-wrap:not(.pd-cascade) .p-table{min-width:660px}
+ .kish-perdoo .p-table-wrap:not(.pd-cascade) td,.kish-perdoo .p-table-wrap:not(.pd-cascade) th{line-height:1.75;vertical-align:middle;font-size:13px}
+ .kish-perdoo .p-head h1,.kish-perdoo .p-section h2{line-height:1.6}
+}
+@media screen and (max-width:520px){
+ .kish-perdoo .pd-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .kish-perdoo .pd-tools>:first-child{grid-column:1/-1}
+ .kish-perdoo .pd-cascade .p-table tr td:first-child{padding:13px 10px!important}
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child){padding:9px 10px!important}
+ .kish-perdoo .pd-cascade .pd-tree-cell>a{font-size:15px!important}
+ .kish-perdoo .pd-cascade .p-table tr td:not(:first-child)::before{font-size:11px!important}
+ .kish-perdoo .pd-cascade .pd-units-list a,.kish-perdoo .pd-cascade .pd-unit-few a{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.kish-perdoo .pd-cascade *{scroll-behavior:auto!important;transition:none!important}}
