@@ -107,7 +107,7 @@
         "en": "Culture Lab",
         "fa": "آزمایشگاه فرهنگ"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/naavsanat-culture-app/",
+      "url": "https://hassnboudlaie.github.io/naavsanat-culture-app/",
       "description": {
         "en": "Learning paths for managers, headquarters staff and operations teams, built around workplace behavior and culture.",
         "fa": "مسیرهای یادگیری مدیران، کارکنان ستاد و عملیات؛ با تمرکز بر رفتار حرفه‌ای و فرهنگ محیط کار."
@@ -182,7 +182,7 @@
         "fa": "ابزار کاربردی · ذخیره محلی",
         "en": "Practical tool · local storage"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/hasan-boudlaie/alborz-performance/",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/alborz-performance/",
       "id": "alborz",
       "type": {
         "fa": "ابزارهای مدیریت و آموزش",
@@ -198,7 +198,7 @@
             "fa": "شعبه من | مدیریت جامع شعبه",
             "en": "My Branch | Branch Management"
           },
-          "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/hasan-boudlaie/alborz-performance/my-branch/",
+          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/alborz-performance/my-branch/",
           "stage": {
             "fa": "نسخه تعاملی · ذخیره در مرورگر",
             "en": "Interactive demo · browser-local storage"
@@ -209,7 +209,7 @@
             "fa": "مدیریت عملکرد کارکنان شعب",
             "en": "Branch Employee Performance"
           },
-          "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/hasan-boudlaie/alborz-performance/",
+          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/alborz-performance/",
           "stage": {
             "fa": "ابزار کاربردی · ذخیره محلی",
             "en": "Practical tool · local storage"
@@ -241,7 +241,7 @@
         "en": "Leadership Lab",
         "fa": "آزمایشگاه رهبری"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/behparvar-leadership-lab/",
+      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/",
       "description": {
         "fa": "کارگاه شش‌جلسه‌ای رهبری؛ با خودارزیابی، گفت‌وگو، کیس و تمرین محیط کار.",
         "en": "A six-session leadership workshop with self-assessment, dialogue, cases and workplace practice."
@@ -278,7 +278,7 @@
         "fa": "کارگاه تعاملی · ذخیره در مرورگر",
         "en": "Interactive workshop · browser-local storage"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/hasan-boudlaie/sabanaft/",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/",
       "logo": "https://hassnboudlaie.github.io/hasan-boudlaie/assets/company-logos/sabanaft.svg",
       "brandColor": "#042ca5",
       "brandAccent": "#b93600",
@@ -301,7 +301,7 @@
         "fa": "وب‌سایت دوزبانه · پیش‌نمایش طراحی",
         "en": "Bilingual boutique · design preview"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/hasan-boudlaie/zilux-jewels/",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/zilux-jewels/",
       "id": "zilux",
       "type": {
         "fa": "وب‌سایت بوتیک",
@@ -325,7 +325,7 @@
         "en": "Business Platform",
         "fa": "پلتفرم کسب‌وکار"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/afra-tejarat-mad/",
+      "url": "https://hassnboudlaie.github.io/afra-tejarat-mad/",
       "description": {
         "en": "An independent industrial sourcing and procurement website, covering capabilities, inquiries and business contact.",
         "fa": "وب‌سایت مستقل تأمین صنعتی و خرید؛ برای معرفی توانمندی‌ها، استعلام و ارتباط تجاری."
@@ -353,7 +353,7 @@
         "en": "Reflection Tool",
         "fa": "ابزار بازاندیشی"
       },
-      "url": "https://hasan-private-apps.hasanboudlaie.chatgpt.site/apps/reflective-leader/",
+      "url": "https://hassnboudlaie.github.io/reflective-leader/",
       "description": {
         "en": "A context-driven leadership journey that connects reflection, roles, decisions and practical action.",
         "fa": "مسیر رهبری مبتنی بر موقعیت؛ برای پیوند بازاندیشی، نقش‌ها، تصمیم و اقدام عملی."
