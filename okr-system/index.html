@@ -4031,6 +4031,45 @@ const pdFrameRouteBefore=pRender;
 pRender=function(key,record='',tab=''){pdFrameRouteBefore(key,record,tab);if(key==='cadences'||key==='rhythm')pdNavCycleRefresh();};
 /* END KISH PERDOO FUNCTIONAL ALIGNMENT v1 */
 
+
+/* Explicit isolated QA fixture. This never runs in ordinary user sessions. */
+async function pdRunIsolatedSmokeTest(){
+ const report=document.createElement('pre');report.id='pd-functional-smoke-results';
+ report.style.cssText='direction:ltr;white-space:pre-wrap;position:relative;z-index:99999;color:#0c2430;background:#def4ff;padding:16px;margin:18px;font:13px/1.7 monospace;border:2px solid #46a8d1';
+ document.body.appendChild(report);
+ const checks=[];const expect=(name,ok,details='')=>checks.push({name,pass:!!ok,details});
+ const before=gpEnsure().cycles.length;
+ let id1=null;
+ try{
+  expect('qa-storage-isolated',!!KISH_QA_NAMESPACE);
+  expect('cadence-defaults',pdCadences().some(c=>c.id==='pd-annual')&&pdCadences().some(c=>c.id==='pd-quarterly'));
+  const fields={cadenceId:'pd-quarterly',name:'QA isolated timeframe',startD:'1',startM:'7',startY:'1405',endD:'30',endM:'9',endY:'1405'};
+  const created=pSubmit('pd-timeframe',fields);
+  id1=created.href.split('/')[1];
+  const c=gpCycle(id1);
+  expect('timeframe-create-and-save',created.ok&&!!id1&&c?.name==='QA isolated timeframe',created.href);
+  expect('timeframe-is-minimal',Array.isArray(c.goalIds)&&c.goalIds.length===0&&c.phase==='draft'&&c.kickoff===c.start&&c.closing===c.end);
+  expect('timeframe-linked-to-cadence',c.cadenceId==='pd-quarterly');
+  const edited=pSubmit('pd-timeframe',{...fields,name:'QA isolated timeframe EDITED'},id1);
+  expect('timeframe-edit-retains-id',edited.ok&&gpCycle(id1)?.name==='QA isolated timeframe EDITED'&&gpEnsure().cycles.length===before+1);
+  const snapshot=loadPractice();
+  expect('timeframe-persisted-to-isolated-browser-storage',snapshot?.platform?.goalsProgram?.cycles?.some(c=>c.id===id1&&c.name==='QA isolated timeframe EDITED'));
+  const meeting=pdRhythmPage();
+  expect('meetings-separate-perform-route',meeting.includes('PERFORM')&&meeting.includes('pd-cadence-stats'));
+  pForm('pd-timeframe',id1);
+  const form=document.querySelector('#platformDialog form[data-platform-form="pd-timeframe"]');
+  expect('timeframe-form-only-essential-fields',!!form&&!!form.querySelector('[name="cadenceId"]')&&!!form.querySelector('[name="startY"]')&&!form.querySelector('[name="kickoffY"]')&&!form.querySelector('[name="teamEnabled"]'));
+  document.getElementById('platformDialog')?.close();
+  expect('qa-record-count',gpEnsure().cycles.length===before+1);
+ }catch(e){checks.push({name:'exception',pass:false,details:String(e?.message||e)});}
+ report.textContent=JSON.stringify({qa:true,checks,passes:checks.filter(c=>c.pass).length,total:checks.length,generatedAt:new Date().toISOString()},null,2);
+ report.scrollIntoView({block:'start'});
+}
+if(KISH_QA_NAMESPACE&&new URLSearchParams(location.search).get('selftest')==='1'){
+ window.addEventListener('load',()=>setTimeout(pdRunIsolatedSmokeTest,300),{once:true});
+}
+/* END isolated Perdoo smoke test */
+
 Promise.resolve().then(dsInitialize);
 
 })();
