@@ -3913,13 +3913,13 @@ function pdNavCycleRefresh(){
  const cfg=side?.querySelector('.pd-nav-group:last-child');
  if(cfg){
   const first=cfg.querySelector('a[href="#program"]');
-  if(first)first.insertAdjacentHTML('beforebegin','<a href="#cadences" '+(current==='cadences'?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">◴</span><span>'+txt('Cadences · تناوب هدف‌گذاری','Cadences')+'</span></a>');
+  if(first&&!cfg.querySelector('a[href="#cadences"]'))first.insertAdjacentHTML('beforebegin','<a href="#cadences" '+(current==='cadences'?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">◴</span><span>'+txt('Cadences · تناوب هدف‌گذاری','Cadences')+'</span></a>');
   const old=cfg.querySelector('a[href="#program"] span:last-child');
   if(old)old.textContent=txt('Timeframes · بازه‌های زمانی','Timeframes');
  }
  const perform=side?.querySelectorAll('.pd-nav-group')?.[2];
  const sessions=perform?.querySelector('a[href="#sessions"]');
- if(sessions)sessions.insertAdjacentHTML('afterend','<a href="#rhythm" '+(current==='rhythm'?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">▤</span><span>'+txt('تقویم جلسات و Check-in','Meeting rhythm')+'</span></a>');
+ if(sessions&&!perform.querySelector('a[href="#rhythm"]'))sessions.insertAdjacentHTML('afterend','<a href="#rhythm" '+(current==='rhythm'?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">▤</span><span>'+txt('تقویم جلسات و Check-in','Meeting rhythm')+'</span></a>');
  const mobile=document.getElementById('platformMobile');
  if(mobile){
   const selected=mobile.value||current;
