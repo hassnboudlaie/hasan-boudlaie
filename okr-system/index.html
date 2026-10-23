@@ -1185,7 +1185,7 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 }
 
 </style>
-<link rel="stylesheet" href="assets/okr-visual-upgrade-20261023.css?v=4">
+<link rel="stylesheet" href="assets/okr-visual-upgrade-20261023.css?v=5">
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
 
@@ -4077,6 +4077,8 @@ if(KISH_QA_NAMESPACE&&new URLSearchParams(location.search).get('selftest')==='1'
 const pdDecoratedFormBase=pForm;
 pForm=function(kind,recordId='',context={}){
  const returned=pdDecoratedFormBase(kind,recordId,context);
+ const dialog=document.getElementById('platformDialog');
+ dialog?.classList.remove('pd-visual-ready','pd-visual-pd-timeframe','pd-visual-pd-cadence','pd-visual-gp-cycle');
  if(['pd-timeframe','pd-cadence','gp-cycle'].includes(kind))pdEnhanceDialogVisual(kind);
  return returned;
 };
@@ -4119,12 +4121,12 @@ function pdEnhanceDialogVisual(kind){
   const cadence=node('cadenceId'),title=node('name'),dates=root.querySelector('.gp-date-pair'),note=root.querySelector('.pd-subtle');
   makeCard(txt('اطلاعات بازه زمانی','Timeframe details'),txt('انتخاب تناوب و عنوان دوره','Cadence and period name'),'◈',[cadence,title]);
   makeCard(txt('تقویم دوره','Date range'),txt('انتخاب دقیق آغاز و پایان در تقویم شمسی','Start and end in the Persian calendar'),'▦',[dates]);
-  if(note)note.classList.add('pd-detail-note');
+  if(note){note.classList.add('pd-detail-note');root.appendChild(note);}
  }else if(root&&kind==='pd-cadence'){
   const name=node('name'),en=node('nameEn'),type=node('type'),months=node('months'),firstMonth=node('startMonth'),day=node('startDay'),freq=node('updateFrequency'),note=root.querySelector('.pd-subtle');
   makeCard(txt('هویت Cadence','Cadence identity'),txt('نام و نوع تناوب هدف‌گذاری','Name and goal-setting frequency'),'◎',[name,en,type,months]);
   makeCard(txt('قواعد تقویمی','Calendar rules'),txt('شروع دوره برنامه‌ریزی و تناوب بررسی اهداف','Planning year and update interval'),'◷',[firstMonth,day,freq]);
-  if(note)note.classList.add('pd-detail-note');
+  if(note){note.classList.add('pd-detail-note');root.appendChild(note);}
  }else if(root&&kind==='gp-cycle'){
   const section=root.querySelector('details.gp-details');
   const rows=section?.querySelector(':scope > .p-fields');
