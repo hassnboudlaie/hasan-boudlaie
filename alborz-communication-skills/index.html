@@ -278,7 +278,7 @@ document.getElementById("app").innerHTML=header()+
 
 const session1Sections=[
  {id:"start",icon:"🏁",label:"شروع جلسه",sub:"ورود به موقعیت"},
- {id:"position",icon:"🧭",label:"ارزیابی جایگاه ارتباطی",sub:"گرمی و شایستگی"},
+ {id:"position",icon:"🧭",label:"ارتباطات من",sub:"ارزیابی رفتار ارتباطی"},
  {id:"presence",icon:"👔",label:"حضور حرفه‌ای",sub:"رفتار و حضور مدیریتی"},
  {id:"matrix",icon:"⚖️",label:"گرمی × شایستگی",sub:"مدل علمی"},
  {id:"stakeholders",icon:"🕸️",label:"ذی‌نفعان",sub:"شناخت مخاطبان"},
@@ -490,7 +490,7 @@ let s1TestTarget="خودم به‌عنوان رئیس شعبه";
 function s1PositionHtml(){
  const q=s1Questions[s1TestIndex];
  const selected=s1TestAnswers[s1TestIndex];
- return '<div class="s1-panel-head"><div class="bigico">🧭</div><div><h2>ارزیابی جایگاه ارتباطی رئیس شعبه</h2><p>خودارزیابی گرمی و شایستگی ادراک‌شده</p></div></div>'+
+ return '<div class="s1-panel-head"><div class="bigico">🧭</div><div><h2>ارتباطات من</h2><p>خودارزیابی رفتار ارتباطی رئیس شعبه در موقعیت‌های واقعی</p></div></div>'+
  '<div class="s1-test-intro"><div class="s1-card"><h3>⚖️ ماتریس گرمی × شایستگی</h3><p>۱۰ سؤال را یکی‌یکی پاسخ دهید. هدف تشخیص الگوی غالب فعلی است، نه برچسب‌زدن شخصیت.</p></div><div class="s1-target"><label>چه کسی را ارزیابی می‌کنید؟</label><select onchange="s1TestTarget=this.value"><option '+(s1TestTarget==="خودم به‌عنوان رئیس شعبه"?"selected":"")+'>خودم به‌عنوان رئیس شعبه</option><option '+(s1TestTarget==="کارکنان شعبه من، به‌طور کلی"?"selected":"")+'>کارکنان شعبه من، به‌طور کلی</option><option '+(s1TestTarget==="رؤسای شعب بیمه البرز، به‌صورت کلی"?"selected":"")+'>رؤسای شعب بیمه البرز، به‌صورت کلی</option></select></div></div>'+
  '<div class="s1-callout"><b>راهنما:</b> رفتار واقعی معمول را بسنجید، نه تصویر ایده‌آل را.</div>'+
  '<div class="s1-stepper"><div class="s1-step-head"><span class="s1-step-count">سؤال '+(s1TestIndex+1)+' از ۱۰</span><div class="s1-progress"><span style="width:'+((s1TestIndex+1)*10)+'%"></span></div></div>'+
