@@ -383,3 +383,47 @@
  .kish-perdoo .pd-tf-card{transition:none}
 }
 /* END Perdoo fidelity pass */
+
+
+/* Perdoo Functional v1 — Configure Cadences & Timeframes + Perform Meetings */
+@media screen {
+ .kish-perdoo .pd-config-tabs{display:flex;align-items:stretch;gap:6px;margin:0 0 5px;padding:0 0 3px;border-bottom:1px solid #446a82;overflow:auto}
+ .kish-perdoo .pd-config-tabs a{display:inline-flex;align-items:center;justify-content:center;border:1px solid #3e6480;border-bottom:0;border-radius:12px 12px 0 0;padding:11px 22px;min-height:44px;color:#c9dfed;text-decoration:none;font-size:14px;font-weight:720;background:#173b52}
+ .kish-perdoo .pd-config-tabs a.active{color:#fff;background:#245875;border-color:#74bdec;box-shadow:inset 0 4px #79cff8}
+ .kish-perdoo .pd-practice-note{font-size:13px;line-height:1.9;padding:11px 16px;margin:0;border-inline-start:3px solid #e5b45f;background:#3d352a;border-radius:8px;color:#ffe5b7}
+ .kish-perdoo .pd-cadence-summary{background:#122d40}
+ .kish-perdoo .pd-cadence-card{cursor:default}
+ .kish-perdoo .pd-cadence-card:hover{transform:none}
+ .kish-perdoo .pd-cadence-card .p-tag{margin-inline-start:auto}
+ .kish-perdoo .pd-cadence-card .pd-inline-actions{width:100%;margin-top:8px}
+ .kish-perdoo .pd-cadence-card .pd-inline-actions .p-btn{font-size:12px;min-height:37px}
+ .kish-perdoo .pd-cadence-card .pd-tf-info{font-size:12px;line-height:1.8}
+ .kish-perdoo .pd-config-shell .pd-tf-card .p-tag.good{background:#164339;color:#a3f3d1;border-color:#348b73}
+ .kish-perdoo .pd-config-shell .pd-tf-card .p-tag.warn{background:#4e3c29;color:#ffe0a6;border-color:#9f7747}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]),
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]){width:min(670px,calc(100% - 24px));max-width:670px;background:#103249;border:1px solid #5a849e;border-radius:15px}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) .p-dialog-head,
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .p-dialog-head{background:#17415a;border-bottom:1px solid #50738b}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) .p-dialog-body,
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .p-dialog-body{background:#0f3045}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) .p-field,
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .p-field{min-width:0}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) :is(input,select),
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) :is(input,select){border:1px solid #5b8299;border-radius:9px;background:#15374d;min-width:0;max-width:100%;color:#edf9ff;min-height:42px}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .gp-date-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) fieldset.gp-date{min-width:0;padding:10px;border:1px solid #507b94;border-radius:12px;background:#143b53}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) fieldset.gp-date legend{font-weight:760;color:#d8f2ff}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .gp-date .p-field{min-width:0}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .p-dialog-foot,
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) .p-dialog-foot{background:#12354c;border-top:1px solid #577f96}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) button[type="submit"],
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) button[type="submit"]{border-color:#6cc2fb;background:#279bf4;color:#041b2c;font-weight:830}
+}
+@media screen and (max-width:700px){
+ .kish-perdoo .pd-config-tabs a{min-height:43px;padding:9px 17px;font-size:13px}
+ .kish-perdoo .pd-config-shell .pd-practice-note{font-size:12px;padding:10px 13px}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .gp-date-pair{grid-template-columns:1fr;gap:8px}
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-cadence"]) .p-dialog-body,
+ .kish-perdoo #platformDialog:has(form[data-platform-form="pd-timeframe"]) .p-dialog-body{padding:16px}
+}
+/* END Perdoo functional CSS v1 */
