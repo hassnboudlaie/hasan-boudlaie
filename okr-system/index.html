@@ -3836,6 +3836,200 @@ gpPage=function(rid=''){
 };
 /* END PERDOO-ALIGNED NAVIGATION & TIMEFRAME WORKSPACE */
 
+
+/* KISH PERDOO FUNCTIONAL ALIGNMENT v1 — independent Cadences, Timeframes & Meetings.
+   Public GitHub Pages is a personal practice edition, NOT private authentication.
+   Existing goals, linked dates, actions and legacy planning are never deleted. */
+pPages.cadences=[txt('تناوب هدف‌گذاری','Cadences'),txt('تناوب هدف‌گذاری','Cadences')];
+pPages.rhythm=[txt('برنامه جلسات','Meeting rhythm'),txt('برنامه جلسات','Meeting rhythm')];
+Object.assign(navigationPages,pPages);
+const pdFaTypes={annual:['سالانه','Annual'],quarterly:['فصلی','Quarterly'],monthly:['ماهانه','Monthly'],custom:['سفارشی','Custom']};
+function pdCadences(){
+ const g=gpEnsure();
+ if(!Array.isArray(g.cadences)){
+  g.cadences=[
+   {id:'pd-annual',name:'سالانه',nameEn:'Annual',type:'annual',months:12,startMonth:1,startDay:1,updateFrequency:'monthly',archived:false,template:true},
+   {id:'pd-quarterly',name:'فصلی',nameEn:'Quarterly',type:'quarterly',months:3,startMonth:1,startDay:1,updateFrequency:'weekly',archived:false,template:true}
+  ];
+ }
+ return g.cadences;
+}
+function pdSuperadmin(){
+ // On public Pages there is no trusted identity; editing affects a local practice copy only.
+ if(PRACTICE_MODE)return true;
+ return auth?.accessRole==='super_admin'||auth?.accessRole==='superadmin'||auth?.role==='superadmin';
+}
+function pdCanWrite(){
+ return pdSuperadmin()&&(!kishShared.enabled||kishShared.publicLocal||kishShared.canWrite);
+}
+function pdCadenceName(c){
+ return c?(fa()?(c.name||pdFaTypes[c.type]?.[0]):(c.nameEn||pdFaTypes[c.type]?.[1])):txt('تعیین نشده','Not set');
+}
+function pdFindCadence(id){return pdCadences().find(c=>c.id===id)||null;}
+function pdCycleCadence(c){return pdFindCadence(c?.cadenceId)||(pdFindCadence('pd-'+(c?.goalCadence||'quarterly')))||null;}
+function pdCadenceOptions(id=''){
+ return pdCadences().filter(c=>!c.archived||c.id===id).map(c=>[c.id,pdCadenceName(c)+' · '+c.months+' '+txt('ماه','months')]);
+}
+function pdDateRange(a,b){
+ const start=gpDate(a),end=gpDate(b);
+ if(end<start)throw Error(txt('تاریخ پایان باید بعد از شروع باشد.','End date must be after start.'));
+ if((end-start)/86400000>3660)throw Error(txt('بازه زمانی نمی‌تواند بیش از ده سال باشد.','A timeframe cannot exceed ten years.'));
+}
+function pdConfigureHint(){return '<p class="pd-practice-note" role="note">'+(PRACTICE_MODE?txt('نسخه عمومی آزمایشی: تغییرات فقط در مرورگر شما ذخیره می‌شوند؛ نقش Superadmin و محدودسازی دسترسی در این نشانی، احراز هویت واقعی سروری نیست.','Public practice edition: edits stay in this browser. Superadmin role is not server-enforced authentication here.'):txt('ویرایش Cadence و Timeframe فقط برای Superadmin مجاز است.','Cadence and timeframe editing requires Superadmin rights.'))+'</p>';}
+function pdCadencesPage(){
+ const rows=pdCadences(),active=rows.filter(x=>!x.archived),archived=rows.filter(x=>x.archived);
+ let out='<div class="pd-config-shell"><div class="pd-config-breadcrumb">CONFIGURE › CADENCES</div><header class="pd-config-header"><div><span class="p-kicker">PERDOO · CONFIGURE</span><h1>'+txt('Cadences · تناوب هدف‌گذاری','Cadences')+'</h1><p>'+txt('Cadence الگوی تکرار ایجاد اهداف است. سالانه و فصلی دو تناوب استاندارد پیشنهادی Perdoo هستند.','A cadence defines how frequently you set goals; annual and quarterly are the standard Perdoo recommendation.')+'</p></div><div class="pd-header-actions">'+(pdCanWrite()?'<button type="button" class="p-btn primary" data-pd-action="cadence-add">'+txt('افزودن Cadence','Add cadence')+'</button>':'')+'</div></header>';
+ out+=pdConfigureHint();
+ out+='<nav class="pd-config-tabs" aria-label="Configure navigation">'+pAnchor(txt('Cadences','Cadences'),'#cadences','active')+pAnchor(txt('Timeframes','Timeframes'),'#program','')+'</nav>';
+ out+='<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('Cadences فعال','Active cadences')+'</h2><span class="pd-subtle">'+pNum(active.length)+' '+txt('تناوب','cadences')+'</span></div><div class="pd-timeframe-list">'+active.map(c=>pdCadenceCard(c)).join('')+'</div>'+(active.length?'':pEmpty(txt('هیچ Cadence فعالی وجود ندارد','No active cadences')))+'</section>';
+ if(archived.length)out+='<details class="pd-legacy-tools"><summary>'+txt('Cadences بایگانی‌شده','Archived cadences')+' ('+pNum(archived.length)+')</summary><div class="pd-legacy-body pd-timeframe-list">'+archived.map(c=>pdCadenceCard(c)).join('')+'</div></details>';
+ out+='<p class="pd-subtle">'+txt('بایگانی غیرمخرب است؛ بازه‌های زمانی، اهداف و داده‌های مرتبط حذف نمی‌شوند.','Archiving is non-destructive: related timeframes, objectives and records remain intact.')+'</p></div>';
+ return out;
+}
+function pdCadenceCard(c){
+ const count=gpEnsure().cycles.filter(t=>pdCycleCadence(t)?.id===c.id).length;
+ return '<article class="pd-tf-card pd-cadence-card"><div class="pd-tf-card-head"><span class="pd-tf-label">'+txt(...pdFaTypes[c.type])+'</span>'+pTag(c.archived?txt('بایگانی','Archived'):txt('فعال','Active'),c.archived?'warn':'good')+'</div><strong>'+esc(pdCadenceName(c))+'</strong><span class="pd-tf-dates">'+pNum(c.months)+' '+txt('ماه در هر بازه','months per timeframe')+' · '+pNum(count)+' Timeframes</span><span class="pd-tf-info">'+txt('شروع سال برنامه‌ریزی:','Planning year starts:')+' '+pNum(c.startDay)+' / '+pNum(c.startMonth)+' · '+txt('به‌روزرسانی پیش‌فرض:','Default update frequency:')+' '+esc(c.updateFrequency)+'</span><div class="pd-inline-actions">'+(pdCanWrite()?'<button type="button" class="p-btn" data-pd-action="cadence-edit" data-pd-id="'+esc(c.id)+'">'+txt('ویرایش','Edit')+'</button><button type="button" class="p-btn" data-pd-action="cadence-'+(c.archived?'restore':'archive')+'" data-pd-id="'+esc(c.id)+'">'+txt(c.archived?'بازیابی':'بایگانی',c.archived?'Restore':'Archive')+'</button>':'')+'</div></article>';
+}
+function pdRhythmPage(){
+ const g=gpEnsure(),cycles=g.cycles,c=gpCycle(location.hash.slice(1).split('/')[1])||cycles.find(x=>!x.closedAt)||cycles.at(-1);
+ let out='<div class="pd-config-shell"><div class="pd-config-breadcrumb">PERFORM › MEETINGS</div><header class="pd-config-header"><div><span class="p-kicker">PERDOO · PERFORM</span><h1>'+txt('جلسات و ریتم اجرای اهداف','Meetings & execution rhythm')+'</h1><p>'+txt('جلسات و Check-inها از Cadence هدف‌گذاری مستقل‌اند. زمان‌های زیر برنامه عملیاتی کیش هستند، نه تنظیمات Timeframe در Perdoo.','Meetings and check-ins are separate from goal-setting cadences. This schedule is Kish-specific, not a Perdoo timeframe requirement.')+'</p></div><div class="pd-header-actions">'+pAnchor(txt('ورود به جلسات','Open meetings'),'#sessions','p-btn primary')+'</div></header>';
+ if(!c)return out+pEmpty(txt('ابتدا در Configure یک Timeframe تعریف کنید.','Create a timeframe in Configure first.'),pAnchor(txt('Timeframes','Timeframes'),'#program','p-btn'))+'</div>';
+ out+='<nav class="pd-config-tabs">'+pAnchor(txt('جلسات ثبت‌شده','Meetings'),'#sessions','')+pAnchor(txt('برنامه اجرای چرخه','Cycle rhythm'),'#rhythm','active')+'</nav><section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('بازه انتخاب‌شده','Selected timeframe')+'</h2>'+pAnchor(c.name,'#program/'+c.id,'p-link')+'</div><div class="pd-metadata-grid"><div><small>'+txt('دوره','Timeframe')+'</small><b>'+esc(c.name)+'</b></div><div><small>'+txt('تاریخ','Dates')+'</small><b>'+gpDisplay(c.start)+' — '+gpDisplay(c.end)+'</b></div><div><small>'+txt('واحد','Team')+'</small><b>'+pUnitLink(c.teamId)+'</b></div><div><small>'+txt('راهبر','Lead')+'</small><b>'+pOwner(c.roles?.lead)+'</b></div></div></section>';
+ out+=pdSchedule(c);
+ out+='<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('تنظیمات عملیاتی موجود','Existing operational planning controls')+'</h2></div><p class="pd-subtle">'+txt('برنامه‌ریزی جلسات و یادداشت‌ها در نسخه قبلی حفظ شده است. برای اصلاح روزها و تقویم، از ابزار تکمیلی دوره استفاده کنید.','Legacy meeting notes and scheduling remain available. Use advanced cycle tools to edit cadence-specific meeting days.')+'</p>'+pAnchor(txt('ابزارهای تقویم تفصیلی','Advanced calendar tools'),'#program/'+c.id,'p-btn')+'</section></div>';
+ return out;
+}
+const pdAppRender=pRender;
+pRender=function(key,record='',tab=''){
+ pdAppRender(key,record,tab);
+ if(key==='cadences'||key==='rhythm'){
+  const body=document.getElementById('platformBody');
+  if(body)body.innerHTML='<div class="p-page">'+(key==='cadences'?pdCadencesPage():pdRhythmPage())+'</div>';
+ }
+ pdNavCycleRefresh();
+};
+function pdNavCycleRefresh(){
+ const side=document.getElementById('platformNav'),current=location.hash.slice(1).split('/')[0];
+ const cfg=side?.querySelector('.pd-nav-group:last-child');
+ if(cfg){
+  const first=cfg.querySelector('a[href="#program"]');
+  if(first)first.insertAdjacentHTML('beforebegin','<a href="#cadences" '+(current==='cadences'?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">◴</span><span>'+txt('Cadences · تناوب هدف‌گذاری','Cadences')+'</span></a>');
+  const old=cfg.querySelector('a[href="#program"] span:last-child');
+  if(old)old.textContent=txt('Timeframes · بازه‌های زمانی','Timeframes');
+ }
+ const perform=side?.querySelectorAll('.pd-nav-group')?.[2];
+ const sessions=perform?.querySelector('a[href="#sessions"]');
+ if(sessions)sessions.insertAdjacentHTML('afterend','<a href="#rhythm" '+(current==='rhythm'?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">▤</span><span>'+txt('تقویم جلسات و Check-in','Meeting rhythm')+'</span></a>');
+ const mobile=document.getElementById('platformMobile');
+ if(mobile){
+  const selected=mobile.value||current;
+  mobile.innerHTML=pOptions([
+   ['start',txt('میز کار','Home')],['map',txt('نقشه راهبرد','Strategy Map')],['goals',txt('اهداف','OKRs')],['kpis','KPIs'],['analytics',txt('داشبوردها','Dashboards')],['organization',txt('تیم‌ها','Teams')],['projects',txt('ابتکارات','Initiatives')],['sessions',txt('جلسات','Meetings')],['rhythm',txt('تقویم جلسات','Meeting rhythm')],['reporting',txt('گزارش‌ها','Reporting')],['cadences','Cadences'],['program','Timeframes'],['people',txt('افراد','People')],['revision',txt('بازنگری','Revision')],['resources',txt('اسناد','Documents')]
+  ],current);
+ }
+}
+const pdNavPrev=pInstallNav;
+pInstallNav=function(){pdNavPrev();pdNavCycleRefresh();};
+const pdFormPrev=pForm;
+pForm=function(kind,recordId='',context={}){
+ if(kind!=='pd-cadence'&&kind!=='pd-timeframe')return pdFormPrev(kind,recordId,context);
+ if(!pdCanWrite()){toast(txt('این عملیات نیازمند دسترسی Superadmin است.','Superadmin role required.'));return;}
+ let title='',fields='';
+ if(kind==='pd-cadence'){
+  const c=pdFindCadence(recordId)||{};
+  title=txt(recordId?'ویرایش Cadence':'افزودن Cadence',recordId?'Edit cadence':'Add cadence');
+  fields=pField(txt('نام Cadence','Cadence name'),'name',c.name||'','text',true,true)
+   +pField(txt('نام انگلیسی','English name'),'nameEn',c.nameEn||'','text',false,true)
+   +pSelect(txt('نوع تناوب','Cadence type'),'type',Object.entries(pdFaTypes).map(([type,label])=>[type,txt(...label)]),c.type||'quarterly',true,true)
+   +pSelect(txt('طول هر Timeframe','Months per timeframe'),'months',[[1,'۱ ماه'],[2,'۲ ماه'],[3,'۳ ماه'],[4,'۴ ماه'],[6,'۶ ماه'],[12,'۱۲ ماه'],[18,'۱۸ ماه'],[24,'۲۴ ماه']].map(([n,l])=>[String(n),l]),String(c.months||3),true)
+   +pSelect(txt('ماه شروع سال برنامه‌ریزی','Fiscal start month'),'startMonth',GP_MONTHS.map((m,i)=>[String(i+1),m]),String(c.startMonth||1),true)
+   +pSelect(txt('روز شروع','Start day'),'startDay',Array.from({length:28},(_,i)=>[String(i+1),pNum(i+1)]),String(c.startDay||1),true)
+   +pSelect(txt('فرکانس پیش‌فرض به‌روزرسانی اهداف','Default goal update frequency'),'updateFrequency',[['weekly',txt('هفتگی','Weekly')],['biweekly',txt('دو هفته','Every 2 weeks')],['monthly',txt('ماهانه','Monthly')],['quarterly',txt('فصلی','Quarterly')],['annually',txt('سالانه','Annual')]],c.updateFrequency||'weekly',true,true)
+   +'<p class="wide pd-subtle">'+txt('ویرایش Cadence بازه‌های موجود را خودکار جابه‌جا نمی‌کند تا اطلاعات و زمان جلسات بدون تأیید شما تغییر نکند.','Editing a cadence does not silently shift existing timeframes or meeting dates.')+'</p>';
+ }else{
+  const c=gpCycle(recordId),d=c||gpDefaultPeriod(),existing=pdCycleCadence(c);
+  title=txt(recordId?'ویرایش Timeframe':'افزودن Timeframe',recordId?'Edit timeframe':'Add timeframe');
+  fields=pSelect('Cadence','cadenceId',pdCadenceOptions(existing?.id),existing?.id||'pd-quarterly',true,true)
+   +pField(txt('نام بازه زمانی','Timeframe name'),'name',d.name,'text',true,true)
+   +'<div class="wide gp-date-pair">'+gpDateFields('start',txt('آغاز بازه','Start date'),d.start)+gpDateFields('end',txt('پایان بازه','End date'),d.end)+'</div>'
+   +'<p class="wide pd-subtle">'+txt('این فرم فقط Cadence، نام و تاریخ Timeframe را ثبت می‌کند. اهداف از Explore و جلسات از Perform مدیریت می‌شوند.','Only cadence, name and dates are configured here. Objectives belong in Explore and meetings in Perform.')+'</p>';
+ }
+ pModalContext={kind,recordId,context};
+ const el=document.getElementById('platformDialog');
+ el.innerHTML='<div class="p-dialog-head"><h2>'+title+'</h2>'+pButton(txt('بستن','Close'),'close-dialog')+'</div><div class="p-dialog-body"><form data-platform-form="'+kind+'"><div class="p-fields">'+fields+'</div><div id="p-form-error" class="p-form-error" role="alert"></div><div class="p-dialog-foot"><button class="p-btn primary" type="submit">'+txt('ذخیره','Save')+'</button></div></form></div>';
+ el.showModal();
+};
+const pdSubmitPrev=pSubmit;
+pSubmit=function(kind,values,recordId='',context={}){
+ if(kind!=='pd-cadence'&&kind!=='pd-timeframe')return pdSubmitPrev(kind,values,recordId,context);
+ if(!pdCanWrite())throw Error(txt('دسترسی لازم برای پیکربندی وجود ندارد.','Configuration requires Superadmin.'));
+ const v=Object.fromEntries(Object.entries(values).map(([k,val])=>[k,String(val).trim()]));
+ if(kind==='pd-cadence'){
+  if(!v.name||!pdFaTypes[v.type])throw Error(txt('نام و نوع تناوب الزامی است.','Name and type required.'));
+  const months=Number(v.months),startMonth=Number(v.startMonth),startDay=Number(v.startDay);
+  if(!Number.isInteger(months)||months<1||months>24||startMonth<1||startMonth>12||startDay<1||startDay>28)throw Error(txt('مقادیر تناوب معتبر نیستند.','Invalid cadence values.'));
+  const values2={name:v.name.slice(0,120),nameEn:v.nameEn.slice(0,120),type:v.type,months,startMonth,startDay,updateFrequency:v.updateFrequency||'weekly'};
+  const list=pdCadences(),c=pdFindCadence(recordId);
+  if(c)Object.assign(c,values2);else list.push({id:id(),...values2,archived:false});
+  if(!pCommit('Cadence configured'))throw Error(txt('ذخیره ناموفق بود.','Save failed.'));
+  return {ok:true,href:'#cadences'};
+ }
+ const cadence=pdFindCadence(v.cadenceId);
+ if(!cadence||cadence.archived)throw Error(txt('Cadence معتبر و فعال انتخاب کنید.','Choose an active cadence.'));
+ if(!v.name)throw Error(txt('نام Timeframe الزامی است.','Timeframe name required.'));
+ const start=gpReadDate(v,'start'),end=gpReadDate(v,'end');pdDateRange(start,end);
+ const g=gpEnsure(),c=gpCycle(recordId);
+ if(c?.closedAt)throw Error(txt('دوره بسته‌شده قابل ویرایش نیست.','Closed timeframes cannot be edited.'));
+ const next={name:v.name.slice(0,150),start,end,goalCadence:cadence.type,cadenceId:cadence.id,calendar:'persian'};
+ if(c){
+  const badDates=(c.kickoff&& (c.kickoff<start||c.kickoff>end))||(c.closing&&(c.closing<start||c.closing>end));
+  if(badDates)throw Error(txt('افتتاحیه یا جمع‌بندی قبلی خارج از محدوده جدید است. ابتدا از ابزارهای پیشرفته آن‌ها را اصلاح کنید.','Existing kickoff or retrospective would fall outside the timeframe. Adjust them in advanced tools first.'));
+  const before=clone(c);Object.assign(c,next);
+  if(!pCommit('Timeframe edited')){Object.assign(c,before);throw Error(txt('ذخیره ناموفق بود.','Save failed.'));}
+ }else{
+  const row={id:id(),createdAt:new Date().toISOString(),...next,teamId:'company',goalIds:[],roles:{},phase:'draft',rules:{},approved:false,agreements:'',kickoff:start,closing:end,planHistory:[]};
+  g.cycles.push(row);
+  if(!pCommit('Timeframe created')){g.cycles.pop();throw Error(txt('ذخیره ناموفق بود.','Save failed.'));}
+  return {ok:true,href:'#program/'+row.id};
+ }
+ return {ok:true,href:'#program/'+recordId};
+};
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-pd-action]');if(!b)return;
+ const act=b.dataset.pdAction,record=b.dataset.pdId||b.dataset.gpCycle||'';
+ if(act==='cadence-add')pForm('pd-cadence');
+ if(act==='cadence-edit')pForm('pd-cadence',record);
+ if(act==='timeframe-new')pForm('pd-timeframe');
+ if(act==='timeframe-edit')pForm('pd-timeframe',record);
+ if(act==='cadence-archive'||act==='cadence-restore'){
+  if(!pdCanWrite())return;
+  const c=pdFindCadence(record);if(!c)return;
+  if(act==='cadence-archive'&&pdCadences().filter(x=>!x.archived).length===1){toast(txt('حداقل یک Cadence فعال حفظ شود.','Keep at least one cadence active.'));return;}
+  if(act==='cadence-archive'&&gpEnsure().cycles.some(t=>!t.closedAt&&pdCycleCadence(t)?.id===record)){toast(txt('این Cadence دارای Timeframe باز است؛ ابتدا بازه‌های وابسته را بررسی کنید.','This cadence has open timeframes; review linked records before archiving.'));return;}
+  c.archived=act==='cadence-archive';
+  pCommit('Cadence archive status updated');route();
+ }
+});
+const pdTimeframePageBefore=gpPage;
+gpPage=function(rid=''){
+ let html=pdTimeframePageBefore(rid);
+ const marker='<details class="pd-legacy-tools">';
+ const i=html.indexOf(marker);
+ if(i===-1)return html;
+ let top=html.slice(0,i),legacy=html.slice(i);
+ top=top.replace(/data-gp-action="gp-cycle" data-gp-cycle="([^"]*)"/g,(m,id)=>'data-pd-action="'+(id?'timeframe-edit':'timeframe-new')+'" data-gp-cycle="'+id+'"');
+ top=top.replace('<div class="pd-config-breadcrumb">CONFIGURE <span aria-hidden="true">›</span> CADENCES &amp; TIMEFRAMES</div>','<div class="pd-config-breadcrumb">CONFIGURE › TIMEFRAMES</div>');
+ top=top.replace(txt('تناوب و بازه‌های زمانی','Cadences & Timeframes'),txt('Timeframes · بازه‌های زمانی','Timeframes'));
+ top=top.replace('<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('Cadences · تناوب هدف‌گذاری','Goal-setting cadences')+'</h2>','<section class="pd-config-section pd-cadence-summary"><div class="pd-section-head"><h2>'+txt('Cadences · تناوب هدف‌گذاری','Goal-setting cadences')+'</h2>');
+ const c=gpCycle(rid)||gpEnsure().cycles.find(x=>!x.closedAt)||gpEnsure().cycles.at(-1);
+ if(c)top=top.replace(pdSchedule(c),'<section class="pd-config-section"><div class="pd-section-head"><h2>'+txt('جلسات و ریتم اجرا','Meetings & execution rhythm')+'</h2></div><p class="pd-subtle">'+txt('برنامه اجرایی جلسات در بخش Perform مدیریت می‌شود، نه در تنظیم Timeframe.','Meetings are managed in Perform, separately from timeframe configuration.')+'</p>'+pAnchor(txt('مشاهده برنامه جلسات','Open meeting rhythm'),'#rhythm','p-btn')+'</section>');
+ top=top.replace('<section class="pd-config-section">','<nav class="pd-config-tabs">'+pAnchor('Cadences','#cadences','')+pAnchor('Timeframes','#program','active')+'</nav>'+pdConfigureHint()+'<section class="pd-config-section">');
+ return top+legacy;
+};
+const pdFrameRouteBefore=pRender;
+pRender=function(key,record='',tab=''){pdFrameRouteBefore(key,record,tab);if(key==='cadences'||key==='rhythm')pdNavCycleRefresh();};
+/* END KISH PERDOO FUNCTIONAL ALIGNMENT v1 */
+
 Promise.resolve().then(dsInitialize);
 
 })();
