@@ -683,3 +683,33 @@
  body.kish-perdoo #platformDialog.pd-visual-ready *{scroll-behavior:auto!important;transition:none!important}
 }
 /* END KISH VISUAL FIDELITY CSS v2 */
+
+
+/* Cadence form density correction — same two cards, fewer unnecessary rows. */
+@media screen and (min-width:701px){
+ body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-edit-fields>.p-field.wide{
+  grid-column:auto!important;
+ }
+ body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-edit-card{
+  padding:14px 18px!important;
+ }
+ body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-edit-card-heading{
+  padding-bottom:10px!important;margin-bottom:12px!important;
+ }
+ body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-edit-fields{
+  gap:10px 14px!important;
+ }
+ body.kish-perdoo #platformDialog.pd-visual-pd-cadence .p-dialog-head{
+  padding-top:15px!important;padding-bottom:14px!important;
+ }
+ body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-dialog-subtitle{
+  line-height:1.55;
+ }
+}
+body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-edit-card-icon{
+ background:#22506d;border-color:#5aa8d5;color:#8addff;
+}
+body.kish-perdoo #platformDialog.pd-visual-pd-cadence .pd-edit-card:nth-of-type(2) .pd-edit-card-icon{
+ background:#195349;border-color:#459e81;color:#97ecc7;
+}
+/* END KISH CADENCE VISUAL v6 */
