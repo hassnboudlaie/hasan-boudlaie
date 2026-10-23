@@ -4070,6 +4070,88 @@ if(KISH_QA_NAMESPACE&&new URLSearchParams(location.search).get('selftest')==='1'
 }
 /* END isolated Perdoo smoke test */
 
+
+/* KISH FORM VISUAL FIDELITY v2
+   Presentational DOM grouping only. Preserves field names, form handlers,
+   Perdoo separation of Cadences/Timeframes from Goals/Meetings. */
+const pdDecoratedFormBase=pForm;
+pForm=function(kind,recordId='',context={}){
+ const returned=pdDecoratedFormBase(kind,recordId,context);
+ if(['pd-timeframe','pd-cadence','gp-cycle'].includes(kind))pdEnhanceDialogVisual(kind);
+ return returned;
+};
+function pdEnhanceDialogVisual(kind){
+ const dialog=document.getElementById('platformDialog');
+ const form=dialog?.querySelector('form[data-platform-form="'+kind+'"]');
+ if(!form||dialog.classList.contains('pd-visual-ready'))return;
+ dialog.classList.add('pd-visual-ready','pd-visual-'+kind);
+ const header=dialog.querySelector('.p-dialog-head'),h2=header?.querySelector('h2');
+ const close=header?.querySelector('[data-p-action="close-dialog"]');
+ if(h2&&header){
+  const group=document.createElement('div');group.className='pd-dialog-title-group';
+  const flag=document.createElement('div');flag.className='pd-dialog-eyebrow';
+  flag.textContent=kind==='pd-cadence'?'CONFIGURE / CADENCE':kind==='pd-timeframe'?'CONFIGURE / TIMEFRAME':'GOALS PROGRAM / CYCLE';
+  const actualTitle=kind==='pd-cadence'?txt('تناوب هدف‌گذاری','Goal-setting cadence'):kind==='pd-timeframe'?txt('تعریف بازه زمانی','Define timeframe'):txt('تعریف دوره و آماده‌سازی اهداف','Cycle planning');
+  h2.textContent=actualTitle;
+  const svg=kind==='pd-cadence'?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2M21 12a9 9 0 0 1-15.5 6.2M17 3v4h-4M7 21v-4h4"/></svg>':kind==='pd-timeframe'?'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18M7 14h4"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="4"/><path d="m11 13 9-9M16 4h4v4"/></svg>';
+  const icon=document.createElement('span');icon.className='pd-dialog-symbol';icon.innerHTML=svg;
+  h2.prepend(icon);
+  header.insertBefore(group,h2);
+  group.append(flag,h2);
+  const subtitle=document.createElement('p');subtitle.className='pd-dialog-subtitle';
+  subtitle.textContent=kind==='pd-timeframe'?txt('یک Cadence و بازه زمانی مشخص انتخاب کنید. اهداف و جلسات در بخش‌های مربوط مدیریت می‌شوند.','Choose a cadence and date range. Goals and meetings are configured elsewhere.'):kind==='pd-cadence'?txt('تناوب و قواعد زمانی هدف‌گذاری را مشخص کنید.','Specify the goal-setting frequency and calendar rules.'):txt('اطلاعات دوره، نقش‌ها و اهداف را در بخش‌های مشخص تکمیل کنید.','Complete the cycle details, ownership and goal alignment.');
+  group.appendChild(subtitle);
+ }
+ if(close){close.classList.add('pd-dialog-close');close.textContent='×';close.setAttribute('aria-label',txt('بستن پنجره','Close dialog'));close.title=txt('بستن','Close');}
+ const root=form.querySelector(':scope > .p-fields');
+ const node=name=>root?.querySelector('[name="'+name+'"]')?.closest('.p-field');
+ const makeCard=(label,help,icon,nodes)=>{
+  const card=document.createElement('section');card.className='pd-edit-card wide';
+  const heading=document.createElement('div');heading.className='pd-edit-card-heading';
+  heading.innerHTML='<span class="pd-edit-card-icon" aria-hidden="true">'+icon+'</span><div><h3>'+label+'</h3><p>'+help+'</p></div>';
+  card.appendChild(heading);
+  const fieldGrid=document.createElement('div');fieldGrid.className='pd-edit-fields';
+  nodes.filter(Boolean).forEach(el=>fieldGrid.appendChild(el));
+  card.appendChild(fieldGrid);
+  root?.appendChild(card);
+ };
+ if(root&&kind==='pd-timeframe'){
+  const cadence=node('cadenceId'),title=node('name'),dates=root.querySelector('.gp-date-pair'),note=root.querySelector('.pd-subtle');
+  makeCard(txt('اطلاعات بازه زمانی','Timeframe details'),txt('انتخاب تناوب و عنوان دوره','Cadence and period name'),'◈',[cadence,title]);
+  makeCard(txt('تقویم دوره','Date range'),txt('انتخاب دقیق آغاز و پایان در تقویم شمسی','Start and end in the Persian calendar'),'▦',[dates]);
+  if(note)note.classList.add('pd-detail-note');
+ }else if(root&&kind==='pd-cadence'){
+  const name=node('name'),en=node('nameEn'),type=node('type'),months=node('months'),firstMonth=node('startMonth'),day=node('startDay'),freq=node('updateFrequency'),note=root.querySelector('.pd-subtle');
+  makeCard(txt('هویت Cadence','Cadence identity'),txt('نام و نوع تناوب هدف‌گذاری','Name and goal-setting frequency'),'◎',[name,en,type,months]);
+  makeCard(txt('قواعد تقویمی','Calendar rules'),txt('شروع دوره برنامه‌ریزی و تناوب بررسی اهداف','Planning year and update interval'),'◷',[firstMonth,day,freq]);
+  if(note)note.classList.add('pd-detail-note');
+ }else if(root&&kind==='gp-cycle'){
+  const section=root.querySelector('details.gp-details');
+  const rows=section?.querySelector(':scope > .p-fields');
+  if(rows&&!rows.classList.contains('pd-roles-grid')){
+   rows.classList.add('pd-roles-grid');
+   [...rows.querySelectorAll(':scope > .p-field')].forEach((field,i)=>{
+    const helper=field.nextElementSibling?.tagName==='SMALL'?field.nextElementSibling:null;
+    const row=document.createElement('div');row.className='pd-role-row';
+    const icon=document.createElement('span');icon.className='pd-role-token';icon.setAttribute('aria-hidden','true');
+    icon.textContent=['♛','◉','◆','▥','♙'][i]||'●';
+    rows.insertBefore(row,field);row.appendChild(icon);row.appendChild(field);if(helper)row.appendChild(helper);
+   });
+  }
+ }
+ const footer=form.querySelector('.p-dialog-foot');
+ if(footer){
+  footer.classList.add('pd-visual-foot');
+  const submit=footer.querySelector('button[type="submit"]');
+  if(submit)submit.textContent=kind==='pd-timeframe'?txt('ذخیره بازه زمانی','Save timeframe'):kind==='pd-cadence'?txt('ذخیره Cadence','Save cadence'):txt('ذخیره برنامه دوره','Save cycle plan');
+  if(!footer.querySelector('.pd-visual-cancel')){
+   const cancel=document.createElement('button');cancel.type='button';cancel.className='p-btn pd-visual-cancel';cancel.dataset.pAction='close-dialog';cancel.textContent=txt('انصراف','Cancel');
+   footer.appendChild(cancel);
+  }
+ }
+}
+/* END KISH FORM VISUAL FIDELITY v2 */
+
 Promise.resolve().then(dsInitialize);
 
 })();
