@@ -69,3 +69,191 @@
  .kish-perdoo .pd-cascade .pd-units-list a,.kish-perdoo .pd-cascade .pd-unit-few a{font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){.kish-perdoo .pd-cascade *{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* ==========================================================
+   KISH OKR / Perdoo-inspired Enterprise Visual System — v2
+   2026-10-23. CSS-only; data, calculations and events unchanged.
+   Uses semantic design tokens, not a replacement for logic.
+   ========================================================== */
+@media screen{
+ body.kish-perdoo{
+   --ux-bg:#0a1c2a;--ux-workspace:#0e2a3d;--ux-surface:#153247;
+   --ux-elevated:#1b3d54;--ux-field:#10293b;--ux-border:#40647b;
+   --ux-white:#f1f8ff;--ux-muted:#b4cadc;--ux-blue:#62caff;
+   --ux-green:#3ed8a7;--ux-amber:#f3bd58;--ux-red:#ff8796;
+   --ux-violet:#b69cff;--ux-shadow:0 13px 32px rgba(1,11,24,.18);
+   --kish-panel:var(--ux-surface);--kish-raised:var(--ux-elevated);
+   --kish-input:var(--ux-field);--kish-text:var(--ux-white);
+   --kish-muted:var(--ux-muted);--kish-link:var(--ux-blue);
+   --kish-line:var(--ux-border);--kish-control:#6387a0;
+   --kish-success:#90f0c7;--kish-warning:#ffd994;--kish-danger:#ffacb8;
+   --ds-surface:var(--ux-surface);--ds-elevated:var(--ux-elevated);--ds-border:var(--ux-border);
+   background:var(--ux-bg);color:var(--ux-white);
+ }
+ .kish-perdoo .content{
+   background:radial-gradient(ellipse 95% 65% at 0% 5%,rgba(57,147,197,.11),transparent 70%),linear-gradient(165deg,#0d283b 0%,#102b3e 52%,#0a2030 100%);
+   color:var(--ux-white);min-width:0;
+ }
+ .kish-perdoo .sidebar{background:linear-gradient(180deg,#091825 0%,#0d2738 85%,#102d40 100%);border-inline-end:1px solid #345a71}
+ .kish-perdoo .topbar{background:linear-gradient(95deg,#0d273a,#15364b);border-bottom:1px solid #416b85}
+ .kish-perdoo .top-title b{color:#f2f9ff;font-weight:800}
+ .kish-perdoo .p-sidebar-nav a{border-radius:12px;margin:3px 0;transition:background-color .16s,border-color .16s}
+ .kish-perdoo .p-sidebar-nav a:hover{background:#1a4159;color:#f6fbff}
+ .kish-perdoo .p-sidebar-nav a.active{background:linear-gradient(100deg,#1d506d,#17394f);color:#fff;border-inline-start:4px solid var(--ux-blue);box-shadow:inset 0 0 0 1px #40718b}
+ .kish-perdoo .p-sidebar-nav a.active .p-nav-icon{color:#7bd7ff}
+ .kish-perdoo :is(.nav-location,.section-navigation){border-color:#365970;background:#102c3f}
+ .kish-perdoo .p-page{min-width:0}
+ .kish-perdoo .p-page :is(h1,h2,h3),.kish-perdoo .ds-page-head :is(h1,h2){letter-spacing:0;color:var(--ux-white)}
+ .kish-perdoo .ds-page-head{border-bottom:1px solid #43677e;padding-block:10px 20px;gap:16px}
+ .kish-perdoo .ds-page-head h1{font-size:clamp(24px,2vw,31px);font-weight:850;line-height:1.55;margin:2px 0 6px}
+ .kish-perdoo .ds-page-head p{color:var(--ux-muted);font-size:15px;line-height:1.9}
+ .kish-perdoo .ds-head-symbol{color:#75d8ff;background:linear-gradient(135deg,#184b69,#12364f);border:1px solid #4e9abb;border-radius:14px;box-shadow:inset 0 0 20px #77d3ff12}
+ .kish-perdoo .ds-head-symbol .ds-icon{color:#75d8ff}
+ .kish-perdoo :is(.p-kicker,.eyebrow){color:#7fd9f5;font-weight:800;letter-spacing:.06em}
+ .kish-perdoo .pd-module-tabs{border-bottom-color:#456980;gap:6px;padding-inline:3px;scroll-padding-inline:20px}
+ .kish-perdoo .pd-module-tabs a{background:#112c3d;border:1px solid #2c4d65;border-bottom:0;border-radius:14px 14px 0 0;min-height:52px;color:#b7cadc}
+ .kish-perdoo .pd-module-tabs a:hover{background:#1a4057;border-color:#62869e;color:#fff}
+ .kish-perdoo .pd-module-tabs a.active{background:linear-gradient(180deg,#225c7c,#1b415c);border-color:#5094b7;box-shadow:inset 0 4px 0 #62caff;color:#fff;font-weight:850}
+ .kish-perdoo .pd-module-tabs a.active>span:first-child{color:#8ce3ff}
+ .kish-perdoo :is(.p-card,.p-stat,.p-module,.p-context,.p-orgtree,.p-table-wrap,.pd-work-list,.pd-map-node,.ux-disclosure){
+   background:var(--ux-surface);border-color:var(--ux-border);box-shadow:var(--ux-shadow);
+ }
+ .kish-perdoo .p-card{border-radius:17px;padding:22px}
+ .kish-perdoo .p-card h2{font-size:21px;font-weight:800;color:#f4faff}
+ .kish-perdoo .p-card-head{border-bottom:1px solid #34566c;padding-bottom:11px;margin-bottom:14px}
+ .kish-perdoo .p-card .p-caption,.kish-perdoo .p-muted{color:#b7cbdc}
+ .kish-perdoo .p-grid{gap:18px}
+ .kish-perdoo .p-module{border-radius:16px;position:relative;overflow:hidden;transition:transform .17s,border-color .17s,background-color .17s}
+ .kish-perdoo .p-module:before{content:"";position:absolute;inset-block:13px;inset-inline-start:0;width:4px;border-radius:6px;background:#61caff}
+ .kish-perdoo .p-module:nth-child(4n+2):before{background:var(--ux-green)}
+ .kish-perdoo .p-module:nth-child(4n+3):before{background:var(--ux-amber)}
+ .kish-perdoo .p-module:nth-child(4n):before{background:var(--ux-violet)}
+ .kish-perdoo .p-module .p-icon{width:47px;height:47px;display:grid;place-items:center;background:#1b4d68;border:1px solid #386986;color:#7cd7ff;border-radius:13px}
+ .kish-perdoo .p-module:nth-child(4n+2) .p-icon{background:#174c46;border-color:#2d796c;color:#75e6bb}
+ .kish-perdoo .p-module:nth-child(4n+3) .p-icon{background:#564329;border-color:#887048;color:#ffcf76}
+ .kish-perdoo .p-module:nth-child(4n) .p-icon{background:#3d365f;border-color:#665792;color:#cfbaff}
+ .kish-perdoo .p-module:hover{transform:translateY(-2px);background:#1c4159;border-color:#77bfe2}
+ .kish-perdoo .p-module b{font-size:16px;font-weight:800;line-height:1.65}
+ .kish-perdoo .p-module small{color:#b9ccdc;font-size:13px;line-height:1.85}
+ .kish-perdoo .p-stat{border-radius:16px;position:relative;overflow:hidden;border-top:3px solid var(--ux-blue)}
+ .kish-perdoo .p-stat:nth-child(4n+2){border-top-color:var(--ux-green)}
+ .kish-perdoo .p-stat:nth-child(4n+3){border-top-color:var(--ux-amber)}
+ .kish-perdoo .p-stat:nth-child(4n){border-top-color:var(--ux-violet)}
+ .kish-perdoo .p-stat strong{font-size:clamp(28px,2.7vw,39px);font-weight:850;color:#fff;font-variant-numeric:tabular-nums}
+ .kish-perdoo .p-stat span{font-size:14px;color:#c9daea}
+ .kish-perdoo .p-stat small{color:#85dcff}
+ .kish-perdoo .p-hero,.kish-perdoo .ux-hero{background:radial-gradient(circle at 7% 10%,#33769950,transparent 42%),linear-gradient(108deg,#1b4b65,#14364e 67%,#102a3d);border-color:#5086a3;border-radius:19px}
+ .kish-perdoo .p-hero:after{display:block;position:absolute;pointer-events:none;border-color:#78d4fb16}
+ .kish-perdoo .p-hero h1{color:white;font-weight:850}
+ .kish-perdoo .p-hero p{color:#d4e9f7}
+ .kish-perdoo .p-hero img{border-radius:14px;border:1px solid #5b859d}
+ .kish-perdoo .p-btn,.kish-perdoo .btn{transition:background-color .15s,border-color .15s,transform .15s;color:#e6f5ff;border-color:#50758a}
+ .kish-perdoo .p-btn.primary,.kish-perdoo .btn.primary{background:#359cf3;color:#071d32;border-color:#69bbff;font-weight:850;box-shadow:0 5px 16px #0d6fca35}
+ .kish-perdoo .p-btn.primary:hover,.kish-perdoo .btn.primary:hover{background:#70c5ff;border-color:#b0e1ff;color:#071d32}
+ .kish-perdoo :is(.p-btn,.btn):active{transform:translateY(1px)}
+ .kish-perdoo :is(.p-toolbar input,.p-toolbar select,.pd-pick select,.pd-period input,.p-top-search input,.ds-view-search,.p-fields input,.p-fields select,textarea){
+   background:#102a3c;color:#f0f9ff;border-color:#587e95;border-radius:11px;
+ }
+ .kish-perdoo :is(input,textarea)::placeholder{color:#aabfd0;opacity:1}
+ .kish-perdoo :is(button,a,summary,input,select,textarea):focus-visible{outline:3px solid #83d9ff;outline-offset:3px}
+ .kish-perdoo :is(.p-filter,.pd-filter-panel,.pd-columns,.ds-map-settings)[open]{border-color:#559dc1}
+ .kish-perdoo .p-table-wrap{border-radius:16px;overflow:auto;scrollbar-color:#55778a #142c3c}
+ .kish-perdoo .p-table th{background:#21435a;border-color:#476b81;color:#eff8ff;font-weight:850;letter-spacing:0;text-transform:none;font-size:13px}
+ .kish-perdoo .p-table tbody tr:nth-child(even){background:#122e41}
+ .kish-perdoo .p-table td{color:#deedf9;border-color:#37566b;line-height:1.75}
+ .kish-perdoo .p-table tbody tr:hover td{background:#20485f}
+ .kish-perdoo .p-table td:first-child{font-weight:650}
+ .kish-perdoo .p-table td small{color:#b1c9da}
+ .kish-perdoo .pd-cascade .p-table .pd-objective{border-inline-start:3px solid #5dbff3}
+ .kish-perdoo .pd-cascade .p-table .pd-kr-row{background:#0f2b3c}
+ .kish-perdoo .pd-cascade .p-table .pd-kr-row td:first-child a{color:#a3eddf}
+ .kish-perdoo .pd-chevron,.kish-perdoo .pd-tree-cell .pd-chevron{background:#204961;border:1px solid #567c97;color:#aff0ff;border-radius:10px}
+ .kish-perdoo .pd-chevron:hover{background:#2d6c8a;border-color:#86d8ff}
+ .kish-perdoo .p-progress{height:9px;background:#2b4860;border-radius:20px;overflow:hidden}
+ .kish-perdoo .p-progress i{background:linear-gradient(90deg,#2caeb6,#49dcb3);border-radius:20px}
+ .kish-perdoo .p-tag{background:#244157;color:#deedfa;border:1px solid #52758e;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700;line-height:1.6}
+ .kish-perdoo .p-tag.good,.kish-perdoo .health.good{background:#143e39;color:#9af3ca;border-color:#278b74}
+ .kish-perdoo .p-tag.warn,.kish-perdoo .health.warn{background:#4b3c28;color:#ffd990;border-color:#9e7746}
+ .kish-perdoo .p-tag.bad,.kish-perdoo .health.bad{background:#4b2d3a;color:#ffb2c1;border-color:#a2556c}
+ .kish-perdoo .p-tag.source{background:#353456;color:#d4c3ff;border-color:#665b99}
+ .kish-perdoo .p-avatar{border:1px solid #599bc1;background:#264965;color:#e8f8ff;box-shadow:0 0 0 2px #092437}
+ .kish-perdoo .p-owner{color:#c0d9ea}
+ .kish-perdoo .p-empty{background:linear-gradient(130deg,#15394d,#102a3a);border:1px dashed #6290ac;border-radius:17px;padding:28px 24px}
+ .kish-perdoo .p-empty>b{color:#f3f9ff}
+ .kish-perdoo .p-empty p{color:#b9cedf}
+ .kish-perdoo .ds-empty-symbol{background:#20536b;border:1px solid #4f90b4;color:#8bdbff}
+ .kish-perdoo .pd-chart-card{border-top:3px solid #59c4ee}
+ .kish-perdoo .pd-dashboard>.p-card:nth-child(2){border-top-color:#47d6a5}
+ .kish-perdoo .pd-dashboard>.p-card:nth-child(3){border-top-color:#f2bd59}
+ .kish-perdoo .pd-dashboard>.p-card:nth-child(4){border-top-color:#b69cff}
+ .kish-perdoo .pd-dashboard .p-chart text{fill:#cedfec}
+ .kish-perdoo .pd-goals-count>a{border-radius:12px;padding:12px 14px;background:#18394f;border:1px solid #315b75;margin:7px 0}
+ .kish-perdoo .pd-goals-count>a:hover{background:#245672;border-color:#70bce4}
+ .kish-perdoo .pd-goals-count>a>i{color:#83d8fb}
+ .kish-perdoo .pd-goals-count>a:nth-child(2)>i{color:#7ee5c4}
+ .kish-perdoo .pd-goals-count>a:nth-child(3)>i{color:#f9c87c}
+ .kish-perdoo .pd-donut{background:conic-gradient(#40d1a3 calc(var(--progress)*1%),#24445b 0);filter:drop-shadow(0 8px 20px #020e1e55)}
+ .kish-perdoo .pd-donut>div{background:#142f42}
+ .kish-perdoo .pd-donut b{color:#fff}
+ .kish-perdoo .pd-map-node{background:linear-gradient(180deg,#1a3d53,#132f43);border-color:#557c95;box-shadow:0 12px 28px #0003}
+ .kish-perdoo .pd-node-ultimate{background:linear-gradient(180deg,#1c4e66,#153b51);border:2px solid #70c7f1}
+ .kish-perdoo .pd-node-pillar{border-top:4px solid #b49cfc}
+ .kish-perdoo .pd-node-kpi{border-top:4px solid #4dd7a7}
+ .kish-perdoo .pd-node-kr{border-top:3px solid #f2bd58}
+ .kish-perdoo .pd-node-link{color:#f6faff!important;font-weight:750}
+ .kish-perdoo .pd-node-type{color:#c3deef}
+ .kish-perdoo .pd-node-meta{color:#a5d7ea}
+ .kish-perdoo .pd-work-group{border-color:#416982;box-shadow:none}
+ .kish-perdoo .pd-work-group>summary{background:#1b4159;color:#eef9ff}
+ .kish-perdoo .pd-work-group[open]>summary{border-bottom:1px solid #50768e;background:#24516c}
+ .kish-perdoo .pd-task-row{background:#142f43;border-color:#34596d}
+ .kish-perdoo .pd-task-row:hover{background:#1c4058}
+ .kish-perdoo .pd-task-row.is-done{background:#12382f}
+ .kish-perdoo .pd-check{border-color:#68a2ba;background:#153649}
+ .kish-perdoo .pd-check.checked{background:#32bf8e;border-color:#65edbc;color:#08291f}
+ .kish-perdoo .pd-due{color:#cbdce9;border-color:#52718a;background:#1d3d52}
+ .kish-perdoo .pd-due.is-overdue{color:#ffb3bc;background:#4a2f3a;border-color:#b96a7b}
+ .kish-perdoo .pd-topic-row{border-bottom:1px solid #315267}
+ .kish-perdoo .pd-topic-row .pd-recurring{background:#244c68;border-color:#609bb9;color:#a6dfff}
+ .kish-perdoo .pd-notes textarea{min-height:145px}
+ .kish-perdoo .pd-report-body>.p-card{border-inline-start:3px solid #6bbce5}
+ .kish-perdoo .pd-report-body>.p-card:nth-child(3n+2){border-inline-start-color:#50d7ad}
+ .kish-perdoo .pd-report-body>.p-card:nth-child(3n){border-inline-start-color:#ae96f1}
+ .kish-perdoo :is(.p-dialog,.ds-record-dialog){border-color:#5687a2}
+ .kish-perdoo .p-dialog-head,.kish-perdoo .ds-record-bar{background:#153448;border-color:#456b84}
+ .kish-perdoo .ds-record-content{background:#0f2a3b}
+ .kish-perdoo .ds-record-tabs button[aria-selected=true]{color:#95e1ff;border-bottom-color:#65caff}
+ .kish-perdoo .p-dialog-foot{background:#143146;border-color:#41647a}
+}
+@media screen and (max-width:1100px){
+ .kish-perdoo .pd-module-tabs{scroll-snap-type:x proximity;overflow-x:auto;flex-wrap:nowrap}
+ .kish-perdoo .pd-module-tabs a{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap;padding:10px 14px}
+ .kish-perdoo .p-grid{gap:12px}
+ .kish-perdoo .p-hero{gap:16px}
+}
+@media screen and (max-width:700px){
+ .kish-perdoo .content{padding:14px 12px 56px!important}
+ .kish-perdoo .ds-page-head{padding-bottom:14px}
+ .kish-perdoo .ds-page-head h1{font-size:23px}
+ .kish-perdoo .p-card{padding:16px;border-radius:15px}
+ .kish-perdoo .p-card h2{font-size:19px}
+ .kish-perdoo .p-stat{padding:15px}
+ .kish-perdoo .p-stat strong{font-size:28px}
+ .kish-perdoo .p-hero{padding:20px 17px}
+ .kish-perdoo .pd-dashboard{gap:12px}
+ .kish-perdoo .pd-module-tabs a{font-size:13px;min-height:47px}
+ .kish-perdoo .pd-module-tabs a>span:first-child{font-size:19px}
+ .kish-perdoo .p-module{min-height:112px}
+ .kish-perdoo .p-module b{font-size:15px}
+ .kish-perdoo .p-table-wrap:not(.pd-cascade){overflow-x:auto;overscroll-behavior-inline:contain}
+ .kish-perdoo .pd-task-row{padding:13px}
+ .kish-perdoo .p-btn.primary,.kish-perdoo .btn.primary{min-height:45px}
+ .kish-perdoo .pd-goals-count>a{padding:9px}
+ .kish-perdoo .pd-meeting-layout{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){
+ .kish-perdoo .p-module,.kish-perdoo .p-sidebar-nav a,.kish-perdoo .p-btn,.kish-perdoo .btn{transition:none}
+ .kish-perdoo .p-module:hover{transform:none}
+}
+/* END enterprise upgrade v2 */
