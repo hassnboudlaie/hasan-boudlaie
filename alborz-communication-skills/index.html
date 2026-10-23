@@ -76,6 +76,15 @@
 .s1-case-note{font-size:14px;color:#667a70;margin-top:8px}
 .s1-mini-table{width:100%;border-collapse:collapse;margin-top:14px}.s1-mini-table th,.s1-mini-table td{border:1px solid #dbe7df;padding:10px;font-size:15px;text-align:right}.s1-mini-table th{background:#eef6f0;color:#194a39}
 .s1-stage2{margin-top:10px;padding:12px 14px;border-radius:12px;background:#fff8e8;border:1px solid #ead9aa;font-size:16px;line-height:1.9}
+.s1-hero-compact{padding:28px 32px;margin-bottom:18px;border-radius:24px}.s1-hero-compact h1{font-size:34px;margin:10px 0 5px;line-height:1.5}.s1-hero-compact p{font-size:18px;line-height:1.8;max-width:760px}.s1-hero-compact .s1-meta{margin-top:12px}.s1-hero-compact .s1-meta span{padding:5px 10px;font-size:13px}
+.s1-start{max-width:920px;margin:0 auto}.s1-start .s1-panel-head{margin-bottom:16px;padding-bottom:14px}.s1-start .s1-panel-head .bigico{width:52px;height:52px;font-size:29px}.s1-start .s1-panel-head h2{font-size:28px}.s1-start .s1-panel-head p{font-size:15px}
+.s1-start-question{font-size:23px;padding:18px 20px;border-radius:16px;background:linear-gradient(135deg,#edf8f1,#f8fcf9);box-shadow:0 6px 18px rgba(16,62,45,.04)}
+.s1-start-goal{display:flex;gap:12px;align-items:flex-start;margin:14px 0;padding:15px 17px;border:1px solid #dce9e0;border-radius:15px;background:#fff}.s1-start-icon{font-size:22px;line-height:1.5}.s1-start-goal b{display:block;color:#174d3c;font-size:17px;margin-bottom:3px}.s1-start-goal p{margin:0;color:#4d6358;font-size:16px;line-height:1.85}
+.s1-start-pulse,.s1-start-scenario{margin-top:14px;border:1px solid #dbe7df;border-radius:17px;padding:17px 18px;background:#fbfdfb}.s1-start-kicker{font-size:12px;font-weight:900;color:#0d6d4b;margin-bottom:4px}.s1-start-pulse h3,.s1-start-scenario h3{font-size:18px;line-height:1.75;color:#173f34;margin:0 0 10px}.s1-start-scenario p{font-size:16px;line-height:1.85;color:#53685d;margin:0 0 10px}
+.s1-start-choices{display:flex;gap:7px;flex-wrap:wrap}.s1-start-choices button{border:1px solid #cbded0;background:#fff;color:#315b49;border-radius:999px;padding:8px 12px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:.18s}.s1-start-choices button:hover{border-color:#7bb094;background:#f1f8f3}.s1-start-choices button.selected{background:#0d6d4b;color:#fff;border-color:#0d6d4b;box-shadow:0 4px 12px rgba(13,109,75,.16)}.s1-start-choice-note{font-size:13px;color:#6a7d72;margin-top:9px}
+.s1-start-scenario details,.s1-start-science{border:1px solid #dce8df;border-radius:13px;background:#fff;overflow:hidden}.s1-start-scenario summary,.s1-start-science summary{cursor:pointer;padding:11px 13px;font-size:14px;font-weight:900;color:#174d3c}.s1-start-scenario details div,.s1-start-science div{padding:0 13px 13px;font-size:15px;line-height:1.9;color:#4b6357}.s1-start-science{margin-top:12px;background:#f8fbf9}
+@media(max-width:900px){.s1-hero-compact{padding:22px 20px;border-radius:20px}.s1-hero-compact h1{font-size:28px}.s1-hero-compact p{font-size:16px}.s1-start-question{font-size:20px;padding:16px}.s1-start-pulse,.s1-start-scenario{padding:15px}.s1-start .s1-panel-head h2{font-size:25px}}
+
 @media(max-width:900px){.s1-micro{grid-template-columns:1fr}.s1-mini-table{display:block;overflow-x:auto}}
 @media(max-width:900px){.s1-shell{grid-template-columns:1fr;padding:16px}.s1-side{position:relative;top:auto;display:flex;overflow:auto;gap:6px;max-height:none;order:-1}.s1-side-title{display:none}.s1-nav-btn{min-width:145px}.s1-hero h1{font-size:31px}.s1-hero p{font-size:19px}.s1-card-grid,.s1-test-intro,.s1-role{grid-template-columns:1fr}.s1-check{grid-template-columns:1fr 1fr}.s1-panel{padding:20px}.s1-panel-head h2{font-size:26px}}
 </style>
@@ -261,13 +270,14 @@ const s1Questions=[
 ];
 
 function s1SectionHtml(id){
- if(id==="start") return '<div class="s1-panel-head"><div class="bigico">🏁</div><div><h2>شروع جلسه</h2><p>فعال‌سازی ذهنی و تعریف مسئله</p></div></div>'+
- '<div class="s1-question">«مخاطب در چند دقیقه اول چه برداشتی از شما و از بیمه البرز می‌سازد؟»</div>'+
- '<div class="s1-pill-row"><span class="s1-pill">⏱ ۱۲۰ دقیقه</span><span class="s1-pill">💬 آنلاین و تعاملی</span><span class="s1-pill">🎯 رؤسای شعب بیمه البرز</span><span class="s1-pill">🧩 سطح متوسط رو به بالا</span></div>'+
- '<div class="s1-card-grid"><div class="s1-card"><span class="mini-emoji">🎯</span><h3>هدف جلسه</h3><p>رئیس شعبه بتواند جایگاه ارتباطی خود را بشناسد، مخاطب و موقعیت را تشخیص دهد و یک ارتباط حرفه‌ای را از همان لحظه اول با ترکیب مناسب احترام، گرمی و شایستگی آغاز کند.</p></div>'+
- '<div class="s1-card s1-accent"><span class="mini-emoji">💡</span><h3>Warm-up کلاس</h3><p><b>در ۳۰ ثانیه اول برخورد با یک رئیس شعبه، چه چیزهایی بیشترین اثر را بر قضاوت شما می‌گذارند؟</b><br>سه کلمه در Chat بنویسید؛ مدرس پاسخ‌ها را به First Impression و Professional Presence متصل می‌کند.</p></div></div>'+
- '<div class="s1-micro"><div><b>🔎 مشاهده</b><span>یک رئیس شعبه حرفه‌ای را به یاد بیاورید؛ چه رفتاری قبل از حرف‌زدن او اثر گذاشت؟</span></div><div><b>💬 گفت‌وگو</b><span>آیا «خوش‌برخورد بودن» به‌تنهایی برای اعتماد کافی است؟ چرا؟</span></div><div><b>✍️ اقدام</b><span>یک موقعیت واقعی امروز را انتخاب کنید که می‌خواهید Opening خود را در آن بهتر کنید.</span></div></div>'+
- '<div class="s1-takeaway">🎯 خروجی این بخش: شرکت‌کننده با یک موقعیت واقعی از شعبه وارد جلسه می‌شود؛ نه با یک تعریف نظری.</div>';
+ if(id==="start") return '<div class="s1-start">'+
+ '<div class="s1-panel-head"><div class="bigico">🏁</div><div><h2>شروع جلسه</h2><p>یک شروع کوتاه برای فعال‌کردن نگاه حرفه‌ای</p></div></div>'+
+ '<div class="s1-question s1-start-question">«مخاطب در چند دقیقه اول چه برداشتی از شما و از بیمه البرز می‌سازد؟»</div>'+
+ '<div class="s1-start-goal"><span class="s1-start-icon">🎯</span><div><b>هدف این بخش</b><p>در لحظات اولیه تعامل، سه Signal را آگاهانه مدیریت کنیم: <span dir="ltr">Warmth · Competence · Professional Presence</span>.</p></div></div>'+
+ '<div class="s1-start-pulse"><div class="s1-start-kicker">انتخاب سریع · فقط دو مورد</div><h3>دو برداشتی که دوست دارید مخاطب در برخورد اول از شما داشته باشد:</h3><div class="s1-start-choices"><button onclick="toggleStartChoice(this)">قابل اعتماد</button><button onclick="toggleStartChoice(this)">حرفه‌ای</button><button onclick="toggleStartChoice(this)">گرم و محترمانه</button><button onclick="toggleStartChoice(this)">مسلط</button><button onclick="toggleStartChoice(this)">آرام</button></div><div class="s1-start-choice-note" id="s1-start-choice-note">دو گزینه را انتخاب کنید؛ همین انتخاب، نقطه شروع گفت‌وگوی کلاس است.</div></div>'+
+ '<div class="s1-start-scenario"><div class="s1-start-kicker">سناریوی شعبه</div><h3>مشتری برای پیگیری خسارت وارد شعبه شده و از قبل ناراضی است.</h3><p>قبل از توضیح مقررات و فرآیند، چه چیزی بیشترین اثر را بر برداشت اولیه او می‌گذارد؟</p><details><summary>نکته کلیدی را ببینید</summary><div>اولین Signal معمولاً از <b>Recognition + لحن + وضوح قدم بعد</b> ساخته می‌شود؛ نه از توضیح طولانی.</div></details></div>'+
+ '<details class="s1-start-science"><summary>🧠 پشتوانه علمی</summary><div>در Social Cognition، دو قضاوت اولیه مهم‌اند: آیا این فرد قابل اعتماد است؟ و آیا توان مدیریت موقعیت را دارد؟ این دو محور با <b>Warmth × Competence</b> هم‌راستا هستند.</div></details>'+
+ '</div>';
 
  if(id==="position") return s1PositionHtml();
 
@@ -392,10 +402,23 @@ function session1Page(){
  document.title="جلسه اول | نقش رئیس شعبه در مدیریت ارتباطات";
  const nav=session1Sections.map((x,i)=>'<button class="s1-nav-btn '+(i===0?'active':'')+'" data-s1="'+x.id+'" onclick="openS1(\''+x.id+'\',this)"><span class="ico">'+x.icon+'</span><span>'+x.label+'<small style="display:block;font-size:11px;font-weight:500;opacity:.75">'+x.sub+'</small></span></button>').join("");
  document.getElementById("app").innerHTML=header()+
- '<main><div class="s1-shell"><button class="s1-menu-toggle" onclick="toggleS1Menu()">☰ مسیر جلسه</button><section class="s1-main"><div class="s1-hero"><span class="s1-eyebrow">🌟 جلسه اول | آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</span><h1>نقش رئیس شعبه در مدیریت ارتباطات و آداب معاشرت حرفه‌ای</h1><p>یک کارگاه دو ساعته، تعاملی و سناریومحور برای رؤسای شعب بیمه البرز؛ با تمرکز بر Professional Presence، First Impression، Warmth × Competence و Contextual Communication.</p><div class="s1-meta"><span>⏱ ۲ ساعت</span><span>🎯 رؤسای شعب بیمه البرز</span><span>💻 Online Workshop</span><span>🎭 Case + Role Play + Game</span></div></div><section class="s1-panel" id="s1-content">'+s1SectionHtml("start")+'</section></section>'+
+ '<main><div class="s1-shell"><button class="s1-menu-toggle" onclick="toggleS1Menu()">☰ مسیر جلسه</button><section class="s1-main"><div class="s1-hero s1-hero-compact"><span class="s1-eyebrow">جلسه اول | آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</span><h1>نقش رئیس شعبه در مدیریت ارتباطات و آداب معاشرت حرفه‌ای</h1><p>مدیریت اولین برداشت حرفه‌ای در مواجهه با مشتری، نماینده و همکار.</p><div class="s1-meta"><span>⏱ ۱۲۰ دقیقه</span><span>🎯 رؤسای شعب بیمه البرز</span></div></div><section class="s1-panel" id="s1-content">'+s1SectionHtml("start")+'</section></section>'+
  '<aside class="s1-side"><div class="s1-side-title">مسیر جلسه اول</div>'+nav+'</aside></div></main>'+footer();
 }
 function openS1(id,btn){document.getElementById("s1-content").innerHTML=s1SectionHtml(id);document.querySelectorAll(".s1-nav-btn").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");const side=document.querySelector(".s1-side");if(side)side.classList.remove("open");window.scrollTo({top:0,behavior:"smooth"});}
+function toggleStartChoice(btn){
+ const wrap=btn.closest(".s1-start-choices");
+ if(!wrap)return;
+ if(btn.classList.contains("selected")){btn.classList.remove("selected");}
+ else{
+   const selected=wrap.querySelectorAll(".selected");
+   if(selected.length>=2) selected[0].classList.remove("selected");
+   btn.classList.add("selected");
+ }
+ const picked=[...wrap.querySelectorAll(".selected")].map(x=>x.textContent.trim());
+ const note=document.getElementById("s1-start-choice-note");
+ if(note) note.textContent=picked.length===2?"انتخاب شما: "+picked.join(" + ")+" — حالا ببینیم چه Signalهایی این برداشت را می‌سازند.":"دو گزینه را انتخاب کنید؛ همین انتخاب، نقطه شروع گفت‌وگوی کلاس است.";
+}
 function s1Feedback(btn,correct){const box=btn.closest(".s1-case");const fb=box.querySelector(".s1-feedback");box.querySelectorAll(".s1-option").forEach(b=>{b.style.opacity=".55";b.style.borderColor="#c7dccd"});btn.style.opacity="1";btn.style.borderColor=correct?"#168353":"#cf654f";fb.innerHTML=correct?fb.innerHTML:"↩️ این گزینه قابل دفاع است، اما بهترین Signal را نمی‌فرستد. دوباره Context، احترام و کنترل موقعیت را هم‌زمان ببینید.";fb.classList.add("show");}
 function scoreS1(){
  let w=0,c=0,wc=0,cc=0;
