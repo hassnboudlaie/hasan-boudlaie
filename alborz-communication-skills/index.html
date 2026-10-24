@@ -308,6 +308,25 @@ document.addEventListener("DOMContentLoaded",()=>{if(already)addExit();else show
 .s1-assess-note{margin:12px 0;background:#fff6e6;padding:14px;border-radius:12px;border-right:3px solid #c28e3d;font-size:14px;line-height:1.9}.s1-result #s1-profile{border:0;background:transparent;padding:0}
 @media(max-width:700px){.s1-result-items{grid-template-columns:1fr}.s1-matrix{height:270px}.s1-cell{padding:7px!important;font-size:12px!important}.s1-cell b{font-size:13px!important}.s1-scores{gap:8px}.s1-score{padding:10px}.s1-score span{font-size:13px}}
 </style>
+<style id="s1-final-accessible-mobile-layout">
+.s1-matrix{direction:ltr}.s1-matrix .s1-cell{direction:rtl}
+.s1-panel-head{min-width:0}.s1-panel-head>div:last-child{min-width:0}.s1-main{min-width:0}.s1-panel{overflow-wrap:anywhere}
+.s1-nav-btn:focus-visible,.s1-tool-card>summary:focus-visible,.s1-dr-reveal:focus-visible{outline:3px solid #dfb861;outline-offset:2px}
+.s1-moment-diagnosis[hidden]{display:none!important}
+@media(max-width:900px){
+ .s1-shell{display:flex;flex-direction:column;direction:rtl;padding:10px 9px 40px;gap:10px}
+ .s1-menu-toggle{display:flex!important;align-items:center;justify-content:center;order:0;position:sticky;top:67px;z-index:999;margin:0 0 2px auto;min-height:42px}
+ .s1-main{order:1;width:100%}
+ .s1-side{display:none;position:fixed;top:116px;right:9px;left:9px;z-index:1000;max-height:65vh;overflow-y:auto;overflow-x:hidden;background:linear-gradient(165deg,#0c533c,#063d30);padding:11px;border-radius:16px;box-shadow:0 14px 38px #113e3266}
+ .s1-side.open{display:block}.s1-side-title{display:block;font-size:15px}
+ .s1-nav-btn{min-width:0;width:100%;margin:3px 0;font-size:15px;text-align:right;transform:none}
+ .s1-hero{padding:17px;border-radius:18px;margin-bottom:11px}.s1-hero h1{font-size:24px;line-height:1.7}.s1-hero p{font-size:16px;line-height:1.9}
+ .s1-panel{padding:13px;border-radius:17px;min-height:350px}.s1-panel-head{gap:10px;margin-bottom:15px}.s1-panel-head h2{font-size:22px}
+ .s1-test-intro,.s1-coach,.s1-card-grid,.s1-result-items,.s1-role,.s1-micro{grid-template-columns:1fr!important}
+ .s1-tool-options button{min-height:50px;touch-action:manipulation}.s1-tool-grid,.s1-dr-grid,.s1-focus-steps{grid-template-columns:1fr}
+}
+@media(max-width:420px){.s1-matrix{height:245px}.s1-cell{font-size:11px!important}.s1-cell b{font-size:12px!important}.s1-big-scale{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}}
+</style>
 <meta name="theme-color" content="#006f3e">
 </head>
 <body>
@@ -626,12 +645,12 @@ function s1RoleReveal(){
 
 function s1SectionHtml(id){
  if(id==="start") return '<div class="s1-start s1-open-v3">'+
- '<div class="s1-panel-head"><div class="bigico">🏁</div><div><h2>شروع جلسه</h2><p>رکن دوم سفر ارتقای رئیس شعبه به رهبر کسب‌وکار</p></div></div>'+
+ '<div class="s1-panel-head"><div class="bigico">🏁</div><div><h2>شروع جلسه</h2><p>ارتباط حرفه‌ای در موقعیت‌های روزمره شعبه</p></div></div>'+
  '<section class="s1-open-v3-hero">'+
    '<div class="s1-open-v3-copy">'+
      '<span class="s1-open-badge">مهارت‌های ارتباطات اثربخش</span>'+
-     '<h3>دانش و مقررات، بدون مهارت ارتباطی به نتیجه کامل نمی‌رسند.</h3>'+
-     '<p>رئیس شعبه باید بتواند پیام را درست <b>بشنود، بفهمد، منتقل کند و در موقعیت دشوار مدیریت کند</b>. این چهار مهارت، پایه ارتباط حرفه‌ای او با مشتری، کارکنان، نمایندگان و ستاد هستند.</p>'+
+     '<h3>پاسخ درست کافی نیست؛ مشتری باید بداند چه اتفاقی می‌افتد.</h3>'+
+     '<p>وقتی مشتری از تأخیر خسارت شکایت می‌کند، کار رئیس شعبه فقط توضیح مقررات نیست: باید روشن کند مشتری چه پاسخی گرفته، کجای کار مبهم است و چه پیگیری‌ای در اختیار شعبه قرار دارد. همین مهارت در گفت‌وگو با کارکنان، نمایندگان و ستاد هم لازم است.</p>'+
    '</div>'+
    '<div class="s1-skill-visual" aria-label="چهار مهارت ارتباطات اثربخش">'+
      '<div class="s1-skill-center"><img src="assets/alborz-logo.png" alt="بیمه البرز"><b>رئیس شعبه</b><small>رهبر کسب‌وکار</small></div>'+
@@ -641,7 +660,7 @@ function s1SectionHtml(id){
      '<div class="s1-skill-card skill4"><span>🗣️</span><b>بیان و رفتار حرفه‌ای</b><small>لحن، زبان بدن، وضوح و آداب ارتباط</small></div>'+
    '</div>'+
  '</section>'+
- '<div class="s1-open-v3-rule"><b>نکته کلیدی:</b> پاسخ درستِ فنی، اگر با گوش‌دادن ضعیف، لحن نامناسب، پرسش ناکافی یا هیجان کنترل‌نشده منتقل شود، می‌تواند نتیجه‌ای کاملاً نادرست بسازد.</div>'+
+ '<div class="s1-open-v3-rule"><b>نکته کلیدی:</b> پیش از پاسخ دادن بپرسید: «مسئله را درست فهمیده‌ام؟» سپس آنچه می‌دانید، آنچه باید بررسی شود و زمان پاسخ بعدی را مشخص کنید.</div>'+
  '<div class="s1-callout" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between"><b>🧰 جعبه‌ابزار مستقل: ۱۶ تکنیک کاربردی همراه با ۸ اقتباس از کتاب لیل لوندز</b><button type="button" onclick="s1GoToTechniques()" style="background:#0b754f;color:white;border:0;border-radius:11px;padding:11px 16px;font:800 15px Vazirmatn,Tahoma,sans-serif;cursor:pointer">مشاهده و تمرین ۱۶ تکنیک ←</button></div>'+
  '<section class="s1-day-card s1-day-advanced">'+
    '<div class="s1-day-head"><div><span>کیس تعاملی پیشرفته</span><h3>یک روز، سه موقعیت ارتباطی</h3><p>در هر کیس، مسئله فقط «چه بگوییم» نیست؛ باید تشخیص دهید <b>کدام تکنیک ارتباطی</b> گره را باز می‌کند.</p></div><div class="s1-day-counter">۳ موقعیت واقعی</div></div>'+
@@ -656,7 +675,7 @@ function s1SectionHtml(id){
    '<details class="s1-why good"><summary><span>✓</span> مهارت ارتباطی قوی چه می‌سازد؟</summary><div><b>اعتماد و وفاداری مشتری</b><b>اعتبار برند بیمه البرز</b><b>همکاری کارکنان و نمایندگان</b><b>کاهش تعارض و شکایت</b><b>افزایش احتمال حفظ و توسعه کسب‌وکار</b></div></details>'+
    '<details class="s1-why risk"><summary><span>!</span> ضعف ارتباطی چه هزینه‌ای دارد؟</summary><div><b>تشدید تنش و شکایت</b><b>فرسایش اعتماد</b><b>از دست‌رفتن فرصت تمدید و فروش</b><b>آسیب به تصویر برند</b><b>کاهش امنیت روانی و همکاری تیم</b></div></details>'+
  '</div>'+
- '<div class="s1-open-close"><b>پرسش آغاز جلسه:</b> اگر تصمیم شما از نظر فنی درست باشد اما طرف مقابل آن را نشنود، نپذیرد یا به شما اعتماد نکند، آیا آن تصمیم واقعاً اثربخش بوده است؟</div>'+
+ '<div class="s1-open-close"><b>پرسش آغاز جلسه:</b> وقتی مشتری می‌گوید «سه بار آمده‌ام و هر بار جواب متفاوت گرفته‌ام»، اولین جمله شما چیست؟ چه چیزی را پیش از توضیح مقررات بررسی می‌کنید؟</div>'+
  '</div>';
 
  if(id==="position") return s1PositionHtml();
@@ -741,7 +760,7 @@ function s1PositionHtml(){
  '<div class="s1-big-scale">'+[1,2,3,4,5].map(v=>'<button class="'+(selected===v?"selected":"")+'" onclick="answerS1('+v+')">'+v+'</button>').join('')+'</div>'+
  '<div style="font-size:13px;color:#6a7d73;margin-top:8px;display:flex;justify-content:space-between"><span>۱ = تقریباً هرگز</span><span>۵ = تقریباً همیشه</span></div>'+
  '<div class="s1-step-nav"><button onclick="moveS1Question(-1)" '+(s1TestIndex===0?"disabled":"")+'>قبلی</button>'+(s1TestIndex<9?'<button class="primary" onclick="moveS1Question(1)" '+(selected==null?"disabled":"")+'>بعدی</button>':'<button class="primary" onclick="scoreS1()" '+(selected==null?"disabled":"")+'>📍 نمایش نتیجه</button>')+'</div></div>'+
- '<div id="s1-result" class="s1-result"><div class="s1-scores"><div class="s1-score"><b id="s1-wscore">—</b><span>شنیدن و توجه به مخاطب / ۵</span></div><div class="s1-score"><b id="s1-cscore">—</b><span>پیگیری و روشن‌کردن اقدام / ۵</span></div></div><div class="s1-matrix" id="s1-matrix"><div class="s1-cell"><b>شنیدن و پیگیری قوی‌تر</b><span>توجه و پیگیری</span></div><div class="s1-cell"><b>پیگیری خوب، توجه کمتر</b><span>پیگیری بیشتر</span></div><div class="s1-cell"><b>توجه خوب، اقدام مبهم</b><span>شنیدن بیشتر</span></div><div class="s1-cell"><b>هر دو حوزه نیازمند تمرین</b><span>تمرین بیشتر در هر دو</span></div><div id="s1-dot" class="s1-dot"></div></div><div class="s1-axis-x">← پیگیری کمتر &nbsp;&nbsp; پیگیری و اقدام &nbsp;&nbsp; بالاتر →</div><div id="s1-profile" class="s1-callout"></div></div>';
+ '<div id="s1-result" class="s1-result"><div class="s1-scores"><div class="s1-score"><b id="s1-wscore">—</b><span>شنیدن و توجه به مخاطب / ۵</span></div><div class="s1-score"><b id="s1-cscore">—</b><span>پیگیری و روشن‌کردن اقدام / ۵</span></div></div><div class="s1-matrix" id="s1-matrix"><div class="s1-cell"><b>شنیدن بیشتر، پیگیری کمتر</b><span>نیاز به اقدام بعدی روشن</span></div><div class="s1-cell"><b>شنیدن و پیگیری بیشتر</b><span>نیاز به حفظ و تقویت در عمل</span></div><div class="s1-cell"><b>هر دو نیازمند تمرین</b><span>از یک رفتار کوچک آغاز کنید</span></div><div class="s1-cell"><b>پیگیری بیشتر، شنیدن کمتر</b><span>نیاز به توجه و پرسش بیشتر</span></div><div id="s1-dot" class="s1-dot"></div></div><div class="s1-axis-x">← پیگیری کمتر &nbsp;&nbsp; پیگیری و اقدام &nbsp;&nbsp; بالاتر →</div><div id="s1-profile" class="s1-callout"></div></div>';
 }
 function answerS1(v){s1TestAnswers[s1TestIndex]=v;document.getElementById("s1-content").innerHTML=s1PositionHtml();}
 function moveS1Question(delta){const next=s1TestIndex+delta;if(next<0||next>9)return;if(delta>0&&s1TestAnswers[s1TestIndex]==null)return;s1TestIndex=next;document.getElementById("s1-content").innerHTML=s1PositionHtml();}
@@ -777,7 +796,7 @@ function session1Page(){
  document.title="جلسه اول | نقش رئیس شعبه در مدیریت ارتباطات";
  const nav=session1Sections.map((x,i)=>'<button class="s1-nav-btn '+(i===0?'active':'')+'" data-s1="'+x.id+'" onclick="openS1(\''+x.id+'\',this)"><span class="ico">'+x.icon+'</span><span>'+x.label+'<small style="display:block;font-size:11px;font-weight:500;opacity:.75">'+x.sub+'</small></span></button>').join("");
  document.getElementById("app").innerHTML=header()+
- '<main><div class="s1-shell"><button class="s1-menu-toggle" onclick="toggleS1Menu()">☰ مسیر جلسه</button><section class="s1-main"><div class="s1-hero s1-hero-compact"><span class="s1-eyebrow">جلسه اول | آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</span><h1>نقش رئیس شعبه در مدیریت ارتباطات و آداب معاشرت حرفه‌ای</h1><p>رکن دوم سفر ارتقای رئیس شعبه به رهبر کسب‌وکار: توسعه مهارت‌های ارتباطات اثربخش.</p><div class="s1-meta"><span>⏱ ۱۲۰ دقیقه</span><span>🎯 رؤسای شعب بیمه البرز</span></div></div><section class="s1-panel" id="s1-content">'+s1SectionHtml("start")+'</section></section>'+
+ '<main><div class="s1-shell"><button class="s1-menu-toggle" onclick="toggleS1Menu()">☰ مسیر جلسه</button><section class="s1-main"><div class="s1-hero s1-hero-compact"><span class="s1-eyebrow">جلسه اول | آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</span><h1>نقش رئیس شعبه در مدیریت ارتباطات و آداب معاشرت حرفه‌ای</h1><p>ارتباط حرفه‌ای در موقعیت‌های روزمره شعبه: توسعه مهارت‌های ارتباطات اثربخش.</p><div class="s1-meta"><span>⏱ ۱۲۰ دقیقه</span><span>🎯 رؤسای شعب بیمه البرز</span></div></div><section class="s1-panel" id="s1-content">'+s1SectionHtml("start")+'</section></section>'+
  '<aside class="s1-side"><div class="s1-side-title">مسیر جلسه اول</div>'+nav+'</aside></div><div class="s1-session-footer">آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب | بیمه البرز</div></main>';
  const initialSection=new URLSearchParams(location.search).get("section");
  if(initialSection && session1Sections.some(x=>x.id===initialSection))openS1(initialSection,document.querySelector('[data-s1="'+initialSection+'"]'));
@@ -847,7 +866,7 @@ function scoreS1(){
  if(!wEl||!cEl)return;
  wEl.textContent=score(warmth);cEl.textContent=score(follow);
  const dot=document.getElementById("s1-dot");
- if(dot){dot.style.right=((follow-1)/4*90+4)+"%";dot.style.bottom=((warmth-1)/4*90+4)+"%";}
+ if(dot){dot.style.left=((follow-1)/4*90+4)+"%";dot.style.bottom=((warmth-1)/4*90+4)+"%";}
  const low=s1TestAnswers.map((v,i)=>({v,i,info:s1ActionCatalog[i]})).sort((a,b)=>a.v-b.v||a.i-b.i);
  const main=low.slice(0,2);const high=[...low].reverse().slice(0,2);
  const isOther=s1TestTarget!=="خودم به‌عنوان رئیس شعبه";
