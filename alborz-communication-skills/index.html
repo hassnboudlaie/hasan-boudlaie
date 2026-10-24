@@ -33,7 +33,7 @@ html.alborz-class-locked{overflow:hidden}
 <script id="alborz-classroom-access-script">
 (function(){
 "use strict";
-const KEY="alborz-academy-classroom-session-v2";
+const KEY="alborz-academy-classroom-session-v3";
 const USER="Bimeh.alborz";
 const SALT="28990ab5a3fedef8bd9e2856d98bd21f";
 const VERIFY="e8b52f3c66f938183a09559ca2f4e43e5d21c13bba0b4809b3d6f6db5ca3a969";
@@ -44,7 +44,9 @@ function clearLogin(){try{sessionStorage.removeItem(KEY);}catch(_){}}
 const already=getLogin();
 if(!already)document.documentElement.classList.add("alborz-class-locked");
 async function correct(user,pass){
- if(user.toLowerCase()!==USER.toLowerCase()||!pass)return false;
+ const normalizedUser=user.normalize("NFKC").replace(/[\u200c\u200d\ufeff]/g,"").trim().toLowerCase();
+ if(normalizedUser!==USER.toLowerCase()||!pass)return false;
+ pass=pass.normalize("NFKC").replace(/[\u200c\u200d\ufeff]/g,"").trim();
  const bytes=new TextEncoder().encode(USER+"\u0000"+pass);
  const key=await crypto.subtle.importKey("raw",bytes,"PBKDF2",false,["deriveBits"]);
  const salt=new Uint8Array(SALT.match(/../g).map(x=>parseInt(x,16)));
@@ -62,10 +64,10 @@ function showGate(){
  screen.innerHTML=`
  <div class="albz-shell">
  <div class="albz-cover"><div class="albz-symbol" aria-hidden="true">✦</div><small>ALBORZ INSURANCE · LEARNING</small><h1>آکادمی ارتباطات اثربخش بیمه البرز</h1><p>دوره اختصاصی رؤسای شعب · ورود به محیط کلاس</p></div>
- <div class="albz-fields"><h2>ورود به کلاس</h2><p>نام کاربری و رمز ارائه‌شده توسط مدرس را وارد کنید.</p>
+ <div class="albz-fields"><h2>ورود به کلاس</h2><p>نام کاربری و رمز ارائه‌شده توسط مدرس را وارد کنید.</p><p style="font-size:12px;color:#6a8576;margin:-8px 0 8px">نسخه به‌روزشدهٔ ورود: ۳</p>
  <form id="albz-class-form" autocomplete="off">
- <label for="albz-class-user">نام کاربری</label><input id="albz-class-user" type="text" autocomplete="username" spellcheck="false" required placeholder="Username">
- <label for="albz-class-pass">رمز عبور</label><div class="albz-passrow"><input id="albz-class-pass" type="password" autocomplete="current-password" required placeholder="Password"><button type="button" class="albz-eye" id="albz-class-eye" aria-label="نمایش یا پنهان کردن رمز">نمایش</button></div>
+ <label for="albz-class-user">نام کاربری</label><input id="albz-class-user" type="text" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required placeholder="Bimeh.alborz">
+ <label for="albz-class-pass">رمز عبور</label><div class="albz-passrow"><input id="albz-class-pass" type="password" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required placeholder="Password"><button type="button" class="albz-eye" id="albz-class-eye" aria-label="نمایش یا پنهان کردن رمز">نمایش</button></div>
  <button type="submit" id="albz-class-enter" class="albz-enter">ورود به آکادمی ←</button><div class="albz-status" id="albz-class-status" aria-live="polite" role="status"></div>
  </form></div></div>
  `;
