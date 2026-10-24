@@ -328,6 +328,15 @@ document.addEventListener("DOMContentLoaded",()=>{if(already)addExit();else show
 }
 @media(max-width:420px){.s1-matrix{height:245px}.s1-cell{font-size:11px!important}.s1-cell b{font-size:12px!important}.s1-big-scale{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}}
 </style>
+<style id="s1-lean-display">
+.s1-more-tech,.s1-focus-optional,.s1-optional-cases,.s1-optional-moments{margin:15px 0;border:1px solid #d5e5dc;border-radius:14px;background:#f9fcfa;padding:12px 14px}
+.s1-more-tech>summary,.s1-focus-optional>summary,.s1-optional-cases>summary,.s1-optional-moments>summary{cursor:pointer;color:#18573e;font-weight:800;font-size:16px;line-height:1.9}
+.s1-more-tech>.s1-tool-grid{margin-top:14px}
+.s1-more-tech>p,.s1-optional-cases>p{line-height:1.9;font-size:14px;color:#42624d}
+.s1-optional-cases button{border:1px solid #c9dfd1;border-radius:10px;padding:10px;background:#eaf5ee;color:#16563b;margin:5px;cursor:pointer;font:800 14px Vazirmatn,Tahoma,sans-serif}
+.s1-optional-moments .s1-day-tabs{margin-top:12px;flex-wrap:wrap}.s1-focus-optional>.s1-focus{margin-top:12px}
+@media(max-width:720px){.s1-more-tech,.s1-focus-optional,.s1-optional-cases,.s1-optional-moments{padding:10px}.s1-optional-cases button{display:block;width:100%;margin:6px 0}}
+</style>
 <meta name="theme-color" content="#006f3e">
 </head>
 <body>
@@ -491,7 +500,7 @@ const session1Sections=[
  {id:"stakeholders",icon:"🕸️",label:"ذی‌نفعان",sub:"شناخت مخاطبان"},
  {id:"impression",icon:"👁️",label:"اولین برداشت",sub:"اثر برخورد نخست"},
  {id:"etiquette",icon:"🤝",label:"آداب حرفه‌ای",sub:"فاصله و آداب"},
- {id:"techniques",icon:"🧰",label:"۱۶ تکنیک کاربردی",sub:"همراه با تمرین و کتاب"},
+ {id:"techniques",icon:"🧰",label:"۱۶ تکنیک کاربردی",sub:"۵ منتخب + ۱۱ تکمیلی"},
  {id:"cases",icon:"🎭",label:"سناریوها",sub:"آزمایشگاه موقعیت‌ها"},
  {id:"roleplay",icon:"👥",label:"تمرین دونفره پیشرفته",sub:"سناریو و گفت‌وگوی تحلیلی"},
  {id:"action",icon:"✅",label:"جمع‌بندی",sub:"برنامه اقدام"}
@@ -669,15 +678,14 @@ function s1SectionHtml(id){
    '</div>'+
  '</section>'+
  '<div class="s1-open-v3-rule"><b>نکته کلیدی:</b> پیش از پاسخ دادن بپرسید: «مسئله را درست فهمیده‌ام؟» سپس آنچه می‌دانید، آنچه باید بررسی شود و زمان پاسخ بعدی را مشخص کنید.</div>'+
- '<div class="s1-callout" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between"><b>🧰 جعبه‌ابزار مستقل: ۱۶ تکنیک کاربردی همراه با ۸ اقتباس از کتاب لیل لوندز</b><button type="button" onclick="s1GoToTechniques()" style="background:#0b754f;color:white;border:0;border-radius:11px;padding:11px 16px;font:800 15px Vazirmatn,Tahoma,sans-serif;cursor:pointer">مشاهده و تمرین ۱۶ تکنیک ←</button></div>'+
+ '<div class="s1-callout" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between"><b>🧰 جعبه‌ابزار آموزشی: ۵ تکنیک منتخب و ۱۱ تکنیک تکمیلی</b><button type="button" onclick="s1GoToTechniques()" style="background:#0b754f;color:white;border:0;border-radius:11px;padding:11px 16px;font:800 15px Vazirmatn,Tahoma,sans-serif;cursor:pointer">مشاهده تکنیک‌های منتخب ←</button></div>'+
  '<section class="s1-day-card s1-day-advanced">'+
-   '<div class="s1-day-head"><div><span>کیس تعاملی پیشرفته</span><h3>یک روز، سه موقعیت ارتباطی</h3><p>در هر کیس، مسئله فقط «چه بگوییم» نیست؛ باید تشخیص دهید <b>کدام تکنیک ارتباطی</b> گره را باز می‌کند.</p></div><div class="s1-day-counter">۳ موقعیت واقعی</div></div>'+
-   '<div class="s1-day-tabs">'+
-     '<button class="active" onclick="s1DayMoment(\'customer\',this)">👤 مشتری ناراضی</button>'+
-     '<button onclick="s1DayMoment(\'agent\',this)">🤝 نماینده کلیدی</button>'+
-     '<button onclick="s1DayMoment(\'employee\',this)">👥 کارمند خطاکرده</button>'+
-   '</div>'+
-   '<div id="s1-day-stage">'+s1DayMomentHtml("customer")+'</div>'+
+   '<div class="s1-day-head"><div><span>تمرین آغاز کلاس</span><h3>یک تصمیم در برخورد نخست</h3><p>اول تصمیم بگیرید، بعد تحلیل را ببینید. برای شروع کلاس همین یک تمرین کافی است.</p></div><div class="s1-day-counter">۱ تمرین اصلی</div></div>'+
+   '<details class="s1-optional-moments"><summary>دو موقعیت کوتاه دیگر (اختیاری)</summary><div class="s1-day-tabs">'+
+'<button onclick="s1DayMoment(\'agent\',this)">🤝 درخواست فوری نماینده</button>'+
+'<button onclick="s1DayMoment(\'employee\',this)">👥 گزارش خطای کارمند</button>'+
+'<button onclick="s1DayMoment(\'customer\',this)">بازگشت به تمرین اصلی</button>'+
+'</div></details>'+    '<div id="s1-day-stage">'+s1DayMomentHtml("customer")+'</div>'+
  '</section>'+
  '<div class="s1-why-grid">'+
    '<details class="s1-why good"><summary><span>✓</span> مهارت ارتباطی قوی چه می‌سازد؟</summary><div><b>اعتماد و وفاداری مشتری</b><b>اعتبار برند بیمه البرز</b><b>همکاری کارکنان و نمایندگان</b><b>کاهش تعارض و شکایت</b><b>افزایش احتمال حفظ و توسعه کسب‌وکار</b></div></details>'+
