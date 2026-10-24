@@ -3,6 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style id="alborz-classroom-access-style">
+html.alborz-class-locked #app{display:none!important}
+html.alborz-class-locked{overflow:hidden}
+.albz-login{position:fixed;inset:0;z-index:2147483500;overflow:auto;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 20% 20%,#c5e7d8,transparent 35%),linear-gradient(135deg,#eff6f0,#f6f8f3);direction:rtl;color:#193f33;font-family:Vazirmatn,Tahoma,sans-serif}
+.albz-shell{display:grid;grid-template-columns:1fr 1fr;width:min(820px,100%);border:1px solid #cfdfd2;border-radius:25px;overflow:hidden;box-shadow:0 18px 70px #153e3129;background:#fff}
+.albz-cover{background:linear-gradient(145deg,#0a3d32,#0b7657);color:#fff;padding:38px;display:flex;flex-direction:column;justify-content:center;min-height:420px;gap:14px}
+.albz-cover .albz-symbol{font-size:34px;display:grid;place-items:center;width:70px;height:70px;border-radius:18px;border:1px solid #ffffff50;background:#ffffff19}
+.albz-cover small{color:#cfe9dc;font-size:13px;font-weight:800;letter-spacing:.05em}
+.albz-cover h1{font-size:28px;line-height:1.75;color:#fff;margin:0}
+.albz-cover p{font-size:16px;line-height:2;color:#e0f7ea;margin:0}
+.albz-fields{padding:38px 33px;align-self:center}
+.albz-fields h2{font-size:25px;margin:0 0 8px;color:#184636}
+.albz-fields p{font-size:15px;line-height:1.9;color:#647b6c;margin:0 0 20px}
+.albz-fields label{display:block;font-size:14px;font-weight:800;margin:15px 0 7px}
+.albz-fields input{box-sizing:border-box;width:100%;min-width:0;border:1.5px solid #c9ddd0;background:#fbfffc;border-radius:11px;font:inherit;font-size:17px;padding:12px 13px;direction:ltr;text-align:left;color:#163e32}
+.albz-fields input:focus{outline:3px solid #b5dfc3;border-color:#14744e}
+.albz-passrow{display:flex;align-items:center;gap:7px}
+.albz-passrow input{flex:1}
+.albz-eye{border:1px solid #cbdfd2;border-radius:10px;background:#f0f8f1;color:#235d43;font:800 13px Vazirmatn,Tahoma,sans-serif;padding:12px;cursor:pointer;white-space:nowrap}
+.albz-enter{display:block;width:100%;margin-top:21px;background:linear-gradient(140deg,#0e8057,#12513c);color:white;border:0;border-radius:12px;padding:14px 16px;font:800 17px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.albz-enter:disabled{opacity:.55;cursor:wait}
+.albz-status{min-height:27px;margin-top:12px;color:#ab3030;font-size:14px;font-weight:700}
+.albz-exit{position:fixed;bottom:15px;left:16px;z-index:998;background:#fff;color:#15553e;border:1px solid #bddaca;border-radius:999px;box-shadow:0 6px 23px #113e302b;padding:9px 15px;font:800 13px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+@media(max-width:670px){.albz-login{padding:11px;align-items:start}.albz-shell{grid-template-columns:1fr;margin:auto 0;border-radius:19px}.albz-cover{min-height:0;padding:24px;gap:8px}.albz-cover h1{font-size:22px}.albz-cover p{font-size:14px}.albz-cover .albz-symbol{width:45px;height:45px;font-size:23px;border-radius:12px}.albz-fields{padding:23px}.albz-fields h2{font-size:22px}}
+</style>
+<!-- Classroom convenience gate only. GitHub Pages files remain publicly readable. -->
+<script id="alborz-classroom-access-script">
+(function(){
+"use strict";
+const KEY="alborz-academy-classroom-session-v1";
+const USER="alborz-class";
+const SALT="28990ab5a3fedef8bd9e2856d98bd21f";
+const VERIFY="b74422b21f4674aacc7f7f4187331c1c929ef64a56363cecdce49d7c843ea6d7";
+const EXPIRY=4*60*60*1000;
+function getLogin(){try{const s=JSON.parse(sessionStorage.getItem(KEY)||"null");return !!(s&&s.v===1&&s.until>Date.now());}catch(_){return false;}}
+function saveLogin(){try{sessionStorage.setItem(KEY,JSON.stringify({v:1,until:Date.now()+EXPIRY}));return true;}catch(_){return false;}}
+function clearLogin(){try{sessionStorage.removeItem(KEY);}catch(_){}}
+const already=getLogin();
+if(!already)document.documentElement.classList.add("alborz-class-locked");
+async function correct(user,pass){
+ if(user!==USER||!pass)return false;
+ const bytes=new TextEncoder().encode(user+"\u0000"+pass);
+ const key=await crypto.subtle.importKey("raw",bytes,"PBKDF2",false,["deriveBits"]);
+ const salt=new Uint8Array(SALT.match(/../g).map(x=>parseInt(x,16)));
+ const bits=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt,iterations:180000},key,256);
+ const computed=Array.from(new Uint8Array(bits),b=>b.toString(16).padStart(2,"0")).join("");
+ return computed===VERIFY;
+}
+function addExit(){
+ if(document.getElementById("albz-class-exit"))return;
+ const btn=document.createElement("button");btn.id="albz-class-exit";btn.type="button";btn.className="albz-exit";btn.textContent="↩ خروج از کلاس";
+ btn.addEventListener("click",()=>{clearLogin();location.reload();});document.body.appendChild(btn);
+}
+function showGate(){
+ const screen=document.createElement("section");screen.id="albz-class-login";screen.className="albz-login";screen.setAttribute("aria-label","ورود به آکادمی بیمه البرز");
+ screen.innerHTML=`
+ <div class="albz-shell">
+ <div class="albz-cover"><div class="albz-symbol" aria-hidden="true">✦</div><small>ALBORZ INSURANCE · LEARNING</small><h1>آکادمی ارتباطات اثربخش بیمه البرز</h1><p>دوره اختصاصی رؤسای شعب · ورود به محیط کلاس</p></div>
+ <div class="albz-fields"><h2>ورود به کلاس</h2><p>نام کاربری و رمز ارائه‌شده توسط مدرس را وارد کنید.</p>
+ <form id="albz-class-form" autocomplete="off">
+ <label for="albz-class-user">نام کاربری</label><input id="albz-class-user" type="text" autocomplete="username" spellcheck="false" required placeholder="Username">
+ <label for="albz-class-pass">رمز عبور</label><div class="albz-passrow"><input id="albz-class-pass" type="password" autocomplete="current-password" required placeholder="Password"><button type="button" class="albz-eye" id="albz-class-eye" aria-label="نمایش یا پنهان کردن رمز">نمایش</button></div>
+ <button type="submit" id="albz-class-enter" class="albz-enter">ورود به آکادمی ←</button><div class="albz-status" id="albz-class-status" aria-live="polite" role="status"></div>
+ </form></div></div>
+ `;
+ document.body.appendChild(screen);
+ document.getElementById("albz-class-eye").addEventListener("click",()=>{
+   const pass=document.getElementById("albz-class-pass");pass.type=pass.type==="password"?"text":"password";
+   document.getElementById("albz-class-eye").textContent=pass.type==="password"?"نمایش":"پنهان";
+ });
+ document.getElementById("albz-class-form").addEventListener("submit",async e=>{
+  e.preventDefault();const submit=document.getElementById("albz-class-enter");const msg=document.getElementById("albz-class-status");
+  submit.disabled=true;msg.textContent="در حال بررسی...";
+  try{
+    const user=document.getElementById("albz-class-user").value.trim(),pass=document.getElementById("albz-class-pass").value;
+    if(await correct(user,pass)){
+      if(!saveLogin()){msg.textContent="نشست در مرورگر قابل ذخیره نیست. از مرورگر معمولی استفاده کنید.";return;}
+      screen.remove();document.documentElement.classList.remove("alborz-class-locked");addExit();window.scrollTo(0,0);
+    }else{msg.textContent="نام کاربری یا رمز عبور نادرست است.";document.getElementById("albz-class-pass").value="";}
+  }catch(_){msg.textContent="مرورگر باید به‌روز و آدرس با HTTPS باز شده باشد.";}
+  finally{submit.disabled=false;}
+ });
+}
+document.addEventListener("DOMContentLoaded",()=>{if(already)addExit();else showGate();});
+})();
+</script>
+
 <title>آکادمی مهارت‌های ارتباطات اثربخش | بیمه البرز</title>
 <style>
 :root{--navy:#173d5d;--teal:#168b8b;--bg:#f5f8fa;--ink:#263746;--muted:#6c7a84;--line:#dce7eb;--soft:#eef7f7}
