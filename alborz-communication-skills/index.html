@@ -779,23 +779,35 @@ const s1CaseData=[
  {title:"😠 سناریو 5 | مشتری ناراضی، هنوز مؤدب",scenario:"مشتری طی سه مراجعه درباره همان خسارت سه پاسخ متفاوت شنیده و امروز می‌گوید دیگر نمی‌داند به کدام پاسخ اعتماد کند. مکاتبات مکتوب و تلفنی هنوز با یکدیگر تطبیق داده نشده‌اند.",options:[["توضیح می‌دهم که تکمیل پرونده مراحل مختلف دارد و پاسخ‌های متفاوت لزوماً به معنای اشتباه شعبه نیست.",false,"روشن‌سازی فرایند لازم است، اما پیش از بررسی تناقض پیام‌ها می‌تواند دفاع از عملکرد بدون سند به نظر برسد."],["اختلاف پیام‌های قبلی را با زبان خودم بازگو می‌کنم؛ زمان و مستند هر پاسخ را می‌پرسم و تعهد پیگیری وضعیت رسمی می‌دهم.",true,"مسئله بی‌اعتمادی با پرسش درباره پیام‌های متناقض قابل بررسی می‌شود؛ نتیجه خسارت بدون سند وعده داده نمی‌شود."],["شماره تماس واحد تخصصی را می‌دهم و از مشتری می‌خواهم برای دریافت پاسخ دقیق مستقیماً پیگیری کند.",false,"ارجاع فنی ممکن است لازم باشد، ولی بدون هماهنگی و اطلاع‌رسانی شعبه، دوباره مسئولیت پیگیری به مشتری منتقل می‌شود."]]},
  {title:"⚡ سناریو 6 | دو اولویت متعارض",scenario:"مدیر مالی یک شرکت برای جلسه تمدید فقط نیم ساعت زمان دارد. هم‌زمان کارشناس درباره خطای احتمالی در اطلاعات پوشش هشدار می‌دهد که شاید موجب صدور نادرست شود. مشتری از تأخیر قبلی ناراضی است.",options:[["جلسه مشتری را بدون وقفه آغاز می‌کنم؛ می‌خواهم کارشناس مغایرت را پس از جلسه بررسی کند.",false,"اگر احتمال صدور اشتباه وجود داشته باشد، ادامه فرایند بدون بررسی ممکن است ریسک جدی ایجاد کند؛ ارزش قرارداد تنها معیار نیست."],["بدون توضیح کافی به مشتری، جلسه را عقب می‌اندازم تا شخصاً مغایرت را کامل رفع کنم.",false,"رفع خطر داخلی مهم است، اما بی‌خبر گذاشتن مشتری از علت و مدت تأخیر به رابطه آسیب می‌زند."],["ریسک خطا و مهلت آن را فوراً بررسی می‌کنم؛ برای کارشناس مسئول تعیین و زمان واقعی شروع جلسه را به مشتری اطلاع می‌دهم.",true,"اولویت بر اساس اثر و زمان تصمیم گرفته می‌شود و مدیر برای هر دو طرف مسئول و موعد مشخص می‌کند."]],stage2:"چه جمله‌ای به مشتری سازمانی می‌گویید تا تأخیر کوتاه، نشانه بی‌نظمی ندهد؟"}
 ];
+s1CaseData[5]={"title":"📲 پیگیری خدمات برخط و حضوری","scenario":"بیمه‌گذار می‌گوید درخواست خسارت را به‌صورت برخط ثبت کرده و کد پیگیری دارد؛ اما اکنون در شعبه دوباره از او مدرک می‌خواهند. شما هنوز نمی‌دانید مدارک قبلی در چه مرحله‌ای دریافت یا بررسی شده‌اند. مشتری نگران دوباره‌کاری و محرمانگی اطلاعاتش است.","options":[["چون پرونده برخط ثبت شده است، از مشتری می‌خواهم فقط از همان مسیر پیگیری کند.",false,"ارجاع بدون مسئول مشخص، مشتری را میان دو کانال سرگردان می‌کند."],["برای سرعت کار، تمام مدارک را دوباره به شماره شخصی کارشناس بفرستد.",false,"درخواست تکراری قبل از بررسی ثبت مدارک، دوباره‌کاری و ریسک محرمانگی ایجاد می‌کند."],["کد پیگیری و وضعیت مدارک را از مسیر و دسترسی مجاز بررسی می‌کنم، مسئول پاسخ‌گویی را روشن می‌سازم و تنها در صورت نقص مستند، کانال امن تکمیل را می‌گویم.",true,"به جای پاس‌کاری، فرایند حضوری و برخط هماهنگ می‌شود؛ نتیجه خسارت همچنان وعده داده نمی‌شود."]],"stage2":"اگر رئیس شعبه دسترسی به سامانه برخط ندارد، از کدام مسیر رسمی استعلام می‌گیرد و چگونه موعد خبر دادن را مشخص می‌کند؟"};
 let s1CaseIndex=0;
+
+const s1MainCases=[0,1,5],s1AdditionalCases=[2,3,4];
+let s1CaseTrack="main";
+function s1CasesNow(){return s1CaseTrack==="extra"?s1AdditionalCases:s1MainCases;}
+function s1ChooseTrack(track){
+ s1CaseTrack=track==="extra"?"extra":"main";s1CaseIndex=0;
+ const stage=document.getElementById("s1-content");if(stage)stage.innerHTML=s1CaseLabHtml();
+}
 function s1CaseLabHtml(){
- const x=s1CaseData[s1CaseIndex];
- return '<div class="s1-panel-head"><div class="bigico">🎭</div><div><h2>آزمایشگاه سناریوها</h2><p>آزمایشگاه سناریوها | یک کیس در هر مرحله</p></div></div>'+
- '<div class="s1-callout"><b>روش کار:</b> تصمیم بگیرید، بازخورد را ببینید، سپس به کیس بعد بروید. هدف قضاوت بهتر است، نه حفظ پاسخ.</div>'+
- '<div class="s1-case-step"><div class="s1-step-head"><span class="s1-step-count">سناریو '+(s1CaseIndex+1)+' از ۶</span><div class="s1-progress"><span style="width:'+(((s1CaseIndex+1)/6)*100)+'%"></span></div></div><div class="s1-case"><h3>'+x.title+'</h3><p>'+x.scenario+'</p><div class="s1-options">'+x.options.map((o,i)=>'<button class="s1-option" onclick="chooseS1CaseOption('+i+',this)">'+o[0]+'</button>').join('')+'</div><div id="s1-case-feedback" class="s1-feedback"></div><div id="s1-case-stage2"></div><button id="s1-next-case" class="s1-next-case" onclick="nextS1Case()">'+(s1CaseIndex<5?"کیس بعدی ←":"پایان آزمایشگاه سناریوها ✓")+'</button></div></div>'+
- '<div class="s1-takeaway">🎯 خروجی آزمایشگاه سناریوها: تشخیص موقعیت، حفظ رابطه، ارسال نشانه مناسب و مدیریت موازنه دشوار.</div>';
+ const x=s1CaseData[s1CasesNow()[s1CaseIndex]];
+ return '<div class="s1-panel-head"><div class="bigico">🎭</div><div><h2>آزمایشگاه سناریوها</h2><p>سه موقعیت اصلی برای تصمیم‌گیری؛ سه موقعیت بیشتر در بخش اختیاری</p></div></div>'+
+ '<div class="s1-callout"><b>تمرین:</b> پیش از دیدن تحلیل، یکی از سه تصمیم را انتخاب کنید و دلیل خود را بگویید. لازم نیست در کلاس همه موقعیت‌ها را حل کنید.</div>'+
+ '<div class="s1-case-step"><div class="s1-step-head"><span class="s1-step-count">موقعیت '+(s1CaseIndex+1)+' از ۳'+(s1CaseTrack==="extra"?" · تکمیلی":"")+'</span><div class="s1-progress"><span style="width:'+(((s1CaseIndex+1)/3)*100)+'%"></span></div></div><div class="s1-case"><h3>'+x.title+'</h3><p>'+x.scenario+'</p><div class="s1-options">'+x.options.map((o,i)=>'<button class="s1-option" onclick="chooseS1CaseOption('+i+',this)">'+o[0]+'</button>').join('')+'</div><div id="s1-case-feedback" class="s1-feedback"></div><div id="s1-case-stage2"></div><button id="s1-next-case" class="s1-next-case" onclick="nextS1Case()">'+(s1CaseIndex<2?"موقعیت بعدی ←":"پایان سه موقعیت ✓")+'</button></div></div>'+
+ '<details class="s1-optional-cases"><summary>سه سناریوی دیگر برای مطالعه یا تمرین بیشتر</summary><p>سناریوهای تکمیلی حفظ شده‌اند، اما در برنامه اصلی ۱۲۰ دقیقه‌ای کلاس الزامی نیستند.</p><button type="button" onclick="s1ChooseTrack(\'extra\')">مشاهده سناریوهای تکمیلی</button><button type="button" onclick="s1ChooseTrack(\'main\')">بازگشت به سه سناریوی اصلی</button></details>';
 }
 function chooseS1CaseOption(i,btn){
- const x=s1CaseData[s1CaseIndex],o=x.options[i],box=btn.closest(".s1-case");
+ const x=s1CaseData[s1CasesNow()[s1CaseIndex]],o=x.options[i],box=btn.closest(".s1-case");
  box.querySelectorAll(".s1-option").forEach(b=>{b.style.opacity=".55";b.style.borderColor="#c7dccd"});btn.style.opacity="1";btn.style.borderColor=o[1]?"#168353":"#cf654f";
- const fb=document.getElementById("s1-case-feedback");fb.innerHTML=(o[1]?"✅ ":"↩️ ")+o[2];fb.classList.add("show");
- const s2=document.getElementById("s1-case-stage2");s2.innerHTML=x.stage2?'<div class="s1-stage2"><b>مرحله دوم:</b> '+x.stage2+'</div>':"";
- document.getElementById("s1-next-case").classList.add("show");
+ const feedback=document.getElementById("s1-case-feedback");feedback.textContent=(o[1]?"✓ ":"↩ ")+o[2];feedback.classList.add("show");
+ const next=document.getElementById("s1-case-stage2");next.textContent=x.stage2?"سؤال تکمیلی: "+x.stage2:"";
+ const btnNext=document.getElementById("s1-next-case");if(btnNext)btnNext.classList.add("show");
 }
-function nextS1Case(){if(s1CaseIndex<5){s1CaseIndex++;document.getElementById("s1-content").innerHTML=s1CaseLabHtml();}else{s1CaseIndex=0;openS1("action",document.querySelector('[data-s1="action"]'));}}
-
+function nextS1Case(){
+ if(s1CaseIndex<2){s1CaseIndex++;document.getElementById("s1-content").innerHTML=s1CaseLabHtml();}
+ else if(s1CaseTrack==="extra")s1ChooseTrack("main");
+ else {s1CaseIndex=0;openS1("action",document.querySelector('[data-s1="action"]'));}
+}
 function toggleS1Menu(){const side=document.querySelector(".s1-side");if(side)side.classList.toggle("open");}
 
 function session1Page(){
