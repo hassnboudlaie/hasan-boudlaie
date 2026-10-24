@@ -44,8 +44,8 @@ function clearLogin(){try{sessionStorage.removeItem(KEY);}catch(_){}}
 const already=getLogin();
 if(!already)document.documentElement.classList.add("alborz-class-locked");
 async function correct(user,pass){
- if(user!==USER||!pass)return false;
- const bytes=new TextEncoder().encode(user+"\u0000"+pass);
+ if(user.toLowerCase()!==USER.toLowerCase()||!pass)return false;
+ const bytes=new TextEncoder().encode(USER+"\u0000"+pass);
  const key=await crypto.subtle.importKey("raw",bytes,"PBKDF2",false,["deriveBits"]);
  const salt=new Uint8Array(SALT.match(/../g).map(x=>parseInt(x,16)));
  const bits=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt,iterations:180000},key,256);
