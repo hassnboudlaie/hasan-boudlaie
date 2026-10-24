@@ -33,7 +33,7 @@ html.alborz-class-locked{overflow:hidden}
 <script id="alborz-classroom-access-script">
 (function(){
 "use strict";
-const KEY="alborz-academy-classroom-session-v3";
+const KEY="alborz-academy-classroom-session-v4";
 const USER="Bimeh.alborz";
 const SALT="28990ab5a3fedef8bd9e2856d98bd21f";
 const VERIFY="e8b52f3c66f938183a09559ca2f4e43e5d21c13bba0b4809b3d6f6db5ca3a969";
@@ -44,15 +44,20 @@ function clearLogin(){try{sessionStorage.removeItem(KEY);}catch(_){}}
 const already=getLogin();
 if(!already)document.documentElement.classList.add("alborz-class-locked");
 async function correct(user,pass){
- const normalizedUser=user.normalize("NFKC").replace(/[\u200c\u200d\ufeff]/g,"").trim().toLowerCase();
- if(normalizedUser!==USER.toLowerCase()||!pass)return false;
- pass=pass.normalize("NFKC").replace(/[\u200c\u200d\ufeff]/g,"").trim();
- const bytes=new TextEncoder().encode(USER+"\u0000"+pass);
+ // Normalize input from mobile keyboards and pasted text without exposing the password.
+ const clean=s=>s.normalize("NFKC").replace(/[\s\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/g,"");
+ const normalizedUser=clean(user).toLowerCase();
+ if(normalizedUser!==USER.toLowerCase())return "username";
+ const normalizedPass=clean(pass).toLowerCase();
+ if(!normalizedPass)return "password";
+ // Capitalization of the input must not prevent entry during class.
+ const canonicalPass=normalizedPass.charAt(0).toUpperCase()+normalizedPass.slice(1);
+ const bytes=new TextEncoder().encode(USER+"\u0000"+canonicalPass);
  const key=await crypto.subtle.importKey("raw",bytes,"PBKDF2",false,["deriveBits"]);
  const salt=new Uint8Array(SALT.match(/../g).map(x=>parseInt(x,16)));
  const bits=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt,iterations:180000},key,256);
  const computed=Array.from(new Uint8Array(bits),b=>b.toString(16).padStart(2,"0")).join("");
- return computed===VERIFY;
+ return computed===VERIFY?"ok":"password";
 }
 function addExit(){
  if(document.getElementById("albz-class-exit"))return;
@@ -64,7 +69,7 @@ function showGate(){
  screen.innerHTML=`
  <div class="albz-shell">
  <div class="albz-cover"><div class="albz-symbol" aria-hidden="true">✦</div><small>ALBORZ INSURANCE · LEARNING</small><h1>آکادمی ارتباطات اثربخش بیمه البرز</h1><p>دوره اختصاصی رؤسای شعب · ورود به محیط کلاس</p></div>
- <div class="albz-fields"><h2>ورود به کلاس</h2><p>نام کاربری و رمز ارائه‌شده توسط مدرس را وارد کنید.</p><p style="font-size:12px;color:#6a8576;margin:-8px 0 8px">نسخه به‌روزشدهٔ ورود: ۳</p>
+ <div class="albz-fields"><h2>ورود به کلاس</h2><p>نام کاربری و رمز ارائه‌شده توسط مدرس را وارد کنید.</p><p style="font-size:12px;color:#6a8576;margin:-8px 0 8px">نسخه به‌روزشدهٔ ورود: ۴</p>
  <form id="albz-class-form" autocomplete="off">
  <label for="albz-class-user">نام کاربری</label><input id="albz-class-user" type="text" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required placeholder="Bimeh.alborz">
  <label for="albz-class-pass">رمز عبور</label><div class="albz-passrow"><input id="albz-class-pass" type="password" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required placeholder="Password"><button type="button" class="albz-eye" id="albz-class-eye" aria-label="نمایش یا پنهان کردن رمز">نمایش</button></div>
@@ -81,10 +86,14 @@ function showGate(){
   submit.disabled=true;msg.textContent="در حال بررسی...";
   try{
     const user=document.getElementById("albz-class-user").value.trim(),pass=document.getElementById("albz-class-pass").value;
-    if(await correct(user,pass)){
+    const verdict=await correct(user,pass);
+    if(verdict==="ok"){
       if(!saveLogin()){msg.textContent="نشست در مرورگر قابل ذخیره نیست. از مرورگر معمولی استفاده کنید.";return;}
       screen.remove();document.documentElement.classList.remove("alborz-class-locked");document.dispatchEvent(new Event("alborz-classroom-authenticated"));addExit();window.scrollTo(0,0);
-    }else{msg.textContent="نام کاربری یا رمز عبور نادرست است.";document.getElementById("albz-class-pass").value="";}
+    }else{
+      msg.textContent=verdict==="username"?"نام کاربری شناسایی نشد؛ دقیقاً Bimeh.alborz را وارد کنید.":"رمز عبور مطابقت ندارد؛ صفحه‌کلید را روی انگلیسی بگذارید و رمز را دوباره وارد کنید.";
+      document.getElementById("albz-class-pass").value="";
+    }
   }catch(_){msg.textContent="مرورگر باید به‌روز و آدرس با HTTPS باز شده باشد.";}
   finally{submit.disabled=false;}
  });
