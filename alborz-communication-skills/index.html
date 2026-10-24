@@ -34,9 +34,9 @@ html.alborz-class-locked{overflow:hidden}
 (function(){
 "use strict";
 const KEY="alborz-academy-classroom-session-v1";
-const USER="alborz-class";
+const USER="Bimeh.alborz";
 const SALT="28990ab5a3fedef8bd9e2856d98bd21f";
-const VERIFY="b74422b21f4674aacc7f7f4187331c1c929ef64a56363cecdce49d7c843ea6d7";
+const VERIFY="e8b52f3c66f938183a09559ca2f4e43e5d21c13bba0b4809b3d6f6db5ca3a969";
 const EXPIRY=4*60*60*1000;
 function getLogin(){try{const s=JSON.parse(sessionStorage.getItem(KEY)||"null");return !!(s&&s.v===1&&s.until>Date.now());}catch(_){return false;}}
 function saveLogin(){try{sessionStorage.setItem(KEY,JSON.stringify({v:1,until:Date.now()+EXPIRY}));return true;}catch(_){return false;}}
