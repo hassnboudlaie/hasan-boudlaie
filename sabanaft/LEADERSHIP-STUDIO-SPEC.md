@@ -28,7 +28,7 @@ Armin Trost (2025), *The Reflective Leader: A Guide to Context-Driven Leadership
 
 ## Current implementation (pilot)
 - Source: `leadership-studio.html`; reads the existing authoritative 18 dimensions and four roles from `reflective-content.js`.
-- Covers profile, context map, ten-point intended role mix, case capture, conditional situation prompts, four-role rehearsal, action, reflection and JSON export/import.
+- Covers profile, 18-dimension context map, three separate ten-point perspectives (appropriate, self-observed, assumed team expectations), case capture, conditional situation prompts, four-role rehearsal, action, reflection and JSON export/import.
 - Isolated key: `sabanaft_leadership_studio_v1`. Does **not** migrate, overwrite or delete the original `sabanaft_reflective_v2` or earlier course data.
 - GitHub Pages hosts static UI only. **There is no authenticated manager account, organization database, secure synchronization, LLM integration, automated private feedback collection or central admin portal yet.** LocalStorage can be read by another user of the same browser and does not constitute a secure multi-manager deployment.
 - No names or confidential company details should be placed in real cases until the server-side security gates have been implemented and tested.
