@@ -81,7 +81,7 @@ function showGate(){
     const user=document.getElementById("albz-class-user").value.trim(),pass=document.getElementById("albz-class-pass").value;
     if(await correct(user,pass)){
       if(!saveLogin()){msg.textContent="نشست در مرورگر قابل ذخیره نیست. از مرورگر معمولی استفاده کنید.";return;}
-      screen.remove();document.documentElement.classList.remove("alborz-class-locked");addExit();window.scrollTo(0,0);
+      screen.remove();document.documentElement.classList.remove("alborz-class-locked");document.dispatchEvent(new Event("alborz-classroom-authenticated"));addExit();window.scrollTo(0,0);
     }else{msg.textContent="نام کاربری یا رمز عبور نادرست است.";document.getElementById("albz-class-pass").value="";}
   }catch(_){msg.textContent="مرورگر باید به‌روز و آدرس با HTTPS باز شده باشد.";}
   finally{submit.disabled=false;}
@@ -815,8 +815,12 @@ document.title="راهنمای استفاده | آکادمی مهارت‌های
 document.getElementById("app").innerHTML=header()+
 '<main><section class="hero"><div class="wrap"><span class="tag">راهنمای استفاده</span><h1>فعلاً فقط معماری دوره</h1><p>این نسخه برای دیدن جلسه صفر و ساختار ۱۰ جلسه اصلی و کلیات هر ماژول است. مسیر یادگیری خطی و اجباری نیست و هر جلسه لینک مستقل دارد.</p></div></section><section class="section"><div class="wrap"><div class="guide"><b>مرحله فعلی</b><p>عنوان، هدف، محورهای اصلی و صفحه مستقل جلسه صفر و ۱۰ جلسه اصلی آماده است.</p></div><div class="guide"><b>مرحله بعد</b><p>هر بار فقط یک جلسه را انتخاب می‌کنیم و محتوای همان جلسه را کامل می‌کنیم؛ نه جلسه‌های بعدی را.</p></div><div class="guide"><b>خروجی نهایی هر جلسه</b><p>جزوه + نکات کلیدی + تمرین + Case + تکنیک + آزمون + Reflection + تکلیف انتقال یادگیری.</p></div></div></section></main>'+footer()
 }
+function renderAcademyAfterLogin(){
 const params=new URLSearchParams(location.search); const hasM=params.has("m"); const m=Number(params.get("m")); const view=params.get("view"); const item=params.get("item");
 if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else home();
+}
+if(!document.documentElement.classList.contains("alborz-class-locked"))renderAcademyAfterLogin();
+document.addEventListener("alborz-classroom-authenticated",renderAcademyAfterLogin);
 </script>
 <!-- publish trigger -->
 </body>
