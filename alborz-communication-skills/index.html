@@ -769,6 +769,8 @@ function session1Page(){
  document.getElementById("app").innerHTML=header()+
  '<main><div class="s1-shell"><button class="s1-menu-toggle" onclick="toggleS1Menu()">☰ مسیر جلسه</button><section class="s1-main"><div class="s1-hero s1-hero-compact"><span class="s1-eyebrow">جلسه اول | آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</span><h1>نقش رئیس شعبه در مدیریت ارتباطات و آداب معاشرت حرفه‌ای</h1><p>رکن دوم سفر ارتقای رئیس شعبه به رهبر کسب‌وکار: توسعه مهارت‌های ارتباطات اثربخش.</p><div class="s1-meta"><span>⏱ ۱۲۰ دقیقه</span><span>🎯 رؤسای شعب بیمه البرز</span></div></div><section class="s1-panel" id="s1-content">'+s1SectionHtml("start")+'</section></section>'+
  '<aside class="s1-side"><div class="s1-side-title">مسیر جلسه اول</div>'+nav+'</aside></div><div class="s1-session-footer">آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب | بیمه البرز</div></main>';
+ const initialSection=new URLSearchParams(location.search).get("section");
+ if(initialSection && session1Sections.some(x=>x.id===initialSection))openS1(initialSection,document.querySelector('[data-s1="'+initialSection+'"]'));
 }
 function openS1(id,btn){document.getElementById("s1-content").innerHTML=s1SectionHtml(id);document.querySelectorAll(".s1-nav-btn").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");const side=document.querySelector(".s1-side");if(side)side.classList.remove("open");window.scrollTo({top:0,behavior:"smooth"});}
 function s1GoToTechniques(){
