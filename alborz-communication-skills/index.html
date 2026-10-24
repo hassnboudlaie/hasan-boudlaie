@@ -298,6 +298,16 @@ document.addEventListener("DOMContentLoaded",()=>{if(already)addExit();else show
 .s1-focus-next{font:800 16px Vazirmatn,Tahoma,sans-serif;background:#1f684e;color:white;border:0;border-radius:11px;padding:13px;cursor:pointer;width:100%;margin-top:12px}
 @media(max-width:800px){.s1-focus-steps{grid-template-columns:1fr}.s1-focus-head h3{font-size:21px}.s1-focus-case{padding:13px}}
 </style>
+
+<style id="s1-final-assessment-polish">
+.s1-result-lead{padding:14px 0;border-bottom:1px solid #dce7dc}.s1-result-lead h3{color:#145438;margin:0 0 8px;font-size:21px}.s1-result-lead p{font-size:18px;font-weight:800;color:#19583f;margin:4px 0}.s1-result-lead small{display:block;color:#647c6b;font-size:13px;line-height:1.85}
+.s1-result-block{margin-top:16px;padding:16px;border:1px solid #dbe9df;border-radius:15px;background:#fff}.s1-result-block h4{font-size:19px;color:#185139;margin:0 0 11px}.s1-result-block ul{margin:0;padding-right:20px}.s1-result-block li{font-size:15px;line-height:1.95}
+.s1-result-practice{margin:10px 0;padding:13px;background:#f1f9f3;border-radius:12px;border-right:3px solid #27986a}.s1-result-practice b{font-size:16px;color:#12543a}.s1-result-practice p{font-size:15px;margin:8px 0;line-height:1.95}.s1-result-practice small{font-size:13px;line-height:1.9;color:#446e52}
+.s1-result-detail{margin:15px 0;padding:12px;border:1px solid #dae8de;border-radius:14px}.s1-result-detail summary{cursor:pointer;color:#1d6347;font-size:16px;font-weight:800}.s1-result-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:13px}.s1-result-item{padding:11px;border:1px solid #e0eae2;border-radius:10px;font-size:13px;line-height:1.85;background:#f9fcfa}.s1-result-item strong{margin-right:10px;white-space:nowrap;color:#165b41}.s1-result-track{height:6px;background:#dcece1;margin-top:7px;border-radius:8px;overflow:hidden;direction:rtl}.s1-result-track i{display:block;height:100%;background:#298e62}
+.s1-result-commit{padding:15px;margin:14px 0;background:#eef5ff;border-radius:14px;border:1px solid #d2dfef}.s1-result-commit h4{font-size:18px;color:#274c65;margin:0}.s1-result-commit p{line-height:2;font-size:15px}.s1-result-commit button{background:#125d46;color:#fff;border:none;border-radius:11px;padding:11px 16px;font:800 15px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.s1-assess-note{margin:12px 0;background:#fff6e6;padding:14px;border-radius:12px;border-right:3px solid #c28e3d;font-size:14px;line-height:1.9}.s1-result #s1-profile{border:0;background:transparent;padding:0}
+@media(max-width:700px){.s1-result-items{grid-template-columns:1fr}.s1-matrix{height:270px}.s1-cell{padding:7px!important;font-size:12px!important}.s1-cell b{font-size:13px!important}.s1-scores{gap:8px}.s1-score{padding:10px}.s1-score span{font-size:13px}}
+</style>
 <meta name="theme-color" content="#006f3e">
 </head>
 <body>
@@ -731,7 +741,7 @@ function s1PositionHtml(){
  '<div class="s1-big-scale">'+[1,2,3,4,5].map(v=>'<button class="'+(selected===v?"selected":"")+'" onclick="answerS1('+v+')">'+v+'</button>').join('')+'</div>'+
  '<div style="font-size:13px;color:#6a7d73;margin-top:8px;display:flex;justify-content:space-between"><span>۱ = تقریباً هرگز</span><span>۵ = تقریباً همیشه</span></div>'+
  '<div class="s1-step-nav"><button onclick="moveS1Question(-1)" '+(s1TestIndex===0?"disabled":"")+'>قبلی</button>'+(s1TestIndex<9?'<button class="primary" onclick="moveS1Question(1)" '+(selected==null?"disabled":"")+'>بعدی</button>':'<button class="primary" onclick="scoreS1()" '+(selected==null?"disabled":"")+'>📍 نمایش نتیجه</button>')+'</div></div>'+
- '<div id="s1-result" class="s1-result"><div class="s1-scores"><div class="s1-score"><b id="s1-wscore">—</b><span>گرمی ارتباطی / ۵</span></div><div class="s1-score"><b id="s1-cscore">—</b><span>شایستگی ادراک‌شده / ۵</span></div></div><div class="s1-matrix" id="s1-matrix"><div class="s1-cell"><b>🌟 حضور ارتباطی حرفه‌ای</b><span>گرم + مسلط</span></div><div class="s1-cell"><b>🧊 مسلط اما سرد</b><span>شایستگی بالا، گرمی پایین</span></div><div class="s1-cell"><b>😊 خوش‌برخورد اما کم‌اثر</b><span>گرمی بالا، شایستگی پایین</span></div><div class="s1-cell"><b>⚠️ ارتباط کم‌اعتماد</b><span>هر دو بعد نیازمند توسعه</span></div><div id="s1-dot" class="s1-dot"></div></div><div class="s1-axis-x">← شایستگی پایین &nbsp;&nbsp; شایستگی ادراک‌شده &nbsp;&nbsp; شایستگی بالا →</div><div id="s1-profile" class="s1-callout"></div></div>';
+ '<div id="s1-result" class="s1-result"><div class="s1-scores"><div class="s1-score"><b id="s1-wscore">—</b><span>شنیدن و توجه به مخاطب / ۵</span></div><div class="s1-score"><b id="s1-cscore">—</b><span>پیگیری و روشن‌کردن اقدام / ۵</span></div></div><div class="s1-matrix" id="s1-matrix"><div class="s1-cell"><b>شنیدن و پیگیری قوی‌تر</b><span>توجه و پیگیری</span></div><div class="s1-cell"><b>پیگیری خوب، توجه کمتر</b><span>پیگیری بیشتر</span></div><div class="s1-cell"><b>توجه خوب، اقدام مبهم</b><span>شنیدن بیشتر</span></div><div class="s1-cell"><b>هر دو حوزه نیازمند تمرین</b><span>تمرین بیشتر در هر دو</span></div><div id="s1-dot" class="s1-dot"></div></div><div class="s1-axis-x">← پیگیری کمتر &nbsp;&nbsp; پیگیری و اقدام &nbsp;&nbsp; بالاتر →</div><div id="s1-profile" class="s1-callout"></div></div>';
 }
 function answerS1(v){s1TestAnswers[s1TestIndex]=v;document.getElementById("s1-content").innerHTML=s1PositionHtml();}
 function moveS1Question(delta){const next=s1TestIndex+delta;if(next<0||next>9)return;if(delta>0&&s1TestAnswers[s1TestIndex]==null)return;s1TestIndex=next;document.getElementById("s1-content").innerHTML=s1PositionHtml();}
@@ -815,130 +825,52 @@ function s1StartAnswer(btn,correct){
    :"↩️ این واکنش ممکن است طبیعی باشد، اما در همان چند ثانیه اول می‌تواند حس «دیده‌نشدن» یا «پاس‌کاری مسئولیت» ایجاد کند. دوباره انتخاب کنید.";
 }
 function s1Feedback(btn,correct){const box=btn.closest(".s1-case");const fb=box.querySelector(".s1-feedback");box.querySelectorAll(".s1-option").forEach(b=>{b.style.opacity=".55";b.style.borderColor="#c7dccd"});btn.style.opacity="1";btn.style.borderColor=correct?"#168353":"#cf654f";fb.innerHTML=correct?fb.innerHTML:"↩️ این گزینه قابل دفاع است، اما بهترین نشانه را نمی‌فرستد. دوباره موقعیت، احترام و کنترل موقعیت را هم‌زمان ببینید.";fb.classList.add("show");}
+
+const s1ActionCatalog=[
+ {title:"دیده‌شدن مراجعه‌کننده هنگام اشتغال مدیر",action:"برای ورود مراجعه‌کننده در حین تماس، یک سلام یا اشاره محترمانه و یک زمان رسیدگی مشخص تمرین کنید.",metric:"در سه مراجعه هم‌زمان، چند بار زمان انتظار روشن اعلام شد؟",group:"w"},
+ {title:"شنیدن گلایه قبل از توضیح مقررات",action:"در گفت‌وگوی بعدی با مشتری ناراضی، ابتدا یک جمله از حرف او را بازگو کنید و بپرسید «درست فهمیدم؟».",metric:"در دو گفت‌وگوی شکایت، آیا مشتری برداشت شما را تأیید یا اصلاح کرد؟",group:"w"},
+ {title:"انتخاب لحن متناسب با شخص و موقعیت",action:"یک درخواست واحد را برای کارمند، نماینده و مشتری به سه شکل محترمانه اما متناسب بیان کنید.",metric:"در سه تعامل، آیا لحن و میزان توضیح را با مخاطب تنظیم کردید؟",group:"w"},
+ {title:"توجه به نگرانی مخاطب هنگام نبود پاسخ نهایی",action:"قبل از ارجاع پرونده به ستاد، نگرانی زمانی مخاطب را بشنوید و ساعت اعلام وضعیت بعدی را مشخص کنید.",metric:"چند پیگیری بدون وعده نتیجه، با زمان گزارش وضعیت ثبت شدند؟",group:"w"},
+ {title:"شنیدن گزارش خطای کارمند بدون قضاوت عجولانه",action:"هنگام اعلام خطا، ابتدا بپرسید «چه اتفاقی افتاده و چه چیزی هنوز قابل اصلاح است؟»؛ بعد مسئولیت اصلاح را تعیین کنید.",metric:"آیا در گزارش خطای بعدی، ابتدا واقعیت و خطر فوری روشن شد؟",group:"w"},
+ {title:"کشف خواسته واقعی در ابتدای گفت‌وگو",action:"در نخستین دقیقه، از مخاطب بپرسید «از این گفت‌وگو چه نتیجه‌ای لازم دارید؟» و تفاوت درخواست با نیاز را مشخص کنید.",metric:"در سه جلسه، آیا خواسته قابل‌پیگیری مخاطب ثبت شد؟",group:"c"},
+ {title:"تعیین مالک پیگیری پرونده وابسته به ستاد",action:"هر بار تصمیم نزد ستاد است، نام نقش پیگیر در شعبه و موعد اعلام وضعیت را در خلاصه اقدام بنویسید.",metric:"در پنج پیگیری، چند مورد مسئول و موعد مشخص داشت؟",group:"c"},
+ {title:"اولویت‌بندی تقاضاهای هم‌زمان",action:"در زمان ازدحام، فوریت، محرمانگی و ریسک را کوتاه بسنجید و به مخاطب منتظر زمان واقع‌بینانه بدهید.",metric:"در دو ازدحام بعدی، چند مخاطب بدون اطلاع از زمان انتظار ماندند؟",group:"c"},
+ {title:"توضیح حدود اختیار بدون پاس‌کاری",action:"عبارت «دست من نیست» را با بیان مرجع تصمیم، کار قابل انجام شعبه و موعد پیگیری جایگزین کنید.",metric:"از پنج پاسخ پیچیده، چند مورد مسیر رسمی پیگیری را روشن کرد؟",group:"c"},
+ {title:"جمع‌بندی گفت‌وگو با اقدام، مسئول و موعد",action:"۳۰ ثانیه پایانی مکالمه را به گفتن اقدام بعد، مسئول آن و زمان بازخورد اختصاص دهید؛ از مخاطب بخواهید اگر برداشت متفاوتی دارد بیان کند.",metric:"در پنج گفت‌وگو، چند بار سه جزء اقدام/مسئول/موعد ثبت شد؟",group:"c"}
+];
 function scoreS1(){
- let w=0,c=0,wc=0,cc=0;
- s1Questions.forEach((q,i)=>{
-   const v=s1TestAnswers[i];
-   if(v==null)return;
-   if(q.d==="w"){w+=v;wc++}else{c+=v;cc++}
- });
- if(s1TestAnswers.some(v=>v==null)){alert("لطفاً به هر ۱۰ سؤال پاسخ دهید.");return}
- w=w/wc;c=c/cc;
- document.getElementById("s1-wscore").textContent=w.toFixed(1);
- document.getElementById("s1-cscore").textContent=c.toFixed(1);
+ if(s1TestAnswers.some(x=>x==null)){alert("برای دیدن تحلیل شخصی، هر ۱۰ پرسش باید پاسخ داشته باشد.");return;}
+ const avg=g=>s1Questions.reduce((sum,q,i)=>sum+(q.d===g?s1TestAnswers[i]:0),0)/5;
+ const warmth=avg("w"),follow=avg("c");
+ const score=v=>v.toLocaleString("fa-IR",{minimumFractionDigits:1,maximumFractionDigits:1});
+ const wEl=document.getElementById("s1-wscore"),cEl=document.getElementById("s1-cscore");
+ if(!wEl||!cEl)return;
+ wEl.textContent=score(warmth);cEl.textContent=score(follow);
  const dot=document.getElementById("s1-dot");
- dot.style.right=((c-1)/4*92+3)+"%";
- dot.style.bottom=((w-1)/4*92+3)+"%";
-
- let profile="",focus="",strengths=[],risks=[],practices=[],steps=[];
-
- if(w>=3&&c>=3){
-   profile="🌟 الگوی غالب: حضور ارتباطی حرفه‌ای";
-   focus="تمرکز توسعه: حفظ تعادل گرمی و شایستگی، به‌ویژه در موقعیت‌های پرفشار و با ذی‌نفعان متفاوت.";
-   strengths=[
-     "مخاطب معمولاً هم احساس احترام می‌کند و هم احساس می‌کند شما بر موقعیت مسلط هستید.",
-     "احتمال بیشتری دارد که در شروع تعامل، اعتماد و همکاری شکل بگیرد.",
-     "می‌توانید به‌صورت هم‌زمان Relationship و Result را مدیریت کنید."
-   ];
-   risks=[
-     "ممکن است در فشار کاری، یکی از دو بُعد افت کند؛ معمولاً گرمی در شرایط شلوغی و نشانه شایستگی در شرایط ابهام.",
-     "اعتماد به الگوی فعلی می‌تواند باعث شود تفاوت موقعیت مشتری، نماینده، کارکنان و ستاد کمتر دیده شود.",
-     "خطر روتین‌شدن رفتار حرفه‌ای وجود دارد؛ یعنی حضور خوب، اما بدون توجه کافی به فرد مقابل."
-   ];
-   practices=[
-     "تمرین «۳۰ ثانیه اول»: هفته‌ای سه تعامل مهم را مرور کنید و ببینید در ۳۰ ثانیه اول چه نشانه‌هایی فرستادید.",
-     "تمرین «تغییر ذی‌نفع»: یک پیام واحد را برای مشتری، نماینده و مدیر ستادی با سه آغاز گفت‌وگو متفاوت بازنویسی کنید.",
-     "تمرین «فشار»: در یک سناریوی شلوغ شعبه، آگاهانه گرمی را بدون افت سرعت حفظ کنید."
-   ];
-   steps=[
-     "یک رفتار قوی خود را که بیشترین اعتماد می‌سازد مشخص و آگاهانه تثبیت کنید.",
-     "در موقعیت‌های پراسترس، قبل از پاسخ فقط ۳ ثانیه روی لحن و اولین جمله تمرکز کنید.",
-     "ماهانه از یک همکار قابل اعتماد بخواهید فقط درباره «گرمی» و «تسلط» شما بازخورد بدهد."
-   ];
- }else if(w>=3){
-   profile="😊 الگوی غالب: خوش‌برخورد اما کم‌اثر";
-   focus="تمرکز توسعه: حفظ گرمی فعلی و تقویت وضوح، قاطعیت و نشانه شایستگی.";
-   strengths=[
-     "مخاطب احتمالاً شما را خوش‌برخورد، در دسترس و قابل صحبت می‌بیند.",
-     "فضای اولیه برای همکاری و بیان مسئله به‌خوبی شکل می‌گیرد.",
-     "در کاهش تنش اولیه و ایجاد رابطه مزیت دارید."
-   ];
-   risks=[
-     "اگر مسیر، تصمیم یا قدم بعد روشن نباشد، گرمی می‌تواند به‌اشتباه به ضعف مدیریتی تعبیر شود.",
-     "توضیح زیاد، تعارف یا تأخیر در جمع‌بندی ممکن است قدرت Positioning شما را کم کند.",
-     "ممکن است برای حفظ رابطه، از تعیین مرز یا گفتن «نه حرفه‌ای» اجتناب کنید."
-   ];
-   practices=[
-     "تمرین «یک جمله نتیجه»: پایان هر گفت‌وگو را با یک جمله روشن درباره اقدام بعدی جمع‌بندی کنید.",
-     "تمرین «۳۰ ثانیه تصمیم»: بعد از شنیدن مسئله، در ۳۰ ثانیه مسیر اولیه را مشخص کنید: بررسی، ارجاع، تصمیم یا زمان پاسخ.",
-     "تمرین «نه حرفه‌ای»: سه موقعیت واقعی را تمرین کنید که باید محدودیت را محترمانه اما قاطع بیان کنید."
-   ];
-   steps=[
-     "در هر تعامل مهم، قبل از شروع مشخص کنید «نتیجه مطلوب این گفت‌وگو چیست؟».",
-     "از عبارات مبهم مثل «ببینیم چی می‌شود» یا «دست من نیست» فاصله بگیرید.",
-     "گرمی خود را نگه دارید، اما آن را با زمان، مسئول و قدم بعد همراه کنید."
-   ];
- }else if(c>=3){
-   profile="🧊 الگوی غالب: مسلط اما نسبتاً سرد";
-   focus="تمرکز توسعه: حفظ شایستگی و افزودن به‌رسمیت‌شناختن، آغاز گرم و توجه آشکار به تجربه مخاطب.";
-   strengths=[
-     "مخاطب معمولاً شما را مسلط، جدی و قابل اتکا در تصمیم‌گیری می‌بیند.",
-     "احتمالاً در ساختاردهی، کنترل زمان و هدایت گفتگو قوی هستید.",
-     "در شرایط پیچیده یا فشرده، نشانه شایستگی خوبی منتقل می‌کنید."
-   ];
-   risks=[
-     "تسلط بالا بدون گرمی ممکن است به سردی، فاصله یا دسترس‌ناپذیری تعبیر شود.",
-     "مخاطب ممکن است قبل از اینکه مسئله‌اش کامل بیان شود، احساس کند شما تصمیم خود را گرفته‌اید.",
-     "در کارکنان و نمایندگان، این الگو می‌تواند سکوت، احتیاط زیاد یا کاهش بیان مسائل واقعی ایجاد کند."
-   ];
-   practices=[
-     "تمرین «به‌رسمیت‌شناختن»: قبل از ورود به اصل موضوع، یک جمله کوتاه برای به‌رسمیت‌شناختن حضور یا نگرانی مخاطب بگویید.",
-     "تمرین «آغاز گرم»: سه آغاز گفت‌وگو حرفه‌ای برای مشتری، نماینده و کارمند طراحی و در هفته استفاده کنید.",
-     "تمرین «یک سؤال قبل از پاسخ»: قبل از ارائه راه‌حل، حداقل یک سؤال روشن‌کننده بپرسید."
-   ];
-   steps=[
-     "در شروع تعامل، سرعت ورود به راه‌حل را کمی کم و کیفیت Connection را کمی بالا ببرید.",
-     "به‌جای فقط انتقال تصمیم، دلیل یا منطق کوتاه آن را نیز توضیح دهید.",
-     "هفته‌ای یک‌بار از خود بپرسید: آیا مخاطب فقط فهمید من چه می‌خواهم، یا احساس کرد او را هم فهمیده‌ام؟"
-   ];
- }else{
-   profile="⚠️ الگوی غالب: ارتباط کم‌اعتماد";
-   focus="تمرکز توسعه: ابتدا ثبات، وضوح و کنترل تعامل؛ سپس تقویت گرمی و شخصی‌سازی.";
-   strengths=[
-     "مزیت این جایگاه این است که فرصت توسعه در هر دو بُعد واضح و قابل اندازه‌گیری است.",
-     "با چند رفتار کوچک و منظم، تغییر ادراک مخاطب می‌تواند نسبتاً سریع اتفاق بیفتد.",
-     "خودآگاهی ایجادشده از همین تست، نقطه شروع مهمی برای رشد است."
-   ];
-   risks=[
-     "مخاطب ممکن است هم نسبت به میزان توجه شما و هم نسبت به تسلط شما تردید داشته باشد.",
-     "در موقعیت‌های پرفشار، واکنش‌های دفاعی، مبهم یا عجولانه می‌تواند این برداشت را تقویت کند.",
-     "نبود الگوی ثابت در شروع و پایان گفتگو باعث می‌شود کیفیت ارتباط وابسته به حال و شرایط روز شود."
-   ];
-   practices=[
-     "تمرین «الگوی ثابت شروع»: سلام + به‌رسمیت‌شناختن + سؤال روشن‌کننده + اعلام مسیر بعد.",
-     "تمرین «یک اقدام مشخص»: در پایان هر تعامل فقط یک اقدام بعدی شفاف، همراه با مسئول و زمان تعیین کنید.",
-     "تمرین «مرور روزانه ۵ دقیقه‌ای»: هر روز یک تعامل ضعیف را بازنویسی کنید و جمله شروع و پایان بهتر بسازید."
-   ];
-   steps=[
-     "اول روی ثبات رفتاری کار کنید؛ یک آغاز گفت‌وگو و Closing استاندارد برای خود بسازید.",
-     "در هفته اول فقط روی وضوح و قدم بعد تمرکز کنید؛ هم‌زمان همه چیز را تغییر ندهید.",
-     "بعد از ایجاد ثبات، گرمی را با تماس چشمی، به‌رسمیت‌شناختن و لحن متناسب اضافه کنید."
-   ];
- }
-
- const target=s1TestTarget;
- document.getElementById("s1-profile").innerHTML=
-   "<b>"+profile+"</b><br>"+focus+
-   "<br><small>مبنای تحلیل: "+target+" | این نتیجه خودارزیابی است، نه آزمون شخصیت یا ارزیابی رسمی.</small>"+
-   '<div class="s1-coach">'+
-     '<div class="s1-coach-card strength"><h4>💪 نقاط قوت قابل تثبیت</h4><ul>'+strengths.map(x=>"<li>"+x+"</li>").join("")+'</ul></div>'+
-     '<div class="s1-coach-card risk"><h4>⚠️ ریسک‌ها و نقاط قابل مراقبت</h4><ul>'+risks.map(x=>"<li>"+x+"</li>").join("")+'</ul></div>'+
-     '<div class="s1-coach-card practice"><h4>🏋️ تمرین‌های پیشنهادی</h4><ul>'+practices.map(x=>"<li>"+x+"</li>").join("")+'</ul></div>'+
-   '</div>'+
-   '<div class="s1-dev-plan"><h4>🎯 برنامه توسعه کوتاه‌مدت</h4>'+steps.map((x,i)=>'<div class="step"><span class="num">'+(i+1)+'</span><span>'+x+'</span></div>').join("")+'</div>';
-
+ if(dot){dot.style.right=((follow-1)/4*90+4)+"%";dot.style.bottom=((warmth-1)/4*90+4)+"%";}
+ const low=s1TestAnswers.map((v,i)=>({v,i,info:s1ActionCatalog[i]})).sort((a,b)=>a.v-b.v||a.i-b.i);
+ const main=low.slice(0,2);const high=[...low].reverse().slice(0,2);
+ const isOther=s1TestTarget!=="خودم به‌عنوان رئیس شعبه";
+ const esc=s1TechEscape;
+ const label=(warmth>=3.5&&follow>=3.5)?"رفتارهای ارتباطی متوازن‌تر در این خودارزیابی":warmth<3.5&&follow>=3.5?"پیگیری و نظم قوی‌تر از شنیدن و همراهی":warmth>=3.5&&follow<3.5?"شنیدن و توجه قوی‌تر از تعیین اقدام بعد":"دو حوزه شنیدن و پیگیری، نیازمند تمرین بیشتر";
+ const base='<div class="s1-result-lead"><h3>الگوی گزارش‌شده شما</h3><p>'+label+'</p><small>این نمودار فقط پاسخ‌های خودتان را در دو گروه پنج‌سؤالی نشان می‌دهد؛ نمره استاندارد شخصیت، میزان واقعی اعتماد مشتری یا شایستگی حرفه‌ای نیست. برای اطمینان باید بازخورد همکاران و مشاهده رفتار واقعی هم بررسی شود.</small></div>';
+ const strongest='<div class="s1-result-block"><h4>✅ رفتارهایی که بیشتر گزارش کرده‌اید</h4><ul>'+high.map(x=>'<li><b>'+esc(x.info.title)+'</b> — پاسخ شما: '+x.v.toLocaleString("fa-IR")+' از ۵</li>').join('')+'</ul></div>';
+ const weakest='<div class="s1-result-block"><h4>🎯 دو اولویت تمرین برای شما</h4>'+main.map((x,i)=>'<div class="s1-result-practice"><b>'+(i+1).toLocaleString("fa-IR")+'. '+esc(x.info.title)+'</b><p>'+esc(x.info.action)+'</p><small>شاخص مشاهده: '+esc(x.info.metric)+'</small></div>').join('')+'</div>';
+ const caveat=isOther?'<div class="s1-assess-note">شما گروه دیگری را انتخاب کرده‌اید، اما پرسش‌ها درباره رفتار شخصی «من» نوشته شده‌اند؛ بنابراین این نتیجه فقط برداشت شماست و ارزیابی واقعی کارکنان یا سایر رؤسای شعب محسوب نمی‌شود.</div>':"";
+ const itemTable='<details class="s1-result-detail"><summary>مشاهده پاسخ هر ۱۰ سؤال و برنامه پیگیری</summary><div class="s1-result-items">'+s1TestAnswers.map((v,i)=>'<div class="s1-result-item"><span>'+((i+1).toLocaleString("fa-IR"))+'. '+esc(s1ActionCatalog[i].title)+'</span><strong>'+v.toLocaleString("fa-IR")+' از ۵</strong><div class="s1-result-track"><i style="width:'+(v*20)+'%"></i></div></div>').join('')+'</div></details>';
+ const evalbox='<div class="s1-result-commit"><h4>📋 تعهد عملی تا جلسه بعد</h4><p>از دو اولویت بالا، فقط یک رفتار را طی سه روز در دست‌کم سه تعامل واقعی تمرین کنید. تعداد اجرا و واکنش مشاهده‌شده را ثبت کنید؛ برای ثبت داده، نام یا مشخصات مشتری را وارد نکنید.</p><button type="button" onclick="s1CopyPlan()">رونوشت برنامه شخصی من</button></div>';
+ const target=document.getElementById("s1-profile");
+ target.innerHTML=base+caveat+strongest+weakest+itemTable+evalbox;
  document.getElementById("s1-result").classList.add("show");
+ target.scrollIntoView({block:"start",behavior:"smooth"});
 }
+function s1CopyPlan(){
+ const low=s1TestAnswers.map((v,i)=>({v,i,info:s1ActionCatalog[i]})).sort((a,b)=>a.v-b.v||a.i-b.i).slice(0,2);
+ const t="برنامه تمرین ارتباطات من در شعبه بیمه البرز\n"+low.map((x,i)=>(i+1)+". "+x.info.title+"\nرفتار: "+x.info.action+"\nشاخص: "+x.info.metric).join("\n\n")+"\nزمان بازنگری: سه روز پس از نخستین اجرا.";
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>{const b=document.querySelector(".s1-result-commit button");if(b)b.textContent="برنامه کپی شد ✓";}).catch(()=>window.prompt("متن برنامه را کپی کنید:",t));}
+ else window.prompt("متن برنامه را کپی کنید:",t);
+}
+
 
 function sessionPage(id){
 if(id===1){session1Page();return}
