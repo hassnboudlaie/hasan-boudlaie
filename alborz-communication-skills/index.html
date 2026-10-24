@@ -542,14 +542,17 @@ const s1DayMoments={
   feedback:"این پاسخ هم پاسخ‌گویی را حفظ می‌کند و هم امنیت روانی را. رئیس شعبه فرد را از مسئله جدا می‌کند، ابتدا ریسک را مهار می‌کند و بعد سراغ علت و یادگیری می‌رود. سرزنش فوری ممکن است گزارش‌دادن خطاهای آینده را به تأخیر بیندازد."
  }
 };
+s1DayMoments.customer.feedbackByChoice=["شروع با مقررات شاید لازم باشد، اما قبل از فهم علت تکرار مراجعه، مشتری آن را پاس‌کاری می‌شنود. نخست درخواست یا مدرک ناقص را با سابقه پیام‌های قبلی تطبیق دهید.","همدلی بدون تعهد مشخص، ممکن است توقع غیرواقعی بسازد. «هر کاری» چه کاری و در محدوده اختیار چه کسی است؟ زمان و مسیر را روشن کنید.","این پاسخ نگرانی را بازمی‌گوید، یک ابهام عملی را باز می‌کند و درباره اطلاع‌رسانی بعدی تعهدی قابل‌کنترل می‌دهد؛ نتیجه خسارت را تضمین نمی‌کند."];
+s1DayMoments.agent.feedbackByChoice=["این پاسخ ضابطه را حفظ می‌کند، اما علت فشار زمانی نماینده و گزینه مجاز قابل اجرا را بررسی نمی‌کند.","اهمیت مشتری، مجوز کنارگذاشتن سند ضروری نیست؛ قول استثنا می‌تواند در صدور یا تعهد پوشش خطر ایجاد کند.","کشف نیاز پشت درخواست و توضیح مرز اختیار، راه بررسی گزینه مجاز را باز نگه می‌دارد؛ وعده انجام همه کارها داده نشده است."];
+s1DayMoments.employee.feedbackByChoice=["پرسیدن درباره تأخیر لازم است، ولی سرزنش پیش از مهار خطا ممکن است اطلاعات دقیقِ خطر فوری را پنهان کند.","آرام‌کردن کارمند مهم است، اما «مهم نیست» و حل‌کردن همه چیز توسط مدیر، پاسخ‌گویی و یادگیری را تضعیف می‌کند.","ابتدا واقعیت و خطر فوری روشن می‌شود؛ سپس درباره گزارش دیرهنگام و پیشگیری از تکرار، بدون تحقیر گفت‌وگو می‌شود."];
 function s1DayMomentHtml(key){
  const x=s1DayMoments[key];
  return '<div class="s1-moment s1-moment-advanced">'+
   '<div class="s1-moment-top"><span>🕘 '+x.time+'</span><b>'+x.title+'</b></div>'+
   '<p class="s1-moment-story">'+x.story+'</p>'+
-  '<div class="s1-moment-diagnosis"><span>🔎 تشخیص موقعیت</span><p>'+x.diagnosis+'</p></div>'+
+  '<div class="s1-moment-diagnosis" hidden><span>🔎 تحلیل موقعیت پس از تصمیم</span><p>'+x.diagnosis+'</p></div>'+
   '<details class="s1-technique"><summary>🧰 تکنیک پیشنهادی</summary><div>'+x.technique+'</div></details>'+
-  '<div class="s1-moment-q">کدام پاسخ، تکنیک را بهتر اجرا می‌کند؟</div>'+
+  '<div class="s1-moment-q">اگر رئیس شعبه باشید، کدام تصمیم قابل دفاع‌تر است؟ اول انتخاب کنید؛ بعد تحلیل را ببینید.</div>'+
   '<div class="s1-moment-options advanced">'+x.options.map((o,i)=>'<button onclick="s1MomentAnswer(this,'+i+',\''+key+'\')"><span class="opt-num">'+(i+1)+'</span>'+o+'</button>').join("")+'</div>'+
   '<div class="s1-moment-feedback"></div>'+
  '</div>';
@@ -565,12 +568,14 @@ function s1MomentAnswer(btn,choice,key){
  if(!box)return;
  const x=s1DayMoments[key];
  const good=choice===x.correct;
+ const diagnosis=box.querySelector(".s1-moment-diagnosis");if(diagnosis)diagnosis.hidden=false;
  box.querySelectorAll(".s1-moment-options button").forEach(b=>b.classList.remove("good","bad"));
  btn.classList.add(good?"good":"bad");
  const fb=box.querySelector(".s1-moment-feedback");
  if(!fb)return;
  fb.className="s1-moment-feedback show "+(good?"good":"bad");
- fb.innerHTML=good?"✓ <b>تحلیل:</b> "+x.feedback:"این پاسخ بخشی از مسئله را می‌بیند، اما گره اصلی را کامل باز نمی‌کند. <b>تشخیص موقعیت</b> و <b>تکنیک پیشنهادی</b> را دوباره مرور کنید.";
+ const response=x.feedbackByChoice&&x.feedbackByChoice[choice]?x.feedbackByChoice[choice]:x.feedback;
+ fb.textContent=(good?"✓ تصمیم قابل دفاع. ":"↩ این تصمیم محدودیت مهمی دارد. ")+response;
 }
 
 
@@ -582,7 +587,7 @@ function s1PracticalToolkitHtml(){
  const esc=s1TechEscape;
  const renderCard=(t,i)=>'<details class="s1-tool-card"><summary><span class="s1-tool-icon">'+esc(t.icon)+'</span><span><b>'+esc(t.name)+'</b><small>'+(t.bookIndex?'برگرفته از کتاب لیل لوندز · تکنیک '+t.bookIndex:'ابزار کاربردی برای رئیس شعبه')+'</small></span><span class="s1-tool-arrow">＋</span></summary><div class="s1-tool-inside"><p class="s1-tool-definition"><b>تعریف اجرایی:</b> '+esc(t.definition)+'</p><div class="s1-tool-context"><b>📍 موقعیت واقعی در شعبه</b><p>'+esc(t.scene)+'</p></div><div class="s1-tool-label">اگر شما رئیس شعبه باشید، چه می‌کنید؟</div><div class="s1-tool-options">'+t.options.map((op,j)=>'<button type="button" onclick="s1PracticalPick(this,'+i+','+j+')">'+esc(op)+'</button>').join('')+'</div><div class="s1-tool-feedback" role="status" aria-live="polite"></div><details class="s1-tool-script"><summary>💬 گفتار پیشنهادی و تمرین</summary><div><b>نمونه جمله:</b> '+esc(t.script)+'<p><b>تمرین کوتاه:</b> '+esc(t.practice)+'</p>'+(t.limit?'<p><b>ملاحظه حرفه‌ای:</b> '+esc(t.limit)+'</p>':'')+'</div></details><div class="s1-tool-source">'+(t.url?'<a href="'+esc(t.url)+'" target="_blank" rel="noopener noreferrer">↗ مشاهده مأخذ: '+esc(t.source)+'</a>':'مبنای آموزشی: '+esc(t.source))+'<small>توضیح و موقعیت بیمه‌ای، اقتباس و تألیف آموزشی است؛ نه نقل قول مستقیم از کتاب یا پژوهش.</small></div></div></details>';
  return '<div class="s1-panel-head"><div class="bigico">🧰</div><div><h2>تکنیک‌های کاربردی رئیس شعبه</h2><p>۱۶ تکنیک؛ ۸ ابزار مدیریتی و ۸ اقتباس منتخب از کتاب ۹۲ تکنیک ارتباطی</p></div></div>'+
- '<div class="s1-callout"><b>راهنمای یادگیری:</b> هر تکنیک را باز کنید، تصمیم بگیرید، تحلیل را ببینید و جمله پیشنهادی را با موقعیت واقعی شعبه خود تطبیق دهید. در کلاس قرار نیست همه ۱۶ تکنیک اجرا شوند.</div>'+
+ '<div class="s1-callout"><b>مسیر اصلی کلاس:</b> سه مهارت را عمیق تمرین کنید: «بازگویی، پرسش و تأیید برداشت»، «معلوم، نامعلوم، اقدام بعدی» و «بازتاب کوتاه واژه کلیدی مخاطب» از کتاب لیل لوندز. ۱۳ تکنیک دیگر برای مطالعه و تمرین متناسب با مسئله واقعی شعبه‌اند. ابتدا تصمیم بگیرید، سپس دلیل و محدودیت هر پاسخ را بخوانید.</div>'+
  
 '<section class="s1-focus"><div class="s1-focus-head"><span>پیشنهاد اصلی برای تمرین عمیق جلسه اول</span><h3>🎯 بازگویی، پرسش و تأیید برداشت</h3><p>وقتی مشتری شکایت می‌کند، پیش از دفاع از شعبه یا ارائه راه‌حل، باید مطمئن شوید دقیقاً از چه چیزی ناراضی است و کدام موضوع نیاز به بررسی دارد.</p></div>'+
 '<div class="s1-focus-steps"><div><b>۱. بازگویی مسئله</b><p>به زبان خودتان بگویید چه چیزی شنیدید؛ با «اگر درست متوجه شدم...» شروع کنید. حرفی به دهان مخاطب نگذارید.</p></div><div><b>۲. پرسش قابل‌بررسی</b><p>یک ابهام مشخص را بپرسید؛ مثلاً «آخرین پیام مکتوب را چه زمانی و از کدام واحد گرفته‌اید؟»</p></div><div><b>۳. تأیید برداشت و مسیر</b><p>از طرف مقابل بپرسید آیا برداشتتان درست است. سپس معلوم و نامعلوم پرونده را جدا کنید و مسئول و موعد اطلاع‌رسانی را تعیین کنید.</p></div></div>'+
@@ -593,7 +598,7 @@ function s1PracticalToolkitHtml(){
 '<div id="s1-focus-feedback" class="s1-focus-feedback" role="status" aria-live="polite"></div>'+
 '<details class="s1-focus-coach"><summary>🔎 تحلیل حرفه‌ای مدرس: چه چیزی هنوز حل نشده است؟</summary><p>حتی با انتخاب پاسخ دوم، نتیجه خسارت معلوم نشده است. مدیر فقط مسئله اصلی را دقیق‌تر می‌فهمد و امکان پیگیری مستند را می‌سازد. باید بعد از گفت‌وگو مشخص کند کدام واحد درخواست تکمیلی داده، آیا پیام قبلیِ کارشناس دقیق بوده، و چه تعهد ارتباطی واقعاً در اختیار اوست.</p><p><b>خط قرمز:</b> تأیید پوشش، مبلغ یا زمان پرداخت بدون اختیار و مستند.</p><p><b>مهارت مکمل از کتاب:</b> بازتاب کوتاه یک عبارت معنادار مشتری (تکنیک شماره ۲۰)؛ مثلاً «دو جواب متفاوت؟» و سپس پرسش دقیق. تکرار مکانیکی واژه‌ها به‌تنهایی تکنیک مؤثری نیست.</p></details>'+
 '<button class="s1-focus-next" type="button" onclick="openS1(\'roleplay\',document.querySelector(\'[data-s1=roleplay]\'))">تمرین دونفره پیشرفته همین موقعیت ←</button></div></section>'+
-'<section class="s1-toolbox"><div class="s1-tool-head"><div><h3>🎯 بخش اول | ۸ ابزار ارتباط مدیریتی</h3><p>گوش‌دادن، مدیریت انتظار، بازخورد، محرمانگی و ارتباط حرفه‌ای در شعبه.</p></div><span class="s1-tool-count">۸ ابزار</span></div><div class="s1-tool-grid">'+s1PracticalTechniques.map((t,i)=>renderCard(t,i)).join('')+'</div></section>'+
+'<section class="s1-toolbox"><div class="s1-tool-head"><div><h3>🎯 بخش اول | ۸ ابزار ارتباط مدیریتی · اولویت تمرین کلاسی: بازگویی و پرسش، مدیریت ابهام، بازتاب عبارت مهم مخاطب</h3><p>گوش‌دادن، مدیریت انتظار، بازخورد، محرمانگی و ارتباط حرفه‌ای در شعبه.</p></div><span class="s1-tool-count">۸ ابزار</span></div><div class="s1-tool-grid">'+s1PracticalTechniques.map((t,i)=>renderCard(t,i)).join('')+'</div></section>'+
  '<section class="s1-toolbox"><div class="s1-tool-head"><div><h3>📗 بخش دوم | ۸ اقتباس از کتاب لیل لوندز</h3><p>بر پایه شماره‌های واقعی تکنیک‌های کتاب؛ انتخاب و بازطراحی برای مخاطب مدیریتی، همراه با ملاحظات علمی و اخلاقی.</p></div><span class="s1-tool-count">۸ تکنیک منتخب</span></div><div class="s1-tool-grid">'+s1LowndesAdaptations.map((t,i)=>renderCard(t,s1PracticalTechniques.length+i)).join('')+'</div><div class="s1-tool-end"><b>منبع:</b> «چگونه با هر کسی صحبت کنیم: ۹۲ ترفند کوچک برای موفقیت در روابط»، لیل لوندز. این بخش مرور تمام ۹۲ تکنیک نیست. نمونه‌ها مستقل تألیف شده‌اند و توصیه‌های غیردقیق درباره تشخیص نیت از حرکات بدن به‌عنوان حقیقت علمی ارائه نشده‌اند.</div></section>';
 }
 
