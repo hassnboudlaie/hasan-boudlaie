@@ -122,3 +122,8 @@
 @media(max-width:900px){.kish-perdoo .km-header{display:block;padding:19px}.kish-perdoo .km-head-buttons{margin-top:12px}.kish-perdoo .km-canvas{padding:16px 15px 30px}.kish-perdoo .km-pillar-lane{width:325px;flex-basis:325px}.kish-perdoo .km-lanes{gap:13px}.kish-perdoo .km-header p{font-size:12px!important}.kish-perdoo .km-header h1{font-size:22px!important}.kish-perdoo .km-viewport{max-height:72vh}}
 @media(max-width:600px){.kish-perdoo .km-canvas{padding:13px 10px 26px}.kish-perdoo .km-pillar-lane{width:284px;flex-basis:284px}.kish-perdoo .km-pillar{padding:12px}.kish-perdoo .km-lanes{gap:11px}.kish-perdoo .km-ultimate{min-width:240px;max-width:340px;padding:14px}.kish-perdoo .km-ultimate strong{font-size:15px}.kish-perdoo .km-header{padding:15px}.kish-perdoo .km-head-buttons a{font-size:11px;padding:7px 10px}.kish-perdoo .km-metrics{gap:6px}.kish-perdoo .km-metrics span{font-size:11px;padding:6px 8px}.kish-perdoo .km-actions{padding:10px;gap:10px}.kish-perdoo .km-checkbox{font-size:11px}.kish-perdoo .km-status{font-size:10px}.kish-perdoo .km-viewport{max-height:75vh}}
 @media(prefers-reduced-motion:reduce){.kish-perdoo .km-app *{scroll-behavior:auto!important;transition:none!important}}
+
+.kish-perdoo .km-collapse{display:block;min-height:31px;margin:9px auto 3px;padding:5px 12px;background:#eef4ff!important;border:1px solid #bdd8ed!important;border-radius:9px;color:#2c6289!important;font-size:11px;font-weight:800;cursor:pointer}
+.kish-perdoo .km-collapse:hover{background:#dff0ff!important}
+.kish-perdoo .km-person{text-decoration:none;color:#617e96!important}
+.kish-perdoo .km-person:hover{color:#1784b5!important;text-decoration:underline}
