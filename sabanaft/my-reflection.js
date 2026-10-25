@@ -50,7 +50,7 @@ select('support','برای ادامه چه حمایتی لازم دارم؟',[['
 (d.support!=='self'?'<div class="rfx-soft">این انتخاب درخواست رزرو یا ارسال اطلاعات نیست؛ صرفاً برای پیگیری شخصی ذخیره می‌شود.</div>':'');}
 var stages=[stage1,stage2,stage3,stage4];
 function history(s){var arr=getDaily(s).items;if(!arr.length)return '<div class="rfx-empty">هنوز بازاندیشی ثبت نکرده‌اید. با یک لحظه واقعی امروز شروع کنید.</div>';
-return arr.slice().reverse().slice(0,8).map(function(d){var date=d.createdAt?localDate(new Date(d.createdAt)):esc(d.date);return '<details class="rfx-record"><summary><b>'+esc(date)+'</b><span>'+(roleNames[d.role]||'')+' · '+esc((d.event||'بازاندیشی').slice(0,45))+'</span></summary><div><p><b>رفتار:</b> '+esc(d.action||'—')+'</p><p><b>نتیجه:</b> '+esc(d.outcome||'—')+'</p><p><b>یادگیری:</b> '+esc(d.lesson||'—')+'</p><p><b>اقدام:</b> '+esc(d.next||'—')+'</p></div></details>';}).join('');}
+return arr.slice().reverse().slice(0,8).map(function(d){var date=d.createdAt?localDate(new Date(d.createdAt)):esc(d.date);return '<details class="rfx-record"><summary><b>'+esc(date)+'</b><span>'+(roleNames[d.role]||'')+' · '+esc((d.event||(linkCase(s,d)&&linkCase(s,d).title)||'بازاندیشی').slice(0,45))+'</span></summary><div><p><b>رفتار:</b> '+esc(d.action||'—')+'</p><p><b>نتیجه:</b> '+esc(d.outcome||'—')+'</p><p><b>یادگیری:</b> '+esc(d.lesson||'—')+'</p><p><b>اقدام:</b> '+esc(d.next||'—')+'</p></div></details>';}).join('');}
 function render(s){var store=getDaily(s),d=store.draft||fresh(),date=dateKey();var todayCount=store.items.filter(function(x){return x.date===date;}).length;var steps=['لحظه مهم','رفتار و نقش','اثر و شواهد','یادگیری و اقدام'];
 var due=store.items.filter(function(x){return x.reviewDate&&x.reviewDate<=date;}).slice(-3).reverse();var displayName=s.profile&&s.profile.name?esc(s.profile.name.split(' ')[0]):'مدیر گرامی';
 var stage=stages[d.step-1]||stage1;
@@ -72,7 +72,8 @@ return '';
 }
 document.addEventListener('input',function(e){var x=e.target;if(!x.dataset.rfxField)return;var s=data();if(!s)return;getDaily(s).draft[x.dataset.rfxField]=clean(x.value,1800);persist();});
 document.addEventListener('change',function(e){var x=e.target;if(!x.dataset.rfxField)return;var s=data();if(!s)return;getDaily(s).draft[x.dataset.rfxField]=clean(x.value,1800);persist();if(['source','contextChanged','support','caseId'].includes(x.dataset.rfxField))redraw();});
-document.addEventListener('click',function(e){var x=e.target.closest('[data-rfx-choice],[data-rfx-step],[data-rfx-prev],[data-rfx-next],[data-rfx-reset],[data-rfx-go]');if(!x)return;var s=data();if(!s)return;var d=getDaily(s).draft;
+document.addEventListener('click',function(e){var x=e.target.closest('[data-rfx-choice],[data-rfx-step],[data-rfx-prev],[data-rfx-next],[data-rfx-reset],[data-rfx-go],[data-rfx-from-case]');if(!x)return;var s=data();if(!s)return;var d=getDaily(s).draft;
+if(x.dataset.rfxFromCase){d.caseId=x.dataset.rfxFromCase;d.step=1;persist();go('daily');return;}
 if(x.dataset.rfxChoice){d[x.dataset.rfxChoice]=x.dataset.rfxValue;persist();redraw();return;}
 if(x.dataset.rfxGo){go(x.dataset.rfxGo);return;}
 if(x.hasAttribute('data-rfx-reset')){if((d.event||d.action||d.lesson)&&!confirm('پیش‌نویس فعلی پاک شود؟'))return;getDaily(s).draft=fresh();persist();redraw();return;}
