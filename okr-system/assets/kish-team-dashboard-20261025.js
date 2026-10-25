@@ -7,8 +7,19 @@ const date=v=>{if(!v)return '—';let d=new Date(String(v).slice(0,10)+'T12:00:0
 const url=v=>encodeURIComponent(String(v||''));
 const tr=(a,b)=>document.documentElement.lang==='en'?b:a;
 const num=v=>v===null||v===undefined||v===''?null:Number.isFinite(Number(v))?Number(v):null;
-const pct=k=>{let [a,b,c]=[num(k.baseline),num(k.current),num(k.target)];return a===null||b===null||c===null||a===c?null:Math.round(Math.max(0,Math.min(100,(b-a)/(c-a)*100)))};
-const progress=g=>{let r=(g.krs||[]).map(pct).filter(v=>v!==null);return r.length?Math.round(r.reduce((a,b)=>a+b,0)/r.length):null};
+const rawPct=k=>{let [a,b,c]=[num(k.baseline),num(k.current),num(k.target)];return a===null||b===null||c===null||a===c?null:Math.max(0,Math.min(100,(b-a)/(c-a)*100))};
+const pct=k=>{let p=rawPct(k);return p===null?null:Math.round(p)};
+const progress=g=>{
+ const r=(g.krs||[]).map(k=>({k,p:rawPct(k)})).filter(x=>x.p!==null);
+ if(!r.length)return null;
+ const weighted=['weighted','weighted-krs','weighted_kr'].includes(String(g.progressMode||g.progressMethod||g.progressCalculation||'').toLowerCase())||g.weightedProgress===true;
+ if(weighted){
+  const valid=r.every(({k})=>k.weight!==null&&k.weight!==undefined&&String(k.weight).trim()!==''&&Number.isFinite(Number(k.weight))&&Number(k.weight)>=0);
+  const sum=r.reduce((s,{k})=>s+Number(k.weight||0),0);
+  return valid&&sum>0?Math.round(r.reduce((s,{k,p})=>s+Number(k.weight)*p,0)/sum):null;
+ }
+ return Math.round(r.reduce((s,x)=>s+x.p,0)/r.length);
+};
 const history=(data,id)=>data.history.filter(h=>h.krId===id).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
 function health(g,data){
  if(g.status==='closed')return ['closed',tr('مختومه','Closed')];
