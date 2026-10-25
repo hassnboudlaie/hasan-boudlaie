@@ -132,7 +132,7 @@ function renderLane(p,data,goalMap,cycleMap,pillarIds){
    desc.forEach(g=>used.add(g.id));
    return '<div class="km-annual-branch"><div class="km-parent">'+goalCard(a,data,{year:true})+'</div>'+(desc.length?'<button class="km-collapse" type="button" data-km-collapse="'+esc(a.id)+'">'+(state.collapsed.has(a.id)?'▾ نمایش '+faNum(desc.length)+' هدف فصلی':'▴ بستن '+faNum(desc.length)+' هدف فصلی')+'</button>':'')+
     (desc.length&&!state.collapsed.has(a.id)?'<div class="km-branch-line"></div><div class="km-quarter-grid">'+desc.map(g=>goalCard(g,data,{quarter:true})).join('')+'</div>':
-    '<p class="km-mini-note">هدف فصلی متصل ثبت نشده است.</p>')+'</div>';
+    (desc.length?'<p class="km-mini-note">اهداف فصلی این شاخه جمع شده‌اند.</p>':'<p class="km-mini-note">هدف فصلی متصل ثبت نشده است.</p>'))+'</div>';
  }).join('');
  const directQ=qtrs.filter(g=>!used.has(g.id));
  directQ.forEach(g=>used.add(g.id));
