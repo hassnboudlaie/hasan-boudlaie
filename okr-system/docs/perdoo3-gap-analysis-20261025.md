@@ -35,7 +35,7 @@
 2. همان فایل — محاسبه `weighted` فقط با درخواست صریح `progressMode`/`progressMethod`/`progressCalculation` یا `weightedProgress=true`؛ داده‌های قبلی به محاسبه ساده ادامه می‌دهند.
 3. پنل توضیح پیشرفت — ستون وزن، روش محاسبه و توضیح وزن نامعتبر.
 4. `assets/kish-strategy-map-20261025.css` — طراحی واکنش‌گرای Nested Pillar، بدون حذف استایل‌های فعلی.
-5. `tests/perdoo3-map-regression.cjs` — آزمون خودکار برای Nested Structure، محاسبه وزنی و ساده، Missing Values، Escape و Cyclic Structure.
+5. `assets/kish-team-dashboard-20261025.js` — یکسان‌سازی درصد پیشرفت هدف بین Team Profile و Map با روش وزنی یا میانگین ساده.\n6. `tests/perdoo3-map-regression.cjs` — آزمون خودکار برای Nested Structure، محاسبه وزنی و ساده، Missing Values، Escape و Cyclic Structure.
 
 **هیچ دیتایی Migration نشده؛ هیچ فیلد قدیمی حذف نشده؛ تنظیمات Authentication و مسیرهای منتشرشده تغییر نکرده‌اند.** این تغییرات هنوز شامل UI ثبت رابطه و وزن و Persistence نیستند.
 
