@@ -1077,17 +1077,28 @@ function s1ChooseTrack(track){
  s1CaseTrack=track==="extra"?"extra":"main";s1CaseIndex=0;
  const stage=document.getElementById("s1-content");if(stage)stage.innerHTML=s1CaseLabHtml();
 }
+const s1CaseSkillMap=[["👋 به‌رسمیت‌شناختن + سنجش فوریت","ورود مهمان در میانه رسیدگی به مشتری","مشتری فعلی را بدون توضیح رها نکنید؛ فوریت واقعی مهمان را هم بسنجید.","«حرف شما نیمه‌کاره نمی‌ماند. همکارم فوریت کار مهمان را می‌پرسد و زمان رسیدگی را مشخص می‌کنیم.»","سمت یا ارزش قرارداد به‌تنهایی اولویت قطعی ایجاد نمی‌کند."],["🎯 کشف نیاز + مرزبندی محترمانه","درخواست استثنا از سوی نماینده باسابقه","مهلت و پیامد واقعی را بپرسید؛ مسیر قانونی تکمیل را بیابید.","«می‌دانم زمان مهم است. کدام مدرک باقی مانده تا ببینیم راه تکمیل یا استعلام مجاز چیست؟»","وعده صدور خارج از کنترل الزامی ندهید."],["🧠 تنظیم واکنش + پرسش مستند","انتقاد مدیر ستادی در جمع کارکنان","به‌جای دفاع شتاب‌زده، ثبت‌ها و مسئولیت‌ها را بررسی کنید.","«گزارش تأخیر را جدی می‌گیریم. اجازه بدهید داده شعبه و سامانه را تطبیق دهیم و نتیجه مستند ارائه کنیم.»","در جمع تقصیر اثبات‌نشده را به تیم یا سامانه نسبت ندهید."],["👥 حفظ شأن همکار + بیان حدود دانسته‌ها","کارشناس جدید پاسخ شرط پوشش را نمی‌داند","فرد را تضعیف نکنید؛ سؤال و مرجع تأیید را روشن کنید.","«برای پاسخ به این بند باید شرایط قرارداد بررسی شود؛ همکارم سؤال را ثبت می‌کند و پاسخ تأییدشده را پیگیری می‌کنیم.»","حدس فنی را جایگزین پاسخ مجاز نکنید."],["👂 بازتاب تناقض + روشن‌سازی","مشتری از دو پاسخ متفاوت درباره مدارک می‌گوید","اول تضاد را بیان کنید؛ سپس تاریخ و ثبت دو پیام را بررسی کنید.","«یک بار گفته شده مدارک کامل است و بعد مدرک تازه‌ای خواسته‌اند؛ اجازه دهید ثبت دو پاسخ را کنار هم ببینیم.»","پیش از بررسی، کارمند یا مشتری را مقصر ندانید."],["🔄 هماهنگی کانال‌ها + مدیریت انتظار","کد پیگیری برخط هست اما مدرک دوباره خواسته شده","پیش از درخواست مجدد، وضعیت ثبت را از مسیر رسمی بررسی کنید.","«اول ببینیم کدام مدرک در سامانه ثبت شده؛ اگر نقصی باقی است، دقیق و از کانال امن اعلام می‌کنیم.»","مشتری را به ارسال مدارک حساس به شماره شخصی ارجاع ندهید."]];
+
+function s1CaseSkillHtml(index){
+ const t=s1CaseSkillMap[index];if(!t)return "";
+ return '<h4>🧰 تکنیک ارتباطیِ مرتبط با این لحظه</h4><p><b>📍 نقطه حساس:</b> '+t[1]+'</p><p><b>🎯 '+t[0]+'</b> — '+t[2]+'</p>'+
+ '<div class="s1-case-skill-example"><b>💬 جمله طبیعی در شعبه</b><p>'+t[3]+'</p></div>'+
+ '<p><b>⚠️ خطای قابل پیشگیری:</b> '+t[4]+'</p>'+
+ '<p class="s1-case-skill-practice">🎙 در ۲۰ ثانیه همین پاسخ را با لحن خودتان اجرا کنید؛ چه چیزی را دقیق‌تر می‌گویید؟</p>';
+}
+
 function s1CaseLabHtml(){
  const x=s1CaseData[s1CasesNow()[s1CaseIndex]];
  return '<div class="s1-panel-head"><div class="bigico">🎭</div><div><h2>آزمایشگاه سناریوها</h2><p>سه موقعیت اصلی برای تصمیم‌گیری؛ سه موقعیت بیشتر در بخش اختیاری</p></div></div>'+
- '<div class="s1-callout"><b>تمرین:</b> پیش از دیدن تحلیل، یکی از سه تصمیم را انتخاب کنید و دلیل خود را بگویید. لازم نیست در کلاس همه موقعیت‌ها را حل کنید.</div>'+
- '<div class="s1-case-step"><div class="s1-step-head"><span class="s1-step-count">موقعیت '+(s1CaseIndex+1).toLocaleString("fa-IR")+' از ۳'+(s1CaseTrack==="extra"?" · تکمیلی":"")+'</span><div class="s1-progress"><span style="width:'+(((s1CaseIndex+1)/3)*100)+'%"></span></div></div><div class="s1-case"><h3>'+x.title+'</h3><p>'+x.scenario+'</p><div class="s1-options">'+x.options.map((o,i)=>'<button class="s1-option" onclick="chooseS1CaseOption('+i+',this)">'+o[0]+'</button>').join('')+'</div><div id="s1-case-feedback" class="s1-feedback"></div><div id="s1-case-stage2"></div><button id="s1-next-case" class="s1-next-case" onclick="nextS1Case()">'+(s1CaseIndex<2?"موقعیت بعدی ←":"پایان سه موقعیت ✓")+'</button></div></div>'+
+ '<div class="s1-callout"><b>🎯 تمرین:</b> ابتدا تصمیم بگیرید؛ سپس تحلیل همان تصمیم، تکنیک مرتبط و یک جمله کاربردی در شعبه را ببینید. در پایان آن جمله را با زبان خودتان بازاجرا کنید.</div>'+
+ '<div class="s1-case-step"><div class="s1-step-head"><span class="s1-step-count">موقعیت '+(s1CaseIndex+1).toLocaleString("fa-IR")+' از ۳'+(s1CaseTrack==="extra"?" · تکمیلی":"")+'</span><div class="s1-progress"><span style="width:'+(((s1CaseIndex+1)/3)*100)+'%"></span></div></div><div class="s1-case"><h3>'+x.title+'</h3><p>'+x.scenario+'</p><div class="s1-options">'+x.options.map((o,i)=>'<button class="s1-option" onclick="chooseS1CaseOption('+i+',this)">'+o[0]+'</button>').join('')+'</div><div id="s1-case-feedback" class="s1-feedback"></div><div id="s1-case-skill" class="s1-case-skill" hidden></div><div id="s1-case-stage2"></div><button id="s1-next-case" class="s1-next-case" onclick="nextS1Case()">'+(s1CaseIndex<2?"موقعیت بعدی ←":"پایان سه موقعیت ✓")+'</button></div></div>'+
  '<details class="s1-optional-cases"><summary>سه سناریوی دیگر برای مطالعه یا تمرین بیشتر</summary><p>سناریوهای تکمیلی حفظ شده‌اند، اما در برنامه اصلی ۱۲۰ دقیقه‌ای کلاس الزامی نیستند.</p><button type="button" onclick="s1ChooseTrack(\'extra\')">مشاهده سناریوهای تکمیلی</button><button type="button" onclick="s1ChooseTrack(\'main\')">بازگشت به سه سناریوی اصلی</button></details>';
 }
 function chooseS1CaseOption(i,btn){
  const x=s1CaseData[s1CasesNow()[s1CaseIndex]],o=x.options[i],box=btn.closest(".s1-case");
  box.querySelectorAll(".s1-option").forEach(b=>{b.style.opacity=".55";b.style.borderColor="#c7dccd"});btn.style.opacity="1";btn.style.borderColor=o[1]?"#168353":"#cf654f";
  const feedback=document.getElementById("s1-case-feedback");feedback.textContent=(o[1]?"✓ ":"↩ ")+o[2];feedback.classList.add("show");
+ const skill=document.getElementById("s1-case-skill");if(skill){skill.innerHTML=s1CaseSkillHtml(s1CasesNow()[s1CaseIndex]);skill.hidden=false;}
  const next=document.getElementById("s1-case-stage2");next.textContent=x.stage2?"سؤال تکمیلی: "+x.stage2:"";
  const btnNext=document.getElementById("s1-next-case");if(btnNext)btnNext.classList.add("show");
 }
