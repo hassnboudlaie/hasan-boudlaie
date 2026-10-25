@@ -1,0 +1,124 @@
+/* Kish live strategy map — four-level visual hierarchy; responsive RTL */
+.kish-perdoo .km-app{--km-navy:#1d4164;--km-blue:#3174d5;--km-cyan:#18a9be;--km-purple:#8870dc;--km-green:#17aa80;--km-amber:#eca83d;--km-red:#e96672;--km-ink:#243c56;font-family:KishVazirmatn,Vazirmatn,Tahoma,Arial,sans-serif;color:var(--km-ink);margin:auto;width:100%;max-width:none;font-size:14px}
+.kish-perdoo .km-header{padding:23px 27px;background:linear-gradient(120deg,#e4f5ff,#f3eefe 60%,#e9faf3)!important;border:1px solid #d6e6f4;border-radius:22px;display:flex;justify-content:space-between;align-items:center;gap:24px;box-shadow:0 12px 32px #32598d12}
+.kish-perdoo .km-eyebrow{display:inline-block;border-radius:9px;padding:4px 10px;background:#d3e9ff;color:#2466a6;font-size:10px;letter-spacing:.09em;font-weight:900;direction:ltr}
+.kish-perdoo .km-header h1{margin:9px 0 5px!important;font-size:clamp(22px,2.4vw,32px)!important;line-height:1.6!important;color:#1f486b!important}
+.kish-perdoo .km-header p{font-size:14px!important;color:#50718e!important;margin:0!important;line-height:1.9!important}
+.kish-perdoo .km-head-buttons{display:flex;flex-wrap:wrap;gap:8px;max-width:420px}
+.kish-perdoo .km-head-buttons a{display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#315d84!important;border:1px solid #c9deee;border-radius:11px;padding:9px 13px;font-weight:800;white-space:nowrap;text-decoration:none;transition:.15s}
+.kish-perdoo .km-head-buttons a:hover,.kish-perdoo .km-link-btn:hover{background:#def4ff;transform:translateY(-2px)}
+.kish-perdoo .km-metrics{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0}
+.kish-perdoo .km-metrics span{border:1px solid #d9e6f2;background:#fff;color:#35536e;box-shadow:0 4px 13px #296b920a;border-radius:12px;padding:9px 13px;font-weight:800}
+.kish-perdoo .km-metrics span:nth-child(1){border-right:4px solid #926ddc;background:#f7f3ff}
+.kish-perdoo .km-metrics span:nth-child(2){border-right:4px solid #36a8d8;background:#f0f9ff}
+.kish-perdoo .km-metrics span:nth-child(3){border-right:4px solid #2caf8f;background:#eefbf4}
+.kish-perdoo .km-metrics span:nth-child(4){border-right:4px solid #e9aa42;background:#fff8ec}
+.kish-perdoo .km-actions{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0;padding:12px 15px;background:#fff;border:1px solid #dfebf3;border-radius:15px}
+.kish-perdoo .km-action-leading,.kish-perdoo .km-action-trailing{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.kish-perdoo .km-action-leading>span{font-size:13px;font-weight:800;color:#476984}
+.kish-perdoo .km-action-leading select{min-width:135px;width:auto;font-weight:800;font-size:14px;min-height:39px;border-radius:10px}
+.kish-perdoo .km-checkbox{display:flex;align-items:center;gap:8px;padding:5px 10px;background:#f3f8ff;border:1px solid #dce9f3;border-radius:10px;color:#426077!important;font-size:12px!important;cursor:pointer}
+.kish-perdoo .km-checkbox input{width:16px;height:16px;accent-color:#1689ca}
+.kish-perdoo .km-action-trailing button{border:1px solid #cfdeeb!important;background:#edf5ff!important;color:#1e5682!important;padding:7px 12px;border-radius:10px;min-width:40px;min-height:37px;font-weight:900;font-size:17px}
+.kish-perdoo .km-action-trailing span{font-size:13px;font-weight:900;width:50px;text-align:center;color:#305a7b}
+.kish-perdoo .km-viewport{width:100%;overflow:auto;max-height:min(80vh,950px);background:linear-gradient(122deg,#e9f6ff 0%,#e8ebff 47%,#f9e9fb 100%);border:1px solid #cfddf2;border-radius:22px;box-shadow:inset 0 0 0 1px #ffffff80,0 12px 32px #31529b12;overscroll-behavior:contain;scrollbar-color:#9bbfe0 #edf3fa;scrollbar-width:thin;scroll-behavior:smooth}
+.kish-perdoo .km-canvas{width:max-content;min-width:100%;padding:27px 27px 52px;box-sizing:border-box;position:relative}
+.kish-perdoo .km-ultimate-wrap{display:flex;justify-content:center;position:relative}
+.kish-perdoo .km-ultimate{max-width:760px;min-width:min(340px,100%);display:grid;justify-items:center;text-align:center;gap:9px;border-radius:20px;padding:21px 31px;color:#23426a!important;background:#fff!important;border:2px solid #bcd8f0;box-shadow:0 12px 32px #2d68a127;position:relative;text-decoration:none}
+.kish-perdoo .km-ultimate:hover{border-color:#3c99d4;transform:translateY(-1px)}
+.kish-perdoo .km-ultimate strong{font-size:19px;line-height:1.8!important;font-weight:900;max-width:670px}
+.kish-perdoo .km-ultimate-badge{color:#186da5!important;background:#e6f7ff;border-radius:999px;padding:6px 15px;font-size:13px;font-weight:900}
+.kish-perdoo .km-ultimate-action{font-size:12px;color:#477393!important}
+.kish-perdoo .km-ultimate-line{width:2px;height:36px;background:linear-gradient(#70b2d4,#a68fe1);margin:auto;position:relative}
+.kish-perdoo .km-ultimate-line:after{content:"";position:absolute;bottom:0;left:-4px;width:10px;height:10px;background:#9479d6;border-radius:50%}
+.kish-perdoo .km-lanes{display:flex;align-items:stretch;justify-content:center;gap:22px;position:relative;min-width:max-content;margin-top:17px}
+.kish-perdoo .km-lanes:before{content:"";position:absolute;top:-17px;left:8%;right:8%;height:2px;background:linear-gradient(90deg,#6eb7d4,#ad94e7,#81d7c9)}
+.kish-perdoo .km-pillar-lane{width:390px;flex:0 0 390px;position:relative;padding-top:1px}
+.kish-perdoo .km-pillar-lane:before{content:"";position:absolute;top:-17px;left:50%;width:2px;height:17px;background:#ad97d9}
+.kish-perdoo .km-pillar{padding:17px;background:linear-gradient(145deg,#fff,#f7fbff)!important;border:1px solid #d4e1ef;border-top:5px solid #7b76d9;border-radius:17px;min-height:148px;box-shadow:0 11px 20px #536d9d16;position:relative}
+.kish-perdoo .km-pillar-lane:nth-child(4n+2) .km-pillar{border-top-color:#1fbcab}
+.kish-perdoo .km-pillar-lane:nth-child(4n+3) .km-pillar{border-top-color:#edaa49}
+.kish-perdoo .km-pillar-lane:nth-child(4n+4) .km-pillar{border-top-color:#ed7796}
+.kish-perdoo .km-pillar-name{display:flex;align-items:center;gap:10px;min-height:44px}
+.kish-perdoo .km-pillar-name h2{font-size:17px!important;line-height:1.6!important;margin:0!important;min-width:0;flex:1;color:#2b4a6a!important;font-weight:900}
+.kish-perdoo .km-pillar-symbol{width:34px;height:34px;background:#e7e4ff;color:#6e60be;border-radius:10px;display:grid;place-items:center;flex:0 0 auto}
+.kish-perdoo .km-pillar-more{padding:4px 11px;background:#eaf3fc;border-radius:8px;text-decoration:none;font-size:20px;line-height:1;color:#486a84!important}
+.kish-perdoo .km-pillar-metrics{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
+.kish-perdoo .km-pillar-metrics>span{font-size:12px;color:#728699}
+.kish-perdoo .km-health{border-radius:9px;padding:6px 9px!important;font-size:12px!important;font-weight:800!important}
+.kish-perdoo .km-health.good{background:#e5f9ed;color:#157a55}
+.kish-perdoo .km-health.bad{background:#fff1e7;color:#a45b1c}
+.kish-perdoo .km-health.unknown{background:#eff2f6;color:#718092}
+.kish-perdoo .km-health i,.kish-perdoo .km-status i{display:inline-block;width:8px;height:8px;background:currentColor;border-radius:50%;margin-left:5px}
+.kish-perdoo .km-pillar-foot{display:flex;justify-content:space-between;gap:9px;margin-top:14px;border-top:1px solid #e1ebf5;padding-top:10px;color:#56728a;font-size:12px!important}
+.kish-perdoo .km-pillar-foot a{color:#2679a9!important;font-weight:800}
+.kish-perdoo .km-pillar-line{width:2px;height:24px;background:#aac4d7;margin:auto}
+.kish-perdoo .km-lane-body{background:#ffffff3b;border:1px solid #ffffffb0;border-radius:18px;padding:12px;min-height:275px}
+.kish-perdoo .km-level-label{display:flex;align-items:center;gap:9px;color:#385d7c;font-size:12px;font-weight:900;margin:7px 0 11px}
+.kish-perdoo .km-level-label i{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;color:#fff;background:linear-gradient(140deg,#3b95d9,#866ad1);font-style:normal;font-weight:900}
+.kish-perdoo .km-annual-branch{margin:0 0 18px;border:1px solid #cedfeefa;border-radius:15px;padding:9px;background:#f7fbfff0}
+.kish-perdoo .km-goal{background:#fff!important;color:#293c54;border:1px solid #d9e3ef;border-right:4px solid #9faabd;border-radius:13px;padding:11px 12px;min-width:0;box-shadow:0 7px 16px #2c5b8413}
+.kish-perdoo .km-goal.km-on{border-right-color:#14a881}
+.kish-perdoo .km-goal.km-off{border-right-color:#e45c68}
+.kish-perdoo .km-goal.km-attention{border-right-color:#e7a33e}
+.kish-perdoo .km-goal.km-closed{border-right-color:#8272ce}
+.kish-perdoo .km-goal.km-quarter{background:linear-gradient(165deg,#fff,#f8fcff)!important}
+.kish-perdoo .km-goal:hover{border-color:#a8d2e6;transform:translateY(-1px);box-shadow:0 12px 21px #2c5b8421}
+.kish-perdoo .km-goal-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.kish-perdoo .km-unit{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;flex:none;color:#fff;font-size:13px;font-weight:900;background:#4784cb}
+.kish-perdoo .km-unit.km-tone-1{background:#25ad9b}.kish-perdoo .km-unit.km-tone-2{background:#9c6bd1}.kish-perdoo .km-unit.km-tone-3{background:#dc9b34}.kish-perdoo .km-unit.km-tone-4{background:#d76e81}
+.kish-perdoo .km-goal-type{color:#7d8d9f;font-size:10px;border-radius:6px;background:#eef3f9;padding:3px 6px}
+.kish-perdoo .km-status{margin-right:auto;font-size:11px;display:inline-flex;align-items:center;background:#f0f3f6;color:#718093;padding:3px 7px;border-radius:20px;white-space:nowrap}
+.kish-perdoo .km-status.km-on{color:#168665;background:#e3f8ee}
+.kish-perdoo .km-status.km-off{color:#c54d5b;background:#ffe9ee}
+.kish-perdoo .km-status.km-attention{color:#ac731a;background:#fff4da}
+.kish-perdoo .km-status.km-closed{color:#7160ba;background:#f0edff}
+.kish-perdoo .km-goal-name{font-weight:900;font-size:13px;line-height:1.85;display:block;min-height:36px;margin:9px 0!important;text-decoration:none;color:#25435b!important}
+.kish-perdoo .km-goal-name:hover{text-decoration:underline;color:#147bae!important}
+.kish-perdoo .km-person{display:inline-flex;align-items:center;gap:6px;min-width:0;font-size:11px;color:#718294}
+.kish-perdoo .km-avatar{display:grid;place-items:center;overflow:hidden;border:2px solid #fff;border-radius:50%;width:25px;height:25px;object-fit:cover;box-shadow:0 1px 4px #3d587b25}
+.kish-perdoo .km-initial{background:#dceafb;color:#245e87;font-weight:800;font-size:10px}
+.kish-perdoo .km-person-name{overflow:hidden;text-overflow:ellipsis;max-width:230px;white-space:nowrap}
+.kish-perdoo .km-goal-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.kish-perdoo .km-progress{border:0;background:#edf5ff!important;color:#206a9c!important;font-weight:900;font-size:18px;border-radius:9px;padding:3px 9px;cursor:pointer}
+.kish-perdoo .km-submeta{font-size:10px;color:#7e8d9e}
+.kish-perdoo .km-progress-track{height:6px;overflow:hidden;border-radius:100px;background:#ebf0f5;margin-top:6px}
+.kish-perdoo .km-progress-track i{display:block;background:linear-gradient(90deg,#2384b7,#28bda1);height:100%;border-radius:100px}
+.kish-perdoo .km-tail{border-top:1px solid #e8eef4;padding-top:8px;margin-top:9px;display:flex;gap:7px;align-items:center;font-size:10px;color:#8194a5}
+.kish-perdoo .km-tail a{color:#366e9a!important;font-weight:800}
+.kish-perdoo .km-child-count{margin-right:auto;font-size:10px;color:#566e81}
+.kish-perdoo .km-last{margin-top:5px;font-size:9px;color:#8192a3}
+.kish-perdoo .km-branch-line{width:2px;height:19px;background:#9cc0df;margin:auto;position:relative}
+.kish-perdoo .km-branch-line:after{content:"";position:absolute;bottom:0;width:8px;height:8px;left:-3px;background:#9cc0df;border-radius:50%}
+.kish-perdoo .km-quarter-grid{display:grid;gap:9px}
+.kish-perdoo .km-mini-note{margin:9px 0 0!important;color:#718399!important;font-size:11px!important}
+.kish-perdoo .km-empty-year,.kish-perdoo .km-unassigned{padding:12px;border:1px dashed #b7cfe2;border-radius:12px;background:#fff9;color:#70899e;font-size:12px;line-height:1.9}
+.kish-perdoo .km-empty-year a{color:#247aa6!important;font-weight:800}
+.kish-perdoo .km-unassigned{margin-top:15px;background:#fff8ecde;border-color:#e3d4b4}
+.kish-perdoo .km-unassigned summary{font-weight:900;color:#8e6931;cursor:pointer;padding:1px 3px}
+.kish-perdoo .km-unassigned .km-quarter-grid{margin-top:11px}
+.kish-perdoo .km-unassigned b{background:#fae4bc;border-radius:8px;padding:2px 7px}
+.kish-perdoo .km-stray{border:1px solid #eccdbb;background:#fff7eff0;border-radius:16px;padding:17px;margin-top:26px}
+.kish-perdoo .km-stray h2{color:#af6a3b!important;margin:0!important;font-size:15px!important}
+.kish-perdoo .km-stray p{margin:3px 0 12px;color:#826e63}
+.kish-perdoo .km-stray .km-quarter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:10px;max-width:900px}
+.kish-perdoo .km-empty{padding:30px;background:white;border-radius:16px}
+.kish-perdoo .km-footnote{display:flex;flex-wrap:wrap;gap:10px 14px;font-size:12px;color:#507189;margin-top:14px}
+.kish-perdoo .km-footnote span{font-size:11px;background:#fff;border-radius:9px;padding:6px 9px}
+.kish-perdoo .km-footnote span:nth-child(1){color:#168665}.kish-perdoo .km-footnote span:nth-child(2){color:#ac731a}.kish-perdoo .km-footnote span:nth-child(3){color:#c54d5b}.kish-perdoo .km-footnote span:nth-child(4){color:#718093}
+.kish-perdoo .km-footnote a{color:#247ba6!important;font-weight:800}
+.kish-perdoo .km-data-note{font-size:12px!important;color:#607f97!important;margin-top:11px!important;padding:10px 13px;background:#edf5fc;border-radius:12px;line-height:1.85!important}
+.kish-perdoo .km-dialog{width:min(760px,calc(100vw - 22px));max-height:90vh;overflow:auto;margin:auto;border:1px solid #c9ddeb;border-radius:19px;padding:0;background:#fff;color:#243c53;box-shadow:0 22px 70px #102c4670}
+.kish-perdoo .km-dialog::backdrop{background:#112d43a5;backdrop-filter:blur(4px)}
+.kish-perdoo .km-dialog form{padding:21px}
+.kish-perdoo .km-dialog-head{display:flex;justify-content:space-between;align-items:center}
+.kish-perdoo .km-dialog-head h2{font-size:20px;color:#245477}
+.kish-perdoo .km-dialog-head button{border:0;background:#eaf3fc;border-radius:9px;padding:8px 12px;font-size:18px}
+.kish-perdoo .km-overflow{overflow:auto;border-radius:12px;border:1px solid #dce8f1}
+.kish-perdoo .km-dialog table{border-collapse:collapse;min-width:570px;width:100%}
+.kish-perdoo .km-dialog th,.kish-perdoo .km-dialog td{padding:10px;text-align:right;border-bottom:1px solid #e3ebf3;font-size:12px}
+.kish-perdoo .km-dialog th{background:#ecf5ff;color:#315474}
+.kish-perdoo .km-link-btn{display:inline-flex;margin-top:12px;text-decoration:none;background:#e8f6ff;color:#256a99!important;padding:9px 13px;border-radius:9px;font-weight:800;border:1px solid #bedef0}
+@media(max-width:900px){.kish-perdoo .km-header{display:block;padding:19px}.kish-perdoo .km-head-buttons{margin-top:12px}.kish-perdoo .km-canvas{padding:16px 15px 30px}.kish-perdoo .km-pillar-lane{width:325px;flex-basis:325px}.kish-perdoo .km-lanes{gap:13px}.kish-perdoo .km-header p{font-size:12px!important}.kish-perdoo .km-header h1{font-size:22px!important}.kish-perdoo .km-viewport{max-height:72vh}}
+@media(max-width:600px){.kish-perdoo .km-canvas{padding:13px 10px 26px}.kish-perdoo .km-pillar-lane{width:284px;flex-basis:284px}.kish-perdoo .km-pillar{padding:12px}.kish-perdoo .km-lanes{gap:11px}.kish-perdoo .km-ultimate{min-width:240px;max-width:340px;padding:14px}.kish-perdoo .km-ultimate strong{font-size:15px}.kish-perdoo .km-header{padding:15px}.kish-perdoo .km-head-buttons a{font-size:11px;padding:7px 10px}.kish-perdoo .km-metrics{gap:6px}.kish-perdoo .km-metrics span{font-size:11px;padding:6px 8px}.kish-perdoo .km-actions{padding:10px;gap:10px}.kish-perdoo .km-checkbox{font-size:11px}.kish-perdoo .km-status{font-size:10px}.kish-perdoo .km-viewport{max-height:75vh}}
+@media(prefers-reduced-motion:reduce){.kish-perdoo .km-app *{scroll-behavior:auto!important;transition:none!important}}
