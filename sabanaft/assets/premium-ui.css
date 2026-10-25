@@ -144,3 +144,27 @@ body{background:var(--paper);color:var(--ink);font-size:14px;line-height:1.85}
  .up-privacy-line{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.up-home{animation:none}.up-next-card,.btn{transition:none;transform:none}}
+
+/* Book-grounded four roles: compact choice, details on demand. */
+.up-role-card{padding:7px 10px;border:1px solid #e8edf0!important;border-radius:14px;background:#fff;min-height:0}
+.up-role-card.selected{border-color:#accbda!important;background:#f8fcfe;box-shadow:0 0 0 2px #bed9e820}
+.up-role-pick{width:100%;text-align:right;display:flex;align-items:center;gap:10px;background:none;border:0;padding:9px 5px;min-height:52px;color:#2d475a}
+.up-role-color{height:10px;width:10px;flex:0 0 10px;border-radius:50%}
+.up-role-copy{display:flex;flex-direction:column;gap:0;min-width:0}
+.up-role-copy strong{font-size:14px;line-height:1.55}
+.up-role-copy small{font-size:11px;color:#8696a0}
+.up-role-check{margin-right:auto;border-radius:50%;height:26px;width:26px;display:grid;place-items:center;color:#94a7b5;background:#f3f6f9;font-weight:900}
+.up-role-card.selected .up-role-check{background:#e7f2f7;color:#33789c}
+.up-role-details{padding:0 12px 8px;border-top:1px solid #eff2f5}
+.up-role-details summary{cursor:pointer;padding:9px 0;font-size:11px;color:#6d8ca1;list-style:auto}
+.up-role-details p{font-size:12px;color:#456277;line-height:1.9;margin:8px 0 3px}
+.up-role-details small{font-size:11px;line-height:1.85;color:#82939e}
+.up-role-hint{font-size:12px;color:#7790a2;margin:13px 0}
+@media(max-width:760px){
+  .role-table{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .up-role-pick{gap:6px;min-height:58px;padding:7px 3px}
+  .up-role-copy strong{font-size:12px}
+  .up-role-copy small{font-size:10px}
+  .up-role-check{height:21px;width:21px}
+}
+@media(max-width:380px){.role-table{grid-template-columns:1fr}}
