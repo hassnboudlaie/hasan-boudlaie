@@ -1,0 +1,27 @@
+name: Kish OKR | Perdoo 3.0 regression
+on:
+  pull_request:
+    paths:
+      - 'okr-system/assets/kish-strategy-map-20261025.js'
+      - 'okr-system/assets/kish-strategy-map-20261025.css'
+      - 'okr-system/assets/kish-team-dashboard-20261025.js'
+      - 'okr-system/tests/perdoo3-map-regression.cjs'
+      - '.github/workflows/kish-okr-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse legacy-compatible JS modules
+        run: |
+          node --check okr-system/assets/kish-strategy-map-20261025.js
+          node --check okr-system/assets/kish-team-dashboard-20261025.js
+      - name: Run cross-view map regression tests
+        run: node okr-system/tests/perdoo3-map-regression.cjs
