@@ -17,11 +17,32 @@ function formattedDate(x){try{return new Intl.DateTimeFormat('fa-IR',{day:'numer
 function initialSimulation(){return {caseId:'',persona:'overloaded',role:'C',round:0,lines:[],reflection:''};}
 function restore(s,x){s.quickDraft=clean(x&&x.quickDraft,3500);s.quickInputMode=x&&x.quickInputMode==='voice'?'voice':'text';s.simulation=initialSimulation();if(x&&x.simulation&&typeof x.simulation==='object'){var a=x.simulation;s.simulation.caseId=clean(a.caseId,48);s.simulation.persona=actors[a.persona]?a.persona:'overloaded';s.simulation.role=roleInfo[a.role]?a.role:'C';s.simulation.round=Math.max(0,Math.min(2,Number(a.round)||0));s.simulation.lines=Array.isArray(a.lines)?a.lines.slice(-4).map(function(z){return {manager:clean(z.manager,500),reply:clean(z.reply,450)};}):[];s.simulation.reflection=clean(a.reflection,850);}
 s.simulationHistory=Array.isArray(x&&x.simulationHistory)?x.simulationHistory.filter(function(z){return z&&typeof z.id==='string';}).map(function(z){return {id:clean(z.id,45),date:clean(z.date,45),caseId:clean(z.caseId,48),role:roleInfo[z.role]?z.role:'C',persona:actors[z.persona]?z.persona:'overloaded',reflection:clean(z.reflection,850)};}):[];}
+
+/* Simple process states; never a performance or psychological score. */
+function caseStatus(s,c){
+  var day=new Date();var today=[day.getFullYear(),String(day.getMonth()+1).padStart(2,'0'),String(day.getDate()).padStart(2,'0')].join('-');
+  var old=(s.reflections||[]).some(function(r){return r.caseId===c.id&&!!(r.actual||'').trim()&&!!(r.observed||'').trim();});
+  var recent=(s.daily&&s.daily.items||[]).some(function(r){return r.caseId===c.id&&r.source!=='none'&&!!(r.outcome||'').trim();});
+  if(old||recent)return 'reviewed';
+  if(c.decision&&(!c.action||(c.reviewDate&&c.reviewDate<=today)))return 'attention';
+  if(c.decision||c.action)return 'progress';
+  return 'unstarted';
+}
+function statusLabel(key){return {reviewed:'مرور شده',attention:'نیازمند توجه',progress:'در حال اقدام',unstarted:'در انتظار تصمیم'}[key]||'نامشخص';}
+function focus(s){
+ var cases=s.cases||[];if(!cases.length)return null;
+ var weight={attention:0,progress:1,unstarted:2,reviewed:3};
+ var cs=cases.map(function(c,i){return {c:c,kind:caseStatus(s,c),i:i};});
+ cs.sort(function(a,b){return weight[a.kind]-weight[b.kind]||a.i-b.i;});
+ return cs[0];
+}
 function home(s){
-  var cases=s.cases||[],latest=cases[0]||null,display=clean((s.profile&&s.profile.name||'').split(/\s+/)[0],45);
-  var draft=s.quickDraft||'',hasIdentity=!!(s.profile&&s.profile.name);
-  var dailyCount=s.daily&&Array.isArray(s.daily.items)?s.daily.items.length:0;
-  var contextCount=Object.values((s.context&&s.context.dimensions)||{}).filter(function(v){return v&&v.value;}).length;
+  var cases=s.cases||[],f=focus(s),display=clean((s.profile&&s.profile.name||'').split(/\s+/)[0],45);
+  var draft=s.quickDraft||'',contextCount=Object.values((s.context&&s.context.dimensions)||{}).filter(function(v){return v&&v.value;}).length;
+  var dayCount=s.daily&&Array.isArray(s.daily.items)?s.daily.items.length:0;
+  var target=f&&f.c,kind=f&&f.kind;
+  var actionable=target&&(kind==='progress'||kind==='attention')&&!!target.action;
+  var actionText=target?(kind==='reviewed'?'بازگشت به یادگیری ثبت‌شده':kind==='attention'&&target.action?'مرور نتیجه اقدام':kind==='progress'&&target.action?'مرور نتیجه اقدام':'بررسی و تکمیل تصمیم'):'شروع مسیر شخصی';
   return '<div class="up-home">'
     +'<div class="up-welcome"><div class="up-eyebrow">REFLECTIVE LEADERSHIP</div><h1>'+(display?'سلام '+esc(display)+'، ':'')+'امروز چه مسئله‌ای پیش روی شماست؟</h1><p>یک موقعیت واقعی را مطرح کنید. با هم گزینه‌های رهبری متناسب با شرایط آن را بررسی می‌کنیم.</p></div>'
     +'<section class="up-composer" aria-label="طرح یک مسئله جدید">'
@@ -34,10 +55,10 @@ function home(s){
     +'<div class="up-privacy-line"><span aria-hidden="true">◈</span> نسخه آزمایشی؛ داده‌ها فقط در مرورگر این دستگاه ذخیره می‌شوند. اطلاعات محرمانه وارد نکنید؛ تبدیل گفتار ممکن است از سرویس بیرونی استفاده کند.</div>'
     +'<div class="up-section-head"><h2>ادامه مسیر من</h2></div>'
     +'<div class="up-next-grid">'
-    +(latest?
-      '<button class="up-next-card up-case-next" type="button" data-ux-open="'+esc(latest.id)+'"><span class="up-mini-illustration up-case-icon" aria-hidden="true">◇</span><span class="up-next-content"><span class="up-next-kicker">آخرین مسئله من</span><strong>'+esc(latest.title)+'</strong><small>'+(latest.decision?'تصمیم ثبت شده؛ قابل بازبینی':'در انتظار بررسی و تصمیم')+'</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>'
-      :'<button class="up-next-card up-case-next" type="button" data-ux-go="profile"><span class="up-mini-illustration up-case-icon" aria-hidden="true">◇</span><span class="up-next-content"><span class="up-next-kicker">شروع مسیر شخصی</span><strong>'+ (hasIdentity?'بازبینی هویت رهبری من':'آشنایی با سبک رهبری خودم')+'</strong><small>'+(hasIdentity?'ایده رهبری و بافت قابل ویرایش‌اند':'شناخت اولیه؛ می‌توانید بعداً تکمیل کنید')+'</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>')
-    +'<button class="up-next-card up-reflect-next" type="button" data-ux-go="daily"><span class="up-mini-illustration up-reflect-icon" aria-hidden="true">◷</span><span class="up-next-content"><span class="up-next-kicker">MY REFLECTION</span><strong>سه دقیقه برای بازاندیشی</strong><small>'+(dailyCount?'یادگیری از تجربه امروز':'از یک اتفاق کوچک امروز شروع کنید')+'</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>'
+    +(target?
+      '<div class="up-next-card up-case-next up-focus-card"><span class="up-mini-illustration up-case-icon" aria-hidden="true">◇</span><div class="up-next-content"><span class="up-next-kicker">تمرکز فعلی من <span class="up-focus-status '+kind+'">'+statusLabel(kind)+'</span></span><strong>'+esc(target.title)+'</strong><small>'+esc(target.action||'هنوز اقدام مشخصی ثبت نشده')+'</small></div><button type="button" class="up-focus-action" '+(actionable?'data-ux-checkin="'+esc(target.id)+'"':'data-ux-open="'+esc(target.id)+'"')+' aria-label="'+esc(actionText)+' برای '+esc(target.title)+'">'+actionText+' ←</button></div>'
+      :'<button class="up-next-card up-case-next" type="button" data-ux-go="profile"><span class="up-mini-illustration up-case-icon" aria-hidden="true">◇</span><span class="up-next-content"><span class="up-next-kicker">شروع مسیر شخصی</span><strong>آشنایی با سبک رهبری خودم</strong><small>می‌توانید بعداً هم آن را تکمیل کنید</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>')
+    +'<button class="up-next-card up-reflect-next" type="button" data-ux-go="daily"><span class="up-mini-illustration up-reflect-icon" aria-hidden="true">◷</span><span class="up-next-content"><span class="up-next-kicker">MY REFLECTION</span><strong>سه دقیقه برای بازاندیشی</strong><small>'+(dayCount?'یادگیری از تجربه امروز':'از یک اتفاق کوچک امروز شروع کنید')+'</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>'
     +'</div>'
     +'<div class="up-meta-footer"><span>بافت ثبت‌شده: '+contextCount+' از ۱۸ بُعد</span><button type="button" data-ux-go="mix">Leadership Idea من</button><span class="up-meta-dot">·</span><button type="button" data-ux-go="coach">کوچ و منتور</button></div>'
     +'</div>';
@@ -72,9 +93,10 @@ return sim.round===0?'مانع اصلی دسترسی به اطلاعات و اخ
 document.addEventListener('input',function(e){var t=e.target,s=state();if(!s)return;if(t.id==='ux-quick-case'){s.quickDraft=clean(t.value,3500);save();}if(t.id==='ux-sim-reflection'){s.simulation.reflection=clean(t.value,850);save();}});
 document.addEventListener('change',function(e){var t=e.target,s=state();if(!s||!t.dataset.uxSelect)return;var k=t.dataset.uxSelect,sim=s.simulation;if(k==='ux-sim-case')sim.caseId=t.value;if(k==='ux-sim-persona')sim.persona=actors[t.value]?t.value:'overloaded';if(k==='ux-sim-role')sim.role=roleInfo[t.value]?t.value:'C';sim.round=0;sim.lines=[];sim.reflection='';save();render();});
 document.addEventListener('submit',function(e){if(e.target.id!=='ux-roleplay-form')return;e.preventDefault();var s=state(),sim=s&&s.simulation,t=document.getElementById('ux-sim-response');if(!sim||!t)return;var messageText=clean(t.value,500).trim();if(messageText.length<3){note('پاسخ خودتان را بنویسید.');return;}sim.lines.push({manager:messageText,reply:reply(sim)});sim.round=Math.min(2,sim.round+1);save();render();});
-document.addEventListener('click',function(e){var t=e.target.closest('[data-ux-voice],[data-ux-submit-case],[data-ux-go],[data-ux-open],[data-ux-save-sim],[data-ux-restart]');if(!t)return;var s=state();if(!s)return;
+document.addEventListener('click',function(e){var t=e.target.closest('[data-ux-voice],[data-ux-submit-case],[data-ux-go],[data-ux-open],[data-ux-checkin],[data-ux-save-sim],[data-ux-restart]');if(!t)return;var s=state();if(!s)return;
 if(t.dataset.uxGo){go(t.dataset.uxGo);return;}
 if(t.dataset.uxOpen){openCase(t.dataset.uxOpen);return;}
+if(t.dataset.uxCheckin){if(window.SabaDailyReflection&&window.SabaDailyReflection.openQuick){window.SabaDailyReflection.openQuick(t.dataset.uxCheckin);}else note('مرور سریع در دسترس نیست.');return;}
 if(t.hasAttribute('data-ux-submit-case')){var value=clean(s.quickDraft,3500).trim();if(value.length<12){note('لطفاً در یک یا دو جمله مسئله را روشن‌تر بنویسید.');return;}var c={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:clean(value.split(/[.؟!\n]/)[0]||value,82),situation:value,urgency:'unknown',risk:'unknown',authority:'unknown',capability:'unknown',dependencies:'unknown',createdAt:new Date().toISOString(),inputMode:s.quickInputMode==='voice'?'voice-reviewed':'text'};s.cases.unshift(c);s.quickDraft='';s.quickInputMode='text';if(!save()){s.cases.shift();s.quickDraft=value;s.quickInputMode=c.inputMode==='voice-reviewed'?'voice':'text';note('ذخیره ممکن نشد؛ از داده‌ها پشتیبان تهیه کنید.');return;}openCase(c.id);note('صورت مسئله ثبت شد. اکنون شرایط آن را بررسی کنید.');return;}
 if(t.hasAttribute('data-ux-restart')){s.simulation.round=0;s.simulation.lines=[];s.simulation.reflection='';save();render();return;}
 if(t.hasAttribute('data-ux-save-sim')){if(s.simulation.round<2){note('ابتدا دو مرحله تمرین را انجام دهید.');return;}if(!s.simulation.reflection.trim()){note('یک نکته یادگیری یا اصلاح رفتار ثبت کنید.');return;}var r={id:'sim'+Date.now().toString(36),date:new Date().toISOString(),caseId:s.simulation.caseId||(s.cases[0]&&s.cases[0].id)||'',role:s.simulation.role,persona:s.simulation.persona,reflection:s.simulation.reflection};s.simulationHistory.push(r);s.simulation=initialSimulation();if(!save()){s.simulationHistory.pop();note('ذخیره تمرین ممکن نشد.');return;}note('تمرین ثبت شد.');go('insights');return;}
@@ -87,5 +109,5 @@ recognizer.onend=function(){live=false;var b=document.querySelector('[data-ux-vo
 try{recognizer.start();}catch(err){note('میکروفن در دسترس نیست. از تایپ استفاده کنید.');recognizer=null;}return;}
 });
 window.addEventListener('hashchange',function(){if(live&&recognizer)recognizer.stop();});
-window.SabaCommercialUX={home:home,insights:insights,coach:coach,simulation:simulation,restore:restore};
+window.SabaCommercialUX={home:home,insights:insights,coach:coach,simulation:simulation,restore:restore,caseStatus:caseStatus,statusLabel:statusLabel,focus:focus};
 })();
