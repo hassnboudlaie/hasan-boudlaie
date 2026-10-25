@@ -492,6 +492,30 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 @media(max-width:480px){body{font-size:18px}.s1-panel{padding:12px}.s1-case{padding:13px}.s1-accordion>summary{font-size:17px}.s1-dr-line p{font-size:16px}.s1-distance{padding:12px}.s1-distance-choice{padding:9px}.s1-distance-choice strong{font-size:14px}.s1-distance-choice span{font-size:12px}.s1-role-tool{padding:13px}.s1-role-tool h4{font-size:18px}.s1-action-lab{padding:13px}.s1-action-picks button{flex:1 1 100%;text-align:right}.s1-action-steps small{font-size:11px}}
 </style>
 
+<style id="s1-scm-correct-matrix-20261025">
+.s1-scm-matrix{background:linear-gradient(155deg,#eef9f1 0%,#ffffff 58%,#f7f9fc 100%);border:1px solid #b4d8c5;box-shadow:0 14px 36px #124c3215;padding:22px}
+.s1-scm-matrix figcaption h3{font-size:clamp(25px,2.7vw,32px);font-weight:900;color:#0c503a}
+.s1-scm-matrix figcaption p{font-size:16px;line-height:1.9;color:#406554}
+.s1-scm-matrix .s1-map-chip{background:linear-gradient(120deg,#0b7a57,#08553d);font-size:13px;box-shadow:0 4px 12px #155f3c25}
+.s1-scm-axis-y{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin:0 0 9px;color:#14563e;font-size:16px;font-weight:900}
+.s1-scm-axis-y small{font-size:13px;color:#567969;font-weight:600}
+.s1-scm-grid{gap:5px;padding:5px;background:#d9e9de;border-radius:20px;min-height:390px;grid-template-rows:repeat(2,minmax(190px,auto))}
+.s1-scm-grid .s1-preview-cell{min-height:184px;border-radius:14px;padding:16px 14px;gap:6px;box-shadow:inset 0 0 0 1px #ffffffaa}
+.s1-scm-grid .s1-preview-icon{font-size:33px}
+.s1-scm-grid .s1-preview-cell b{font-size:clamp(15px,1.7vw,19px);font-weight:900;line-height:1.6}
+.s1-scm-grid .s1-preview-cell strong{font-size:clamp(14px,1.45vw,17px);line-height:1.65}
+.s1-scm-grid .s1-preview-cell small{font-size:14px;line-height:1.85;color:#345b4a}
+.s1-scm-grid .warm{background:linear-gradient(135deg,#eaf7fd,#dff0f7)}
+.s1-scm-grid .balanced{background:linear-gradient(135deg,#d5f5e0,#e9fbed);border:1px solid #8ccea8}
+.s1-scm-grid .growth{background:linear-gradient(135deg,#fff5e5,#fff9f0)}
+.s1-scm-grid .execution{background:linear-gradient(135deg,#f1e8fc,#f8f2fc)}
+.s1-scm-axis-x{display:flex;justify-content:space-between;direction:ltr;font-weight:900;color:#176447;font-size:15px;padding:8px 4px}
+.s1-scm-axis-x span,.s1-scm-axis-x b{direction:rtl}
+.s1-scm-facets{display:flex;flex-wrap:wrap;gap:9px;margin-top:7px}
+.s1-scm-facets span{padding:8px 12px;background:#eaf5ed;border:1px solid #cfe3d5;border-radius:999px;color:#235b43;font-size:14px}
+.s1-scm-matrix .s1-preview-foot{font-size:13px!important;line-height:1.95!important;margin-top:14px!important}
+@media(max-width:600px){.s1-scm-matrix{padding:14px 11px}.s1-scm-matrix figcaption{gap:8px;flex-wrap:wrap}.s1-scm-matrix .s1-map-chip{font-size:11px}.s1-scm-grid{grid-template-rows:repeat(2,minmax(185px,auto));min-height:0}.s1-scm-grid .s1-preview-cell{padding:12px 8px;min-height:185px}.s1-scm-grid .s1-preview-icon{font-size:26px}.s1-scm-grid .s1-preview-cell b{font-size:14px}.s1-scm-grid .s1-preview-cell strong{font-size:13px}.s1-scm-grid .s1-preview-cell small{font-size:11px;line-height:1.75}.s1-scm-axis-x{font-size:12px}.s1-scm-axis-y small{font-size:12px}.s1-scm-facets span{font-size:12px;padding:6px 9px}}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -869,20 +893,20 @@ function s1RoleReveal(){
 
 /* Session 1: visual orientation immediately before the existing self-assessment. */
 function s1PositionPreviewHtml(){
- return '<figure class="s1-matrix-preview" aria-label="ماتریس دو بعدی شنیدن و پیگیری ارتباطی؛ چهار سبک رفتاری">'+
- '<figcaption><div><span class="s1-map-eyebrow">🧭 نقشه ارتباطات من</span><h3>ماتریس رفتار ارتباطی</h3><p>دو رفتار را هم‌زمان ببینید: چقدر می‌شنویم و چقدر مسیر اقدام را روشن می‌کنیم؟</p></div><span class="s1-map-chip">۴ الگوی قابل بهبود</span></figcaption>'+
- '<div class="s1-preview-y">↑ شنیدن، توجه و همراهی بیشتر</div>'+
- '<div class="s1-preview-grid">'+
- '<div class="s1-preview-cell warm"><span class="s1-preview-icon">👂</span><b>شنیدن قوی‌تر</b><strong>پیگیری نامشخص</strong><small>همدلی هست؛ قدم بعد برای مخاطب مبهم است.</small></div>'+
- '<div class="s1-preview-cell balanced"><span class="s1-preview-icon">🤝</span><b>شنیدن و پیگیری</b><strong>هر دو قوی‌تر</strong><small>نگرانی شنیده می‌شود؛ مسئول و زمان پیگیری روشن است.</small></div>'+
- '<div class="s1-preview-cell growth"><span class="s1-preview-icon">🌱</span><b>شنیدن و پیگیری</b><strong>هر دو نیازمند تمرین</strong><small>از یک سؤال روشن و یک اقدام قابل‌پیگیری شروع کنید.</small></div>'+
- '<div class="s1-preview-cell execution"><span class="s1-preview-icon">📋</span><b>پیگیری قوی‌تر</b><strong>شنیدن ناکافی</strong><small>اقدام انجام می‌شود؛ مخاطب ممکن است احساس نادیده‌شدن کند.</small></div>'+
+ return '<figure class="s1-matrix-preview s1-scm-matrix" aria-label="ماتریس گرمی و شایستگی با محور افقی شایستگی و محور عمودی گرمی">'+
+ '<figcaption><div><span class="s1-map-eyebrow">🧭 ارتباطات من · مدل علمی</span><h3>ماتریس گرمی × شایستگی</h3><p>مخاطب در برخورد با رئیس شعبه دو چیز را می‌سنجد: «آیا خیرخواه و محترم است؟» و «آیا توانمند و قابل اتکاست؟»</p></div><span class="s1-map-chip">Warmth × Competence</span></figcaption>'+
+ '<div class="s1-scm-axis-y"><span>گرمی بالاتر ↑</span><small>احترام · نیت مثبت · توجه به نگرانی</small></div>'+
+ '<div class="s1-preview-grid s1-scm-grid" role="img" aria-label="چهار خانه ماتریس: بالا چپ گرم و کم‌شایستگی؛ بالا راست گرم و شایسته؛ پایین چپ سرد و کم‌شایستگی؛ پایین راست سرد و شایسته">'+
+  '<div class="s1-preview-cell warm"><span class="s1-preview-icon">💚</span><b>گرمی بالا · شایستگی پایین</b><strong>خوش‌برخورد اما کم‌اثر</strong><small>مشتری احساس احترام می‌کند، اما پاسخ روشن، تسلط یا اقدام قابل اتکا نمی‌بیند.</small></div>'+
+  '<div class="s1-preview-cell balanced"><span class="s1-preview-icon">🤝</span><b>گرمی بالا · شایستگی بالا</b><strong>قابل اعتماد و توانمند</strong><small>هم شنیده می‌شود، هم دقت، مرز اختیار و مسیر رسیدگی را می‌بیند.</small></div>'+
+  '<div class="s1-preview-cell growth"><span class="s1-preview-icon">🧊</span><b>گرمی پایین · شایستگی پایین</b><strong>سرد و کم‌اثر</strong><small>نه احساس احترام و توجه شکل می‌گیرد، نه اعتماد به پاسخ و پیگیری.</small></div>'+
+  '<div class="s1-preview-cell execution"><span class="s1-preview-icon">🎯</span><b>گرمی پایین · شایستگی بالا</b><strong>مسلط اما سرد</strong><small>کار را می‌داند، اما لحن و شیوه برخورد می‌تواند فاصله و بی‌اعتمادی بسازد.</small></div>'+
  '</div>'+
- '<div class="s1-preview-x"><span>پیگیری کمتر</span><b>پیگیری و اقدام روشن‌تر ←</b></div>'+
- '<p class="s1-preview-foot">این نقشه فقط برای فهم دو بُعد رفتاری است؛ نقطه شخصی شما بعد از پاسخ‌دادن به ۱۰ سؤال، در ماتریس نتیجه نشان داده می‌شود.</p>'+
+ '<div class="s1-scm-axis-x"><span>← شایستگی پایین‌تر</span><b>شایستگی بالاتر →</b></div>'+
+ '<div class="s1-scm-facets"><span>💚 <b>گرمی:</b> احترام، همدلی، نیت خیر</span><span>🎯 <b>شایستگی:</b> تسلط، دقت، اثربخشی</span></div>'+
+ '<p class="s1-preview-foot"><b>پشتوانه علمی:</b> Warmth–Competence / Stereotype Content Model، Fiske و همکاران (۲۰۰۲) و Cuddy و همکاران (۲۰۰۸). این چهار خانه برای فهم برداشت مخاطب هستند؛ برچسب شخصیت نیستند. پرسشنامه ده‌سؤالی زیر، تمرینی آموزشی درباره نشانه‌های رفتاری این دو بُعد است و آزمون معتبرِ سنجش ادراک مخاطب محسوب نمی‌شود.</p>'+
  '</figure>';
 }
-
 const s1PresenceReplies=[
  {speech:"«ببینید، تصمیم نهایی با ستاد است. تا جوابشان نیاید، واقعاً چیزی دست من نیست.»",reaction:"مشتری: «این را هر بار به من گفته‌اند. پس من برای چه باید دوباره به شعبه بیایم؟»",insight:"مرز اختیار را صادقانه گفته‌اید؛ اما مسئول پیگیری و زمان اطلاع‌رسانی هنوز معلوم نیست. مشتری احتمالاً این پاسخ را به شکل پاس‌دادن مسئولیت می‌شنود.",better:"«نتیجه را نمی‌توانم از طرف واحد خسارت اعلام کنم؛ اما می‌توانیم همین حالا وضعیت ثبت‌شده و مسئول پیگیری را مشخص کنیم.»",tone:"risk"},
  {speech:"«می‌دانم چند بار پیگیری کرده‌اید و هنوز جواب مشخص نگرفته‌اید. اجازه بدهید اول ببینیم آخرین مدرک شما در سامانه ثبت شده یا نه. نتیجه پرداخت را نمی‌توانم از قبل بگویم، ولی تا ساعت ۱۴ وضعیت پیگیری را به شما اطلاع می‌دهیم؛ حتی اگر پاسخ نهایی هنوز نیامده باشد.»",reaction:"مشتری: «اگر تا دو هم جواب نیامد چی؟ باز باید خودم زنگ بزنم؟»",insight:"تجربه تکرار مراجعه را به رسمیت می‌شناسید، موضوع قابل راستی‌آزمایی را جدا می‌کنید و به‌جای وعده پرداخت، تعهد ارتباطیِ قابل‌کنترل می‌دهید. باید مالک و کانال پیگیری واقعاً مشخص شود.",better:"«اگر پاسخ نهایی نیامده باشد، همان ساعت آخرین وضعیت ثبت‌شده و زمان پیگیری بعدی را خبر می‌دهیم؛ لازم نیست حدس بزنیم.»",tone:"strong"},
@@ -1193,14 +1217,14 @@ function s1PositionHtml(){
  const selected=s1TestAnswers[s1TestIndex];
  return '<div class="s1-panel-head"><div class="bigico">🧭</div><div><h2>ارتباطات من</h2><p>خودارزیابی رفتار ارتباطی رئیس شعبه در موقعیت‌های واقعی</p></div></div>'+
  s1PositionPreviewHtml()+
- '<div class="s1-test-intro"><div class="s1-card"><h3>⚖️ ماتریس گرمی × شایستگی</h3><p>۱۰ سؤال را یکی‌یکی پاسخ دهید. هدف تشخیص الگوی غالب فعلی است، نه برچسب‌زدن شخصیت.</p></div><div class="s1-target"><label>چه کسی را ارزیابی می‌کنید؟</label><select onchange="s1TestTarget=this.value"><option '+(s1TestTarget==="خودم به‌عنوان رئیس شعبه"?"selected":"")+'>خودم به‌عنوان رئیس شعبه</option><option '+(s1TestTarget==="کارکنان شعبه من، به‌طور کلی"?"selected":"")+'>کارکنان شعبه من، به‌طور کلی</option><option '+(s1TestTarget==="رؤسای شعب بیمه البرز، به‌صورت کلی"?"selected":"")+'>رؤسای شعب بیمه البرز، به‌صورت کلی</option></select></div></div>'+
+ '<div class="s1-test-intro"><div class="s1-card"><h3>✍️ نشانه‌های رفتاری من</h3><p>۱۰ پرسش درباره نشانه‌های گرمی و شایستگی در تعامل با مشتری و کارکنان؛ نتیجه یک راهنمای تمرین فردی است، نه برچسب شخصیتی.</p></div><div class="s1-target"><label>چه کسی را ارزیابی می‌کنید؟</label><select onchange="s1TestTarget=this.value"><option '+(s1TestTarget==="خودم به‌عنوان رئیس شعبه"?"selected":"")+'>خودم به‌عنوان رئیس شعبه</option><option '+(s1TestTarget==="کارکنان شعبه من، به‌طور کلی"?"selected":"")+'>کارکنان شعبه من، به‌طور کلی</option><option '+(s1TestTarget==="رؤسای شعب بیمه البرز، به‌صورت کلی"?"selected":"")+'>رؤسای شعب بیمه البرز، به‌صورت کلی</option></select></div></div>'+
  '<div class="s1-callout"><b>راهنما:</b> رفتار واقعی معمول را بسنجید، نه تصویر ایده‌آل را.</div>'+
  '<div class="s1-stepper"><div class="s1-step-head"><span class="s1-step-count">سؤال '+(s1TestIndex+1)+' از ۱۰</span><div class="s1-progress"><span style="width:'+((s1TestIndex+1)*10)+'%"></span></div></div>'+
  '<div class="s1-step-q">'+q.t+'</div>'+
  '<div class="s1-big-scale">'+[1,2,3,4,5].map(v=>'<button class="'+(selected===v?"selected":"")+'" onclick="answerS1('+v+')">'+v+'</button>').join('')+'</div>'+
  '<div style="font-size:13px;color:#6a7d73;margin-top:8px;display:flex;justify-content:space-between"><span>۱ = تقریباً هرگز</span><span>۵ = تقریباً همیشه</span></div>'+
  '<div class="s1-step-nav"><button onclick="moveS1Question(-1)" '+(s1TestIndex===0?"disabled":"")+'>قبلی</button>'+(s1TestIndex<9?'<button class="primary" onclick="moveS1Question(1)" '+(selected==null?"disabled":"")+'>بعدی</button>':'<button class="primary" onclick="scoreS1()" '+(selected==null?"disabled":"")+'>📍 نمایش نتیجه</button>')+'</div></div>'+
- '<div id="s1-result" class="s1-result"><div class="s1-scores"><div class="s1-score"><b id="s1-wscore">—</b><span>شنیدن و توجه به مخاطب / ۵</span></div><div class="s1-score"><b id="s1-cscore">—</b><span>پیگیری و روشن‌کردن اقدام / ۵</span></div></div><div class="s1-matrix" id="s1-matrix"><div class="s1-cell"><b>شنیدن بیشتر، پیگیری کمتر</b><span>نیاز به اقدام بعدی روشن</span></div><div class="s1-cell"><b>شنیدن و پیگیری بیشتر</b><span>نیاز به حفظ و تقویت در عمل</span></div><div class="s1-cell"><b>هر دو نیازمند تمرین</b><span>از یک رفتار کوچک آغاز کنید</span></div><div class="s1-cell"><b>پیگیری بیشتر، شنیدن کمتر</b><span>نیاز به توجه و پرسش بیشتر</span></div><div id="s1-dot" class="s1-dot"></div></div><div class="s1-axis-x">← پیگیری کمتر &nbsp;&nbsp; پیگیری و اقدام &nbsp;&nbsp; بالاتر →</div><div id="s1-profile" class="s1-callout"></div></div>';
+ '<div id="s1-result" class="s1-result"><div class="s1-scores"><div class="s1-score"><b id="s1-wscore">—</b><span>گرمی (توجه، احترام و همراهی) / ۵</span></div><div class="s1-score"><b id="s1-cscore">—</b><span>شایستگی (دقت، وضوح و اقدام) / ۵</span></div></div><div class="s1-matrix" id="s1-matrix"><div class="s1-cell"><b>گرمی بالا، شایستگی پایین</b><span>خوش‌برخورد اما کم‌اثر</span></div><div class="s1-cell"><b>گرمی بالا، شایستگی بالا</b><span>توانمند و همراه</span></div><div class="s1-cell"><b>گرمی و شایستگی پایین</b><span>نیاز به تقویت هر دو بُعد</span></div><div class="s1-cell"><b>شایستگی بالا، گرمی پایین</b><span>مسلط اما سرد</span></div><div id="s1-dot" class="s1-dot"></div></div><div class="s1-axis-x">← شایستگی کمتر &nbsp;&nbsp; شایستگی ادراک‌شده &nbsp;&nbsp; بیشتر →</div><div id="s1-profile" class="s1-callout"></div></div>';
 }
 function answerS1(v){s1TestAnswers[s1TestIndex]=v;document.getElementById("s1-content").innerHTML=s1PositionHtml();}
 function moveS1Question(delta){const next=s1TestIndex+delta;if(next<0||next>9)return;if(delta>0&&s1TestAnswers[s1TestIndex]==null)return;s1TestIndex=next;document.getElementById("s1-content").innerHTML=s1PositionHtml();}
@@ -1354,8 +1378,8 @@ function scoreS1(){
  const main=low.slice(0,2);const high=[...low].reverse().slice(0,2);
  const isOther=s1TestTarget!=="خودم به‌عنوان رئیس شعبه";
  const esc=s1TechEscape;
- const label=(warmth>=3.5&&follow>=3.5)?"رفتارهای ارتباطی متوازن‌تر در این خودارزیابی":warmth<3.5&&follow>=3.5?"پیگیری و نظم قوی‌تر از شنیدن و همراهی":warmth>=3.5&&follow<3.5?"شنیدن و توجه قوی‌تر از تعیین اقدام بعد":"دو حوزه شنیدن و پیگیری، نیازمند تمرین بیشتر";
- const base='<div class="s1-result-lead"><h3>الگوی گزارش‌شده شما</h3><p>'+label+'</p><small>این نمودار فقط پاسخ‌های خودتان را در دو گروه پنج‌سؤالی نشان می‌دهد؛ نمره استاندارد شخصیت، میزان واقعی اعتماد مشتری یا شایستگی حرفه‌ای نیست. برای اطمینان باید بازخورد همکاران و مشاهده رفتار واقعی هم بررسی شود.</small></div>';
+ const label=(warmth>=3.5&&follow>=3.5)?"نشانه‌های گرمی و شایستگی هر دو بیشتر گزارش شده‌اند":warmth<3.5&&follow>=3.5?"نشانه‌های شایستگی قوی‌تر از گرمی گزارش شده‌اند":warmth>=3.5&&follow<3.5?"نشانه‌های گرمی قوی‌تر از شایستگی گزارش شده‌اند":"نشانه‌های گرمی و شایستگی هر دو نیازمند تمرین بیشترند";
+ const base='<div class="s1-result-lead"><h3>الگوی گزارش‌شده شما</h3><p>'+label+'</p><small>این نمودار فقط خودگزارشی رفتارها در دو گروه پنج‌سؤالی را نشان می‌دهد؛ سنجش استاندارد گرمی/شایستگی ادراک‌شده، شخصیت، یا میزان واقعی اعتماد مشتری نیست. برای اطمینان باید بازخورد همکاران و مشاهده رفتار واقعی هم بررسی شود.</small></div>';
  const strongest='<div class="s1-result-block"><h4>✅ رفتارهایی که بیشتر گزارش کرده‌اید</h4><ul>'+high.map(x=>'<li><b>'+esc(x.info.title)+'</b> — پاسخ شما: '+x.v.toLocaleString("fa-IR")+' از ۵</li>').join('')+'</ul></div>';
  const weakest='<div class="s1-result-block"><h4>🎯 دو اولویت تمرین برای شما</h4>'+main.map((x,i)=>'<div class="s1-result-practice"><b>'+(i+1).toLocaleString("fa-IR")+'. '+esc(x.info.title)+'</b><p>'+esc(x.info.action)+'</p><small>شاخص مشاهده: '+esc(x.info.metric)+'</small></div>').join('')+'</div>';
  const caveat=isOther?'<div class="s1-assess-note">شما گروه دیگری را انتخاب کرده‌اید، اما پرسش‌ها درباره رفتار شخصی «من» نوشته شده‌اند؛ بنابراین این نتیجه فقط برداشت شماست و ارزیابی واقعی کارکنان یا سایر رؤسای شعب محسوب نمی‌شود.</div>':"";
