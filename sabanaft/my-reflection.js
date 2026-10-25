@@ -8,11 +8,11 @@ function fresh(){return {step:1,caseId:'',moment:'challenge',event:'',role:'',ac
 function clean(v,n){return typeof v==='string'?v.slice(0,n||1800):'';}
 function esc(v){return String(v===undefined||v===null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function normalized(x){var d=fresh();if(!x||typeof x!=='object')return d;fields.forEach(function(k){d[k]=clean(x[k],k==='event'||k==='action'||k==='outcome'?1800:900);});d.step=[1,2,3,4].includes(x.step)?x.step:1;if(!roleNames[d.role])d.role='';if(!['challenge','success','surprise','ordinary'].includes(d.moment))d.moment='challenge';if(!['self','feedback','document','none'].includes(d.source))d.source='self';if(!['yes','no','unsure'].includes(d.contextChanged))d.contextChanged='unsure';if(!['self','ai','human'].includes(d.support))d.support='self';return d;}
-function restore(state,raw){var x=raw&&raw.daily||{};state.daily={draft:normalized(x.draft),items:Array.isArray(x.items)?x.items.slice(-160).filter(function(v){return v&&typeof v==='object'&&typeof v.id==='string';}).map(function(v){var o=normalized(v);o.id=clean(v.id,48);o.date=clean(v.date,12);o.createdAt=clean(v.createdAt,50);return o;}):[]};}
+function restore(state,raw){var x=raw&&raw.daily||{};state.daily={draft:normalized(x.draft),items:Array.isArray(x.items)?x.items.filter(function(v){return v&&typeof v==='object'&&typeof v.id==='string';}).map(function(v){var o=normalized(v);o.id=clean(v.id,48);o.date=clean(v.date,12);o.createdAt=clean(v.createdAt,50);o.followedUpAt=clean(v.followedUpAt,50);return o;}):[]};}
 function getDaily(state){if(!state.daily)state.daily={draft:fresh(),items:[]};return state.daily;}
 function bridge(){return window.SabanaftLeadershipStudio&&window.SabanaftLeadershipStudio.dailyBridge;}
 function data(){return bridge()&&bridge().state();}
-function persist(){if(bridge())bridge().save();}
+function persist(){return bridge()?bridge().save():false;}
 function redraw(){if(bridge())bridge().render();}
 function message(t){if(bridge())bridge().toast(t);}
 function go(t){if(bridge())bridge().go(t);}
@@ -52,7 +52,7 @@ var stages=[stage1,stage2,stage3,stage4];
 function history(s){var arr=getDaily(s).items;if(!arr.length)return '<div class="rfx-empty">هنوز بازاندیشی ثبت نکرده‌اید. با یک لحظه واقعی امروز شروع کنید.</div>';
 return arr.slice().reverse().slice(0,8).map(function(d){var date=d.createdAt?localDate(new Date(d.createdAt)):esc(d.date);return '<details class="rfx-record"><summary><b>'+esc(date)+'</b><span>'+(roleNames[d.role]||'')+' · '+esc((d.event||(linkCase(s,d)&&linkCase(s,d).title)||'بازاندیشی').slice(0,45))+'</span></summary><div><p><b>رفتار:</b> '+esc(d.action||'—')+'</p><p><b>نتیجه:</b> '+esc(d.outcome||'—')+'</p><p><b>یادگیری:</b> '+esc(d.lesson||'—')+'</p><p><b>اقدام:</b> '+esc(d.next||'—')+'</p></div></details>';}).join('');}
 function render(s){var store=getDaily(s),d=store.draft||fresh(),date=dateKey();var todayCount=store.items.filter(function(x){return x.date===date;}).length;var steps=['لحظه مهم','رفتار و نقش','اثر و شواهد','یادگیری و اقدام'];
-var due=store.items.filter(function(x){return x.reviewDate&&x.reviewDate<=date;}).slice(-3).reverse();var displayName=s.profile&&s.profile.name?esc(s.profile.name.split(' ')[0]):'مدیر گرامی';
+var due=store.items.filter(function(x){return x.reviewDate&&x.reviewDate<=date&&!x.followedUpAt;}).slice(-3).reverse();var displayName=s.profile&&s.profile.name?esc(s.profile.name.split(' ')[0]):'مدیر گرامی';
 var stage=stages[d.step-1]||stage1;
 return '<section class="rfx-hero"><span class="rfx-overline">MY REFLECTION · DAILY LEADERSHIP PRACTICE</span><h1>'+displayName+'، امروز درباره رهبری خود چه چیزی آموختید؟</h1><p>از یک لحظه واقعی تا یک Next Best Step. بدون تست شخصیت، امتیازدهی یا گزارش اجباری.</p><div class="rfx-meta"><span>◷ حدود ۳ دقیقه</span><span>'+localDate(new Date())+'</span><span>🔒 ذخیره محلی</span></div></section>'+
 '<div class="rfx-metrics"><div><small>بازاندیشی‌های من</small><b>'+store.items.length+'</b></div><div><small>بازاندیشی امروز</small><b>'+todayCount+'</b></div><div><small>گام جاری</small><b>'+d.step+' / ۴</b></div></div>'+
@@ -60,7 +60,7 @@ return '<section class="rfx-hero"><span class="rfx-overline">MY REFLECTION · DA
 '<aside class="span4 card rfx-mirror"><span class="rfx-overline">REFLECTION MIRROR</span><h2>یک پرسش برای فکرکردن</h2><p class="muted">این پرسش‌ها براساس رفتار شما و اطلاعات کیس ساخته می‌شوند؛ نتیجه قطعی نیستند.</p>'+
 (d.role?'<div class="rfx-role"><i style="background:'+colors[d.role]+'"></i> نقش ثبت‌شده: '+roleNames[d.role]+'</div>':'<p class="rfx-soft">در گام دوم نقش واقعی را انتخاب کنید.</p>')+prompt(s,d).map(function(p){return '<div class="rfx-prompt">◈ '+esc(p)+'</div>';}).join('')+
 '<div class="rfx-links"><button type="button" data-rfx-go="mix" class="btn light sm">Leadership Idea</button><button type="button" data-rfx-go="context" class="btn light sm">Context</button></div><p class="rfx-confidential">این یادداشت به‌طور خودکار برای سازمان، منابع انسانی یا کوچ ارسال نمی‌شود.</p></aside></div>'+
-'<div class="grid"><section class="span8 card"><div class="title-row"><h2>Reflection History</h2><span class="small">۸ بازاندیشی اخیر</span></div>'+history(s)+'</section><aside class="span4 card"><h2>Follow-through</h2>'+(due.length?due.map(function(x){return '<div class="rfx-prompt"><small>مرور از '+esc(x.reviewDate)+'</small><p>'+esc(x.next||x.lesson||'بازبینی تصمیم')+'</p></div>';}).join(''):'<p class="muted">پس از ثبت یک Next Best Step می‌توانید موعد بازاندیشی بعدی را تعیین کنید. اعلان خودکار هنوز فعال نیست.</p>')+'<button type="button" data-rfx-go="portfolio" class="btn light sm">دریافت گزارش شخصی</button></aside></div>'+
+'<div class="grid"><section class="span8 card"><div class="title-row"><h2>Reflection History</h2><span class="small">۸ بازاندیشی اخیر</span></div>'+history(s)+'</section><aside class="span4 card"><h2>Follow-through</h2>'+(due.length?due.map(function(x){return '<div class="rfx-prompt"><small>موعد بازاندیشی: '+esc(x.reviewDate)+'</small><p>'+esc(x.next||x.lesson||'بازبینی تصمیم')+'</p><button type="button" data-rfx-follow="'+esc(x.id)+'" class="btn light sm">✓ مرور شد</button></div>';}).join(''):'<p class="muted">پس از ثبت یک Next Best Step می‌توانید موعد بازاندیشی بعدی را تعیین کنید. اعلان خودکار هنوز فعال نیست.</p>')+'<button type="button" data-rfx-go="portfolio" class="btn light sm">دریافت گزارش شخصی</button></aside></div>'+
 '<p class="rfx-citation">مبنای مفهومی: Armin Trost, The Reflective Leader (2025), فصل‌های ۴، ۸، ۹ و ۱۱. یادداشت شخصی جایگزین بازخورد واقعی کارکنان نیست.</p>';
 }
 function check(d,step){
@@ -72,7 +72,8 @@ return '';
 }
 document.addEventListener('input',function(e){var x=e.target;if(!x.dataset.rfxField)return;var s=data();if(!s)return;getDaily(s).draft[x.dataset.rfxField]=clean(x.value,1800);persist();});
 document.addEventListener('change',function(e){var x=e.target;if(!x.dataset.rfxField)return;var s=data();if(!s)return;getDaily(s).draft[x.dataset.rfxField]=clean(x.value,1800);persist();if(['source','contextChanged','support','caseId'].includes(x.dataset.rfxField))redraw();});
-document.addEventListener('click',function(e){var x=e.target.closest('[data-rfx-choice],[data-rfx-step],[data-rfx-prev],[data-rfx-next],[data-rfx-reset],[data-rfx-go],[data-rfx-from-case]');if(!x)return;var s=data();if(!s)return;var d=getDaily(s).draft;
+document.addEventListener('click',function(e){var x=e.target.closest('[data-rfx-choice],[data-rfx-step],[data-rfx-prev],[data-rfx-next],[data-rfx-reset],[data-rfx-go],[data-rfx-from-case],[data-rfx-follow]');if(!x)return;var s=data();if(!s)return;var d=getDaily(s).draft;
+if(x.dataset.rfxFollow){var item=getDaily(s).items.find(function(v){return v.id===x.dataset.rfxFollow;});if(!item)return;item.followedUpAt=new Date().toISOString();if(!persist()){item.followedUpAt='';message('ذخیره این مرور ممکن نشد. خروجی پشتیبان تهیه کنید.');return;}redraw();message('پیگیری مرور شد.');return;}
 if(x.dataset.rfxFromCase){d.caseId=x.dataset.rfxFromCase;d.step=1;persist();go('daily');return;}
 if(x.dataset.rfxChoice){d[x.dataset.rfxChoice]=x.dataset.rfxValue;persist();redraw();return;}
 if(x.dataset.rfxGo){go(x.dataset.rfxGo);return;}
@@ -82,7 +83,7 @@ if(x.dataset.rfxStep){var n=Number(x.dataset.rfxStep);if(n>d.step){var m=check(d
 if(x.hasAttribute('data-rfx-next')){var issue=check(d,d.step);if(issue){message(issue);return;}d.step=Math.min(d.step+1,4);persist();redraw();}
 });
 document.addEventListener('submit',function(e){if(e.target.id!=='rfx-form')return;e.preventDefault();var s=data();if(!s)return;var d=getDaily(s).draft;for(var i=1;i<=4;i++){var err=check(d,i);if(err){d.step=i;persist();redraw();message(err);return;}}
-var date=new Date(),item=normalized(d);item.id='rfx'+date.getTime().toString(36)+Math.random().toString(36).slice(2,6);item.date=dateKey(date);item.createdAt=date.toISOString();s.daily.items.push(item);s.daily.items=s.daily.items.slice(-160);s.daily.draft=fresh();persist();redraw();message('بازاندیشی شما ذخیره شد.');
+var date=new Date(),item=normalized(d);item.id='rfx'+date.getTime().toString(36)+Math.random().toString(36).slice(2,6);item.date=dateKey(date);item.createdAt=date.toISOString();s.daily.items.push(item);s.daily.draft=fresh();if(!persist()){s.daily.items.pop();s.daily.draft=d;message('ذخیره مرورگر در دسترس نیست؛ اطلاعات پیش‌نویس را از دست ندهید و از بسته شخصی خروجی بگیرید.');return;}redraw();message('بازاندیشی شما ذخیره شد.');
 });
 window.SabaDailyReflection={render:render,restore:restore,fresh:fresh};
 })();
