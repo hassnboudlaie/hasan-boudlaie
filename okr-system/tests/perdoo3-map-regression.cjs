@@ -41,4 +41,15 @@ assert.ok(!out.includes('<img src=x'),'XSS-sensitive title is escaped');
 data=fixture();data.strategy.pillars=[{id:'p1',title:'A',parentId:'p2'},{id:'p2',title:'B',parentId:'p1'}];
 out=window.KishMapView.render(data);
 assert.ok(out.includes('ساختار ارکان دارای چرخه'),'cycles do not recurse forever');
-console.log('PASS 10 Kish Map regression assertions');
+// Cross-view parity: same Objective must produce the same progress on Team and Map.
+const teamJs=fs.readFileSync(path.join(__dirname,'..','assets','kish-team-dashboard-20261025.js'),'utf8');
+document.documentElement={lang:'fa'};
+vm.runInNewContext(teamJs,{window,document,Intl,Date,Set,Map,Number,String,Math,Object,Array,encodeURIComponent},{filename:'kish-team-dashboard-20261025.js',timeout:5000});
+const cross=fixture().goals[0];
+assert.equal(window.KishTeamView.progress(cross),25,'Map and Team weighted agreement');
+cross.progressMode='average';
+assert.equal(window.KishTeamView.progress(cross),50,'Map and Team default average agreement');
+cross.progressMode='weighted';
+delete cross.krs[0].weight;
+assert.equal(window.KishTeamView.progress(cross),null,'Unknown weight is consistent across views');
+console.log('PASS Kish Map and Team cross-view regression suite');
