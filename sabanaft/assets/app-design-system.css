@@ -874,3 +874,78 @@ html,body{background:var(--saba-cream);color:var(--saba-ink);font-size:16px}
 @media(prefers-reduced-motion:reduce){
   .up-home,.ed-home{animation:none!important}
 }
+
+/* Product UX: the primary task stays visible; optional science and roadmap
+   remain reachable without becoming the default focus. */
+.ux-coach-primary{
+  background:linear-gradient(125deg,#ffffff,#fffaf5);
+  border:1px solid #d5dedf;
+  padding:clamp(23px,3vw,37px);
+  min-height:285px;
+}
+.ux-coach-primary h2{font-size:clamp(23px,2.5vw,31px);color:#152f43;line-height:1.5}
+.ux-coach-primary p{font-size:15px;line-height:2;color:#405767}
+.ux-coach-primary .ux-tile-icon{
+  display:grid;place-items:center;width:66px;height:66px;
+  border-radius:16px;background:#ffe9d6;color:#9b5c36;font-size:32px;
+  margin-bottom:16px;
+}
+.ux-coach-primary .form-actions{margin:20px 0 10px}
+.ux-coach-options,.ux-org-advanced{
+  background:#fdfcf8;box-shadow:none;border:1px solid #dce2e3;
+  padding:17px 20px;
+}
+.ux-coach-options summary,.ux-org-advanced summary{
+  cursor:pointer;font-size:15px;line-height:1.8;
+  font-weight:900;color:#213e51;
+  min-height:46px;padding:9px 0;
+}
+.ux-coach-options[open] summary,.ux-org-advanced[open] summary{
+  border-bottom:1px solid #e2e7e6;margin-bottom:16px
+}
+.ux-coach-options .ux-service{
+  background:transparent;border:0;border-bottom:1px solid #e4e8e7;
+  padding:11px 0;border-radius:0;box-shadow:none;
+}
+.ux-coach-options .ux-service:last-child{border-bottom:0}
+.ux-coach-options h3{font-size:16px;color:#1a3a50;line-height:1.6}
+.ux-coach-options p,.ux-org-advanced p{font-size:13px;color:#456071;line-height:1.9}
+.ux-org-advanced h2{font-size:18px}
+.ux-org-advanced .ux-report-stack{margin-block:10px}
+.rfx-progress-disclosure{
+  background:#fffdf9;border:1px solid #d9e1e3;
+  border-radius:13px;padding:9px 17px;
+  margin-top:15px;
+}
+.rfx-progress-disclosure summary,.rfx-guidance-details summary{
+  cursor:pointer;font-size:14px;font-weight:900;line-height:1.9;
+  color:#284b63;min-height:42px;padding:9px 0;
+}
+.rfx-progress-disclosure .rfx-metrics{margin:8px 0 12px}
+.rfx-progress-disclosure .rfx-metrics>div{min-height:76px}
+.rfx-guidance-details{width:100%}
+.rfx-guidance-details[open]>summary,.rfx-progress-disclosure[open]>summary{
+  border-bottom:1px solid #e1e8e8;margin-bottom:10px;
+}
+.rfx-mirror{min-height:0;align-self:start;background:#fffdf9}
+.rfx-mirror .rfx-overline{display:block;margin:10px 0 4px}
+.rfx-mirror h2{font-size:20px}
+.rfx-main .rfx-steps{margin-top:15px}
+.rfx-main .rfx-buttons{margin-top:19px}
+.rfx-main .rfx-buttons .btn{min-height:47px}
+@media(max-width:760px){
+  .ux-coach-primary{padding:22px 18px;min-height:0}
+  .ux-coach-primary h2{font-size:22px}
+  .ux-coach-primary p{font-size:14px}
+  .ux-coach-primary .form-actions{display:flex;flex-direction:column}
+  .ux-coach-primary .form-actions button{width:100%}
+  .ux-coach-options,.ux-org-advanced{padding:13px 16px}
+  .rfx-progress-disclosure{margin-top:11px;padding:8px 12px}
+  .rfx-progress-disclosure .rfx-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rfx-progress-disclosure .rfx-metrics>div{
+    min-height:70px;padding:10px 7px;display:flex;flex-direction:column;
+    gap:4px;align-items:center;justify-content:center;text-align:center;
+  }
+  .rfx-progress-disclosure .rfx-metrics small{font-size:11px}
+  .rfx-progress-disclosure .rfx-metrics b{font-size:22px}
+}
