@@ -927,6 +927,35 @@ function s1StakeAnswer(btn,index,key){
  box.querySelector(".s1-stake-analysis").hidden=false;
 }
 
+
+const s1DistanceZones=[
+ {icon:"👥",name:"عمومی",range:"بیش از ۳٫۷ متر",description:"برای سخنرانی کوتاه، آموزش گروهی یا راهنمایی جمع؛ محل مناسبی برای بحث جزئیات خسارت نیست."},
+ {icon:"🤝",name:"اجتماعی / کاری",range:"۱٫۲ تا ۳٫۷ متر",description:"برای ملاقات حرفه‌ای با بیمه‌گذار، نماینده یا مدیر شرکت؛ فاصله قابل تغییر با میز، شرایط فضا و ترجیح طرف مقابل."},
+ {icon:"🧍",name:"شخصی",range:"۴۵ سانتی‌متر تا ۱٫۲ متر",description:"نزدیک‌شدن برای نشان‌دادن یک سند، بدون ضرورت و توجه به راحتی مخاطب، ممکن است مزاحم باشد؛ بهتر است سند را روی میز یا نمایشگر نشان دهید."},
+ {icon:"🚫",name:"بسیار نزدیک / صمیمی",range:"کمتر از ۴۵ سانتی‌متر",description:"معمولاً برای گفت‌وگوی کاری شعبه مناسب نیست؛ به‌ویژه تماس بدنی یا ایستادن بسیار نزدیک کنار مشتری."}
+];
+function s1DistanceDiagramHtml(){
+ return '<section class="s1-distance"><div class="s1-distance-head"><span>📐 Proxemics · نمودار آموزشی</span><h3>چهار حریم فاصله در ملاقات حضوری</h3><p>هر ناحیه را انتخاب کنید؛ مثال بیمه‌ای همان‌جا نمایش داده می‌شود.</p></div>'+
+ '<div class="s1-distance-layout"><div class="s1-distance-diagram" role="img" aria-label="نمودار حلقه‌ای چهار ناحیه صمیمی، شخصی، اجتماعی و عمومی">'+
+ '<div class="s1-distance-ring outer"><div class="s1-distance-ring middle"><div class="s1-distance-ring inner"><div class="s1-distance-ring core">🧍</div></div></div></div>'+
+ '<small>حلقه‌ها شماتیک‌اند؛ مقیاس دقیق ندارند.</small></div>'+
+ '<div class="s1-distance-controls">'+s1DistanceZones.map((z,i)=>'<button type="button" class="s1-distance-choice '+(i===1?'selected':'')+'" data-s1-distance="'+i+'" aria-pressed="'+(i===1)+'"><strong>'+z.icon+' '+z.name+'</strong><span>'+z.range+'</span></button>').join('')+'</div></div>'+
+ '<div class="s1-distance-detail" id="s1-distance-detail"><b>'+s1DistanceZones[1].name+' · '+s1DistanceZones[1].range+'</b><p>'+s1DistanceZones[1].description+'</p></div>'+
+ '<p class="s1-distance-disclaimer"><b>نکته علمی:</b> بازه‌ها تقریب‌های مدل کلاسیک ادوارد تی. هال هستند، نه استاندارد قطعی رفتار. فرهنگ، محیط، رابطه، محدودیت حرکتی و رضایت مخاطب می‌تواند فاصله مناسب را تغییر دهد؛ از فاصله برای تشخیص شخصیت یا دروغ استفاده نکنید.</p>'+
+ '<details class="s1-distance-privacy"><summary>🔐 حریم فیزیکی و حریم اطلاعاتی چه تفاوتی دارند؟</summary><div>'+
+ '<article><b>🏢 عمومی شعبه</b><p>پذیرش، نوبت و اطلاعات عمومی خدمات؛ بدون بیان مبلغ خسارت یا وضعیت پزشکی مشتری در جمع.</p></article>'+
+ '<article><b>🪑 نیمه‌خصوصی</b><p>گفت‌وگو در میز مشاوره با کنترل صدا و زاویه نمایشگر؛ مراقب شنیده‌شدن یا دیده‌شدن پرونده توسط دیگران باشید.</p></article>'+
+ '<article><b>🚪 خصوصی / محرمانه</b><p>جزئیات خسارت، مسائل سلامت، اختلاف کارکنان یا داده‌های قرارداد در فضای مناسب و با دسترسی و احراز هویت مجاز مطرح شوند.</p></article>'+
+ '</div></details>'+
+ '<div class="s1-distance-mini"><b>💬 مثال کلاسی:</b> مشتری با صدای بلند مبلغ خسارت خود را در سالن می‌گوید. جمله حرفه‌ای رئیس شعبه: «اعتراض شما را حتماً بررسی می‌کنیم. چون جزئیات پرونده شخصی است، اگر موافقید در فضای مناسب ادامه بدهیم؛ این کار برای حفظ اطلاعات شماست.»</div>'+
+ '</section>';
+}
+function s1ChooseDistance(btn,n){
+ const z=s1DistanceZones[n],panel=document.getElementById("s1-distance-detail");if(!z||!panel)return;
+ panel.innerHTML="<b>"+z.icon+" "+z.name+" · "+z.range+"</b><p>"+z.description+"</p>";
+ document.querySelectorAll("[data-s1-distance]").forEach(b=>{b.classList.toggle("selected",b===btn);b.setAttribute("aria-pressed",String(b===btn))});
+}
+
 function s1SectionHtml(id){
 
  if(id==="start") return '<div class="s1-start s1-open-v4">'+
@@ -981,6 +1010,7 @@ function s1SectionHtml(id){
  '<div class="s1-takeaway">💡 نکته کلیدی: نتیجه اولین برخورد همیشه در اختیار شما نیست؛ اما سلام‌کردن، روشن‌کردن نوبت و ادامه پیگیری در اختیار شماست.</div>';
 
  if(id==="etiquette") return '<div class="s1-panel-head"><div class="bigico">🤝</div><div><h2>آداب حرفه‌ای و فاصله مناسب</h2><p>آداب حرفه‌ای و فاصله مناسب</p></div></div>'+
+ s1DistanceDiagramHtml()+
  '<div class="s1-card-grid"><div class="s1-card"><span class="mini-emoji">🧊</span><h3>رسمیت بیش از حد</h3><p>وقتی کارمند برای مطرح‌کردن مشکل وارد اتاق می‌شود و شما بدون شنیدن موضوع فقط می‌گویید «مکتوب کنید»، ممکن است دفعه بعد هشدار مهمی را هم مطرح نکند. اگر زمان ندارید، علت را کوتاه بگویید و ساعت مشخصی برای شنیدن تعیین کنید.</p></div><div class="s1-card"><span class="mini-emoji">😄</span><h3>صمیمیت بیش از حد</h3><p>اگر نماینده قدیمی مقابل کارکنان با شوخی از شما بخواهد بدون طی مراحل قانونی پرونده‌اش را جلو بیندازید، صمیمیت گذشته نباید روی تصمیم شما اثر بگذارد. رابطه محترمانه می‌ماند؛ ضابطه تغییر نمی‌کند.</p></div></div>'+
  '<div class="s1-quote" style="margin-top:16px">با مراجعه‌کننده سلام و ارتباط روشن داشته باشید؛ با همکار فرصت طرح مسئله فراهم کنید؛ به نماینده درباره درخواست خارج از اختیار، محترمانه و با دلیل «نه» بگویید؛ به جای دستور دادن، مسئول و زمان پیگیری را مشخص کنید.</div>'+
  '<details class="s1-accordion"><summary>👋 خطاب و معرفی</summary><div class="inside"><b>کاربرد:</b> عنوان مناسب، معرفی روشن و پرهیز از کوچک‌کردن جایگاه افراد.<br><b>خطای رایج:</b> خطاب‌کردن کارمند تازه‌وارد فقط با نام کوچک در حضور مشتری، یا استفاده مداوم از عناوین طولانی در یک گفت‌وگوی کاری کوتاه.<br><b>تمرین:</b> برای نماینده باسابقه و مدیر ستادی، دو جمله متفاوت بنویسید که در هرکدام نام یا سمت، هدف مراجعه و گام بعد روشن باشد.</div></details>'+
@@ -1088,6 +1118,7 @@ function session1Page(){
    else if(target.hasAttribute("data-s1-presence-follow"))s1PresenceFollow(target,Number(target.dataset.s1PresenceFollow));
    else if(target.hasAttribute("data-s1-stake-case"))s1StakeSwitch(target,target.dataset.s1StakeCase);
    else if(target.hasAttribute("data-s1-stake-choice"))s1StakeAnswer(target,Number(target.dataset.s1StakeChoice),target.dataset.s1StakeKey);
+   else if(target.hasAttribute("data-s1-distance"))s1ChooseDistance(target,Number(target.dataset.s1Distance));
   });
  }
  const initialSection=new URLSearchParams(location.search).get("section");
