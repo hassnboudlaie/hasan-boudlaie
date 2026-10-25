@@ -3,7 +3,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const faNum=v=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1}).format(v);
+const faNum=v=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1,useGrouping:false}).format(v);
 const months=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const state={zoom:1,year:'all',showUnassigned:true,collapsed:new Set(),mapView:'strategy'};
 function jParts(s){
@@ -53,7 +53,7 @@ function owner(owner,people){
  const name=person?.name||owner||'مسئول تعیین نشده';
  const image=person?.photoUrl||person?.avatarUrl||person?.avatar||person?.photo||'';
  const initials=String(name).trim().slice(0,2)||'؟';
- return '<span class="km-person" title="'+esc(name)+'">'+(image&&/^https:\/\//.test(String(image))?'<img class="km-avatar" src="'+esc(image)+'" alt="" loading="lazy">':'<span class="km-avatar km-initial">'+esc(initials)+'</span>')+'<span class="km-person-name">'+esc(name)+'</span></span>';
+ return '<a class="km-person" href="#people/'+encodeURIComponent(person?.id||owner||'company')+'" title="'+esc(name)+'">'+(image&&/^https:\/\//.test(String(image))?'<img class="km-avatar" src="'+esc(image)+'" alt="" loading="lazy">':'<span class="km-avatar km-initial">'+esc(initials)+'</span>')+'<span class="km-person-name">'+esc(name)+'</span></a>';
 }
 function unit(g,teams){
  const t=teams.find(t=>t.okrs?.some(o=>o.id===g.id));
@@ -79,7 +79,7 @@ function goalCard(g,source,opts={}){
   '<div class="km-goal-bottom"><button type="button" class="km-progress" data-km-action="progress" data-id="'+esc(g.id)+'" title="نمایش مبنای محاسبه پیشرفت">'+(p.n===null?'—':faNum(p.n)+'٪')+'</button>'+
   '<span class="km-submeta">'+faNum(p.count)+' از '+faNum(p.total)+' نتیجه سنجیده</span></div>'+
   (p.n!==null?'<div class="km-progress-track"><i style="width:'+p.n+'%"></i></div>':'')+
-  '<div class="km-tail"><a href="#goals/'+target+'">'+faNum(krCount)+' نتیجه کلیدی</a><span>·</span><a href="#projects">'+faNum(projects.length)+' ابتکار</a>'+
+  '<div class="km-tail"><a href="#goals/'+target+'">'+faNum(krCount)+' نتیجه کلیدی</a><span>·</span><a href="#goals/'+target+'" title="مشاهده ابتکارات مرتبط">'+faNum(projects.length)+' ابتکار</a>'+
   (descendants?'<span class="km-child-count">'+faNum(descendants)+' هدف متصل</span>':'')+'</div>'+
   (last?'<div class="km-last">'+last+'</div>':'')+
   '</article>';
@@ -130,8 +130,8 @@ function renderLane(p,data,goalMap,cycleMap,pillarIds){
    used.add(a.id);
    const desc=qtrs.filter(g=>g.parentId===a.id);
    desc.forEach(g=>used.add(g.id));
-   return '<div class="km-annual-branch"><div class="km-parent">'+goalCard(a,data,{year:true})+'</div>'+
-    (desc.length?'<div class="km-branch-line"></div><div class="km-quarter-grid">'+desc.map(g=>goalCard(g,data,{quarter:true})).join('')+'</div>':
+   return '<div class="km-annual-branch"><div class="km-parent">'+goalCard(a,data,{year:true})+'</div>'+(desc.length?'<button class="km-collapse" type="button" data-km-collapse="'+esc(a.id)+'">'+(state.collapsed.has(a.id)?'▾ نمایش '+faNum(desc.length)+' هدف فصلی':'▴ بستن '+faNum(desc.length)+' هدف فصلی')+'</button>':'')+
+    (desc.length&&!state.collapsed.has(a.id)?'<div class="km-branch-line"></div><div class="km-quarter-grid">'+desc.map(g=>goalCard(g,data,{quarter:true})).join('')+'</div>':
     '<p class="km-mini-note">هدف فصلی متصل ثبت نشده است.</p>')+'</div>';
  }).join('');
  const directQ=qtrs.filter(g=>!used.has(g.id));
@@ -187,6 +187,7 @@ function updateZoom(n){
  const t=$('kmZoomValue');if(t)t.textContent=faNum(Math.round(state.zoom*100))+'٪';
 }
 document.addEventListener('click',e=>{
+ const collapse=e.target.closest('[data-km-collapse]');if(collapse){e.preventDefault();const id=collapse.dataset.kmCollapse;state.collapsed.has(id)?state.collapsed.delete(id):state.collapsed.add(id);window.KishMapBridge?.refresh();return;}
  const zoom=e.target.closest('[data-km-zoom]');
  if(zoom){e.preventDefault();updateZoom(Number(zoom.dataset.kmZoom));return;}
  const p=e.target.closest('[data-km-action="progress"]');
@@ -197,6 +198,11 @@ document.addEventListener('change',e=>{
  if(e.target.matches('[data-km-year]')){state.year=e.target.value;window.KishMapBridge?.refresh();}
  if(e.target.matches('[data-km-unassigned]')){state.showUnassigned=e.target.checked;window.KishMapBridge?.refresh();}
 });
+let drag=null;
+document.addEventListener('pointerdown',e=>{const v=e.target.closest('#kmViewport');if(!v||e.target.closest('a,button,input,select,summary,.km-goal,.km-pillar'))return;drag={x:e.clientX,y:e.clientY,left:v.scrollLeft,top:v.scrollTop,id:e.pointerId,view:v};v.style.cursor='grabbing';});
+document.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;drag.view.scrollLeft=drag.left-(e.clientX-drag.x);drag.view.scrollTop=drag.top-(e.clientY-drag.y);});
+document.addEventListener('pointerup',()=>{if(drag)drag.view.style.cursor='';drag=null;});
+document.addEventListener('pointercancel',()=>{if(drag)drag.view.style.cursor='';drag=null;});
 window.KishMapView={render,refresh(){window.KishMapBridge?.refresh();}};
 window.addEventListener('DOMContentLoaded',()=>{if(location.hash.startsWith('#map'))window.KishMapBridge?.refresh();});
 })();
