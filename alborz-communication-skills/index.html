@@ -956,6 +956,41 @@ function s1ChooseDistance(btn,n){
  document.querySelectorAll("[data-s1-distance]").forEach(b=>{b.classList.toggle("selected",b===btn);b.setAttribute("aria-pressed",String(b===btn))});
 }
 
+
+const s1ActionSituations=[
+ ["😟 مشتری معترض","پیگیری خسارت با پاسخ‌های متفاوت","«دو پاسخ متفاوت گرفتید؛ اجازه بدهید آخرین ثبت‌ها را بررسی کنیم، بعد مسئول و موعد بعدی را مشخص کنیم.»","آیا مشتری مسئول پیگیری و زمان دریافت وضعیت را فهمید؟"],
+ ["🤝 نماینده پرتوقع","درخواست استثنا برای تمدید بیمه‌نامه","«فشار زمانی را درک می‌کنم. کدام مدرک مانده تا مسیر مجاز تکمیل را بررسی کنیم؟»","آیا رابطه حفظ شد، بدون قول صدور خارج از ضابطه؟"],
+ ["👥 گزارش خطای کارمند","اشتباه ثبت پرونده و تأخیر در گزارش","«اول دقیق بگویید چه اتفاقی افتاده و چه چیزی هنوز قابل اصلاح است؛ بعد درباره علت تأخیر صحبت می‌کنیم.»","آیا خطر فوری مهار و بازخورد بدون سرزنش علنی ارائه شد؟"]
+];
+const s1ActionMoves=["👂 گوش‌دادن و بازتاب","❓ پرسش روشن‌کننده","🧱 مرزبندی محترمانه","⏱️ توافق بر پیگیری"];
+let s1ActionScene=0,s1ActionMove=0;
+function s1ActionHtml(){
+ return '<div class="s1-action-v2"><div class="s1-panel-head"><div class="bigico">✅</div><div><h2>جمع‌بندی: فردا در شعبه چه کار می‌کنم؟</h2><p>یک موقعیت واقعی، یک مهارت و یک تغییر قابل مشاهده</p></div></div>'+
+ '<div class="s1-action-steps"><div>👂 <b>بشنو</b><small>مسئله اصلی چیست؟</small></div><div>❓ <b>روشن کن</b><small>چه چیزی معلوم یا نامعلوم است؟</small></div><div>🎯 <b>پیگیری کن</b><small>مسئول و زمان بعدی چیست؟</small></div></div>'+
+ '<section class="s1-action-lab"><h3>🛠 برنامه عملی سه‌روزه من</h3><p>دو انتخاب کوتاه انجام دهید و یک جمله واقعی برای استفاده در شعبه بردارید.</p>'+
+ '<h4>۱. کدام موقعیت را تمرین می‌کنید؟</h4><div class="s1-action-picks">'+s1ActionSituations.map((x,i)=>'<button type="button" data-s1-action-scene="'+i+'" class="'+(s1ActionScene===i?'selected':'')+'">'+x[0]+'</button>').join("")+'</div>'+
+ '<h4>۲. کدام تکنیک به کمک شما می‌آید؟</h4><div class="s1-action-picks">'+s1ActionMoves.map((x,i)=>'<button type="button" data-s1-action-move="'+i+'" class="'+(s1ActionMove===i?'selected':'')+'">'+x+'</button>').join("")+'</div>'+
+ '<button type="button" class="s1-action-generate" onclick="s1ActionGenerate()">✨ برنامه کاربردی من را بساز</button>'+
+ '<div id="s1-action-output" class="s1-action-output" hidden role="status" aria-live="polite"></div></section>'+
+ '<details class="s1-action-discussion"><summary>💬 دو پرسش برای پایان کلاس</summary><p>اگر مشتری پاسخ قطعی نگرفته باشد، چطور بدون وعده غیرمجاز اعتماد را حفظ می‌کنید؟</p><p>وقتی ستاد تصمیم‌گیر است، رئیس شعبه مسئول کدام بخش پیگیری است؟</p></details>'+
+ '<div class="s1-takeaway">🎯 نتیجه جلسه: یک موقعیت، یک جمله طبیعی و یک معیار مشاهده تغییر؛ نه یک فرم طولانی.</div></div>';
+}
+function s1ActionSelect(btn,type,i){
+ if(type==="scene")s1ActionScene=i;else s1ActionMove=i;
+ document.querySelectorAll(type==="scene"?"[data-s1-action-scene]":"[data-s1-action-move]").forEach(b=>b.classList.toggle("selected",b===btn));
+ const output=document.getElementById("s1-action-output");if(output)output.hidden=true;
+}
+function s1ActionGenerate(){
+ const x=s1ActionSituations[s1ActionScene],name=s1ActionMoves[s1ActionMove],out=document.getElementById("s1-action-output");if(!out||!x)return;
+ out.innerHTML='<h3>📋 برنامه ۷۲ ساعت آینده</h3>'+
+ '<div><b>📍 موقعیت</b><p>'+x[1]+'</p></div><div><b>🧰 تکنیک انتخابی</b><p>'+name+'</p></div>'+
+ '<div><b>💬 جمله پیشنهادی (با لحن خودتان تمرین کنید)</b><p>'+x[2]+'</p></div>'+
+ '<div><b>✅ چه کار می‌کنم؟</b><p>در اولین موقعیت واقعی، جمله را اجرا می‌کنم؛ مسئول، زمان و کانال پیگیری را روشن می‌کنم.</p></div>'+
+ '<div><b>🔎 چه چیزی را می‌سنجم؟</b><p>'+x[3]+'</p></div>'+
+ '<div><b>📝 بازنگری یک‌دقیقه‌ای</b><p>چه گفتم؟ مخاطب چه واکنشی نشان داد؟ دفعه بعد چه چیزی را بهتر می‌گویم؟</p></div>';
+ out.hidden=false;
+}
+
 function s1SectionHtml(id){
 
  if(id==="start") return '<div class="s1-start s1-open-v4">'+
@@ -1025,14 +1060,7 @@ function s1SectionHtml(id){
 
  if(id==="roleplay") return s1DeepRoleplayHtml();
 
- if(id==="action") return '<div class="s1-panel-head"><div class="bigico">✅</div><div><h2>جمع‌بندی و انتقال یادگیری</h2><p>از کلاس به رفتار واقعی شعبه</p></div></div>'+
- '<div class="s1-card-grid"><div class="s1-card"><h3>💬 پیام ۱</h3><p>رئیس شعبه قبل از حل مسئله، باید رابطه را درست آغاز کند.</p></div><div class="s1-card"><h3>⚖️ پیام ۲</h3><p>وقتی مشتری ناراضی است، فقط دلجویی نکنید و فقط بخشنامه نخوانید؛ نگرانی او را بشنوید و قدم بعدی را روشن کنید.</p></div><div class="s1-card"><h3>🧩 پیام ۳</h3><p>به همه احترام بگذارید؛ اما گفت‌وگو با مشتری خسارت‌دیده، کارمند نگران، نماینده پرتوقع و مدیر ستادی باید متناسب با نیاز و محدودیت هر موقعیت باشد.</p></div><div class="s1-card"><h3>🎯 پیام ۴</h3><p>رفتار مناسب یعنی احترام در خطاب، حفظ محرمانگی، رعایت نوبت و نه‌گفتن محترمانه به درخواست خارج از ضابطه.</p></div></div>'+
- '<h3 style="font-size:23px;color:#174d3c;margin-top:24px">✍️ ممیزی ارتباطات شخصی</h3>'+
- '<div class="s1-action-cards">'+[1,2,3].map((n)=>'<div class="s1-action-card"><h4>موقعیت '+n+'</h4><div class="s1-field"><label>موقعیت</label><input placeholder="مثلاً ورود نماینده"></div><div class="s1-field"><label>مخاطب</label><input placeholder="مثلاً نماینده"></div><div class="s1-field"><label>نشانه فعلی من</label><input placeholder="مثلاً عجله یا سردی"></div><div class="s1-field"><label>نشانه مطلوب</label><input placeholder="مثلاً احترام + کنترل"></div><div class="s1-field"><label>رفتار جدید</label><input placeholder="یک رفتار مشخص و قابل مشاهده"></div></div>').join('')+'</div>'+
- '<div class="s1-case"><h3>🧠 آزمون خروج ۳ سؤالی</h3><p>۱) اگر گرمی بالا ولی نشانه شایستگی پایین باشد، ریسک اصلی چیست؟<br>۲) در اولین ۳۰ ثانیه چه رفتاری به‌رسمیت‌شناختن را نشان می‌دهد؟<br>۳) اگر کارمندتان در حضور مشتری اشتباه کرده، چگونه محترمانه موضوع را مدیریت می‌کنید و بازخورد اصلی را به گفت‌وگوی خصوصی می‌برید؟</p></div>'+
- '<div class="s1-question" style="margin-top:18px">از فردا فقط یک رفتار ارتباطی را تغییر می‌دهم: ____________</div>'+
- '<div class="s1-callout"><b>تمرین انتقال یادگیری ۷۲ ساعته:</b> این رفتار را طی سه روز آینده در یک موقعیت واقعی اجرا کنید و جلسه بعد با سه داده برگردید: چه کردید؟ مخاطب چه واکنشی نشان داد؟ دفعه بعد چه چیزی را اصلاح می‌کنید؟</div>'+
- '<div class="s1-takeaway">🎯 خروجی جلسه: یک رفتار مشخص، یک موقعیت واقعی و یک معیار برای مشاهده تغییر.</div>';
+ if(id==="action") return s1ActionHtml();
 
  return "";
 }
@@ -1130,6 +1158,8 @@ function session1Page(){
    else if(target.hasAttribute("data-s1-stake-case"))s1StakeSwitch(target,target.dataset.s1StakeCase);
    else if(target.hasAttribute("data-s1-stake-choice"))s1StakeAnswer(target,Number(target.dataset.s1StakeChoice),target.dataset.s1StakeKey);
    else if(target.hasAttribute("data-s1-distance"))s1ChooseDistance(target,Number(target.dataset.s1Distance));
+   else if(target.hasAttribute("data-s1-action-scene"))s1ActionSelect(target,"scene",Number(target.dataset.s1ActionScene));
+   else if(target.hasAttribute("data-s1-action-move"))s1ActionSelect(target,"move",Number(target.dataset.s1ActionMove));
   });
  }
  const initialSection=new URLSearchParams(location.search).get("section");
