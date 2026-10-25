@@ -413,3 +413,89 @@ html,body{background:var(--saba-cream);color:var(--saba-ink);font-size:16px}
  .ed-footlinks button{font-size:17px}
 }
 @media(prefers-reduced-motion:reduce){.ed-home{animation:none}.ed-submit-button:hover{transform:none}}
+
+/* Premium product screens — same scale, contrast and focus as the new home */
+.lf-case-board{background:#fff;border-color:#d2d8da;padding:clamp(19px,2.4vw,28px)}
+.lf-board-head h2{font-size:23px;letter-spacing:-.2px}
+.lf-case-row{border:1px solid #d8dedf;border-radius:12px;box-shadow:none;background:#fffdf9;padding:20px}
+.lf-case-row:hover{border-color:#92b0be;background:#fff}
+.lf-case-controls{gap:8px}
+.lf-case-controls .btn{min-height:43px}
+.lf-case-controls .lf-edit{font-size:13px;color:#1d526e;font-weight:800}
+.lf-case-filters{margin:20px 0}
+.lf-case-filters button{box-shadow:none}
+.lf-case-filters button:focus-visible{outline:3px solid #df843e}
+.ux-case-clarity{border-color:#d5dddf;padding:clamp(15px,2vw,21px)}
+.ux-clarity-title h2{font-size:23px;font-weight:900}
+.ux-clarity-alert{font-size:14px;color:#214963;background:#eef4f6}
+.ux-flow-label{font-size:14px;padding:13px 16px;border-radius:10px}
+.up-role-card{background:#fffdf9;border:1px solid #d5dddf!important;box-shadow:none;padding:9px 12px}
+.up-role-card.selected{background:#edf4f8;border-color:#4784a3!important;box-shadow:0 0 0 1px #4784a3}
+.up-role-pick{min-height:65px}
+.up-role-copy strong{font-size:17px;color:#172f42}
+.up-role-copy small{font-size:13px;color:#385469}
+.up-role-details summary{font-size:13px;color:#2c5975}
+.up-role-details p{font-size:14px;color:#324f60}
+.up-role-hint{font-size:14px;color:#39576a}
+.ux-dialogue{background:#f6f6f2;border:1px solid #e3e4df;border-radius:15px;padding:18px}
+.ux-bubble{border-radius:14px;line-height:1.9;font-size:15px}
+.ux-bubble small{font-size:12px;color:#37546b}
+.ux-bubble p{font-size:15px}
+.ux-counterpart{background:#fff;border-color:#d4dbdf}
+.ux-me{background:#eaf3f7;border-color:#bfd8e5}
+.ux-sim-settings{gap:10px}
+.ux-sim-side{background:#fffaf4;border-color:#e8ddce}
+.ux-sim-side h2{font-size:22px}
+.ux-example{font-size:14px;line-height:1.95}
+.ux-service{background:#fff;border-color:#d7dddf}
+.ux-service h2{font-size:23px}
+.ux-service p{font-size:15px;color:#3f5565}
+.ux-tile-icon{font-size:29px}
+.metric{min-height:122px;align-items:flex-start}
+.metric strong{font-size:clamp(36px,3.4vw,47px);color:#19354a;font-weight:950;line-height:1.2}
+.metric p{font-size:13px;line-height:1.8;color:#3a5367}
+.metric .cube{background:#f7e5d7;color:#9b5933;border-radius:13px}
+.ux-metric-row{border-bottom:1px solid #e5e7e6;padding:14px 0}
+.ux-metric-row:last-of-type{border-bottom:none}
+.ux-metric-row strong{font-size:15px;color:#193347}
+.ux-metric-row .progress{margin:11px 0}
+.ux-report-stack>div{border-color:#e4e8e9}
+.ux-report-stack b{font-size:15px;color:#193e58}
+.ux-report-stack span{font-size:13px;color:#48606e}
+.ux-pulse{background:#fffaf4;border-color:#e8ded1}
+.ux-pulse-title h3{font-size:19px}
+.rfx-metrics{gap:11px}
+.rfx-metrics>div{border-radius:14px;border:1px solid #d8dedf;box-shadow:none}
+.rfx-metrics small{font-size:13px;color:#3e596b}
+.rfx-metrics b{color:#153d58;font-size:31px;font-weight:950}
+.rfx-main,.rfx-mirror{border-color:#d8dedf}
+.rfx-main .rfx-buttons button{font-size:15px}
+.rfx-steps button{background:#f1f4f3;border-color:#d7dedf;color:#3d5768}
+.rfx-steps button.active{background:#173d58;border:2px solid #173d58;color:#fff}
+.rfx-steps button.active span{background:#f1b587;color:#1b3345}
+.rfx-bar span{background:linear-gradient(90deg,#b97042,#edaf81)}
+.rfx-prompt{background:#f5f6f1;border-color:#e1e5e1;color:#2e4d5f}
+.rfx-record{border-color:#d8e0e4}
+.rfx-record summary{font-size:14px;font-weight:750}
+.rfx-confidential{font-size:12px;color:#405868}
+.lf-card{background:#fff;border-color:#d7dedf}
+.lf-header p{font-size:15px}
+.lf-case p{color:#3a5668}
+.lf-card>.small{font-size:13px;color:#465d6d}
+#lf-form textarea{font-size:16px;line-height:1.9;border:1.5px solid #bdcbd3}
+#lf-form select{font-size:15px}
+@media(max-width:760px){
+ .page-title{font-size:27px}
+ .intro{font-size:14px}
+ .card h2{font-size:19px}
+ .field label{font-size:14px}
+ .lf-case-row{padding:16px}
+ .lf-case-board{padding:17px}
+ .ux-clarity-title h2{font-size:20px}
+ .up-role-copy strong{font-size:14px}
+ .up-role-copy small{font-size:11px}
+ .rfx-metrics small{font-size:11px}
+ .rfx-metrics b{font-size:24px}
+ .rfx-steps button{font-size:11px}
+ .ed-privacy{font-size:12px}
+}
