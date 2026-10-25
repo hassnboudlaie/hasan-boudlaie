@@ -1,0 +1,146 @@
+/* Contrast & visual hierarchy audit — Sabanaft (2026-10-25)
+   Inspired by high-contrast editorial design; not a copy of BetterUp.
+   Main copy WCAG AA pairs: #152838 on #F7F6F0 = ~13:1
+   Muted copy: #4C5C67 on #F7F6F0 = ~6.4:1
+   Reversed copy: #fff on #172C40 = ~14.3:1.
+*/
+:root{
+  --navy:#172c40;
+  --deep:#112737;
+  --ink:#182c3b;
+  --muted:#4c5c67;
+  --line:#d9dfe0;
+  --paper:#f7f6f0;
+  --orange:#f8b57c;
+  --blue:#21577d;
+}
+html{color-scheme:light}
+body{background:var(--paper);color:var(--ink)}
+.main{background:var(--paper)}
+.pane{max-width:1090px}
+.brand b{color:#122533}
+.brand small{color:#4c6070;font-size:11px}
+.top .eyebrow{color:#495b67;font-size:12px;font-weight:750}
+.top .status{color:#195a43;background:#e5f2ea;border:1px solid #c8e5d4}
+.rail{background:#fff;border-left:1px solid #dfe4e7}
+.rail .section-kicker{color:#50616d}
+.nav button{color:#3f5463;font-weight:750}
+.nav .num{color:#3f5667;background:#edf1f4}
+.nav button:hover,.nav button[aria-current=page]{background:#e8f0f4;color:#173b52}
+.nav button[aria-current=page]{border-color:#c5d9e5;box-shadow:inset -4px 0 #e89357}
+.ux-nav-group{border-color:#dfe5e9}
+.ux-nav-group summary{color:#375569}
+.card{background:#fff;border:1px solid #dce2e5;box-shadow:0 9px 26px #101d2b0c}
+.page-title,.title-row h2,.card h2,.lf-board-head h2{color:#183143}
+.intro,.muted,.small,.note{color:#4c5c67}
+.field label,.up-input-label{color:#233e51}
+.field input,.field select,.field textarea,textarea.free{background:#fff;color:#183143;border-color:#aebec9}
+.field input::placeholder,.field textarea::placeholder{color:#596a78;opacity:1}
+.field input:focus-visible,.field textarea:focus-visible,.field select:focus-visible{border-color:#246388;box-shadow:0 0 0 3px #24638822}
+.btn{background:#153d5a;color:#fff;border:1px solid #153d5a;font-weight:850}
+.btn.light{background:#eef4f7;color:#163d5a;border-color:#c9dbe6}
+.btn.orange{background:#f8b57c;color:#182c3c;border-color:#f8b57c}
+.btn:hover{filter:brightness(.97)}
+.btn:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #df843e;outline-offset:3px}
+.pill{background:#eaf3f7;color:#284e68;border:1px solid #cbdde7}
+.source-foot{color:#52616c;font-size:11px}
+.up-welcome{margin-top:14px;margin-bottom:24px}
+.up-eyebrow{color:#315a71;font-size:11px;letter-spacing:1.1px}
+.up-welcome h1{color:#111c25;font-size:clamp(30px,4.1vw,44px);font-weight:900;line-height:1.53;letter-spacing:-.6px}
+.up-welcome p{color:#405564;font-size:15px;line-height:2;max-width:710px}
+.up-composer{
+  background:#172c40;
+  color:#fff;
+  border:1px solid #172c40;
+  box-shadow:0 17px 34px #152a3b22;
+  border-radius:23px;
+  padding:clamp(21px,3.1vw,30px);
+}
+.up-composer-head h2{color:#fff;font-size:20px;font-weight:900}
+.up-composer-head p{color:#d8e5ed;font-size:13px}
+.up-composer-icon{background:#f8b57c;color:#172c40}
+.up-input-label{color:#f1f6f9;font-size:14px}
+.up-composer textarea{
+  background:#fff;
+  color:#142f41;
+  border:2px solid #fff;
+  font-size:15px;
+  min-height:134px;
+  box-shadow:none;
+}
+.up-composer textarea::placeholder{color:#566b7a;opacity:1}
+.up-composer textarea:focus{border-color:#f8b57c;box-shadow:0 0 0 3px #f8b57c33}
+.up-mic{border-color:#fff;background:#fff;color:#183b52;font-size:13px}
+.up-mic span{color:#235d82}
+.up-mic[aria-pressed=true]{background:#f8b57c;border-color:#f8b57c;color:#172c40}
+.up-mic:hover{background:#e8f1f8}
+.up-voice-note{color:#dbe7ee;font-size:12px}
+.up-primary,.up-composer-toolbar .up-primary{
+  background:#f8b57c!important;
+  border:1px solid #f8b57c!important;
+  color:#182c3c!important;
+  font-weight:900;
+  font-size:14px;
+  min-height:47px;
+}
+.up-privacy-line{color:#435869;font-size:12px;line-height:1.85}
+.up-section-head h2{color:#152b39;font-size:19px;font-weight:900}
+.up-next-card{background:#fff;border:1px solid #d9e2e8;border-radius:17px;box-shadow:0 6px 16px #152b3b0a}
+.up-next-card:hover{border-color:#91b3c6;box-shadow:0 9px 18px #152b3b13}
+.up-next-kicker{color:#455f72;font-size:11px;font-weight:800}
+.up-next-content strong{color:#162f42;font-size:15px;font-weight:850}
+.up-next-content small{color:#4b6272;font-size:12px}
+.up-next-arrow{color:#315e79}
+.up-case-icon{background:#e8f2fa;color:#214f72}
+.up-reflect-icon{background:#fcecdc;color:#976037}
+.up-meta-footer{color:#4b606d;font-size:12px}
+.up-meta-footer button{color:#204f72;font-size:12px}
+.up-focus-status{background:#e9f1f6;color:#34566b}
+.up-focus-status.attention,.lf-status.attention{background:#ffeddd;color:#85451f}
+.up-focus-status.reviewed,.lf-status.reviewed{background:#e2f2e7;color:#1b6142}
+.up-focus-status.progress,.lf-status.progress{background:#e4eef8;color:#255b83}
+.up-focus-action{background:#153d5a;border:1px solid #153d5a;color:#fff;font-size:12px}
+.lf-case-main h3,.lf-case h2{color:#183143}
+.lf-case-main p{color:#4a6171}
+.lf-case-filters button{color:#304e63;background:#eef3f6;border-color:#d4e0e7}
+.lf-case-filters button.selected{color:#fff;background:#173e5b;border-color:#173e5b}
+.lf-case-filters button.selected span{color:#ecf4f8}
+.lf-case-controls .lf-edit{color:#255577}
+.lf-header h1,.rfx-hero h1{color:#172c40}
+.rfx-hero{background:#fff3e8;border:1px solid #edd9c7;color:#172c40}
+.rfx-hero p,.rfx-mirror .muted{color:#425a6d}
+.rfx-overline{color:#7d482d}
+.rfx-meta span{background:#fff;color:#385669;border-color:#d5c5b7}
+.rfx-choice{color:#27465c;border-color:#cfdae1;background:#f8fafb}
+.rfx-choice.selected{color:#fff;background:#174869;border-color:#174869}
+.rfx-record summary{color:#24425a}
+.rfx-confidential{color:#52616b}
+.ux-case-clarity{background:#fff}
+.ux-clarity-title h2{color:#173246}
+.ux-clarity-title span,.ux-case-state,.ux-clarity-details small{color:#415a6a}
+.ux-case-state{background:#e9f3f8}
+.ux-clarity-alert{color:#294b64}
+.ux-flow-label{color:#254d68;border-color:#d0e1e9;background:#eef4f7}
+.ux-flow-label span{color:#3c596b}
+.ux-missing-body p{color:#455b6c}
+.ux-evidence>summary,.ux-clarity-details>summary,.ux-missing-facts>summary{color:#225779}
+.ux-pulse p,.ux-report-stack span{color:#495c6a}
+.mobile-bottom-nav{background:#fff;border-color:#d9e0e4}
+.mobile-bottom-nav button{color:#365468;font-size:11px;font-weight:750}
+.mobile-bottom-nav button .m-icon{color:#35566c}
+.mobile-bottom-nav button[aria-current=page]{background:#173d58;color:#fff}
+.mobile-bottom-nav button[aria-current=page] .m-icon{color:#f8b57c}
+@media(max-width:760px){
+  .up-welcome h1{font-size:clamp(27px,6.8vw,35px)}
+  .up-welcome p{font-size:13px}
+  .up-composer{border-radius:19px;padding:18px}
+  .up-composer-head h2{font-size:17px}
+  .up-composer-head p{font-size:12px}
+  .up-composer textarea{font-size:14px}
+  .up-voice-note{font-size:11px}
+  .up-privacy-line{font-size:11px}
+  .top{margin-bottom:16px}
+  .main{background:var(--paper)}
+  .up-next-content small{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
