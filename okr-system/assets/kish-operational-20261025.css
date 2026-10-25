@@ -87,3 +87,6 @@ body.kish-perdoo{--navy:#163958!important;--ink:#223750!important;--text:#223750
 @media(max-width:900px){.kish-perdoo .content{padding:16px 12px 44px!important}.kish-perdoo .launch-actions{grid-template-columns:1fr!important}.kish-perdoo .p-head{padding:15px!important}.kish-perdoo .sidebar{box-shadow:0 0 35px #123b5577!important}}
 @media(max-width:620px){.kish-perdoo .p-grid.four,.kish-perdoo .p-grid.three{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.kish-perdoo .p-card{padding:13px!important}.kish-perdoo .p-head h1{font-size:21px!important}.kish-perdoo .topbar{padding-inline:12px!important}.kish-perdoo .p-nav-group{margin-bottom:9px}}
 @media(prefers-reduced-motion:reduce){.kish-perdoo :is(.p-card,.p-btn,.btn,.p-module){transition:none!important;animation:none!important}}
+
+/* Do not expose a downloadable legacy teaching edition from the operational landing page. */
+.kish-perdoo .entry-foot a[href="offline.html"]{display:none!important}
