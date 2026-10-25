@@ -390,6 +390,108 @@
 }
 </style>
 
+<style id="alborz-visual-polish-20261025">
+:root{--albr-forest:#126247;--albr-jade:#0f8866;--albr-gold:#c6a35e;--albr-soft:#f3f9f6;--albr-outline:#d2e4d9}
+body{font-size:19px;line-height:1.95;background:linear-gradient(145deg,#f1f8f3 0%,#f8fafb 53%,#f4f8f6 100%)}
+button,select,input,textarea{font-family:Vazirmatn,Tahoma,sans-serif}
+button{transition:background-color .18s,border-color .18s,transform .18s,box-shadow .18s}
+button:active{transform:translateY(1px)}
+button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #dbb868;outline-offset:3px}
+.top{box-shadow:0 4px 25px rgba(15,68,49,.055)}
+.brand b{font-size:18px}.brand small{font-size:14px}
+.nav a,.utility-btn{font-size:16px}.btn{font-size:16px;font-weight:800}
+.hero h1{font-size:clamp(31px,4.2vw,45px)}
+.card,.lab-card,.panel,.s1-card,.s1-case,.ai-card,.s1-tool-card,.s1-role-card{border-color:var(--albr-outline);border-radius:19px;box-shadow:0 7px 24px rgba(16,73,48,.055);background:#fff}
+.card h3,.lab-card h2,.s1-card h3{font-size:clamp(20px,2vw,23px)}
+.card p,.lab-card p,.ai-card p,.s1-card p,.s1-case p{font-size:17px;line-height:2}
+.card:hover,.ai-card:hover,.s1-tool-card:hover{box-shadow:0 15px 32px rgba(15,88,58,.1);border-color:#a5d1b7}
+.s1-shell{gap:19px}.s1-side{border-radius:21px;box-shadow:0 12px 33px rgba(4,54,39,.1)}
+.s1-nav-btn{font-size:16px;line-height:1.7;padding:12px 13px}
+.s1-nav-btn .ico{font-size:23px;filter:drop-shadow(0 2px 1px rgba(0,0,0,.07))}
+.s1-panel{background:#fff;border:1px solid #d6e7dd;border-radius:22px;box-shadow:0 10px 30px rgba(11,75,48,.05)}
+.s1-panel-head{background:linear-gradient(110deg,#f0f9f4,#fff);border:1px solid #e0ebe4;border-radius:18px;padding:13px 15px}
+.s1-panel-head h2{font-size:clamp(24px,2.4vw,30px);color:#113e31}
+.s1-panel-head p{font-size:15px}
+.s1-panel-head .bigico{font-size:29px;background:#e2f2e8;border-radius:14px}
+.s1-quote{border-radius:20px;box-shadow:0 6px 16px #0c533116}
+.s1-case,.s1-dr-card,.s1-stake-workshop{box-shadow:0 7px 22px rgba(11,73,50,.065)}
+.s1-case h3,.s1-dr-card h4,.s1-role-tool h4{line-height:1.7}
+.s1-option,.s1-step-nav button,.s1-nav-btn,.s1-action-picks button{min-height:44px}
+.s1-micro span,.s1-step-q,.s1-takeaway{line-height:1.85}
+.s1-option{font-size:16px;border-width:1.5px;line-height:1.9}
+.s1-step-count,.s1-test-intro p,.s1-axis-x,.s1-result-detail summary{font-size:15px}
+.s1-accordion>summary,.s1-optional-cases>summary,.s1-dr-coach>summary,.s1-dr-act>summary{font-size:17px}
+.s1-accordion .inside,.s1-moment-story,.s1-role-tool p{font-size:16px}
+.s1-presence-choices button,.s1-stake-choices button{font-size:15px}
+.s1-stake-lenses small,.s1-preview-cell small{font-size:13px}
+/* Roleplay: signal technique at exact dialogue moment */
+.s1-role-moment{margin:9px 9px 15px;padding:12px 15px;border-right:4px solid #cfaa5f;border-radius:13px;background:linear-gradient(110deg,#fff8e9,#f5faf7);box-shadow:0 3px 10px rgba(89,72,23,.035)}
+.s1-role-moment b{display:block;font-size:15px;color:#775c27}.s1-role-moment p{font-size:15px;line-height:1.9;color:#4e5f50;margin:4px 0}.s1-role-moment small{font-size:14px;line-height:1.8;color:#37644e}
+.s1-dr-line{border-radius:16px}.s1-dr-line p{font-size:16px;line-height:1.95}
+.s1-dr-hero h3{font-size:26px}.s1-dr-section>h3{font-size:22px}
+.s1-role-tools{padding:19px 0;border-top:1px solid #dce9dd;margin-top:22px}
+.s1-role-tools>h3{font-size:24px;color:#14573e;margin:4px 0}.s1-role-tools>p{color:#5f7163;font-size:15px;margin:0 0 14px}
+.s1-role-tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.s1-role-tool{border:1px solid #d5e7dc;border-radius:17px;background:linear-gradient(150deg,#fff,#f4faf6);padding:16px;box-shadow:0 5px 17px rgba(15,77,51,.055);min-width:0}
+.s1-role-tool h4{font-size:19px;color:#13553d;margin:0 0 9px}
+.s1-role-when{font-size:15px;color:#52725f;line-height:1.85}
+.s1-role-tool blockquote{margin:11px 0;background:#eaf5ee;border-right:4px solid #23865c;border-radius:10px;padding:10px 13px;font-size:16px;line-height:1.85;color:#124732}
+.s1-role-tool>p{font-size:15px;color:#53675b;line-height:1.9;margin:8px 0 0}
+/* Case technique blocks are shown only after the learner chooses */
+.s1-case-skill[hidden]{display:none!important}.s1-case-skill{margin:14px 0 8px;border:1px solid #c9e2d4;border-radius:16px;padding:16px;background:linear-gradient(145deg,#eef8f2,#ffffff)}
+.s1-case-skill h4{font-size:20px;margin:0 0 10px;color:#126047}.s1-case-skill>p{font-size:15px!important;line-height:1.9;margin:8px 0}
+.s1-case-skill-example{background:#fff;border-right:4px solid #249168;padding:10px 13px;border-radius:11px}
+.s1-case-skill-example b{font-size:15px;color:#14543d}.s1-case-skill-example p{font-size:16px;margin:4px 0!important}
+.s1-case-skill-practice{color:#197250!important;font-weight:800}
+/* Proxemics radial diagram + labels */
+.s1-distance{border-radius:23px;border:1px solid #cfe4d6;background:linear-gradient(140deg,#f5fbf7,#fff 63%);padding:20px;margin:15px 0;box-shadow:0 10px 28px #124f3510}
+.s1-distance-head>span{font-weight:900;font-size:13px;color:#0a7c58}
+.s1-distance-head h3{font-size:clamp(21px,2.2vw,26px);color:#155039;margin:2px 0}
+.s1-distance-head p{font-size:15px;color:#5d7164;margin:0 0 16px}
+.s1-distance-layout{display:grid;grid-template-columns:minmax(250px,1fr) minmax(260px,1fr);gap:16px;align-items:center}
+.s1-distance-diagram{display:flex;align-items:center;flex-direction:column;justify-content:center;min-width:0;padding:15px 0}
+.s1-distance-ring{display:grid;place-items:center;flex:none;aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,255,255,.95);box-shadow:0 0 0 1px #ffffffaa,0 4px 12px #144a3416}
+.s1-distance-ring.outer{width:min(100%,310px);background:#d9e9f8}
+.s1-distance-ring.middle{width:76%;background:#cfede2}
+.s1-distance-ring.inner{width:68%;background:#ffedc5}
+.s1-distance-ring.core{width:60%;background:#f4d8d8;font-size:33px}
+.s1-distance-diagram>small{color:#758778;font-size:12px;margin:7px 0}
+.s1-distance-controls{display:grid;gap:9px}
+.s1-distance-choice{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;width:100%;text-align:right;border:1px solid #d4e6d9;border-radius:13px;background:#fff;padding:12px 13px;cursor:pointer}
+.s1-distance-choice:nth-child(1){border-right:5px solid #8db5db}.s1-distance-choice:nth-child(2){border-right:5px solid #4daa8e}.s1-distance-choice:nth-child(3){border-right:5px solid #dcbb69}.s1-distance-choice:nth-child(4){border-right:5px solid #d69b9b}
+.s1-distance-choice strong{font-size:16px;color:#194f3b}.s1-distance-choice span{font-size:14px;color:#52725d}
+.s1-distance-choice.selected{background:#edf8f1;border-color:#46a77b;box-shadow:0 5px 13px #24855419}
+.s1-distance-detail{border:1px solid #d0e4d8;background:#f3f9f5;padding:13px 16px;border-radius:14px;line-height:1.9}
+.s1-distance-detail b{font-size:16px;color:#195d41}.s1-distance-detail p{font-size:15px;margin:3px 0;color:#4a6857}
+.s1-distance-disclaimer{font-size:14px;line-height:1.9;color:#5d725e;background:#fff9eb;padding:12px 15px;border-radius:12px}
+.s1-distance-privacy{background:#fff;border:1px solid #d7e7db;border-radius:13px;padding:13px;margin-top:10px}
+.s1-distance-privacy summary{font-size:16px;font-weight:900;color:#185640;cursor:pointer}
+.s1-distance-privacy>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.s1-distance-privacy article{padding:13px;background:#f3f9f5;border-radius:11px;min-width:0}
+.s1-distance-privacy article b{font-size:16px;color:#18553e}.s1-distance-privacy article p{font-size:14px;line-height:1.85;margin:5px 0}
+.s1-distance-mini{padding:14px 16px;border-radius:12px;background:#edf5fa;color:#31546a;font-size:15px;line-height:1.9;margin-top:12px}
+/* Summary: choose > see tailored script > practice */
+.s1-action-v2{max-width:1030px}.s1-action-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.s1-action-steps>div{border:1px solid #d4e5d9;border-radius:16px;background:#eff8f2;padding:16px;display:flex;flex-direction:column;gap:3px;text-align:center;font-size:24px}
+.s1-action-steps b{font-size:19px;color:#18563f}.s1-action-steps small{font-size:14px;color:#5e7766}
+.s1-action-lab{background:#fff;border:1px solid #d4e6da;padding:19px;border-radius:21px;box-shadow:0 8px 24px #0e694914}
+.s1-action-lab h3{font-size:24px;color:#154b38;margin:0 0 6px}.s1-action-lab>p{font-size:16px;line-height:1.9;color:#5f7565;margin:0 0 10px}
+.s1-action-lab h4{font-size:18px;color:#1b6246;margin:16px 0 7px}
+.s1-action-picks{display:flex;gap:8px;flex-wrap:wrap}
+.s1-action-picks button{font:800 15px Vazirmatn,Tahoma,sans-serif;border:1px solid #c7decf;background:#f7fbf8;padding:10px 14px;border-radius:12px;cursor:pointer;color:#226044}
+.s1-action-picks button.selected{background:#0b6f50;color:#fff;border-color:#0b6f50;box-shadow:0 6px 13px #0d6c4b26}
+.s1-action-generate{display:block;margin-top:17px;border:0;border-radius:13px;background:linear-gradient(115deg,#087451,#14885f);color:#fff;padding:12px 18px;font:900 17px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.s1-action-output[hidden]{display:none!important}.s1-action-output{margin-top:17px;border:1px solid #cce4d4;border-radius:17px;background:#f2faf4;padding:15px;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.s1-action-output h3{grid-column:1/-1;margin:0;font-size:21px}
+.s1-action-output>div{padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #e0eee3;min-width:0}
+.s1-action-output b{font-size:15px;color:#135941}.s1-action-output p{font-size:15px;line-height:1.9;margin:6px 0 0}
+.s1-action-discussion{margin-top:13px;border:1px solid #d8e7df;border-radius:13px;padding:12px 14px;background:#fff}
+.s1-action-discussion summary{font-size:16px;color:#175b41;font-weight:900;cursor:pointer}
+.s1-action-discussion p{font-size:15px;line-height:1.9}
+@media(max-width:800px){.s1-role-tools-grid,.s1-action-output{grid-template-columns:1fr}.s1-distance-layout{grid-template-columns:1fr}.s1-distance-privacy>div{grid-template-columns:1fr}.s1-distance-diagram{padding:7px 0}.s1-distance-ring.outer{width:min(78vw,285px)}.s1-distance-controls{grid-template-columns:1fr 1fr}.s1-action-steps{gap:7px}.s1-action-steps>div{padding:12px 5px}.s1-action-steps b{font-size:16px}.s1-action-steps small{font-size:12px}}
+@media(max-width:480px){body{font-size:18px}.s1-panel{padding:12px}.s1-case{padding:13px}.s1-accordion>summary{font-size:17px}.s1-dr-line p{font-size:16px}.s1-distance{padding:12px}.s1-distance-choice{padding:9px}.s1-distance-choice strong{font-size:14px}.s1-distance-choice span{font-size:12px}.s1-role-tool{padding:13px}.s1-role-tool h4{font-size:18px}.s1-action-lab{padding:13px}.s1-action-picks button{flex:1 1 100%;text-align:right}.s1-action-steps small{font-size:11px}}
+</style>
+
 </head>
 <body>
 <div id="app"></div>
@@ -980,11 +1082,27 @@ function s1ActionSelect(btn,type,i){
  document.querySelectorAll(type==="scene"?"[data-s1-action-scene]":"[data-s1-action-move]").forEach(b=>b.classList.toggle("selected",b===btn));
  const output=document.getElementById("s1-action-output");if(output)output.hidden=true;
 }
+
+const s1ActionPhrases=[
+ ["«سه بار پیگیری کرده‌اید و دو پاسخ متفاوت گرفته‌اید؛ درست فهمیدم که مهم‌ترین نگرانی شما نداشتن زمان روشن است؟»",
+ "«آخرین بار چه پاسخی گرفتید و در سامانه کدام مدرک ثبت شده؟ اجازه دهید دو مورد را تطبیق دهیم.»",
+ "«تصمیم پرداخت را پیش از بررسی مرجع تخصصی نمی‌توانم قول بدهم؛ اما مسئول اطلاع‌رسانی وضعیت پرونده را مشخص می‌کنیم.»",
+ "«همین امروز مسئول بررسی و زمان اعلام وضعیت بعدی را تعیین می‌کنیم؛ اگر رأی نهایی نیامد، گزارش پیگیری را می‌دهیم.»"],
+ ["«می‌شنوم که از دست‌رفتن قرارداد نگران هستید؛ مهلت مشتری دقیقاً چه زمانی است؟»",
+ "«کدام مدرک ضروری باقی مانده و چه مسیر رسمی برای تکمیل یا استعلام سریع آن وجود دارد؟»",
+ "«رابطه همکاری برای ما مهم است، اما بدون کنترل الزام صدور، نمی‌توانم استثنا قول بدهم؛ مسیر مجاز را بررسی می‌کنیم.»",
+ "«کارشناس مسئول را مشخص می‌کنیم و تا موعد توافق‌شده نتیجه استعلام یا وضعیت تکمیل را اطلاع می‌دهیم.»"],
+ ["«متوجه‌ام که از پیامد خطا نگران هستید؛ اول توضیح دهید چه اتفاقی افتاده و کدام بخش قابل اصلاح است.»",
+ "«ثبت اشتباه در چه مرحله‌ای رخ داده و آیا هنوز اقدامی برای مهار اثر آن ممکن است؟»",
+ "«ابتدا اصلاح فوری را دنبال می‌کنیم؛ بعد در گفت‌وگوی خصوصی درباره علت تأخیر گزارش و مسئولیت اصلاح صحبت می‌کنیم.»",
+ "«یک مسئول برای اصلاح ثبت تعیین می‌کنیم؛ زمان کنترل دوباره و شیوه گزارش تغییر را هم روشن می‌کنیم.»"]
+];
+
 function s1ActionGenerate(){
  const x=s1ActionSituations[s1ActionScene],name=s1ActionMoves[s1ActionMove],out=document.getElementById("s1-action-output");if(!out||!x)return;
  out.innerHTML='<h3>📋 برنامه ۷۲ ساعت آینده</h3>'+
  '<div><b>📍 موقعیت</b><p>'+x[1]+'</p></div><div><b>🧰 تکنیک انتخابی</b><p>'+name+'</p></div>'+
- '<div><b>💬 جمله پیشنهادی (با لحن خودتان تمرین کنید)</b><p>'+x[2]+'</p></div>'+
+ '<div><b>💬 جمله پیشنهادی متناسب با همین تکنیک</b><p>'+s1ActionPhrases[s1ActionScene][s1ActionMove]+'</p></div>'+
  '<div><b>✅ چه کار می‌کنم؟</b><p>در اولین موقعیت واقعی، جمله را اجرا می‌کنم؛ مسئول، زمان و کانال پیگیری را روشن می‌کنم.</p></div>'+
  '<div><b>🔎 چه چیزی را می‌سنجم؟</b><p>'+x[3]+'</p></div>'+
  '<div><b>📝 بازنگری یک‌دقیقه‌ای</b><p>چه گفتم؟ مخاطب چه واکنشی نشان داد؟ دفعه بعد چه چیزی را بهتر می‌گویم؟</p></div>';
