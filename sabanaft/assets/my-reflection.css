@@ -1,0 +1,52 @@
+/* My Reflection — intentional, calm, responsive, RTL-first. */
+.rfx-hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#0b2b4e,#114d86 66%,#14729a);color:#fff;border-radius:25px;padding:clamp(23px,4vw,38px);box-shadow:0 16px 39px #0f3c7a18}
+.rfx-hero:before{content:"";position:absolute;width:300px;height:300px;border:47px solid #ffffff0a;border-radius:50%;left:-120px;bottom:-205px}
+.rfx-hero>*{position:relative}
+.rfx-hero h1{font-size:clamp(22px,2.8vw,31px);line-height:1.6;margin:8px 0}
+.rfx-hero p{max-width:660px;color:#d5eafb;margin:0 0 17px}
+.rfx-overline{font-size:11px;font-weight:900;color:#ffa85c;letter-spacing:.5px}
+.rfx-meta{display:flex;gap:10px;flex-wrap:wrap}
+.rfx-meta span{background:#ffffff1b;border:1px solid #ffffff31;border-radius:999px;padding:4px 10px;font-size:11px}
+.rfx-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0 0}
+.rfx-metrics>div{background:#fff;border:1px solid #dce7ef;border-radius:17px;min-height:88px;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rfx-metrics small{font-size:12px;color:#62798e}
+.rfx-metrics b{font-size:25px;color:#164b7b;white-space:nowrap}
+.rfx-main{min-height:560px}
+.rfx-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:14px}
+.rfx-steps button{min-width:0;background:#eff4f9;border:1px solid #d8e5ef;border-radius:13px;color:#58738b;padding:10px 5px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:12px}
+.rfx-steps button.active{background:#e4f2fd;border:2px solid #237dbd;color:#155d93}
+.rfx-steps button span{width:22px;height:22px;background:#dbe7f1;display:grid;place-items:center;border-radius:8px;font-size:12px;flex-shrink:0}
+.rfx-steps button.active span{background:#1b76b1;color:#fff}
+.rfx-bar{height:5px;background:#ecf0f5;border-radius:99px;overflow:hidden;margin:13px 0 21px}
+.rfx-bar span{display:block;height:100%;background:linear-gradient(90deg,#11a69e,#3d94c7);border-radius:99px}
+.rfx-main h2{font-size:19px;line-height:1.7;margin:10px 0 6px}
+.rfx-main form .field{margin:16px 0}
+.rfx-main form textarea{width:100%;min-height:95px}
+.rfx-choices{display:flex;flex-wrap:wrap;gap:9px;margin:19px 0}
+.rfx-choice{border:1.5px solid #d6e3ee;border-radius:13px;background:#f8fbfe;color:#385877;padding:12px 14px;font-weight:800;font-size:13px;min-height:46px}
+.rfx-choice:hover{border-color:#80b0d6}
+.rfx-choice.selected{border-color:#187bc0;background:#e1f2fd;color:#11598f;box-shadow:inset 0 -2px #328dca}
+.rfx-soft{background:#f1f6fb;color:#416580;border-right:3px solid #78b8da;border-radius:10px;padding:10px 13px;font-size:12px;margin:14px 0}
+.rfx-buttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:19px}
+.rfx-main p.small{margin-top:13px}
+.rfx-mirror{align-self:start}
+.rfx-mirror h2{font-size:18px;margin:7px 0}
+.rfx-mirror>p{font-size:13px}
+.rfx-mirror .rfx-overline{color:#2287bd}
+.rfx-role{margin:15px 0;font-weight:900;border:1px solid #deebf4;border-radius:11px;padding:11px;color:#365c79}
+.rfx-role i{width:10px;height:10px;display:inline-block;border-radius:50%;margin-left:8px}
+.rfx-prompt{border:1px solid #dceaf3;border-right:3px solid #0ca9aa;background:#f8fbff;border-radius:11px;margin:11px 0;padding:13px;color:#385870;font-size:13px}
+.rfx-links{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
+.rfx-confidential{padding:12px;border-radius:11px;background:#eff6fa;color:#516e83;font-size:11px!important}
+.rfx-empty{text-align:center;border:1px dashed #cfdfed;background:#f7fafd;border-radius:13px;padding:30px 14px;color:#607990}
+.rfx-record{border:1px solid #e0eaf1;border-radius:13px;margin-top:9px;overflow:hidden;background:#fff}
+.rfx-record summary{padding:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rfx-record summary span{font-size:12px;color:#5c758d}
+.rfx-record summary b{white-space:nowrap}
+.rfx-record[open]{background:#f9fcff}
+.rfx-record>div{padding:4px 15px 14px;border-top:1px solid #e6edf4;color:#3d5b76}
+.rfx-record p{margin:8px 0;font-size:13px;overflow-wrap:anywhere}
+.rfx-citation{font-size:11px;color:#8b9cad;margin:20px 3px}
+@media(max-width:920px){.rfx-steps button{font-size:11px;gap:3px}.rfx-steps button span{width:18px;height:18px}}
+@media(max-width:760px){.rfx-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.rfx-metrics>div{padding:9px;align-items:start;flex-direction:column;justify-content:space-between;min-height:85px}.rfx-metrics small{font-size:10px}.rfx-metrics b{font-size:21px}.rfx-steps{gap:4px}.rfx-steps button{font-size:10px;flex-direction:column;gap:3px;padding:9px 3px}.rfx-steps button span{width:22px;height:22px}.rfx-main{min-height:0}.rfx-hero{border-radius:20px}.rfx-choice{padding:9px 12px;font-size:12px}.rfx-record summary{align-items:start;flex-direction:column;gap:3px}}
+@media(prefers-reduced-motion:reduce){.rfx-bar span{transition:none!important}}
