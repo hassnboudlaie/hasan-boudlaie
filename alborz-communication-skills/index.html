@@ -549,6 +549,23 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 @media(max-width:700px){.s1-intro-hero{grid-template-columns:1fr}.s1-intro-text{padding:17px}.s1-intro-text p{font-size:16px}.s1-intro-visual{min-height:190px}.s1-today-grid{grid-template-columns:1fr}.s1-today-grid>div{padding:12px}.s1-roadmap{padding:12px}.s1-roadmap-node strong{font-size:14px}.s1-roadmap-icon{width:47px;height:47px;font-size:23px}.s1-roadmap-node{padding:9px 4px}.s1-roadmap-node small{font-size:11px}.s1-roadmap-footer span{font-size:13px}}
 @media(max-width:430px){.s1-roadmap-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.s1-roadmap-node{padding:12px 6px}.s1-new-opening-case .s1-moment-story{font-size:15px}}
 </style>
+<style id="s1-human-interaction-cases-20261025">
+.s1-case-human[hidden],.s1-live-consequence[hidden]{display:none!important}
+.s1-live-dialogue{margin:15px 0 10px;padding:17px;border:1px solid #bfdccf;border-radius:19px;background:linear-gradient(140deg,#f6fbf8,#eef8f4);box-shadow:0 9px 24px #0b5d4012}
+.s1-live-label{display:inline-block;background:#0d7953;color:white;padding:5px 12px;font-size:13px;font-weight:900;border-radius:99px;margin-bottom:11px}
+.s1-live-speech{max-width:92%;background:#fff;border:1px solid #d3e6dc;border-right:5px solid #19855f;border-radius:16px 16px 4px 16px;padding:14px 16px;box-shadow:0 6px 19px #0b653b14}
+.s1-live-speech b{font-size:15px;color:#166347}
+.s1-live-speech p{margin:6px 0 0;font-size:17px;line-height:2;color:#234b3b}
+.s1-live-question{margin:16px 0 10px;display:flex;flex-direction:column;gap:5px}
+.s1-live-question b{font-size:18px;color:#165a40}.s1-live-question small{font-size:14px;color:#587266}
+.s1-live-replies{display:grid;gap:9px}
+.s1-live-replies button{width:100%;text-align:right;border:1.5px solid #d6e5db;border-radius:13px;background:white;padding:12px 14px;color:#265541;font:650 16px/1.9 Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.s1-live-replies button:hover{border-color:#69b58d;background:#f4fbf6}
+.s1-live-replies button.selected{border-color:#138255;background:#e8f8ed;box-shadow:inset 0 0 0 1px #219567}
+.s1-live-consequence{margin:12px 0;background:#fff8e8;border-right:4px solid #c19b4c;border-radius:12px;padding:12px 14px;font-size:15px;line-height:2;color:#5c4d28}
+.s1-live-note{font-size:14px;color:#52735e;line-height:1.95;margin-top:13px;border-top:1px dashed #c5dfd0;padding-top:10px}
+@media(max-width:640px){.s1-live-dialogue{padding:12px}.s1-live-speech{max-width:100%;padding:10px 13px}.s1-live-speech p{font-size:16px}.s1-live-replies button{font-size:15px;padding:10px 12px}}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -1325,17 +1342,83 @@ function s1CaseSkillHtml(index){
  '<p class="s1-case-skill-practice">🎙 در ۲۰ ثانیه همین پاسخ را با لحن خودتان اجرا کنید؛ چه چیزی را دقیق‌تر می‌گویید؟</p>';
 }
 
+
+const s1HumanDialogue={
+ 0:{person:"👤 مشتری در حال گفت‌وگو",reply:[
+  "«متوجه‌ام مهمان جدید مهم است، ولی ما هم وسط بررسی گزارش خسارت هستیم. قرار است از اول توضیح بدهم؟»",
+  "«ممنون که گفت‌وگو را رها نمی‌کنید. فقط بگویید حدوداً چقدر باید منتظر بمانیم؟»",
+  "«پس من باید همین‌طور بنشینم و هیچ‌کس حتی نگفت مهمان آمده؟»"
+ ],turn:"در پاسخ به نگرانی مشتری فعلی، اولین جمله شما چیست؟",choices:[
+  ["«قرار است مهمان مهمی برسد، عجله داریم؛ شما هم کمی همراهی کنید.»","اولویتِ جایگاه را جایگزین توضیح منصفانه می‌کند؛ ممکن است مشتری احساس کند ارزش کمتری دارد."],
+  ["«حق دارید زمان گفت‌وگو برایتان روشن باشد. موضوع این پرونده را با شما نیمه‌کاره رها نمی‌کنم؛ همکارم فوریت مهمان را بررسی می‌کند و ظرف چند دقیقه درباره ادامه گفت‌وگو به شما اطلاع می‌دهم.»","شناخت دغدغه، شفافیت زمان و حفظ نوبت؛ تصمیم نهایی با سنجش فوریت گرفته می‌شود."]
+ ]},
+ 1:{person:"🤝 نماینده باسابقه",reply:[
+  "«پس می‌خواهید قرارداد ۱۰ میلیاردی را به خاطر یک مدرک از دست بدهیم؟»",
+  "«ممنون؛ اگر نتوانستید امروز تأیید بگیرید، من به مشتری چه بگویم؟»",
+  "«بقیه شعب راهش را بلدند؛ فقط اینجا همه چیز سخت است!»"
+ ],turn:"با فشار نماینده چه می‌کنید تا رابطه و ضابطه هر دو حفظ شوند؟",choices:[
+  ["«اگر لازم باشد خودم پیگیری می‌کنم، ولی از این مرحله نمی‌توانیم بدون تأیید مجاز عبور کنیم. بگویید دقیقاً چه مهلتی داریم تا مسیر تکمیل یا استعلام را مشخص کنم.»","پرسش روشن‌کننده، حفظ مرز اختیار و پذیرش مسئولیت ارتباطی را هم‌زمان اجرا می‌کند."],
+  ["«این به من مربوط نیست، با صدور هماهنگ کنید.»","ارجاع بدون مسئول و موعد، مسئله ارتباطی را به بن‌بست می‌برد."]
+ ]},
+ 2:{person:"🏢 مدیر ستادی",reply:[
+  "«این توضیح‌ها را هر شعبه‌ای می‌دهد؛ بگویید بالاخره مسئول چه کسی است؟»",
+  "«پس من تا فردا منتظر گزارش دقیق و مستند شما هستم. چه داده‌هایی لازم دارید؟»",
+  "«سکوتتان یعنی تأیید می‌کنید شعبه کوتاهی کرده است.»"
+ ],turn:"در حضور کارکنان، بدون دفاع هیجانی و بدون تحقیر تیم چه می‌گویید؟",choices:[
+  ["«همین‌جا مشخص کنید مشکل از ستاد است یا شعبه، تا کارکنان بدانند.»","دعوت به مقصریابی فوری، بدون داده، می‌تواند تعارض را تشدید کند."],
+  ["«مسئولیت بررسی و پاسخ‌گویی شعبه با من است. درباره علت، قبل از دیدن ثبت زمان‌ها قضاوت نمی‌کنم؛ امروز داده‌ها را جمع می‌کنم و نتیجه و اقدام اصلاحی را در زمان مشخص ارائه می‌دهم.»","Accountability را می‌پذیرد، بدون نسبت‌دادن علت اثبات‌نشده؛ شأن تیم نیز حفظ می‌شود."]
+ ]},
+ 3:{person:"👔 مدیر منابع انسانی مشتری سازمانی",reply:[
+  "«من به کارشناس شما اطمینان کرده بودم؛ الان معلوم نیست چه کسی شرایط بیمه را می‌شناسد.»",
+  "«متشکرم. آیا پاسخی که بعداً می‌فرستید رسمی و قابل استناد خواهد بود؟»",
+  "«پس بهتر بود از اول خودتان در جلسه باشید.»"
+ ],turn:"چگونه اعتماد را بدون تضعیف کارشناس جدید برمی‌گردانید؟",choices:[
+  ["«همکارم تازه‌کار است؛ اشکالی ندارد، من جواب می‌دهم.»","کاهش شأن همکار همراه با پاسخ احتمالی، دقت و اعتبار حرفه‌ای را تضعیف می‌کند."],
+  ["«پرسش شما تخصصی و قابل‌توجه است. همکارم مسئول هماهنگی بررسی خواهد بود و نتیجه مطابق شرایط قرارداد، پس از تأیید مرجع مربوط، از کانال رسمی به شما اعلام می‌شود.»","هم شأن همکار را حفظ می‌کند و هم نوع پاسخ، مسئول پیگیری و مرجع تأیید را مشخص می‌سازد."]
+ ]},
+ 4:{person:"😟 مشتری خسارت‌دیده",reply:[
+  "«یعنی باز می‌گویید خودم باید دنبال رسید قدیمی بگردم؟»",
+  "«اگر مسئول پیگیری مشخص شد، آیا لازم است فردا دوباره حضوری بیایم؟»",
+  "«پس می‌خواهید من دوباره با ستاد تماس بگیرم؟»"
+ ],turn:"در مرحله دوم چگونه جلوی احساس پاس‌کاری را می‌گیرید؟",choices:[
+  ["«مسئول بررسی از داخل شعبه تعیین می‌شود. شما لازم نیست برای فهم وضعیت بین واحدها جابه‌جا شوید؛ اگر مدرک تازه‌ای لازم باشد، دقیق و از مسیر امن اطلاع می‌دهیم.»","پذیرش مالکیت ارتباطی و روشن‌کردن مسیر؛ بدون قول نتیجه خسارت."],
+  ["«تا جواب ستاد نیاید هیچ کاری نمی‌توانیم بکنیم؛ بعداً تماس بگیرید.»","ممکن است از نظر تصمیم تخصصی درست باشد، ولی برای اطلاع‌رسانی و پیگیریِ در اختیار شعبه قابل دفاع نیست."]
+ ]},
+ 5:{person:"📱 بیمه‌گذار با کد پیگیری برخط",reply:[
+  "«پس برای چه کد پیگیری گرفتم؟ بهتر است اصلاً همه مدارک را دوباره بفرستم؟»",
+  "«ممنون. فقط نگرانم اطلاعات شخصی‌ام چند بار برای افراد مختلف ارسال شود.»",
+  "«خب معلوم شد شعبه شما هم به ثبت‌های آنلاین دسترسی ندارد.»"
+ ],turn:"چه پاسخ انسانی و دقیقی برای حفظ محرمانگی و اعتماد می‌دهید؟",choices:[
+  ["«همین‌جا مدارک را به واتس‌اپ همکار می‌فرستید که راحت‌تر شود.»","کانال شخصی برای اسناد بیمه‌گذار، ریسک محرمانگی دارد و دوباره‌کاری را عادی می‌کند."],
+  ["«نگرانی شما درباره تکرار ارسال و محرمانگی کاملاً بجاست. اول با کد پیگیری، وضعیت را از مسیر مجاز بررسی می‌کنیم؛ اگر نقصی باشد فقط همان مورد را از کانال رسمی می‌خواهیم.»","بازتاب نگرانی، شفاف‌سازی و حفاظت از اطلاعات را در یک پاسخ قابل اجرا کنار هم می‌گذارد."]
+ ]}
+};
+function s1CaseHumanHtml(caseIndex,decision){
+ const x=s1HumanDialogue[caseIndex];if(!x)return "";
+ return '<div class="s1-live-dialogue"><div class="s1-live-phase"><span class="s1-live-label">🎬 گفت‌وگو ادامه دارد</span><div class="s1-live-speech"><b>'+x.person+'</b><p>'+x.reply[decision]+'</p></div></div>'+
+ '<div class="s1-live-question"><b>🗣️ حالا چه می‌گویید؟</b><small>'+x.turn+'</small></div>'+
+ '<div class="s1-live-replies">'+x.choices.map((o,i)=>'<button type="button" data-s1-live-answer="'+i+'" data-s1-live-case="'+caseIndex+'" aria-pressed="false">'+o[0]+'</button>').join("")+'</div>'+
+ '<div class="s1-live-consequence" hidden role="status" aria-live="polite"></div>'+
+ '<div class="s1-live-note">👂 نکته تمرینی: لحن، مکث و شنیدن پاسخ طرف مقابل به‌اندازه محتوای جمله اهمیت دارد. این گفت‌وگوها نمونه آموزشی‌اند؛ واکنش واقعی افراد می‌تواند متفاوت باشد.</div></div>';
+}
+function s1CaseHumanFollow(btn,index,caseIndex){
+ const x=s1HumanDialogue[caseIndex],pane=btn.closest(".s1-live-dialogue");if(!x||!pane||!x.choices[index])return;
+ pane.querySelectorAll("[data-s1-live-answer]").forEach(b=>{b.classList.toggle("selected",b===btn);b.setAttribute("aria-pressed",String(b===btn))});
+ const fb=pane.querySelector(".s1-live-consequence");fb.hidden=false;fb.textContent=(x.choices[index][1])+"  💡 اکنون همین پاسخ را بدون خواندن متن، با عبارت طبیعی خودتان اجرا کنید.";
+}
+
 function s1CaseLabHtml(){
  const x=s1CaseData[s1CasesNow()[s1CaseIndex]];
  return '<div class="s1-panel-head"><div class="bigico">🎭</div><div><h2>آزمایشگاه سناریوها</h2><p>سه موقعیت اصلی برای تصمیم‌گیری؛ سه موقعیت بیشتر در بخش اختیاری</p></div></div>'+
- '<div class="s1-callout"><b>🎯 تمرین:</b> ابتدا تصمیم بگیرید؛ سپس تحلیل همان تصمیم، تکنیک مرتبط و یک جمله کاربردی در شعبه را ببینید. در پایان آن جمله را با زبان خودتان بازاجرا کنید.</div>'+
- '<div class="s1-case-step"><div class="s1-step-head"><span class="s1-step-count">موقعیت '+(s1CaseIndex+1).toLocaleString("fa-IR")+' از ۳'+(s1CaseTrack==="extra"?" · تکمیلی":"")+'</span><div class="s1-progress"><span style="width:'+(((s1CaseIndex+1)/3)*100)+'%"></span></div></div><div class="s1-case"><h3>'+x.title+'</h3><p>'+x.scenario+'</p><div class="s1-options">'+x.options.map((o,i)=>'<button class="s1-option" onclick="chooseS1CaseOption('+i+',this)">'+o[0]+'</button>').join('')+'</div><div id="s1-case-feedback" class="s1-feedback"></div><div id="s1-case-skill" class="s1-case-skill" hidden></div><div id="s1-case-stage2"></div><button id="s1-next-case" class="s1-next-case" onclick="nextS1Case()">'+(s1CaseIndex<2?"موقعیت بعدی ←":"پایان سه موقعیت ✓")+'</button></div></div>'+
+ '<div class="s1-callout"><b>🎯 روش اجرا:</b> یک تصمیم بگیرید؛ پاسخ طبیعی مخاطب را ببینید و یک پاسخ دوم انتخاب کنید. بعد تکنیک ارتباطی مرتبط را مرور و گفت‌وگو را با لحن خودتان بازاجرا کنید.</div>'+
+ '<div class="s1-case-step"><div class="s1-step-head"><span class="s1-step-count">موقعیت '+(s1CaseIndex+1).toLocaleString("fa-IR")+' از ۳'+(s1CaseTrack==="extra"?" · تکمیلی":"")+'</span><div class="s1-progress"><span style="width:'+(((s1CaseIndex+1)/3)*100)+'%"></span></div></div><div class="s1-case"><h3>'+x.title+'</h3><p>'+x.scenario+'</p><div class="s1-options">'+x.options.map((o,i)=>'<button class="s1-option" onclick="chooseS1CaseOption('+i+',this)">'+o[0]+'</button>').join('')+'</div><div id="s1-case-feedback" class="s1-feedback"></div><div id="s1-case-human" class="s1-case-human" hidden></div><div id="s1-case-skill" class="s1-case-skill" hidden></div><div id="s1-case-stage2"></div><button id="s1-next-case" class="s1-next-case" onclick="nextS1Case()">'+(s1CaseIndex<2?"موقعیت بعدی ←":"پایان سه موقعیت ✓")+'</button></div></div>'+
  '<details class="s1-optional-cases"><summary>سه سناریوی دیگر برای مطالعه یا تمرین بیشتر</summary><p>سناریوهای تکمیلی حفظ شده‌اند، اما در برنامه اصلی ۱۲۰ دقیقه‌ای کلاس الزامی نیستند.</p><button type="button" onclick="s1ChooseTrack(\'extra\')">مشاهده سناریوهای تکمیلی</button><button type="button" onclick="s1ChooseTrack(\'main\')">بازگشت به سه سناریوی اصلی</button></details>';
 }
 function chooseS1CaseOption(i,btn){
  const x=s1CaseData[s1CasesNow()[s1CaseIndex]],o=x.options[i],box=btn.closest(".s1-case");
  box.querySelectorAll(".s1-option").forEach(b=>{b.style.opacity=".55";b.style.borderColor="#c7dccd"});btn.style.opacity="1";btn.style.borderColor=o[1]?"#168353":"#cf654f";
  const feedback=document.getElementById("s1-case-feedback");feedback.textContent=(o[1]?"✓ ":"↩ ")+o[2];feedback.classList.add("show");
+ const live=document.getElementById("s1-case-human");if(live){live.innerHTML=s1CaseHumanHtml(s1CasesNow()[s1CaseIndex],i);live.hidden=false;}
  const skill=document.getElementById("s1-case-skill");if(skill){skill.innerHTML=s1CaseSkillHtml(s1CasesNow()[s1CaseIndex]);skill.hidden=false;}
  const next=document.getElementById("s1-case-stage2");next.textContent=x.stage2?"سؤال تکمیلی: "+x.stage2:"";
  const btnNext=document.getElementById("s1-next-case");if(btnNext)btnNext.classList.add("show");
@@ -1371,6 +1454,7 @@ function session1Page(){
    else if(target.hasAttribute("data-s1-action-scene"))s1ActionSelect(target,"scene",Number(target.dataset.s1ActionScene));
    else if(target.hasAttribute("data-s1-action-move"))s1ActionSelect(target,"move",Number(target.dataset.s1ActionMove));
    else if(target.hasAttribute("data-s1-roadmap")){const id=target.dataset.s1Roadmap;openS1(id,document.querySelector('[data-s1="'+id+'"]'));}
+   else if(target.hasAttribute("data-s1-live-answer"))s1CaseHumanFollow(target,Number(target.dataset.s1LiveAnswer),Number(target.dataset.s1LiveCase));
   });
  }
  const initialSection=new URLSearchParams(location.search).get("section");
