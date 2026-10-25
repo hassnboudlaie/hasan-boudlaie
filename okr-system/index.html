@@ -1188,6 +1188,7 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 <link rel="stylesheet" href="assets/okr-visual-upgrade-20261023.css?v=6">
 <link rel="stylesheet" href="assets/kish-operational-20261025.css?v=1">
 <link rel="stylesheet" href="assets/kish-strategy-map-20261025.css?v=2">
+<link rel="stylesheet" href="assets/kish-team-dashboard-20261025.css?v=1">
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
 
@@ -4190,12 +4191,109 @@ function pdEnhanceDialogVisual(kind){
  };
 })();
 
+
+/* PHASE 2 — Team Goals uses the existing data model, forms and persistence. */
+(function kishLiveTeams(){
+ pPages.team=['داشبورد اهداف واحدها','Team goals'];
+ navigationPages.team=pPages.team;
+ function snapshot(){
+  const platform=pEnsure(),program=gpEnsure();
+  const chart=ORG_CHART.map(n=>({id:n.id,parentId:n.parentId||null,teamId:pTeam(n.id)?.id||n.id,name:orgName(n)}));
+  const units=state.teams.map(t=>({id:t.id,orgChartId:t.orgChartId,name:unitName(t),lead:t.lead||'',descendantIds:[...pDescendants(t.id)]}));
+  const scopes={};
+  units.forEach(t=>{scopes[t.id]={goals:pUnitGoals(t.id).map(x=>x.objective),kpis:pUnitKpis(t.id)}});
+  return {
+   orgChart:chart,units,scopes,goals:allObjectives().map(x=>x.objective),
+   kpis:pKpis(),people:platform.people||[],history:state.history||[],
+   kpiHistory:platform.kpiHistory||[],initiatives:state.initiatives||[],
+   cycles:program.cycles||[],activity:platform.activity||[]
+  };
+ }
+ window.KishTeamBridge={
+  snapshot,
+  refresh:function(){
+   if(location.hash.slice(1).split('/')[0]==='team')pRender('team',location.hash.split('/')[1]||'company',location.hash.split('/')[2]||'goals');
+  }
+ };
+ const previousTeamRender=pRender;
+ pRender=function(key,record='',tab=''){
+  if(key==='team'){
+   const body=document.getElementById('platformBody');
+   if(body)body.innerHTML='<div class="p-page">'+(window.KishTeamView?.render?window.KishTeamView.render(snapshot(),record||'company',tab||'goals'):'<div class="p-card">در حال آماده‌سازی داشبورد واحدها…</div>')+'</div>';
+   pInstallNav();
+   return;
+  }
+  return previousTeamRender(key,record,tab);
+ };
+ const previousTeamNav=pInstallNav;
+ pInstallNav=function(){
+  previousTeamNav();
+  const nav=document.getElementById('platformNav'),current=location.hash.slice(1).split('/')[0];
+  if(nav){
+   let explore=nav.querySelectorAll('.pd-nav-group')[1]||nav.querySelector('.pd-nav-group');
+   if(explore&&!explore.querySelector('.kt-sidebar-entry')){
+    let a=document.createElement('a');
+    a.className='kt-sidebar-entry';
+    a.href='#team/company/goals';
+    a.innerHTML='<span class="p-nav-icon" aria-hidden="true">👥</span><span data-fa="داشبورد اهداف واحدها" data-en="Team Goals">داشبورد اهداف واحدها</span>';
+    explore.appendChild(a);
+   }
+   const link=nav.querySelector('.kt-sidebar-entry');
+   if(link){
+    link.classList.toggle('active',current==='team');
+    link.setAttribute('aria-current',current==='team'?'page':'false');
+    const label=link.querySelector('span:last-child');
+    if(label)label.textContent=txt('داشبورد اهداف واحدها','Team Goals');
+   }
+  }
+  const mobile=document.getElementById('platformMobile');
+  if(mobile&&!mobile.querySelector('option[value="team"]')){
+   mobile.insertAdjacentHTML('beforeend','<option value="team">'+txt('داشبورد اهداف واحدها','Team Goals')+'</option>');
+  }
+ };
+ const oldOrgList=pOrgList;
+ pOrgList=function(){
+  return oldOrgList().replace(/href="#organization\/([^"#/]+)"/g,(m,id)=>id==='company'?m:'href="#team/'+id+'/goals"');
+ };
+ const initialForm=pForm;
+ pForm=function(kind,recordId='',context={}){
+  initialForm(kind,recordId,context);
+  if(kind==='goal'){
+   const dlg=document.getElementById('platformDialog');
+   const form=dlg?.querySelector('form');
+   if(form&&!form.querySelector('[name="programCycleId"]')){
+    const cycles=gpEnsure().cycles.filter(c=>!c.closedAt);
+    const current=gpEnsure().cycles.find(c=>(c.goalIds||[]).includes(recordId));
+    const options=[['',txt('بدون بازه زمانی','No timeframe')],...cycles.map(c=>[c.id,c.name||c.start])];
+    const field=pSelect(txt('بازه زمانی هدف','Objective timeframe'),'programCycleId',options,current?.id||'');
+    const parent=form.querySelector('[name="parentId"]')?.closest('.p-field');
+    if(parent)parent.insertAdjacentHTML('afterend',field);
+   }
+  }
+ };
+ const oldGoalSubmit=pSubmit;
+ pSubmit=function(kind,values,recordId='',context={}){
+  const was=kind==='goal'&&recordId?pGoal(recordId)?.status:null;
+  const result=oldGoalSubmit(kind,values,recordId,context);
+  if(kind==='goal'&&recordId&&result?.ok&&was!==values.status){
+   const p=pEnsure();
+   p.goalStatusHistory||=[];
+   p.goalStatusHistory.push({objectiveId:recordId,from:was||'draft',to:values.status,at:new Date().toISOString(),by:auth?.name||''});
+   p.goalStatusHistory=p.goalStatusHistory.slice(-300);
+   pCommit('Objective lifecycle changed');
+  }
+  return result;
+ };
+ pInstallNav();
+})();
+
 Promise.resolve().then(dsInitialize);
 
 })();
 </script>
 <script src="assets/kish-operational-20261025.js?v=1" defer></script>
 <script defer src="assets/kish-strategy-map-20261025.js?v=2"></script>
+<script defer src="assets/kish-team-dashboard-20261025.js?v=1"></script>
 </body>
 </html>
 
