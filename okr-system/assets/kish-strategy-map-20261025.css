@@ -127,3 +127,15 @@
 .kish-perdoo .km-collapse:hover{background:#dff0ff!important}
 .kish-perdoo .km-person{text-decoration:none;color:#617e96!important}
 .kish-perdoo .km-person:hover{color:#1784b5!important;text-decoration:underline}
+
+
+/* Nested strategic pillar presentation — additive and opt-in to a parentId relationship. */
+.kish-perdoo .km-subpillars{margin-top:18px;padding:11px 15px 2px 0;border-right:3px solid #9bc9ee;display:block}
+.kish-perdoo .km-subpillars-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;padding:7px 11px;background:#eef7ff;border-radius:10px;color:#245b86;font-size:12px;font-weight:800}
+.kish-perdoo .km-subpillars-heading button{font:inherit;color:#285f92!important;background:#fff!important;border:1px solid #b9d4ec;border-radius:8px;padding:6px 10px;cursor:pointer}
+.kish-perdoo .km-subpillars .km-nested-lane{width:auto!important;flex:none!important;min-width:0;max-width:100%;margin:10px 0 14px;padding:11px;border:1px solid #d8e4f2;border-radius:16px;background:linear-gradient(160deg,#fbfdff,#f0f8ff);box-sizing:border-box}
+.kish-perdoo .km-subpillars .km-nested-lane:before{display:none}
+.kish-perdoo .km-subpillars .km-nested-lane .km-pillar{min-height:0;border-top-color:#35a8b8}
+.kish-perdoo .km-subpillars .km-nested-lane .km-lane-body{padding:8px;background:#fff}
+.kish-perdoo .km-subpillars .km-nested-lane .km-goal{max-width:100%}
+@media(max-width:600px){.kish-perdoo .km-subpillars{padding-right:8px}.kish-perdoo .km-subpillars .km-nested-lane{padding:7px}.kish-perdoo .km-subpillars-heading{font-size:11px;flex-wrap:wrap}}
