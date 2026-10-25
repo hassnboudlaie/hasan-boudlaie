@@ -37,31 +37,36 @@ function focus(s){
  return cs[0];
 }
 function home(s){
-  var cases=s.cases||[],f=focus(s),display=clean((s.profile&&s.profile.name||'').split(/\s+/)[0],45);
-  var draft=s.quickDraft||'',contextCount=Object.values((s.context&&s.context.dimensions)||{}).filter(function(v){return v&&v.value;}).length;
-  var dayCount=s.daily&&Array.isArray(s.daily.items)?s.daily.items.length:0;
-  var target=f&&f.c,kind=f&&f.kind;
-  var actionable=target&&(kind==='progress'||kind==='attention')&&!!target.action;
-  var actionText=target?(kind==='reviewed'?'بازگشت به یادگیری ثبت‌شده':kind==='attention'&&target.action?'مرور نتیجه اقدام':kind==='progress'&&target.action?'مرور نتیجه اقدام':'بررسی و تکمیل تصمیم'):'شروع مسیر شخصی';
-  return '<div class="up-home">'
-    +'<div class="up-welcome"><div class="up-eyebrow">REFLECTIVE LEADERSHIP</div><h1>'+(display?'سلام '+esc(display)+'، ':'')+'امروز چه مسئله‌ای پیش روی شماست؟</h1><p>یک موقعیت واقعی را مطرح کنید. با هم گزینه‌های رهبری متناسب با شرایط آن را بررسی می‌کنیم.</p></div>'
-    +'<section class="up-composer" aria-label="طرح یک مسئله جدید">'
-    +'<div class="up-composer-head"><div class="up-composer-icon" aria-hidden="true">✦</div><div><h2>از همین‌جا شروع کنید</h2><p>با نوشتن یا گفتن مسئله؛ بدون فرم طولانی.</p></div></div>'
-    +'<label class="up-input-label" for="ux-quick-case">مسئله شما چیست؟</label>'
-    +'<textarea id="ux-quick-case" rows="4" maxlength="3500" placeholder="مثلاً یکی از اعضای تیم مسئولیت جدید را نمی‌پذیرد؛ نمی‌دانم چطور با او گفت‌وگو کنم.">'+esc(draft)+'</textarea>'
-    +'<div class="up-composer-toolbar"><div class="up-voice-group"><button type="button" class="up-mic" data-ux-voice aria-pressed="false"><span aria-hidden="true">◉</span> گفتن مسئله</button><span id="ux-voice-status" class="up-voice-note" role="status">متن قابل ویرایش خواهد بود</span></div>'
-    +'<button type="button" class="btn up-primary" data-ux-submit-case>بررسی مسئله <span aria-hidden="true">←</span></button></div>'
-    +'</section>'
-    +'<div class="up-privacy-line"><span aria-hidden="true">◈</span> نسخه آزمایشی؛ داده‌ها فقط در مرورگر این دستگاه ذخیره می‌شوند. اطلاعات محرمانه وارد نکنید؛ تبدیل گفتار ممکن است از سرویس بیرونی استفاده کند.</div>'
-    +'<div class="up-section-head"><h2>ادامه مسیر من</h2></div>'
-    +'<div class="up-next-grid">'
-    +(target?
-      '<div class="up-next-card up-case-next up-focus-card"><span class="up-mini-illustration up-case-icon" aria-hidden="true">◇</span><div class="up-next-content"><span class="up-next-kicker">تمرکز فعلی من <span class="up-focus-status '+kind+'">'+statusLabel(kind)+'</span></span><strong>'+esc(target.title)+'</strong><small>'+esc(target.action||'هنوز اقدام مشخصی ثبت نشده')+'</small></div><button type="button" class="up-focus-action" '+(kind==='reviewed'?'data-ux-go="daily"':actionable?'data-ux-checkin="'+esc(target.id)+'"':'data-ux-open="'+esc(target.id)+'"')+' aria-label="'+esc(actionText)+' برای '+esc(target.title)+'">'+actionText+' ←</button></div>'
-      :'<button class="up-next-card up-case-next" type="button" data-ux-go="profile"><span class="up-mini-illustration up-case-icon" aria-hidden="true">◇</span><span class="up-next-content"><span class="up-next-kicker">شروع مسیر شخصی</span><strong>آشنایی با سبک رهبری خودم</strong><small>می‌توانید بعداً هم آن را تکمیل کنید</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>')
-    +'<button class="up-next-card up-reflect-next" type="button" data-ux-go="daily"><span class="up-mini-illustration up-reflect-icon" aria-hidden="true">◷</span><span class="up-next-content"><span class="up-next-kicker">MY REFLECTION</span><strong>سه دقیقه برای بازاندیشی</strong><small>'+(dayCount?'یادگیری از تجربه امروز':'از یک اتفاق کوچک امروز شروع کنید')+'</small></span><span class="up-next-arrow" aria-hidden="true">←</span></button>'
-    +'</div>'
-    +'<div class="up-meta-footer"><span>بافت ثبت‌شده: '+contextCount+' از ۱۸ بُعد</span><button type="button" data-ux-go="mix">Leadership Idea من</button><span class="up-meta-dot">·</span><button type="button" data-ux-go="coach">کوچ و منتور</button></div>'
-    +'</div>';
+ var f=focus(s),p=s.profile||{},name=clean((p.name||'').trim().split(/\s+/)[0],45);
+ var draft=s.quickDraft||'',dimensions=Object.values((s.context&&s.context.dimensions)||{}).filter(function(x){return x&&x.value;}).length;
+ var todayCount=s.daily&&Array.isArray(s.daily.items)?s.daily.items.length:0;
+ var c=f&&f.c,kind=f&&f.kind,actionable=c&&(kind==='attention'||kind==='progress')&&!!c.action;
+ var actionText=c?(kind==='reviewed'?'دیدن یادگیری':actionable?'مرور نتیجه':'ادامه تصمیم'):'شناخت رهبری من';
+ var actionAttr=c?(kind==='reviewed'?'data-ux-go="daily"':actionable?'data-ux-checkin="'+esc(c.id)+'"':'data-ux-open="'+esc(c.id)+'"'):'data-ux-go="profile"';
+ return '<div class="up-home ed-home">'
+ +'<section class="ed-hero" aria-label="شروع از یک مسئله واقعی">'
+ +'<div class="ed-hero-ornament" aria-hidden="true"><span class="ed-ring ed-ring-one"></span><span class="ed-ring ed-ring-two"></span><span class="ed-orb"></span></div>'
+ +'<div class="ed-hero-head"><span class="ed-supra">SABA NAFT <span aria-hidden="true">/</span> REFLECTIVE LEADERSHIP</span><span class="ed-hero-mark" aria-hidden="true">✳</span></div>'
+ +'<div class="ed-hero-content"><div class="ed-pretitle">فضای شخصی رهبری بازاندیشانه</div>'
+ +'<h1>'+(name?'<span class="ed-greet">سلام '+esc(name)+'،</span>':'')+'امروز چه مسئله‌ای <span>پیش روی شماست؟</span></h1>'
+ +'<p>از یک موقعیت واقعی شروع کنید؛ به تصمیمی روشن‌تر، گفت‌وگویی بهتر و یادگیری عملی برسید.</p></div>'
+ +'<div class="ed-compose"><div class="ed-compose-head"><span class="ed-compose-index">01</span><div><h2>مسئله‌تان را مطرح کنید</h2><p>بنویسید یا بگویید؛ نیازی به پرکردن فرم طولانی نیست.</p></div></div>'
+ +'<label for="ux-quick-case" class="ed-label">چه اتفاقی افتاده است؟</label>'
+ +'<textarea id="ux-quick-case" rows="4" maxlength="3500" placeholder="مثلاً یکی از اعضای تیم مسئولیت جدیدی را نمی‌پذیرد و نمی‌دانم گفت‌وگو را چگونه شروع کنم.">'+esc(draft)+'</textarea>'
+ +'<div class="ed-compose-actions"><div class="ed-compose-voice"><button type="button" class="ed-voice-button" data-ux-voice aria-pressed="false"><span aria-hidden="true">◉</span> گفتن مسئله</button><span id="ux-voice-status" class="ed-voice-status" role="status">متن قابل ویرایش است</span></div>'
+ +'<button type="button" class="ed-submit-button" data-ux-submit-case>بررسی مسئله <span aria-hidden="true">←</span></button></div></div>'
+ +'</section>'
+ +'<div class="up-privacy-line ed-privacy"><span aria-hidden="true">◇</span> نسخه آزمایشی با ذخیره‌سازی در همین مرورگر؛ اطلاعات محرمانه وارد نکنید. تبدیل گفتار ممکن است از سرویس بیرونی استفاده کند.</div>'
+ +'<div class="ed-section-title"><div><span>YOUR NEXT STEP</span><h2>ادامه مسیر من</h2></div><span class="ed-section-rule" aria-hidden="true"></span></div>'
+ +'<div class="ed-journey">'
+ +'<article class="ed-journey-item ed-journey-focus"><span class="ed-journey-number">01</span><div class="ed-journey-content"><span class="ed-kicker">'+(c?'تمرکز فعلی من':'شروع مسیر شخصی')+'</span>'
+ +'<h3>'+esc(c?c.title:'شناخت ایده رهبری من')+'</h3><p>'+esc(c?(c.action||'هنوز اقدام مشخصی ثبت نشده'):'ایده رهبری و بافت خود را به‌تدریج بشناسید.')+'</p>'
+ +(c?'<span class="ed-progress-state '+kind+'">'+statusLabel(kind)+'</span>':'')+'</div>'
+ +'<button type="button" class="ed-journey-action" '+actionAttr+' aria-label="'+esc(actionText+(c?' برای '+c.title:''))+'">'+actionText+' <span aria-hidden="true">←</span></button></article>'
+ +'<button type="button" class="ed-journey-item ed-journey-reflect" data-ux-go="daily"><span class="ed-journey-number">02</span><span class="ed-journey-content"><span class="ed-kicker">MY REFLECTION</span><strong>سه دقیقه برای بازاندیشی</strong><small>'+(todayCount?'ادامه یادگیری از تجربه امروز':'یک اتفاق کوچک امروز کافی است')+'</small></span><span class="ed-journey-arrow" aria-hidden="true">←</span></button>'
+ +'</div>'
+ +'<div class="ed-footlinks"><span>Context من: '+dimensions+' از ۱۸ بُعد</span><button type="button" data-ux-go="mix">ایده رهبری من</button><button type="button" data-ux-go="coach">کوچ و منتور</button></div>'
+ +'</div>';
 }
 function select(id,label,opts,v){return '<div class="field"><label for="'+id+'">'+label+'</label><select id="'+id+'" data-ux-select="'+id+'">'+opts.map(function(o){return '<option value="'+o[0]+'" '+(o[0]===v?'selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>';}
 function simulation(s){var cases=s.cases||[],sim=s.simulation||initialSimulation(),c=cases.find(function(x){return x.id===sim.caseId;})||cases[0],persona=actors[sim.persona]||actors.overloaded;
