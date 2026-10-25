@@ -2,11 +2,12 @@ name: Kish OKR | Perdoo 3.0 regression
 on:
   pull_request:
     paths:
-      - 'okr-system/assets/kish-strategy-map-20261025.js'
-      - 'okr-system/assets/kish-strategy-map-20261025.css'
-      - 'okr-system/assets/kish-team-dashboard-20261025.js'
-      - 'okr-system/tests/perdoo3-map-regression.cjs'
-      - 'okr-system/tests/browser-smoke.cjs'
+      - 'okr-system/**'
+      - '.github/workflows/kish-okr-regression.yml'
+  push:
+    branches: [main, 'feature/kish-unified-explore-20261025']
+    paths:
+      - 'okr-system/**'
       - '.github/workflows/kish-okr-regression.yml'
   workflow_dispatch:
 permissions:
@@ -24,8 +25,12 @@ jobs:
         run: |
           node --check okr-system/assets/kish-strategy-map-20261025.js
           node --check okr-system/assets/kish-team-dashboard-20261025.js
+          node --check okr-system/assets/kish-explore-model.js
+          node --check okr-system/assets/kish-explore.js
       - name: Run cross-view map regression tests
         run: node okr-system/tests/perdoo3-map-regression.cjs
+      - name: Test unified Explore data model
+        run: node okr-system/tests/explore-model.cjs
       - name: Install Chromium for read-only UI smoke tests
         run: |
           npm install --no-save playwright@1.56.1
@@ -35,3 +40,4 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/kish-okr-server.log 2>&1 &
           sleep 3
           node okr-system/tests/browser-smoke.cjs
+          node okr-system/tests/explore-browser.cjs
