@@ -25,10 +25,16 @@ function krPercent(k){
  return Math.max(0,Math.min(100,(c-b)/(t-b)*100));
 }
 function goalProgress(g){
- const all=g.krs||[],measured=all.map(krPercent).filter(n=>n!==null);
- if(!measured.length)return {n:null,count:0,total:all.length,rows:[]};
- const rows=all.map(k=>({k,p:krPercent(k)}));
- return {n:Math.round(measured.reduce((a,b)=>a+b,0)/measured.length),count:measured.length,total:all.length,rows};
+ const all=g.krs||[],rows=all.map(k=>({k,p:krPercent(k)})),measured=rows.filter(x=>x.p!==null);
+ const mode=['weighted','weighted-krs','weighted_kr'].includes(String(g.progressMode||g.progressMethod||g.progressCalculation||'').toLowerCase())||g.weightedProgress===true?'weighted':'average';
+ if(!measured.length)return {n:null,count:0,total:all.length,rows,mode,reason:'نتیجه قابل محاسبه وجود ندارد'};
+ if(mode==='weighted'){
+  const valid=measured.every(({k})=>k.weight!==null&&k.weight!==undefined&&String(k.weight).trim()!==''&&Number.isFinite(Number(k.weight))&&Number(k.weight)>=0);
+  const total=measured.reduce((sum,{k})=>sum+Number(k.weight||0),0);
+  if(!valid||!(total>0))return {n:null,count:measured.length,total:all.length,rows,mode,reason:'وزن معتبر برای تمام نتایج سنجیده ثبت نشده است'};
+  return {n:Math.round(measured.reduce((sum,{k,p})=>sum+p*Number(k.weight),0)/total),count:measured.length,total:all.length,rows,mode,reason:''};
+ }
+ return {n:Math.round(measured.reduce((sum,x)=>sum+x.p,0)/measured.length),count:measured.length,total:all.length,rows,mode,reason:''};
 }
 function health(g,history){
  if(g.status==='closed')return {name:'مختومه',cls:'closed',last:''};
@@ -115,7 +121,9 @@ function pillarHeader(p,data,goals){
  (missing?'<span title="شاخص‌هایی که مقدار جاری یا آستانه ندارند">'+faNum(missing)+' فاقد داده</span>':'')+'</div>'+
  '<div class="km-pillar-foot"><a href="#kpis">'+faNum(kpis.length)+' KPI</a><span>'+faNum(linked)+' هدف مستقیم · '+faNum(allGoals)+' هدف مرتبط</span></div></header>';
 }
-function renderLane(p,data,goalMap,cycleMap,pillarIds){
+function renderLane(p,data,goalMap,cycleMap,pillarIds,depth=0,seen=new Set()){
+ if(depth>10||seen.has(p.id))return '<p class="km-mini-note">ساختار ارکان دارای چرخه یا عمق نامعتبر است.</p>';
+ const ancestry=new Set([...seen,p.id]);
  const all=data.goals.filter(g=>pillarOf(g,goalMap,pillarIds)===p.id);
  const yearSelect=state.year;
  const applicable=all.filter(g=>{
@@ -137,29 +145,33 @@ function renderLane(p,data,goalMap,cycleMap,pillarIds){
  const directQ=qtrs.filter(g=>!used.has(g.id));
  directQ.forEach(g=>used.add(g.id));
  const unassigned=loose.filter(g=>!used.has(g.id));
- const noAnnual=ann.length===0;
- return '<section class="km-pillar-lane">'+pillarHeader(p,data,all)+
+ const subpillars=(data.strategy.pillars||[]).filter(x=>x.parentId===p.id&&x.id!==p.id);
+ const subkey='pillar:'+p.id,subopen=!state.collapsed.has(subkey);
+ const nested=subpillars.length?'<section class="km-subpillars"><div class="km-subpillars-heading"><span>↳ '+faNum(subpillars.length)+' زیررکن راهبردی</span><button type="button" data-km-collapse="'+esc(subkey)+'">'+(subopen?'▴ بستن زیرارکان':'▾ نمایش زیرارکان')+'</button></div>'+(subopen?subpillars.map(child=>renderLane(child,data,goalMap,cycleMap,pillarIds,depth+1,ancestry)).join(''):'')+'</section>':'';
+ return '<section class="km-pillar-lane'+(depth?' km-nested-lane':'')+'">'+pillarHeader(p,data,all)+
  '<div class="km-pillar-line"></div>'+
  '<div class="km-lane-body">'+
  (ann.length?'<div class="km-level-label"><i>۳</i> اهداف سالانه</div>'+annualBlock:'<div class="km-empty-year">اهداف سالانه برای این رکن و بازه تعریف نشده‌اند. <a href="#goals">مدیریت اهداف</a></div>')+
  (directQ.length?'<div class="km-level-label"><i>۴</i> اهداف فصلی با ارتباط مستقیم یا خارج از شاخه سالانه</div><div class="km-quarter-grid">'+directQ.map(g=>goalCard(g,data,{quarter:true})).join('')+'</div>':'')+
  (unassigned.length?'<details class="km-unassigned" '+(state.showUnassigned?'open':'')+'><summary>اهداف نیازمند تعیین دوره <b>'+faNum(unassigned.length)+'</b></summary><div class="km-quarter-grid">'+unassigned.map(g=>goalCard(g,data,{})).join('')+'</div></details>':'')+
- (!applicable.length?'<p class="km-mini-note">هدف مرتبطی برای این انتخاب ثبت نشده است.</p>':'')+
- '</div></section>';
+ (!applicable.length?'<p class="km-mini-note">هدف مستقیمی برای این رکن و بازه ثبت نشده است.</p>':'')+
+ nested+'</div></section>';
 }
 function helpModal(data,id){
  const g=data.goals.find(x=>x.id===id);if(!g)return;
- const p=goalProgress(g),rows=p.rows.map(({k,p:n})=>'<tr><td>'+esc(k.text)+'</td><td>'+esc(k.baseline??'—')+'</td><td>'+esc(k.current??'—')+'</td><td>'+esc(k.target??'—')+'</td><td>'+(n===null?'فاقد داده':faNum(Math.round(n))+'٪')+'</td></tr>').join('');
- const content='<dialog class="km-dialog" id="kmDetail"><form method="dialog"><div class="km-dialog-head"><h2>مبنای محاسبه پیشرفت</h2><button aria-label="بستن" type="submit">✕</button></div><p><b>'+esc(g.objective)+'</b></p><p>روش فعلی: میانگین ساده نتایج کلیدیِ دارای مبنا، هدف و مقدار جاری معتبر. موارد بدون داده از محاسبه کنار گذاشته می‌شوند؛ این رقم نشانگر سلامت زمانی هدف نیست.</p>'+
- '<div class="km-overflow"><table><thead><tr><th>نتیجه کلیدی</th><th>مبنا</th><th>جاری</th><th>هدف</th><th>پیشرفت</th></tr></thead><tbody>'+(rows||'<tr><td colspan="5">نتیجه قابل اندازه‌گیری موجود نیست.</td></tr>')+'</tbody></table></div>'+
- '<p>پیشرفت کل: <strong>'+(p.n===null?'قابل محاسبه نیست':faNum(p.n)+'٪')+'</strong> · '+faNum(p.count)+' نتیجه قابل سنجش از '+faNum(p.total)+'</p>'+
+ const p=goalProgress(g),rows=p.rows.map(({k,p:n})=>'<tr><td>'+esc(k.text)+'</td><td>'+esc(k.baseline??'—')+'</td><td>'+esc(k.current??'—')+'</td><td>'+esc(k.target??'—')+'</td><td>'+(k.weight===undefined||k.weight===null?'—':esc(k.weight))+'</td><td>'+(n===null?'فاقد داده':faNum(Math.round(n))+'٪')+'</td></tr>').join('');
+ const content='<dialog class="km-dialog" id="kmDetail"><form method="dialog"><div class="km-dialog-head"><h2>مبنای محاسبه پیشرفت</h2><button aria-label="بستن" type="submit">✕</button></div><p><b>'+esc(g.objective)+'</b></p><p>در روش ساده میانگین نتایج قابل سنجش و در روش وزنی فقط وزن‌های صریح معتبر استفاده می‌شود. نتایج بدون داده کنار گذاشته می‌شوند و پیشرفت، نشانگر سلامت زمانی هدف نیست.</p>'+
+ '<div class="km-overflow"><table><thead><tr><th>نتیجه کلیدی</th><th>مبنا</th><th>جاری</th><th>هدف</th><th>وزن</th><th>پیشرفت</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6">نتیجه قابل اندازه‌گیری موجود نیست.</td></tr>')+'</tbody></table></div>'+
+ '<p>روش فعال: <b>'+(p.mode==='weighted'?'میانگین وزنی نتایج کلیدی':'میانگین ساده نتایج کلیدی')+'</b>'+(p.reason?' · '+esc(p.reason):'')+'</p><p>پیشرفت کل: <strong>'+(p.n===null?'قابل محاسبه نیست':faNum(p.n)+'٪')+'</strong> · '+faNum(p.count)+' نتیجه قابل سنجش از '+faNum(p.total)+'</p>'+
  '<a class="km-link-btn" href="#goals/'+encodeURIComponent(g.id)+'">مشاهده جزئیات هدف، مسئول و تاریخچه</a></form></dialog>';
  document.getElementById('kmDetail')?.remove();document.body.insertAdjacentHTML('beforeend',content);
  const dlg=$('kmDetail');dlg.showModal();dlg.addEventListener('close',()=>dlg.remove(),{once:true});
 }
 function render(data,pillarId){
  if(!data?.strategy)return '<p>داده راهبرد هنوز بارگذاری نشده است.</p>';
- const filteredPillars=(data.strategy.pillars||[]).filter(p=>!pillarId||p.id===pillarId);
+ const allPillars=data.strategy.pillars||[],pillarMap=new Map(allPillars.map(p=>[p.id,p]));
+ const roots=allPillars.filter(p=>!pillarMap.has(p.parentId)||p.parentId===p.id);
+ const filteredPillars=pillarId?allPillars.filter(p=>p.id===pillarId):(roots.length?roots:allPillars);
  const goalMap=new Map(data.goals.map(g=>[g.id,g])),cycleMap=cycleIndex(data);
  const pillarIds=new Set((data.strategy.pillars||[]).map(p=>p.id));
  const years=[...new Set(data.cycles.map(c=>period(c,data.cadences).year).filter(Boolean))].sort((a,b)=>b-a);
@@ -169,7 +181,7 @@ function render(data,pillarId){
  const nav='<div class="km-actions"><div class="km-action-leading"><span>سال شمسی</span><select data-km-year aria-label="فیلتر سال">'+options+'</select>'+
  '<label class="km-checkbox"><input type="checkbox" data-km-unassigned '+(state.showUnassigned?'checked':'')+'> اهداف بدون دوره</label></div>'+
  '<div class="km-action-trailing"><button type="button" data-km-zoom="-1" aria-label="کوچک‌نمایی">−</button><span id="kmZoomValue">'+faNum(Math.round(state.zoom*100))+'٪</span><button type="button" data-km-zoom="1" aria-label="بزرگ‌نمایی">＋</button><button type="button" data-km-zoom="0">بازنشانی</button></div></div>';
- const summary='<div class="km-metrics"><span>◆ '+faNum(filteredPillars.length)+' رکن راهبردی</span><span>🎯 '+faNum(goalsCount)+' هدف ثبت‌شده</span><span>📊 '+faNum(totalKpis)+' شاخص</span><span>🗓️ '+faNum(cyclesCount)+' بازه زمانی</span></div>';
+ const summary='<div class="km-metrics"><span>◆ '+faNum(allPillars.length)+' رکن راهبردی</span><span>🎯 '+faNum(goalsCount)+' هدف ثبت‌شده</span><span>📊 '+faNum(totalKpis)+' شاخص</span><span>🗓️ '+faNum(cyclesCount)+' بازه زمانی</span></div>';
  const ultimate='<div class="km-ultimate-wrap"><a href="#strategy" class="km-ultimate"><span class="km-ultimate-badge">🚀 هدف غایی شرکت</span><strong>'+esc(data.strategy.ultimateGoal||'هدف غایی هنوز ثبت نشده است')+'</strong><span class="km-ultimate-action">مشاهده و ویرایش راهبرد ◀</span></a></div><div class="km-ultimate-line"></div>';
  return '<section class="km-app" dir="rtl">'+
  '<div class="km-header"><div><span class="km-eyebrow">STRATEGY ALIGNMENT · KISH</span><h1>🧭 نقشه هم‌راستایی راهبرد و اهداف</h1><p>از مقصد راهبردی تا اهداف سالانه و فصلی؛ پیوند هر کارت به اطلاعات و فرم‌های اجرایی همان سامانه است.</p></div>'+
