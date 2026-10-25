@@ -757,7 +757,7 @@ html,body{background:var(--saba-cream);color:var(--saba-ink);font-size:16px}
    Safeguard for phone browsers that report a wider CSS viewport (often desktop-site mode).
    Does not alter content, navigation routes, persisted data, or book pedagogy.
 */
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 760px), screen and (pointer: coarse) and (max-width: 1150px) {
   html,body{width:100%;max-width:100%;overflow-x:clip}
   body{margin:0;min-width:0;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .app{display:block!important;width:100%;min-width:0;min-height:100svh;grid-template-columns:none!important}
@@ -844,4 +844,33 @@ html,body{background:var(--saba-cream);color:var(--saba-ink);font-size:16px}
   .field input,.field select,.field textarea{font-size:19px!important}
   .page-title{font-size:35px!important}
   .intro,.muted,.small{font-size:17px}
+}
+
+/* Consolidated design tokens, touch and reading refinements. */
+:root{
+  --color-canvas:#f8f7f2;
+  --color-surface:#fffdf9;
+  --color-ink:#182c3c;
+  --color-secondary:#405768;
+  --color-focus:#d37a44;
+  --color-primary:#162f43;
+  --color-action:#f4ad79;
+  --control-radius:12px;
+  --card-radius:17px;
+}
+.ed-home, .lf-page, .ux-service, .rfx-main{font-family:Vazirmatn,Tahoma,sans-serif;}
+.ed-privacy,.source-foot,.rfx-citation{line-height:1.9;}
+#view{min-width:0;}
+#view button,#nav button,.mobile-bottom-nav button{touch-action:manipulation;}
+#view button:focus-visible,#nav button:focus-visible,.mobile-bottom-nav button:focus-visible{
+  outline:3px solid var(--color-focus);
+  outline-offset:3px;
+}
+#view .btn,#view .ed-submit-button,#view .ed-voice-button,#view .ed-journey-action{
+  min-height:44px;
+}
+#view textarea,#view input,#view select{max-width:100%}
+#view h1,#view h2,#view h3{overflow-wrap:break-word}
+@media(prefers-reduced-motion:reduce){
+  .up-home,.ed-home{animation:none!important}
 }
