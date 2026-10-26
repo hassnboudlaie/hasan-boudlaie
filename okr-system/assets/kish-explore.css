@@ -58,3 +58,38 @@ body.kish-perdoo #platformBody .kx-app .kx-node{color:#18344e!important;backgrou
   .kx-app .kx-node{margin-inline-start:calc(var(--depth)*6px);max-width:100%;padding:13px}
 }
 @media(max-width:370px){.kx-app .kx-filter-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Visual QA follow-up: neutralize inherited dark dropdown styles in the light Explore workspace. */
+body.kish-perdoo #platformBody .kx-app .kx-filter-grid select[multiple],
+body.kish-perdoo #platformBody .kx-app .kx-filter-grid select[multiple]:focus {
+  color-scheme:light!important;
+  background-color:#fff!important;
+  color:#173247!important;
+  border:1px solid #94adbf!important;
+  box-shadow:none!important;
+  -webkit-text-fill-color:#173247!important;
+  font-size:14px!important;
+  line-height:1.6!important;
+  padding:6px 7px!important;
+  height:128px;
+  overflow-y:auto;
+}
+body.kish-perdoo #platformBody .kx-app .kx-filter-grid select[multiple] option {
+  color:#173247!important;
+  background-color:#fff!important;
+  -webkit-text-fill-color:#173247!important;
+  padding:4px 6px!important;
+}
+body.kish-perdoo #platformBody .kx-app .kx-filter-grid select[multiple] option:checked {
+  background:#dcecf7!important;
+  color:#153e5b!important;
+  -webkit-text-fill-color:#153e5b!important;
+}
+body.kish-perdoo #platformBody .kx-app .kx-filters input[type="text"],
+body.kish-perdoo #platformBody .kx-app .kx-filters input:not([type]),
+body.kish-perdoo #platformBody .kx-app .kx-filters select:not([multiple]) {
+  color-scheme:light!important;
+  background:#fff!important;
+  color:#173247!important;
+  -webkit-text-fill-color:#173247!important;
+}
