@@ -2051,7 +2051,7 @@ function renderDashboard(){renderJourney();
   ];
   document.getElementById('stats').innerHTML=stats.map(s=>'<div class="card stat"><div class="label">'+s[0]+'</div><div class="value">'+s[1]+'</div><div class="sub">'+s[2]+'</div>'+(s[0]==='Active Progress'?'<div class="progress"><i style="width:'+avg+'%"></i></div>':'')+'</div>').join('');
   const dash=document.getElementById('dashObjectives');
-  dash.innerHTML=objs.length?objs.slice(0,8).map(x=>{const p=objectiveProgress(x.objective);return '<a class="dash-row" href="#objective/'+esc(x.objective.id)+'"><div><b>'+esc(x.objective.objective||'Objective بدون عنوان')+'</b><span>'+esc(x.scope+(x.team?' · '+x.team:''))+'</span></div><strong>'+p+'%</strong><div class="progress"><i style="width:'+p+'%"></i></div></a>'}).join(''):'<div class="empty">Objective ثبت نشده است.</div>';
+  dash.innerHTML=objs.length?objs.slice(0,8).map(x=>{const p=objectiveProgress(x.objective);return '<a class="dash-row" href="#objective/'+esc(x.objective.id)+'"><div><b>'+esc(x.objective.objective||'Objective بدون عنوان')+'</b><span>'+esc(x.scope+(x.team?' · '+x.team:''))+(x.objective.sampleData?' · داده فرضی':'')+'</span></div><strong>'+p+'%</strong><span class="p-tag '+(p>=70?'good':p>=50?'warn':'bad')+'">'+(p>=70?'On Track':p>=50?'Needs Attention':'Off Track')+'</span><div class="progress"><i style="width:'+p+'%"></i></div></a>'}).join(''):'<div class="empty">Objective ثبت نشده است.</div>';
   document.getElementById('recentUpdates').innerHTML=recent.length?recent.slice(0,6).map(x=>'<a class="report-item" href="#checkins/'+esc(x.kr.id)+'"><div><b>'+esc(x.kr.text||'KR')+'</b><span>'+esc(x.kr.lastNote||'بدون توضیح')+'</span></div><div>'+new Date(x.kr.lastUpdate).toLocaleDateString('fa-IR')+'</div></a>').join(''):'<div class="empty">هنوز Check-in ثبت نشده است.</div>';
   renderKpiSnapshot();renderAttentionBar();renderStrategyMap();
   renderDirectReports();renderWeeklyReport();
@@ -2410,7 +2410,7 @@ function makeCompanyState(){
    o.urgent=(o.urgent||'')+' | داده پیش‌فرض آموزشی؛ نیازمند تأیید سازمان.';
    (o.krs||[]).slice(0,2).forEach((k,j)=>{
      const v=Math.max(0,samples[i]-j*9);
-     k.baseline=0;k.target=100;k.current=v;k.unit='%';
+     k.baseline=0;if(k.target===''||k.target==null||!Number.isFinite(Number(k.target)))k.target=100;k.current=Number(k.baseline)+(Number(k.target)-Number(k.baseline))*v/100; // preserve source target and unit
      k.owner=o.owner;k.confidence=v>=70?'healthy':v>=50?'attention':'unhealthy';
      k.lastUpdate=demoDate;k.lastNote='ثبت نمونه فرضی برای مشاهده نمودار و وضعیت؛ داده واقعی نیست.';
      k.sampleData=true;
