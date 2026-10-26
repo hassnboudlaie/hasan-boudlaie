@@ -1197,6 +1197,22 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 <link rel="stylesheet" href="assets/kish-strategy-map-20261025.css?v=2">
 <link rel="stylesheet" href="assets/kish-team-dashboard-20261025.css?v=1">
 <link rel="stylesheet" href="assets/kish-explore.css?v=1">
+<!-- Final-layer design tokens: existing modules and navigation remain intact. -->
+<style id="kish-perdoo-contrast-qa">
+/* Override late-loaded theme rules consistently, without changing application structure. */
+:root{--muted:#475569;--line:#cbd5e1;--bg:#f5f7fc;--soft:#eef2ff}
+.kish-perdoo .p-page{color:#172b4d}
+.kish-perdoo .p-head p,.kish-perdoo .p-card p,.kish-perdoo .p-footer{color:#475569}
+.kish-perdoo .p-tag,.kish-perdoo .p-btn{font-weight:600}
+.kish-perdoo .p-sidebar-nav a{min-height:42px;display:flex;align-items:center;gap:10px;border-radius:10px}
+.kish-perdoo .p-sidebar-nav a.active,.kish-perdoo .p-sidebar-nav a[aria-current="page"]{font-weight:700}
+.kish-perdoo .p-sidebar-nav .nav-label{letter-spacing:.025em;font-weight:700}
+.kish-perdoo input,.kish-perdoo select,.kish-perdoo textarea{min-height:40px}
+.kish-perdoo button,.kish-perdoo a,.kish-perdoo input,.kish-perdoo select,.kish-perdoo textarea{outline-offset:3px}
+.kish-perdoo :is(button,a,input,select,textarea):focus-visible{outline:3px solid #5175e5!important}
+.kish-perdoo .p-progress,.kish-perdoo .progress{min-height:9px}
+@media(max-width:760px){.kish-perdoo .p-sidebar-nav a{min-height:44px}.kish-perdoo .p-page{overflow-wrap:anywhere}}
+</style>
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
 
