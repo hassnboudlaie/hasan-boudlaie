@@ -8,7 +8,7 @@ const stages={proposed:'پیشنهادی',draft:'پیش‌نویس',active:'فع
 const icons={pillar:'◈',objective:'◎',kr:'↗',kpi:'▥',initiative:'◇'};
 let f={q:'',types:[],stages:[],teams:[],owners:[],timeframes:[],archived:false},view='cascade',sort='title',collapsed=new Set();
 const link=r=>'#'+({objective:'goals',kr:'results',kpi:'kpis',initiative:'projects',pillar:'map'}[r.type])+'/'+encodeURIComponent(r.id);
-const options=(rows,selected)=>rows.map(([v,n])=>'<option value="'+X(v)+'" '+(selected.includes(v)?'selected':'')+'>'+X(n)+'</option>').join('');
+const options=(rows,selected)=>rows.map(([v,n])=>'<option value="'+X(v)+'" title="'+X(n)+'" '+(selected.includes(v)?'selected':'')+'>'+X(n)+'</option>').join('');
 const pick=(label,key,opts)=>'<label>'+label+'<select multiple data-kx-filter="'+key+'" aria-label="'+label+'">'+options(opts,f[key])+'</select></label>';
 const btn=(label,act,id='')=>'<button type="button" data-kx-action="'+act+'" data-id="'+X(id)+'">'+label+'</button>';
 function actions(r){return btn('ویرایش','edit',r.id)+(r.type==='kr'?btn('ثبت پیشرفت','update',r.id):'')+(r.type==='objective'?btn('＋ نتیجه','kr',r.id):'');}
