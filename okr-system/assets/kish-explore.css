@@ -93,3 +93,10 @@ body.kish-perdoo #platformBody .kx-app .kx-filters select:not([multiple]) {
   color:#173247!important;
   -webkit-text-fill-color:#173247!important;
 }
+
+/* Screenshot QA: give organizational unit names room in expanded filters. */
+@media(min-width:1101px){body.kish-perdoo #platformBody .kx-app .kx-filter-grid{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:18px;row-gap:14px}}
+@media(min-width:641px) and (max-width:1100px){body.kish-perdoo #platformBody .kx-app .kx-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}}
+@media(max-width:640px){body.kish-perdoo #platformBody .kx-app .kx-filter-grid{grid-template-columns:minmax(0,1fr)}}
+body.kish-perdoo #platformBody .kx-app .kx-filter-grid label{min-width:0;color:#234458!important}
+body.kish-perdoo #platformBody .kx-app .kx-filter-grid select[multiple]{width:100%;max-width:100%;box-sizing:border-box}
