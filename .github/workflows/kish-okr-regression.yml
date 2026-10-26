@@ -5,7 +5,7 @@ on:
       - 'okr-system/**'
       - '.github/workflows/kish-okr-regression.yml'
   push:
-    branches: [main, 'feature/kish-unified-explore-20261025']
+    branches: [main, 'feature/kish-unified-explore-20261025', 'feature/kish-secure-transfer-20261026']
     paths:
       - 'okr-system/**'
       - '.github/workflows/kish-okr-regression.yml'
@@ -27,6 +27,8 @@ jobs:
           node --check okr-system/assets/kish-team-dashboard-20261025.js
           node --check okr-system/assets/kish-explore-model.js
           node --check okr-system/assets/kish-explore.js
+          node --check okr-system/assets/kish-workspace-validation.js
+          node --check okr-system/assets/kish-workspace-transfer.js
       - name: Run cross-view map regression tests
         run: node okr-system/tests/perdoo3-map-regression.cjs
       - name: Test unified Explore data model
@@ -41,3 +43,4 @@ jobs:
           sleep 3
           node okr-system/tests/browser-smoke.cjs
           node okr-system/tests/explore-browser.cjs
+          node okr-system/tests/workspace-transfer.cjs
