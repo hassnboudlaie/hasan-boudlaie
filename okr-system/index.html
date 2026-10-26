@@ -1612,7 +1612,7 @@ function kpiTrend(k){
 }
 function kpiHealth(k){
   const c=num(k.current),t=num(k.target),dir=k.direction||'up'; if(!isFilled(k.current)||!isFilled(k.target))return {cls:'neutral',text:'No target'};
-  const ratio=t===0?1:(dir==='down'?t/Math.max(c,.0001):c/Math.max(t,.0001));
+  const ratio=t===0?(dir==='down'?(c<=0?1:0):(c>=0?1:0)):(dir==='down'?t/Math.max(c,.0001):c/Math.max(t,.0001));
   if((dir==='up'&&c>=t)||(dir==='down'&&c<=t))return {cls:'good',text:'Healthy'};
   if(ratio>=.85)return {cls:'warn',text:'Watch'}; return {cls:'bad',text:'At risk'}
 }
@@ -2412,7 +2412,7 @@ function makeCompanyState(){
    (o.krs||[]).slice(0,2).forEach((k,j)=>{
      const v=Math.max(0,samples[i]-j*9);
      k.baseline=0;if(k.target===''||k.target==null||!Number.isFinite(Number(k.target)))k.target=100;k.current=Number(k.baseline)+(Number(k.target)-Number(k.baseline))*v/100; // preserve source target and unit
-     k.owner=o.owner;k.confidence=v>=70?'healthy':v>=50?'attention':'unhealthy';
+     k.owner=o.owner;k.confidence=v>=70?'on-track':v>=50?'attention':'off-track';
      k.lastUpdate=demoDate;k.lastNote='ثبت نمونه فرضی برای مشاهده نمودار و وضعیت؛ داده واقعی نیست.';
      k.sampleData=true;
    });
