@@ -2403,6 +2403,7 @@ function makeCompanyState(){
  // Preserve the source document and keep every illustrative value visibly marked.
  const demoDate='2026-10-20';
  s.meta.startDate='2026-10-01';s.meta.endDate='2026-12-31';
+ s.meta.companyCadence='Annual';s.meta.teamCadence='Quarterly';
  s.meta.processNotes='نمونه‌های پیش‌فرض آموزشی؛ مقادیر و تاریخ‌ها فرضی هستند و عملکرد واقعی شرکت را نشان نمی‌دهند.';
  const samples=[68,82,46,74];
  s.companyOkrs.slice(0,4).forEach((o,i)=>{
@@ -2417,10 +2418,17 @@ function makeCompanyState(){
    });
  });
  (s.strategy.kpis||[]).slice(0,4).forEach((k,i)=>{
-   k.previous=Math.max(0,samples[i]-8);k.current=samples[i];
-   k.target=100;k.unit='%';k.sampleData=true;
+   // Respect the documented target, unit and direction. Demo observations are explicitly illustrative.
+   const target=Number(k.target),validTarget=k.target!==''&&k.target!=null&&Number.isFinite(target);
+   const baseline=validTarget?target:(i+1)*20;
+   const factor=(k.direction==='down'?1.12:0.88);
+   k.previous=Number((baseline*(k.direction==='down'?1.2:0.8)).toFixed(2));
+   k.current=Number((baseline*factor).toFixed(2));
+   if(!validTarget)k.target=baseline;
+   k.sampleData=true;k.sampleNote='مقادیر جاری و قبلی صرفاً فرضی هستند؛ هدف و واحد منبع حفظ شده است.';
  });
- s.history=[{id:'sample-checkin-1',date:demoDate,note:'چک‌این فرضی آموزشی؛ صرفاً برای نمایش اولیه.',sampleData:true}];
+ // Do not inject synthetic audit/check-in events: real check-ins must use the app's native event schema.
+ s.history=[];
  return s;
 }
 const documentTabs={foundation:['مبانی راهبردی','Foundations'],pillars:['ارکان و KPIها','Pillars & KPIs'],objectives:['اهداف و نتایج کلیدی','Objectives & KRs'],initiatives:['بانک ابتکارها','Initiative bank'],review:['نیازمند بازبینی','Review points'],reader:['متن کامل سند','Full document']};
