@@ -1184,6 +1184,13 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
  .kish-perdoo .pd-table-foot .p-btn{min-height:42px;font-size:12px}
 }
 
+
+/* Contrast/readability refinement, additive and non-destructive */
+:root{--muted:#475569;--line:#cbd5e1;--bg:#f5f7fc;--soft:#eef2ff;--navy:#1d3155}
+.p-tag,.p-btn,.pd-nav-group a,button,select,input{font-weight:500}
+.p-progress,.progress{min-height:9px}
+:focus-visible{outline:3px solid #405bd8!important;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 <link rel="stylesheet" href="assets/okr-visual-upgrade-20261023.css?v=6">
 <link rel="stylesheet" href="assets/kish-operational-20261025.css?v=1">
