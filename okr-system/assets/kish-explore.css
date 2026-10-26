@@ -8,3 +8,53 @@ body.kish-perdoo #platformBody .kx-app h1,body.kish-perdoo #platformBody .kx-app
 body.kish-perdoo #platformBody .kx-app .kx-help,body.kish-perdoo #platformBody .kx-app small{color:#526c80!important}
 body.kish-perdoo #platformBody .kx-app .kx-header{background:linear-gradient(115deg,#e6f6fa,#eceeff)!important}
 body.kish-perdoo #platformBody .kx-app .kx-node{color:#18344e!important;background:#fff!important}
+
+/* Explore UX pass 2026-10-26: WCAG-oriented light palette and robust mobile interaction. */
+.kx-app{--kx-ink:#173247;--kx-muted:#354f62;--kx-line:#b9cdd9;color:var(--kx-ink);font-size:15px;line-height:1.65}
+.kx-app .kx-header small,.kx-app .kx-header p,.kx-app .kx-parent,.kx-app .kx-table small,.kx-app .kx-help{color:var(--kx-muted)!important}
+.kx-app .kx-meta{color:#304d61}
+.kx-app .kx-meta span{background:#e9f1f6;color:#254458;border:1px solid #cfdee7}
+.kx-app .kx-meta .kx-status{font-weight:750}
+.kx-app .kx-meta .kx-status-good{background:#d9f4e6;color:#145737;border-color:#8dc9a8}
+.kx-app .kx-meta .kx-status-bad{background:#ffeded;color:#942b31;border-color:#e9afb3}
+.kx-app .kx-meta .kx-status-attention{background:#fff2d5;color:#7a4e00;border-color:#eac779}
+.kx-app .kx-meta .kx-status-neutral{background:#eaf1f6;color:#344f62;border-color:#b9cdd9}
+.kx-app :is(button,input,select,textarea){color:#173247;border-color:var(--kx-line)}
+.kx-app :is(button,input,select,textarea):focus-visible,.kx-app [role="tab"]:focus-visible{outline:3px solid #174d82!important;outline-offset:3px;box-shadow:0 0 0 2px #fff}
+.kx-app .kx-actions button,.kx-app .kx-toolbar button,.kx-app .kx-filters form button{min-height:44px;min-width:44px}
+.kx-app input:not([type=checkbox]),.kx-app select:not([multiple]){min-height:44px}
+.kx-app select[multiple]{min-height:120px;border-color:#a8becd}
+.kx-app .kx-toolbar nav [role=tab][aria-selected=true]{background:#154c6a;color:#fff!important;border-color:#154c6a;font-weight:750}
+.kx-app .kx-toolbar nav [role=tab][aria-selected=false]{background:#fff;color:#244b64!important}
+.kx-app .kx-toolbar nav [role=tab]:hover{border-color:#154c6a}
+.kx-app .kx-filters{border-color:#bacdda;background:#f3f7fa}
+.kx-app .kx-filters summary{padding:4px 0;min-height:36px;color:#173247}
+.kx-app .kx-archive-toggle{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:14px;font-weight:650;color:#234860}
+.kx-app .kx-archive-toggle input{width:19px;height:19px;accent-color:#155b7c;flex:none}
+.kx-app .kx-table{font-size:14px;line-height:1.8}
+.kx-app .kx-table th{position:sticky;top:0;z-index:1;color:#1c435e!important;border-bottom:2px solid #b9cdd9;font-size:14px}
+.kx-app .kx-table td{border-top-color:#d8e4ec}
+.kx-app .kx-table a,.kx-app .kx-node-title{text-underline-offset:4px}
+.kx-app .kx-table a:hover,.kx-app .kx-table a:focus-visible{text-decoration:underline}
+.kx-app .kx-title{align-items:flex-start;overflow-wrap:anywhere;min-width:0}
+.kx-app .kx-title button{padding:6px;min-width:40px;min-height:40px;flex:none}
+.kx-app .kx-title a{min-width:0}
+.kx-app .kx-board th,.kx-app .kx-board td{min-width:95px}
+.kx-app .kx-board th:first-child,.kx-app .kx-board td:first-child{min-width:260px}
+.kx-app [role=tabpanel]{outline-offset:3px}
+@media(max-width:640px){
+  .kx-app{padding:8px;line-height:1.75}
+  .kx-app .kx-header{padding:16px;border-radius:15px}
+  .kx-app .kx-header h1{font-size:22px;line-height:1.6}
+  .kx-app .kx-toolbar{align-items:stretch;gap:12px}
+  .kx-app .kx-toolbar nav{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .kx-app .kx-toolbar nav [role=tab]{font-size:13px;padding:8px 5px;min-width:0}
+  .kx-app .kx-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .kx-app .kx-filters form{align-items:stretch;flex-wrap:wrap}
+  .kx-app .kx-filters form label{flex:1 1 180px}
+  .kx-app .kx-filters form button{flex:0 0 auto}
+  .kx-app .kx-table{min-width:760px}
+  .kx-app .kx-map{border-inline-start:0;padding:5px 2px}
+  .kx-app .kx-node{margin-inline-start:calc(var(--depth)*6px);max-width:100%;padding:13px}
+}
+@media(max-width:370px){.kx-app .kx-filter-grid{grid-template-columns:minmax(0,1fr)}}
