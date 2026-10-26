@@ -2398,7 +2398,30 @@ function ensureCompanyDocument(s){
 function makeCompanyState(){
  const s=clone(emptyState);s.meta.orgName='شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش';s.meta.cycle='افق سند ۱۴۰۴–۱۴۰۶';
  s.history=[];s.archives=[];s.initiatives=[];s.exercises={};s.rollout={stages:{},receipts:{}};s.savedViews=[];s.meetings=[];s.config={prompts:{}};
- ensureOrganizationUnits(s);return ensureCompanyDocument(s);
+ ensureOrganizationUnits(s);ensureCompanyDocument(s);
+ // Illustrative defaults ONLY for a new workspace. Existing saved workspaces are never reseeded.
+ // Preserve the source document and keep every illustrative value visibly marked.
+ const demoDate='2026-10-20';
+ s.meta.startDate='2026-10-01';s.meta.endDate='2026-12-31';
+ s.meta.processNotes='نمونه‌های پیش‌فرض آموزشی؛ مقادیر و تاریخ‌ها فرضی هستند و عملکرد واقعی شرکت را نشان نمی‌دهند.';
+ const samples=[68,82,46,74];
+ s.companyOkrs.slice(0,4).forEach((o,i)=>{
+   o.status='active';o.owner='مسئول نمونه · واحد '+(i+1);o.sampleData=true;
+   o.urgent=(o.urgent||'')+' | داده پیش‌فرض آموزشی؛ نیازمند تأیید سازمان.';
+   (o.krs||[]).slice(0,2).forEach((k,j)=>{
+     const v=Math.max(0,samples[i]-j*9);
+     k.baseline=0;k.target=100;k.current=v;k.unit='%';
+     k.owner=o.owner;k.confidence=v>=70?'healthy':v>=50?'attention':'unhealthy';
+     k.lastUpdate=demoDate;k.lastNote='ثبت نمونه فرضی برای مشاهده نمودار و وضعیت؛ داده واقعی نیست.';
+     k.sampleData=true;
+   });
+ });
+ (s.strategy.kpis||[]).slice(0,4).forEach((k,i)=>{
+   k.previous=Math.max(0,samples[i]-8);k.current=samples[i];
+   k.target=100;k.unit='%';k.sampleData=true;
+ });
+ s.history=[{id:'sample-checkin-1',date:demoDate,note:'چک‌این فرضی آموزشی؛ صرفاً برای نمایش اولیه.',sampleData:true}];
+ return s;
 }
 const documentTabs={foundation:['مبانی راهبردی','Foundations'],pillars:['ارکان و KPIها','Pillars & KPIs'],objectives:['اهداف و نتایج کلیدی','Objectives & KRs'],initiatives:['بانک ابتکارها','Initiative bank'],review:['نیازمند بازبینی','Review points'],reader:['متن کامل سند','Full document']};
 let documentTab='foundation',documentFilters={q:'',pillar:'all',objective:'all',unit:'all',kind:'all',page:1},documentOffset=0;
