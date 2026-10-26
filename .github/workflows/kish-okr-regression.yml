@@ -41,3 +41,12 @@ jobs:
           sleep 3
           node okr-system/tests/browser-smoke.cjs
           node okr-system/tests/explore-browser.cjs
+          node okr-system/tests/explore-ux-a11y.cjs
+
+      - name: Upload Explore QA snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kish-explore-visual-qa
+          path: okr-system/tests/artifacts/*.png
+          if-no-files-found: ignore
