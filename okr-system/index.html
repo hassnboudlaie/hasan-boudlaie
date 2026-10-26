@@ -1211,7 +1211,17 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 .kish-perdoo button,.kish-perdoo a,.kish-perdoo input,.kish-perdoo select,.kish-perdoo textarea{outline-offset:3px}
 .kish-perdoo :is(button,a,input,select,textarea):focus-visible{outline:3px solid #5175e5!important}
 .kish-perdoo .p-progress,.kish-perdoo .progress{min-height:9px}
-@media(max-width:760px){.kish-perdoo .p-sidebar-nav a{min-height:44px}.kish-perdoo .p-page{overflow-wrap:anywhere}}
+/* Explore readability: maintain the existing Cascade, Map and Board components. */
+.kish-perdoo .pd-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.kish-perdoo .pd-tools :is(button,select,input){min-height:42px;max-width:100%}
+.kish-perdoo .pd-tools :is(button,select){cursor:pointer}
+.kish-perdoo .pd-cascade .p-table th,.kish-perdoo .pd-cascade .p-table td{vertical-align:middle}
+.kish-perdoo .pd-cascade .p-table th{font-weight:700}
+.kish-perdoo .pd-cascade .p-table :is(button,a):focus-visible{outline:3px solid #5175e5!important;outline-offset:2px}
+.kish-perdoo .pd-map :is(button,a):focus-visible{outline:3px solid #5175e5!important;outline-offset:2px}
+.kish-perdoo .p-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.kish-perdoo .p-tabs :is(button,a){min-height:40px}
+@media(max-width:760px){.kish-perdoo .p-sidebar-nav a{min-height:44px}.kish-perdoo .p-page{overflow-wrap:anywhere}.kish-perdoo .pd-tools{gap:8px}.kish-perdoo .pd-tools>*{min-width:0}.kish-perdoo .p-tabs{gap:6px}}
 </style>
 </head>
 <body><dialog id="dsRecordPanel" class="ds-record-dialog" aria-label="Record details"></dialog><dialog id="dsWorkspaceTools" class="p-dialog" aria-label="Workspace tools"><div class="p-dialog-head"><h2 data-fa="ابزارها و ذخیره اطلاعات" data-en="Workspace tools & saving">ابزارها و ذخیره اطلاعات</h2><button type="button" class="p-btn" data-ds-action="settings-close" aria-label="Close tools">×</button></div><div id="dsSettingsBody" class="p-dialog-body"><div id="dsSharedTools"></div><div id="dsSettingsActions" class="ds-settings-actions"></div></div></dialog><dialog class="p-dialog" id="platformDialog" aria-label="Edit workspace record"></dialog><nav class="section-navigation no-print" aria-label="Section navigation"><button type="button" class="btn" id="sectionBackBtn"><span class="nav-arrow" aria-hidden="true">←</span><span data-fa="برگشت" data-en="Back">برگشت</span></button><a class="btn" id="sectionHomeLink" href="#home"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></a><span class="ds-qa-badge hidden" id="dsQaBadge"></span><span class="navigation-location" id="navigationLocation" aria-live="polite"></span></nav>
