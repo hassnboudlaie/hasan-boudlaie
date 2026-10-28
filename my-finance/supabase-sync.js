@@ -14,10 +14,18 @@ function notice(message,online=false){
  const indicator=byId('cloud-indicator');
  if(indicator){indicator.textContent=online?'● امن و همگام':'● '+message;indicator.classList.toggle('online',online)}
 }
+async function refreshPairStatus(){
+ if(!user)return;
+ const {data,error}=await client.from('finance_voice_pairings').select('consumed_at,expires_at').eq('user_id',user.id).maybeSingle();
+ if(error)return;
+ if(data?.consumed_at)byId('supabase-pair-status').textContent='✓ اتصال ChatGPT تأیید شده است. از این به بعد می‌توانید تراکنش را در همین چت اعلام کنید.';
+ else if(data?.expires_at&&new Date(data.expires_at)>new Date())byId('supabase-pair-status').textContent='کد اتصال فعال است؛ اگر کد را گم کرده‌اید، یک کد جدید ایجاد کنید.';
+ else byId('supabase-pair-status').textContent='برای اتصال مستقیم به ChatGPT یک کد یک‌بارمصرف بسازید.';
+}
 function renderAuth(){
  login.hidden=!!user;actions.hidden=!user;
- if(!user)notice('حالت محلی · ورود امن برای اتصال');
- else notice('حساب متصل: '+user.email,true);
+ if(!user){notice('حالت محلی · ورود امن برای اتصال');byId('supabase-pair-status').textContent='پس از ورود، برای اتصال مستقیم به ChatGPT کد یک‌بارمصرف بسازید.'}
+ else {notice('حساب متصل: '+user.email,true);refreshPairStatus().catch(()=>{});}
 }
 function allRecords(data){
  const records=new Map();
@@ -124,6 +132,7 @@ async function sync(){
   for(const row of outgoingEntries)dirty.delete('tx:'+row.id);
   localStorage.setItem(dirtyKey(),JSON.stringify([...dirty]));
   seen=allRecords(bridge.getData());
+  refreshPairStatus().catch(()=>{});
   const count=cloudEntries.length+cloudObjects.length+outgoingEntries.length+outgoingObjects.length;
   notice('همگام‌سازی امن فعال · '+count.toLocaleString('fa-IR')+' رکورد'+(errors.length?' · '+errors.length+' رکورد با شناسه قدیمی نیازمند اصلاح':'') ,true);
  }catch(e){
@@ -159,6 +168,15 @@ byId('supabase-send').addEventListener('click',async()=>{
  notice('لینک ورود در حال ارسال…');
  const {error}=await client.auth.signInWithOtp({email:value,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
  notice(error?'ارسال انجام نشد: '+error.message:'لینک ورود ارسال شد. ایمیل را در همین گوشی باز کنید.');
+});
+byId('supabase-pair').addEventListener('click',async()=>{
+ if(!user)return notice('اول وارد حساب خود شوید.');
+ const buf=new Uint32Array(2);crypto.getRandomValues(buf);
+ const code=String((buf[0]^buf[1])%100000000).padStart(8,'0');
+ const expires_at=new Date(Date.now()+15*60*1000).toISOString();
+ const {error}=await client.from('finance_voice_pairings').upsert({user_id:user.id,pairing_code:code,expires_at,consumed_at:null},{onConflict:'user_id'});
+ if(error)return byId('supabase-pair-status').textContent='ساخت کد انجام نشد: '+error.message;
+ byId('supabase-pair-status').textContent='کد اتصال شما: '+code+' · این کد فقط ۱۵ دقیقه معتبر است. آن را یک‌بار در همین گفتگوی ChatGPT اعلام کنید.';
 });
 byId('supabase-logout').addEventListener('click',async()=>{
  const {error}=await client.auth.signOut();
