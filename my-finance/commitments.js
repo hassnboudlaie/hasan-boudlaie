@@ -4,7 +4,7 @@ const bridge=window.MyFinanceBridge,$=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(Number(n)||0);
 function today(){const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=t=>p.find(x=>x.type===t).value;return v('year')+'-'+v('month')+'-'+v('day')}
-const valid=s=>/^\d{4}-\d{2}-\d{2}$/.test(s)&&new Date(s+'T12:00:00Z').toISOString().slice(0,10)===s;
+const valid=s=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;const d=new Date(s+'T12:00:00Z');return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===s};
 const days=s=>Math.round((new Date(s+'T12:00:00Z')-new Date(today()+'T12:00:00Z'))/86400000);
 const fdate=s=>valid(s)?new Date(s+'T12:00:00Z').toLocaleDateString('fa-IR',{timeZone:'Asia/Tehran'}):'نامشخص';
 function next(iso,cadence,anchor){
