@@ -12,6 +12,35 @@ try{
  // Perdoo 3.0 parity: eight sort fields, reversible order, demo-mode disclosure, all read-only.
  assert.equal(await page.locator('[data-kx-sort] option').count(),11);
  assert.ok(await page.locator('.kx-local-note').isVisible());
+ // Perdoo 3.0 Cascade columns: enable, reorder, resize, retain across reload and reset.
+ await page.locator('[data-kx-view="cascade"]').click();
+ assert.equal(await page.locator('.kx-cascade th[data-kx-col]').count(),4);
+ await page.locator('[data-kx-action="col-toggle"]').click();
+ await page.locator('[data-kx-column="lead"]').check();
+ assert.equal(await page.locator('.kx-cascade th[data-kx-col="lead"]').count(),1);
+ await page.locator('[data-kx-action="col-up"][data-id="lead"]').click();
+ const order=await page.locator('.kx-cascade th[data-kx-col]').evaluateAll(els=>els.map(x=>x.dataset.kxCol));
+ assert.equal(order[2],'lead','configurable column order persists in Cascade');
+ await page.locator('[data-kx-width="lead"]').focus();
+ await page.keyboard.press('ArrowRight');
+ const width=await page.locator('.kx-cascade th[data-kx-col="lead"]').evaluate(x=>parseInt(x.style.minWidth,10));
+ assert.ok(width>=170,'column width adjusted');
+ await page.reload();await page.locator('.kx-cascade').waitFor();
+ assert.equal(await page.locator('.kx-cascade th[data-kx-col="lead"]').count(),1);
+ assert.equal(await page.locator('.kx-cascade th[data-kx-col]').count(),5);
+ await page.locator('[data-kx-action="col-toggle"]').click();
+ await page.locator('[data-kx-action="col-reset"]').click();
+ assert.equal(await page.locator('.kx-cascade th[data-kx-col]').count(),4);
+ // Perdoo 3.0 default Map KPI Tree, aligned to existing data (no duplicated goal store).
+ await page.locator('[data-kx-view="map"]').click();
+ await page.getByRole('link',{name:'درخت KPI',exact:true}).click();
+ await page.locator('.kx-map .kx-node.kpi').first().waitFor();
+ assert.ok(await page.locator('.kx-map .kx-node.kpi').count()>0);
+ assert.equal(await page.locator('.kx-map .kx-node.kr').count(),0);
+ assert.ok(page.url().endsWith('#explore/map/kpi'));
+ await page.reload();await page.locator('.kx-map .kx-node.kpi').first().waitFor();
+ await page.getByRole('link',{name:'درخت همه اهداف',exact:true}).click();
+ await page.locator('.kx-map .kx-node.kr').first().waitFor();
  await page.locator('[data-kx-view="board"]').click();
  await page.locator('[data-kx-sort]').selectOption('title');
  const labels=()=>page.locator('.kx-board tbody tr td:first-child a').allTextContents();
@@ -52,5 +81,5 @@ try{
  const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish_qa_explore-ci:kish_okr_free_practice_v1')));assert.equal(snapshot.state.companyOkrs.find(g=>g.id===goalId).progressMode,'weighted');assert.deepEqual(snapshot.state.companyOkrs.find(g=>g.id===goalId).krs.map(k=>k.weight),[1,3]);assert.ok(await page.evaluate(()=>localStorage.getItem('kish_qa_explore-ci:kish_okr_before_unified_explore_v1')));
  // Cross-tab optimistic revision guard: a stale edit must not overwrite newer data.
  const second=await context.newPage();await second.goto(root+'#explore');await second.waitForSelector('.kx-app');await page.getByRole('button',{name:'＋ رکن',exact:true}).click();await page.locator('[data-kx-pillar] input').fill('QA first writer');await page.getByRole('button',{name:'ذخیره رکن',exact:true}).click();await second.getByRole('button',{name:'＋ رکن',exact:true}).click();await second.locator('[data-kx-pillar] input').fill('QA stale writer');await second.getByRole('button',{name:'ذخیره رکن',exact:true}).click();assert.match(await second.locator('[data-kx-error]').innerText(),/ذخیره|تعارض/);await second.close();
- await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
+ await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: custom columns, drag-ready ordering, column widths, KPI Tree, advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1)});
