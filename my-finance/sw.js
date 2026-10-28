@@ -1,27 +1,16 @@
-const CACHE='my-finance-20261028-icon-v10';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-v2.svg','./icon-maskable.svg'];
-self.addEventListener('install',event=>{
- event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
-});
-self.addEventListener('activate',event=>{
- event.waitUntil(caches.keys().then(keys=>Promise.all(
-  keys.filter(key=>(key.startsWith('my-finance-preview-')||key.startsWith('my-finance-'))&&key!==CACHE).map(key=>caches.delete(key))
- )).then(()=>self.clients.claim()));
-});
+const CACHE='my-finance-release-20261028r3';
+const ASSETS=['./','./index.html','./premium.css?v=20261028r3','./commitments.js?v=20261028r3','./supabase-sync.js?v=20261028r3','./manifest.webmanifest?v=7','./icon-v2.svg?v=20261028r3','./icon-maskable.svg?v=20261028r3'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('my-finance-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
- const url=new URL(event.request.url);
- if(url.origin!==self.location.origin)return;
- const isBrandAsset=url.pathname.endsWith('/manifest.webmanifest')||url.pathname.endsWith('/icon.svg')||url.pathname.endsWith('/icon-v2.svg');
- const isNavigation=event.request.mode==='navigate';
- if(isNavigation){
-  event.respondWith(fetch(event.request).then(response=>{
-   if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put('./index.html',copy));}
-   return response;
-  }).catch(()=>caches.match('./index.html')));
- }else if(isBrandAsset){
-  event.respondWith(fetch(event.request).catch(()=>caches.match(event.request)));
- }else{
-  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));
+ const url=new URL(event.request.url);if(url.origin!==self.location.origin)return;
+ if(event.request.mode==='navigate'){
+  event.respondWith(fetch(event.request).then(r=>{if(r.ok)caches.open(CACHE).then(c=>c.put('./index.html',r.clone()));return r}).catch(()=>caches.match('./index.html')));return;
  }
+ const revalidate=url.pathname.endsWith('/manifest.webmanifest')||url.pathname.endsWith('.svg')||url.pathname.endsWith('.js')||url.pathname.endsWith('.css');
+ if(revalidate){
+  event.respondWith(fetch(event.request).then(r=>{if(r.ok)caches.open(CACHE).then(c=>c.put(event.request,r.clone()));return r}).catch(()=>caches.match(event.request)));return;
+ }
+ event.respondWith(caches.match(event.request).then(r=>r||fetch(event.request)));
 });
