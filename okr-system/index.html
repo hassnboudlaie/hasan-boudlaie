@@ -4369,7 +4369,50 @@ function pdEnhanceDialogVisual(kind){
   const before=clone(state);try{change();if(!pCommit(label))throw Error('ذخیره انجام نشد؛ ورودی را نگه دارید و تعارض یا فضای مرورگر را بررسی کنید.');}catch(e){state=before;throw e;}
  }
  window.KishExploreBridge={snapshot,form:pForm,exportData,exportCsv:pCsv,
-  inline(recordId,field,value){transact('Explore inline edit',()=>{const row=window.KishExploreModel.normalize(snapshot()).find(r=>r.id===recordId);if(!row)throw Error('رکورد پیدا نشد.');if(row.archived)throw Error('ابتدا رکورد بایگانی‌شده را بازیابی کنید.');if(!['title','owner'].includes(field))throw Error('فیلد مجاز نیست.');const v=String(value||'').trim();if(!v||v.length>500)throw Error('مقدار معتبر بین ۱ تا ۵۰۰ نویسه وارد کنید.');const record=row.type==='kpi'?pKpi(recordId).record:row.record;record[field==='owner'?'owner':({objective:'objective',kr:'text',kpi:'name',pillar:'title',initiative:'title'}[row.type])]=v;record.updatedAt=new Date().toISOString();});},
+  inline(recordId,field,value){transact('Explore inline edit',()=>{
+   const row=window.KishExploreModel.normalize(snapshot()).find(r=>r.id===recordId);
+   if(!row)throw Error('رکورد پیدا نشد.');
+   if(row.archived)throw Error('ابتدا رکورد بایگانی‌شده را بازیابی کنید.');
+   if(!['title','owner','team','timeframe','stage'].includes(field))throw Error('فیلد مجاز نیست.');
+   const v=String(value??'').trim(),record=row.type==='kpi'?pKpi(recordId)?.record:row.record;
+   if(!record)throw Error('رکورد اصلی پیدا نشد.');
+   if(field==='title'||field==='owner'){
+    if(!v||v.length>500)throw Error('مقدار معتبر بین ۱ تا ۵۰۰ نویسه وارد کنید.');
+    record[field==='owner'?'owner':({objective:'objective',kr:'text',kpi:'name',pillar:'title',initiative:'title'}[row.type])]=v;
+   }else if(field==='team'){
+    if(v!=='company'&&!pTeam(v))throw Error('واحد انتخاب‌شده معتبر نیست.');
+    if(row.type==='objective'){
+     const source=[state.companyOkrs,...state.teams.flatMap(t=>[t.okrs||[]])].find(a=>a.some(g=>g.id===recordId));
+     if(!source)throw Error('محل فعلی هدف پیدا نشد.');
+     const destination=v==='company'?state.companyOkrs:pTeam(v).okrs||(pTeam(v).okrs=[]);
+     if(source!==destination){
+      const index=source.findIndex(g=>g.id===recordId);source.splice(index,1);
+      if(!destination.some(g=>g.id===recordId))destination.push(record);
+     }
+    }else{
+     record.teamId=v;
+     if(row.type==='initiative')record.unitId=v==='company'?null:v;
+    }
+   }else if(field==='timeframe'){
+    if(row.type!=='objective')throw Error('تغییر دوره باید روی هدف اصلی انجام شود.');
+    const cycles=gpEnsure().cycles||[];
+    if(v&&!cycles.some(c=>c.id===v&&!c.closedAt))throw Error('دوره باز معتبر انتخاب کنید.');
+    for(const cycle of cycles.filter(c=>!c.closedAt))cycle.goalIds=(cycle.goalIds||[]).filter(id=>id!==recordId);
+    if(v){const target=cycles.find(c=>c.id===v);target.goalIds||=[];target.goalIds.push(recordId);}
+   }else if(field==='stage'){
+    const allowed=row.type==='objective'?['draft','review','alignment','active']:
+      row.type==='kpi'?['draft','active']:
+      row.type==='initiative'?['planned','in-progress','blocked','done']:[];
+    if(!allowed.includes(v))throw Error('برای این نوع هدف، ویرایش مستقیم مرحله مجاز نیست.');
+    if(row.type==='objective'&&v==='active'){
+     const candidate={...record,status:v},error=validateObjective(candidate);
+     if(error)throw Error(error);
+     if((candidate.dependencies||[]).some(d=>!d.accepted))throw Error('تعهدهای وابسته را تأیید کنید.');
+    }
+    record.status=v;
+   }
+   record.updatedAt=new Date().toISOString();
+  });},
   lifecycle(recordId,action,values={}){let result;transact('Objective '+action,()=>{const g=pGoal(recordId);if(!g)throw Error('هدف پیدا نشد.');const now=new Date().toISOString();
    if(action==='clone'){const copy=window.KishExploreModel.cloneGoal(g,id);copy.createdAt=now;const team=state.teams.find(t=>t.okrs?.some(o=>o.id===g.id));(team?team.okrs:state.companyOkrs).push(copy);if(pEnsure().goalUnits[g.id])pEnsure().goalUnits[copy.id]=clone(pEnsure().goalUnits[g.id]);result=copy.id;}
    else if(action==='close'){if(g.archived||g.status==='closed')throw Error('هدف بسته یا بایگانی‌شده است.');for(const k of ['wins','learnings','nextSteps'])if(!String(values[k]||'').trim())throw Error('هر سه بخش جمع‌بندی را تکمیل کنید.');g.closingNotes={wins:String(values.wins).trim(),learnings:String(values.learnings).trim(),nextSteps:String(values.nextSteps).trim(),at:now,by:auth.name,progress:pGoalScore(g).value};g.closureHistory=[...(g.closureHistory||[]),clone(g.closingNotes)];g.status='closed';g.closedAt=now;}
