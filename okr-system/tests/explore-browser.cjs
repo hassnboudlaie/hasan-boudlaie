@@ -97,8 +97,34 @@ try{
  await page.locator('[data-kx-sort]').selectOption('endDate');
  await page.locator('[data-kx-sort]').selectOption('lastUpdate');await page.locator('[data-kx-sort-direction]').selectOption('asc');
  await page.getByRole('button',{name:'ذخیره نمای این مرورگر',exact:true}).click();await page.locator('[data-kx-save] input').fill('QA objectives');await page.getByRole('button',{name:'ذخیره نما',exact:true}).click();await page.reload();await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-saved]').selectOption({label:'QA objectives'});assert.equal(await page.locator('[data-kx-record]').count(),14);assert.equal(await page.locator('[data-kx-sort]').inputValue(),'lastUpdate');assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
+ // Perdoo Saved Views: folder names, per-view column layout, Board timeline, and reorder.
+ await page.getByRole('button',{name:'پوشه جدید',exact:true}).click();
+ await page.locator('[data-kx-folder] input[name="name"]').fill('QA folder');
+ await page.locator('[data-kx-folder] button[type="submit"]').click();
+ await page.locator('[data-kx-view="cascade"]').click();
+ await page.locator('[data-kx-action="col-toggle"]').click();
+ await page.locator('[data-kx-column="lead"]').check();
+ await page.locator('[data-kx-view="board"]').click();
+ await page.locator('[data-kx-board-option="count"]').selectOption('12');
+ await page.getByRole('button',{name:'ذخیره نمای این مرورگر',exact:true}).click();
+ await page.locator('[data-kx-save] input[name="name"]').fill('QA foldered board');
+ await page.locator('[data-kx-save] select[name="folder"]').selectOption('QA folder');
+ await page.locator('[data-kx-save] button[type="submit"]').click();
+ await page.reload();await page.locator('.kx-app').waitFor();
+ await page.locator('.kx-filters > summary').click();
+ await page.locator('[data-kx-saved]').selectOption({label:'QA folder / QA foldered board'});
+ assert.equal(await page.locator('[data-kx-board-option="count"]').inputValue(),'12');
+ await page.locator('[data-kx-view="cascade"]').click();
+ assert.equal(await page.locator('.kx-cascade th[data-kx-col="lead"]').count(),1,'saved view restores custom column');
+ await page.getByRole('button',{name:'بالا',exact:true}).click();
+ const orderedViews=await page.locator('[data-kx-saved] option').allTextContents();
+ assert.ok(orderedViews.indexOf('QA folder / QA foldered board')<orderedViews.indexOf('QA objectives'),'view can move up');
+ await page.getByRole('button',{name:'انتقال به پوشه',exact:true}).click();
+ await page.locator('[data-kx-folder-assign] select[name="folder"]').selectOption('');
+ await page.locator('[data-kx-folder-assign] button[type="submit"]').click();
+ assert.ok((await page.locator('[data-kx-saved] option').allTextContents()).includes('QA foldered board'));
  const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish_qa_explore-ci:kish_okr_free_practice_v1')));assert.equal(snapshot.state.companyOkrs.find(g=>g.id===goalId).progressMode,'weighted');assert.deepEqual(snapshot.state.companyOkrs.find(g=>g.id===goalId).krs.map(k=>k.weight),[1,3]);assert.ok(await page.evaluate(()=>localStorage.getItem('kish_qa_explore-ci:kish_okr_before_unified_explore_v1')));
  // Cross-tab optimistic revision guard: a stale edit must not overwrite newer data.
  const second=await context.newPage();await second.goto(root+'#explore');await second.waitForSelector('.kx-app');await page.getByRole('button',{name:'＋ رکن',exact:true}).click();await page.locator('[data-kx-pillar] input').fill('QA first writer');await page.getByRole('button',{name:'ذخیره رکن',exact:true}).click();await second.getByRole('button',{name:'＋ رکن',exact:true}).click();await second.locator('[data-kx-pillar] input').fill('QA stale writer');await second.getByRole('button',{name:'ذخیره رکن',exact:true}).click();assert.match(await second.locator('[data-kx-error]').innerText(),/ذخیره|تعارض/);await second.close();
- await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: custom Board periods, KPI edit cells, custom columns, drag-ready ordering, column widths, KPI Tree, advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
+ await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: Saved View folders/columns, custom Board periods, KPI edit cells, custom columns, drag-ready ordering, column widths, KPI Tree, advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1)});
