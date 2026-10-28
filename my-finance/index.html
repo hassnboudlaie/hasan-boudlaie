@@ -175,6 +175,35 @@ if(location.hash.startsWith('#finance-sync-sheet=')){
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloudToken&&Date.now()<cloudExpiry)cloudPull()});
 
+
+const API_STATE_KEY='my-finance-api-link-v1';
+let apiState={origin:'',token:''},apiBusy=false;
+try{const p=JSON.parse(localStorage.getItem(API_STATE_KEY)||'{}');apiState={origin:String(p.origin||''),token:String(p.token||'')}}catch(e){}
+function apiStatus(s){if($('apistatus'))$('apistatus').textContent=s}
+function apiValidOrigin(url){
+ try{const u=new URL(url);return u.protocol==='https:'&&u.hostname.endsWith('.onrender.com')&&u.pathname==='/'&&u.search===''&&u.hash===''}catch(e){return false}
+}
+function apiSave(){
+ const origin=$('apiorigin').value.trim().replace(/\/$/,'');
+ if(!apiValidOrigin(origin)){apiStatus('لطفاً آدرس معتبر سرویس خصوصی Render را وارد کنید.');return false}
+ if(apiState.origin!==origin)apiState.token='';
+ apiState.origin=origin;localStorage.setItem(API_STATE_KEY,JSON.stringify(apiState));apiStatus('آدرس ثبت شد. برای اتصال یک‌باره Google را انتخاب کنید.');return true
+}
+function apiConnect(){
+ if(!apiSave())return;
+ window.location.assign(apiState.origin+'/auth/start')
+}
+function apiHandleReturn(){
+ if(!location.hash.startsWith('#finance-api-session='))return;
+ const params=new URLSearchParams(location.hash.slice(1));
+ const origin=String(params.get('api')||'');
+ const token=String(params.get('finance-api-session')||'');
+ history.replaceState(null,'',location.pathname+location.search);
+ if(!apiValidOrigin(origin)||!token||token.length>9000||!/^[A-Za-z0-9_-]+$/.test(token)){apiStatus('مجوز اتصال معتبر نیست.');return}
+ apiState={origin,token};localStorage.setItem(API_STATE_KEY,JSON.stringify(apiState));
+ $('apiorigin').value=origin;apiStatus('Google متصل شد. در حال بازیابی داده‌ها...');apiPull()
+}
+
 function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
 function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db=d;save()}}catch(e){alert('فایل معتبر نیست')}}
 // Safe, confirmation-required handoff from ChatGPT. URL fragment never reaches hosting server.
