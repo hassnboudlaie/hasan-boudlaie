@@ -113,6 +113,13 @@ async function cloudConnect(){
   await cloudPull()
  }catch(e){cloudStatus('اتصال برقرار نشد: '+String(e.message||e).slice(0,200))}
 }
+async function cloudFetchTransactions(){
+ const range=encodeURIComponent('Transactions!A1:N10001');
+ const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
+ const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
+ if(!response.ok)throw Error('Google Transactions HTTP '+response.status);
+ return (await response.json()).values||[];
+}
 async function cloudPull(){
  if(cloudBusy)return;
  if(!cloudValid(cloudConfig)){cloudStatus('ابتدا تنظیمات Google Sheets را وارد کنید.');tab('settings');return}
