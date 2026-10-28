@@ -37,6 +37,26 @@ style.textContent=`
 @media(max-width:390px){.loan-summary,.loan-metrics{grid-template-columns:1fr}.loan-stat strong{font-size:19px}}
 `;
 document.head.appendChild(style);
+const reminder=document.createElement('div');reminder.id='loan-due-notice';reminder.className='upcoming-notice';reminder.hidden=true;
+document.getElementById('upcoming-notice')?.insertAdjacentElement('afterend',reminder);
+const persianDate=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'});
+function nextJalali(daysAhead){
+ const parts=persianDate.formatToParts(new Date(Date.now()+daysAhead*86400000));
+ const p=k=>parts.find(x=>x.type===k)?.value||'0';
+ return p('year')+'/'+p('month').padStart(2,'0')+'/'+p('day').padStart(2,'0');
+}
+function dueReminders(loans){
+ const today=nextJalali(0),dates=[0,1,3,7],notices=[];
+ for(const loan of loans){
+  const due=String(loan.nextDueJalali||'');
+  if(!due)continue;
+  const d=dates.find(offset=>nextJalali(offset)===due);
+  if(d!==undefined)notices.push((loan.title||'وام')+' · '+(d===0?'امروز':d+' روز تا سررسید')+' · '+toman(loan.installment));
+  else if(due<today)notices.push((loan.title||'وام')+' · سررسید گذشته؛ وضعیت پرداخت را بررسی کنید');
+ }
+ reminder.hidden=notices.length===0;
+ reminder.textContent=notices.length?'⏰ اقساط: '+notices.join(' | '):'';
+}
 function dueSchedule(loan){
  const due=String(loan.nextDueJalali||'');
  const match=due.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
@@ -54,6 +74,7 @@ function dueSchedule(loan){
 function render(){
  const data=bridge.getData(),loans=(data.loans||[]).filter(l=>l.status!=='closed');
  const summary=document.getElementById('loans-overview'),list=document.getElementById('loans-items');
+ dueReminders(loans);
  if(!summary||!list)return;
  if(!loans.length){
   summary.innerHTML='<p class="muted">هنوز وامی ثبت نشده است.</p>';
