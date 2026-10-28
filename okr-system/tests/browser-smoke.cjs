@@ -17,6 +17,17 @@ const assert=require('node:assert/strict');
   const after=await page.locator('#kmZoomValue').innerText();
   assert.notEqual(before,after,'zoom control works');
   console.log('PASS desktop map, ultimate goal, zoom');
+  // Perdoo 3.0 navigation cleanup: legacy rollout and learning entries are not primary modules.
+  const nav=page.locator('#platformNav');
+  assert.equal(await nav.count(),1,'operational navigation exists');
+  for(const route of ['roadmap','introduce','announce','educate','learn','training']){
+   assert.equal(await nav.locator('a[href="#'+route+'"]:visible').count(),0,'retired legacy link visible: '+route);
+  }
+  for(const route of ['history','admin']){
+   assert.ok(await nav.locator('a[href="#'+route+'"]:visible').count()<=1,'duplicate administrative navigation: '+route);
+  }
+  console.log('PASS Perdoo 3.0 navigation cleanup: no legacy learning menu or duplicate admin links');
+
   await page.goto(root+'#team/company/goals',{waitUntil:'domcontentloaded',timeout:45000});
   await page.waitForSelector('.kt-shell',{timeout:30000});
   assert.ok(await page.locator('.kt-tabs').isVisible(),'Team profile tabs visible');
