@@ -121,9 +121,11 @@ try{
  await page.locator('[data-kx-filter="statuses"]').selectOption(['no-status']);
  assert.ok(await page.locator('[data-kx-record]').count()>0);
  await page.locator('[data-kx-filter="statuses"]').selectOption([]);
+ await page.locator('[data-kx-filter="types"]').selectOption(['kpi']);
  await page.locator('[data-kx-filter="updateCadences"]').selectOption(['30']);
  assert.ok(await page.locator('[data-kx-record]').count()>0,'KPI monthly cadence filter returns records');
  await page.locator('[data-kx-filter="updateCadences"]').selectOption([]);
+ await page.locator('[data-kx-filter="types"]').selectOption(['objective']);
  await page.locator('[data-kx-sort]').selectOption('status');
  assert.equal(await page.locator('[data-kx-sort]').inputValue(),'status');
 
