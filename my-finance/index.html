@@ -162,6 +162,25 @@ function importChatGPTDraft(){
    const raw=item.entry&&typeof item.entry==='object'?item.entry:item;
    const prepared=validateReceivable(raw);
    history.replaceState(null,'',location.pathname+location.search);
+   if(item.mode==='commit'){
+    tab('receivables');
+    const duplicates=db.receivables.filter(r=>r.id===prepared.id||(r.counterparty.trim()===prepared.counterparty.trim()&&r.principal===prepared.principal&&r.expected===prepared.expected&&r.currency===prepared.currency&&r.dueMonth===prepared.dueMonth));
+    if(duplicates.length){
+     alert('این سرمایه‌گذاری قبلاً در اپ ثبت شده است؛ رکورد تکراری ایجاد نشد.');
+     return;
+    }
+    const summary='طرف قرارداد: '+prepared.counterparty+'\\nاصل سرمایه: '+fmt(prepared.principal)+' '+prepared.currency+'\\nبازپرداخت توافقی: '+fmt(prepared.expected)+' '+prepared.currency+'\\nسررسید: '+monthText(prepared.dueMonth)+'\\nمحل: '+prepared.location+' · '+prepared.sector;
+    if(!confirm('آیا اطلاعات زیر در همین اپ ثبت شود؟\\n\\n'+summary))return;
+    db.receivables.push(prepared);
+    try{
+     save();
+     alert('✅ سرمایه‌گذاری مستقیماً در همین اپ ثبت شد. در بخش «مطالبات» قابل مشاهده است.');
+    }catch(err){
+     db.receivables=db.receivables.filter(r=>r!==prepared);
+     alert('ذخیره در این مرورگر موفق نبود. فضای ذخیره‌سازی دستگاه را بررسی کنید.');
+    }
+    return;
+   }
    if(($('rcvname').value||$('rcvprincipal').value||$('rcvnotes').value)&&!confirm('پیش‌نویس طلب فعلی با اطلاعات ChatGPT جایگزین شود؟'))return;
    $('rcvname').value=prepared.counterparty;
    $('rcvcurrency').value=prepared.currency;
