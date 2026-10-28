@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="My Finance maskable logo">
+<defs><linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#174779"/><stop offset=".47" stop-color="#09264E"/><stop offset="1" stop-color="#06162E"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF0BB"/><stop offset=".42" stop-color="#F2CF80"/><stop offset="1" stop-color="#C98A35"/></linearGradient><linearGradient id="wave" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#2B76B2"/><stop offset=".55" stop-color="#164977"/><stop offset="1" stop-color="#0B2850"/></linearGradient></defs>
+<rect width="512" height="512" fill="url(#navy)"/>
+<g transform="translate(85 85) scale(.667)">
+ <path d="M108 330C111 204 194 104 310 91C363 85 404 101 430 119" fill="none" stroke="#F3CE7B" stroke-width="14" stroke-linecap="round"/>
+ <rect x="169" y="297" width="48" height="119" rx="8" fill="url(#gold)"/><rect x="242" y="249" width="48" height="167" rx="8" fill="url(#gold)"/><rect x="315" y="199" width="48" height="217" rx="8" fill="url(#gold)"/>
+ <path d="M104 383C181 350 261 302 337 228C367 198 388 173 415 132" fill="none" stroke="#05162E" stroke-width="30" stroke-linecap="round"/>
+ <path d="M104 383C181 350 261 302 337 228C367 198 388 173 415 132" fill="none" stroke="url(#gold)" stroke-width="20" stroke-linecap="round"/>
+ <path d="M370 145L439 106L431 184Z" fill="url(#gold)"/>
+</g>
+<path d="M0 449C110 400 184 449 255 469C346 492 411 459 512 421V512H0Z" fill="url(#wave)" opacity=".65"/>
+</svg>
