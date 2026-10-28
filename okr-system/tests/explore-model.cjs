@@ -47,7 +47,7 @@ assert.deepEqual(M.filter(enriched,{createdAfter:'2026-10-04'}).map(r=>r.id),['g
 assert.deepEqual(M.filter(enriched,{startAfter:'2026-10-02'}).map(r=>r.id),[]);
 assert.deepEqual(M.filter(enriched,{dueBefore:'2026-11-30'}).map(r=>r.id),[]);
 assert.deepEqual(M.filter(enriched,{progressMin:'20',progressMax:'30'}).map(r=>r.id),['g']);
-assert.deepEqual(M.filter(enriched,{progressMin:'26'}).map(r=>r.id),[]);
+assert.deepEqual(M.filter(enriched,{progressMin:'26'}).map(r=>r.id),['k1'],'KR 100% remains while Objective 25% is excluded');
 assert.equal(M.filter(enriched,{alignedTo:['p']}).length,2,'direct children of pillar');
 assert.equal(M.filter(enriched,{alignedTo:['p'],includeSubgoals:true}).length,5,'nested descendants of pillar');
 const teamRow={id:'team-goal',teamId:'sub',parentId:'',archived:false,contributors:[],tags:[],stage:'active',type:'objective',owner:'',timeframe:''};
