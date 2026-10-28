@@ -77,3 +77,5 @@ footer{font-size:11px;opacity:.65;padding:18px 0;text-align:center}
 .expense-track span{display:block;height:100%;background:var(--accent);border-radius:99px}
 .report-table{min-width:430px}
 @media(max-width:700px){.report-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-stat{padding:13px}.finance-stat strong{font-size:16px}}
+
+#supabase-pair-status{background:var(--bg);border:1px dashed var(--line);border-radius:14px;padding:13px 15px;line-height:1.9;font-size:13px}#supabase-pair{background:#173c4a;color:#fff}body.dark #supabase-pair{background:#286172}

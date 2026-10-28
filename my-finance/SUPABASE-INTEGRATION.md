@@ -17,6 +17,13 @@
 6. Recurring commitments create Pending expenses on their due dates; payment confirmation is needed before deducting from an account. In-app reminders default to 7/3/1/0 days and are individually configurable.
 7. Reminder notifications **when the app is closed** are not implemented without a push service.
 
+## One-time pairing for ChatGPT voice → database
+- After Supabase email login, use **اتصال یک‌باره به ChatGPT** in the Settings panel.
+- The app generates a cryptographically-random eight-digit pairing code that expires after 15 minutes; the code is written only to the private `finance_voice_pairings` table, not the public repository or an URL.
+- Share this code once in the current authorized ChatGPT conversation. The connected Supabase action can resolve and consume this code, linking subsequent explicitly instructed financial messages to that verified `user_id`.
+- The database enforces per-user RLS, short expiration and server-controlled pairing consumption. Do **not** expose Supabase secret/service-role keys in the client.
+- No repeated per-transaction code, copy/paste import or download is required after pairing, as long as the authorized ChatGPT Supabase connector remains available.
+
 ## ChatGPT voice → database
 This app cannot silently read messages from arbitrary ChatGPT conversations. An authorized ChatGPT session equipped with the **connected Supabase action** may write to `finance_entries` on the user's explicit instruction, provided the user's signed-in Supabase account is identified and verified. The PWA will then retrieve that row automatically. This exact end-to-end ChatGPT write has **not yet been tested**, because no Supabase Auth user has signed in as of initial deployment.
 
