@@ -4,9 +4,9 @@ const container=document.getElementById('supabase-sync');
 const status=document.getElementById('supabase-status');
 const email=document.getElementById('supabase-email');
 const say=s=>{status.textContent=s};
-let activeUser=null;
+let activeUser=null;let pullBusy=false;let lastPulledUser=null;
 function renderAuth(){document.getElementById('supabase-login').hidden=!!activeUser;document.getElementById('supabase-actions').hidden=!activeUser;say(activeUser?'اتصال امن فعال است: '+activeUser.email:'برای همگام‌سازی ابتدا وارد حساب خود شوید.')}
-async function refresh(){const {data,error}=await client.auth.getUser();activeUser=error?null:data.user;renderAuth()}
+async function refresh(){const {data,error}=await client.auth.getUser();activeUser=error?null:data.user;renderAuth();if(activeUser&&lastPulledUser!==activeUser.id){lastPulledUser=activeUser.id;pullEntries().catch(e=>say('خطای همگام‌سازی: '+e.message))}}
 client.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});
 document.getElementById('supabase-send').addEventListener('click',async()=>{
  const value=email.value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return say('ایمیل معتبر وارد کنید.');
@@ -15,11 +15,13 @@ document.getElementById('supabase-send').addEventListener('click',async()=>{
  say(error?'خطا: '+error.message:'لینک ورود ارسال شد. ایمیل را باز کنید و لینک را در همین مرورگر اجرا کنید.');
 });
 document.getElementById('supabase-logout').addEventListener('click',async()=>{await client.auth.signOut();activeUser=null;renderAuth()});
-document.getElementById('supabase-pull').addEventListener('click',async()=>{
+async function pullEntries(){
+ if(pullBusy)return;pullBusy=true;
+ try{
  if(!activeUser)return say('ابتدا وارد شوید.');
  say('در حال دریافت تراکنش‌ها...');
  const {data,error}=await client.from('finance_entries').select('id,entry_type,amount,currency,category,description,occurred_at').in('entry_type',['income','expense']).order('occurred_at',{ascending:false}).limit(1000);
- if(error)return say('خطای دریافت: '+error.message);
+ if(error){say('خطای دریافت: '+error.message);return;}
  const existing=new Set(db.tx.map(t=>t.id));let added=0,skipped=0;
  for(const item of data){
   if(existing.has(item.id))continue;
@@ -30,7 +32,11 @@ document.getElementById('supabase-pull').addEventListener('click',async()=>{
  }
  if(added)save();
  say(added+' تراکنش دریافت شد؛ '+skipped+' تراکنش با حساب نامشخص (بدون تغییر موجودی حساب‌ها). داده‌های موجود حفظ شدند.');
-});
+ }finally{pullBusy=false}
+}
+document.getElementById('supabase-pull').addEventListener('click',()=>pullEntries().catch(e=>say('خطا: '+e.message)));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&activeUser)pullEntries().catch(()=>{})});
+setInterval(()=>{if(!document.hidden&&activeUser)pullEntries().catch(()=>{})},30000);
 document.getElementById('supabase-push').addEventListener('click',async()=>{
  if(!activeUser)return say('ابتدا وارد شوید.');
  if(!confirm('تراکنش‌های محلی درآمد و هزینه در فضای خصوصی Supabase ذخیره شوند؟ این عمل موجودی و حساب‌ها را منتقل نمی‌کند.'))return;
