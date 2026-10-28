@@ -165,3 +165,10 @@ body.kish-perdoo #platformBody .p-page>h1+p{color:#d4e4ef!important}
 .kx-app .kx-board-measure>button:hover,.kx-app .kx-board-measure>button:focus-visible{background:#e3f1f9;border-color:#639ab7;outline:2px solid #28749d;outline-offset:1px}
 .kx-app .kx-board th{white-space:nowrap}
 @media(max-width:640px){.kx-app .kx-board-options{padding:10px;gap:9px}.kx-app .kx-board-options>label{min-width:128px;flex:1 1 135px}}
+
+/* Perdoo 3.0 Explore private Saved View organization. */
+.kx-app .kx-saveview-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.kx-app .kx-saveview-tools button{min-height:44px;min-width:62px;padding:7px 10px;background:#fff;border-color:#a5c2d5;color:#21465f}
+.kx-app [data-kx-saved]{max-width:380px;min-height:44px}
+.kx-app [data-kx-saved] option{padding:5px}
+@media(max-width:640px){.kx-app .kx-saveview-tools{width:100%}.kx-app .kx-saveview-tools button{flex:1 1 125px}}
