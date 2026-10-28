@@ -172,7 +172,7 @@ byId('supabase-send').addEventListener('click',async()=>{
 byId('supabase-pair').addEventListener('click',async()=>{
  if(!user)return notice('اول وارد حساب خود شوید.');
  const buf=new Uint32Array(2);crypto.getRandomValues(buf);
- const code=String((buf[0]^buf[1])%100000000).padStart(8,'0');
+ const code=String(((buf[0]^buf[1])>>>0)%100000000).padStart(8,'0');
  const expires_at=new Date(Date.now()+15*60*1000).toISOString();
  const {error}=await client.from('finance_voice_pairings').upsert({user_id:user.id,pairing_code:code,expires_at,consumed_at:null},{onConflict:'user_id'});
  if(error)return byId('supabase-pair-status').textContent='ساخت کد انجام نشد: '+error.message;
