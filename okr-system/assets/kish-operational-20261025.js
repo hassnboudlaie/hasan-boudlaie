@@ -123,21 +123,54 @@
  function operationalNav(){
   const nav=document.getElementById('platformNav');
   if(!nav||!nav.querySelector('.pd-nav-group'))return;
+  const entries=[
+   ['#history','◷','تاریخچه تغییرات','Change history'],
+   ['#admin','⚙','مدیریت دسترسی','Access management']
+  ];
   let group=nav.querySelector('#kish-system-nav');
-  if(!group){
-   group=document.createElement('div');
-   group.className='pd-nav-group';
-   group.id='kish-system-nav';
-   group.innerHTML='<div class="nav-label" data-fa="کنترل و مدیریت" data-en="CONTROL & ADMIN">کنترل و مدیریت</div><a href="#history"><span class="p-nav-icon" aria-hidden="true">◷</span><span data-fa="تاریخچه تغییرات" data-en="Change history">تاریخچه تغییرات</span></a><a href="#admin"><span class="p-nav-icon" aria-hidden="true">⚙</span><span data-fa="مدیریت دسترسی" data-en="Access management">مدیریت دسترسی</span></a>';
-   nav.appendChild(group);
+  for(const [href,icon,fa,en] of entries){
+   const nativeExists=[...nav.querySelectorAll('a[href="'+href+'"]')].some(a=>!a.closest('#kish-system-nav'));
+   const own=group?.querySelector('a[href="'+href+'"]');
+   if(nativeExists&&own){own.remove();continue;}
+   if(!nativeExists&&!own){
+    if(!group){
+     group=document.createElement('div');
+     group.className='pd-nav-group';
+     group.id='kish-system-nav';
+     group.innerHTML='<div class="nav-label" data-fa="کنترل و مدیریت" data-en="CONTROL & ADMIN">کنترل و مدیریت</div>';
+     nav.appendChild(group);
+    }
+    const link=document.createElement('a');
+    link.href=href;
+    link.innerHTML='<span class="p-nav-icon" aria-hidden="true">'+icon+'</span><span></span>';
+    link.lastElementChild.dataset.fa=fa;
+    link.lastElementChild.dataset.en=en;
+    group.appendChild(link);
+   }
   }
+  if(group&&!group.querySelector('a')){group.remove();group=null;}
+  if(!group)return;
   const cur=location.hash.slice(1).split('/')[0];
   group.querySelectorAll('a').forEach(a=>{
    a.classList.toggle('active',a.getAttribute('href')==='#'+cur);
    if(a.classList.contains('active'))a.setAttribute('aria-current','page');
    else a.removeAttribute('aria-current');
-   const txtEl=a.querySelector('span:last-child');
-   if(txtEl)txtEl.textContent=document.documentElement.lang==='fa'?txtEl.dataset.fa:txtEl.dataset.en;
+   const txt=a.querySelector('span:last-child');
+   if(txt)txt.textContent=document.documentElement.lang==='fa'?txt.dataset.fa:txt.dataset.en;
+  });
+ }
+ function removeObsoleteNavigation(){
+  const nav=document.getElementById('platformNav');
+  if(!nav)return;
+  // Retire legacy training/rollout links without deleting stored records or operational features.
+  const retired=new Set(['roadmap','introduce','announce','educate','learn','training']);
+  nav.querySelectorAll('a[href^="#"]').forEach(a=>{
+   const route=a.getAttribute('href').slice(1).split('/')[0];
+   if(retired.has(route)){
+    a.hidden=true;
+    a.setAttribute('aria-hidden','true');
+    a.tabIndex=-1;
+   }
   });
  }
  function removeLearningUI(){
@@ -168,11 +201,11 @@
  function run(){
   if(busy)return;
   busy=true;
-  try{removeLearningUI();operationalNav();replaceLabels();}
+  try{removeLearningUI();operationalNav();removeObsoleteNavigation();replaceLabels();}
   finally{busy=false;}
  }
  function preventTrainingRoute(){
-  if(/^#(?:learn|educate|training)(?:\/|$)/.test(location.hash)){
+  if(/^#(?:learn|educate|training|roadmap|introduce|announce)(?:\/|$)/.test(location.hash)){
    location.replace(location.pathname+location.search+'#start');
   }
  }
