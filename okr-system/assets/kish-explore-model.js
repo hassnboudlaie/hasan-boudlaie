@@ -5,6 +5,19 @@ const number=v=>v===null||v===undefined||String(v).trim()===''?null:Number.isFin
 function percent(k){const b=number(k.baseline),t=number(k.target),v=number(k.current);return b===null||t===null||v===null||b===t?null:Math.max(0,Math.min(100,(v-b)/(t-b)*100));}
 function progress(g){const rows=(g.krs||[]).map(k=>({k,p:percent(k)})).filter(x=>x.p!==null);if(!rows.length)return null;const weighted=['weighted','weighted-krs','weighted_kr'].includes(String(g.progressMode||g.progressMethod||g.progressCalculation||'').toLowerCase())||g.weightedProgress===true;if(!weighted)return Math.round(rows.reduce((a,x)=>a+x.p,0)/rows.length);if(rows.some(x=>number(x.k.weight)===null||number(x.k.weight)<0))return null;const total=rows.reduce((a,x)=>a+number(x.k.weight),0);return total>0?Math.round(rows.reduce((a,x)=>a+x.p*number(x.k.weight),0)/total):null;}
 function assertParent(records,id,parentId){const byId=new Map(records.map(x=>[x.id,x]));let cur=parentId;const seen=new Set([id]);while(cur){if(seen.has(cur))throw Error('هم‌راستایی دوری مجاز نیست.');seen.add(cur);const item=byId.get(cur);if(!item)throw Error('رکورد بالادست معتبر نیست.');cur=item.parentId;}}
+const CADENCE_DAYS=Object.freeze([7,14,30,90,120,180,365]);
+function updateCadence(record={},type='objective'){
+ const numeric=number(record.updateEveryDays);
+ if(numeric!==null)return numeric>0&&Number.isFinite(numeric)?numeric:null;
+ const symbolic=String(record.updateFrequency||record.updateCadence||'').trim().toLowerCase();
+ const mapping={weekly:7,biweekly:14,'every-2-weeks':14,monthly:30,quarterly:90,'every-4-months':120,'every-6-months':180,annual:365,yearly:365};
+ return mapping[symbolic]||(type==='kpi'?30:7);
+}
+function goalStatus(record={}){
+ const raw=String(record.progressStatus||record.healthStatus||record.confidence||record.goalStatus||'').trim().toLowerCase();
+ const map={'on-track':'on-track',on_track:'on-track',healthy:'on-track','off-track':'off-track',off_track:'off-track',unhealthy:'off-track',attention:'needs-attention','needs-attention':'needs-attention',needs_attention:'needs-attention',at_risk:'needs-attention','no-status':'no-status',no_status:'no-status'};
+ return map[raw]||'no-status';
+}
 function normalize(d,now=new Date()){const rows=[],cycles=d.cycles||[],goals=d.goals||[],teams=d.teams||[],pillars=d.strategy?.pillars||[];
  const base=(r,type,title,parentId,teamId='company',extra={})=>({id:r.id,type,title:title||'بدون عنوان',parentId:parentId||'',owner:r.owner||'',teamId,stage:r.status||'draft',archived:!!r.archived,timeframe:cycles.find(c=>(c.goalIds||[]).includes(r.id))?.id||'',progress:null,record:r,...extra});
  pillars.forEach(p=>rows.push(base(p,'pillar',p.title,p.parentId,p.teamId,{stage:p.status||'active'})));
@@ -20,6 +33,8 @@ function normalize(d,now=new Date()){const rows=[],cycles=d.cycles||[],goals=d.g
   r.endDate=original.endDate||original.dueDate||original.due||original.end||cycle?.end||'';
   r.contributors=asItems(original.contributors||original.contributorIds||original.contributor_ids);
   r.tags=asItems(original.tags||original.tagIds||original.tag_ids);
+  r.updateEveryDays=updateCadence(original,r.type);
+  r.progressStatus=goalStatus(original);
  });
  rows.forEach(r=>{const seen=new Set([r.id]);let parent=byId.get(r.parentId);while(parent&&!seen.has(parent.id)){seen.add(parent.id);if(parent.archived)r.archived=true;parent=byId.get(parent.parentId);}
  const cycle=cycles.find(c=>c.id===r.timeframe);
@@ -27,9 +42,9 @@ function normalize(d,now=new Date()){const rows=[],cycles=d.cycles||[],goals=d.g
  r.behind=r.progress!==null&&r.expected!==null&&r.progress<r.expected;
  const history=r.type==='kpi'?(d.kpiHistory||[]).filter(h=>h.kpiId===r.id):r.type==='kr'?(d.history||[]).filter(h=>h.krId===r.id):r.type==='objective'?(d.history||[]).filter(h=>(r.record.krs||[]).some(k=>k.id===h.krId)):[];
  r.lastUpdate=history.map(h=>h.at).filter(Boolean).sort().at(-1)||r.record.lastUpdate||'';
- const cadence=number(r.record.updateEveryDays)??7;
+ const cadence=r.updateEveryDays;
  const stamp=day(r.lastUpdate),today=day(now);
- r.outdated=['objective','kr','kpi'].includes(r.type)&&!['draft','closed'].includes(r.stage)&&!r.archived&&(stamp===null||today-stamp>cadence*86400000);
+ r.outdated=['objective','kr','kpi'].includes(r.type)&&!['draft','closed'].includes(r.stage)&&!r.archived&&cadence!==null&&(stamp===null||today-stamp>=cadence*86400000);
  });
  return rows;
 }
@@ -46,7 +61,7 @@ function filter(rows,f={},context={}){
  return rows.filter(r=>
  (f.archived?r.archived:!r.archived)&&match(r.type,f.types)&&match(r.stage,f.stages)&&
  teamMatch(r)&&match(r.owner,f.owners)&&match(r.timeframe,f.timeframes)&&
- matchesAny(r.tags,f.tags)&&matchesAny(r.contributors,f.contributors)&&aligns(r)&&
+ matchesAny(r.tags,f.tags)&&matchesAny(r.contributors,f.contributors)&&match(r.progressStatus,f.statuses)&&match(String(r.updateEveryDays),f.updateCadences)&&aligns(r)&&
  after(r.createdAt,f.createdAfter)&&after(r.startDate,f.startAfter)&&before(r.endDate,f.dueBefore)&&
  numberBound(r.progress,f.progressMin,f.progressMax)&&
  (!f.behind||r.behind)&&(!f.outdated||r.outdated)&&
@@ -92,5 +107,5 @@ function boardPeriods(mode='weekly',count=6,asOf=new Date()){
  return results.reverse();
 }
 function cloneGoal(g,makeId){const c=JSON.parse(JSON.stringify(g));c.id=makeId();c.objective=g.objective+' — رونوشت';c.status='draft';c.archived=false;c.dependencies=[];c.krs=(c.krs||[]).map(k=>{const n={...k,id:makeId(),current:'',lastUpdate:'',confidence:''};delete n.lastNote;return n;});for(const key of ['sourceId','sourcePage','closedAt','closingNotes','closureHistory','clonedFrom','comments','createdAt','updatedAt'])delete c[key];c.clonedFrom=g.id;return c;}
-return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,boardPeriods,cloneGoal};
+return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,boardPeriods,CADENCE_DAYS,updateCadence,goalStatus,cloneGoal};
 });
