@@ -306,4 +306,9 @@ window.addEventListener('hashchange',importChatGPTDraft);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{});
 render();
 importChatGPTDraft();
+$('apiorigin').value=apiState.origin;
+apiHandleReturn();
+if(apiState.token)apiPull();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&apiState.token)apiPull()});
+setInterval(()=>{if(!document.hidden&&apiState.token&&!apiBusy)apiPull()},60000);
 </script></body></html>
