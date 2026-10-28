@@ -11,7 +11,16 @@ function normalize(d,now=new Date()){const rows=[],cycles=d.cycles||[],goals=d.g
  goals.forEach(g=>{const team=teams.find(t=>t.okrs?.some(x=>x.id===g.id))?.id||'company',frame=cycles.find(c=>(c.goalIds||[]).includes(g.id))?.id||'';rows.push(base(g,'objective',g.objective,g.parentId,team,{progress:progress(g),timeframe:frame}));(g.krs||[]).forEach(k=>rows.push(base(k,'kr',k.text,g.id,k.teamId||team,{progress:percent(k),stage:g.status||'draft',timeframe:frame})));});
  (d.kpis||[]).forEach(k=>{const parent=k.parentId||k.pillarId||pillars.find(p=>p.title===k.pillar)?.id||'';rows.push(base(k,'kpi',k.name,parent,k.teamId,{stage:k.status||'active'}));});
  (d.initiatives||[]).forEach(i=>{const g=rows.find(g=>g.type==='objective'&&g.id===i.objectiveId);rows.push(base(i,'initiative',i.title,i.parentId||i.objectiveId||i.kpiId,i.teamId||i.unitId||g?.teamId||'company',{timeframe:i.timeframeId||g?.timeframe||'',progress:i.status==='done'?100:null,stage:i.status||'planned'}));});
+ const asItems=value=>(Array.isArray(value)?value:(typeof value==='string'&&value.trim()?value.split(','):[])).map(v=>typeof v==='object'&&v!==null?String(v.id??v.email??v.name??v.label??v.title??'').trim():String(v??'').trim()).filter(Boolean);
  const byId=new Map(rows.map(r=>[r.id,r]));
+ rows.forEach(r=>{
+  const original=r.record||{},cycle=cycles.find(c=>c.id===r.timeframe);
+  r.createdAt=original.createdAt||original.created_at||original.created||'';
+  r.startDate=original.startDate||original.start||cycle?.start||'';
+  r.endDate=original.endDate||original.dueDate||original.due||original.end||cycle?.end||'';
+  r.contributors=asItems(original.contributors||original.contributorIds||original.contributor_ids);
+  r.tags=asItems(original.tags||original.tagIds||original.tag_ids);
+ });
  rows.forEach(r=>{const seen=new Set([r.id]);let parent=byId.get(r.parentId);while(parent&&!seen.has(parent.id)){seen.add(parent.id);if(parent.archived)r.archived=true;parent=byId.get(parent.parentId);}
  const cycle=cycles.find(c=>c.id===r.timeframe);
  r.expected=['objective','kr'].includes(r.type)?expected(cycle?.start,cycle?.end,now):null;
@@ -24,7 +33,25 @@ function normalize(d,now=new Date()){const rows=[],cycles=d.cycles||[],goals=d.g
  });
  return rows;
 }
-function filter(rows,f={}){const match=(v,a)=>!a?.length||a.includes(v);return rows.filter(r=>(f.archived?r.archived:!r.archived)&&match(r.type,f.types)&&match(r.stage,f.stages)&&match(r.teamId,f.teams)&&match(r.owner,f.owners)&&match(r.timeframe,f.timeframes)&&(!f.behind||r.behind)&&(!f.outdated||r.outdated)&&(!f.q||[r.title,r.owner].join(' ').toLocaleLowerCase().includes(f.q.toLocaleLowerCase())));}
+function filter(rows,f={},context={}){
+ const match=(v,a)=>!Array.isArray(a)||!a.length||a.includes(v);
+ const matchesAny=(values,selected)=>!Array.isArray(selected)||!selected.length||(values||[]).some(v=>selected.includes(v));
+ const after=(v,bound)=>!bound||(day(v)!==null&&day(v)>=day(bound)&&day(bound)!==null);
+ const before=(v,bound)=>!bound||(day(v)!==null&&day(v)<=day(bound)&&day(bound)!==null);
+ const numberBound=(v,min,max)=>(min===''||min===undefined||min===null)&&(max===''||max===undefined||max===null)||v!==null&&v!==undefined&&(min===''||min===undefined||min===null||v>=Number(min))&&(max===''||max===undefined||max===null||v<=Number(max));
+ const byId=new Map(rows.map(r=>[r.id,r])),units=new Map((context.units||[]).map(t=>[t.id,t]));
+ const ancestry=(id,selected,collection)=>{const seen=new Set();let current=id;while(current&&!seen.has(current)){if(selected.includes(current))return true;seen.add(current);const next=collection.get(current);current=next?.parentId||next?.parentUnitId||next?.parentTeamId||'';}return false;};
+ const aligns=r=>!f.alignedTo?.length||f.alignedTo.includes(r.parentId)||(f.includeSubgoals&&ancestry(r.parentId,f.alignedTo,byId));
+ const teamMatch=r=>match(r.teamId,f.teams)||(f.includeSubteams&&f.teams?.length&&ancestry(r.teamId,f.teams,units));
+ return rows.filter(r=>
+ (f.archived?r.archived:!r.archived)&&match(r.type,f.types)&&match(r.stage,f.stages)&&
+ teamMatch(r)&&match(r.owner,f.owners)&&match(r.timeframe,f.timeframes)&&
+ matchesAny(r.tags,f.tags)&&matchesAny(r.contributors,f.contributors)&&aligns(r)&&
+ after(r.createdAt,f.createdAfter)&&after(r.startDate,f.startAfter)&&before(r.endDate,f.dueBefore)&&
+ numberBound(r.progress,f.progressMin,f.progressMax)&&
+ (!f.behind||r.behind)&&(!f.outdated||r.outdated)&&
+ (!f.q||[r.title,r.owner].join(' ').toLocaleLowerCase().includes(String(f.q).toLocaleLowerCase())));
+}
 function tree(rows){const ids=new Set(rows.map(r=>r.id)),seen=new Set(),out=[];function walk(r,depth){if(seen.has(r.id))return;seen.add(r.id);out.push({...r,depth});rows.filter(x=>x.parentId===r.id).forEach(x=>walk(x,Math.min(depth+1,20)));}rows.filter(r=>!ids.has(r.parentId)).forEach(r=>walk(r,0));rows.forEach(r=>walk(r,0));return out;}
 function historicalValue(row,d,end){const before=h=>h.at&&h.at.slice(0,10)<=end;
  const history=(row.type==='kpi'?(d.kpiHistory||[]).filter(h=>h.kpiId===row.id):(d.history||[]).filter(h=>h.krId===row.id)).filter(before).sort((a,b)=>a.at.localeCompare(b.at));

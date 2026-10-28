@@ -31,3 +31,28 @@ const monitored=M.normalize({...d,goals:[{...g,status:'active'}],cycles:[{id:'t'
 assert.equal(monitored.find(x=>x.id==='g').expected,50);assert.equal(monitored.find(x=>x.id==='g').behind,true);
 assert.ok(M.filter(monitored,{behind:true}).every(x=>x.behind));assert.equal(M.normalize({...d,goals:[{...g,archived:true}]}).find(x=>x.id==='k1').archived,true);
 console.log('PASS Phase 3: expected progress bounds, invalid dates, Saturday, safe clone, monitoring, inherited archive');
+
+/* Perdoo 3.0 Explore filters: date, progress, aligned descendants, people/tags and sub-teams. */
+const enriched=M.normalize({...d,goals:[{...g,createdAt:'2026-10-04T10:00:00Z',tags:['safety'],contributors:[{id:'leader2'}]}],cycles:[{id:'t',start:'2026-10-01',end:'2026-12-31',goalIds:['g']}]});
+const target=enriched.find(r=>r.id==='g');
+assert.equal(target.createdAt,'2026-10-04T10:00:00Z');
+assert.equal(target.startDate,'2026-10-01');
+assert.equal(target.endDate,'2026-12-31');
+assert.deepEqual(target.tags,['safety']);
+assert.deepEqual(target.contributors,['leader2']);
+assert.deepEqual(M.filter(enriched,{tags:['safety']}).map(r=>r.id),['g']);
+assert.deepEqual(M.filter(enriched,{contributors:['leader2']}).map(r=>r.id),['g']);
+assert.deepEqual(M.filter(enriched,{createdAfter:'2026-10-05'}).map(r=>r.id),[]);
+assert.deepEqual(M.filter(enriched,{createdAfter:'2026-10-04'}).map(r=>r.id),['g']);
+assert.deepEqual(M.filter(enriched,{startAfter:'2026-10-02'}).map(r=>r.id),[]);
+assert.deepEqual(M.filter(enriched,{dueBefore:'2026-11-30'}).map(r=>r.id),[]);
+assert.deepEqual(M.filter(enriched,{progressMin:'20',progressMax:'30'}).map(r=>r.id),['g']);
+assert.deepEqual(M.filter(enriched,{progressMin:'26'}).map(r=>r.id),['k1'],'KR 100% remains while Objective 25% is excluded');
+assert.equal(M.filter(enriched,{alignedTo:['p']}).length,2,'direct children of pillar');
+assert.equal(M.filter(enriched,{alignedTo:['p'],includeSubgoals:true}).length,5,'nested descendants of pillar');
+const teamRow={id:'team-goal',teamId:'sub',parentId:'',archived:false,contributors:[],tags:[],stage:'active',type:'objective',owner:'',timeframe:''};
+const units=[{id:'parent',parentId:''},{id:'sub',parentId:'parent'}];
+assert.equal(M.filter([teamRow],{teams:['parent']},{units}).length,0);
+assert.equal(M.filter([teamRow],{teams:['parent'],includeSubteams:true},{units}).length,1);
+assert.equal(JSON.stringify(d),before,'advanced filters never mutate authoritative source');
+console.log('PASS Perdoo Explore 3.0 advanced filter model: hierarchy, dates, contributors, tags and progress');
