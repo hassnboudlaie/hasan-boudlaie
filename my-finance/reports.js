@@ -9,7 +9,7 @@ const box=$('report');box.hidden=true;
 const panel=document.createElement('div');panel.id='finance-report-dashboard';panel.setAttribute('aria-live','polite');box.after(panel);
 function render(){
  const data=bridge.getData(),posted=(data.tx||[]).filter(t=>['expense','income'].includes(t.kind)&&!['pending','cancelled'].includes(t.status));
- const currencies=[...new Set([...posted.map(currency),...(data.receivables||[]).map(r=>r.currency)])].filter(Boolean).sort();
+ const currencies=[...new Set([...posted.map(currency),...(data.receivables||[]).map(r=>r.currency),...(data.loans||[]).map(l=>l.currency)])].filter(Boolean).sort();
  if(!currencies.length){panel.innerHTML='<p class="muted">هنوز تراکنش یا سرمایه‌گذاری ثبت نشده است. گزارش پس از ثبت اولین داده ساخته می‌شود.</p>';return}
  let output='';
  for(const cur of currencies){
@@ -20,7 +20,10 @@ function render(){
   const expected=receivables.filter(r=>r.expected!==null&&r.expected!==undefined).reduce((s,r)=>s+Math.max(0,Number(r.expected)-Number(r.receivedAmount||0)),0);
   const outstandingPrincipal=receivables.reduce((s,r)=>s+Math.max(0,Number(r.principal||0)-Number(r.receivedAmount||0)),0);
   const unknownReturnPrincipal=receivables.filter(r=>r.expected===null||r.expected===undefined).reduce((s,r)=>s+Math.max(0,Number(r.principal||0)-Number(r.receivedAmount||0)),0);
-  output+='<div class="report-unit"><h3>گزارش '+esc(cur)+'</h3><div class="report-overview">'+card('درآمد محقق‌شده',income,cur)+card('هزینه پرداخت‌شده',expense,cur)+card('خالص جریان نقد',income-expense,cur)+card('بازپرداخت توافقی',expected,cur)+card('اصل سرمایه نزد اشخاص',outstandingPrincipal,cur)+(unknownReturnPrincipal?card('مشارکت با بازده نامشخص',unknownReturnPrincipal,cur):'')+'</div>';
+  const loans=(data.loans||[]).filter(l=>l.currency===cur&&l.status!=='closed');
+  const loanDebt=loans.reduce((s,l)=>s+Math.max(0,Number(l.outstanding||0)),0);
+  const loanInstallment=loans.reduce((s,l)=>s+Math.max(0,Number(l.installment||0)),0);
+  output+='<div class="report-unit"><h3>گزارش '+esc(cur)+'</h3><div class="report-overview">'+card('درآمد محقق‌شده',income,cur)+card('هزینه پرداخت‌شده',expense,cur)+card('خالص جریان نقد',income-expense,cur)+card('بازپرداخت توافقی',expected,cur)+card('اصل سرمایه نزد اشخاص',outstandingPrincipal,cur)+(unknownReturnPrincipal?card('مشارکت با بازده نامشخص',unknownReturnPrincipal,cur):'')+(loans.length?card('بدهی وام‌ها (آخرین اعلام بانک)',loanDebt,cur)+card('تعهد اقساط ماهانه',loanInstallment,cur):'')+'</div>';
   const cats=new Map();
   for(const t of tx.filter(t=>t.kind==='expense'))cats.set(t.category||'سایر',(cats.get(t.category||'سایر')||0)+Number(t.amount));
   const sorted=[...cats].sort((a,b)=>b[1]-a[1]).slice(0,7);
