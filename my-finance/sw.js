@@ -1,5 +1,5 @@
-const CACHE='my-finance-20261028-ui-v21-v9';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-v2.svg'];
+const CACHE='my-finance-20261028-icon-v10';
+const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-v2.svg','./icon-maskable.svg'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
