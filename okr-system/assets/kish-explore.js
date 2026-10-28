@@ -36,7 +36,90 @@ function flat(d){
  });
 }
 function metadata(r,d){const unit=d.units.find(t=>t.id===r.teamId)?.name||'شرکت';const owner=d.people.find(p=>[p.id,p.name,p.email].includes(r.owner))?.name||r.owner||'تعیین نشده';const state=String(r.stage||'no-status');const label=stages[state]||state;const category=/^(on-track|on_track|healthy|done)$/.test(state)?'good':/^(off-track|off_track|unhealthy|blocked)$/.test(state)?'bad':/^(needs-attention|needs_attention|at_risk)$/.test(state)?'attention':'neutral';return '<span>'+X(owner)+'</span><span>'+X(unit)+'</span><span class="kx-status kx-status-'+category+'" aria-label="وضعیت: '+X(label)+'">'+X(label)+'</span>';}
-function cascade(rows,d){const ids=new Set(rows.map(r=>r.id));let blockedDepth=null;return '<div class="kx-scroll"><table class="kx-table"><thead><tr><th>هدف و هم‌راستایی</th><th>مسئول / واحد / وضعیت</th><th>پیشرفت / انتظار</th><th>عملیات</th></tr></thead><tbody>'+M.tree(rows).map(r=>{if(blockedDepth!==null&&r.depth>blockedDepth)return '';blockedDepth=null;const children=rows.some(x=>x.parentId===r.id);if(collapsed.has(r.id))blockedDepth=r.depth;return '<tr data-kx-record="'+X(r.id)+'"><td><div class="kx-title" style="padding-inline-start:'+r.depth*18+'px">'+(children?'<button data-kx-action="fold" data-id="'+X(r.id)+'" aria-label="باز و بسته کردن زیرهدف‌ها" aria-expanded="'+!collapsed.has(r.id)+'">'+(collapsed.has(r.id)?'＋':'−')+'</button>':'')+'<span class="kx-icon '+r.type+'" title="'+types[r.type]+'">'+icons[r.type]+'</span><a href="'+link(r)+'">'+X(r.title)+'</a></div><small>'+types[r.type]+(r.parentId&&!ids.has(r.parentId)?' · بالادست خارج از فیلتر':'')+'</small></td><td><div class="kx-meta">'+metadata(r,d)+'</div></td><td>'+N(r.progress)+(r.progress===null?'':'٪')+'<small>انتظار: '+N(r.expected)+(r.expected===null?'':'٪')+'</small>'+(r.behind?'<small class="kx-warning">عقب‌تر از انتظار</small>':'')+(r.outdated?'<small class="kx-warning">به‌روزرسانی عقب‌افتاده</small>':'')+'</td><td><div class="kx-actions">'+actions(r)+'</div></td></tr>';}).join('')+'</tbody></table></div>';}
+
+const columnLabels={
+ goal:'هدف و هم‌راستایی',meta:'مسئول / واحد / وضعیت',progress:'پیشرفت / انتظار',actions:'عملیات',
+ lead:'مسئول',team:'تیم',timeframe:'بازه زمانی',stage:'مرحله',expected:'پیشرفت مورد انتظار',
+ lastUpdate:'آخرین ثبت',outdated:'به‌روزرسانی عقب‌افتاده',closingNotes:'یادداشت اختتام',
+ tags:'برچسب‌ها',type:'نوع هدف',customFields:'فیلدهای سفارشی'
+};
+const defaultColumns=['goal','meta','progress','actions'];
+const columnKey='kish_explore_columns_v3:'+location.pathname+':'+new URLSearchParams(location.search).get('qa');
+function loadColumns(){
+ try{const raw=JSON.parse(localStorage.getItem(columnKey)||'null');
+  if(!raw||!Array.isArray(raw.order))return {order:[...defaultColumns],widths:{}};
+  const order=[...new Set(raw.order)].filter(k=>columnLabels[k]);
+  if(!order.includes('goal'))order.unshift('goal');
+  if(!order.includes('actions'))order.push('actions');
+  return {order,widths:raw.widths||{}};
+ }catch(_){return {order:[...defaultColumns],widths:{}}}
+}
+let columns=loadColumns(),columnPanelOpen=false,dragColumn='';
+function saveColumns(){try{localStorage.setItem(columnKey,JSON.stringify(columns));}catch(_){}}
+function changeColumns(name,operation){
+ if(operation==='reset'){columns={order:[...defaultColumns],widths:{}};saveColumns();return}
+ if(!columnLabels[name])return;
+ const order=columns.order;
+ const at=order.indexOf(name);
+ if(operation==='toggle'){
+  if(['goal','actions'].includes(name))return;
+  if(at>=0)order.splice(at,1);else order.splice(order.indexOf('actions'),0,name);
+ }
+ if(operation==='up'&&at>0&&name!=='goal'&&order[at-1]!=='goal') [order[at-1],order[at]]=[order[at],order[at-1]];
+ if(operation==='down'&&at>=0&&at<order.length-1&&name!=='actions'&&order[at+1]!=='actions') [order[at],order[at+1]]=[order[at+1],order[at]];
+ saveColumns();
+}
+function columnOptions(){
+ return '<section class="kx-column-panel" aria-label="تنظیم ستون‌های Cascade">'+
+ '<div class="kx-col-options">'+Object.entries(columnLabels).map(([key,label])=>
+  '<div class="kx-col-option"><label><input type="checkbox" data-kx-column="'+key+'" '+(columns.order.includes(key)?'checked':'')+
+  (['goal','actions'].includes(key)?' disabled':'')+'> '+label+'</label>'+
+  (columns.order.includes(key)?'<div class="kx-col-tools">'+
+   '<button type="button" data-kx-action="col-up" data-id="'+key+'" aria-label="انتقال '+label+' به راست">↑</button>'+
+   '<button type="button" data-kx-action="col-down" data-id="'+key+'" aria-label="انتقال '+label+' به چپ">↓</button>'+
+   '<label class="kx-col-width-label">عرض <input type="range" min="100" max="480" step="20" data-kx-width="'+key+'" value="'+(columns.widths[key]||(['goal'].includes(key)?320:170))+'"></label>'+
+  '</div>':'')+'</div>').join('')+
+ '</div><p class="kx-help">ستون‌ها را فعال یا غیرفعال کنید؛ با کلیدهای جابه‌جایی یا کشیدن عنوان ستون ترتیب را تغییر دهید. عرض ستون قابل تنظیم است. این تنظیمات فقط در همین مرورگر ذخیره می‌شوند.</p>'+
+ '<button type="button" data-kx-action="col-reset">بازنشانی ستون‌ها</button></section>';
+}
+function columnValue(key,r,d,ids,children){
+ const team=d.units.find(t=>t.id===r.teamId)?.name||'شرکت';
+ const lead=d.people.find(p=>[p.id,p.name,p.email].includes(r.owner))?.name||r.owner||'تعیین نشده';
+ if(key==='goal')return '<div class="kx-title" style="padding-inline-start:'+r.depth*18+'px">'+
+ (children?'<button data-kx-action="fold" data-id="'+X(r.id)+'" aria-label="باز و بسته کردن زیرهدف‌ها" aria-expanded="'+!collapsed.has(r.id)+'">'+(collapsed.has(r.id)?'＋':'−')+'</button>':'')+
+ '<span class="kx-icon '+r.type+'" title="'+types[r.type]+'">'+icons[r.type]+'</span><a href="'+link(r)+'">'+X(r.title)+'</a></div>'+
+ '<small>'+types[r.type]+(r.parentId&&!ids.has(r.parentId)?' · بالادست خارج از فیلتر':'')+'</small>';
+ if(key==='meta')return '<div class="kx-meta">'+metadata(r,d)+'</div>';
+ if(key==='progress')return N(r.progress)+(r.progress===null?'':'٪')+'<small>انتظار: '+N(r.expected)+(r.expected===null?'':'٪')+'</small>'+(r.behind?'<small class="kx-warning">عقب‌تر از انتظار</small>':'')+(r.outdated?'<small class="kx-warning">به‌روزرسانی عقب‌افتاده</small>':'');
+ if(key==='actions')return '<div class="kx-actions">'+actions(r)+'</div>';
+ if(key==='lead')return X(lead);
+ if(key==='team')return X(team);
+ if(key==='timeframe')return X(d.cycles.find(c=>c.id===r.timeframe)?.name||'—');
+ if(key==='stage')return X(stages[r.stage]||r.stage||'—');
+ if(key==='expected')return N(r.expected)+(r.expected===null?'':'٪');
+ if(key==='lastUpdate')return X(r.lastUpdate?String(r.lastUpdate).slice(0,10):'—');
+ if(key==='outdated')return r.outdated?'بله':'خیر';
+ if(key==='closingNotes'){const c=r.record.closingNotes||{};return X([c.wins,c.learnings,c.nextSteps].filter(Boolean).join(' · ')||'—')}
+ if(key==='tags')return X((r.tags||[]).join('، ')||'—');
+ if(key==='type')return X(types[r.type]||'—');
+ if(key==='customFields'){const cf=r.record.customFields||{};return X(Object.entries(cf).map(([k,v])=>k+': '+(typeof v==='object'?JSON.stringify(v):v)).join(' · ')||'—')}
+ return '—';
+}
+function cascade(rows,d){
+ const ids=new Set(rows.map(r=>r.id));let blockedDepth=null;
+ const header=columns.order.map(k=>'<th scope="col" draggable="true" data-kx-col="'+k+'" style="min-width:'+Number(columns.widths[k]||(['goal'].includes(k)?300:145))+'px"><span class="kx-col-title">'+X(columnLabels[k])+'</span></th>').join('');
+ const records=M.tree(rows).map(r=>{
+  if(blockedDepth!==null&&r.depth>blockedDepth)return '';
+  blockedDepth=null;
+  const children=rows.some(x=>x.parentId===r.id);
+  if(collapsed.has(r.id))blockedDepth=r.depth;
+  return '<tr data-kx-record="'+X(r.id)+'">'+columns.order.map(k=>
+   '<td data-kx-cell="'+k+'" style="min-width:'+Number(columns.widths[k]||(['goal'].includes(k)?300:145))+'px">'+columnValue(k,r,d,ids,children)+'</td>').join('')+'</tr>';
+ }).join('');
+ return '<div class="kx-column-toolbar"><button type="button" data-kx-action="col-toggle" aria-expanded="'+columnPanelOpen+'">⚙ ستون‌ها</button><span>نمایش '+N(columns.order.length)+' ستون</span></div>'+
+ (columnPanelOpen?columnOptions():'')+
+ '<div class="kx-scroll"><table class="kx-table kx-cascade"><thead><tr>'+header+'</tr></thead><tbody>'+records+'</tbody></table></div>';
+}
 function goalTree(rows,d){let hiddenDepth=null;const ordered=M.tree(rows).filter(r=>{if(hiddenDepth!==null&&r.depth>hiddenDepth)return false;hiddenDepth=collapsed.has(r.id)?r.depth:null;return true;}),ids=new Set(rows.map(r=>r.id));return '<div class="kx-map" role="list" aria-label="نقشه هم‌راستایی">'+ordered.map(r=>'<article role="listitem" class="kx-node '+r.type+'" style="--depth:'+Math.min(r.depth,6)+'" data-kx-record="'+X(r.id)+'"><div class="kx-node-top"><span class="kx-icon '+r.type+'">'+icons[r.type]+'</span><small>'+types[r.type]+'</small><b>'+N(r.progress)+(r.progress===null?'':'٪')+'</b></div><a class="kx-node-title" href="'+link(r)+'">'+X(r.title)+'</a><p class="kx-parent">'+(r.parentId?'↳ '+X(rows.find(p=>p.id===r.parentId)?.title||'بالادست خارج از فیلتر'):'سطح بالای نقشه')+'</p><div class="kx-meta">'+metadata(r,d)+'</div><div class="kx-actions">'+actions(r)+'</div></article>').join('')+'</div>';}
 function map(rows,d){const route=location.hash.split('/'),strategy=route[2]==='strategy';const chooser='<nav class="kc-tabs" aria-label="چیدمان نقشه"><a href="#explore/map" '+(!strategy?'aria-current="page"':'')+'>درخت همه اهداف</a><a href="#explore/map/strategy" '+(strategy?'aria-current="page"':'')+'>چیدمان راهبرد، سال و فصل</a></nav>';if(!strategy)return chooser+goalTree(rows,d);const ids=new Set(rows.map(r=>r.id));const data={...d,alignmentGoals:d.goals,goals:d.goals.filter(g=>ids.has(g.id)),kpis:d.kpis.filter(k=>ids.has(k.id)),initiatives:d.initiatives.filter(i=>ids.has(i.id))};return chooser+'<p class="kx-help">چیدمان سال و فصل، اهداف و شاخص‌ها را با همان فیلترهای کاوش نشان می‌دهد. برای نتایج کلیدی و ابتکارات، درخت همه اهداف را انتخاب کنید. ارکان برای حفظ مسیر هم‌راستایی باقی می‌مانند.</p>'+window.KishMapView.render(data,route[3]?decodeURIComponent(route[3]):'');}
 function periods(){const now=new Date(M.weekStart(new Date())+'T00:00:00Z'),out=[];for(let i=5;i>=0;i--){const d=i===0?new Date():new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()-i*7));out.push({end:d.toISOString().slice(0,10),label:new Intl.DateTimeFormat('fa-IR',{month:'short',day:'numeric',timeZone:'UTC'}).format(d)});}return out;}
