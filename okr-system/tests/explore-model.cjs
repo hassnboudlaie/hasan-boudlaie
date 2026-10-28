@@ -56,3 +56,10 @@ assert.equal(M.filter([teamRow],{teams:['parent']},{units}).length,0);
 assert.equal(M.filter([teamRow],{teams:['parent'],includeSubteams:true},{units}).length,1);
 assert.equal(JSON.stringify(d),before,'advanced filters never mutate authoritative source');
 console.log('PASS Perdoo Explore 3.0 advanced filter model: hierarchy, dates, contributors, tags and progress');
+
+const wk=M.boardPeriods('weekly',6,'2026-10-28');assert.equal(wk.length,6);assert.equal(wk.at(-1).end,'2026-10-28');assert.equal(wk.at(-2).end,'2026-10-23');assert.ok(wk.every((p,i)=>i===0||p.end>wk[i-1].end));
+const mo=M.boardPeriods('monthly',12,'2026-10-28');assert.equal(mo.length,12);assert.equal(mo.at(-1).end,'2026-10-28');assert.equal(new Set(mo.map(p=>p.key)).size,12);assert.ok(mo.some(p=>p.label.includes('۱۴۰۵')));
+const qr=M.boardPeriods('quarterly',6,'2026-10-28');assert.equal(qr.length,6);assert.equal(new Set(qr.map(p=>p.key)).size,6);assert.ok(qr.at(-1).label.includes('سه‌ماهه'));
+assert.equal(M.boardPeriods('quarterly',26,'2026-10-28').length,26,'26 Persian quarters');
+assert.throws(()=>M.boardPeriods('monthly',6,'2026-02-30'),/معتبر/);
+console.log('PASS Perdoo 3.0 Board periods: Saturday weeks, Persian calendar months/quarters, six/twelve/26 columns');
