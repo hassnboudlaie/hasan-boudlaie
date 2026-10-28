@@ -64,7 +64,8 @@ function day(v){if(!v)return null;const s=v instanceof Date?v.toISOString().slic
 function expected(start,end,now=new Date()){const a=day(start),b=day(end),t=day(now);if(a===null||b===null||t===null||b<a)return null;if(a===b)return t>=b?100:0;return Math.max(0,Math.min(100,(t-a)/(b-a)*100));}
 function weekStart(value){const n=day(value);if(n===null)return null;const d=new Date(n);d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+1)%7);return d.toISOString().slice(0,10);}
 function boardPeriods(mode='weekly',count=6,asOf=new Date()){
- const last=day(asOf);if(last===null)throw Error('تاریخ مرجع Board معتبر نیست.');
+ const lastStamp=day(asOf);if(lastStamp===null)throw Error('تاریخ مرجع Board معتبر نیست.');
+ const last=new Date(lastStamp).toISOString().slice(0,10);
  const length=[6,12,26].includes(Number(count))?Number(count):6;
  const type=['weekly','monthly','quarterly'].includes(mode)?mode:'weekly';
  const dateLabel=v=>new Intl.DateTimeFormat('fa-IR-u-ca-persian',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(v+'T00:00:00Z'));
