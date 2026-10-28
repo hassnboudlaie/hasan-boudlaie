@@ -1,50 +1,176 @@
+/* My Finance · authenticated cloud sync v3. No service credentials belong in a public PWA. */
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
 const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const container=document.getElementById('supabase-sync');
-const status=document.getElementById('supabase-status');
-const email=document.getElementById('supabase-email');
-const say=s=>{status.textContent=s};
-let activeUser=null;let pullBusy=false;let lastPulledUser=null;
-function renderAuth(){document.getElementById('supabase-login').hidden=!!activeUser;document.getElementById('supabase-actions').hidden=!activeUser;say(activeUser?'اتصال امن فعال است: '+activeUser.email:'برای همگام‌سازی ابتدا وارد حساب خود شوید.')}
-async function refresh(){const {data,error}=await client.auth.getUser();activeUser=error?null:data.user;renderAuth();if(activeUser&&lastPulledUser!==activeUser.id){lastPulledUser=activeUser.id;pullEntries().catch(e=>say('خطای همگام‌سازی: '+e.message))}}
-client.auth.onAuthStateChange(()=>{setTimeout(refresh,0)});
-document.getElementById('supabase-send').addEventListener('click',async()=>{
- const value=email.value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return say('ایمیل معتبر وارد کنید.');
- say('در حال ارسال لینک ورود...');
- const {error}=await client.auth.signInWithOtp({email:value,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
- say(error?'خطا: '+error.message:'لینک ورود ارسال شد. ایمیل را باز کنید و لینک را در همین مرورگر اجرا کنید.');
-});
-document.getElementById('supabase-logout').addEventListener('click',async()=>{await client.auth.signOut();activeUser=null;renderAuth()});
-async function pullEntries(){
- if(pullBusy)return;pullBusy=true;
- try{
- if(!activeUser)return say('ابتدا وارد شوید.');
- say('در حال دریافت تراکنش‌ها...');
- const {data,error}=await client.from('finance_entries').select('id,entry_type,amount,currency,category,description,occurred_at').in('entry_type',['income','expense']).order('occurred_at',{ascending:false}).limit(1000);
- if(error){say('خطای دریافت: '+error.message);return;}
- const existing=new Set(db.tx.map(t=>t.id));let added=0,skipped=0;
- for(const item of data){
-  if(existing.has(item.id))continue;
-  const accounts=db.accounts.filter(a=>a.currency===item.currency);
-  const matched=accounts.length===1?accounts[0]:null;
-  if(!matched)skipped++;
-  db.tx.push({id:item.id,account:matched?.id||null,currency:item.currency,amount:Number(item.amount),kind:item.entry_type,scope:'personal',category:item.category||'',memo:item.description||'',date:item.occurred_at,source:'supabase',accountName:matched?.name||'حساب نامشخص'});added++;
- }
- if(added)save();
- say(added+' تراکنش دریافت شد؛ '+skipped+' تراکنش با حساب نامشخص (بدون تغییر موجودی حساب‌ها). داده‌های موجود حفظ شدند.');
- }finally{pullBusy=false}
+const bridge=window.MyFinanceBridge;
+const byId=id=>document.getElementById(id);
+const login=byId('supabase-login'),actions=byId('supabase-actions'),email=byId('supabase-email');
+let user=null,busy=false,queued=false,authPending=false,seen=new Map();
+const collections={account:'accounts',receivable:'receivables',transfer:'transfers',commitment:'commitments'};
+let dirty=new Set();
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const dirtyKey=()=>user?'my-finance-dirty-'+user.id:'';
+function notice(message,online=false){
+ byId('supabase-status').textContent=message;
+ const indicator=byId('cloud-indicator');
+ if(indicator){indicator.textContent=online?'● امن و همگام':'● '+message;indicator.classList.toggle('online',online)}
 }
-document.getElementById('supabase-pull').addEventListener('click',()=>pullEntries().catch(e=>say('خطا: '+e.message)));
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&activeUser)pullEntries().catch(()=>{})});
-setInterval(()=>{if(!document.hidden&&activeUser)pullEntries().catch(()=>{})},30000);
-document.getElementById('supabase-push').addEventListener('click',async()=>{
- if(!activeUser)return say('ابتدا وارد شوید.');
- if(!confirm('تراکنش‌های محلی درآمد و هزینه در فضای خصوصی Supabase ذخیره شوند؟ این عمل موجودی و حساب‌ها را منتقل نمی‌کند.'))return;
- say('در حال انتقال تراکنش‌ها...');
- const items=db.tx.filter(t=>['income','expense'].includes(t.kind)&&t.source!=='supabase'&&t.id&&Number.isFinite(Number(t.amount))&&Number(t.amount)>0).map(t=>({id:t.id,user_id:activeUser.id,entry_type:t.kind,amount:Number(t.amount),currency:t.currency||db.accounts.find(a=>a.id===t.account)?.currency||'IRT',category:t.category||null,description:t.memo||null,occurred_at:t.date||new Date().toISOString(),source:'pwa',status:'completed'}));
- if(!items.length)return say('تراکنشی برای انتقال وجود ندارد.');
- let sent=0;
- for(let i=0;i<items.length;i+=100){const {error}=await client.from('finance_entries').upsert(items.slice(i,i+100),{onConflict:'id',ignoreDuplicates:true});if(error)return say('انتقال متوقف شد: '+error.message+'؛ '+sent+' رکورد منتقل شد.');sent+=Math.min(100,items.length-i)}
- say(sent+' تراکنش با موفقیت در Supabase ذخیره شد.');
+function renderAuth(){
+ login.hidden=!!user;actions.hidden=!user;
+ if(!user)notice('حالت محلی · ورود امن برای اتصال');
+ else notice('حساب متصل: '+user.email,true);
+}
+function allRecords(data){
+ const records=new Map();
+ for(const [kind,collection] of Object.entries(collections)){
+  for(const item of data[collection]||[])if(item&&item.id)records.set(kind+':'+item.id,JSON.stringify(item));
+ }
+ for(const item of data.tx||[])if(item&&item.id)records.set('tx:'+item.id,JSON.stringify(item));
+ return records;
+}
+function setDirty(){
+ if(!user)return;
+ const current=allRecords(bridge.getData());
+ for(const [key,value] of current)if(!seen.has(key)||seen.get(key)!==value)dirty.add(key);
+ localStorage.setItem(dirtyKey(),JSON.stringify([...dirty]));
+ queueSync();
+}
+function queueSync(){
+ queued=true;
+ if(!busy)setTimeout(()=>sync().catch(e=>notice('خطای همگام‌سازی: '+e.message)),850);
+}
+async function readAll(table,fields){
+ const rows=[];
+ for(let i=0;i<10000;i+=500){
+  const {data,error}=await client.from(table).select(fields).order('created_at',{ascending:true}).range(i,i+499);
+  if(error)throw error;
+  rows.push(...data);
+  if(data.length<500)return rows;
+ }
+ throw Error('تعداد رکوردها از محدودیت فعلی همگام‌سازی بیشتر است.');
+}
+function fromEntry(row){
+ const meta=row.metadata||{};
+ return {id:row.id,kind:row.entry_type,amount:Number(row.amount),currency:row.currency,
+  category:row.category||'',memo:row.description||'',date:row.occurred_at,status:row.status,
+  account:meta.accountId||null,accountName:meta.accountName||'',
+  paymentMethod:meta.paymentMethod||'',scope:meta.scope||'personal',source:'supabase'};
+}
+function toEntry(item){
+ const account=bridge.getData().accounts.find(a=>a.id===item.account);
+ const currency=item.currency||account?.currency||'IRT';
+ const metadata={accountId:item.account||null,accountName:item.accountName||account?.name||null,
+  paymentMethod:item.paymentMethod||null,scope:item.scope||'personal'};
+ return {id:item.id,user_id:user.id,entry_type:item.kind,amount:Number(item.amount),currency,
+  category:item.category||null,description:item.memo||null,occurred_at:item.date||new Date().toISOString(),
+  status:['pending','cancelled'].includes(item.status)?item.status:'completed',
+  source:item.source==='chatgpt'?'chatgpt':'pwa',metadata};
+}
+async function writeBatch(table,rows){
+ for(let i=0;i<rows.length;i+=80){
+  const {error}=await client.from(table).upsert(rows.slice(i,i+80),{onConflict:'id'});
+  if(error)throw error;
+ }
+}
+async function sync(){
+ if(!user||busy)return;
+ busy=true;queued=false;
+ notice('در حال همگام‌سازی…',true);
+ try{
+  const [cloudObjects,cloudEntries]=await Promise.all([
+   readAll('finance_objects','id,kind,payload,updated_at,created_at'),
+   readAll('finance_entries','id,entry_type,amount,currency,category,description,occurred_at,status,source,metadata,updated_at,created_at')
+  ]);
+  const latest=bridge.getData(),next={...latest};
+  const remoteObjects=new Set(),remoteTx=new Set();
+  for(const [kind,collection] of Object.entries(collections)){
+   const map=new Map((latest[collection]||[]).map(r=>[r.id,r]));
+   for(const row of cloudObjects.filter(r=>r.kind===kind)){
+    remoteObjects.add(kind+':'+row.id);
+    if(!dirty.has(kind+':'+row.id)&&row.payload&&typeof row.payload==='object'){
+     const payload={...row.payload,id:row.id};
+     map.set(row.id,payload);
+    }
+   }
+   next[collection]=[...map.values()];
+  }
+  const transactions=new Map((latest.tx||[]).map(r=>[r.id,r]));
+  for(const row of cloudEntries){
+   remoteTx.add('tx:'+row.id);
+   if(!dirty.has('tx:'+row.id))transactions.set(row.id,fromEntry(row));
+  }
+  next.tx=[...transactions.values()];
+  bridge.replaceData(next); // Deliberately does not emit local-change event.
+  const outgoingEntries=[],outgoingObjects=[];
+  const errors=[];
+  for(const t of next.tx){
+   const key='tx:'+t.id;
+   if(remoteTx.has(key)&&!dirty.has(key))continue;
+   if(!uuid.test(t.id)||!['income','expense','investment','transfer'].includes(t.kind)||!(Number(t.amount)>0)){
+    errors.push(key);continue;
+   }
+   outgoingEntries.push(toEntry(t));
+  }
+  for(const [kind,collection] of Object.entries(collections)){
+   for(const item of next[collection]||[]){
+    const key=kind+':'+item.id;
+    if(remoteObjects.has(key)&&!dirty.has(key))continue;
+    if(!uuid.test(item.id)){errors.push(key);continue}
+    outgoingObjects.push({id:item.id,user_id:user.id,kind,payload:item});
+   }
+  }
+  if(outgoingObjects.length)await writeBatch('finance_objects',outgoingObjects);
+  if(outgoingEntries.length)await writeBatch('finance_entries',outgoingEntries);
+  for(const row of outgoingObjects)dirty.delete(row.kind+':'+row.id);
+  for(const row of outgoingEntries)dirty.delete('tx:'+row.id);
+  localStorage.setItem(dirtyKey(),JSON.stringify([...dirty]));
+  seen=allRecords(bridge.getData());
+  const count=cloudEntries.length+cloudObjects.length+outgoingEntries.length+outgoingObjects.length;
+  notice('همگام‌سازی امن فعال · '+count.toLocaleString('fa-IR')+' رکورد'+(errors.length?' · '+errors.length+' رکورد با شناسه قدیمی نیازمند اصلاح':'') ,true);
+ }catch(e){
+  notice('همگام‌سازی ناموفق: '+String(e.message||e).slice(0,180),false);
+  throw e;
+ }finally{
+  busy=false;
+  if(queued)queueSync();
+ }
+}
+async function refreshIdentity(){
+ if(authPending)return;
+ authPending=true;
+ try{
+  const {data,error}=await client.auth.getUser();
+  const next=error?null:data?.user||null;
+  if((next?.id||null)===(user?.id||null))return;
+  user=next;
+  dirty=new Set();
+  seen=new Map();
+  if(user){
+   bridge.bindUser(user.id);
+   try{dirty=new Set(JSON.parse(localStorage.getItem(dirtyKey())||'[]'))}catch(e){}
+  }else bridge.bindUser(null);
+  renderAuth();
+  if(user)await sync();
+ }catch(e){notice('اتصال حساب ناموفق: '+e.message)}
+ finally{authPending=false}
+}
+byId('supabase-send').addEventListener('click',async()=>{
+ const value=email.value.trim();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return notice('ایمیل معتبر وارد کنید.');
+ notice('لینک ورود در حال ارسال…');
+ const {error}=await client.auth.signInWithOtp({email:value,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+ notice(error?'ارسال انجام نشد: '+error.message:'لینک ورود ارسال شد. ایمیل را در همین گوشی باز کنید.');
 });
-refresh().catch(e=>say('خطای اتصال: '+e.message));
+byId('supabase-logout').addEventListener('click',async()=>{
+ const {error}=await client.auth.signOut();
+ if(error)notice('خروج ناموفق: '+error.message);
+ else await refreshIdentity();
+});
+byId('supabase-pull').addEventListener('click',()=>sync().catch(()=>{}));
+byId('supabase-push').addEventListener('click',()=>sync().catch(()=>{}));
+document.addEventListener('myfinance:changed',setDirty);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&user)sync().catch(()=>{})});
+window.addEventListener('online',()=>{if(user)sync().catch(()=>{})});
+setInterval(()=>{if(user&&!document.hidden&&navigator.onLine)sync().catch(()=>{})},15000);
+client.auth.onAuthStateChange(()=>setTimeout(refreshIdentity,0));
+window.MyFinanceCloud={sync,authenticated:()=>!!user};
+renderAuth();refreshIdentity();
