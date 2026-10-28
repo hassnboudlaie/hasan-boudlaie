@@ -155,3 +155,13 @@ body.kish-perdoo #platformBody .p-page>h1+p{color:#d4e4ef!important}
 .kx-app .kx-cascade td[data-kx-cell=goal]{min-width:300px}
 .kx-app .kx-cascade td[data-kx-cell=actions]{min-width:160px}
 @media(max-width:700px){.kx-app .kx-col-options{grid-template-columns:minmax(0,1fr)}.kx-app .kx-column-panel{padding:12px}.kx-app .kx-cascade{min-width:max-content}}
+
+/* Perdoo 3.0 custom Board controls and editable measurement cells. */
+.kx-app .kx-board-options{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:0 0 16px;padding:14px;border:1px solid #b9d1df;border-radius:12px;background:#eff6fa}
+.kx-app .kx-board-options>label{display:flex;flex-direction:column;gap:5px;min-width:155px;flex:1 1 160px;font-weight:700;color:#1e4560}
+.kx-app .kx-board-options select,.kx-app .kx-board-options input{min-height:44px;font:inherit;color:#123c55;border:1px solid #a5bfd2;border-radius:7px;background:white;padding:7px}
+.kx-app .kx-board-options>button{min-height:44px;background:#fff;border:1px solid #9ebace;color:#174361;border-radius:8px;padding:7px 16px}
+.kx-app .kx-board-measure>button{width:100%;min-height:44px;padding:6px 8px;font:inherit;border:1px solid transparent;background:transparent;color:#174e71;cursor:pointer;border-radius:8px}
+.kx-app .kx-board-measure>button:hover,.kx-app .kx-board-measure>button:focus-visible{background:#e3f1f9;border-color:#639ab7;outline:2px solid #28749d;outline-offset:1px}
+.kx-app .kx-board th{white-space:nowrap}
+@media(max-width:640px){.kx-app .kx-board-options{padding:10px;gap:9px}.kx-app .kx-board-options>label{min-width:128px;flex:1 1 135px}}
