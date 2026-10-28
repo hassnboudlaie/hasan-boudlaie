@@ -9,6 +9,67 @@ const collections={account:'accounts',receivable:'receivables',transfer:'transfe
 let dirty=new Set();
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const dirtyKey=()=>user?'my-finance-dirty-'+user.id:'';
+
+/**
+ * Upgrade legacy local identifiers without deleting transactions or touching bank balances.
+ * UUIDs are stable per authenticated user + original key so re-imports cannot create new IDs.
+ * The original browser snapshot is retained as a local recovery backup.
+ */
+async function stableLegacyUUID(kind,original){
+ const input=new TextEncoder().encode('my-finance/legacy/v1/'+user.id+'/'+kind+'/'+original);
+ const bytes=new Uint8Array(await crypto.subtle.digest('SHA-256',input)).slice(0,16);
+ bytes[6]=(bytes[6]&15)|80;bytes[8]=(bytes[8]&63)|128;
+ const h=[...bytes].map(b=>b.toString(16).padStart(2,'0')).join('');
+ return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+}
+async function repairLegacyIds(){
+ if(!user)return 0;
+ const original=bridge.getData();
+ const next=JSON.parse(JSON.stringify(original));
+ const remap={account:new Map(),receivable:new Map(),transfer:new Map(),commitment:new Map(),tx:new Map()};
+ let repaired=0;
+ for(const [kind,collection] of Object.entries({...collections,tx:'tx'})){
+  for(const item of next[collection]||[]){
+   if(!item||typeof item!=='object')continue;
+   const old=String(item.id??'');
+   if(uuid.test(old))continue;
+   const newId=old?await stableLegacyUUID(kind,old):crypto.randomUUID();
+   if(old)remap[kind].set(old,newId);
+   item.id=newId;
+   if(old)item.legacyId=old.slice(0,150);
+   repaired++;
+  }
+ }
+ if(!repaired)return 0;
+ const mapRef=(kind,id)=>id==null?id:remap[kind].get(String(id))||id;
+ for(const t of next.tx||[]){
+  t.account=mapRef('account',t.account);
+  t.recurringId=mapRef('commitment',t.recurringId);
+ }
+ for(const t of next.transfers||[]){
+  t.from=mapRef('account',t.from);
+  t.to=mapRef('account',t.to);
+ }
+ for(const c of next.commitments||[])c.account=mapRef('account',c.account);
+ const backupKey='my-finance-backup-before-id-repair-'+user.id;
+ if(!localStorage.getItem(backupKey))localStorage.setItem(backupKey,JSON.stringify(original));
+ const updatedDirty=new Set();
+ for(const key of dirty){
+  const n=key.indexOf(':');
+  if(n<0){updatedDirty.add(key);continue}
+  const kind=key.slice(0,n),old=key.slice(n+1);
+  updatedDirty.add(kind+':'+(remap[kind]?.get(old)||old));
+ }
+ dirty=updatedDirty;
+ for(const [kind,collection] of Object.entries({...collections,tx:'tx'})){
+  for(const item of next[collection]||[]){if(item?.legacyId&&remap[kind].get(item.legacyId)===item.id)updatedDirty.add(kind+':'+item.id)}
+ }
+ dirty=updatedDirty;
+ bridge.replaceData(next);
+ localStorage.setItem(dirtyKey(),JSON.stringify([...dirty]));
+ return repaired;
+}
+
 function notice(message,online=false){
  byId('supabase-status').textContent=message;
  const indicator=byId('cloud-indicator');
@@ -61,13 +122,15 @@ function fromEntry(row){
  return {id:row.id,kind:row.entry_type,amount:Number(row.amount),currency:row.currency,
   category:row.category||'',memo:row.description||'',date:row.occurred_at,status:row.status,
   account:meta.accountId||null,accountName:meta.accountName||'',
-  paymentMethod:meta.paymentMethod||'',scope:meta.scope||'personal',source:'supabase'};
+  paymentMethod:meta.paymentMethod||'',scope:meta.scope||'personal',legacyId:meta.legacyId||null,
+  recurringId:meta.recurringId||null,dueDate:meta.dueDate||null,paidAt:meta.paidAt||null,source:'supabase'};
 }
 function toEntry(item){
  const account=bridge.getData().accounts.find(a=>a.id===item.account);
  const currency=item.currency||account?.currency||'IRT';
  const metadata={accountId:item.account||null,accountName:item.accountName||account?.name||null,
-  paymentMethod:item.paymentMethod||null,scope:item.scope||'personal'};
+  paymentMethod:item.paymentMethod||null,scope:item.scope||'personal',legacyId:item.legacyId||null,
+  recurringId:item.recurringId||null,dueDate:item.dueDate||null,paidAt:item.paidAt||null};
  return {id:item.id,user_id:user.id,entry_type:item.kind,amount:Number(item.amount),currency,
   category:item.category||null,description:item.memo||null,occurred_at:item.date||new Date().toISOString(),
   status:['pending','cancelled'].includes(item.status)?item.status:'completed',
@@ -84,6 +147,7 @@ async function sync(){
  busy=true;queued=false;
  notice('در حال همگام‌سازی…',true);
  try{
+  const repaired=await repairLegacyIds();
   const [cloudObjects,cloudEntries]=await Promise.all([
    readAll('finance_objects','id,kind,payload,updated_at,created_at'),
    readAll('finance_entries','id,entry_type,amount,currency,category,description,occurred_at,status,source,metadata,updated_at,created_at')
@@ -134,7 +198,7 @@ async function sync(){
   seen=allRecords(bridge.getData());
   refreshPairStatus().catch(()=>{});
   const count=cloudEntries.length+cloudObjects.length+outgoingEntries.length+outgoingObjects.length;
-  notice('همگام‌سازی امن فعال · '+count.toLocaleString('fa-IR')+' رکورد'+(errors.length?' · '+errors.length+' رکورد با شناسه قدیمی نیازمند اصلاح':'') ,true);
+  notice('همگام‌سازی امن فعال · '+count.toLocaleString('fa-IR')+' رکورد'+(repaired?' · '+repaired+' شناسه قدیمی اصلاح شد':'')+(errors.length?' · '+errors.length+' رکورد نیازمند بررسی':'') ,true);
  }catch(e){
   notice('همگام‌سازی ناموفق: '+String(e.message||e).slice(0,180),false);
   throw e;
@@ -171,6 +235,9 @@ byId('supabase-send').addEventListener('click',async()=>{
 });
 byId('supabase-pair').addEventListener('click',async()=>{
  if(!user)return notice('اول وارد حساب خود شوید.');
+ const {data:existing,error:checkError}=await client.from('finance_voice_pairings').select('consumed_at').eq('user_id',user.id).maybeSingle();
+ if(checkError)return notice('خطای بررسی اتصال: '+checkError.message);
+ if(existing?.consumed_at&&!confirm('اتصال فعلی ChatGPT تأیید شده است. آیا می‌خواهید آن را لغو کرده و کد اتصال جدید بسازید؟'))return;
  const buf=new Uint32Array(2);crypto.getRandomValues(buf);
  const code=String(((buf[0]^buf[1])>>>0)%100000000).padStart(8,'0');
  const expires_at=new Date(Date.now()+15*60*1000).toISOString();
