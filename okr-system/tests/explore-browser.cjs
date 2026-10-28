@@ -10,7 +10,7 @@ try{
  await page.goto(root+'#explore');for(const view of ['cascade','map','board']){await page.locator('[data-kx-view="'+view+'"]').click();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);}
  await page.reload();await page.locator('[data-kx-record="'+goalId+'"]').waitFor();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);
  // Perdoo 3.0 parity: eight sort fields, reversible order, demo-mode disclosure, all read-only.
- assert.equal(await page.locator('[data-kx-sort] option').count(),8);
+ assert.equal(await page.locator('[data-kx-sort] option').count(),11);
  assert.ok(await page.locator('.kx-local-note').isVisible());
  await page.locator('[data-kx-view="board"]').click();
  await page.locator('[data-kx-sort]').selectOption('title');
@@ -24,11 +24,33 @@ try{
  assert.notDeepEqual(descending,ascending,'direction changes display order');
  await page.locator('[data-kx-sort]').selectOption('owner');
  assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
- await page.locator('.kx-filters summary').click();await page.locator('[data-kx-filter="types"]').selectOption(['objective']);assert.equal(await page.locator('[data-kx-record]').count(),14);
+ await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-filter="types"]').selectOption(['objective']);assert.equal(await page.locator('[data-kx-record]').count(),14);
+ // Perdoo Explore 3.0 advanced filtering: rendered controls and reversible progress/date range.
+ await page.locator('.kx-advanced-filters > summary').click();
+ for(const key of ['alignedTo','contributors','tags'])assert.equal(await page.locator('[data-kx-filter="'+key+'"]').count(),1);
+ for(const key of ['createdAfter','startAfter','dueBefore'])assert.equal(await page.locator('[data-kx-date="'+key+'"]').count(),1);
+ await page.locator('[data-kx-number="progressMin"]').fill('20');
+ await page.locator('[data-kx-record="'+goalId+'"]').waitFor();
+ await page.locator('[data-kx-number="progressMin"]').fill('26');
+ assert.equal(await page.locator('[data-kx-record="'+goalId+'"]').count(),0,'min progress excludes 25%');
+ await page.locator('[data-kx-number="progressMin"]').fill('20');
+ await page.locator('[data-kx-number="progressMax"]').fill('30');
+ await page.locator('[data-kx-record="'+goalId+'"]').waitFor();
+ await page.locator('[data-kx-number="progressMax"]').fill('24');
+ assert.equal(await page.locator('[data-kx-record="'+goalId+'"]').count(),0,'max progress excludes 25%');
+ await page.locator('[data-kx-number="progressMin"]').fill('');
+ await page.locator('[data-kx-number="progressMax"]').fill('');
+ await page.locator('[data-kx-date="createdAfter"]').fill('2099-01-01');
+ assert.equal(await page.locator('[data-kx-record]').count(),0,'no goal has creation date in 2099');
+ await page.locator('[data-kx-date="createdAfter"]').fill('');
+ assert.equal(await page.locator('[data-kx-record]').count(),14,'advanced reset restores objective filter');
+ await page.locator('[data-kx-sort]').selectOption('createdAt');
+ await page.locator('[data-kx-sort]').selectOption('startDate');
+ await page.locator('[data-kx-sort]').selectOption('endDate');
  await page.locator('[data-kx-sort]').selectOption('lastUpdate');await page.locator('[data-kx-sort-direction]').selectOption('asc');
- await page.getByRole('button',{name:'ذخیره نمای این مرورگر',exact:true}).click();await page.locator('[data-kx-save] input').fill('QA objectives');await page.getByRole('button',{name:'ذخیره نما',exact:true}).click();await page.reload();await page.locator('.kx-filters summary').click();await page.locator('[data-kx-saved]').selectOption({label:'QA objectives'});assert.equal(await page.locator('[data-kx-record]').count(),14);assert.equal(await page.locator('[data-kx-sort]').inputValue(),'lastUpdate');assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
+ await page.getByRole('button',{name:'ذخیره نمای این مرورگر',exact:true}).click();await page.locator('[data-kx-save] input').fill('QA objectives');await page.getByRole('button',{name:'ذخیره نما',exact:true}).click();await page.reload();await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-saved]').selectOption({label:'QA objectives'});assert.equal(await page.locator('[data-kx-record]').count(),14);assert.equal(await page.locator('[data-kx-sort]').inputValue(),'lastUpdate');assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
  const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish_qa_explore-ci:kish_okr_free_practice_v1')));assert.equal(snapshot.state.companyOkrs.find(g=>g.id===goalId).progressMode,'weighted');assert.deepEqual(snapshot.state.companyOkrs.find(g=>g.id===goalId).krs.map(k=>k.weight),[1,3]);assert.ok(await page.evaluate(()=>localStorage.getItem('kish_qa_explore-ci:kish_okr_before_unified_explore_v1')));
  // Cross-tab optimistic revision guard: a stale edit must not overwrite newer data.
  const second=await context.newPage();await second.goto(root+'#explore');await second.waitForSelector('.kx-app');await page.getByRole('button',{name:'＋ رکن',exact:true}).click();await page.locator('[data-kx-pillar] input').fill('QA first writer');await page.getByRole('button',{name:'ذخیره رکن',exact:true}).click();await second.getByRole('button',{name:'＋ رکن',exact:true}).click();await second.locator('[data-kx-pillar] input').fill('QA stale writer');await second.getByRole('button',{name:'ذخیره رکن',exact:true}).click();assert.match(await second.locator('[data-kx-error]').innerText(),/ذخیره|تعارض/);await second.close();
- await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore E2E: create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
+ await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1)});
