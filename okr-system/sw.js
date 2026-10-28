@@ -1,10 +1,10 @@
 /* Kish Ports & Airports OKR - strictly scoped static PWA cache (no API or user data). */
 'use strict';
 const PREFIX='kish-okr-pwa-';
-const CACHE=PREFIX+'20261028-v1';
+const CACHE=PREFIX+'20261028-v2';
 const SCOPE=new URL('./',self.registration.scope);
 const SHELL=new URL('index.html',SCOPE).href;
-const CORE=['index.html','manifest.webmanifest','favicon.svg','pwa-maskable.svg',
+const CORE=['index.html','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png','pwa-maskable.svg',
   'assets/kish-pwa-install.js','assets/kish-entry.css','assets/kish-explore.js',
   'assets/kish-explore-model.js','assets/kish-explore.css',
   'assets/kish-operational-20261025.js','assets/kish-operational-20261025.css',
