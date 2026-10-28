@@ -24,20 +24,21 @@ document.getElementById('supabase-pull').addEventListener('click',async()=>{
  for(const item of data){
   if(existing.has(item.id))continue;
   const accounts=db.accounts.filter(a=>a.currency===item.currency);
-  if(accounts.length!==1){skipped++;continue}
-  db.tx.push({id:item.id,account:accounts[0].id,amount:Number(item.amount),kind:item.entry_type,scope:'personal',category:item.category||'',memo:item.description||'',date:item.occurred_at});added++;
+  const matched=accounts.length===1?accounts[0]:null;
+  if(!matched)skipped++;
+  db.tx.push({id:item.id,account:matched?.id||null,currency:item.currency,amount:Number(item.amount),kind:item.entry_type,scope:'personal',category:item.category||'',memo:item.description||'',date:item.occurred_at,source:'supabase',accountName:matched?.name||'حساب نامشخص'});added++;
  }
  if(added)save();
- say(added+' تراکنش دریافت شد؛ '+skipped+' تراکنش به دلیل نامشخص بودن حساب وارد نشد. داده‌های موجود حفظ شدند.');
+ say(added+' تراکنش دریافت شد؛ '+skipped+' تراکنش با حساب نامشخص (بدون تغییر موجودی حساب‌ها). داده‌های موجود حفظ شدند.');
 });
 document.getElementById('supabase-push').addEventListener('click',async()=>{
  if(!activeUser)return say('ابتدا وارد شوید.');
  if(!confirm('تراکنش‌های محلی درآمد و هزینه در فضای خصوصی Supabase ذخیره شوند؟ این عمل موجودی و حساب‌ها را منتقل نمی‌کند.'))return;
  say('در حال انتقال تراکنش‌ها...');
- const items=db.tx.filter(t=>['income','expense'].includes(t.kind)).map(t=>({id:t.id,user_id:activeUser.id,entry_type:t.kind,amount:Number(t.amount),currency:db.accounts.find(a=>a.id===t.account)?.currency||'IRT',category:t.category||null,description:t.memo||null,occurred_at:t.date||new Date().toISOString(),source:'pwa',status:'completed'}));
+ const items=db.tx.filter(t=>['income','expense'].includes(t.kind)&&t.source!=='supabase'&&t.id&&Number.isFinite(Number(t.amount))&&Number(t.amount)>0).map(t=>({id:t.id,user_id:activeUser.id,entry_type:t.kind,amount:Number(t.amount),currency:t.currency||db.accounts.find(a=>a.id===t.account)?.currency||'IRT',category:t.category||null,description:t.memo||null,occurred_at:t.date||new Date().toISOString(),source:'pwa',status:'completed'}));
  if(!items.length)return say('تراکنشی برای انتقال وجود ندارد.');
  let sent=0;
- for(let i=0;i<items.length;i+=100){const {error}=await client.from('finance_entries').upsert(items.slice(i,i+100),{onConflict:'id'});if(error)return say('انتقال متوقف شد: '+error.message+'؛ '+sent+' رکورد منتقل شد.');sent+=Math.min(100,items.length-i)}
+ for(let i=0;i<items.length;i+=100){const {error}=await client.from('finance_entries').upsert(items.slice(i,i+100),{onConflict:'id',ignoreDuplicates:true});if(error)return say('انتقال متوقف شد: '+error.message+'؛ '+sent+' رکورد منتقل شد.');sent+=Math.min(100,items.length-i)}
  say(sent+' تراکنش با موفقیت در Supabase ذخیره شد.');
 });
 refresh().catch(e=>say('خطای اتصال: '+e.message));
