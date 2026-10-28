@@ -81,8 +81,8 @@ const server=http.createServer(async(req,res)=>{
    if(!header.startsWith('Bearer '))return json(res,401,{error:'Sign in required'},origin);
    let session;try{session=unseal(header.slice(7))}catch(e){return json(res,401,{error:'Session expired or invalid'},origin)}
    const access=await formPost('https://oauth2.googleapis.com/token',{client_id:env.client,client_secret:env.secret,refresh_token:session.refresh,grant_type:'refresh_token'});
-   const [receivables,transactions]=await Promise.all([googleRead(access.access_token,'Receivables!A1:L10001'),googleRead(access.access_token,'Transactions!A1:N10001')]);
-   return json(res,200,{receivables,transactions,updatedAt:new Date().toISOString()},origin);
+   const [receivables,transactions,transfers]=await Promise.all([googleRead(access.access_token,'Receivables!A1:L10001'),googleRead(access.access_token,'Transactions!A1:N10001'),googleRead(access.access_token,'Transfers!A1:N10001')]);
+   return json(res,200,{receivables,transactions,transfers,updatedAt:new Date().toISOString()},origin);
   }
   return json(res,404,{error:'Not found'},origin);
  }catch(e){return json(res,500,{error:'Secure sync failed. Check the Google authorization and private ledger access.'},origin)}
