@@ -38,18 +38,7 @@ html{font-size:16px;-webkit-text-size-adjust:100%}body{line-height:1.65}button,i
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
 <section id="settings" hidden><div class="card" id="supabase-sync"><h2>Supabase · Private Sync</h2><p class="muted">ورود امن و همگام‌سازی خصوصی درآمد و هزینه</p><div id="supabase-login"><input type="email" id="supabase-email" placeholder="ایمیل ورود"><button type="button" id="supabase-send">ارسال لینک ورود</button></div><div id="supabase-actions" hidden><button type="button" id="supabase-pull">دریافت تراکنش‌ها</button><button type="button" id="supabase-push">انتقال تراکنش‌های محلی</button><button type="button" id="supabase-logout">خروج</button></div><p id="supabase-status" role="status"></p></div>
-<div class="card"><h2>Automatic Sync · اتصال مستقیم با ChatGPT</h2>
-<p class="muted">اتصال مستقیم ChatGPT هنوز راه‌اندازی نشده است. این بخش تا تکمیل Backend و احراز هویت عملیاتی نیست.</p>
-<div class="fields"><input id="apiorigin" inputmode="url" autocomplete="off" placeholder="Private Backend URL on Render"></div>
-<div class="row"><button class="alt" onclick="apiSave()">ذخیره آدرس</button><button onclick="apiConnect()">اتصال یک‌باره Google</button><button class="alt" onclick="apiPull()">همگام‌سازی</button></div>
-<p class="muted" id="apistatus" role="status">Backend خصوصی هنوز فعال نیست.</p>
-</div><div class="card"><h2>Cloud Sync — Google Sheets خصوصی</h2>
-<p class="muted">رکوردهایی که با دستور شما در ChatGPT ثبت می‌شوند، پس از اتصال امن به حساب Google در اپ نمایش داده می‌شوند. این اتصال فعلاً برای «مطالبات» فقط خواندنی است.</p>
-<div class="fields"><input id="cloudsheet" autocomplete="off" placeholder="Private Google Sheet ID"><input id="cloudclient" autocomplete="off" placeholder="Google OAuth Client ID"></div>
-<div class="row"><button class="alt" onclick="cloudSaveConfig()">ذخیره تنظیمات</button><button onclick="cloudConnect()">اتصال و همگام‌سازی با Google</button><button class="alt" onclick="cloudPull()">بازخوانی مطالبات</button></div>
-<p class="muted" id="cloudstatus" role="status">اتصال ابری هنوز تنظیم نشده است.</p>
-<p class="muted">برای راه‌اندازی یک‌باره، در Google Cloud یک OAuth Web Client بسازید؛ Google Sheets API را فعال کنید و همین دامنه GitHub Pages را در Authorized JavaScript Origins ثبت کنید. Access Token فقط در حافظه موقت صفحه می‌ماند.</p></div>
-<div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در همین مرورگر ذخیره می‌شوند. GitHub Pages هیچ پایگاه داده مالی برای این برنامه ندارد. ذخیره‌سازی محلی به‌معنای رمزگذاری اطلاعات نیست؛ تا تکمیل امنیت، داده حساس وارد نکنید.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود از ChatGPT: لینک اختصاصی پیش‌نویس را باز کنید؛ اطلاعات فقط پس از بررسی و تأیید شما ثبت می‌شوند. لینک‌های حاوی اطلاعات مالی را برای دیگران ارسال نکنید.</p></div></section>
+<div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در این دستگاه ذخیره می‌شوند و پس از ورود امن، در فضای خصوصی Supabase همگام خواهند شد. داده‌های محلی رمزگذاری نشده‌اند؛ در دستگاه مشترک از آن استفاده نکنید. اطلاعات واقعی در GitHub ثبت نمی‌شوند.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود اطلاعات از ChatGPT پس از اتصال امن انجام می‌شود. پیش‌نویس‌های قدیمی همچنان قابل واردکردن هستند.</p></div></section>
 <footer class="muted">My Finance · Private Finances · Secure cloud sync · No financial data on GitHub</footer></main>
 <script>
 let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));function tab(id){document.querySelectorAll('section').forEach(s=>s.hidden=s.id!==id);document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',String((b.getAttribute('onclick')||'').includes("'"+id+"'"))))}function toggleTheme(){document.body.classList.toggle('dark')}function toggleLang(){lang=lang==='fa'?'en':'fa';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='fa'?'EN':'فا';document.querySelectorAll('[data-fa]').forEach(x=>x.textContent=x.dataset[lang]);render()}
@@ -139,182 +128,8 @@ $('rcvlist').innerHTML=db.receivables.length?db.receivables.slice().reverse().ma
 renderTransferList();
 }
 
-const CLOUD_CONFIG_KEY='my-finance-cloud-sync-v1';
-let cloudConfig={sheetId:'',clientId:''},cloudToken='',cloudExpiry=0,cloudBusy=false,cloudGsiPromise=null;
-try {const s=JSON.parse(localStorage.getItem(CLOUD_CONFIG_KEY)||'{}');cloudConfig={sheetId:String(s.sheetId||''),clientId:String(s.clientId||'')}}catch(e){}
-function cloudStatus(message){if($('cloudstatus'))$('cloudstatus').textContent=message}
-function cloudValid(s){return /^[a-zA-Z0-9_-]{20,100}$/.test(s.sheetId)&&/^[0-9]+-[a-z0-9-]+[.]apps[.]googleusercontent[.]com$/.test(s.clientId)}
-function cloudSaveConfig(){
- const next={sheetId:$('cloudsheet').value.trim(),clientId:$('cloudclient').value.trim()};
- if(!cloudValid(next)){cloudStatus('شناسه Google Sheet یا OAuth Client ID معتبر نیست.');return false}
- if(next.clientId!==cloudConfig.clientId){cloudToken='';cloudExpiry=0}
- cloudConfig=next;localStorage.setItem(CLOUD_CONFIG_KEY,JSON.stringify(cloudConfig));
- cloudStatus('تنظیمات ثبت شد. برای خواندن دفتر خصوصی به Google متصل شوید.');return true
-}
-function cloudLoadScript(){
- if(window.google?.accounts?.oauth2)return Promise.resolve();
- if(cloudGsiPromise)return cloudGsiPromise;
- cloudGsiPromise=new Promise((resolve,reject)=>{
-  const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;
-  s.onload=()=>window.google?.accounts?.oauth2?resolve():reject(Error('Google Identity unavailable'));
-  s.onerror=()=>reject(Error('Google sign-in blocked'));document.head.appendChild(s);
- }).catch(e=>{cloudGsiPromise=null;throw e});
- return cloudGsiPromise
-}
-async function cloudConnect(){
- if(!cloudSaveConfig())return;
- cloudStatus('در حال گرفتن مجوز امن Google...');
- try{
-  await cloudLoadScript();
-  const token=await new Promise((resolve,reject)=>{
-   const client=google.accounts.oauth2.initTokenClient({
-    client_id:cloudConfig.clientId,scope:'https://www.googleapis.com/auth/spreadsheets.readonly',
-    callback:result=>result.error?reject(Error(result.error)):resolve(result),
-    error_callback:e=>reject(Error(e.type||'authorization failed'))
-   });
-   client.requestAccessToken({prompt:'consent'})
-  });
-  cloudToken=token.access_token;
-  cloudExpiry=Date.now()+(Math.max(60,Number(token.expires_in)||3600)-30)*1000;
-  await cloudPull()
- }catch(e){cloudStatus('اتصال برقرار نشد: '+String(e.message||e).slice(0,200))}
-}
-async function cloudFetchTransfers(){
- const range=encodeURIComponent('Transfers!A1:N10001');
- const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
- const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
- if(!response.ok)throw Error('Google Transfers HTTP '+response.status);
- return (await response.json()).values||[];
-}
-async function cloudFetchTransactions(){
- const range=encodeURIComponent('Transactions!A1:N10001');
- const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
- const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
- if(!response.ok)throw Error('Google Transactions HTTP '+response.status);
- return (await response.json()).values||[];
-}
-function cloudApplyTransactions(rows){
- const header=['id','occurredAt','kind','amount','currency','category','description','paymentMethod','accountName','scope','status','source','createdAt','notes'];
- if(!rows.length||header.some((x,i)=>rows[0][i]!==x))throw Error('ساختار Transactions نامعتبر است.');
- const records=new Map(db.tx.map(t=>[t.id,t]));let count=0;
- for(const r of rows.slice(1)){
-  if(!r[0])continue;
-  const id=String(r[0]),kind=String(r[2]),amount=Number(r[3]),currency=String(r[4]);
-  if(!id||id.length>120||!['income','expense'].includes(kind)||!Number.isFinite(amount)||amount<=0||!['IRT','IRR','USD','EUR'].includes(currency))continue;
-  const accountName=String(r[8]||'').slice(0,150);
-  const account=db.accounts.find(a=>a.name===accountName&&a.currency===currency);
-  records.set(id,{id,date:String(r[1]||r[12]||''),kind,amount,currency,category:String(r[5]||'').slice(0,100),memo:String(r[6]||'').slice(0,500),paymentMethod:String(r[7]||''),accountName,account:account?.id||null,scope:String(r[9]||'personal'),status:String(r[10]||'posted'),source:'chatgpt',cloud:true});count++;
- }
- db.tx=[...records.values()];return count;
-}
-function cloudApplyTransfers(rows){
- const header=['id','occurredAt','amount','currency','fromAccount','toCounterparty','toCardLast4','description','paymentMethod','purpose','status','source','createdAt','notes'];
- if(!Array.isArray(rows)||!rows.length||header.some((v,i)=>rows[0][i]!==v))throw Error('ساختار Transfers معتبر نیست.');
- const existing=new Map(db.transfers.map(t=>[t.id,t]));let count=0;
- for(const row of rows.slice(1)){
-  if(!row[0])continue;
-  const id=String(row[0]),amount=Number(row[2]),currency=String(row[3]);
-  if(!id||id.length>120||!Number.isFinite(amount)||amount<=0||!['IRR','IRT','USD','EUR'].includes(currency))continue;
-  existing.set(id,{type:'external',id,occurredAt:String(row[1]||'').slice(0,40),amount,currency,fromAccount:String(row[4]||'').slice(0,120),recipient:String(row[5]||'').slice(0,160),last4:String(row[6]||'').slice(0,4),description:String(row[7]||'انتقال وجه').slice(0,200),paymentMethod:String(row[8]||'').slice(0,40),purpose:String(row[9]||'').slice(0,200),status:String(row[10]||'pending_classification').slice(0,40),source:'chatgpt',notes:String(row[13]||'').slice(0,500)});
-  count++;
- }
- db.transfers=[...existing.values()];return count;
-}
-async function cloudPull(){
- if(cloudBusy)return;
- if(!cloudValid(cloudConfig)){cloudStatus('ابتدا تنظیمات Google Sheets را وارد کنید.');tab('settings');return}
- if(!cloudToken||Date.now()>=cloudExpiry){cloudStatus('اتصال Google منقضی شده است. دوباره به Google متصل شوید.');return}
- cloudBusy=true;cloudStatus('در حال خواندن دفتر خصوصی...');
- try{
-  const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+encodeURIComponent('Receivables!A1:L10001')+'?valueRenderOption=UNFORMATTED_VALUE';
-  const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
-  if(!response.ok){let msg='HTTP '+response.status;try{msg=(await response.json()).error?.message||msg}catch(e){}throw Error(msg)}
-  const matrix=(await response.json()).values||[];
-  const required=['id','counterparty','principal','expected','currency','termMonths','dueMonth','location','sector','notes','status','createdAt'];
-  if(!matrix.length||required.some((v,i)=>matrix[0][i]!==v))throw Error('ستون‌های دفتر خصوصی مطابق الگوی اپ نیست.');
-  let synced=[];
-  for(const row of matrix.slice(1)){
-   if(!row[0])continue;
-   const raw={id:String(row[0]),counterparty:row[1],principal:row[2],expected:row[3],currency:row[4],termMonths:row[5],dueMonth:row[6],location:row[7],sector:row[8],notes:row[9]};
-   const r=validateReceivable(raw);
-   r.status=row[10]==='paid'?'paid':'pending';r.createdAt=String(row[11]||r.createdAt);synced.push(r)
-  }
-  const map=new Map(db.receivables.map(r=>[r.id,r]));
-  for(const r of synced)map.set(r.id,r);
-  const transactionRows=await cloudFetchTransactions();
-  const txCount=cloudApplyTransactions(transactionRows);
-  const transferCount=cloudApplyTransfers(await cloudFetchTransfers());
-  db.receivables=[...map.values()];save();
-  cloudStatus('همگام شد · '+txCount+' تراکنش · '+transferCount+' انتقال · '+synced.length+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
- }catch(e){cloudStatus('خطای خواندن: '+String(e.message||e).slice(0,200))}
- finally{cloudBusy=false}
-}
-$('cloudsheet').value=cloudConfig.sheetId;$('cloudclient').value=cloudConfig.clientId;
-if(location.hash.startsWith('#finance-sync-sheet=')){
- const id=decodeURIComponent(location.hash.slice('#finance-sync-sheet='.length));
- history.replaceState(null,'',location.pathname+location.search);
- if(/^[a-zA-Z0-9_-]{20,100}$/.test(id)){$('cloudsheet').value=id;tab('settings');cloudStatus('شناسه دفتر خصوصی وارد شد؛ OAuth Client ID را تنظیم کنید.')}
-}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloudToken&&Date.now()<cloudExpiry)cloudPull()});
-
-
-const API_STATE_KEY='my-finance-api-link-v1';
-let apiState={origin:'',token:''},apiBusy=false;
-try{const p=JSON.parse(localStorage.getItem(API_STATE_KEY)||'{}');apiState={origin:String(p.origin||''),token:String(p.token||'')}}catch(e){}
-function apiStatus(s){if($('apistatus'))$('apistatus').textContent=s}
-function apiValidOrigin(url){
- try{const u=new URL(url);return u.protocol==='https:'&&u.hostname.endsWith('.onrender.com')&&u.pathname==='/'&&u.search===''&&u.hash===''}catch(e){return false}
-}
-function apiSave(){
- const origin=$('apiorigin').value.trim().replace(/\/$/,'');
- if(!apiValidOrigin(origin)){apiStatus('لطفاً آدرس معتبر سرویس خصوصی Render را وارد کنید.');return false}
- if(apiState.origin!==origin)apiState.token='';
- apiState.origin=origin;localStorage.setItem(API_STATE_KEY,JSON.stringify(apiState));apiStatus('آدرس ثبت شد. برای اتصال یک‌باره Google را انتخاب کنید.');return true
-}
-function apiConnect(){
- if(!apiSave())return;
- window.location.assign(apiState.origin+'/auth/start')
-}
-function apiHandleReturn(){
- if(!location.hash.startsWith('#finance-api-session='))return;
- const params=new URLSearchParams(location.hash.slice(1));
- const origin=String(params.get('api')||'');
- const token=String(params.get('finance-api-session')||'');
- history.replaceState(null,'',location.pathname+location.search);
- if(!apiValidOrigin(origin)||!token||token.length>9000||!/^[A-Za-z0-9_-]+$/.test(token)){apiStatus('مجوز اتصال معتبر نیست.');return}
- apiState={origin,token};localStorage.setItem(API_STATE_KEY,JSON.stringify(apiState));
- $('apiorigin').value=origin;apiStatus('Google متصل شد. در حال بازیابی داده‌ها...');apiPull()
-}
-
-
-function apiApplyReceivables(rows){
- const header=['id','counterparty','principal','expected','currency','termMonths','dueMonth','location','sector','notes','status','createdAt'];
- if(!Array.isArray(rows)||!rows.length||header.some((x,i)=>rows[0][i]!==x))throw Error('ساختار مطالبات معتبر نیست.');
- const seen=new Map(db.receivables.map(r=>[r.id,r]));let count=0;
- for(const row of rows.slice(1)){
-  if(!row[0])continue;
-  const obj=validateReceivable({id:String(row[0]),counterparty:row[1],principal:row[2],expected:row[3],currency:row[4],termMonths:row[5],dueMonth:row[6],location:row[7],sector:row[8],notes:row[9]});
-  obj.status=row[10]==='paid'?'paid':'pending';obj.createdAt=String(row[11]||obj.createdAt);
-  seen.set(obj.id,obj);count++;
- }
- db.receivables=[...seen.values()];return count
-}
-async function apiPull(){
- if(apiBusy)return;
- if(!apiValidOrigin(apiState.origin)||!apiState.token){apiStatus('Backend هنوز متصل نیست. یک‌بار ورود امن Google لازم است.');return}
- apiBusy=true;apiStatus('در حال همگام‌سازی...');
- try{
-  const response=await fetch(apiState.origin+'/api/snapshot',{headers:{Authorization:'Bearer '+apiState.token},cache:'no-store',signal:AbortSignal.timeout(20000)});
-  if(!response.ok)throw Error(response.status===401?'اعتبار اتصال پایان یافته؛ لطفاً یک‌بار دیگر وارد Google شوید.':'خطای سرویس: '+response.status);
-  const data=await response.json();
-  const t=cloudApplyTransactions(data.transactions),r=apiApplyReceivables(data.receivables),x=cloudApplyTransfers(data.transfers);
-  save();apiStatus('همگام‌شده: '+t+' تراکنش · '+x+' انتقال · '+r+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
- }catch(e){apiStatus('Sync انجام نشد: '+String(e.message||e).slice(0,180))}
- finally{apiBusy=false}
-}
-
-function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
-function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db=d;save()}}catch(e){alert('فایل معتبر نیست')}}
+function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,t.currency||db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name||t.accountName,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
+function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db={accounts:d.accounts,tx:d.tx,transfers:d.transfers,receivables:Array.isArray(d.receivables)?d.receivables:[],commitments:Array.isArray(d.commitments)?d.commitments:[]};save()}}catch(e){alert('فایل معتبر نیست')}}
 // Safe, confirmation-required handoff from ChatGPT. URL fragment never reaches hosting server.
 function importChatGPTDraft(){
  const marker='#finance-import=';
@@ -382,7 +197,7 @@ function importChatGPTDraft(){
  let matched=candidates.find(a=>item.accountName&&a.name.trim()===String(item.accountName).trim());
  $('account').value=(matched||((!item.accountName&&candidates.length===1)?candidates[0]:null))?.id||'';
  tab('transactions');
- alert(db.accounts.length===0?'پیش‌نویس از ChatGPT آماده شد. ابتدا در بخش حساب‌ها یک حساب بساز، سپس تراکنش را بررسی و تأیید کن.':'پیش‌نویس از ChatGPT آماده شد. مبلغ، ارز حساب، نوع و توضیح را بررسی کن؛ هیچ اطلاعاتی هنوز ثبت نشده است.');
+ alert(db.accounts.length===0?'پیش‌نویس از ChatGPT آماده شد. می‌توانی بدون انتخاب حساب هم تراکنش را ثبت کنی؛ موجودی هیچ حسابی تغییر نمی‌کند.':'پیش‌نویس از ChatGPT آماده شد. مبلغ، ارز حساب، نوع و توضیح را بررسی کن؛ هیچ اطلاعاتی هنوز ثبت نشده است.');
 }
 window.addEventListener('hashchange',importChatGPTDraft);
 if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{reg.update().catch(()=>{});}).catch(()=>{});}
@@ -414,7 +229,5 @@ window.MyFinanceBridge={
 };
 render();tab('transactions');
 importChatGPTDraft();
-$('apiorigin').value=apiState.origin;
-apiHandleReturn();
-/* Legacy API polling disabled; Supabase is the active private cloud backend. */
+/* Authentication and synchronization are handled exclusively by Supabase. */
 </script><script src="./commitments.js?v=20261028r3" defer></script><script type="module" src="./supabase-sync.js?v=20261028r3"></script></body></html>
