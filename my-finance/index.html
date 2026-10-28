@@ -259,8 +259,8 @@ async function apiPull(){
   const response=await fetch(apiState.origin+'/api/snapshot',{headers:{Authorization:'Bearer '+apiState.token},cache:'no-store',signal:AbortSignal.timeout(20000)});
   if(!response.ok)throw Error(response.status===401?'اعتبار اتصال پایان یافته؛ لطفاً یک‌بار دیگر وارد Google شوید.':'خطای سرویس: '+response.status);
   const data=await response.json();
-  const t=cloudApplyTransactions(data.transactions),r=apiApplyReceivables(data.receivables);
-  save();apiStatus('همگام‌شده: '+t+' تراکنش · '+r+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
+  const t=cloudApplyTransactions(data.transactions),r=apiApplyReceivables(data.receivables),x=cloudApplyTransfers(data.transfers);
+  save();apiStatus('همگام‌شده: '+t+' تراکنش · '+x+' انتقال · '+r+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
  }catch(e){apiStatus('Sync انجام نشد: '+String(e.message||e).slice(0,180))}
  finally{apiBusy=false}
 }
