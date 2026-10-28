@@ -21,7 +21,7 @@ function actions(r){
  (r.type==='kpi'?btn('ثبت مقدار KPI','update',r.id):'')+
  (r.type==='objective'&&editable?btn('＋ نتیجه','kr',r.id):'')+
  '<details class="kx-more"><summary>بیشتر</summary><div class="kx-actions">'+
- (editable?button('ویرایش عنوان','title')+button('ویرایش مسئول','owner')+
+ (editable?button('عنوان در جدول','title')+button('مسئول در جدول','owner')+
  button('تغییر تیم','team')+
  (r.type==='objective'?button('تغییر دوره','timeframe'):'')+
  ((r.type==='objective'&&r.stage!=='closed')||r.type==='kpi'||r.type==='initiative'?button('تغییر مرحله','stage'):''):'')+
