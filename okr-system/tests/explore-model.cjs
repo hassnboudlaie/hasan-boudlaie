@@ -63,3 +63,24 @@ const qr=M.boardPeriods('quarterly',6,'2026-10-28');assert.equal(qr.length,6);as
 assert.equal(M.boardPeriods('quarterly',26,'2026-10-28').length,26,'26 Persian quarters');
 assert.throws(()=>M.boardPeriods('monthly',6,'2026-02-30'),/معتبر/);
 console.log('PASS Perdoo 3.0 Board periods: Saturday weeks, Persian calendar months/quarters, six/twelve/26 columns');
+
+/* Perdoo 3.0: Stage is not progress Status, KPI monthly update due, documented frequencies. */
+assert.equal(M.updateCadence({},'kpi'),30,'KPIs default to monthly (Perdoo)');
+assert.equal(M.updateCadence({},'objective'),7,'Objectives default to weekly');
+assert.equal(M.updateCadence({updateFrequency:'quarterly'},'kpi'),90);
+assert.equal(M.updateCadence({updateEveryDays:14},'objective'),14);
+assert.deepEqual([...M.CADENCE_DAYS],[7,14,30,90,120,180,365]);
+assert.equal(M.goalStatus({status:'active'}),'no-status','Stage never masquerades as progress Status');
+assert.equal(M.goalStatus({confidence:'attention'}),'needs-attention');
+assert.equal(M.goalStatus({healthStatus:'unhealthy'}),'off-track');
+const statusData={...d,kpis:[{id:'kpi',name:'KPI',status:'active',current:70,target:100,updateEveryDays:undefined}],goals:[{...g,status:'active',krs:[{...g.krs[0],confidence:'attention'}]}]};
+const statusRows=M.normalize(statusData,new Date('2026-10-17T10:00:00Z'));
+const kpiStatus=statusRows.find(r=>r.type==='kpi'),krStatus=statusRows.find(r=>r.id==='k1');
+assert.equal(kpiStatus.updateEveryDays,30);
+assert.equal(kpiStatus.outdated,false,'KPI not yet due after 7 days of monthly cadence');
+assert.equal(krStatus.progressStatus,'needs-attention');
+assert.equal(M.filter(statusRows,{statuses:['needs-attention']}).length,1);
+assert.equal(M.filter(statusRows,{updateCadences:['30']}).filter(r=>r.type==='kpi').length,1);
+const due=M.normalize(statusData,new Date('2026-11-10T00:00:00Z'));
+assert.equal(due.find(r=>r.type==='kpi').outdated,true,'monthly KPI overdue after 31 days');
+console.log('PASS Perdoo 3.0: independent Status/Stage, KPI monthly default, progress status/frequency filters');
