@@ -235,6 +235,9 @@ byId('supabase-send').addEventListener('click',async()=>{
 });
 byId('supabase-pair').addEventListener('click',async()=>{
  if(!user)return notice('اول وارد حساب خود شوید.');
+ const {data:existing,error:checkError}=await client.from('finance_voice_pairings').select('consumed_at').eq('user_id',user.id).maybeSingle();
+ if(checkError)return notice('خطای بررسی اتصال: '+checkError.message);
+ if(existing?.consumed_at&&!confirm('اتصال فعلی ChatGPT تأیید شده است. آیا می‌خواهید آن را لغو کرده و کد اتصال جدید بسازید؟'))return;
  const buf=new Uint32Array(2);crypto.getRandomValues(buf);
  const code=String(((buf[0]^buf[1])>>>0)%100000000).padStart(8,'0');
  const expires_at=new Date(Date.now()+15*60*1000).toISOString();
