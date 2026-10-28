@@ -34,7 +34,7 @@ html{font-size:16px;-webkit-text-size-adjust:100%}body{line-height:1.65}button,i
 <div class="card"><h2>ورود رکورد خصوصی / Private import</h2><input type="file" id="rcvimport" accept=".json,application/json" onchange="importReceivableFile(this)"><p class="muted">این فایل فقط در مرورگر شما خوانده می‌شود. فایل خصوصی را در GitHub منتشر نکنید؛ داده محلی رمزگذاری نشده است.</p></div>
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
-<section id="settings" hidden>
+<section id="settings" hidden><div class="card" id="supabase-sync"><h2>Supabase · Private Sync</h2><p class="muted">ورود امن و همگام‌سازی خصوصی درآمد و هزینه</p><div id="supabase-login"><input type="email" id="supabase-email" placeholder="ایمیل ورود"><button type="button" id="supabase-send">ارسال لینک ورود</button></div><div id="supabase-actions" hidden><button type="button" id="supabase-pull">دریافت تراکنش‌ها</button><button type="button" id="supabase-push">انتقال تراکنش‌های محلی</button><button type="button" id="supabase-logout">خروج</button></div><p id="supabase-status" role="status"></p></div>
 <div class="card"><h2>Automatic Sync · اتصال مستقیم با ChatGPT</h2>
 <p class="muted">پس از یک‌بار اتصال امن، داده‌های ChatGPT به این اپ همگام می‌شوند. برای هر تراکنش لینک، دانلود یا تأیید مجدد نیاز نیست.</p>
 <div class="fields"><input id="apiorigin" inputmode="url" autocomplete="off" placeholder="Private Backend URL on Render"></div>
@@ -353,4 +353,4 @@ apiHandleReturn();
 if(apiState.token)apiPull();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&apiState.token)apiPull()});
 setInterval(()=>{if(!document.hidden&&apiState.token&&!apiBusy)apiPull()},60000);
-</script></body></html>
+</script><script type="module" src="./supabase-sync.js?v=1"></script></body></html>
