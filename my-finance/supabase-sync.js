@@ -5,7 +5,7 @@ const bridge=window.MyFinanceBridge;
 const byId=id=>document.getElementById(id);
 const login=byId('supabase-login'),actions=byId('supabase-actions'),email=byId('supabase-email');
 let user=null,busy=false,queued=false,authPending=false,seen=new Map();
-const collections={account:'accounts',receivable:'receivables',transfer:'transfers',commitment:'commitments'};
+const collections={account:'accounts',receivable:'receivables',transfer:'transfers',commitment:'commitments',loan:'loans'};
 let dirty=new Set();
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const dirtyKey=()=>user?'my-finance-dirty-'+user.id:'';
