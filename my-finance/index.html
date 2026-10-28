@@ -32,7 +32,7 @@ html{font-size:16px;-webkit-text-size-adjust:100%}body{line-height:1.65}button,i
 <input id="rcvsector" placeholder="حوزه سرمایه‌گذاری">
 <input id="rcvnotes" placeholder="یادداشت (اختیاری)">
 </div><button onclick="addReceivable()">بررسی و ثبت طلب</button>
-<p class="muted">اگر روز دقیق سررسید مشخص نیست، فقط ماه ثبت می‌شود؛ یادآور روزانه فعال نخواهد شد.</p></div>
+<p class="muted">اگر بازپرداخت یا سررسید هنوز مشخص نیست، آن فیلد را خالی بگذارید؛ سودی به‌صورت فرضی محاسبه نمی‌شود.</p></div>
 <div class="card"><h2>مطالبات ثبت‌شده / Receivables</h2><div id="rcvlist"></div></div>
 <div class="card"><h2>ورود رکورد خصوصی / Private import</h2><input type="file" id="rcvimport" accept=".json,application/json" onchange="importReceivableFile(this)"><p class="muted">این فایل فقط در مرورگر شما خوانده می‌شود. فایل خصوصی را در GitHub منتشر نکنید؛ داده محلی رمزگذاری نشده است.</p></div>
 </section>
@@ -86,15 +86,15 @@ function transfer(){let from=$('from').value,to=$('to').value,send=Number($('sen
 
 const digits=s=>String(s??'').replace(/[۰-۹]/g,c=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(c))).replace(/[٠-٩]/g,c=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(c)));
 const solarMonths=['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
-function monthText(v){let s=digits(v).trim(),m=s.match(/^(\d{4})\/(0[1-9]|1[0-2])$/);return m?solarMonths[Number(m[2])]+' '+m[1]:esc(v)}
+function monthText(v){let s=digits(String(v??'')).trim(),m=s.match(/^(\d{4})\/(0[1-9]|1[0-2])$/);return m?solarMonths[Number(m[2])]+' '+m[1]:s?esc(s):'نامشخص'}
 function validateReceivable(raw){
- let principal=Number(raw.principal),expected=Number(raw.expected),counterparty=String(raw.counterparty??'').trim(),dueMonth=digits(raw.dueMonth).trim(),term=raw.termMonths===null||raw.termMonths===undefined||raw.termMonths===''?null:Number(raw.termMonths);
- if(!counterparty||counterparty.length>150||!Number.isFinite(principal)||principal<=0||!Number.isFinite(expected)||expected<=0||!['USD','EUR','IRT','IRR'].includes(raw.currency)||!/^\d{4}\/(0[1-9]|1[0-2])$/.test(dueMonth)||term!==null&&(!Number.isInteger(term)||term<1||term>600))throw Error('invalid');
+ let principal=Number(raw.principal),expected=raw.expected===null||raw.expected===undefined||raw.expected===''?null:Number(raw.expected),counterparty=String(raw.counterparty??'').trim(),dueMonth=digits(String(raw.dueMonth??'')).trim(),term=raw.termMonths===null||raw.termMonths===undefined||raw.termMonths===''?null:Number(raw.termMonths);
+ if(!counterparty||counterparty.length>150||!Number.isFinite(principal)||principal<=0||(expected!==null&&(!Number.isFinite(expected)||expected<=0))||!['USD','EUR','IRT','IRR'].includes(raw.currency)||(dueMonth&&!/^\d{4}\/(0[1-9]|1[0-2])$/.test(dueMonth))||term!==null&&(!Number.isInteger(term)||term<1||term>600))throw Error('invalid');
  return {id:String(raw.id||crypto.randomUUID()).slice(0,120),counterparty,principal,expected,currency:raw.currency,termMonths:term,dueMonth,location:String(raw.location||'').slice(0,150),sector:String(raw.sector||'').slice(0,150),notes:String(raw.notes||'').slice(0,1000),status:'pending',createdAt:new Date().toISOString()};
 }
 function addReceivable(){
  let raw={counterparty:$('rcvname').value,principal:$('rcvprincipal').value,expected:$('rcvexpected').value,currency:$('rcvcurrency').value,termMonths:$('rcvterm').value,dueMonth:$('rcvdue').value,location:$('rcvlocation').value,sector:$('rcvsector').value,notes:$('rcvnotes').value};
- try{let r=validateReceivable(raw);if(!confirm('ثبت طلب '+fmt(r.expected)+' '+r.currency+' از '+r.counterparty+' برای '+monthText(r.dueMonth)+'؟'))return;db.receivables.push(r);['rcvname','rcvprincipal','rcvexpected','rcvterm','rcvdue','rcvlocation','rcvsector','rcvnotes'].forEach(id=>$(id).value='');save()}catch(e){alert('طرف قرارداد، مبلغ‌های مثبت، ارز و ماه سررسید معتبر الزامی‌اند. مثال: ۱۴۰۶/۰۲')}
+ try{let r=validateReceivable(raw);if(!confirm('ثبت سرمایه '+fmt(r.principal)+' '+r.currency+' نزد '+r.counterparty+'؛ بازپرداخت '+(r.expected===null?'نامشخص':fmt(r.expected)+' '+r.currency)+'؛ سررسید '+monthText(r.dueMonth)+'؟'))return;db.receivables.push(r);['rcvname','rcvprincipal','rcvexpected','rcvterm','rcvdue','rcvlocation','rcvsector','rcvnotes'].forEach(id=>$(id).value='');save()}catch(e){alert('نام طرف قرارداد، اصل سرمایه و ارز الزامی‌اند؛ بازپرداخت و سررسید می‌توانند نامشخص بمانند.')}
 }
 async function importReceivableFile(input){
  let f=input.files[0];if(!f)return;
@@ -104,7 +104,7 @@ async function importReceivableFile(input){
   if(payload.kind!=='my-finance-receivable-v1'||!payload.entry||typeof payload.entry!=='object')throw Error('format');
   let r=validateReceivable(payload.entry);
   if(db.receivables.some(x=>x.id===r.id)){alert('این رکورد قبلاً ثبت شده است.');return}
-  if(!confirm('آیا طلب '+fmt(r.expected)+' '+r.currency+' از '+r.counterparty+' به اطلاعات محلی افزوده شود؟'))return;
+  if(!confirm('آیا سرمایه '+fmt(r.principal)+' '+r.currency+' نزد '+r.counterparty+' وارد شود؟'))return;
   db.receivables.push(r);save();alert('رکورد خصوصی به مطالبات افزوده شد.');
  }catch(e){alert('فایل ورود مطالبات معتبر نیست.')}finally{input.value=''}
 }
@@ -124,7 +124,7 @@ function renderTransferList(){
 function balance(a){return (a.opening||0)+db.tx.filter(t=>t.account===a.id&&!['pending','cancelled'].includes(t.status)).reduce((s,t)=>s+(t.kind==='income'?t.amount:-t.amount),0)+db.transfers.reduce((s,t)=>s+(t.to===a.id?t.receive:0)-(t.from===a.id?t.send+t.fee:0),0)}
 function render(){let opts=db.accounts.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name)+' ('+esc(a.currency)+')</option>').join('');['account','from','to'].forEach(id=>{let old=$(id).value;$(id).innerHTML='<option value="">انتخاب حساب</option>'+opts;$(id).value=old||''});$('accountlist').innerHTML='<h2>حساب‌ها</h2>'+(db.accounts.length?db.accounts.map(a=>'<p>'+esc(a.name)+' · '+fmt(balance(a))+' '+esc(a.currency)+(a.opening===null?' · موجودی اولیه نامشخص':'')+'</p>').join(''):'<p class="muted">هنوز حسابی تعریف نشده است.</p>');let cur=db.accounts.filter(a=>a.currency==='IRT');$('balance').textContent=cur.length?fmt(cur.reduce((s,a)=>s+balance(a),0))+' تومان':'—';let tx=db.tx.filter(t=>(t.currency||db.accounts.find(a=>a.id===t.account)?.currency)==='IRT'&&!['pending','cancelled'].includes(t.status));$('income').textContent=fmt(tx.filter(t=>t.kind==='income').reduce((s,t)=>s+t.amount,0));$('expense').textContent=fmt(tx.filter(t=>t.kind==='expense').reduce((s,t)=>s+t.amount,0));$('txrows').innerHTML=db.tx.length?db.tx.slice().reverse().map(t=>'<tr><td>'+esc(t.kind==='income'?'درآمد':t.kind==='investment'?'خرید دارایی / سرمایه‌گذاری':t.kind==='transfer'?'تبدیل ارز / انتقال':'هزینه')+' · '+esc(t.category||'سایر')+(t.status==='pending'?' · در انتظار پرداخت':'')+'</td><td>'+fmt(t.amount)+' '+esc(t.currency||'')+'</td><td>'+esc(db.accounts.find(a=>a.id===t.account)?.name||t.accountName||(t.paymentMethod==='card'?'کارت · حساب نامشخص':'—'))+'</td><td>'+esc(t.memo)+'</td></tr>').join(''):'<tr><td>هنوز تراکنشی ثبت نشده است.</td></tr>';$('report').textContent='تعداد حساب‌ها: '+db.accounts.length+' | تراکنش‌ها: '+db.tx.length+' | انتقال‌ها: '+db.transfers.length+' | مطالبات: '+db.receivables.length+' | تعهدات: '+db.commitments.length;
 $('rcvcount').textContent=db.receivables.length?fmt(db.receivables.filter(r=>r.status!=='paid').length)+' مورد':'—';
-$('rcvlist').innerHTML=db.receivables.length?db.receivables.slice().reverse().map(r=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(r.counterparty)+'</strong> · <span>'+esc(r.status==='paid'?'وصول‌شده':r.status==='partial'?'بخشی وصول‌شده':'در انتظار وصول')+'</span><p>'+fmt(r.principal)+' '+esc(r.currency)+' اصل سرمایه → '+fmt(r.expected)+' '+esc(r.currency)+' مبلغ توافقی</p><p class="muted">سود توافقی: '+fmt(r.expected-r.principal)+' '+esc(r.currency)+(r.receivedAmount?' | وصول: '+fmt(r.receivedAmount)+' '+esc(r.currency):'')+' | سررسید: '+esc(monthText(r.dueMonth))+(r.termMonths?' | مدت: '+fmt(r.termMonths)+' ماه':'')+'</p><p class="muted">'+esc([r.location,r.sector,r.notes].filter(Boolean).join(' · '))+'</p></div>').join(''):'<p class="muted">هنوز طلب یا سرمایه‌گذاری ثبت نشده است.</p>';
+$('rcvlist').innerHTML=db.receivables.length?db.receivables.slice().reverse().map(r=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(r.counterparty)+'</strong> · <span>'+esc(r.status==='paid'?'وصول‌شده':r.status==='partial'?'بخشی وصول‌شده':'در انتظار وصول')+'</span><p>'+fmt(r.principal)+' '+esc(r.currency)+' اصل سرمایه → '+(r.expected===null||r.expected===undefined?'بازپرداخت توافقی نامشخص':fmt(r.expected)+' '+esc(r.currency)+' مبلغ توافقی')+'</p><p class="muted">'+(r.expected===null||r.expected===undefined?'سود نامشخص':'سود توافقی: '+fmt(r.expected-r.principal)+' '+esc(r.currency))+(r.receivedAmount?' | وصول: '+fmt(r.receivedAmount)+' '+esc(r.currency):'')+' | سررسید: '+esc(monthText(r.dueMonth))+(r.termMonths?' | مدت: '+fmt(r.termMonths)+' ماه':'')+'</p><p class="muted">'+esc([r.location,r.sector,r.notes].filter(Boolean).join(' · '))+'</p></div>').join(''):'<p class="muted">هنوز طلب یا سرمایه‌گذاری ثبت نشده است.</p>';
 renderTransferList();
 }
 
@@ -230,4 +230,4 @@ window.MyFinanceBridge={
 render();tab('transactions');
 importChatGPTDraft();
 /* Authentication and synchronization are handled exclusively by Supabase. */
-</script><script src="./commitments.js?v=20261028r3" defer></script><script src="./reports.js?v=20261028r4" defer></script><script src="./receivables-actions.js?v=20261028r4" defer></script><script type="module" src="./supabase-sync.js?v=20261028r6"></script></body></html>
+</script><script src="./commitments.js?v=20261028r3" defer></script><script src="./reports.js?v=20261028r5" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261028r6"></script></body></html>
