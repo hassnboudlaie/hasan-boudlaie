@@ -41,6 +41,7 @@ jobs:
           sleep 3
           node okr-system/tests/browser-smoke.cjs
           node okr-system/tests/explore-browser.cjs
+          node okr-system/tests/parity-browser.cjs
           node okr-system/tests/explore-ux-a11y.cjs
 
       - name: Upload Explore QA snapshots
