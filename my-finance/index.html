@@ -155,8 +155,10 @@ async function cloudPull(){
   }
   const map=new Map(db.receivables.map(r=>[r.id,r]));
   for(const r of synced)map.set(r.id,r);
+  const transactionRows=await cloudFetchTransactions();
+  const txCount=cloudApplyTransactions(transactionRows);
   db.receivables=[...map.values()];save();
-  cloudStatus('همگام‌سازی موفق · '+synced.length+' رکورد از Google Sheets · '+new Date().toLocaleTimeString('fa-IR'))
+  cloudStatus('همگام شد · '+txCount+' تراکنش · '+synced.length+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
  }catch(e){cloudStatus('خطای خواندن: '+String(e.message||e).slice(0,200))}
  finally{cloudBusy=false}
 }
