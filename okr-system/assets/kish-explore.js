@@ -13,7 +13,23 @@ const link=r=>'#'+({objective:'goals',kr:'results',kpi:'kpis',initiative:'projec
 const options=(rows,selected)=>rows.map(([v,n])=>'<option value="'+X(v)+'" title="'+X(n)+'" '+((Array.isArray(selected)?selected:[]).includes(v)?'selected':'')+'>'+X(n)+'</option>').join('');
 const pick=(label,key,opts)=>'<label>'+label+'<select multiple data-kx-filter="'+key+'" aria-label="'+label+'">'+options(opts,f[key])+'</select></label>';
 const btn=(label,act,id='')=>'<button type="button" data-kx-action="'+act+'" data-id="'+X(id)+'">'+label+'</button>';
-function actions(r){return btn('ویرایش','edit',r.id)+(r.type==='kr'?btn('ثبت پیشرفت','update',r.id):'')+(r.type==='objective'&&!r.archived?btn('＋ نتیجه','kr',r.id):'')+'<details class="kx-more"><summary>بیشتر</summary><div class="kx-actions">'+btn('عنوان در جدول','inline-title',r.id)+btn('مسئول در جدول','inline-owner',r.id)+(r.type==='kpi'?btn('هدف برای بهبود شاخص','improve',r.id):'')+(r.type==='objective'?btn('رونوشت پیش‌نویس','clone',r.id)+btn('یادداشت','comment',r.id)+(r.archived?btn('بازیابی','restore',r.id):r.stage==='closed'?btn('بایگانی','archive',r.id):btn('جمع‌بندی هدف','goal-close',r.id)):'')+'</div></details>';}
+function actions(r){
+ const editable=!r.archived;
+ const button=(title,field)=>btn(title,'inline-'+field,r.id);
+ return btn('ویرایش','edit',r.id)+
+ (r.type==='kr'?btn('ثبت پیشرفت','update',r.id):'')+
+ (r.type==='kpi'?btn('ثبت مقدار KPI','update',r.id):'')+
+ (r.type==='objective'&&editable?btn('＋ نتیجه','kr',r.id):'')+
+ '<details class="kx-more"><summary>بیشتر</summary><div class="kx-actions">'+
+ (editable?button('ویرایش عنوان','title')+button('ویرایش مسئول','owner')+
+ button('تغییر تیم','team')+
+ (r.type==='objective'?button('تغییر دوره','timeframe'):'')+
+ ((r.type==='objective'&&r.stage!=='closed')||r.type==='kpi'||r.type==='initiative'?button('تغییر مرحله','stage'):''):'')+
+ (r.type==='kpi'?btn('هدف برای بهبود شاخص','improve',r.id):'')+
+ (r.type==='objective'?btn('رونوشت پیش‌نویس','clone',r.id)+btn('یادداشت','comment',r.id)+
+ (r.archived?btn('بازیابی','restore',r.id):r.stage==='closed'?btn('بایگانی','archive',r.id):btn('جمع‌بندی هدف','goal-close',r.id)):'')+
+ '</div></details>';
+}
 
 function flat(d){
  const rows=M.filter(M.normalize(d),f,{units:d.units}),collator=new Intl.Collator('fa',{numeric:true,sensitivity:'base'});
@@ -102,15 +118,15 @@ function columnValue(key,r,d,ids,children){
  const lead=d.people.find(p=>[p.id,p.name,p.email].includes(r.owner))?.name||r.owner||'تعیین نشده';
  if(key==='goal')return '<div class="kx-title" style="padding-inline-start:'+r.depth*18+'px">'+
  (children?'<button data-kx-action="fold" data-id="'+X(r.id)+'" aria-label="باز و بسته کردن زیرهدف‌ها" aria-expanded="'+!collapsed.has(r.id)+'">'+(collapsed.has(r.id)?'＋':'−')+'</button>':'')+
- '<span class="kx-icon '+r.type+'" title="'+types[r.type]+'">'+icons[r.type]+'</span><a href="'+link(r)+'">'+X(r.title)+'</a></div>'+
+ '<span class="kx-icon '+r.type+'" title="'+types[r.type]+'">'+icons[r.type]+'</span><a href="'+link(r)+'" title="'+X(r.title)+'">'+X(r.title)+'</a>'+(r.archived?'':'<button type="button" class="kx-inline-pencil" data-kx-action="inline-title" data-id="'+X(r.id)+'" aria-label="ویرایش مستقیم عنوان">✎</button>')+'</div>'+
  '<small>'+types[r.type]+(r.parentId&&!ids.has(r.parentId)?' · بالادست خارج از فیلتر':'')+'</small>';
- if(key==='meta')return '<div class="kx-meta">'+metadata(r,d)+'</div>';
+ if(key==='meta')return '<div class="kx-meta">'+metadata(r,d)+'</div>'+(!r.archived?'<div class="kx-inline-triggers">'+btn('مسئول','inline-owner',r.id)+btn('تیم','inline-team',r.id)+(r.type==='objective'?btn('دوره','inline-timeframe',r.id):'')+((r.type==='objective'&&r.stage!=='closed')||r.type==='kpi'||r.type==='initiative'?btn('مرحله','inline-stage',r.id):'')+'</div>':'');
  if(key==='progress')return N(r.progress)+(r.progress===null?'':'٪')+'<small>انتظار: '+N(r.expected)+(r.expected===null?'':'٪')+'</small>'+(r.behind?'<small class="kx-warning">عقب‌تر از انتظار</small>':'')+(r.outdated?'<small class="kx-warning">به‌روزرسانی عقب‌افتاده</small>':'');
  if(key==='actions')return '<div class="kx-actions">'+actions(r)+'</div>';
- if(key==='lead')return X(lead);
- if(key==='team')return X(team);
- if(key==='timeframe')return X(d.cycles.find(c=>c.id===r.timeframe)?.name||'—');
- if(key==='stage')return X(stages[r.stage]||r.stage||'—');
+ if(key==='lead')return '<button type="button" class="kx-inline-cell" data-kx-action="inline-owner" data-id="'+X(r.id)+'" aria-label="ویرایش مسئول">'+X(lead)+'</button>';
+ if(key==='team')return '<button type="button" class="kx-inline-cell" data-kx-action="inline-team" data-id="'+X(r.id)+'" aria-label="ویرایش تیم">'+X(team)+'</button>';
+ if(key==='timeframe')return r.type==='objective'?'<button type="button" class="kx-inline-cell" data-kx-action="inline-timeframe" data-id="'+X(r.id)+'" aria-label="ویرایش بازه زمانی">'+X(d.cycles.find(c=>c.id===r.timeframe)?.name||'—')+'</button>':X(d.cycles.find(c=>c.id===r.timeframe)?.name||'—');
+ if(key==='stage')return ((r.type==='objective'&&r.stage!=='closed')||r.type==='kpi'||r.type==='initiative')?'<button type="button" class="kx-inline-cell" data-kx-action="inline-stage" data-id="'+X(r.id)+'" aria-label="ویرایش مرحله">'+X(stages[r.stage]||r.stage||'—')+'</button>':X(stages[r.stage]||r.stage||'—');
  if(key==='expected')return N(r.expected)+(r.expected===null?'':'٪');
  if(key==='lastUpdate')return X(r.lastUpdate?String(r.lastUpdate).slice(0,10):'—');
  if(key==='outdated')return r.outdated?'بله':'خیر';
@@ -205,7 +221,32 @@ function pillarForm(r){const d=B.snapshot();modal(r?'ویرایش رکن راه�
 document.addEventListener('click',e=>{const v=e.target.closest('[data-kx-view]');if(v){view=v.dataset.kxView;history.pushState(null,'','#explore/'+view);B.refresh();return;}const b=e.target.closest('[data-kx-action]');if(!b)return;const act=b.dataset.kxAction,id=b.dataset.id;try{const d=B.snapshot(),r=M.normalize(d).find(r=>r.id===id);if(act==='close'){document.getElementById('platformDialog').close();return;}if(act==='expand-all'){collapsed.clear();if(location.hash.startsWith('#explore/map/strategy'))window.KishMapView.setExpanded(d,true);B.refresh();}if(act==='collapse-all'){if(location.hash.startsWith('#explore/map/strategy'))window.KishMapView.setExpanded(d,false);collapsed=new Set(M.normalize(d).filter(r=>r.parentId).map(r=>r.parentId));B.refresh();}
  if(act==='report'){report(d);return;}
  if(act==='improve'&&r){B.form('goal','',{improvesKpiId:r.id});const title=document.getElementById('pf-objective');if(title)title.value='بهبود '+r.title;const parent=document.getElementById('pf-parentId');if(parent&&r.parentId)parent.value=r.parentId;return;}
- if(act.startsWith('inline-')&&r){const field=act.slice(7),host=b.closest('[data-kx-record]');if(!host)return;const cell=host.tagName==='TR'?host.querySelector('td'):host;cell.querySelector('[data-kx-inline]')?.remove();cell.insertAdjacentHTML('beforeend','<form data-kx-inline="'+X(id)+'" data-field="'+X(field)+'"><label>'+ (field==='title'?'عنوان':'مسئول')+'<input name="value" required maxlength="500" value="'+X(r[field]||'')+'"></label><button>ثبت</button><button type="button" data-kx-action="cancel-inline">انصراف</button><span role="alert" data-kx-error></span></form>');cell.querySelector('[data-kx-inline] input').focus();return;}
+ if(act.startsWith('inline-')&&r){
+  const field=act.slice(7),host=b.closest('[data-kx-record]');
+  if(!host||r.archived)return;
+  const cell=host.tagName==='TR'?(b.closest('td')||host.querySelector('td')):host;
+  cell.querySelector('[data-kx-inline]')?.remove();
+  let label='',control='';
+  if(field==='title'||field==='owner'){
+   label=field==='title'?'عنوان':'مسئول';
+   control='<input name="value" required maxlength="500" value="'+X(field==='title'?r.title:r.owner)+'">';
+  }else if(field==='team'){
+   label='تیم / واحد';
+   control='<select name="value" required>'+options([['company','شرکت'],...(d.units||[]).map(t=>[t.id,t.name])],[r.teamId||'company'])+'</select>';
+  }else if(field==='timeframe'&&r.type==='objective'){
+   label='بازه زمانی';
+   control='<select name="value">'+options([['','بدون دوره'],...(d.cycles||[]).filter(c=>!c.closedAt).map(c=>[c.id,c.name])],[r.timeframe||''])+'</select>';
+  }else if(field==='stage'){
+   const allowed=r.type==='objective'?['draft','review','alignment','active']:
+    r.type==='kpi'?['draft','active']:
+    r.type==='initiative'?['planned','in-progress','blocked','done']:[];
+   if(!allowed.length)return;
+   label='مرحله هدف';
+   control='<select name="value" required>'+options(allowed.map(st=>[st,stages[st]||st]),[r.stage])+'</select>';
+  }else return;
+  cell.insertAdjacentHTML('beforeend','<form data-kx-inline="'+X(id)+'" data-field="'+X(field)+'"><label>'+label+control+'</label><div class="kx-inline-actions"><button type="submit">ثبت</button><button type="button" data-kx-action="cancel-inline">انصراف</button></div><span role="alert" data-kx-error></span></form>');
+  cell.querySelector('[data-kx-inline] input, [data-kx-inline] select')?.focus();return;
+ }
  if(act==='cancel-inline'){b.closest('form').remove();return;}
  if(['clone','restore','archive','goal-close','comment'].includes(act)&&r){const names={clone:'رونوشت پیش‌نویس',restore:'بازیابی هدف',archive:'بایگانی هدف','goal-close':'جمع‌بندی هدف',comment:'یادداشت هدف'};let fields=act==='goal-close'?['wins','learnings','nextSteps'].map((k,i)=>'<label>'+['دستاوردها','آموخته‌ها','اقدام بعد'][i]+'<textarea name="'+k+'" required></textarea></label>').join(''):act==='comment'?'<label>یادداشت<textarea name="text" maxlength="5000" required></textarea></label>':'<p>'+ (act==='clone'?'رونوشت با شناسه‌های جدید و مقادیر اندازه‌گیری خالی ایجاد می‌شود. اصل هدف و سوابق آن حفظ می‌شوند.':act==='archive'?'هدف و نتایج آن از نمای جاری کاوش پنهان می‌شوند. داده و سوابق حفظ می‌شوند.':'هدف دوباره در کاوش نمایش داده می‌شود؛ وضعیت مختومه تغییر نمی‌کند.')+'</p>';modal(names[act],'<form class="p-dialog-body" data-kx-lifecycle="'+act+'" data-id="'+X(id)+'"><h3>'+X(r.title)+'</h3>'+fields+'<p data-kx-error role="alert"></p><button type="submit">تأیید و ذخیره</button></form>');return;}
  if(['preset-active','preset-off-track','preset-near-complete'].includes(act)){f=defaults();if(act==='preset-active')f.stages=['active'];if(act==='preset-off-track')f.behind=true;if(act==='preset-near-complete'){f.progressMin='80';f.progressMax='99';}view='cascade';history.replaceState(null,'','#explore/cascade');B.refresh();return;}
@@ -217,7 +258,7 @@ document.addEventListener('click',e=>{const v=e.target.closest('[data-kx-view]')
  if(act==='col-toggle'){columnPanelOpen=!columnPanelOpen;B.refresh();return;}
  if(act==='col-reset'){changeColumns('','reset');B.refresh();return;}
  if(['col-up','col-down'].includes(act)){changeColumns(id,act==='col-up'?'up':'down');B.refresh();return;}
- if(act==='fold'){collapsed.has(id)?collapsed.delete(id):collapsed.add(id);B.refresh();}if(act==='reset'){f=defaults();advancedOpen=false;B.refresh();}if(act==='edit'&&r){if(r.type==='pillar')pillarForm(r.record);else B.form({objective:'goal',kr:'kr',kpi:'kpi',initiative:'project'}[r.type],id);}if(act==='update')B.form('checkin',id);if(act==='kr')B.form('kr','',{objectiveId:id});if(act==='new-objective')B.form('goal');if(act==='new-kpi')B.form('kpi');if(act==='new-pillar')pillarForm();if(act==='backup-current')B.exportData();if(act==='backup-old')B.backup();if(act==='csv')B.exportCsv([['ID','Type','Title','Parent','Owner','Team','Stage','Progress'],...flat(d).map(r=>[r.id,r.type,r.title,r.parentId,r.owner,r.teamId,r.stage,r.progress??''])],'Kish-Explore.csv');if(act==='save-view')modal('ذخیره نمای این مرورگر','<form class="p-dialog-body" data-kx-save><label>نام نما<input name="name" required maxlength="100"></label><label>پوشه<select name="folder">'+savedFolderOptions()+'</select></label><p data-kx-error role="alert"></p><button type="submit" class="p-btn primary">ذخیره نما</button></form>');}catch(error){modal('ذخیره یا عملیات انجام نشد','<p class="p-dialog-body" role="alert">'+X(error.message)+'</p>');}});
+ if(act==='fold'){collapsed.has(id)?collapsed.delete(id):collapsed.add(id);B.refresh();}if(act==='reset'){f=defaults();advancedOpen=false;B.refresh();}if(act==='edit'&&r){if(r.type==='pillar')pillarForm(r.record);else B.form({objective:'goal',kr:'kr',kpi:'kpi',initiative:'project'}[r.type],id);}if(act==='update')B.form(r?.type==='kpi'?'kpi':'checkin',id);if(act==='kr')B.form('kr','',{objectiveId:id});if(act==='new-objective')B.form('goal');if(act==='new-kpi')B.form('kpi');if(act==='new-pillar')pillarForm();if(act==='backup-current')B.exportData();if(act==='backup-old')B.backup();if(act==='csv')B.exportCsv([['ID','Type','Title','Parent','Owner','Team','Stage','Progress'],...flat(d).map(r=>[r.id,r.type,r.title,r.parentId,r.owner,r.teamId,r.stage,r.progress??''])],'Kish-Explore.csv');if(act==='save-view')modal('ذخیره نمای این مرورگر','<form class="p-dialog-body" data-kx-save><label>نام نما<input name="name" required maxlength="100"></label><label>پوشه<select name="folder">'+savedFolderOptions()+'</select></label><p data-kx-error role="alert"></p><button type="submit" class="p-btn primary">ذخیره نما</button></form>');}catch(error){modal('ذخیره یا عملیات انجام نشد','<p class="p-dialog-body" role="alert">'+X(error.message)+'</p>');}});
 document.addEventListener('input',e=>{
  const control=e.target.closest('[data-kx-width]');if(!control)return;
  const key=control.dataset.kxWidth;if(!columnLabels[key])return;
