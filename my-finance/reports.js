@@ -17,7 +17,7 @@ function render(){
   const income=tx.filter(t=>t.kind==='income').reduce((s,t)=>s+Number(t.amount||0),0);
   const expense=tx.filter(t=>t.kind==='expense').reduce((s,t)=>s+Number(t.amount||0),0);
   const receivables=(data.receivables||[]).filter(r=>r.currency===cur&&r.status!=='paid');
-  const expected=receivables.reduce((s,r)=>s+Number(r.expected||0),0);
+  const expected=receivables.reduce((s,r)=>s+Math.max(0,Number(r.expected||0)-Number(r.receivedAmount||0)),0);
   output+='<div class="report-unit"><h3>گزارش '+esc(cur)+'</h3><div class="report-overview">'+card('درآمد محقق‌شده',income,cur)+card('هزینه پرداخت‌شده',expense,cur)+card('خالص جریان نقد',income-expense,cur)+card('مطالبات و بازگشت سرمایه',expected,cur)+'</div>';
   const cats=new Map();
   for(const t of tx.filter(t=>t.kind==='expense'))cats.set(t.category||'سایر',(cats.get(t.category||'سایر')||0)+Number(t.amount));
