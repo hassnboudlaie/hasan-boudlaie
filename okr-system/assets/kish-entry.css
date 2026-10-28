@@ -25,7 +25,7 @@ body.kish-perdoo #authScreen .home-card h2{color:#17394f;font-size:21px;line-hei
 body.kish-perdoo #authScreen .home-card p{color:#4c6576;font-size:15px;line-height:1.9;margin:0 0 22px}
 body.kish-perdoo #authScreen .execution-choice h2{color:#fff}
 body.kish-perdoo #authScreen .execution-choice p{color:#dcebf3}
-body.kish-perdoo #authScreen .home-card .btn{margin-top:auto;min-height:50px;width:100%;font:700 16px/1.6 inherit;border-radius:9px;border:1px solid #b2c5d2;background:#fff;color:#17394f;box-shadow:none}
+body.kish-perdoo #authScreen .home-card .btn{margin-top:auto;min-height:50px;width:100%;font-family:inherit;font-size:16px;font-weight:700;line-height:1.6;border-radius:9px;border:1px solid #b2c5d2;background:#fff;color:#17394f;box-shadow:none}
 body.kish-perdoo #authScreen .execution-choice .btn{background:#fff;color:#123c55;border-color:#fff}
 body.kish-perdoo #authScreen .home-card .btn:hover{background:#e7f1f6}
 body.kish-perdoo #authScreen button:focus-visible{outline:3px solid #c26b16;outline-offset:4px}

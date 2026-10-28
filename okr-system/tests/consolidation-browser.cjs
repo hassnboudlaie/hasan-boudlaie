@@ -15,7 +15,19 @@ try{
  // Timeframe creation form still opens through Configure (cancel without data mutation).
  await page.goto(root+'#configure/timeframes');const add=page.locator('[data-pd-action="timeframe-new"]').first();await add.click();await page.locator('#platformDialog[open]').waitFor();assert.ok(await page.locator('#platformDialog input').count()>0);await page.keyboard.press('Escape');
  fs.mkdirSync('okr-system/tests/artifacts',{recursive:true});await page.goto(root+'#configure');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-configure.png',animations:'disabled'});await page.goto(root+'#dashboards');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-dashboard.png',animations:'disabled'});await page.goto(root+'#explore/map/strategy');await page.locator('#kmCanvas').waitFor();await page.screenshot({path:'okr-system/tests/artifacts/consolidation-map.png',animations:'disabled'});
- await page.setViewportSize({width:390,height:844});await page.goto(root+'#configure');await page.locator('.kc-tabs').waitFor();assert.equal(await page.evaluate(()=>document.documentElement.dir),'rtl');const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);assert.equal(overflow,false,'mobile page overflow');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-mobile.png',animations:'disabled'});
+ await page.setViewportSize({width:390,height:844});await page.goto(root+'#configure');await page.locator('#platformBody .kc-tabs').waitFor();assert.equal(await page.evaluate(()=>document.documentElement.dir),'rtl');const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);assert.equal(overflow,false,'mobile page overflow');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-mobile.png',animations:'disabled'});
+ // Entry: retained actions, readable text, phone layout and no page-wide overflow.
+ await page.goto(root+'#home');await page.locator('#authScreen:not(.hidden)').waitFor();
+ for(const width of [1440,390,360]){
+  await page.setViewportSize({width,height:900});
+  const entry=await page.locator('#authScreen').evaluate(el=>{const h=el.querySelector('h1'),b=el.querySelector('#entryExecBtn');return {heading:getComputedStyle(h).fontSize,button:b.getBoundingClientRect().height,overflow:el.scrollWidth>el.clientWidth+2};});
+  assert.ok(parseFloat(entry.heading)>=28);assert.ok(entry.button>=44);assert.equal(entry.overflow,false);
+  assert.ok(await page.locator('#entryExecBtn').isVisible());assert.ok(await page.locator('#documentEntryBtn').isVisible());
+  assert.equal(await page.locator('#platformHomeQuick').isVisible(),false);
+  await page.screenshot({path:'okr-system/tests/artifacts/consolidation-entry-'+width+'.png',fullPage:true,animations:'disabled'});
+ }
+ await page.locator('#documentEntryBtn').click();await page.locator('#view-document.active').waitFor();
+ await page.goto(root+'#home');await page.locator('#entryExecBtn').click();await page.waitForURL('**#start');await page.locator('#view-start.active').waitFor();
  assert.deepEqual(errors,[]);console.log('PASS consolidation: 9 primary destinations, 18 legacy aliases, preserved records, Map pillar/zoom/layout/Board refresh, timeframe form, desktop/mobile RTL');
 }finally{await browser.close();}};
 if(require.main===module)module.exports().catch(e=>{console.error(e);process.exit(1)});
