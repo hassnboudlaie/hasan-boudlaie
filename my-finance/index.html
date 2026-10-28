@@ -1,4 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#075e61"><link rel="manifest" href="./manifest.webmanifest"><title>داشبورد مالی من</title><style>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#075e61"><link rel="manifest" href="./manifest.webmanifest?v=3"><link rel="icon" href="./icon-v2.svg" type="image/svg+xml"><title>داشبورد مالی من</title><style>
 :root{font-family:Tahoma,Arial,sans-serif;--bg:#f4f7f8;--card:white;--fg:#193139;--muted:#60757a;--line:#dce6e8;--accent:#087e75}body.dark{--bg:#0c1920;--card:#192a32;--fg:#e9f5f5;--muted:#afc1c4;--line:#35464c;--accent:#0a8f83}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg)}main{max-width:980px;margin:auto;padding:20px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:22px}h2{font-size:17px}button,input,select{font:inherit}button{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 15px;cursor:pointer}button.alt{background:var(--card);color:var(--fg);border:1px solid var(--line)}input,select{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:11px;min-width:0;width:100%}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric b{display:block;font-size:23px;margin-top:12px}.muted{color:var(--muted);font-size:13px}.entry{display:flex;gap:8px}.entry input{flex:1}.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:10px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap}section[hidden]{display:none}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:start;border-bottom:1px solid var(--line)}.scroll{overflow:auto}label{font-size:12px;color:var(--muted)}.notice{background:var(--bg);border-radius:10px;padding:12px}.danger{color:#d45d5d}@media(max-width:550px){.grid{grid-template-columns:repeat(2,1fr)}.metric b{font-size:17px}.fields{grid-template-columns:1fr}main{padding:12px}h1{font-size:19px}}
 </style></head><body><main><header><h1 id="title">داشبورد مالی من</h1><div class="row"><button class="alt" onclick="toggleTheme()">☾</button><button class="alt" onclick="toggleLang()" id="lang">EN</button></div></header>
 <div class="card"><h2 data-fa="ثبت سریع تراکنش" data-en="Quick entry">ثبت سریع تراکنش</h2><div class="entry"><input id="quick" placeholder="مثلاً: امروز ۵۰۰ هزار تومان هزینه کردم"><button onclick="parseQuick()">➕</button></div><p class="muted" data-fa="پیش از ثبت، اطلاعات تراکنش را تأیید می‌کنید." data-en="Review and confirm before saving.">پیش از ثبت، اطلاعات تراکنش را تأیید می‌کنید.</p></div>
@@ -26,7 +26,7 @@
 <div class="card"><h2>ورود رکورد خصوصی / Private import</h2><input type="file" id="rcvimport" accept=".json,application/json" onchange="importReceivableFile(this)"><p class="muted">این فایل فقط در مرورگر شما خوانده می‌شود. فایل خصوصی را در GitHub منتشر نکنید؛ داده محلی رمزگذاری نشده است.</p></div>
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
-<section id="settings" hidden><div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در همین مرورگر ذخیره می‌شوند. GitHub Pages هیچ پایگاه داده مالی برای این برنامه ندارد. ذخیره‌سازی محلی به‌معنای رمزگذاری اطلاعات نیست؛ تا تکمیل امنیت، داده حساس وارد نکنید.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p></div></section>
+<section id="settings" hidden><div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در همین مرورگر ذخیره می‌شوند. GitHub Pages هیچ پایگاه داده مالی برای این برنامه ندارد. ذخیره‌سازی محلی به‌معنای رمزگذاری اطلاعات نیست؛ تا تکمیل امنیت، داده حساس وارد نکنید.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود از ChatGPT: لینک اختصاصی پیش‌نویس را باز کنید؛ اطلاعات فقط پس از بررسی و تأیید شما ثبت می‌شوند. لینک‌های حاوی اطلاعات مالی را برای دیگران ارسال نکنید.</p></div></section>
 <footer class="muted">MVP Preview · Empty Start · Local browser storage · No financial data on GitHub</footer></main>
 <script>
 const KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));function tab(id){document.querySelectorAll('section').forEach(s=>s.hidden=s.id!==id)}function toggleTheme(){document.body.classList.toggle('dark')}function toggleLang(){lang=lang==='fa'?'en':'fa';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='fa'?'EN':'فا';document.querySelectorAll('[data-fa]').forEach(x=>x.textContent=x.dataset[lang]);render()}
@@ -67,5 +67,40 @@ $('rcvlist').innerHTML=db.receivables.length?db.receivables.slice().reverse().ma
 }
 function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
 function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db=d;save()}}catch(e){alert('فایل معتبر نیست')}}
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render();
+// Safe, confirmation-required handoff from ChatGPT. URL fragment never reaches hosting server.
+function importChatGPTDraft(){
+ const marker='#finance-import=';
+ if(!location.hash.startsWith(marker))return;
+ let item;
+ try{
+  const encoded=location.hash.slice(marker.length);
+  if(encoded.length>4500)throw Error('payload too long');
+  item=JSON.parse(decodeURIComponent(encoded));
+  if(item.type!=='transaction'||!['income','expense'].includes(item.kind))throw Error('unsupported transaction');
+  const amount=Number(item.amount);
+  if(!Number.isFinite(amount)||amount<=0||amount>1e15)throw Error('invalid amount');
+  if(item.currency&&!['IRT','IRR','USD','EUR'].includes(item.currency))throw Error('unsupported currency');
+  if(item.scope&&!['personal','business'].includes(item.scope))throw Error('invalid scope');
+ }catch(err){
+  history.replaceState(null,'',location.pathname+location.search);
+  alert('لینک ثبت اطلاعات معتبر نیست. هیچ داده‌ای ذخیره نشد.');
+  return;
+ }
+ history.replaceState(null,'',location.pathname+location.search);
+ if(($('amount').value||$('memo').value)&&!confirm('پیش‌نویس فعلی با اطلاعات ChatGPT جایگزین شود؟'))return;
+ $('amount').value=Number(item.amount);
+ $('kind').value=item.kind;
+ $('scope').value=item.scope==='business'?'business':'personal';
+ $('category').value=String(item.category||'').slice(0,100);
+ $('memo').value=String(item.memo||'').slice(0,500);
+ let candidates=db.accounts.filter(a=>!item.currency||a.currency===item.currency);
+ let matched=candidates.find(a=>item.accountName&&a.name.trim()===String(item.accountName).trim());
+ $('account').value=(matched||((!item.accountName&&candidates.length===1)?candidates[0]:null))?.id||'';
+ tab('transactions');
+ alert(db.accounts.length===0?'پیش‌نویس از ChatGPT آماده شد. ابتدا در بخش حساب‌ها یک حساب بساز، سپس تراکنش را بررسی و تأیید کن.':'پیش‌نویس از ChatGPT آماده شد. مبلغ، ارز حساب، نوع و توضیح را بررسی کن؛ هیچ اطلاعاتی هنوز ثبت نشده است.');
+}
+window.addEventListener('hashchange',importChatGPTDraft);
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{});
+render();
+importChatGPTDraft();
 </script></body></html>
