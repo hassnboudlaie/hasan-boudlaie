@@ -1,0 +1,55 @@
+/* Entry screen: one clear starting action, readable at phone width. */
+body.kish-perdoo #authScreen{background:#edf3f7;color:#17394f;padding:24px 16px;overflow:auto;overflow-x:hidden;color-scheme:light}
+body.kish-perdoo #authScreen .entry-shell{width:min(960px,100%);min-height:0;margin:24px auto;background:#fff;border:1px solid #d8e3eb;border-radius:20px;box-shadow:0 12px 44px #16384e10;color:#17394f}
+body.kish-perdoo #authScreen .entry-head{height:auto;min-height:90px;padding:20px 28px;background:#fff;border-bottom:1px solid #e4ebf0;gap:16px}
+body.kish-perdoo #authScreen .entry-brand{min-width:0;gap:14px}
+body.kish-perdoo #authScreen .entry-brand img{width:112px;height:58px;background:#153c56;border-radius:8px;padding:7px}
+body.kish-perdoo #authScreen .entry-brand-copy{display:block;color:#17394f}
+body.kish-perdoo #authScreen .entry-brand-copy b{font-size:15px;line-height:1.8;color:#17394f}
+body.kish-perdoo #authScreen .entry-brand-copy span{display:block;font-size:11px;line-height:1.6;color:#526b7c;max-width:290px}
+body.kish-perdoo #authScreen .entry-brand-line{display:none}
+body.kish-perdoo #authScreen .lang-switch{flex-shrink:0;border:1px solid #bdceda;background:#f4f7fa;border-radius:10px;padding:3px}
+body.kish-perdoo #authScreen .lang-switch button{min-width:44px;min-height:44px;background:transparent;color:#294a60;font-size:13px;border-radius:7px}
+body.kish-perdoo #authScreen .lang-switch button.active{background:#163f58;color:#fff}
+body.kish-perdoo #authScreen .home-launchpad{padding:36px 40px 24px;gap:0;max-width:none}
+body.kish-perdoo #authScreen .home-intro{width:100%;max-width:none;align-self:stretch;background:transparent;border:0;padding:0;margin:0 0 28px;border-radius:0;box-shadow:none;text-align:start}
+body.kish-perdoo #authScreen .home-intro small{display:block;font-size:12px;letter-spacing:.1em;color:#386679;direction:ltr;text-align:start}
+body.kish-perdoo #authScreen .home-intro h1{font-size:clamp(28px,4vw,40px);line-height:1.5;color:#17394f;margin:10px 0}
+body.kish-perdoo #authScreen .home-intro p{font-size:17px;line-height:1.9;color:#4c6576;max-width:620px;margin:0}
+body.kish-perdoo #authScreen .launch-actions{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;margin:0}
+body.kish-perdoo #authScreen .home-card{min-width:0;margin:0;padding:24px;background:#f6f9fb;color:#17394f;border:1px solid #d5e1e9;border-radius:14px;box-shadow:none;display:flex;flex-direction:column;align-items:stretch}
+body.kish-perdoo #authScreen .execution-choice{order:-1;background:#153f58;border-color:#153f58;color:#fff}
+body.kish-perdoo #authScreen .home-card .home-icon{background:#e4edf3;color:#28566c;width:40px;height:40px;border-radius:10px;font-size:23px;display:grid;place-items:center;margin-bottom:12px}
+body.kish-perdoo #authScreen .execution-choice .home-icon{background:#2b566f;color:#fff}
+body.kish-perdoo #authScreen .home-card h2{color:#17394f;font-size:21px;line-height:1.6;margin:0 0 6px}
+body.kish-perdoo #authScreen .home-card p{color:#4c6576;font-size:15px;line-height:1.9;margin:0 0 22px}
+body.kish-perdoo #authScreen .execution-choice h2{color:#fff}
+body.kish-perdoo #authScreen .execution-choice p{color:#dcebf3}
+body.kish-perdoo #authScreen .home-card .btn{margin-top:auto;min-height:50px;width:100%;font-family:inherit;font-size:16px;font-weight:700;line-height:1.6;border-radius:9px;border:1px solid #b2c5d2;background:#fff;color:#17394f;box-shadow:none}
+body.kish-perdoo #authScreen .execution-choice .btn{background:#fff;color:#123c55;border-color:#fff}
+body.kish-perdoo #authScreen .home-card .btn:hover{background:#e7f1f6}
+body.kish-perdoo #authScreen button:focus-visible{outline:3px solid #c26b16;outline-offset:4px}
+body.kish-perdoo #authScreen #practiceNotice{font-size:13px;line-height:1.9;color:#4c6576;background:transparent;border:0;border-radius:0;padding:0;margin:20px 0 0}
+body.kish-perdoo #authScreen .entry-foot{padding:18px 24px;font-size:12px;line-height:1.8;color:#526b7c;border-top:1px solid #e4ebf0;background:#f8fafc}
+body.kish-perdoo #authScreen #platformHomeQuick,body.kish-perdoo #authScreen .learning-choice,body.kish-perdoo #authScreen .home-guide{display:none!important}
+@media(max-width:640px){
+ body.kish-perdoo #authScreen{padding:12px}
+ body.kish-perdoo #authScreen .entry-shell{margin:8px auto;border-radius:16px}
+ body.kish-perdoo #authScreen .entry-head{padding:16px;gap:10px;min-height:80px}
+ body.kish-perdoo #authScreen .entry-brand img{width:86px;height:48px}
+ body.kish-perdoo #authScreen .entry-brand-copy{display:none}
+ body.kish-perdoo #authScreen .home-launchpad{padding:26px 20px 20px}
+ body.kish-perdoo #authScreen .home-intro{margin-bottom:22px}
+ body.kish-perdoo #authScreen .home-intro p{font-size:16px}
+ body.kish-perdoo #authScreen .launch-actions{grid-template-columns:minmax(0,1fr);gap:14px}
+ body.kish-perdoo #authScreen .home-card{padding:20px}
+ body.kish-perdoo #authScreen .home-card .home-icon{display:none}
+ body.kish-perdoo #authScreen .home-card p{margin-bottom:16px}
+}
+/* The entry is a screen, not an overlay exposing the previous module below it. */
+body.kish-perdoo:has(#authScreen:not(.hidden)) #executionApp{display:none!important}
+body.kish-perdoo #authScreen .home-intro{background:transparent!important;padding:0!important;box-shadow:none!important}
+body.kish-perdoo #authScreen .home-intro h1:focus{outline:none}
+body.kish-perdoo #authScreen .execution-choice{background:#153f58!important;box-shadow:none!important}
+body.kish-perdoo #authScreen .execution-choice .btn{background:#fff!important;color:#123c55!important;border-color:#fff!important}
+body.kish-perdoo #authScreen .document-entry{background:#f6f9fb!important;box-shadow:none!important}

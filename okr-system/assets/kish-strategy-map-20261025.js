@@ -172,7 +172,7 @@ function render(data,pillarId){
  const allPillars=data.strategy.pillars||[],pillarMap=new Map(allPillars.map(p=>[p.id,p]));
  const roots=allPillars.filter(p=>!pillarMap.has(p.parentId)||p.parentId===p.id);
  const filteredPillars=pillarId?allPillars.filter(p=>p.id===pillarId):(roots.length?roots:allPillars);
- const goalMap=new Map(data.goals.map(g=>[g.id,g])),cycleMap=cycleIndex(data);
+ const goalMap=new Map((data.alignmentGoals||data.goals).map(g=>[g.id,g])),cycleMap=cycleIndex(data);
  const pillarIds=new Set((data.strategy.pillars||[]).map(p=>p.id));
  const years=[...new Set(data.cycles.map(c=>period(c,data.cadences).year).filter(Boolean))].sort((a,b)=>b-a);
  const stray=data.goals.filter(g=>!pillarOf(g,goalMap,pillarIds)).filter(g=>state.year==='all'||String(cycleMap.get(g.id)?.year)===state.year||(!cycleMap.has(g.id)&&state.showUnassigned));
@@ -215,6 +215,6 @@ document.addEventListener('pointerdown',e=>{const v=e.target.closest('#kmViewpor
 document.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;drag.view.scrollLeft=drag.left-(e.clientX-drag.x);drag.view.scrollTop=drag.top-(e.clientY-drag.y);});
 document.addEventListener('pointerup',()=>{if(drag)drag.view.style.cursor='';drag=null;});
 document.addEventListener('pointercancel',()=>{if(drag)drag.view.style.cursor='';drag=null;});
-window.KishMapView={render,refresh(){window.KishMapBridge?.refresh();}};
+window.KishMapView={render,setExpanded(data,expanded){state.collapsed=expanded?new Set():new Set([...data.goals.map(g=>g.id),...(data.strategy.pillars||[]).map(p=>'pillar:'+p.id)]);},refresh(){window.KishMapBridge?.refresh();}};
 window.addEventListener('DOMContentLoaded',()=>{if(location.hash.startsWith('#map'))window.KishMapBridge?.refresh();});
 })();

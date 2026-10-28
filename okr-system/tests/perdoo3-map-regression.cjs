@@ -53,3 +53,17 @@ cross.progressMode='weighted';
 delete cross.krs[0].weight;
 assert.equal(window.KishTeamView.progress(cross),null,'Unknown weight is consistent across views');
 console.log('PASS Kish Map and Team cross-view regression suite');
+// Filtering a parent out must not detach its matching descendant from the pillar.
+data=fixture();
+const parent=data.goals[0];
+const child={...parent,id:'filtered-child',parentId:parent.id,objective:'Visible filtered child',krs:[]};
+data.alignmentGoals=[parent,child];data.goals=[child];
+out=window.KishMapView.render(data);
+assert.ok(!out.includes('km-stray'),'filtered parent remains available for ancestry only');
+assert.ok(!out.includes(parent.objective),'filtered parent is not displayed');
+assert.equal(out.split('Visible filtered child').length-1,1);
+window.KishMapView.setExpanded(data,false);out=window.KishMapView.render(data);
+assert.ok(!out.includes('Visible filtered child'),'collapse closes nested pillar');
+window.KishMapView.setExpanded(data,true);out=window.KishMapView.render(data);
+assert.ok(out.includes('Visible filtered child'),'expand restores nested pillar');
+console.log('PASS integrated Map: filtered ancestry and expand/collapse');
