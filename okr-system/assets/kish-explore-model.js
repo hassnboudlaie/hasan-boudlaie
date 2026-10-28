@@ -78,7 +78,7 @@ function boardPeriods(mode='weekly',count=6,asOf=new Date()){
  }
  const parts=new Intl.DateTimeFormat('en-US-u-ca-persian',{year:'numeric',month:'numeric',timeZone:'UTC'});
  const results=[],seen=new Set();
- for(let i=0;i<1600&&results.length<length;i++){
+ for(let i=0;i<Math.max(1600,length*110)&&results.length<length;i++){
   const at=new Date(day(last)-i*86400000).toISOString().slice(0,10);
   const data=parts.formatToParts(new Date(at+'T00:00:00Z'));
   const year=Number(data.find(x=>x.type==='year')?.value),month=Number(data.find(x=>x.type==='month')?.value);
