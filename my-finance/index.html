@@ -131,6 +131,13 @@ async function cloudConnect(){
   await cloudPull()
  }catch(e){cloudStatus('اتصال برقرار نشد: '+String(e.message||e).slice(0,200))}
 }
+async function cloudFetchTransfers(){
+ const range=encodeURIComponent('Transfers!A1:N10001');
+ const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
+ const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
+ if(!response.ok)throw Error('Google Transfers HTTP '+response.status);
+ return (await response.json()).values||[];
+}
 async function cloudFetchTransactions(){
  const range=encodeURIComponent('Transactions!A1:N10001');
  const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
@@ -188,8 +195,9 @@ async function cloudPull(){
   for(const r of synced)map.set(r.id,r);
   const transactionRows=await cloudFetchTransactions();
   const txCount=cloudApplyTransactions(transactionRows);
+  const transferCount=cloudApplyTransfers(await cloudFetchTransfers());
   db.receivables=[...map.values()];save();
-  cloudStatus('همگام شد · '+txCount+' تراکنش · '+synced.length+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
+  cloudStatus('همگام شد · '+txCount+' تراکنش · '+transferCount+' انتقال · '+synced.length+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
  }catch(e){cloudStatus('خطای خواندن: '+String(e.message||e).slice(0,200))}
  finally{cloudBusy=false}
 }
