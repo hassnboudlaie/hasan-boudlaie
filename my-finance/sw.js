@@ -1,4 +1,4 @@
-const CACHE='my-finance-preview-20261028-direct-save-v5';
+const CACHE='my-finance-preview-20261028-finance-sync-v6';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-v2.svg'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
