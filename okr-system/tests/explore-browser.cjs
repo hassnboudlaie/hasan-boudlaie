@@ -9,8 +9,24 @@ try{
  for(const [title,current,weight] of [['QA KR one','100','1'],['QA KR two','0','3']]){await page.getByRole('button',{name:'افزودن نتیجه کلیدی',exact:true}).click();await fill({text:title,owner:'QA owner',unit:'%',baseline:'0',target:'100',current,weight,measurementNote:'Synthetic CI evidence'});await page.getByRole('button',{name:'ذخیره',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await page.goto(goalUrl);}
  await page.goto(root+'#explore');for(const view of ['cascade','map','board']){await page.locator('[data-kx-view="'+view+'"]').click();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);}
  await page.reload();await page.locator('[data-kx-record="'+goalId+'"]').waitFor();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);
+ // Perdoo 3.0 parity: eight sort fields, reversible order, demo-mode disclosure, all read-only.
+ assert.equal(await page.locator('[data-kx-sort] option').count(),8);
+ assert.ok(await page.locator('.kx-local-note').isVisible());
+ await page.locator('[data-kx-view="board"]').click();
+ await page.locator('[data-kx-sort]').selectOption('title');
+ const labels=()=>page.locator('.kx-board tbody tr td:first-child a').allTextContents();
+ const ascending=await labels();assert.ok(ascending.length>20);
+ const persian=new Intl.Collator('fa',{numeric:true,sensitivity:'base'});
+ assert.ok(ascending.every((name,i)=>i===0||persian.compare(ascending[i-1],name)<=0),'ascending Persian collation');
+ await page.locator('[data-kx-sort-direction]').selectOption('desc');
+ const descending=await labels();
+ assert.ok(descending.every((name,i)=>i===0||persian.compare(descending[i-1],name)>=0),'descending Persian collation');
+ assert.notDeepEqual(descending,ascending,'direction changes display order');
+ await page.locator('[data-kx-sort]').selectOption('owner');
+ assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
  await page.locator('.kx-filters summary').click();await page.locator('[data-kx-filter="types"]').selectOption(['objective']);assert.equal(await page.locator('[data-kx-record]').count(),14);
- await page.getByRole('button',{name:'ذخیره نمای این مرورگر',exact:true}).click();await page.locator('[data-kx-save] input').fill('QA objectives');await page.getByRole('button',{name:'ذخیره نما',exact:true}).click();await page.reload();await page.locator('.kx-filters summary').click();await page.locator('[data-kx-saved]').selectOption({label:'QA objectives'});assert.equal(await page.locator('[data-kx-record]').count(),14);
+ await page.locator('[data-kx-sort]').selectOption('lastUpdate');await page.locator('[data-kx-sort-direction]').selectOption('asc');
+ await page.getByRole('button',{name:'ذخیره نمای این مرورگر',exact:true}).click();await page.locator('[data-kx-save] input').fill('QA objectives');await page.getByRole('button',{name:'ذخیره نما',exact:true}).click();await page.reload();await page.locator('.kx-filters summary').click();await page.locator('[data-kx-saved]').selectOption({label:'QA objectives'});assert.equal(await page.locator('[data-kx-record]').count(),14);assert.equal(await page.locator('[data-kx-sort]').inputValue(),'lastUpdate');assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
  const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish_qa_explore-ci:kish_okr_free_practice_v1')));assert.equal(snapshot.state.companyOkrs.find(g=>g.id===goalId).progressMode,'weighted');assert.deepEqual(snapshot.state.companyOkrs.find(g=>g.id===goalId).krs.map(k=>k.weight),[1,3]);assert.ok(await page.evaluate(()=>localStorage.getItem('kish_qa_explore-ci:kish_okr_before_unified_explore_v1')));
  // Cross-tab optimistic revision guard: a stale edit must not overwrite newer data.
  const second=await context.newPage();await second.goto(root+'#explore');await second.waitForSelector('.kx-app');await page.getByRole('button',{name:'＋ رکن',exact:true}).click();await page.locator('[data-kx-pillar] input').fill('QA first writer');await page.getByRole('button',{name:'ذخیره رکن',exact:true}).click();await second.getByRole('button',{name:'＋ رکن',exact:true}).click();await second.locator('[data-kx-pillar] input').fill('QA stale writer');await second.getByRole('button',{name:'ذخیره رکن',exact:true}).click();assert.match(await second.locator('[data-kx-error]').innerText(),/ذخیره|تعارض/);await second.close();
