@@ -7,8 +7,8 @@ main{max-width:990px;margin:auto;padding:18px 24px 82px}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;padding:10px 0 18px;border-bottom:1px solid var(--line)}
 header h1{font-size:clamp(22px,3vw,29px);line-height:1.4;letter-spacing:-.6px;margin:0;font-weight:800}
 .brand-wrap{display:flex;align-items:center;gap:13px}
-.brand-mark{display:grid;place-items:center;width:49px;height:49px;flex-shrink:0;border-radius:16px;background:#0c5960;box-shadow:0 7px 20px rgba(6,83,84,.17)}
-.brand-mark svg{width:31px;height:31px}
+.brand-mark{display:grid;place-items:center;width:49px;height:49px;flex-shrink:0;border-radius:16px;background:#09264e;box-shadow:0 7px 20px rgba(8,29,57,.19);overflow:hidden}
+.brand-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 .brand-tag{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.7px;line-height:1.2}
 header .row{gap:8px}
 header button.alt{width:43px;min-width:43px;border-radius:13px;padding:8px}
