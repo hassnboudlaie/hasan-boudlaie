@@ -172,3 +172,17 @@ body.kish-perdoo #platformBody .p-page>h1+p{color:#d4e4ef!important}
 .kx-app [data-kx-saved]{max-width:380px;min-height:44px}
 .kx-app [data-kx-saved] option{padding:5px}
 @media(max-width:640px){.kx-app .kx-saveview-tools{width:100%}.kx-app .kx-saveview-tools button{flex:1 1 125px}}
+
+/* Perdoo 3.0 Cascade — field-level editing without a second data store. */
+.kx-app .kx-inline-triggers{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.kx-app .kx-inline-triggers button{font:inherit;font-size:12px;font-weight:700;min-height:36px;padding:5px 9px;background:#edf6fb;color:#154a6a;border:1px solid #a3c5d7;border-radius:7px}
+.kx-app .kx-inline-cell{min-height:44px;width:100%;text-align:start;direction:rtl;font:inherit;background:transparent;color:#155579;border:1px solid transparent;border-radius:7px;padding:8px;cursor:pointer}
+.kx-app .kx-inline-cell:hover,.kx-app .kx-inline-cell:focus-visible,.kx-app .kx-inline-pencil:hover,.kx-app .kx-inline-pencil:focus-visible{background:#e6f2fa;border-color:#699eba;outline:2px solid #34799d;outline-offset:1px}
+.kx-app .kx-inline-pencil{min-width:38px;min-height:38px;margin-inline-start:8px;padding:5px;background:transparent;color:#1c5c7f;border:1px solid transparent;border-radius:6px;font:inherit;cursor:pointer}
+.kx-app form[data-kx-inline]{display:flex;flex-direction:column;gap:10px;margin-top:10px;padding:12px;border:1px solid #83afc7;background:#f5fafe;border-radius:11px;color:#163d56}
+.kx-app form[data-kx-inline]>label{display:flex;flex-direction:column;gap:7px;font-weight:700}
+.kx-app form[data-kx-inline] input,.kx-app form[data-kx-inline] select{display:block;min-height:44px;width:100%;font:inherit;padding:8px;border:1px solid #92b4c7;border-radius:7px;background:#fff;color:#163d56;max-width:100%}
+.kx-app form[data-kx-inline] .kx-inline-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kx-app form[data-kx-inline] .kx-inline-actions button{min-height:44px;padding:6px 12px}
+.kx-app form[data-kx-inline] [data-kx-error]:not(:empty){color:#9c2e2e;font-weight:700}
+@media(max-width:640px){.kx-app .kx-inline-triggers button{min-height:40px}.kx-app form[data-kx-inline]{min-width:220px}}
