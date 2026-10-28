@@ -6,7 +6,7 @@ function renderActions(){
  const data=bridge.getData(),items=[...(data.receivables||[])].reverse();
  const cards=$('rcvlist')?.querySelectorAll('.notice')||[];
  cards.forEach((card,index)=>{
-  const r=items[index];if(!r||r.status==='paid'||card.querySelector('button[data-rcv]'))return;
+  const r=items[index];if(!r||r.status==='paid'||r.expected==null||card.querySelector('button[data-rcv]'))return;
   const remain=Math.max(0,Number(r.expected||0)-Number(r.receivedAmount||0));
   const button=document.createElement('button');button.className='alt';
   button.dataset.rcv=r.id;button.textContent='ثبت وصول ('+money(remain)+' '+r.currency+')';
@@ -16,7 +16,7 @@ function renderActions(){
 $('rcvlist').addEventListener('click',event=>{
  const button=event.target.closest('button[data-rcv]');if(!button)return;
  const data=bridge.getData(),r=data.receivables.find(x=>x.id===button.dataset.rcv);
- if(!r||r.status==='paid')return;
+ if(!r||r.status==='paid'||r.expected==null)return;
  const remaining=Math.max(0,Number(r.expected||0)-Number(r.receivedAmount||0));
  const raw=prompt('مبلغ دریافت‌شده را به '+r.currency+' وارد کنید. مانده قابل وصول: '+money(remaining),String(remaining));
  if(raw===null)return;
