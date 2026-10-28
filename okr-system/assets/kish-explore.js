@@ -124,7 +124,7 @@ function goalTree(rows,d){let hiddenDepth=null;const ordered=M.tree(rows).filter
 function map(rows,d){
  const route=location.hash.split('/'),mode=route[2]||'goal',strategy=mode==='strategy',kpiTree=mode==='kpi';
  const chooser='<nav class="kc-tabs" aria-label="نماهای پیش‌فرض Map">'+
- '<a href="#explore/map" '+(!strategy&&!kpiTree?'aria-current="page"':'')+'>درخت اهداف</a>'+
+ '<a href="#explore/map" '+(!strategy&&!kpiTree?'aria-current="page"':'')+'>درخت همه اهداف</a>'+
  '<a href="#explore/map/strategy" '+(strategy?'aria-current="page"':'')+'>نقشه راهبرد</a>'+
  '<a href="#explore/map/kpi" '+(kpiTree?'aria-current="page"':'')+'>درخت KPI</a></nav>';
  if(kpiTree){
