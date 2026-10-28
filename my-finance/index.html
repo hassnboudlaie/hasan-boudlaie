@@ -152,6 +152,19 @@ function cloudApplyTransactions(rows){
  }
  db.tx=[...records.values()];return count;
 }
+function cloudApplyTransfers(rows){
+ const header=['id','occurredAt','amount','currency','fromAccount','toCounterparty','toCardLast4','description','paymentMethod','purpose','status','source','createdAt','notes'];
+ if(!Array.isArray(rows)||!rows.length||header.some((v,i)=>rows[0][i]!==v))throw Error('ساختار Transfers معتبر نیست.');
+ const existing=new Map(db.transfers.map(t=>[t.id,t]));let count=0;
+ for(const row of rows.slice(1)){
+  if(!row[0])continue;
+  const id=String(row[0]),amount=Number(row[2]),currency=String(row[3]);
+  if(!id||id.length>120||!Number.isFinite(amount)||amount<=0||!['IRR','IRT','USD','EUR'].includes(currency))continue;
+  existing.set(id,{type:'external',id,occurredAt:String(row[1]||'').slice(0,40),amount,currency,fromAccount:String(row[4]||'').slice(0,120),recipient:String(row[5]||'').slice(0,160),last4:String(row[6]||'').slice(0,4),description:String(row[7]||'انتقال وجه').slice(0,200),paymentMethod:String(row[8]||'').slice(0,40),purpose:String(row[9]||'').slice(0,200),status:String(row[10]||'pending_classification').slice(0,40),source:'chatgpt',notes:String(row[13]||'').slice(0,500)});
+  count++;
+ }
+ db.transfers=[...existing.values()];return count;
+}
 async function cloudPull(){
  if(cloudBusy)return;
  if(!cloudValid(cloudConfig)){cloudStatus('ابتدا تنظیمات Google Sheets را وارد کنید.');tab('settings');return}
