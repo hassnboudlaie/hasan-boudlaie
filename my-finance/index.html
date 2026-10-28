@@ -1,4 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#075e61"><link rel="manifest" href="./manifest.webmanifest?v=6"><link rel="icon" href="./icon-v2.svg" type="image/svg+xml"><title>داشبورد مالی من</title><style>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#112e40"><link rel="manifest" href="./manifest.webmanifest?v=7"><link rel="icon" href="./icon-v2.svg?v=20261028r3" type="image/svg+xml"><link rel="stylesheet" href="./premium.css?v=20261028r3"><title>داشبورد مالی من</title><style>
 :root{font-family:Tahoma,Arial,sans-serif;--bg:#f4f7f8;--card:white;--fg:#193139;--muted:#60757a;--line:#dce6e8;--accent:#087e75}body.dark{--bg:#0c1920;--card:#192a32;--fg:#e9f5f5;--muted:#afc1c4;--line:#35464c;--accent:#0a8f83}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg)}main{max-width:980px;margin:auto;padding:20px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:22px}h2{font-size:17px}button,input,select{font:inherit}button{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 15px;cursor:pointer}button.alt{background:var(--card);color:var(--fg);border:1px solid var(--line)}input,select{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:11px;min-width:0;width:100%}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric b{display:block;font-size:23px;margin-top:12px}.muted{color:var(--muted);font-size:13px}.entry{display:flex;gap:8px}.entry input{flex:1}.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:10px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap}section[hidden]{display:none}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:start;border-bottom:1px solid var(--line)}.scroll{overflow:auto}label{font-size:12px;color:var(--muted)}.notice{background:var(--bg);border-radius:10px;padding:12px}.danger{color:#d45d5d}@media(max-width:550px){.grid{grid-template-columns:repeat(2,1fr)}.metric b{font-size:17px}.fields{grid-template-columns:1fr}main{padding:12px}h1{font-size:19px}}
 
 /* Mobile-first refinement: visual only; financial storage schema unchanged */
@@ -8,9 +8,12 @@ html{font-size:16px;-webkit-text-size-adjust:100%}body{line-height:1.65}button,i
 /* Finance mobile redesign 2026-10-28: visual layer only; no financial data migration */
 :root{--bg:#f2f6f6;--fg:#16343a;--muted:#526b71;--line:#d7e4e4;--accent:#087e75}main{max-width:860px}header{padding:14px 0}header h1{font-size:clamp(23px,4vw,29px);font-weight:800;letter-spacing:-.4px}.card{border-radius:20px;box-shadow:0 5px 22px rgba(11,48,52,.055)}h2{font-size:20px;font-weight:800}.metric{min-height:118px}.metric b{font-size:26px;color:var(--accent)}button{transition:filter .15s ease}button:hover{filter:brightness(.95)}.tabs button{border-radius:12px}.entry input{font-size:16px}.muted{font-size:14px}footer{opacity:.8}
 @media(max-width:600px){main{padding:16px 14px 32px}header{padding:6px 0 14px}header h1{font-size:24px}header .row button{min-width:45px}.card{padding:18px 16px;margin:14px 0;border-radius:19px}h2{font-size:19px;margin:0 0 16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid .card{padding:16px;margin:0;min-height:116px}.metric{font-size:15px}.metric b{font-size:24px;margin-top:12px}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}.tabs button{min-height:48px;padding:9px 4px;font-size:14px;font-weight:700}.entry{align-items:stretch}.entry input{font-size:16px;min-height:50px}.entry button{min-width:52px}.fields{grid-template-columns:1fr;gap:12px}.fields input,.fields select{font-size:16px;min-height:48px}button{min-height:46px}.muted{font-size:13px;line-height:1.9}footer{font-size:12px}}
-</style></head><body><main><header><h1 id="title">داشبورد مالی من</h1><div class="row"><button class="alt" onclick="toggleTheme()">☾</button><button class="alt" onclick="toggleLang()" id="lang">EN</button></div></header>
-<div class="card"><h2 data-fa="ثبت سریع تراکنش" data-en="Quick entry">ثبت سریع تراکنش</h2><div class="entry"><input id="quick" placeholder="مثلاً: امروز ۵۰۰ هزار تومان هزینه کردم"><button onclick="parseQuick()">➕</button></div><p class="muted" data-fa="پیش از ثبت، اطلاعات تراکنش را تأیید می‌کنید." data-en="Review and confirm before saving.">پیش از ثبت، اطلاعات تراکنش را تأیید می‌کنید.</p></div>
-<div class="grid"><div class="card metric"><span data-fa="موجودی" data-en="Balance">موجودی</span><b id="balance">—</b></div><div class="card metric"><span data-fa="درآمد" data-en="Income">درآمد</span><b id="income">—</b></div><div class="card metric"><span data-fa="هزینه" data-en="Expense">هزینه</span><b id="expense">—</b></div><div class="card metric"><span data-fa="مطالبات" data-en="Receivables">مطالبات</span><b id="rcvcount">—</b></div></div>
+
+/* My Finance premium mobile design */
+:root{--bg:#f5f7f9;--card:#fff;--fg:#142b36;--muted:#526875;--line:#e1e8ed;--accent:#086b69}body{background:radial-gradient(ellipse at 95% 0%,#e5f3f0 0%,transparent 48%),var(--bg)}body.dark{--bg:#101c26;--card:#1a2b37;--fg:#f0f7f8;--muted:#b9ccd1;--line:#344956;--accent:#18a89b;background:var(--bg)}main{max-width:940px}header{border-bottom:1px solid var(--line);margin-bottom:16px}header h1{letter-spacing:-.5px}.card{border:1px solid var(--line);border-radius:24px;box-shadow:0 12px 35px rgba(13,46,58,.045)}.grid .card{background:linear-gradient(150deg,var(--card),var(--bg))}.metric b{font-variant-numeric:tabular-nums}.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0}.tabs button{border:1px solid var(--line);background:var(--card);color:var(--fg)}.tabs button:focus-visible{outline:3px solid var(--accent)}button:not(.alt){background:var(--accent)}input:focus,select:focus{border-color:var(--accent);outline:2px solid color-mix(in srgb,var(--accent) 25%,transparent)}@media(max-width:600px){main{padding:12px 14px 38px}header h1{font-size:23px}.card{border-radius:22px}.tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tabs button{font-size:12px;padding:10px 3px}.grid .card{min-height:115px}.metric b{font-size:22px}}
+</style></head><body><main><header><div class="brand-wrap"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M7 34.5 18 23l8 7 15-17" stroke="#B7FBE0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 13h10v10" stroke="#B7FBE0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="brand-tag">MY FINANCE</div><h1 id="title">داشبورد مالی من</h1><div id="cloud-indicator" class="cloud-status" role="status">حالت محلی · اتصال امن لازم است</div></div></div><div class="row"><button class="alt" onclick="toggleTheme()">☾</button><button class="alt" onclick="toggleLang()" id="lang">EN</button></div></header>
+<div class="card"><h2 data-fa="ثبت سریع تراکنش" data-en="Quick entry">ثبت سریع تراکنش</h2><div class="entry"><input id="quick" placeholder="مثلاً: امروز ۵۰۰ هزار تومان هزینه کردم"><button type="button" onclick="startVoiceEntry()" title="ورود صوتی داخل برنامه" aria-label="ورود صوتی داخل برنامه">🎙</button><button onclick="parseQuick()" aria-label="بررسی ورودی سریع">➜</button></div><p class="muted" data-fa="پیش از ثبت، اطلاعات تراکنش را تأیید می‌کنید." data-en="Review and confirm before saving.">پیش از ثبت، اطلاعات تراکنش را تأیید می‌کنید.</p></div>
+<div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div><div class="grid"><div class="card metric"><span data-fa="موجودی" data-en="Balance">موجودی</span><b id="balance">—</b></div><div class="card metric"><span data-fa="درآمد" data-en="Income">درآمد</span><b id="income">—</b></div><div class="card metric"><span data-fa="هزینه" data-en="Expense">هزینه</span><b id="expense">—</b></div><div class="card metric"><span data-fa="مطالبات" data-en="Receivables">مطالبات</span><b id="rcvcount">—</b></div></div>
 <div class="tabs"><button class="alt" onclick="tab('transactions')" data-fa="تراکنش‌ها" data-en="Transactions">تراکنش‌ها</button><button class="alt" onclick="tab('accounts')" data-fa="حساب‌ها" data-en="Accounts">حساب‌ها</button><button class="alt" onclick="tab('transfers')" data-fa="انتقال و ارز" data-en="Transfers">انتقال و ارز</button><button class="alt" onclick="tab('receivables')" data-fa="مطالبات" data-en="Receivables">مطالبات</button><button class="alt" onclick="tab('reports')" data-fa="گزارش" data-en="Reports">گزارش</button><button class="alt" onclick="tab('settings')" data-fa="تنظیمات" data-en="Settings">تنظیمات</button></div>
 <section id="transactions"><div class="card"><h2 data-fa="ثبت درآمد یا هزینه" data-en="Add transaction">ثبت درآمد یا هزینه</h2><div class="fields"><select id="kind"><option value="expense">هزینه / Expense</option><option value="income">درآمد / Income</option></select><input id="amount" type="number" min="0" placeholder="مبلغ (تومان)"><select id="account"></select><select id="scope"><option value="personal">شخصی / Personal</option><option value="business">کاری / Business</option></select><input id="category" placeholder="دسته‌بندی"><input id="memo" placeholder="توضیح"></div><button onclick="saveTx()">بررسی و تأیید ثبت</button></div><div class="card"><h2>تراکنش‌های ثبت‌شده</h2><div class="scroll"><table><tbody id="txrows"></tbody></table></div></div></section>
 <section id="accounts" hidden><div class="card"><h2>حساب جدید / New account</h2><div class="fields"><input id="accname" placeholder="نام حساب"><select id="currency"><option>IRT</option><option>USD</option><option>EUR</option><option>IRR</option></select><input id="opening" type="number" placeholder="موجودی اولیه (اختیاری)"></div><button onclick="addAccount()">افزودن حساب</button></div><div class="card" id="accountlist"></div></section>
@@ -34,25 +37,51 @@ html{font-size:16px;-webkit-text-size-adjust:100%}body{line-height:1.65}button,i
 <div class="card"><h2>ورود رکورد خصوصی / Private import</h2><input type="file" id="rcvimport" accept=".json,application/json" onchange="importReceivableFile(this)"><p class="muted">این فایل فقط در مرورگر شما خوانده می‌شود. فایل خصوصی را در GitHub منتشر نکنید؛ داده محلی رمزگذاری نشده است.</p></div>
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
-<section id="settings" hidden>
-<div class="card"><h2>Automatic Sync · اتصال مستقیم با ChatGPT</h2>
-<p class="muted">پس از یک‌بار اتصال امن، داده‌های ChatGPT به این اپ همگام می‌شوند. برای هر تراکنش لینک، دانلود یا تأیید مجدد نیاز نیست.</p>
-<div class="fields"><input id="apiorigin" inputmode="url" autocomplete="off" placeholder="Private Backend URL on Render"></div>
-<div class="row"><button class="alt" onclick="apiSave()">ذخیره آدرس</button><button onclick="apiConnect()">اتصال یک‌باره Google</button><button class="alt" onclick="apiPull()">همگام‌سازی</button></div>
-<p class="muted" id="apistatus" role="status">Backend خصوصی هنوز فعال نیست.</p>
-</div><div class="card"><h2>Cloud Sync — Google Sheets خصوصی</h2>
-<p class="muted">رکوردهایی که با دستور شما در ChatGPT ثبت می‌شوند، پس از اتصال امن به حساب Google در اپ نمایش داده می‌شوند. این اتصال فعلاً برای «مطالبات» فقط خواندنی است.</p>
-<div class="fields"><input id="cloudsheet" autocomplete="off" placeholder="Private Google Sheet ID"><input id="cloudclient" autocomplete="off" placeholder="Google OAuth Client ID"></div>
-<div class="row"><button class="alt" onclick="cloudSaveConfig()">ذخیره تنظیمات</button><button onclick="cloudConnect()">اتصال و همگام‌سازی با Google</button><button class="alt" onclick="cloudPull()">بازخوانی مطالبات</button></div>
-<p class="muted" id="cloudstatus" role="status">اتصال ابری هنوز تنظیم نشده است.</p>
-<p class="muted">برای راه‌اندازی یک‌باره، در Google Cloud یک OAuth Web Client بسازید؛ Google Sheets API را فعال کنید و همین دامنه GitHub Pages را در Authorized JavaScript Origins ثبت کنید. Access Token فقط در حافظه موقت صفحه می‌ماند.</p></div>
-<div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در همین مرورگر ذخیره می‌شوند. GitHub Pages هیچ پایگاه داده مالی برای این برنامه ندارد. ذخیره‌سازی محلی به‌معنای رمزگذاری اطلاعات نیست؛ تا تکمیل امنیت، داده حساس وارد نکنید.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود از ChatGPT: لینک اختصاصی پیش‌نویس را باز کنید؛ اطلاعات فقط پس از بررسی و تأیید شما ثبت می‌شوند. لینک‌های حاوی اطلاعات مالی را برای دیگران ارسال نکنید.</p></div></section>
-<footer class="muted">My Finance · UI v2.1 · Local browser storage · No financial data on GitHub</footer></main>
+<section id="settings" hidden><div class="card" id="supabase-sync"><h2>Supabase · Private Sync</h2><p class="muted">ورود امن و همگام‌سازی خصوصی درآمد و هزینه</p><div id="supabase-login"><input type="email" id="supabase-email" placeholder="ایمیل ورود"><button type="button" id="supabase-send">ارسال لینک ورود</button></div><div id="supabase-actions" hidden><button type="button" id="supabase-pull">دریافت تراکنش‌ها</button><button type="button" id="supabase-push">انتقال تراکنش‌های محلی</button><button type="button" id="supabase-logout">خروج</button></div><p id="supabase-status" role="status"></p></div>
+<div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در این دستگاه ذخیره می‌شوند و پس از ورود امن، در فضای خصوصی Supabase همگام خواهند شد. داده‌های محلی رمزگذاری نشده‌اند؛ در دستگاه مشترک از آن استفاده نکنید. اطلاعات واقعی در GitHub ثبت نمی‌شوند.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود اطلاعات از ChatGPT پس از اتصال امن انجام می‌شود. پیش‌نویس‌های قدیمی همچنان قابل واردکردن هستند.</p></div></section>
+<footer class="muted">My Finance · Private Finances · Secure cloud sync · No financial data on GitHub</footer></main>
 <script>
-const KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));function tab(id){document.querySelectorAll('section').forEach(s=>s.hidden=s.id!==id);if(id==='settings')cloudLoadScript().catch(()=>{})}function toggleTheme(){document.body.classList.toggle('dark')}function toggleLang(){lang=lang==='fa'?'en':'fa';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='fa'?'EN':'فا';document.querySelectorAll('[data-fa]').forEach(x=>x.textContent=x.dataset[lang]);render()}
-function parseQuick(){let s=$('quick').value.replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));let m=s.match(/([\d,.]+)\s*(میلیون|هزار|تومان)?/);if(!m)return alert('مبلغ مشخص نیست');let factor=m[2]==='میلیون'?1e6:m[2]==='هزار'?1e3:1;$('amount').value=Number(m[1].replace(/,/g,''))*factor;$('kind').value=/درآمد|دریافت|حقوق|واریز/.test(s)?'income':'expense';$('memo').value=$('quick').value;tab('transactions');alert('لطفاً مبلغ، حساب و نوع تراکنش را بررسی و تأیید کنید.')}
+let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));function tab(id){document.querySelectorAll('section').forEach(s=>s.hidden=s.id!==id);document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',String((b.getAttribute('onclick')||'').includes("'"+id+"'"))))}function toggleTheme(){document.body.classList.toggle('dark')}function toggleLang(){lang=lang==='fa'?'en':'fa';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='fa'?'EN':'فا';document.querySelectorAll('[data-fa]').forEach(x=>x.textContent=x.dataset[lang]);render()}
+function parsePersianNumber(raw){
+ const text=digits(raw).replace(/[،,](?=\d{3}(?:\D|$))/g,'').replace(/\u200c/g,' ').replace(/ي/g,'ی').replace(/ك/g,'ک');
+ const unit={هزار:1e3,میلیون:1e6,میلیارد:1e9};
+ const words={صفر:0,یک:1,یه:1,دو:2,سه:3,چهار:4,پنج:5,شش:6,هفت:7,هشت:8,نه:9,ده:10,یازده:11,دوازده:12,سیزده:13,چهارده:14,پانزده:15,شانزده:16,هفده:17,هجده:18,نوزده:19,بیست:20,سی:30,چهل:40,پنجاه:50,شصت:60,هفتاد:70,هشتاد:80,نود:90,صد:100,یکصد:100,دویست:200,سیصد:300,چهارصد:400,پانصد:500,ششصد:600,هفتصد:700,هشتصد:800,نهصد:900,نیم:.5};
+ const tokens=text.split(/[\s]+/),starts=tokens.findIndex(x=>(/^\d+(?:\.\d+)?$/.test(x)||Object.hasOwn(words,x))),limit=tokens.length;
+ if(starts<0)return null;
+ let total=0,group=0,found=false;
+ for(let i=starts;i<limit;i++){
+   const w=tokens[i].replace(/[.:؛؟!]/g,'');
+   if(w==='و')continue;
+   if(Object.hasOwn(unit,w)){total+=(group||1)*unit[w];group=0;found=true;continue}
+   if(/^\d+(?:\.\d+)?$/.test(w)){group+=Number(w);found=true;continue}
+   if(Object.hasOwn(words,w)){group+=words[w];found=true;continue}
+   if(['تومان','تومن','ریال','دلار','یورو','رو','برای','بابت'].includes(w))break;
+   if(found)break;
+ }
+ return found?(total+group):null;
+}
+function parseQuick(){
+ const value=$('quick').value.trim();
+ const amount=parsePersianNumber(value);
+ if(!(amount>0))return alert('مبلغ را مشخص کنید؛ مثل «یک میلیون و چهارصد هزار تومان».');
+ $('amount').value=amount;
+ $('kind').value=/درآمد|دریافت|حقوق|واریز|فروش|سود/.test(value)?'income':'expense';
+ const category=/کله.?پاچه|صبحانه|ناهار|شام|رستوران|غذا|کافه/.test(value)?'خوراک و رستوران':/تاکسی|بنزین|اسنپ|رفت.?و.?آمد/.test(value)?'حمل و نقل':/خرید|سوپرمارکت/.test(value)?'خرید':'سایر';
+ $('category').value=category;
+ $('memo').value=value;
+ tab('transactions');
+ $('amount').focus();
+}
+function startVoiceEntry(){
+ const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Speech)return alert('تشخیص گفتار در این مرورگر در دسترس نیست. از ویس ChatGPT یا ورود متنی استفاده کنید.');
+ const r=new Speech();r.lang='fa-IR';r.interimResults=false;r.maxAlternatives=1;
+ r.onresult=e=>{$('quick').value=e.results[0][0].transcript;parseQuick()};
+ r.onerror=e=>alert('تشخیص گفتار انجام نشد: '+e.error);
+ r.start();
+}
 function addAccount(){let name=$('accname').value.trim(),currency=$('currency').value,opening=$('opening').value;if(!name)return alert('نام حساب لازم است');db.accounts.push({id:crypto.randomUUID(),name,currency,opening:opening===''?null:Number(opening)});$('accname').value='';$('opening').value='';save()}
-function saveTx(){let account=$('account').value,amount=Number($('amount').value),kind=$('kind').value;if(!account||!(amount>0))return alert('حساب و مبلغ معتبر لازم است');let a=db.accounts.find(x=>x.id===account);if(!confirm((kind==='income'?'درآمد':'هزینه')+' '+fmt(amount)+' '+a.currency+' — '+a.name+' ؟'))return;db.tx.push({id:crypto.randomUUID(),account,amount,kind,scope:$('scope').value,category:$('category').value,memo:$('memo').value,date:new Date().toISOString()});$('amount').value='';$('memo').value='';$('quick').value='';save()}
+function saveTx(){let account=$('account').value,amount=Number($('amount').value),kind=$('kind').value;if(!(amount>0))return alert('مبلغ معتبر لازم است');let a=db.accounts.find(x=>x.id===account),currency=a?.currency||'IRT';if(!confirm((kind==='income'?'درآمد':'هزینه')+' '+fmt(amount)+' '+currency+' — '+(a?.name||'حساب نامشخص')+' ؟'))return;db.tx.push({id:crypto.randomUUID(),account:account||null,currency,amount,kind,status:'completed',scope:$('scope').value,category:$('category').value,memo:$('memo').value,date:new Date().toISOString()});$('amount').value='';$('memo').value='';$('quick').value='';save()}
 function transfer(){let from=$('from').value,to=$('to').value,send=Number($('send').value),receive=Number($('receive').value),fee=Number($('fee').value||0);if(!from||!to||from===to||!(send>0)||!(receive>0)||fee<0)return alert('حساب‌ها و مبلغ‌ها را بررسی کنید');if(!confirm('انتقال '+fmt(send)+' از مبدأ و '+fmt(receive)+' به مقصد با کارمزد '+fmt(fee)+' ثبت شود؟'))return;db.transfers.push({id:crypto.randomUUID(),from,to,send,receive,fee,date:new Date().toISOString()});save()}
 
 const digits=s=>String(s??'').replace(/[۰-۹]/g,c=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(c))).replace(/[٠-٩]/g,c=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(c)));
@@ -92,189 +121,15 @@ function renderTransferList(){
   return '<tr><td>انتقال بین حساب‌های خودم</td><td>'+fmt(t.send)+' '+esc(db.accounts.find(a=>a.id===t.from)?.currency||'')+'</td><td>'+esc(label(t.from))+' ← '+esc(label(t.to))+'</td><td>ثبت‌شده</td></tr>'
  }).join(''):'<tr><td class="muted">هنوز انتقالی ثبت نشده است.</td></tr>';
 }
-function balance(a){return (a.opening||0)+db.tx.filter(t=>t.account===a.id).reduce((s,t)=>s+(t.kind==='income'?t.amount:-t.amount),0)+db.transfers.reduce((s,t)=>s+(t.to===a.id?t.receive:0)-(t.from===a.id?t.send+t.fee:0),0)}
-function render(){let opts=db.accounts.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name)+' ('+esc(a.currency)+')</option>').join('');['account','from','to'].forEach(id=>{let old=$(id).value;$(id).innerHTML='<option value="">انتخاب حساب</option>'+opts;$(id).value=old||''});$('accountlist').innerHTML='<h2>حساب‌ها</h2>'+(db.accounts.length?db.accounts.map(a=>'<p>'+esc(a.name)+' · '+fmt(balance(a))+' '+esc(a.currency)+(a.opening===null?' · موجودی اولیه نامشخص':'')+'</p>').join(''):'<p class="muted">هنوز حسابی تعریف نشده است.</p>');let cur=db.accounts.filter(a=>a.currency==='IRT');$('balance').textContent=cur.length?fmt(cur.reduce((s,a)=>s+balance(a),0))+' تومان':'—';let tx=db.tx.filter(t=>(t.currency||db.accounts.find(a=>a.id===t.account)?.currency)==='IRT');$('income').textContent=fmt(tx.filter(t=>t.kind==='income').reduce((s,t)=>s+t.amount,0));$('expense').textContent=fmt(tx.filter(t=>t.kind==='expense').reduce((s,t)=>s+t.amount,0));$('txrows').innerHTML=db.tx.length?db.tx.slice().reverse().map(t=>'<tr><td>'+esc(t.kind==='income'?'درآمد':'هزینه')+' · '+esc(t.category||'سایر')+'</td><td>'+fmt(t.amount)+' '+esc(t.currency||'')+'</td><td>'+esc(db.accounts.find(a=>a.id===t.account)?.name||t.accountName||(t.paymentMethod==='card'?'کارت · حساب نامشخص':'—'))+'</td><td>'+esc(t.memo)+'</td></tr>').join(''):'<tr><td>هنوز تراکنشی ثبت نشده است.</td></tr>';$('report').textContent='تعداد حساب‌ها: '+db.accounts.length+' | تراکنش‌ها: '+db.tx.length+' | انتقال‌ها: '+db.transfers.length+' | مطالبات: '+db.receivables.length;
+function balance(a){return (a.opening||0)+db.tx.filter(t=>t.account===a.id&&!['pending','cancelled'].includes(t.status)).reduce((s,t)=>s+(t.kind==='income'?t.amount:-t.amount),0)+db.transfers.reduce((s,t)=>s+(t.to===a.id?t.receive:0)-(t.from===a.id?t.send+t.fee:0),0)}
+function render(){let opts=db.accounts.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name)+' ('+esc(a.currency)+')</option>').join('');['account','from','to'].forEach(id=>{let old=$(id).value;$(id).innerHTML='<option value="">انتخاب حساب</option>'+opts;$(id).value=old||''});$('accountlist').innerHTML='<h2>حساب‌ها</h2>'+(db.accounts.length?db.accounts.map(a=>'<p>'+esc(a.name)+' · '+fmt(balance(a))+' '+esc(a.currency)+(a.opening===null?' · موجودی اولیه نامشخص':'')+'</p>').join(''):'<p class="muted">هنوز حسابی تعریف نشده است.</p>');let cur=db.accounts.filter(a=>a.currency==='IRT');$('balance').textContent=cur.length?fmt(cur.reduce((s,a)=>s+balance(a),0))+' تومان':'—';let tx=db.tx.filter(t=>(t.currency||db.accounts.find(a=>a.id===t.account)?.currency)==='IRT'&&!['pending','cancelled'].includes(t.status));$('income').textContent=fmt(tx.filter(t=>t.kind==='income').reduce((s,t)=>s+t.amount,0));$('expense').textContent=fmt(tx.filter(t=>t.kind==='expense').reduce((s,t)=>s+t.amount,0));$('txrows').innerHTML=db.tx.length?db.tx.slice().reverse().map(t=>'<tr><td>'+esc(t.kind==='income'?'درآمد':'هزینه')+' · '+esc(t.category||'سایر')+(t.status==='pending'?' · در انتظار پرداخت':'')+'</td><td>'+fmt(t.amount)+' '+esc(t.currency||'')+'</td><td>'+esc(db.accounts.find(a=>a.id===t.account)?.name||t.accountName||(t.paymentMethod==='card'?'کارت · حساب نامشخص':'—'))+'</td><td>'+esc(t.memo)+'</td></tr>').join(''):'<tr><td>هنوز تراکنشی ثبت نشده است.</td></tr>';$('report').textContent='تعداد حساب‌ها: '+db.accounts.length+' | تراکنش‌ها: '+db.tx.length+' | انتقال‌ها: '+db.transfers.length+' | مطالبات: '+db.receivables.length+' | تعهدات: '+db.commitments.length;
 $('rcvcount').textContent=db.receivables.length?fmt(db.receivables.filter(r=>r.status==='pending').length)+' مورد':'—';
 $('rcvlist').innerHTML=db.receivables.length?db.receivables.slice().reverse().map(r=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(r.counterparty)+'</strong> · <span>'+esc(r.status==='pending'?'در انتظار وصول':'وصول‌شده')+'</span><p>'+fmt(r.principal)+' '+esc(r.currency)+' اصل سرمایه → '+fmt(r.expected)+' '+esc(r.currency)+' مبلغ توافقی</p><p class="muted">سود توافقی: '+fmt(r.expected-r.principal)+' '+esc(r.currency)+' | سررسید: '+esc(monthText(r.dueMonth))+(r.termMonths?' | مدت: '+fmt(r.termMonths)+' ماه':'')+'</p><p class="muted">'+esc([r.location,r.sector,r.notes].filter(Boolean).join(' · '))+'</p></div>').join(''):'<p class="muted">هنوز طلب یا سرمایه‌گذاری ثبت نشده است.</p>';
 renderTransferList();
 }
 
-const CLOUD_CONFIG_KEY='my-finance-cloud-sync-v1';
-let cloudConfig={sheetId:'',clientId:''},cloudToken='',cloudExpiry=0,cloudBusy=false,cloudGsiPromise=null;
-try {const s=JSON.parse(localStorage.getItem(CLOUD_CONFIG_KEY)||'{}');cloudConfig={sheetId:String(s.sheetId||''),clientId:String(s.clientId||'')}}catch(e){}
-function cloudStatus(message){if($('cloudstatus'))$('cloudstatus').textContent=message}
-function cloudValid(s){return /^[a-zA-Z0-9_-]{20,100}$/.test(s.sheetId)&&/^[0-9]+-[a-z0-9-]+[.]apps[.]googleusercontent[.]com$/.test(s.clientId)}
-function cloudSaveConfig(){
- const next={sheetId:$('cloudsheet').value.trim(),clientId:$('cloudclient').value.trim()};
- if(!cloudValid(next)){cloudStatus('شناسه Google Sheet یا OAuth Client ID معتبر نیست.');return false}
- if(next.clientId!==cloudConfig.clientId){cloudToken='';cloudExpiry=0}
- cloudConfig=next;localStorage.setItem(CLOUD_CONFIG_KEY,JSON.stringify(cloudConfig));
- cloudStatus('تنظیمات ثبت شد. برای خواندن دفتر خصوصی به Google متصل شوید.');return true
-}
-function cloudLoadScript(){
- if(window.google?.accounts?.oauth2)return Promise.resolve();
- if(cloudGsiPromise)return cloudGsiPromise;
- cloudGsiPromise=new Promise((resolve,reject)=>{
-  const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;
-  s.onload=()=>window.google?.accounts?.oauth2?resolve():reject(Error('Google Identity unavailable'));
-  s.onerror=()=>reject(Error('Google sign-in blocked'));document.head.appendChild(s);
- }).catch(e=>{cloudGsiPromise=null;throw e});
- return cloudGsiPromise
-}
-async function cloudConnect(){
- if(!cloudSaveConfig())return;
- cloudStatus('در حال گرفتن مجوز امن Google...');
- try{
-  await cloudLoadScript();
-  const token=await new Promise((resolve,reject)=>{
-   const client=google.accounts.oauth2.initTokenClient({
-    client_id:cloudConfig.clientId,scope:'https://www.googleapis.com/auth/spreadsheets.readonly',
-    callback:result=>result.error?reject(Error(result.error)):resolve(result),
-    error_callback:e=>reject(Error(e.type||'authorization failed'))
-   });
-   client.requestAccessToken({prompt:'consent'})
-  });
-  cloudToken=token.access_token;
-  cloudExpiry=Date.now()+(Math.max(60,Number(token.expires_in)||3600)-30)*1000;
-  await cloudPull()
- }catch(e){cloudStatus('اتصال برقرار نشد: '+String(e.message||e).slice(0,200))}
-}
-async function cloudFetchTransfers(){
- const range=encodeURIComponent('Transfers!A1:N10001');
- const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
- const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
- if(!response.ok)throw Error('Google Transfers HTTP '+response.status);
- return (await response.json()).values||[];
-}
-async function cloudFetchTransactions(){
- const range=encodeURIComponent('Transactions!A1:N10001');
- const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+range+'?valueRenderOption=UNFORMATTED_VALUE';
- const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
- if(!response.ok)throw Error('Google Transactions HTTP '+response.status);
- return (await response.json()).values||[];
-}
-function cloudApplyTransactions(rows){
- const header=['id','occurredAt','kind','amount','currency','category','description','paymentMethod','accountName','scope','status','source','createdAt','notes'];
- if(!rows.length||header.some((x,i)=>rows[0][i]!==x))throw Error('ساختار Transactions نامعتبر است.');
- const records=new Map(db.tx.map(t=>[t.id,t]));let count=0;
- for(const r of rows.slice(1)){
-  if(!r[0])continue;
-  const id=String(r[0]),kind=String(r[2]),amount=Number(r[3]),currency=String(r[4]);
-  if(!id||id.length>120||!['income','expense'].includes(kind)||!Number.isFinite(amount)||amount<=0||!['IRT','IRR','USD','EUR'].includes(currency))continue;
-  const accountName=String(r[8]||'').slice(0,150);
-  const account=db.accounts.find(a=>a.name===accountName&&a.currency===currency);
-  records.set(id,{id,date:String(r[1]||r[12]||''),kind,amount,currency,category:String(r[5]||'').slice(0,100),memo:String(r[6]||'').slice(0,500),paymentMethod:String(r[7]||''),accountName,account:account?.id||null,scope:String(r[9]||'personal'),status:String(r[10]||'posted'),source:'chatgpt',cloud:true});count++;
- }
- db.tx=[...records.values()];return count;
-}
-function cloudApplyTransfers(rows){
- const header=['id','occurredAt','amount','currency','fromAccount','toCounterparty','toCardLast4','description','paymentMethod','purpose','status','source','createdAt','notes'];
- if(!Array.isArray(rows)||!rows.length||header.some((v,i)=>rows[0][i]!==v))throw Error('ساختار Transfers معتبر نیست.');
- const existing=new Map(db.transfers.map(t=>[t.id,t]));let count=0;
- for(const row of rows.slice(1)){
-  if(!row[0])continue;
-  const id=String(row[0]),amount=Number(row[2]),currency=String(row[3]);
-  if(!id||id.length>120||!Number.isFinite(amount)||amount<=0||!['IRR','IRT','USD','EUR'].includes(currency))continue;
-  existing.set(id,{type:'external',id,occurredAt:String(row[1]||'').slice(0,40),amount,currency,fromAccount:String(row[4]||'').slice(0,120),recipient:String(row[5]||'').slice(0,160),last4:String(row[6]||'').slice(0,4),description:String(row[7]||'انتقال وجه').slice(0,200),paymentMethod:String(row[8]||'').slice(0,40),purpose:String(row[9]||'').slice(0,200),status:String(row[10]||'pending_classification').slice(0,40),source:'chatgpt',notes:String(row[13]||'').slice(0,500)});
-  count++;
- }
- db.transfers=[...existing.values()];return count;
-}
-async function cloudPull(){
- if(cloudBusy)return;
- if(!cloudValid(cloudConfig)){cloudStatus('ابتدا تنظیمات Google Sheets را وارد کنید.');tab('settings');return}
- if(!cloudToken||Date.now()>=cloudExpiry){cloudStatus('اتصال Google منقضی شده است. دوباره به Google متصل شوید.');return}
- cloudBusy=true;cloudStatus('در حال خواندن دفتر خصوصی...');
- try{
-  const url='https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(cloudConfig.sheetId)+'/values/'+encodeURIComponent('Receivables!A1:L10001')+'?valueRenderOption=UNFORMATTED_VALUE';
-  const response=await fetch(url,{headers:{Authorization:'Bearer '+cloudToken}});
-  if(!response.ok){let msg='HTTP '+response.status;try{msg=(await response.json()).error?.message||msg}catch(e){}throw Error(msg)}
-  const matrix=(await response.json()).values||[];
-  const required=['id','counterparty','principal','expected','currency','termMonths','dueMonth','location','sector','notes','status','createdAt'];
-  if(!matrix.length||required.some((v,i)=>matrix[0][i]!==v))throw Error('ستون‌های دفتر خصوصی مطابق الگوی اپ نیست.');
-  let synced=[];
-  for(const row of matrix.slice(1)){
-   if(!row[0])continue;
-   const raw={id:String(row[0]),counterparty:row[1],principal:row[2],expected:row[3],currency:row[4],termMonths:row[5],dueMonth:row[6],location:row[7],sector:row[8],notes:row[9]};
-   const r=validateReceivable(raw);
-   r.status=row[10]==='paid'?'paid':'pending';r.createdAt=String(row[11]||r.createdAt);synced.push(r)
-  }
-  const map=new Map(db.receivables.map(r=>[r.id,r]));
-  for(const r of synced)map.set(r.id,r);
-  const transactionRows=await cloudFetchTransactions();
-  const txCount=cloudApplyTransactions(transactionRows);
-  const transferCount=cloudApplyTransfers(await cloudFetchTransfers());
-  db.receivables=[...map.values()];save();
-  cloudStatus('همگام شد · '+txCount+' تراکنش · '+transferCount+' انتقال · '+synced.length+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
- }catch(e){cloudStatus('خطای خواندن: '+String(e.message||e).slice(0,200))}
- finally{cloudBusy=false}
-}
-$('cloudsheet').value=cloudConfig.sheetId;$('cloudclient').value=cloudConfig.clientId;
-if(location.hash.startsWith('#finance-sync-sheet=')){
- const id=decodeURIComponent(location.hash.slice('#finance-sync-sheet='.length));
- history.replaceState(null,'',location.pathname+location.search);
- if(/^[a-zA-Z0-9_-]{20,100}$/.test(id)){$('cloudsheet').value=id;tab('settings');cloudStatus('شناسه دفتر خصوصی وارد شد؛ OAuth Client ID را تنظیم کنید.')}
-}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloudToken&&Date.now()<cloudExpiry)cloudPull()});
-
-
-const API_STATE_KEY='my-finance-api-link-v1';
-let apiState={origin:'',token:''},apiBusy=false;
-try{const p=JSON.parse(localStorage.getItem(API_STATE_KEY)||'{}');apiState={origin:String(p.origin||''),token:String(p.token||'')}}catch(e){}
-function apiStatus(s){if($('apistatus'))$('apistatus').textContent=s}
-function apiValidOrigin(url){
- try{const u=new URL(url);return u.protocol==='https:'&&u.hostname.endsWith('.onrender.com')&&u.pathname==='/'&&u.search===''&&u.hash===''}catch(e){return false}
-}
-function apiSave(){
- const origin=$('apiorigin').value.trim().replace(/\/$/,'');
- if(!apiValidOrigin(origin)){apiStatus('لطفاً آدرس معتبر سرویس خصوصی Render را وارد کنید.');return false}
- if(apiState.origin!==origin)apiState.token='';
- apiState.origin=origin;localStorage.setItem(API_STATE_KEY,JSON.stringify(apiState));apiStatus('آدرس ثبت شد. برای اتصال یک‌باره Google را انتخاب کنید.');return true
-}
-function apiConnect(){
- if(!apiSave())return;
- window.location.assign(apiState.origin+'/auth/start')
-}
-function apiHandleReturn(){
- if(!location.hash.startsWith('#finance-api-session='))return;
- const params=new URLSearchParams(location.hash.slice(1));
- const origin=String(params.get('api')||'');
- const token=String(params.get('finance-api-session')||'');
- history.replaceState(null,'',location.pathname+location.search);
- if(!apiValidOrigin(origin)||!token||token.length>9000||!/^[A-Za-z0-9_-]+$/.test(token)){apiStatus('مجوز اتصال معتبر نیست.');return}
- apiState={origin,token};localStorage.setItem(API_STATE_KEY,JSON.stringify(apiState));
- $('apiorigin').value=origin;apiStatus('Google متصل شد. در حال بازیابی داده‌ها...');apiPull()
-}
-
-
-function apiApplyReceivables(rows){
- const header=['id','counterparty','principal','expected','currency','termMonths','dueMonth','location','sector','notes','status','createdAt'];
- if(!Array.isArray(rows)||!rows.length||header.some((x,i)=>rows[0][i]!==x))throw Error('ساختار مطالبات معتبر نیست.');
- const seen=new Map(db.receivables.map(r=>[r.id,r]));let count=0;
- for(const row of rows.slice(1)){
-  if(!row[0])continue;
-  const obj=validateReceivable({id:String(row[0]),counterparty:row[1],principal:row[2],expected:row[3],currency:row[4],termMonths:row[5],dueMonth:row[6],location:row[7],sector:row[8],notes:row[9]});
-  obj.status=row[10]==='paid'?'paid':'pending';obj.createdAt=String(row[11]||obj.createdAt);
-  seen.set(obj.id,obj);count++;
- }
- db.receivables=[...seen.values()];return count
-}
-async function apiPull(){
- if(apiBusy)return;
- if(!apiValidOrigin(apiState.origin)||!apiState.token){apiStatus('Backend هنوز متصل نیست. یک‌بار ورود امن Google لازم است.');return}
- apiBusy=true;apiStatus('در حال همگام‌سازی...');
- try{
-  const response=await fetch(apiState.origin+'/api/snapshot',{headers:{Authorization:'Bearer '+apiState.token},cache:'no-store',signal:AbortSignal.timeout(20000)});
-  if(!response.ok)throw Error(response.status===401?'اعتبار اتصال پایان یافته؛ لطفاً یک‌بار دیگر وارد Google شوید.':'خطای سرویس: '+response.status);
-  const data=await response.json();
-  const t=cloudApplyTransactions(data.transactions),r=apiApplyReceivables(data.receivables),x=cloudApplyTransfers(data.transfers);
-  save();apiStatus('همگام‌شده: '+t+' تراکنش · '+x+' انتقال · '+r+' طلب · '+new Date().toLocaleTimeString('fa-IR'))
- }catch(e){apiStatus('Sync انجام نشد: '+String(e.message||e).slice(0,180))}
- finally{apiBusy=false}
-}
-
-function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
-function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db=d;save()}}catch(e){alert('فایل معتبر نیست')}}
+function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,t.currency||db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name||t.accountName,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
+function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db={accounts:d.accounts,tx:d.tx,transfers:d.transfers,receivables:Array.isArray(d.receivables)?d.receivables:[],commitments:Array.isArray(d.commitments)?d.commitments:[]};save()}}catch(e){alert('فایل معتبر نیست')}}
 // Safe, confirmation-required handoff from ChatGPT. URL fragment never reaches hosting server.
 function importChatGPTDraft(){
  const marker='#finance-import=';
@@ -342,15 +197,37 @@ function importChatGPTDraft(){
  let matched=candidates.find(a=>item.accountName&&a.name.trim()===String(item.accountName).trim());
  $('account').value=(matched||((!item.accountName&&candidates.length===1)?candidates[0]:null))?.id||'';
  tab('transactions');
- alert(db.accounts.length===0?'پیش‌نویس از ChatGPT آماده شد. ابتدا در بخش حساب‌ها یک حساب بساز، سپس تراکنش را بررسی و تأیید کن.':'پیش‌نویس از ChatGPT آماده شد. مبلغ، ارز حساب، نوع و توضیح را بررسی کن؛ هیچ اطلاعاتی هنوز ثبت نشده است.');
+ alert(db.accounts.length===0?'پیش‌نویس از ChatGPT آماده شد. می‌توانی بدون انتخاب حساب هم تراکنش را ثبت کنی؛ موجودی هیچ حسابی تغییر نمی‌کند.':'پیش‌نویس از ChatGPT آماده شد. مبلغ، ارز حساب، نوع و توضیح را بررسی کن؛ هیچ اطلاعاتی هنوز ثبت نشده است.');
 }
 window.addEventListener('hashchange',importChatGPTDraft);
 if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{reg.update().catch(()=>{});}).catch(()=>{});}
-render();
+window.MyFinanceBridge={
+ getData:()=>JSON.parse(JSON.stringify(db)),
+ bindUser:(uid)=>{
+  const nextKey=uid?'my-finance-user-'+uid:'my-finance-preview-v1';
+  if(nextKey===KEY)return;
+  KEY=nextKey;
+  let next=null;
+  try{next=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+  if(!next&&uid){
+   let legacy=null;try{legacy=JSON.parse(localStorage.getItem('my-finance-preview-v1')||'null')}catch(e){}
+   if(legacy&&(legacy.accounts?.length||legacy.tx?.length||legacy.receivables?.length||legacy.transfers?.length)){
+    if(confirm('اطلاعات محلی قبلی این گوشی متعلق به همین حساب است و به حساب خصوصی منتقل شود؟'))next=legacy;
+   }
+  }
+  db={accounts:Array.isArray(next?.accounts)?next.accounts:[],tx:Array.isArray(next?.tx)?next.tx:[],transfers:Array.isArray(next?.transfers)?next.transfers:[],receivables:Array.isArray(next?.receivables)?next.receivables:[],commitments:Array.isArray(next?.commitments)?next.commitments:[]};
+  localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:rebound'));
+ },
+ commitData:(next)=>{
+  db={accounts:Array.isArray(next?.accounts)?next.accounts:[],tx:Array.isArray(next?.tx)?next.tx:[],transfers:Array.isArray(next?.transfers)?next.transfers:[],receivables:Array.isArray(next?.receivables)?next.receivables:[],commitments:Array.isArray(next?.commitments)?next.commitments:[]};
+  save();
+ },
+ replaceData:(next)=>{
+  db={accounts:Array.isArray(next?.accounts)?next.accounts:[],tx:Array.isArray(next?.tx)?next.tx:[],transfers:Array.isArray(next?.transfers)?next.transfers:[],receivables:Array.isArray(next?.receivables)?next.receivables:[],commitments:Array.isArray(next?.commitments)?next.commitments:[]};
+  localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:rebound'));
+ }
+};
+render();tab('transactions');
 importChatGPTDraft();
-$('apiorigin').value=apiState.origin;
-apiHandleReturn();
-if(apiState.token)apiPull();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&apiState.token)apiPull()});
-setInterval(()=>{if(!document.hidden&&apiState.token&&!apiBusy)apiPull()},60000);
-</script></body></html>
+/* Authentication and synchronization are handled exclusively by Supabase. */
+</script><script src="./commitments.js?v=20261028r3" defer></script><script type="module" src="./supabase-sync.js?v=20261028r3"></script></body></html>
