@@ -27,7 +27,12 @@
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
 <section id="settings" hidden>
-<div class="card"><h2>Cloud Sync — Google Sheets خصوصی</h2>
+<div class="card"><h2>Automatic Sync · اتصال مستقیم با ChatGPT</h2>
+<p class="muted">پس از یک‌بار اتصال امن، داده‌های ChatGPT به این اپ همگام می‌شوند. برای هر تراکنش لینک، دانلود یا تأیید مجدد نیاز نیست.</p>
+<div class="fields"><input id="apiorigin" inputmode="url" autocomplete="off" placeholder="Private Backend URL on Render"></div>
+<div class="row"><button class="alt" onclick="apiSave()">ذخیره آدرس</button><button onclick="apiConnect()">اتصال یک‌باره Google</button><button class="alt" onclick="apiPull()">همگام‌سازی</button></div>
+<p class="muted" id="apistatus" role="status">Backend خصوصی هنوز فعال نیست.</p>
+</div><div class="card"><h2>Cloud Sync — Google Sheets خصوصی</h2>
 <p class="muted">رکوردهایی که با دستور شما در ChatGPT ثبت می‌شوند، پس از اتصال امن به حساب Google در اپ نمایش داده می‌شوند. این اتصال فعلاً برای «مطالبات» فقط خواندنی است.</p>
 <div class="fields"><input id="cloudsheet" autocomplete="off" placeholder="Private Google Sheet ID"><input id="cloudclient" autocomplete="off" placeholder="Google OAuth Client ID"></div>
 <div class="row"><button class="alt" onclick="cloudSaveConfig()">ذخیره تنظیمات</button><button onclick="cloudConnect()">اتصال و همگام‌سازی با Google</button><button class="alt" onclick="cloudPull()">بازخوانی مطالبات</button></div>
