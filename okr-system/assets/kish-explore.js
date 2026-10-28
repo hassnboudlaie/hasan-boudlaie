@@ -77,7 +77,7 @@ function columnOptions(){
   (columns.order.includes(key)?'<div class="kx-col-tools">'+
    '<button type="button" data-kx-action="col-up" data-id="'+key+'" aria-label="انتقال '+label+' به راست">↑</button>'+
    '<button type="button" data-kx-action="col-down" data-id="'+key+'" aria-label="انتقال '+label+' به چپ">↓</button>'+
-   '<label class="kx-col-width-label">عرض <input type="range" min="100" max="480" step="20" data-kx-width="'+key+'" value="'+(columns.widths[key]||(['goal'].includes(key)?320:170))+'"></label>'+
+   '<label class="kx-col-width-label">عرض <input type="range" min="100" max="480" step="20" data-kx-width="'+key+'" value="'+(columns.widths[key]||(['goal'].includes(key)?320:180))+'"></label>'+
   '</div>':'')+'</div>').join('')+
  '</div><p class="kx-help">ستون‌ها را فعال یا غیرفعال کنید؛ با کلیدهای جابه‌جایی یا کشیدن عنوان ستون ترتیب را تغییر دهید. عرض ستون قابل تنظیم است. این تنظیمات فقط در همین مرورگر ذخیره می‌شوند.</p>'+
  '<button type="button" data-kx-action="col-reset">بازنشانی ستون‌ها</button></section>';
