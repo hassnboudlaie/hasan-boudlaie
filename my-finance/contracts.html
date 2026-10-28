@@ -1,0 +1,50 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>قراردادها و مطالبات کاری | My Finance</title><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=9"><style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#183549;background:#f5f8fb}*{box-sizing:border-box}body{margin:0}main{max-width:860px;margin:auto;padding:20px 16px 70px}header{display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:23px}h2{font-size:17px;margin:5px 0 14px}a{color:#087568;text-decoration:none;font-weight:bold}.hint{font-size:13px;color:#637887;line-height:1.9}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0}.stat,.card{border:1px solid #dce8ee;border-radius:20px;background:white;padding:18px;box-shadow:0 5px 25px #142d400a}.stat span{display:block;font-size:12px;color:#597180}.stat strong{display:block;font-size:20px;margin:10px 0;color:#0b5f64}.card{margin:13px 0}.card header{align-items:flex-start}.meta{font-size:13px;color:#526c79;line-height:1.9}.amount{font-size:20px;font-weight:800;color:#0d615e;margin:10px 0}.tag{padding:5px 9px;border-radius:30px;background:#e8f4f1;color:#11635d;font-size:11px;white-space:nowrap}.tag.warn{background:#fff1dc;color:#855117}button{border:0;border-radius:12px;background:#0c6865;color:white;padding:12px 15px;font:inherit;font-size:13px;font-weight:bold;cursor:pointer}button:disabled{opacity:.5}progress{width:100%;height:11px;accent-color:#0b866c}#status{padding:12px 0}.bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.note{border:1px dashed #c7dce0;border-radius:16px;padding:13px;margin:16px 0;background:#eef5f6}@media(max-width:590px){.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}.stat strong{font-size:18px}h1{font-size:20px}.card{padding:16px}}
+</style></head><body><main><header><h1>قراردادها و مطالبات کاری</h1><a href="./">My Finance</a></header><p class="hint">حق‌المشاوره، قراردادهای آموزشی و مطالبات وصول‌نشده؛ تا زمان تأیید دریافت وجه، هیچ مبلغی به درآمد نقدی اضافه نمی‌شود.</p><p id="status" role="status">در حال اتصال امن…</p><div class="stats" id="stats"></div><div id="items"></div><p class="hint note">مبالغ قراردادها، برنامه‌های آینده و مطالبات با درآمد دریافت‌شده تفاوت دارند و نباید با یکدیگر جمع شوند.</p></main><script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
+const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:0}).format(Number(n)||0);
+const st=document.getElementById('status'),cards=document.getElementById('items'),stats=document.getElementById('stats');
+const userResult=await client.auth.getUser();const user=userResult.data?.user;
+function text(parent,tag,str,cls){const el=document.createElement(tag);el.textContent=str;if(cls)el.className=cls;parent.append(el);return el}
+function amount(c){if(c.kind==='retainer')return fmt(c.monthlyAmount)+' تومان / ماه';if(c.totalContractAmount!=null)return fmt(c.totalContractAmount)+' تومان / کل قرارداد';if(c.unpaidAmount!=null)return fmt(c.unpaidAmount)+' تومان طلب';return 'مبلغ نامشخص'}
+function details(c){
+ if(c.kind==='retainer')return 'مشاوره مستمر · دریافت وجه ماه جاری تأیید نشده';
+ if(c.kind==='training_contract'||c.kind==='training_agreement')return fmt(c.completedSessions||0)+' از '+fmt(c.totalSessions)+' جلسه برگزار شده · '+fmt(c.remainingSessions)+' جلسه باقی مانده'+(c.hoursPerSession?' · '+fmt(c.hoursPerSession)+' ساعت در هر جلسه':'')+(c.feePerSession?' · '+fmt(c.feePerSession)+' تومان هر جلسه':'')+(c.expectedPaymentDateShamsi?' · پرداخت مورد انتظار: '+c.expectedPaymentDateShamsi:'');
+ return c.kind==='insurance_claim'?'بیمه عمر · مبلغ هنوز دریافت نشده':c.contractSigned===false?'قرارداد امضا نشده · مطالبه پرداخت‌نشده':'مطالبه پرداخت‌نشده';
+}
+async function render(){
+ if(!user){st.textContent='لطفاً ابتدا از صفحه اصلی My Finance وارد حساب Supabase شوید.';return}
+ const {data,error}=await client.from('finance_objects').select('id,payload').eq('kind','contract').order('created_at',{ascending:true});
+ if(error){st.textContent='دریافت اطلاعات ناموفق: '+error.message;return}
+ const items=(data||[]).map(x=>({id:x.id,...x.payload}));cards.replaceChildren();stats.replaceChildren();
+ const claims=items.filter(x=>x.unpaidAmount!=null).reduce((s,x)=>s+Number(x.unpaidAmount),0);
+ const ongoing=items.filter(x=>x.kind==='training_contract'||x.kind==='training_agreement').reduce((s,x)=>s+Number(x.totalContractAmount||0),0);
+ const salary=items.filter(x=>x.kind==='retainer').reduce((s,x)=>s+Number(x.monthlyAmount||0),0);
+ for(const [label,n] of [['مطالبات دریافت‌نشده',claims],['ارزش کل قراردادهای آموزشی',ongoing],['حق‌المشاوره ماهانه',salary]]){const d=document.createElement('div');d.className='stat';text(d,'span',label);text(d,'strong',fmt(n)+' تومان');stats.append(d)}
+ st.textContent=fmt(items.length)+' پرونده · حساب خصوصی متصل';
+ for(const c of items){
+  const article=document.createElement('article');article.className='card';
+  const hd=document.createElement('header');text(hd,'h2',c.name);text(hd,'span',c.contractSigned===false?'قرارداد امضا نشده':c.kind==='retainer'?'مستمر':c.remainingSessions>0?'در حال اجرا':'در انتظار وصول','tag'+(c.contractSigned===false?' warn':''));article.append(hd);
+  text(article,'div',amount(c),'amount');text(article,'p',details(c),'meta');
+  if(c.totalSessions){const pg=document.createElement('progress');pg.max=c.totalSessions;pg.value=c.completedSessions||0;article.append(pg)}
+  if(c.kind==='training_contract'||c.kind==='training_agreement'){
+   const footer=document.createElement('div');footer.className='bottom';const label=text(footer,'small','جلسات باقیمانده: '+fmt(c.remainingSessions||0),'hint');
+   if(c.remainingSessions>0){const b=text(footer,'button','ثبت برگزاری جلسه بعد');b.type='button';b.addEventListener('click',async()=>{
+    if(!confirm('برگزاری یک جلسه دیگر از '+c.name+' تأیید شود؟ این کار هیچ درآمد نقدی ثبت نمی‌کند.'))return;
+    b.disabled=true;
+    const next={...c,completedSessions:Number(c.completedSessions||0)+1,remainingSessions:Number(c.remainingSessions)-1};
+    if(next.totalHours&&next.hoursPerSession){next.completedHours=next.completedSessions*next.hoursPerSession;next.remainingHours=Math.max(0,next.totalHours-next.completedHours)}
+    if(next.feePerSession){next.completedSessionValue=next.completedSessions*next.feePerSession;next.remainingPlannedValue=next.remainingSessions*next.feePerSession}
+    delete next.id;const payload={...next,id:c.id};
+    const {error:saveError}=await client.from('finance_objects').update({payload}).eq('id',c.id);
+    if(saveError){alert('ثبت جلسه انجام نشد: '+saveError.message);b.disabled=false;return}
+    await render();
+   })}
+   article.append(footer)
+  }
+  cards.append(article)
+ }
+}
+await render();
+</script></body></html>
