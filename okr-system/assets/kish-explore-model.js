@@ -5,15 +5,26 @@ const number=v=>v===null||v===undefined||String(v).trim()===''?null:Number.isFin
 function percent(k){const b=number(k.baseline),t=number(k.target),v=number(k.current);return b===null||t===null||v===null||b===t?null:Math.max(0,Math.min(100,(v-b)/(t-b)*100));}
 function progress(g){const rows=(g.krs||[]).map(k=>({k,p:percent(k)})).filter(x=>x.p!==null);if(!rows.length)return null;const weighted=['weighted','weighted-krs','weighted_kr'].includes(String(g.progressMode||g.progressMethod||g.progressCalculation||'').toLowerCase())||g.weightedProgress===true;if(!weighted)return Math.round(rows.reduce((a,x)=>a+x.p,0)/rows.length);if(rows.some(x=>number(x.k.weight)===null||number(x.k.weight)<0))return null;const total=rows.reduce((a,x)=>a+number(x.k.weight),0);return total>0?Math.round(rows.reduce((a,x)=>a+x.p*number(x.k.weight),0)/total):null;}
 function assertParent(records,id,parentId){const byId=new Map(records.map(x=>[x.id,x]));let cur=parentId;const seen=new Set([id]);while(cur){if(seen.has(cur))throw Error('هم‌راستایی دوری مجاز نیست.');seen.add(cur);const item=byId.get(cur);if(!item)throw Error('رکورد بالادست معتبر نیست.');cur=item.parentId;}}
-function normalize(d){const rows=[],cycles=d.cycles||[],goals=d.goals||[],teams=d.teams||[],pillars=d.strategy?.pillars||[];
+function normalize(d,now=new Date()){const rows=[],cycles=d.cycles||[],goals=d.goals||[],teams=d.teams||[],pillars=d.strategy?.pillars||[];
  const base=(r,type,title,parentId,teamId='company',extra={})=>({id:r.id,type,title:title||'بدون عنوان',parentId:parentId||'',owner:r.owner||'',teamId,stage:r.status||'draft',archived:!!r.archived,timeframe:cycles.find(c=>(c.goalIds||[]).includes(r.id))?.id||'',progress:null,record:r,...extra});
  pillars.forEach(p=>rows.push(base(p,'pillar',p.title,p.parentId,p.teamId,{stage:p.status||'active'})));
  goals.forEach(g=>{const team=teams.find(t=>t.okrs?.some(x=>x.id===g.id))?.id||'company',frame=cycles.find(c=>(c.goalIds||[]).includes(g.id))?.id||'';rows.push(base(g,'objective',g.objective,g.parentId,team,{progress:progress(g),timeframe:frame}));(g.krs||[]).forEach(k=>rows.push(base(k,'kr',k.text,g.id,k.teamId||team,{progress:percent(k),stage:g.status||'draft',timeframe:frame})));});
  (d.kpis||[]).forEach(k=>{const parent=k.parentId||k.pillarId||pillars.find(p=>p.title===k.pillar)?.id||'';rows.push(base(k,'kpi',k.name,parent,k.teamId,{stage:k.status||'active'}));});
  (d.initiatives||[]).forEach(i=>{const g=rows.find(g=>g.type==='objective'&&g.id===i.objectiveId);rows.push(base(i,'initiative',i.title,i.parentId||i.objectiveId||i.kpiId,i.teamId||i.unitId||g?.teamId||'company',{timeframe:i.timeframeId||g?.timeframe||'',progress:i.status==='done'?100:null,stage:i.status||'planned'}));});
+ const byId=new Map(rows.map(r=>[r.id,r]));
+ rows.forEach(r=>{const seen=new Set([r.id]);let parent=byId.get(r.parentId);while(parent&&!seen.has(parent.id)){seen.add(parent.id);if(parent.archived)r.archived=true;parent=byId.get(parent.parentId);}
+ const cycle=cycles.find(c=>c.id===r.timeframe);
+ r.expected=['objective','kr'].includes(r.type)?expected(cycle?.start,cycle?.end,now):null;
+ r.behind=r.progress!==null&&r.expected!==null&&r.progress<r.expected;
+ const history=r.type==='kpi'?(d.kpiHistory||[]).filter(h=>h.kpiId===r.id):r.type==='kr'?(d.history||[]).filter(h=>h.krId===r.id):r.type==='objective'?(d.history||[]).filter(h=>(r.record.krs||[]).some(k=>k.id===h.krId)):[];
+ r.lastUpdate=history.map(h=>h.at).filter(Boolean).sort().at(-1)||r.record.lastUpdate||'';
+ const cadence=number(r.record.updateEveryDays)??7;
+ const stamp=day(r.lastUpdate),today=day(now);
+ r.outdated=['objective','kr','kpi'].includes(r.type)&&!['draft','closed'].includes(r.stage)&&!r.archived&&(stamp===null||today-stamp>cadence*86400000);
+ });
  return rows;
 }
-function filter(rows,f={}){const match=(v,a)=>!a?.length||a.includes(v);return rows.filter(r=>(f.archived?r.archived:!r.archived)&&match(r.type,f.types)&&match(r.stage,f.stages)&&match(r.teamId,f.teams)&&match(r.owner,f.owners)&&match(r.timeframe,f.timeframes)&&(!f.q||[r.title,r.owner].join(' ').toLocaleLowerCase().includes(f.q.toLocaleLowerCase())));}
+function filter(rows,f={}){const match=(v,a)=>!a?.length||a.includes(v);return rows.filter(r=>(f.archived?r.archived:!r.archived)&&match(r.type,f.types)&&match(r.stage,f.stages)&&match(r.teamId,f.teams)&&match(r.owner,f.owners)&&match(r.timeframe,f.timeframes)&&(!f.behind||r.behind)&&(!f.outdated||r.outdated)&&(!f.q||[r.title,r.owner].join(' ').toLocaleLowerCase().includes(f.q.toLocaleLowerCase())));}
 function tree(rows){const ids=new Set(rows.map(r=>r.id)),seen=new Set(),out=[];function walk(r,depth){if(seen.has(r.id))return;seen.add(r.id);out.push({...r,depth});rows.filter(x=>x.parentId===r.id).forEach(x=>walk(x,Math.min(depth+1,20)));}rows.filter(r=>!ids.has(r.parentId)).forEach(r=>walk(r,0));rows.forEach(r=>walk(r,0));return out;}
 function historicalValue(row,d,end){const before=h=>h.at&&h.at.slice(0,10)<=end;
  const history=(row.type==='kpi'?(d.kpiHistory||[]).filter(h=>h.kpiId===row.id):(d.history||[]).filter(h=>h.krId===row.id)).filter(before).sort((a,b)=>a.at.localeCompare(b.at));
@@ -22,5 +33,9 @@ function historicalValue(row,d,end){const before=h=>h.at&&h.at.slice(0,10)<=end;
  if(row.type==='objective'){const krs=(row.record.krs||[]).map(k=>{const h=(d.history||[]).filter(h=>h.krId===k.id&&before(h)).sort((a,b)=>a.at.localeCompare(b.at)).at(-1);return {...k,current:h?.current??null};});return progress({...row.record,krs});}
  return null;
 }
-return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue};
+function day(v){if(!v)return null;const s=v instanceof Date?v.toISOString().slice(0,10):String(v).slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return null;const n=Date.parse(s+'T00:00:00Z');return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===s?n:null;}
+function expected(start,end,now=new Date()){const a=day(start),b=day(end),t=day(now);if(a===null||b===null||t===null||b<a)return null;if(a===b)return t>=b?100:0;return Math.max(0,Math.min(100,(t-a)/(b-a)*100));}
+function weekStart(value){const n=day(value);if(n===null)return null;const d=new Date(n);d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+1)%7);return d.toISOString().slice(0,10);}
+function cloneGoal(g,makeId){const c=JSON.parse(JSON.stringify(g));c.id=makeId();c.objective=g.objective+' — رونوشت';c.status='draft';c.archived=false;c.dependencies=[];c.krs=(c.krs||[]).map(k=>{const n={...k,id:makeId(),current:'',lastUpdate:'',confidence:''};delete n.lastNote;return n;});for(const key of ['sourceId','sourcePage','closedAt','closingNotes','closureHistory','clonedFrom','comments','createdAt','updatedAt'])delete c[key];c.clonedFrom=g.id;return c;}
+return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,cloneGoal};
 });
