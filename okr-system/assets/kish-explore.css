@@ -132,3 +132,26 @@ body.kish-perdoo #platformBody .p-page>h1+p{color:#d4e4ef!important}
 .kx-app .kx-advanced-filters .kx-filter-options input{width:18px;height:18px;accent-color:#155b7c}
 .kx-app .kx-advanced-filters .kx-help{margin:8px 0 0}
 @media(max-width:640px){.kx-app .kx-presets span{flex:0 0 100%}.kx-app .kx-presets button{flex:1 1 140px}.kx-app .kx-advanced-filters{padding:10px}}
+
+/* Perdoo 3.0 Explore — configurable Cascade columns with accessible reorder/width controls. */
+.kx-app .kx-column-toolbar{display:flex;gap:12px;align-items:center;margin:0 0 12px;flex-wrap:wrap}
+.kx-app .kx-column-toolbar button{min-height:44px;font-weight:700;background:#eef6fb;border-color:#9ebdd0}
+.kx-app .kx-column-toolbar span{font-size:13px;color:#3b5668}
+.kx-app .kx-column-panel{padding:16px;background:#fff;border:1px solid #a9c2d3;border-radius:14px;margin:0 0 14px;color:#173247}
+.kx-app .kx-col-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.kx-app .kx-col-option{min-width:0;padding:12px;border-radius:10px;border:1px solid #cfdee8;background:#f7fafc}
+.kx-app .kx-col-option>label{display:flex;gap:9px;align-items:center;font-weight:650;min-height:40px;font-size:14px}
+.kx-app .kx-col-option input[type=checkbox]{width:20px;height:20px;accent-color:#185f83;flex-shrink:0}
+.kx-app .kx-col-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kx-app .kx-col-tools>button{min-height:40px;min-width:40px;font-size:18px;padding:5px}
+.kx-app .kx-col-width-label{display:flex;align-items:center;gap:6px;min-height:44px;flex:1 1 140px}
+.kx-app .kx-col-width-label input{flex:1;max-width:180px;accent-color:#155b7c}
+.kx-app .kx-cascade{width:100%;min-width:max-content;table-layout:auto}
+.kx-app .kx-cascade th[data-kx-col]{cursor:grab;user-select:none;position:sticky;top:0;white-space:nowrap}
+.kx-app .kx-cascade th[data-kx-col]:active{cursor:grabbing}
+.kx-app .kx-cascade th[data-kx-col],.kx-app .kx-cascade td[data-kx-cell]{box-sizing:border-box;overflow-wrap:break-word}
+.kx-app .kx-cascade td[data-kx-cell=closingNotes],.kx-app .kx-cascade td[data-kx-cell=customFields]{max-width:450px;white-space:normal;line-height:1.75}
+.kx-app .kx-col-title{display:inline-flex;align-items:center;gap:5px}
+.kx-app .kx-cascade td[data-kx-cell=goal]{min-width:300px}
+.kx-app .kx-cascade td[data-kx-cell=actions]{min-width:160px}
+@media(max-width:700px){.kx-app .kx-col-options{grid-template-columns:minmax(0,1fr)}.kx-app .kx-column-panel{padding:12px}.kx-app .kx-cascade{min-width:max-content}}
