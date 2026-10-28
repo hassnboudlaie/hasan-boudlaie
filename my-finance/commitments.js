@@ -6,9 +6,33 @@ const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(Num
 function today(){const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=t=>p.find(x=>x.type===t).value;return v('year')+'-'+v('month')+'-'+v('day')}
 const valid=s=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;const d=new Date(s+'T12:00:00Z');return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===s};
 const days=s=>Math.round((new Date(s+'T12:00:00Z')-new Date(today()+'T12:00:00Z'))/86400000);
+const jalaliFormat=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'numeric'});
+function addDays(iso,number){
+ const [y,m,d]=iso.split('-').map(Number);
+ return new Date(Date.UTC(y,m-1,d+number,12)).toISOString().slice(0,10);
+}
+function jalaliMonthKey(iso){
+ const fields=jalaliFormat.formatToParts(new Date(iso+'T12:00:00Z'));
+ const part=type=>fields.find(x=>x.type===type)?.value;
+ return part('year')+'/'+part('month');
+}
+// Find the last Gregorian date belonging to the current Persian calendar month.
+// Use Tehran-local Persian calendar to handle 29/30/31-day months and leap years correctly.
+function jalaliMonthEndOnOrAfter(iso){
+ const key=jalaliMonthKey(iso);
+ for(let offset=1;offset<=33;offset++){
+  if(jalaliMonthKey(addDays(iso,offset))!==key)return addDays(iso,offset-1);
+ }
+ throw Error('Cannot determine Persian month end');
+}
+function nextJalaliMonthEnd(iso){
+ const currentEnd=jalaliMonthEndOnOrAfter(iso);
+ return jalaliMonthEndOnOrAfter(addDays(currentEnd,1));
+}
 const fdate=s=>valid(s)?new Date(s+'T12:00:00Z').toLocaleDateString('fa-IR',{timeZone:'Asia/Tehran'}):'نامشخص';
 function next(iso,cadence,anchor){
  const [y,m,d]=iso.split('-').map(Number);
+ if(cadence==='jalali-month-end')return nextJalaliMonthEnd(iso);
  if(cadence==='weekly')return new Date(Date.UTC(y,m-1,d+7)).toISOString().slice(0,10);
  const total=y*12+m-1+(cadence==='yearly'?12:1),yy=Math.floor(total/12),mm=total%12;
  const last=new Date(Date.UTC(yy,mm+1,0)).getUTCDate();
@@ -18,7 +42,7 @@ const sec=document.createElement('section');sec.id='commitments';sec.hidden=true
 sec.innerHTML='<div class="card"><h2>تعهدات و هزینه‌های ثابت</h2><p class="muted">در سررسید، هزینه با وضعیت «در انتظار پرداخت» ثبت می‌شود؛ موجودی فقط پس از تأیید پرداخت تغییر می‌کند.</p>'+
 '<div class="fields"><input id="com-title" maxlength="120" placeholder="عنوان، مثلاً اجاره یا اشتراک"><input id="com-amount" type="number" min="0.01" step="any" placeholder="مبلغ">'+
 '<select id="com-currency"><option value="IRT">تومان · IRT</option><option value="IRR">ریال · IRR</option><option value="USD">دلار · USD</option><option value="EUR">یورو · EUR</option></select>'+
-'<select id="com-cadence"><option value="monthly">ماهانه</option><option value="weekly">هفتگی</option><option value="yearly">سالانه</option></select>'+
+'<select id="com-cadence"><option value="monthly">ماهانه</option><option value="weekly">هفتگی</option><option value="yearly">سالانه</option><option value="jalali-month-end">ماهانه · آخر ماه شمسی</option></select>'+
 '<label>اولین سررسید (میلادی)<input id="com-due" type="date"></label><label>روزهای یادآوری قبل از سررسید<input id="com-reminders" value="7,3,1,0" dir="ltr"></label>'+
 '<select id="com-account"><option value="">حساب نامشخص</option></select><input id="com-category" placeholder="دسته‌بندی"></div><button id="com-create">افزودن تعهد</button></div>'+
 '<div class="card"><h2>پرداخت‌های در انتظار</h2><div id="com-pending"></div></div>'+
@@ -51,8 +75,10 @@ function create(){
  const reminders=$('com-reminders').value.split(/[,،\s]+/).filter(Boolean).map(Number);
  if(reminders.some(x=>!Number.isInteger(x)||x<0||x>365)||reminders.length>12)return alert('روزهای یادآوری باید مثل 7,3,1,0 باشند.');
  const data=bridge.getData();
+ const cadence=$('com-cadence').value;
+ const nextDue=cadence==='jalali-month-end'?jalaliMonthEndOnOrAfter(due):due;
  data.commitments.push({id:crypto.randomUUID(),title,amount,currency:$('com-currency').value,
-  cadence:$('com-cadence').value,nextDue:due,anchorDay:Number(due.slice(8,10)),
+  cadence,nextDue,anchorDay:cadence==='jalali-month-end'?null:Number(due.slice(8,10)),calendar:cadence==='jalali-month-end'?'jalali':'gregorian',
   reminders:[...new Set(reminders)],account:$('com-account').value||null,category:$('com-category').value,
   active:true,createdAt:new Date().toISOString()});
  commit(data);$('com-title').value='';$('com-amount').value='';generate();
@@ -64,7 +90,7 @@ function render(){
  const pending=(data.tx||[]).filter(t=>t.recurringId&&t.status==='pending').sort((a,b)=>(a.dueDate||'').localeCompare(b.dueDate||''));
  $('com-pending').innerHTML=pending.length?pending.map(t=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(t.memo)+'</strong> · '+fmt(t.amount)+' '+esc(t.currency)+'<p class="muted">سررسید '+fdate(t.dueDate)+'</p><button data-action="pay" data-id="'+esc(t.id)+'">تأیید پرداخت</button></div>').join(''):'<p class="muted">پرداختی در انتظار نیست.</p>';
  const cs=data.commitments||[];
- $('com-list').innerHTML=cs.length?cs.map(c=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(c.title)+'</strong> · '+fmt(c.amount)+' '+esc(c.currency)+'<p class="muted">سررسید بعدی '+fdate(c.nextDue)+' · '+(c.cadence==='weekly'?'هفتگی':c.cadence==='yearly'?'سالانه':'ماهانه')+' · یادآورها: '+esc((c.reminders||[]).join('، '))+'</p><button class="alt" data-action="toggle" data-id="'+esc(c.id)+'">'+(c.active?'توقف موقت':'فعال‌سازی')+'</button></div>').join(''):'<p class="muted">هنوز تعهدی ثبت نشده است.</p>';
+ $('com-list').innerHTML=cs.length?cs.map(c=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(c.title)+'</strong> · '+fmt(c.amount)+' '+esc(c.currency)+'<p class="muted">سررسید بعدی '+fdate(c.nextDue)+' · '+(c.cadence==='weekly'?'هفتگی':c.cadence==='yearly'?'سالانه':c.cadence==='jalali-month-end'?'آخر هر ماه شمسی':'ماهانه')+' · یادآورها: '+esc((c.reminders||[]).join('، '))+'</p><button class="alt" data-action="toggle" data-id="'+esc(c.id)+'">'+(c.active?'توقف موقت':'فعال‌سازی')+'</button></div>').join(''):'<p class="muted">هنوز تعهدی ثبت نشده است.</p>';
  const alerts=[];
  for(const c of cs.filter(c=>c.active)){const d=days(c.nextDue);if(d<0||(c.reminders||[7,3,1,0]).includes(d))alerts.push(c.title+' · '+(d<0?'سررسید گذشته':d===0?'امروز':d+' روز مانده'))}
  for(const t of pending.filter(t=>days(t.dueDate)<0))if(!alerts.some(x=>x.startsWith(t.memo+' ·')))alerts.push(t.memo+' · پرداخت معوق');
