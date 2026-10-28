@@ -36,7 +36,7 @@ Status is against the requested capability as a whole, not just a visible contro
 | Outdated goals | Explore | Not in unified view | Partially Implemented | Default 7-day rule, configurable objective interval, filter; no notification service | Model / UI controls |
 | Goal lifecycle | Explore | Draft/active/closed; limited review | Partially Implemented | Confirmed clone, close notes, comments, archive/restore in Explore | Parity E2E |
 | Clone integrity | Roles / Explore | No unified clone workflow | Fully Implemented for Objectives + nested KRs | Fresh IDs, draft, actuals/history cleared; original unchanged | Model + parity E2E |
-| KPI improvement OKR | Goal alignment | No dedicated shortcut | Partially Implemented | KPI shortcut preselects linked KPI on existing goal form; explicit relation retained | Source audit; browser test pending |
+| KPI improvement OKR | Goal alignment | No dedicated shortcut | Partially Implemented | KPI shortcut preselects linked KPI on existing goal form; explicit relation retained | Pass: parity browser KPI shortcut and persisted association |
 | Cascade / Map / Board truth | Explore | Same live records, weekly board | Partially Implemented | Keep single source; inherited archive visibility; current week includes today | Explore / parity E2E |
 | Inline editing | Explore | Modal editing only | Partially Implemented | Inline title and lead, validation, rollback on save failure | Parity E2E |
 | Filter / sort / saved views | Explore | Multi-select team/type/stage/owner/timeframe, local saved views | Partially Implemented; shared views and all sorts missing | Add behind/outdated filters | Explore E2E / model |
@@ -83,14 +83,14 @@ Beta: October in-app AI Agent. Existing MCP tools are released; additional agent
 | 1 | Pillar and aligned objective | Pass: `explore-browser.cjs` creates both |
 | 2 | Objective with multiple KRs | Pass: Explore E2E, weighted fixtures |
 | 3 | Team, lead and timeframe | Partial: lead/company form exercised; full assignment combination not verified — Blocked certification |
-| 4 | KR update recalculates objective | Pass for recorded initial values 100×1 + 0×3 = 25%; dedicated subsequent check-in pending |
+| 4 | KR update recalculates objective | Pass for recorded initial values 100×1 + 0×3 = 25%; Pass: subsequent check-in to 100% and retained evidence/history |
 | 5 | Cascade/Map/Board/dashboard consistency | Pass three Explore views + Map/Team model; full dashboard browser verification pending |
 | 6 | Edit from Explore | Pass modal baseline; inline phase3 suite |
 | 7 | Team/status/timeframe/expected filters | Pass pure filter model; browser suite covers type; full combinations pending |
 | 8 | Private/shared view permission | Pass local-device saved view; shared/server-private permission Blocked |
 | 9 | Clone without corrupting original | Phase3 browser + pure model |
-| 10 | Create OKR to improve KPI | Implemented relationship + shortcut; dedicated browser verification pending |
-| 11 | Check-in with retained history | Existing recorded measurements persist; dedicated acceptance pending |
+| 10 | Create OKR to improve KPI | Implemented relationship + shortcut; Pass: dedicated browser workflow and persisted KPI association |
+| 11 | Check-in with retained history | Existing recorded measurements persist; Pass: subsequent Check-in, recalculated progress, retained history |
 | 12 | Close and record wins/learnings/next steps | Phase3 browser suite |
 | 13 | Meeting talking point → task completion | Not Implemented as requested; existing next-action conversion only |
 | 14 | Management report export | Phase3 report + print rendering; CSV baseline; PPT Not Implemented |
@@ -106,3 +106,14 @@ Final CI and deployment evidence are appended after verification. Local Node mod
 First CI run caught loss of current-week Board observations after Saturday anchoring; corrected to include today's observations in the current column. Second run passed baseline E2E and detected that the closure-detail assertion needed to open the existing progressive-disclosure section; the test now opens it before asserting visible text. No assertions were removed.
 
 Rollback only this release's application/code commits. Preserve current JSON exports before any deliberate data restore. Added fields are additive; no browser store reset or bulk deletion is performed. No raw attachments or private credentials were added to public source.
+
+
+### Verified release candidate
+
+- Application candidate `288852de2087e41e6e247d2350a6523f8a30f68a`: [successful full CI run](https://github.com/hassnboudlaie/hasan-boudlaie/actions/runs/40653437171).
+- Expanded acceptance tests at `12b11fb5a212dd70beca9984f0e382ca38edd8df`: [successful CI run](https://github.com/hassnboudlaie/hasan-boudlaie/actions/runs/40653600793). This commit changes tests only, not application behavior.
+- All suites passed: JS module parsing, Map/Team model, Explore model, browser smoke, Explore E2E, phase-3 lifecycle/check-in/KPI association E2E, keyboard/contrast/touch-target/mobile RTL suite. The app is static HTML/JS/CSS; there is no bundler compilation step to claim.
+- Acceptance 9, 10, 11, 12, 14 and 16 pass within the explicitly local scope. Acceptance 18 passes the tested keyboard tabs, four status-color contrast ratios, tab touch targets, viewport fit and RTL; this is not a complete WCAG audit.
+- Screenshots: [Cascade desktop](qa-20261028/cascade-desktop.png), [Map desktop](qa-20261028/map-desktop.png), [Map mobile](qa-20261028/map-mobile.png). Images contain isolated QA/sample records, not verified Kish performance. A resize-transition image was excluded; the mobile image is after page reload.
+- Source scope verified: only `okr-system/**` plus its existing dedicated regression workflow changed. No other application was edited. Public source attachments and original strategy seed content were not replaced.
+- Deployment proceeds through PR #4 after successful tests; deployment commit and live URL are reported with final verification. Existing URL: https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/#explore
