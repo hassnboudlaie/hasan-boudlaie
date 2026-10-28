@@ -30,21 +30,13 @@ const assert=require('node:assert/strict');
 
   await page.goto(root+'#explore',{waitUntil:'domcontentloaded'});
   await page.waitForSelector('.kx-app');
-  const clean=page.locator('#kish-clean-navigation');
-  assert.ok(await clean.isVisible(),'consolidated operational navigation visible');
-  assert.equal(await nav.locator('[data-kish-nav-original]:visible').count(),0,'old primary menu must be hidden');
-  assert.equal(await clean.locator('a:visible').count(),9,'nine daily operational links, advanced links collapsed');
-  assert.equal(await clean.locator('a[href="#explore"]:visible').count(),1,'one canonical Explore link');
-  assert.equal(await page.locator('[data-kish-advanced-map]').count(),1,'advanced map accessible from Explore');
-  assert.match(await page.locator('#profileBtn').innerText(),/پروفایل محلی/, 'no classroom identity label');
-  const advanced=clean.locator('.kish-nav-details').last();
-  await advanced.locator('summary').click();
-  assert.ok(await advanced.locator('a[href="#map"]').isVisible(),'detailed strategy map remains available');
-  await advanced.locator('a[href="#map"]').click();
+  assert.equal(await nav.locator('> a:visible').count(),9,'nine canonical primary destinations');
+  assert.equal(await nav.locator('a[href="#explore"]:visible').count(),1);
+  assert.match(await page.locator('#profileBtn').innerText(),/پروفایل محلی/);
+  await page.locator('[data-kx-view="map"]').click();
+  await page.getByRole('link',{name:'چیدمان راهبرد، سال و فصل',exact:true}).click();
   await page.waitForSelector('#kmCanvas');
-  assert.ok(await page.locator('#kmViewport').isVisible(),'legacy deep route continues functioning after cleanup');
-  console.log('PASS clean sidebar: nine primary entries, preserved advanced workflows and valid Map deep link');
-
+  console.log('PASS canonical sidebar and integrated rich Map');
 
   await page.goto(root+'#team/company/goals',{waitUntil:'domcontentloaded',timeout:45000});
   await page.waitForSelector('.kt-shell',{timeout:30000});
@@ -58,4 +50,5 @@ const assert=require('node:assert/strict');
   console.log('PASS mobile RTL map');
   assert.deepEqual(failures,[],'No uncaught runtime errors');
  }finally{await browser.close()}
+ await require('./consolidation-browser.cjs')();
 })().catch(error=>{console.error(error);process.exit(1)});
