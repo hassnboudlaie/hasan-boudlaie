@@ -40,4 +40,5 @@ const assert=require('node:assert/strict');
   console.log('PASS mobile RTL map');
   assert.deepEqual(failures,[],'No uncaught runtime errors');
  }finally{await browser.close()}
+ await require('./consolidation-browser.cjs')();
 })().catch(error=>{console.error(error);process.exit(1)});

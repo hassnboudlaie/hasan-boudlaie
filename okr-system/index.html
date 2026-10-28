@@ -1196,7 +1196,7 @@ body.kish-perdoo{--section-nav-height:52px;--ds-space-1:4px;--ds-space-2:8px;--d
 <link rel="stylesheet" href="assets/kish-operational-20261025.css?v=1">
 <link rel="stylesheet" href="assets/kish-strategy-map-20261025.css?v=2">
 <link rel="stylesheet" href="assets/kish-team-dashboard-20261025.css?v=1">
-<link rel="stylesheet" href="assets/kish-explore.css?v=3">
+<link rel="stylesheet" href="assets/kish-explore.css?v=4">
 <!-- Final-layer design tokens: existing modules and navigation remain intact. -->
 <style id="kish-perdoo-contrast-qa">
 /* Override late-loaded theme rules consistently, without changing application structure. */
@@ -4414,15 +4414,66 @@ function pdEnhanceDialogVisual(kind){
  pInstallNav();
 })();
 
+
+/* Canonical operational navigation. Reuses existing renderers and state, no migration. */
+(function kishConsolidation(){
+ const mappings={map:'explore/map/strategy',alignment:'goals/alignment',analytics:'dashboards',reporting:'dashboards/reports',reports:'dashboards/weekly',cadences:'configure/cadences',program:'configure/timeframes',admin:'configure/access',history:'configure/history',setup:'configure/company',strategy:'configure/strategy',cycles:'configure/cycles',rhythm:'sessions/calendar',review:'reviews',kpis:'goals/kpis',meetings:'sessions/one-to-one',company:'goals/company',teams:'organization/manage'};
+ function canonical(hash){const parts=String(hash||'#start').replace(/^#/,'').split('/');return '#'+(mappings[parts[0]]?[mappings[parts.shift()],...parts].join('/'):parts.join('/'));}
+ const entries=[['start','⌂','خانه','Home'],['goals','◎','اهداف و شاخص‌ها','Goals & KPIs'],['explore','◈','کاوش اهداف','Explore'],['organization','▤','تیم‌ها','Teams'],['people','◉','افراد','People'],['dashboards','▦','داشبوردها و گزارش‌ها','Dashboards'],['sessions','◷','جلسات','Meetings'],['reviews','✓','بازبینی‌ها','Reviews'],['configure','⚙','پیکربندی','Configure']];
+ function links(items){return '<nav class="kc-tabs" aria-label="بخش‌های مرتبط">'+items.map(([hash,fa,en])=>'<a href="'+hash+'" '+(location.hash===hash?'aria-current="page" class="active"':'')+'>'+esc(txt(fa,en||fa))+'</a>').join('')+'</nav>';}
+ const configureTabs=[['#configure','نمای کلی','Overview'],['#configure/cadences','تناوب هدف‌گذاری','Cadences'],['#configure/timeframes','بازه‌های زمانی','Timeframes'],['#configure/strategy','راهبرد','Strategy'],['#configure/company','تنظیمات شرکت','Company'],['#configure/access','دسترسی','Access'],['#configure/history','تاریخچه','History'],['#configure/cycles','چرخه‌های ثبت‌شده','Recorded cycles'],['#configure/resources','اسناد','Resources']];
+ const dashboardTabs=[['#dashboards','عملکرد','Performance'],['#dashboards/reports','گزارش واحدها','Unit reporting'],['#dashboards/weekly','گزارش هفتگی','Weekly report']];
+ const sessionTabs=[['#sessions','جلسات و پیگیری','Meetings'],['#sessions/calendar','تقویم اجرا','Calendar'],['#sessions/one-to-one','گفت‌وگوهای فردی','1:1 notes']];
+ const goalTabs=[['#goals','اهداف','Objectives'],['#goals/kpis','شاخص‌ها','KPIs'],['#goals/alignment','تعهدها و هم‌راستایی','Alignment commitments'],['#checkins','ثبت پیشرفت','Check-ins'],['#explore','کاوش و عملیات','Explore']];
+ const homeTabs=[['#start','خانه','Home'],['#projects','ابتکارات و وظایف','Initiatives & tasks'],['#checkins','ثبت پیشرفت','Check-ins'],['#sessions','جلسات','Meetings']];
+ function nav(){const current=location.hash.slice(1).split('/')[0]||'start';const active=['projects','tasks','checkins'].includes(current)?'start':current==='team'?'organization':current;const html='<div class="nav-label">'+txt('اجرای راهبرد','STRATEGY EXECUTION')+'</div>'+entries.map(([key,icon,fa,en])=>'<a href="#'+key+'" '+(key===active?'class="active" aria-current="page"':'')+'><span class="p-nav-icon" aria-hidden="true">'+icon+'</span><span>'+txt(fa,en)+'</span></a>').join('');const target=document.getElementById('platformNav');if(target){target.dataset.consolidated='true';if(target.innerHTML!==html)target.innerHTML=html;}const mobile=document.getElementById('platformMobile');if(mobile)mobile.innerHTML=pOptions(entries.map(([key,,fa,en])=>[key,txt(fa,en)]),active);}
+ pInstallNav=nav;
+ pPages.configure=['پیکربندی','Configure'];pPages.dashboards=['داشبوردها و گزارش‌ها','Dashboards'];pPages.reviews=['بازبینی‌ها','Reviews'];Object.assign(navigationPages,{configure:pPages.configure,dashboards:pPages.dashboards,reviews:pPages.reviews});
+ const oldRender=pRender;
+ function prepend(tabs){document.getElementById('platformBody')?.insertAdjacentHTML('afterbegin',links(tabs));}
+ function legacy(key,tabs){showView(key,false);document.getElementById('contextGuide')?.classList.add('hidden');const view=document.getElementById('view-'+key);view?.querySelector('[data-kc-shell]')?.remove();view?.insertAdjacentHTML('afterbegin','<div data-kc-shell>'+links(tabs)+'</div>');nav();}
+ pRender=function(key,record='',tab=''){
+  if(key==='configure'){
+   if(!record){oldRender('resources');const body=document.getElementById('platformBody');body.innerHTML='<section class="p-page"><h1>'+txt('پیکربندی سامانه','Configure workspace')+'</h1><p>'+txt('تنظیمات موجود در یک مسیر؛ هر تغییر با فرم و قواعد ذخیره‌سازی همان بخش انجام می‌شود.','Existing settings in one place, using their original forms and persistence rules.')+'</p>'+links(configureTabs)+'<div class="p-grid two">'+configureTabs.slice(1).map(([hash,fa,en])=>'<a class="p-card" href="'+hash+'"><h2>'+txt(fa,en)+'</h2></a>').join('')+'</div><p class="p-note">'+txt('نسخه عمومی محلی است؛ تنظیم نقش در مرورگر جایگزین مجوز سروری نیست.','Public storage is local; browser roles are not server authorization.')+'</p></section>';nav();return;}
+   if(['access','history','company','strategy','cycles'].includes(record)){legacy({access:'admin',history:'history',company:'setup',strategy:'strategy',cycles:'cycles'}[record],configureTabs);return;}
+   oldRender({cadences:'cadences',timeframes:'program',resources:'resources'}[record]||'resources',tab);prepend(configureTabs);nav();return;
+  }
+  if(key==='dashboards'){if(record==='weekly'){legacy('reports',dashboardTabs);return;}oldRender(record==='reports'?'reporting':'analytics');prepend(dashboardTabs);nav();return;}
+  if(key==='reviews'){legacy('review',[['#reviews','بازبینی نتایج','Reviews'],['#configure/timeframes','جمع‌بندی دوره','Cycle close']]);return;}
+  if(key==='sessions'&&record==='one-to-one'){legacy('meetings',sessionTabs);return;}
+  if(key==='sessions'&&record==='calendar'){oldRender('rhythm');prepend(sessionTabs);nav();return;}
+  if(key==='goals'&&record==='alignment'){legacy('alignment',goalTabs);return;}
+  if(key==='goals'&&record==='company'){legacy('company',goalTabs);return;}
+  if(key==='goals'&&record==='kpis'){oldRender('kpis',tab);prepend(goalTabs);nav();return;}
+  if(key==='organization'&&record==='manage'){legacy('teams',[['#organization','تیم‌ها','Teams'],['#organization/manage','ویرایش ساختار','Edit structure']]);return;}
+  oldRender(key,record,tab);
+  if(key==='goals'&&!record)prepend(goalTabs);
+  if(key==='sessions')prepend(sessionTabs);
+  if(key==='organization'&&!record)prepend([['#organization','ساختار سازمان','Organization'],['#team/company/goals','اهداف شرکت و واحدها','Team goals'],['#organization/manage','ویرایش ساختار','Edit structure']]);
+  if(['projects','tasks'].includes(key))prepend(homeTabs);
+  nav();
+ };
+ const oldHome=pHome;pHome=function(){return links(homeTabs)+oldHome();};
+ const oldRoute=route;route=function(){const next=canonical(location.hash);if(next!==location.hash){history.replaceState(null,'',next);}oldRoute();nav();};
+ // Preserve authored links while ensuring their destination is canonical even before a click.
+ function normalizeLinks(){document.querySelectorAll('#executionApp a[href^="#"],#platformDialog a[href^="#"]').forEach(a=>{const raw=a.getAttribute('href'),next=canonical(raw);if(raw!==next)a.setAttribute('href',next);});}
+ new MutationObserver(normalizeLinks).observe(document.getElementById('executionApp'),{subtree:true,childList:true});
+ document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const raw=a.getAttribute('href'),next=canonical(raw);if(raw!==next){e.preventDefault();navigateSection(next);}},true);
+ // Rich strategy canvas is now an Explore Map layout; old callbacks refresh the same view.
+ const mapRefresh=window.KishMapBridge.refresh;window.KishMapBridge.refresh=function(){if(location.hash.startsWith('#explore'))window.KishExploreBridge.refresh();else mapRefresh();};
+ window.KishConsolidation={canonical};
+ nav();normalizeLinks();
+})();
+
 Promise.resolve().then(dsInitialize);
 
 })();
 </script>
-<script src="assets/kish-operational-20261025.js?v=1" defer></script>
+<script src="assets/kish-operational-20261025.js?v=4" defer></script>
 <script defer src="assets/kish-strategy-map-20261025.js?v=2"></script>
 <script defer src="assets/kish-team-dashboard-20261025.js?v=1"></script>
 <script defer src="assets/kish-explore-model.js?v=3"></script>
-<script defer src="assets/kish-explore.js?v=3"></script>
+<script defer src="assets/kish-explore.js?v=4"></script>
 </body>
 </html>
 

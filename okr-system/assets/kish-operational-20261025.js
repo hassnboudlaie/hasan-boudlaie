@@ -122,7 +122,7 @@
  }
  function operationalNav(){
   const nav=document.getElementById('platformNav');
-  if(!nav||!nav.querySelector('.pd-nav-group'))return;
+  if(!nav||nav.dataset.consolidated==='true'||!nav.querySelector('.pd-nav-group'))return;
   const entries=[
    ['#history','◷','تاریخچه تغییرات','Change history'],
    ['#admin','⚙','مدیریت دسترسی','Access management']
