@@ -50,7 +50,7 @@ try{
  for(const view of ['cascade','map','board']){await page.locator('[data-kx-view="'+view+'"]').click();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);}
  await page.reload();await page.locator('[data-kx-record="'+goalId+'"]').waitFor();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);
  // Perdoo 3.0 parity: eight sort fields, reversible order, demo-mode disclosure, all read-only.
- assert.equal(await page.locator('[data-kx-sort] option').count(),11);
+ assert.equal(await page.locator('[data-kx-sort] option').count(),12);
  assert.ok(await page.locator('.kx-local-note').isVisible());
  // Perdoo 3.0 Cascade columns: enable, reorder, resize, retain across reload and reset.
  await page.locator('[data-kx-view="cascade"]').click();
@@ -116,6 +116,17 @@ try{
  // Perdoo Explore 3.0 advanced filtering: rendered controls and reversible progress/date range.
  await page.locator('.kx-advanced-filters > summary').click();
  for(const key of ['alignedTo','contributors','tags'])assert.equal(await page.locator('[data-kx-filter="'+key+'"]').count(),1);
+ assert.equal(await page.locator('[data-kx-filter="statuses"]').count(),1);
+ assert.equal(await page.locator('[data-kx-filter="updateCadences"]').count(),1);
+ await page.locator('[data-kx-filter="statuses"]').selectOption(['no-status']);
+ assert.ok(await page.locator('[data-kx-record]').count()>0);
+ await page.locator('[data-kx-filter="statuses"]').selectOption([]);
+ await page.locator('[data-kx-filter="updateCadences"]').selectOption(['30']);
+ assert.ok(await page.locator('[data-kx-record]').count()>0,'KPI monthly cadence filter returns records');
+ await page.locator('[data-kx-filter="updateCadences"]').selectOption([]);
+ await page.locator('[data-kx-sort]').selectOption('status');
+ assert.equal(await page.locator('[data-kx-sort]').inputValue(),'status');
+
  for(const key of ['createdAfter','startAfter','dueBefore'])assert.equal(await page.locator('[data-kx-date="'+key+'"]').count(),1);
  await page.locator('[data-kx-number="progressMin"]').fill('20');await page.locator('[data-kx-number="progressMin"]').press('Tab');
  await page.locator('[data-kx-record="'+goalId+'"]').waitFor();
