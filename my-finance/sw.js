@@ -1,11 +1,11 @@
-const CACHE='my-finance-preview-20261028-bank-transfers-v7';
+const CACHE='my-finance-20261028-mobile-ui-v8';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-v2.svg'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
  event.waitUntil(caches.keys().then(keys=>Promise.all(
-  keys.filter(key=>key.startsWith('my-finance-preview-')&&key!==CACHE).map(key=>caches.delete(key))
+  keys.filter(key=>(key.startsWith('my-finance-preview-')||key.startsWith('my-finance-'))&&key!==CACHE).map(key=>caches.delete(key))
  )).then(()=>self.clients.claim()));
 });
 self.addEventListener('fetch',event=>{
