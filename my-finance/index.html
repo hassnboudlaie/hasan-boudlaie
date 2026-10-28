@@ -120,6 +120,20 @@ async function cloudFetchTransactions(){
  if(!response.ok)throw Error('Google Transactions HTTP '+response.status);
  return (await response.json()).values||[];
 }
+function cloudApplyTransactions(rows){
+ const header=['id','occurredAt','kind','amount','currency','category','description','paymentMethod','accountName','scope','status','source','createdAt','notes'];
+ if(!rows.length||header.some((x,i)=>rows[0][i]!==x))throw Error('ساختار Transactions نامعتبر است.');
+ const records=new Map(db.tx.map(t=>[t.id,t]));let count=0;
+ for(const r of rows.slice(1)){
+  if(!r[0])continue;
+  const id=String(r[0]),kind=String(r[2]),amount=Number(r[3]),currency=String(r[4]);
+  if(!id||id.length>120||!['income','expense'].includes(kind)||!Number.isFinite(amount)||amount<=0||!['IRT','IRR','USD','EUR'].includes(currency))continue;
+  const accountName=String(r[8]||'').slice(0,150);
+  const account=db.accounts.find(a=>a.name===accountName&&a.currency===currency);
+  records.set(id,{id,date:String(r[1]||r[12]||''),kind,amount,currency,category:String(r[5]||'').slice(0,100),memo:String(r[6]||'').slice(0,500),paymentMethod:String(r[7]||''),accountName,account:account?.id||null,scope:String(r[9]||'personal'),status:String(r[10]||'posted'),source:'chatgpt',cloud:true});count++;
+ }
+ db.tx=[...records.values()];return count;
+}
 async function cloudPull(){
  if(cloudBusy)return;
  if(!cloudValid(cloudConfig)){cloudStatus('ابتدا تنظیمات Google Sheets را وارد کنید.');tab('settings');return}
