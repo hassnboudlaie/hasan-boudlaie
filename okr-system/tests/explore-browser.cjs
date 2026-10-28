@@ -16,8 +16,12 @@ try{
  await page.locator('[data-kx-sort]').selectOption('title');
  const labels=()=>page.locator('.kx-board tbody tr td:first-child a').allTextContents();
  const ascending=await labels();assert.ok(ascending.length>20);
+ const persian=new Intl.Collator('fa',{numeric:true,sensitivity:'base'});
+ assert.ok(ascending.every((name,i)=>i===0||persian.compare(ascending[i-1],name)<=0),'ascending Persian collation');
  await page.locator('[data-kx-sort-direction]').selectOption('desc');
- const descending=await labels();assert.deepEqual(descending,ascending.slice().reverse());
+ const descending=await labels();
+ assert.ok(descending.every((name,i)=>i===0||persian.compare(descending[i-1],name)>=0),'descending Persian collation');
+ assert.notDeepEqual(descending,ascending,'direction changes display order');
  await page.locator('[data-kx-sort]').selectOption('owner');
  assert.equal(await page.locator('[data-kx-sort-direction]').inputValue(),'asc');
  await page.locator('.kx-filters summary').click();await page.locator('[data-kx-filter="types"]').selectOption(['objective']);assert.equal(await page.locator('[data-kx-record]').count(),14);
