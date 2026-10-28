@@ -76,6 +76,24 @@ function importChatGPTDraft(){
   const encoded=location.hash.slice(marker.length);
   if(encoded.length>4500)throw Error('payload too long');
   item=JSON.parse(decodeURIComponent(encoded));
+  if(item.type==='receivable'){
+   const raw=item.entry&&typeof item.entry==='object'?item.entry:item;
+   const prepared=validateReceivable(raw);
+   history.replaceState(null,'',location.pathname+location.search);
+   if(($('rcvname').value||$('rcvprincipal').value||$('rcvnotes').value)&&!confirm('پیش‌نویس طلب فعلی با اطلاعات ChatGPT جایگزین شود؟'))return;
+   $('rcvname').value=prepared.counterparty;
+   $('rcvcurrency').value=prepared.currency;
+   $('rcvprincipal').value=prepared.principal;
+   $('rcvexpected').value=prepared.expected;
+   $('rcvterm').value=prepared.termMonths||'';
+   $('rcvdue').value=prepared.dueMonth;
+   $('rcvlocation').value=prepared.location;
+   $('rcvsector').value=prepared.sector;
+   $('rcvnotes').value=prepared.notes;
+   tab('receivables');
+   alert('پیش‌نویس طلب از ChatGPT آماده شد. مشخصات و سررسید را بررسی کن و برای ذخیره، «بررسی و ثبت طلب» را بزن. هیچ رکوردی خودکار ثبت نشده است.');
+   return;
+  }
   if(item.type!=='transaction'||!['income','expense'].includes(item.kind))throw Error('unsupported transaction');
   const amount=Number(item.amount);
   if(!Number.isFinite(amount)||amount<=0||amount>1e15)throw Error('invalid amount');
