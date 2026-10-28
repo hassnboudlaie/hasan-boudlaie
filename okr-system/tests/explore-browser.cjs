@@ -7,7 +7,47 @@ try{
  await page.getByRole('button',{name:'＋ رکن',exact:true}).click();await page.locator('[data-kx-pillar] input[name="title"]').fill('QA nested pillar');await page.locator('[data-kx-pillar] select').selectOption('doc-pillar-1');await page.getByRole('button',{name:'ذخیره رکن',exact:true}).click();assert.equal(await page.locator('[data-kx-record]').count(),initial+1);await page.reload();await page.getByRole('link',{name:'QA nested pillar',exact:true}).waitFor();
  await page.getByRole('button',{name:'＋ هدف',exact:true}).click();await fill({objective:'QA weighted goal',owner:'QA owner'});await page.locator('#pf-parentId').selectOption('doc-pillar-1');await page.locator('#pf-progressMode').selectOption('weighted');await page.getByRole('button',{name:'ذخیره',exact:true}).click();await page.getByRole('heading',{name:'QA weighted goal',exact:true}).waitFor();const goalUrl=page.url(),goalId=goalUrl.split('/').at(-1);
  for(const [title,current,weight] of [['QA KR one','100','1'],['QA KR two','0','3']]){await page.getByRole('button',{name:'افزودن نتیجه کلیدی',exact:true}).click();await fill({text:title,owner:'QA owner',unit:'%',baseline:'0',target:'100',current,weight,measurementNote:'Synthetic CI evidence'});await page.getByRole('button',{name:'ذخیره',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await page.goto(goalUrl);}
- await page.goto(root+'#explore');for(const view of ['cascade','map','board']){await page.locator('[data-kx-view="'+view+'"]').click();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);}
+ await page.goto(root+'#explore');
+ // Perdoo 3.0 Cascade: direct edits must mutate existing authoritative goals, not a duplicate store.
+ const qaRow=()=>page.locator('[data-kx-record="'+goalId+'"]').first();
+ await qaRow().locator('[data-kx-action="inline-owner"]').first().click();
+ await qaRow().locator('[data-kx-inline][data-field="owner"] input').fill('QA updated lead');
+ await qaRow().locator('[data-kx-inline][data-field="owner"] button[type="submit"]').click();
+ let current=await page.evaluate(id=>window.KishExploreBridge.snapshot().goals.find(g=>g.id===id),goalId);
+ assert.equal(current.owner,'QA updated lead','inline Lead persisted to original Objective');
+ await qaRow().locator('[data-kx-action="inline-stage"]').first().click();
+ await qaRow().locator('[data-kx-inline][data-field="stage"] select').selectOption('review');
+ await qaRow().locator('[data-kx-inline][data-field="stage"] button[type="submit"]').click();
+ current=await page.evaluate(id=>window.KishExploreBridge.snapshot().goals.find(g=>g.id===id),goalId);
+ assert.equal(current.status,'review','inline Stage persisted');
+ const beforeTeam=await page.evaluate(id=>window.KishExploreBridge.snapshot().teams.filter(t=>t.okrs.some(g=>g.id===id)).map(t=>t.id),goalId);
+ await qaRow().locator('[data-kx-action="inline-team"]').first().click();
+ const teamSelector=qaRow().locator('[data-kx-inline][data-field="team"] select');
+ const teamOptions=await teamSelector.locator('option').evaluateAll(options=>options.map(o=>o.value).filter(v=>v&&v!=='company'));
+ assert.ok(teamOptions.length>0,'organizational teams available');
+ const targetTeam=teamOptions.find(v=>!beforeTeam.includes(v))||teamOptions[0];
+ await teamSelector.selectOption(targetTeam);
+ await qaRow().locator('[data-kx-inline][data-field="team"] button[type="submit"]').click();
+ let afterSnapshot=await page.evaluate(()=>window.KishExploreBridge.snapshot());
+ assert.ok(afterSnapshot.teams.find(t=>t.id===targetTeam).okrs.some(g=>g.id===goalId),'Objective moved to destination Team');
+ assert.equal(afterSnapshot.teams.filter(t=>t.okrs.some(g=>g.id===goalId)).length,1,'Objective belongs to exactly one Team');
+ assert.equal(afterSnapshot.goals.filter(g=>g.id===goalId).length,1,'shared normalized records have no duplication');
+ const cycle=afterSnapshot.cycles.find(c=>!c.closedAt);
+ if(cycle){
+  await qaRow().locator('[data-kx-action="inline-timeframe"]').first().click();
+  await qaRow().locator('[data-kx-inline][data-field="timeframe"] select').selectOption(cycle.id);
+  await qaRow().locator('[data-kx-inline][data-field="timeframe"] button[type="submit"]').click();
+  afterSnapshot=await page.evaluate(()=>window.KishExploreBridge.snapshot());
+  assert.ok(afterSnapshot.cycles.find(c=>c.id===cycle.id).goalIds.includes(goalId),'Timeframe membership persisted');
+ }
+ const invalidTeam=await page.evaluate(id=>{try{window.KishExploreBridge.inline(id,'team','missing-qa-unit');return '';}catch(error){return error.message;}},goalId);
+ assert.match(invalidTeam,/واحد|معتبر/,'invalid Team rejected in transactional bridge');
+ await qaRow().locator('[data-kx-action="inline-title"]').first().click();
+ assert.ok(await qaRow().locator('[data-kx-inline][data-field="title"]').isVisible());
+ await qaRow().locator('[data-kx-action="cancel-inline"]').click();
+ await page.reload();await qaRow().waitFor();
+ assert.match(await qaRow().innerText(),/QA updated lead/);
+ for(const view of ['cascade','map','board']){await page.locator('[data-kx-view="'+view+'"]').click();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);}
  await page.reload();await page.locator('[data-kx-record="'+goalId+'"]').waitFor();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);
  // Perdoo 3.0 parity: eight sort fields, reversible order, demo-mode disclosure, all read-only.
  assert.equal(await page.locator('[data-kx-sort] option').count(),11);
@@ -126,5 +166,5 @@ try{
  const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish_qa_explore-ci:kish_okr_free_practice_v1')));assert.equal(snapshot.state.companyOkrs.find(g=>g.id===goalId).progressMode,'weighted');assert.deepEqual(snapshot.state.companyOkrs.find(g=>g.id===goalId).krs.map(k=>k.weight),[1,3]);assert.ok(await page.evaluate(()=>localStorage.getItem('kish_qa_explore-ci:kish_okr_before_unified_explore_v1')));
  // Cross-tab optimistic revision guard: a stale edit must not overwrite newer data.
  const second=await context.newPage();await second.goto(root+'#explore');await second.waitForSelector('.kx-app');await page.getByRole('button',{name:'＋ رکن',exact:true}).click();await page.locator('[data-kx-pillar] input').fill('QA first writer');await page.getByRole('button',{name:'ذخیره رکن',exact:true}).click();await second.getByRole('button',{name:'＋ رکن',exact:true}).click();await second.locator('[data-kx-pillar] input').fill('QA stale writer');await second.getByRole('button',{name:'ذخیره رکن',exact:true}).click();assert.match(await second.locator('[data-kx-error]').innerText(),/ذخیره|تعارض/);await second.close();
- await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: Saved View folders/columns, custom Board periods, KPI edit cells, custom columns, drag-ready ordering, column widths, KPI Tree, advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
+ await page.setViewportSize({width:390,height:844});await page.goto(root+'#explore');assert.equal(await page.locator('.kx-app').getAttribute('dir'),'rtl');await page.locator('[data-kx-view="map"]').click();assert.ok(await page.locator('.kx-map').isVisible());assert.deepEqual(errors,[]);console.log('PASS Explore 3.0 E2E: transactional inline Team/Lead/Timeframe/Stage, Saved View folders/columns, custom Board periods, KPI edit cells, custom columns, drag-ready ordering, column widths, KPI Tree, advanced date/progress/contributor/tag/alignment controls, 11 sorts, create pillar/goal/KRs, weighted 25% in three views, reload, filters, saved view, backup, stale write protection, mobile RTL');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1)});
