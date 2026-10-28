@@ -46,3 +46,10 @@ body.kish-perdoo #authScreen #platformHomeQuick,body.kish-perdoo #authScreen .le
  body.kish-perdoo #authScreen .home-card .home-icon{display:none}
  body.kish-perdoo #authScreen .home-card p{margin-bottom:16px}
 }
+/* The entry is a screen, not an overlay exposing the previous module below it. */
+body.kish-perdoo:has(#authScreen:not(.hidden)) #executionApp{display:none!important}
+body.kish-perdoo #authScreen .home-intro{background:transparent!important;padding:0!important;box-shadow:none!important}
+body.kish-perdoo #authScreen .home-intro h1:focus{outline:none}
+body.kish-perdoo #authScreen .execution-choice{background:#153f58!important;box-shadow:none!important}
+body.kish-perdoo #authScreen .execution-choice .btn{background:#fff!important;color:#123c55!important;border-color:#fff!important}
+body.kish-perdoo #authScreen .document-entry{background:#f6f9fb!important;box-shadow:none!important}

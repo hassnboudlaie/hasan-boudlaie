@@ -23,11 +23,11 @@ try{
   const entry=await page.locator('#authScreen').evaluate(el=>{const h=el.querySelector('h1'),b=el.querySelector('#entryExecBtn');return {heading:getComputedStyle(h).fontSize,button:b.getBoundingClientRect().height,overflow:el.scrollWidth>el.clientWidth+2};});
   assert.ok(parseFloat(entry.heading)>=28);assert.ok(entry.button>=44);assert.equal(entry.overflow,false);
   assert.ok(await page.locator('#entryExecBtn').isVisible());assert.ok(await page.locator('#documentEntryBtn').isVisible());
-  assert.equal(await page.locator('#platformHomeQuick').isVisible(),false);
+  assert.equal(await page.locator('#platformHomeQuick').isVisible(),false);assert.equal(await page.locator('#executionApp').isVisible(),false,'entry must conceal previous module');
   await page.screenshot({path:'okr-system/tests/artifacts/consolidation-entry-'+width+'.png',fullPage:true,animations:'disabled'});
  }
  await page.locator('#documentEntryBtn').click();await page.locator('#view-document.active').waitFor();
- await page.goto(root+'#home');await page.locator('#entryExecBtn').click();await page.waitForURL('**#start');await page.locator('#view-start.active').waitFor();
+ await page.goto(root+'#home');await page.locator('#entryExecBtn').click();await page.waitForURL('**#start');await page.locator('#view-start.active').waitFor();assert.ok(await page.locator('#executionApp').isVisible());
  assert.deepEqual(errors,[]);console.log('PASS consolidation: 9 primary destinations, 18 legacy aliases, preserved records, Map pillar/zoom/layout/Board refresh, timeframe form, desktop/mobile RTL');
 }finally{await browser.close();}};
 if(require.main===module)module.exports().catch(e=>{console.error(e);process.exit(1)});
