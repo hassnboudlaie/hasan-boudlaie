@@ -173,6 +173,129 @@
    }
   });
  }
+ function consolidateOperationalNav(){
+  const nav=document.getElementById('platformNav');
+  if(!nav||!nav.querySelector('.pd-nav-group'))return;
+  // Perdoo 3.0-style information architecture: one visible entry per daily task,
+  // with advanced legacy workflows reachable without duplicating the primary menu.
+  const sections=[
+   {name:'خانه',items:[['#start','⌂','میز کار','Home']]},
+   {name:'اهداف و عملکرد',items:[
+    ['#explore','◈','کاوش یکپارچه اهداف','Explore'],
+    ['#goals','◎','اهداف و نتایج کلیدی','Goals'],
+    ['#kpis','▥','شاخص‌های عملکرد','KPIs'],
+    ['#analytics','▦','داشبوردها','Dashboards']]},
+   {name:'سازمان و اجرا',items:[
+    ['#organization','▤','تیم‌ها و واحدها','Teams'],
+    ['#people','◉','افراد و مسئولان','People'],
+    ['#sessions','◷','جلسات و پیگیری','Meetings'],
+    ['#projects','◇','ابتکارات و وظایف','Initiatives']]},
+   {name:'تنظیمات و ابزارهای تکمیلی',details:[
+    {name:'پیکربندی',en:'Configure',items:[
+     ['#cadences','◴','تناوب هدف‌گذاری','Cadences'],
+     ['#program','▦','بازه‌های زمانی','Timeframes'],
+     ['#admin','⚙','مدیریت دسترسی','Access management']]},
+    {name:'نماها و ابزارهای پیشرفته',en:'Advanced views',items:[
+     ['#map','◇','نقشه تفصیلی راهبرد','Detailed strategy map'],
+     ['#team/company/goals','👥','داشبورد اهداف واحدها','Team goals dashboard'],
+     ['#rhythm','▤','تقویم جلسات و Check-in','Meetings and check-ins calendar'],
+     ['#reporting','≡','گزارش‌های تفصیلی','Detailed reports'],
+     ['#revision','↻','پیگیری استقرار','Implementation follow-up'],
+     ['#resources','▧','اسناد و مراجع','Documents and references'],
+     ['#history','◷','تاریخچه تغییرات','Change history']]}
+   ]}
+  ];
+  // Original navigation is retained for router compatibility, not displayed.
+  const original=[...nav.querySelectorAll(':scope > .pd-nav-group:not([data-kish-clean-nav])')];
+  original.forEach(group=>{
+   group.setAttribute('data-kish-nav-original','');
+   group.hidden=true;
+   group.setAttribute('aria-hidden','true');
+  });
+  let clean=nav.querySelector('#kish-clean-navigation');
+  if(!clean){
+   clean=document.createElement('div');
+   clean.id='kish-clean-navigation';
+   clean.setAttribute('data-kish-clean-nav','');
+   for(const section of sections){
+    const group=document.createElement('div');
+    group.className='pd-nav-group';
+    group.setAttribute('data-kish-clean-nav','');
+    const title=document.createElement('div');
+    title.className='nav-label';
+    title.textContent=section.name;
+    group.appendChild(title);
+    const addLink=(item,host)=>{
+     const [href,icon,fa,en]=item;
+     const a=document.createElement('a');
+     a.href=href;
+     a.dataset.kishFa=fa;
+     a.dataset.kishEn=en;
+     const ico=document.createElement('span');
+     ico.className='p-nav-icon';
+     ico.setAttribute('aria-hidden','true');
+     ico.textContent=icon;
+     const label=document.createElement('span');
+     label.className='kish-nav-text';
+     a.append(ico,label);
+     host.appendChild(a);
+    };
+    (section.items||[]).forEach(item=>addLink(item,group));
+    (section.details||[]).forEach(sub=>{
+     const details=document.createElement('details');
+     details.className='kish-nav-details';
+     const summary=document.createElement('summary');
+     summary.dataset.kishFa=sub.name;
+     summary.dataset.kishEn=sub.en;
+     summary.textContent=sub.name;
+     details.appendChild(summary);
+     const links=document.createElement('div');
+     links.className='kish-nav-submenu';
+     sub.items.forEach(item=>addLink(item,links));
+     details.appendChild(links);
+     group.appendChild(details);
+    });
+    clean.appendChild(group);
+   }
+   nav.appendChild(clean);
+  }
+  const current='#'+location.hash.replace(/^#/,'').split('/')[0];
+  const lang=document.documentElement.lang==='en'?'en':'fa';
+  clean.querySelectorAll('a[href^="#"]').forEach(a=>{
+   const href=a.getAttribute('href');
+   a.classList.toggle('active',location.hash===href||location.hash.startsWith(href+'/'));
+   if(a.classList.contains('active')){
+    a.setAttribute('aria-current','page');
+    a.closest('.kish-nav-details')?.setAttribute('open','');
+   }else a.removeAttribute('aria-current');
+   const label=a.querySelector('.kish-nav-text');
+   if(label){
+    const desired=lang==='en'?a.dataset.kishEn:a.dataset.kishFa;
+    if(label.textContent!==desired)label.textContent=desired;
+   }
+  });
+  clean.querySelectorAll('summary[data-kish-fa]').forEach(t=>{
+   const desired=lang==='en'?t.dataset.kishEn:t.dataset.kishFa;
+   if(t.textContent!==desired)t.textContent=desired;
+  });
+  const profile=document.getElementById('profileBtn');
+  if(profile){
+   const name=lang==='en'?'Local profile':'پروفایل محلی من';
+   if(profile.textContent.trim()!==name)profile.textContent=name;
+   profile.title=lang==='en'?'Local evaluation identity, not a verified organizational account':'هویت محلی در نسخه ارزیابی؛ حساب سازمانی تأییدشده نیست';
+  }
+ }
+ function addExploreDetailedMapLink(){
+  if(!location.hash.startsWith('#explore'))return;
+  const tools=document.querySelector('.kx-header .kx-actions');
+  if(!tools||tools.querySelector('[data-kish-advanced-map]'))return;
+  const link=document.createElement('a');
+  link.href='#map';
+  link.dataset.kishAdvancedMap='';
+  link.textContent=document.documentElement.lang==='en'?'Detailed strategy map':'نقشه تفصیلی راهبرد';
+  link.title='نمای تکمیلی شامل Zoom و پیمایش نقشه؛ داده‌های هدف مشترک هستند';
+  tools.appendChild(link);
+ }
  function removeLearningUI(){
   document.querySelectorAll('.learning-choice,.home-guide,.p-sidebar-legacy,#topTrainingBtn,#trainingScreen').forEach(el=>{el.hidden=true;el.setAttribute('aria-hidden','true');});
   const hero=document.querySelector('#authScreen .home-intro p');
@@ -201,7 +324,7 @@
  function run(){
   if(busy)return;
   busy=true;
-  try{removeLearningUI();operationalNav();removeObsoleteNavigation();replaceLabels();}
+  try{removeLearningUI();operationalNav();removeObsoleteNavigation();consolidateOperationalNav();replaceLabels();addExploreDetailedMapLink();}
   finally{busy=false;}
  }
  function preventTrainingRoute(){

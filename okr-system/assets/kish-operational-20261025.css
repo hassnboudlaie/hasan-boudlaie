@@ -93,3 +93,22 @@ body.kish-perdoo{--navy:#163958!important;--ink:#223750!important;--text:#223750
 
 /* Retired training links must remain hidden even when sidebar anchor styles set display. */
 .kish-perdoo #platformNav a[hidden]{display:none!important}
+
+
+/* Firecrawl-verified Perdoo 3.0 navigation consolidation. Legacy routes remain live. */
+.kish-perdoo #platformNav>[data-kish-nav-original]{display:none!important}
+.kish-perdoo #kish-clean-navigation{display:block;min-width:0}
+.kish-perdoo #kish-clean-navigation>.pd-nav-group{margin-bottom:9px!important;padding:6px 7px 9px!important}
+.kish-perdoo #kish-clean-navigation>.pd-nav-group .nav-label{font-size:12px!important;letter-spacing:0!important}
+.kish-perdoo #kish-clean-navigation a{display:flex;align-items:center;min-height:43px!important}
+.kish-perdoo #kish-clean-navigation .kish-nav-details{border-top:1px solid rgba(205,228,244,.17);margin:6px 1px 0}
+.kish-perdoo #kish-clean-navigation .kish-nav-details>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;list-style:none;padding:12px 13px;color:#f0f8ff;font-size:14px;font-weight:750;border-radius:10px}
+.kish-perdoo #kish-clean-navigation .kish-nav-details>summary::-webkit-details-marker{display:none}
+.kish-perdoo #kish-clean-navigation .kish-nav-details>summary::after{content:'⌄';color:#bdeafb;font-size:18px}
+.kish-perdoo #kish-clean-navigation .kish-nav-details[open]>summary::after{content:'⌃'}
+.kish-perdoo #kish-clean-navigation .kish-nav-details>summary:hover,.kish-perdoo #kish-clean-navigation .kish-nav-details>summary:focus-visible{background:rgba(255,255,255,.12);outline-offset:2px}
+.kish-perdoo #kish-clean-navigation .kish-nav-submenu{padding-inline-start:8px;border-inline-start:2px solid rgba(112,202,250,.3)}
+.kish-perdoo #kish-clean-navigation .kish-nav-submenu>a{font-size:13px!important;min-height:42px!important}
+.kish-perdoo .kx-header a[data-kish-advanced-map]{font:inherit;display:inline-flex;align-items:center;justify-content:center;border:1px solid #2c669b;background:#fff;color:#17466c!important;border-radius:10px;padding:9px 13px;min-height:44px;font-weight:750;text-decoration:none;white-space:normal}
+.kish-perdoo .kx-header a[data-kish-advanced-map]:hover,.kish-perdoo .kx-header a[data-kish-advanced-map]:focus-visible{background:#e9f5ff;outline-offset:3px}
+@media(max-width:700px){.kish-perdoo #kish-clean-navigation .kish-nav-details>summary{min-height:45px}.kish-perdoo .kx-header a[data-kish-advanced-map]{width:100%}}
