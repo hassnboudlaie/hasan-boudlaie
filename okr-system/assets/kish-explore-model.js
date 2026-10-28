@@ -63,6 +63,33 @@ function historicalValue(row,d,end){const before=h=>h.at&&h.at.slice(0,10)<=end;
 function day(v){if(!v)return null;const s=v instanceof Date?v.toISOString().slice(0,10):String(v).slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return null;const n=Date.parse(s+'T00:00:00Z');return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===s?n:null;}
 function expected(start,end,now=new Date()){const a=day(start),b=day(end),t=day(now);if(a===null||b===null||t===null||b<a)return null;if(a===b)return t>=b?100:0;return Math.max(0,Math.min(100,(t-a)/(b-a)*100));}
 function weekStart(value){const n=day(value);if(n===null)return null;const d=new Date(n);d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+1)%7);return d.toISOString().slice(0,10);}
+function boardPeriods(mode='weekly',count=6,asOf=new Date()){
+ const last=day(asOf);if(last===null)throw Error('تاریخ مرجع Board معتبر نیست.');
+ const length=[6,12,26].includes(Number(count))?Number(count):6;
+ const type=['weekly','monthly','quarterly'].includes(mode)?mode:'weekly';
+ const dateLabel=v=>new Intl.DateTimeFormat('fa-IR-u-ca-persian',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(v+'T00:00:00Z'));
+ if(type==='weekly'){
+  const current=weekStart(last),first=day(current);
+  return Array.from({length},(_,i)=>{
+   const offset=length-1-i;
+   const end=offset===0?last:new Date(first-86400000-(offset-1)*604800000).toISOString().slice(0,10);
+   return {key:'week-'+weekStart(end),end,label:dateLabel(end)};
+  });
+ }
+ const parts=new Intl.DateTimeFormat('en-US-u-ca-persian',{year:'numeric',month:'numeric',timeZone:'UTC'});
+ const results=[],seen=new Set();
+ for(let i=0;i<1600&&results.length<length;i++){
+  const at=new Date(day(last)-i*86400000).toISOString().slice(0,10);
+  const data=parts.formatToParts(new Date(at+'T00:00:00Z'));
+  const year=Number(data.find(x=>x.type==='year')?.value),month=Number(data.find(x=>x.type==='month')?.value);
+  const quarter=Math.ceil(month/3),key=type==='monthly'?year+'-'+month:year+'-Q'+quarter;
+  if(seen.has(key))continue;
+  seen.add(key);
+  const label=type==='monthly'?new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'long',timeZone:'UTC'}).format(new Date(at+'T00:00:00Z')):'سه‌ماهه '+new Intl.NumberFormat('fa-IR').format(quarter)+' · '+new Intl.NumberFormat('fa-IR').format(year);
+  results.push({key,end:at,label});
+ }
+ return results.reverse();
+}
 function cloneGoal(g,makeId){const c=JSON.parse(JSON.stringify(g));c.id=makeId();c.objective=g.objective+' — رونوشت';c.status='draft';c.archived=false;c.dependencies=[];c.krs=(c.krs||[]).map(k=>{const n={...k,id:makeId(),current:'',lastUpdate:'',confidence:''};delete n.lastNote;return n;});for(const key of ['sourceId','sourcePage','closedAt','closingNotes','closureHistory','clonedFrom','comments','createdAt','updatedAt'])delete c[key];c.clonedFrom=g.id;return c;}
-return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,cloneGoal};
+return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,boardPeriods,cloneGoal};
 });
