@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="My Finance professional logo">
+<defs>
+ <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#174779"/><stop offset=".47" stop-color="#09264E"/><stop offset="1" stop-color="#06162E"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF0BB"/><stop offset=".42" stop-color="#F2CF80"/><stop offset="1" stop-color="#C98A35"/></linearGradient>
+ <linearGradient id="wave" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#2B76B2"/><stop offset=".55" stop-color="#164977"/><stop offset="1" stop-color="#0B2850"/></linearGradient>
+ <radialGradient id="halo" cx=".3" cy=".1" r=".9"><stop stop-color="#67AFED" stop-opacity=".22"/><stop offset="1" stop-color="#67AFED" stop-opacity="0"/></radialGradient>
+ <clipPath id="round"><rect x="8" y="8" width="496" height="496" rx="103"/></clipPath>
+</defs>
+<g clip-path="url(#round)">
+ <rect x="8" y="8" width="496" height="496" fill="url(#navy)"/>
+ <rect x="8" y="8" width="496" height="496" fill="url(#halo)"/>
+ <path d="M108 330C111 204 194 104 310 91C363 85 404 101 430 119" fill="none" stroke="#F3CE7B" stroke-width="12" stroke-linecap="round" opacity=".94"/>
+ <rect x="169" y="297" width="48" height="119" rx="8" fill="url(#gold)"/>
+ <rect x="242" y="249" width="48" height="167" rx="8" fill="url(#gold)"/>
+ <rect x="315" y="199" width="48" height="217" rx="8" fill="url(#gold)"/>
+ <path d="M104 390C187 350 264 301 337 228C367 198 388 173 415 132" fill="none" stroke="#0A1930" stroke-width="33" stroke-linecap="round" opacity=".55"/>
+ <path d="M104 383C181 350 261 302 337 228C367 198 388 173 415 132" fill="none" stroke="url(#gold)" stroke-width="19" stroke-linecap="round"/>
+ <path d="M370 145L439 106L431 184Z" fill="url(#gold)"/>
+ <path d="M0 432C85 353 144 380 219 414C295 449 365 447 512 361V512H0Z" fill="url(#wave)"/>
+ <path d="M0 456C97 399 162 429 230 452C301 477 388 470 512 411V512H0Z" fill="#05162E" opacity=".6"/>
+</g>
+<rect x="8.5" y="8.5" width="495" height="495" rx="103" fill="none" stroke="#608BB1" stroke-width="1.5" opacity=".65"/>
+</svg>
