@@ -23,8 +23,10 @@ try{
  assert.equal(order[2],'lead','configurable column order persists in Cascade');
  await page.locator('[data-kx-width="lead"]').focus();
  await page.keyboard.press('ArrowRight');
+ await page.keyboard.press('Tab');
+ const widthValue=Number(await page.locator('[data-kx-width="lead"]').inputValue());
  const width=await page.locator('.kx-cascade th[data-kx-col="lead"]').evaluate(x=>parseInt(x.style.minWidth,10));
- assert.ok(width>=170,'column width adjusted');
+ assert.equal(width,widthValue,'RTL keyboard-adjusted column width is reflected in Cascade');
  await page.reload();await page.locator('.kx-cascade').waitFor();
  assert.equal(await page.locator('.kx-cascade th[data-kx-col="lead"]').count(),1);
  assert.equal(await page.locator('.kx-cascade th[data-kx-col]').count(),5);
