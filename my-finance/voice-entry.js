@@ -554,6 +554,18 @@ async function startAIRecording(){
  }catch(e){aiClearRecorder();status('اجازه ضبط صدا داده نشد یا میکروفون در دسترس نیست. از ورود متنی استفاده کنید.',true)}
 }
 function startSelected(){
+ if(aiRecorder&&aiRecorder.state==='recording')return startAIRecording();
+ const apple=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
+ if(apple){
+  if(listening)stopListening();
+  if(window.MyFinanceAI&&navigator.mediaDevices?.getUserMedia&&typeof MediaRecorder!=='undefined'){
+   status('در حال آماده‌سازی ضبط واقعی صدا در آیفون…');
+   return startAIRecording();
+  }
+  keyboardDictation();
+  status('ضبط مستقیم و تبدیل گفتار در این نسخه Safari در دسترس نیست. میکروفون صفحه‌کلید آیفون را بزنید، صحبت کنید و سپس «بررسی» را انتخاب کنید.',true);
+  return;
+ }
  if($('voice-ai-consent')?.checked){if(listening)stopListening();return startAIRecording()}
  if(aiRecorder){aiClearRecorder();return}
  return start();
