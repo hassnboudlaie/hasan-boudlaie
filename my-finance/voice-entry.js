@@ -105,17 +105,21 @@ function parse(raw,accounts=[]){
  if(/(?:حساب|بانک|کارت|کیف\s+پول)/.test(text)&&!account)warnings.push('حساب یا کارت گفته‌شده به‌طور قطعی شناسایی نشد؛ حساب را انتخاب کنید.');
  return {amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/(?:شرکت|کاری|پروژه|بیزنس)/.test(text)?'business':'personal',warnings};
 }
-let recognition=null,listening=false,hasSaved=false,voiceTimer=null,voiceToken=0,transcript='',voiceError='',hadAudio=false;
+let recognition=null,listening=false,hasSaved=false,voiceTimer=null,restartTimer=null,voiceToken=0,transcript='',voiceError='',hadAudio=false,voiceSession=null;
 function setMic(active){
  const b=$('voice-mic');if(!b)return;
  b.setAttribute('aria-pressed',String(active));b.textContent=active?'■':'🎙';
  b.title=active?'پایان شنیدن و بررسی نتیجه':'شروع تشخیص گفتار';
  b.setAttribute('aria-label',active?'توقف شنیدن':'شروع ثبت صوتی');
 }
-function clearVoiceTimer(){if(voiceTimer!==null){clearTimeout(voiceTimer);voiceTimer=null}}
+function clearVoiceTimer(){
+ if(voiceTimer!==null){clearTimeout(voiceTimer);voiceTimer=null}
+ if(restartTimer!==null){clearTimeout(restartTimer);restartTimer=null}
+}
 function stopListening(message='',isError=false){
  ++voiceToken;clearVoiceTimer();
- const current=recognition;recognition=null;listening=false;setMic(false);
+ const current=recognition;
+ voiceSession=null;recognition=null;listening=false;setMic(false);
  if(current){try{current.abort()}catch(e){}}
  if(message)status(message,isError);
 }
@@ -185,98 +189,143 @@ function preview(raw){
  return parsed;
 }
 function previewFromInput(){return preview($('quick').value)}
+function joinSpeech(previous,newText){
+ const a=String(previous||'').trim(),b=String(newText||'').trim();
+ if(!b)return a;
+ if(!a)return b;
+ if(a===b||a.endsWith(' '+b)||a.endsWith(b))return a;
+ if(b.startsWith(a))return b;
+ const left=a.replace(/[.،؛!؟\s]+$/g,''),right=b.replace(/^[.،؛!؟\s]+/g,'');
+ const leftWords=left.split(/\s+/),rightWords=right.split(/\s+/);
+ for(let n=Math.min(leftWords.length,rightWords.length,9);n>=1;n--){
+  if(leftWords.slice(-n).join(' ')==rightWords.slice(0,n).join(' '))
+   return left+' '+rightWords.slice(n).join(' ');
+ }
+ return left+' '+right;
+}
+function finishVoice(session,reason='',failed=false){
+ if(!session||session.token!==voiceToken||voiceSession!==session)return;
+ const all=joinSpeech(session.base,session.partial);
+ ++voiceToken;clearVoiceTimer();
+ const current=recognition;
+ recognition=null;voiceSession=null;listening=false;setMic(false);
+ if(current){try{current.abort()}catch(e){}}
+ if(all.trim()){
+  $('quick').value=all;
+  preview(all);
+  if(failed)status('گفتار کامل دریافت نشد؛ متن را بررسی و بخش ناقص را دستی تکمیل کنید.',true);
+ }else status(reason||recognitionFallback('هیچ گفتاری به متن تبدیل نشد.'),true);
+}
 function start(){
- if(listening){
-  // Deliberately stop on a second tap. Preserve the best partial transcript.
-  const last=transcript.trim();stopListening();
-  if(last){$('quick').value=last;preview(last)}
-  else status(recognitionFallback('شنیدن متوقف شد ولی متنی دریافت نشد.'),true);
+ if(listening&&voiceSession){
+  const session=voiceSession;
+  finishVoice(session,'شنیدن متوقف شد و متنی دریافت نشد.',false);
   return;
  }
  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!Speech){
-  status(recognitionFallback('تشخیص گفتار داخلی در این مرورگر پشتیبانی نمی‌شود.'),true);
+  status(recognitionFallback('تشخیص گفتار در این مرورگر پشتیبانی نمی‌شود.'),true);
   return;
  }
  if(!document.body.classList.contains('finance-unlocked')){
-  status('ابتدا وارد حساب شخصی خود شوید.',true);return;
+  status('ابتدا وارد حساب شخصی خود شوید.',true);
+  return;
  }
  const token=++voiceToken;
- transcript='';voiceError='';hadAudio=false;
- try{
+ const session={token,base:$('quick').value.trim(),partial:'',cycle:0,emptyCycles:0,errors:0,seconds:75,startedAt:Date.now()};
+ voiceSession=session;
+ listening=true;hadAudio=false;voiceError='';transcript=session.base;
+ setMic(true);
+ const renderLive=()=>{
+  transcript=joinSpeech(session.base,session.partial);
+  $('quick').value=transcript;
+ };
+ function beginCycle(){
+  if(session!==voiceSession||token!==voiceToken||!listening)return;
+  if(Date.now()-session.startedAt>75000||session.cycle>=12){
+   finishVoice(session,'مهلت ضبط تمام شد؛ لطفاً دوباره تلاش کنید.',false);
+   return;
+  }
+  session.cycle++;
+  session.partial='';
+  let resultsSeen=false,cycleError='', ended=false;
   const r=new Speech();
   recognition=r;
-  r.lang='fa-IR';r.interimResults=true;r.maxAlternatives=1;r.continuous=false;
-  let finished=false;
-  const finish=(message='',isError=false)=>{
-   if(finished||token!==voiceToken)return;
-   finished=true;clearVoiceTimer();recognition=null;listening=false;setMic(false);
-   if(transcript.trim()){
-    $('quick').value=transcript.trim();
-    preview(transcript.trim());
-    if(voiceError)status('بخشی از گفتار دریافت شد؛ متن را بررسی کنید و سپس تأیید کنید.');
-   }else status(message||recognitionFallback('گفتاری به متن تبدیل نشد.'),isError||!message);
-  };
+  r.lang='fa-IR';r.interimResults=true;r.maxAlternatives=1;
+  // Android Chrome currently ignores continuous=true. Accumulate and restart short sessions.
+  r.continuous=true;
   r.onstart=()=>{
-   if(token!==voiceToken)return;
-   listening=true;setMic(true);
-   status('در حال شنیدن… صحبت کنید. با لمس مجدد میکروفون می‌توانید ضبط را متوقف کنید.');
+   if(token!==voiceToken||recognition!==r)return;
+   status(session.cycle===1?
+    'در حال شنیدن… جمله را بگویید. وقتی تمام شد دوباره روی میکروفون بزنید.':
+    'در حال شنیدن ادامه جمله… برای پایان دوباره روی میکروفون بزنید.');
   };
   r.onaudiostart=()=>{if(token===voiceToken)hadAudio=true};
   r.onspeechstart=()=>{
-   if(token===voiceToken)status('صدا دریافت شد؛ در حال تبدیل گفتار به متن…');
+   if(token===voiceToken&&recognition===r)status('صدا دریافت شد؛ در حال تبدیل گفتار به متن…');
   };
   r.onresult=event=>{
-   if(token!==voiceToken)return;
-   const candidates=[];
+   if(token!==voiceToken||recognition!==r)return;
+   const pieces=[];
    for(let i=0;i<(event.results?.length||0);i++){
     const txt=event.results[i]?.[0]?.transcript?.trim();
-    if(txt)candidates.push(txt);
+    if(txt)pieces.push(txt);
    }
-   if(!candidates.length)return;
-   transcript=candidates.join(' ').trim();
-   $('quick').value=transcript;
-   const isFinal=[...event.results].every(result=>result.isFinal);
-   if(isFinal){
-    try{r.stop()}catch(e){}
-    finish();
-   }else status('متن در حال دریافت: '+transcript+' · پس از پایان صحبت، پیش‌نمایش نمایش داده می‌شود.');
+   if(!pieces.length)return;
+   resultsSeen=true;
+   session.partial=pieces.join(' ').trim();
+   renderLive();
+   status('متن دریافت‌شده: '+transcript+' · ادامه دهید یا برای پایان روی میکروفون بزنید.');
+   // Do not stop on the first final result; that was truncating Android speech.
   };
-  r.onnomatch=()=>{voiceError='no-match';status(recognitionFallback('صدا شنیده شد اما تشخیص داده نشد.'),true)};
+  r.onnomatch=()=>{if(token===voiceToken)status('این بخش واضح نبود؛ می‌توانید ادامه دهید.',true)};
   r.onerror=event=>{
-   if(token!==voiceToken)return;
-   voiceError=event.error||'unknown';
-   const reason={
-    'not-allowed':'مجوز میکروفون رد شده است. دسترسی Microphone را در تنظیمات مرورگر فعال کنید.',
-    'service-not-allowed':'سرویس تشخیص صدا در این مرورگر مجاز نیست.',
-    'no-speech':'صدایی دریافت نشد.',
-    'audio-capture':'میکروفون گوشی در دسترس نیست.',
-    'language-not-supported':'تشخیص زبان فارسی در این سرویس پشتیبانی نمی‌شود.',
-    'network':'سرویس اینترنتی تشخیص گفتار پاسخ نداد.',
-    'aborted':'تشخیص صدا متوقف شد.'
-   }[voiceError]||'تشخیص صدا ناموفق بود.';
-   status(recognitionFallback(reason),true);
+   if(token!==voiceToken||recognition!==r)return;
+   cycleError=event.error||'unknown';
+   voiceError=cycleError;
+   const fatal=['not-allowed','service-not-allowed','audio-capture','language-not-supported','network'].includes(cycleError);
+   if(fatal){
+    const reason={
+     'not-allowed':'دسترسی میکروفون رد شد.',
+     'service-not-allowed':'سرویس تشخیص گفتار در مرورگر مجاز نیست.',
+     'audio-capture':'میکروفون گوشی در دسترس نیست.',
+     'language-not-supported':'پشتیبانی از فارسی در سرویس گفتار موجود نیست.',
+     'network':'سرویس اینترنتی گفتار پاسخ نداد.'
+    }[cycleError];
+    finishVoice(session,recognitionFallback(reason),true);
+   }else if(cycleError==='no-speech')status('صدایی در این بخش دریافت نشد؛ هنوز می‌توانید صحبت کنید.');
   };
   r.onend=()=>{
-   if(token!==voiceToken)return;
-   const msg=voiceError?recognitionFallback('تشخیص گفتار پایان یافت و نتیجه‌ای دریافت نشد.'):
-     recognitionFallback(hadAudio?'میکروفون فعال شد اما متن دریافت نشد.':'سرویس گفتار بدون دریافت صدا متوقف شد.');
-   finish(msg,true);
+   if(ended||token!==voiceToken||session!==voiceSession||recognition!==r)return;
+   ended=true;
+   recognition=null;
+   session.base=joinSpeech(session.base,session.partial);
+   session.partial='';
+   renderLive();
+   if(resultsSeen)session.emptyCycles=0;
+   else session.emptyCycles++;
+   if(session.emptyCycles>=2){
+    finishVoice(session,recognitionFallback('مرورگر در چند نوبت صدایی تشخیص نداد.'),true);
+    return;
+   }
+   if(!listening||Date.now()-session.startedAt>75000){
+    finishVoice(session,'ضبط پایان یافت.',false);return;
+   }
+   status(session.base?'بخش اول ثبت شد؛ در حال آماده‌سازی شنیدن ادامه…':'در حال تلاش برای شنیدن…');
+   restartTimer=setTimeout(()=>{
+    restartTimer=null;
+    if(token!==voiceToken||voiceSession!==session)return;
+    try{beginCycle()}catch(e){finishVoice(session,recognitionFallback('مرورگر اجازه ادامه خودکار ضبط را نداد.'),true)}
+   },350);
   };
-  listening=true;setMic(true);
-  status('در حال اتصال به میکروفون… لطفاً فارسی صحبت کنید.');
-  voiceTimer=setTimeout(()=>{
-   if(token!==voiceToken||finished)return;
-   const hasText=!!transcript.trim();
-   // A browser service can fire "start" but never produce results or "end".
-   try{r.abort()}catch(e){}
-   finish(hasText?'':'تشخیص صدا پس از ۲۰ ثانیه پاسخی نداد. از دیکته با کیبورد استفاده کنید.',!hasText);
-  },20000);
-  r.start();
- }catch(e){
-  if(token!==voiceToken)return;
-  stopListening(recognitionFallback('شروع تشخیص گفتار ممکن نشد. اجازه میکروفون را بررسی کنید.'),true);
+  try{r.start()}catch(e){finishVoice(session,recognitionFallback('تشخیص گفتار در این دستگاه شروع نشد.'),true)}
  }
+ voiceTimer=setTimeout(()=>{
+  if(token!==voiceToken||voiceSession!==session)return;
+  finishVoice(session,recognitionFallback('مهلت ضبط (۷۵ ثانیه) تمام شد.'),false);
+ },75000);
+ status('در حال اتصال به میکروفون… فارسی صحبت کنید و برای پایان دوباره میکروفون را لمس کنید.');
+ beginCycle();
 }
 function save(){
  if(hasSaved)return;
