@@ -342,5 +342,32 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIde
 window.addEventListener('online',()=>refreshIdentity());
 setInterval(()=>{if(!document.hidden&&navigator.onLine)refreshIdentity().then(()=>{if(user)sync().catch(()=>{})})},15000);
 client.auth.onAuthStateChange(event=>{if(event==='PASSWORD_RECOVERY'){recovery=true;byId('auth-reset-panel').hidden=false}setTimeout(refreshIdentity,0)});
+async function runFinanceAI(body){
+ if(!user)throw Error('ابتدا به حساب شخصی خود وارد شوید.');
+ const {data,error}=await client.functions.invoke('finance-voice-ai',{body});
+ if(error){
+  let detail='';
+  try{
+   const context=error.context;
+   if(context&&typeof context.json==='function'){
+    const payload=await context.json();detail=String(payload?.message||payload?.error||'');
+   }
+  }catch{}
+  if(detail==='AI_NOT_CONFIGURED'||detail.includes('کلید API'))throw Error('سرویس تحلیل هوشمند هنوز کلید API ندارد و فعال نشده است.');
+  throw Error(detail||'سرویس تحلیل هوشمند در حال حاضر پاسخ نمی‌دهد.');
+ }
+ if(!data||!data.result)throw Error('پاسخ قابل استفاده‌ای از تحلیل هوشمند دریافت نشد.');
+ return data;
+}
+window.MyFinanceAI={
+ analyzeText:(text,accounts=[])=>runFinanceAI({text,accounts:accounts.map(a=>({name:a.name,currency:a.currency}))}),
+ analyzeAudio:(blob,accounts=[])=>{
+  const form=new FormData();
+  form.append('audio',blob,'finance-recording.webm');
+  form.append('accounts',JSON.stringify(accounts.map(a=>({name:a.name,currency:a.currency}))));
+  return runFinanceAI(form);
+ }
+};
+
 window.MyFinanceCloud={sync,authenticated:()=>!!user};
 renderAuth();refreshIdentity();
