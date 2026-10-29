@@ -595,10 +595,12 @@ async function refreshIdentity(){
  }catch(e){
   // Network failures must not be interpreted as explicit logout.
   // Only a server-verified identity may unlock financial data.
-  let storedSession=null;
+  let storedSession=null,hasRememberedToken=false;
   try{const {data}=await client.auth.getSession();storedSession=data?.session||null}catch(_ignored){}
-  if(storedSession){
-   lock('اتصال برای بررسی حساب برقرار نیست؛ نشست این دستگاه محفوظ است. پس از برقراری اینترنت «بررسی مجدد وضعیت دسترسی» را بزنید.',storedSession.user||next||{email:authEmail.value},true);
+  // Presence of a saved token is only a signal to display "retry"; never authorization.
+  try{hasRememberedToken=!!(keepSignedIn()?localStorage.getItem(AUTH_SESSION_KEY):sessionStorage.getItem(AUTH_SESSION_KEY))}catch(_ignored){}
+  if(storedSession||hasRememberedToken){
+   lock('اتصال برای بررسی حساب برقرار نیست؛ نشست این دستگاه محفوظ است. پس از برقراری اینترنت «بررسی مجدد وضعیت دسترسی» را بزنید.',storedSession?.user||next||{email:authEmail.value},true);
   }else{
    lock('ورود امن تأیید نشد. اتصال اینترنت را بررسی کنید و اگر نشست پایان یافته، دوباره وارد شوید.',null,true);
   }
