@@ -4,10 +4,10 @@ module.exports=async function(){const browser=await chromium.launch({headless:tr
 try{
  await page.goto(root+'#explore');await page.locator('.kx-app').waitFor();
  const signature=()=>page.evaluate(()=>{const d=window.KishExploreBridge.snapshot();return JSON.stringify({goals:d.goals,strategy:d.strategy,teams:d.teams.map(t=>({id:t.id,okrs:t.okrs,kpis:t.kpis}))});});const initial=await signature();
- assert.equal(await page.locator('#platformNav > a:visible').count(),9);
+ assert.equal(await page.locator('#platformNav > a:visible').count(),8);
  for(const href of ['map','analytics','reporting','reports','cadences','program','admin','history','rhythm','kpis'])assert.equal(await page.locator('#platformNav a[href="#'+href+'"]:visible').count(),0,'duplicate primary '+href);
- const cases=[['#map','#explore/map/strategy','#kmCanvas'],['#alignment','#explore/map/strategy','#kmCanvas'],['#analytics','#dashboards','#platformBody'],['#reporting','#dashboards/reports','#platformBody'],['#reports','#dashboards/weekly','#view-reports.active'],['#cadences','#configure/cadences','#platformBody'],['#program','#configure/timeframes','#platformBody'],['#admin','#configure/access','#view-admin.active'],['#history','#configure/history','#view-history.active'],['#strategy','#configure/strategy','#view-strategy.active'],['#setup','#configure/company','#view-setup.active'],['#cycles','#configure/cycles','#view-cycles.active'],['#rhythm','#sessions/calendar','#platformBody'],['#meetings','#sessions/one-to-one','#view-meetings.active'],['#review','#reviews','#view-review.active'],['#kpis','#goals/kpis','#platformBody'],['#teams','#organization/manage','#view-teams.active'],['#company','#goals/company','#view-company.active']];
- for(const [from,to,selector] of cases){await page.goto(root+from);await page.waitForURL('**'+to);await page.locator(selector).waitFor({state:'visible'});assert.ok((await page.locator(selector).innerText()).trim().length>30,'empty route '+to);assert.equal(await page.locator('#platformNav > a:visible').count(),9);}
+ const cases=[['#map','#explore/map/strategy','#kmCanvas'],['#alignment','#explore/map/strategy','#kmCanvas'],['#analytics','#dashboards','#platformBody'],['#reporting','#dashboards/reports','#platformBody'],['#reports','#dashboards/weekly','#view-reports.active'],['#cadences','#configure/cadences','#platformBody'],['#program','#configure/timeframes','#platformBody'],['#admin','#configure/access','#view-admin.active'],['#history','#configure/history','#view-history.active'],['#strategy','#configure/strategy','#view-strategy.active'],['#setup','#configure/company','#view-setup.active'],['#cycles','#configure/cycles','#view-cycles.active'],['#rhythm','#sessions/calendar','#platformBody'],['#meetings','#sessions/one-to-one','#view-meetings.active'],['#review','#reviews','#view-review.active'],['#kpis','#explore/cascade','.kx-app'],['#teams','#organization/manage','#view-teams.active'],['#company','#explore/cascade','.kx-app']];
+ for(const [from,to,selector] of cases){await page.goto(root+from);await page.waitForURL('**'+to);await page.locator(selector).waitFor({state:'visible'});assert.ok((await page.locator(selector).innerText()).trim().length>30,'empty route '+to);assert.equal(await page.locator('#platformNav > a:visible').count(),8);}
  assert.equal(await signature(),initial,'navigation must preserve goal/strategy/team records');
  // Old pillar deep links preserve focus and rich Map controls.
  await page.goto(root+'#map/doc-pillar-1');await page.waitForURL('**#explore/map/strategy/doc-pillar-1');await page.locator('#kmViewport').waitFor();const zoom=await page.locator('#kmZoomValue').innerText();await page.locator('[data-km-zoom="1"]').click();assert.notEqual(await page.locator('#kmZoomValue').innerText(),zoom);await page.locator('[data-km-year]').selectOption('all');await page.locator('#kmCanvas').waitFor();
@@ -16,18 +16,22 @@ try{
  await page.goto(root+'#configure/timeframes');const add=page.locator('[data-pd-action="timeframe-new"]').first();await add.click();await page.locator('#platformDialog[open]').waitFor();assert.ok(await page.locator('#platformDialog input').count()>0);await page.keyboard.press('Escape');
  fs.mkdirSync('okr-system/tests/artifacts',{recursive:true});await page.goto(root+'#configure');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-configure.png',animations:'disabled'});await page.goto(root+'#dashboards');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-dashboard.png',animations:'disabled'});await page.goto(root+'#explore/map/strategy');await page.locator('#kmCanvas').waitFor();await page.screenshot({path:'okr-system/tests/artifacts/consolidation-map.png',animations:'disabled'});
  await page.setViewportSize({width:390,height:844});await page.goto(root+'#configure');await page.locator('#platformBody .kc-tabs').waitFor();assert.equal(await page.evaluate(()=>document.documentElement.dir),'rtl');const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);assert.equal(overflow,false,'mobile page overflow');await page.screenshot({path:'okr-system/tests/artifacts/consolidation-mobile.png',animations:'disabled'});
- // Entry: retained actions, readable text, phone layout and no page-wide overflow.
- await page.goto(root+'#home');await page.locator('#authScreen:not(.hidden)').waitFor();
+ // Legacy entry/teaching routes now lead directly to operational Home.
+ for(const hash of ['#home','#learn/prepare','#roadmap','#educate','#introduce','#announce']){
+  await page.goto(root+hash);await page.waitForURL('**#start');await page.locator('.kc-action-center').waitFor();
+  assert.equal(await page.locator('#authScreen').isVisible(),false);
+  assert.equal(await page.locator('.ux-workflow:visible').count(),0);
+ }
  for(const width of [1440,390,360]){
   await page.setViewportSize({width,height:900});
-  const entry=await page.locator('#authScreen').evaluate(el=>{const h=el.querySelector('h1'),b=el.querySelector('#entryExecBtn');return {heading:getComputedStyle(h).fontSize,button:b.getBoundingClientRect().height,overflow:el.scrollWidth>el.clientWidth+2};});
-  assert.ok(parseFloat(entry.heading)>=28);assert.ok(entry.button>=44);assert.equal(entry.overflow,false);
-  assert.ok(await page.locator('#entryExecBtn').isVisible());assert.ok(await page.locator('#documentEntryBtn').isVisible());
-  assert.equal(await page.locator('#platformHomeQuick').isVisible(),false);assert.equal(await page.locator('#executionApp').isVisible(),false,'entry must conceal previous module');
-  await page.screenshot({path:'okr-system/tests/artifacts/consolidation-entry-'+width+'.png',fullPage:true,animations:'disabled'});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
+  await page.screenshot({path:'okr-system/tests/artifacts/consolidation-home-'+width+'.png',fullPage:true,animations:'disabled'});
  }
- await page.locator('#documentEntryBtn').click();await page.locator('#view-document.active').waitFor();
- await page.goto(root+'#home');await page.locator('#entryExecBtn').click();await page.waitForURL('**#start');await page.locator('#view-start.active').waitFor();assert.ok(await page.locator('#executionApp').isVisible());
- assert.deepEqual(errors,[]);console.log('PASS consolidation: 9 primary destinations, 18 legacy aliases, preserved records, Map pillar/zoom/layout/Board refresh, timeframe form, desktop/mobile RTL');
+ await page.goto(root+'#start/tasks');await page.locator('.kc-home-tasks [data-p-action="task"]').click();
+ await page.locator('#platformDialog[open] form[data-platform-form="task"]').waitFor();await page.keyboard.press('Escape');
+ await page.goto(root+'#resources');await page.waitForURL('**#document/reader');await page.locator('#view-document.active').waitFor();
+ assert.ok((await page.locator('#documentResults').innerText()).length>100,'strategy source retained');
+ assert.equal(await signature(),initial,'cleanup routes preserve all goal/strategy/team records');
+ assert.deepEqual(errors,[]);console.log('PASS consolidation: 8 primary destinations, retired legacy routes, preserved records, Map pillar/zoom/layout/Board refresh, timeframe form, desktop/mobile RTL');
 }finally{await browser.close();}};
 if(require.main===module)module.exports().catch(e=>{console.error(e);process.exit(1)});

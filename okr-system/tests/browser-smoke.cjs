@@ -30,7 +30,7 @@ const assert=require('node:assert/strict');
 
   await page.goto(root+'#explore',{waitUntil:'domcontentloaded'});
   await page.waitForSelector('.kx-app');
-  assert.equal(await nav.locator('> a:visible').count(),9,'nine canonical primary destinations');
+  assert.equal(await nav.locator('> a:visible').count(),8,'eight canonical primary destinations');
   assert.equal(await nav.locator('a[href="#explore"]:visible').count(),1);
   assert.match(await page.locator('#profileBtn').innerText(),/پروفایل محلی/);
   await page.locator('[data-kx-view="map"]').click();
