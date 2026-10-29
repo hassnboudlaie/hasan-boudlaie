@@ -185,3 +185,10 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
  .personal-ai-buttons button{flex:1 1 45%}
  #personal-ai-mode,#personal-ai-text{font-size:16px}
 }
+
+/* Optional personal assistant shortcut: findable, without crowding transaction controls */
+.personal-ai-shortcut-line{display:flex;justify-content:flex-start;margin:10px 0 0}
+.personal-ai-shortcut-line button.personal-ai-shortcut{font-size:12px;font-weight:750;padding:9px 12px;min-height:40px;border-radius:12px;border-color:rgba(223,245,239,.7);background:rgba(255,255,255,.9);color:#14504b}
+.personal-ai-shortcut-line button.personal-ai-shortcut:focus-visible{outline:3px solid #f9ca73;outline-offset:2px}
+#personal-ai-panel{scroll-margin-top:85px}
+@media(max-width:420px){.personal-ai-shortcut-line button.personal-ai-shortcut{font-size:12px;max-width:100%;white-space:normal;text-align:center}}
