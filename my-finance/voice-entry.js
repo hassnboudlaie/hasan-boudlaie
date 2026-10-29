@@ -338,6 +338,7 @@ function start(){
   return;
  }
  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const appleWebKit=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
  if(!Speech){
   status(recognitionFallback('تشخیص گفتار در این مرورگر پشتیبانی نمی‌شود.'),true);
   return;
@@ -368,7 +369,7 @@ function start(){
   recognition=r;
   r.lang='fa-IR';r.interimResults=true;r.maxAlternatives=1;
   // Android Chrome currently ignores continuous=true. Accumulate and restart short sessions.
-  r.continuous=true;
+  r.continuous=!appleWebKit;
   r.onstart=()=>{
    if(token!==voiceToken||recognition!==r)return;
    status(session.cycle===1?
