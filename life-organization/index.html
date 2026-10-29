@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#172c3c">
+  <meta name="description" content="سازمان عالی زندگی من — فضای شخصی طراحی، هماهنگی، مدیریت و بازطراحی زندگی.">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:title" content="The Life Organization">
+  <meta property="og:description" content="Design a life that fits.">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css?v=0.1.1">
+  <title>سازمان عالی زندگی من | The Life Organization</title>
+</head>
+<body>
+  <a id="skip-link" href="#main">رفتن به محتوای اصلی</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a href="#home" class="brand" aria-label="The Life Organization">
+        <span class="brand-mark"><img src="./icon.svg" alt="" width="43" height="43"></span>
+        <span class="brand-words"><strong>سازمان عالی زندگی من</strong><small>THE LIFE ORGANIZATION</small></span>
+      </a>
+      <div class="side-caption" data-i18n="workspace">فضای کاری من</div>
+      <nav id="side-nav" class="side-nav" aria-label="Primary"></nav>
+      <div class="side-bottom">
+        <div class="side-message"><span class="side-message-icon" aria-hidden="true">✦</span><strong data-i18n="asideTitle">زندگی متناسب با من</strong><p data-i18n="asideDesc">یک فضای آرام برای فکر کردن، انتخاب کردن و پیش رفتن.</p></div>
+        <div class="sidebar-meta"><span>VERSION 0.1 · PREVIEW</span><span class="meta-dot" aria-hidden="true"></span><span data-i18n="localOnly">ذخیره روی این دستگاه</span></div>
+      </div>
+    </aside>
+    <div class="content-shell">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <img src="./icon.svg" alt="" width="34" height="34">
+          <span data-i18n="mobileBrand">سازمان زندگی من</span>
+        </div>
+        <div id="breadcrumbs" class="breadcrumbs" aria-label="Breadcrumb"></div>
+        <div class="top-actions">
+          <button id="language-btn" class="top-action lang-toggle" type="button" aria-label="Switch language">EN</button>
+          <button id="theme-btn" class="top-action" type="button" aria-label="Toggle color theme"></button>
+          <button id="profile-btn" class="avatar-button" type="button" aria-label="Profile"><span id="avatar-letter">م</span></button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <div id="page" aria-live="polite"></div>
+      </main>
+      <footer class="page-footer"><span>THE LIFE ORGANIZATION</span><span>DESIGN A LIFE THAT FITS.</span></footer>
+    </div>
+  </div>
+  <nav id="bottom-nav" class="bottom-nav" aria-label="Mobile navigation"></nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="install-dialog" class="app-dialog">
+    <form method="dialog"><button class="dialog-close" aria-label="Close" type="submit">×</button></form>
+    <div class="dialog-symbol">↗</div><h2 id="install-title">نصب اپلیکیشن</h2>
+    <p id="install-body">در Chrome از منوی سه‌نقطه گزینه Install app یا Add to Home screen را انتخاب کنید.</p>
+    <form method="dialog"><button class="btn btn-primary dialog-done" type="submit" data-i18n="gotIt">متوجه شدم</button></form>
+  </dialog>
+  <script src="./app.js?v=0.1.1" defer></script>
+</body>
+</html>
