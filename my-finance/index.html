@@ -13,7 +13,7 @@ html{font-size:16px;-webkit-text-size-adjust:100%}body{line-height:1.65}button,i
 :root{--bg:#f5f7f9;--card:#fff;--fg:#142b36;--muted:#526875;--line:#e1e8ed;--accent:#086b69}body{background:radial-gradient(ellipse at 95% 0%,#e5f3f0 0%,transparent 48%),var(--bg)}body.dark{--bg:#101c26;--card:#1a2b37;--fg:#f0f7f8;--muted:#b9ccd1;--line:#344956;--accent:#18a89b;background:var(--bg)}main{max-width:940px}header{border-bottom:1px solid var(--line);margin-bottom:16px}header h1{letter-spacing:-.5px}.card{border:1px solid var(--line);border-radius:24px;box-shadow:0 12px 35px rgba(13,46,58,.045)}.grid .card{background:linear-gradient(150deg,var(--card),var(--bg))}.metric b{font-variant-numeric:tabular-nums}.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0}.tabs button{border:1px solid var(--line);background:var(--card);color:var(--fg)}.tabs button:focus-visible{outline:3px solid var(--accent)}button:not(.alt){background:var(--accent)}input:focus,select:focus{border-color:var(--accent);outline:2px solid color-mix(in srgb,var(--accent) 25%,transparent)}@media(max-width:600px){main{padding:12px 14px 38px}header h1{font-size:23px}.card{border-radius:22px}.tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tabs button{font-size:12px;padding:10px 3px}.grid .card{min-height:115px}.metric b{font-size:22px}}
  .finance-shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:16px 0 5px}.finance-shortcut{display:flex;gap:12px;align-items:center;padding:14px 17px;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:18px;text-decoration:none;color:var(--fg);box-shadow:0 4px 18px #142d4008}.finance-shortcut-icon{font-size:27px;color:#087e75;line-height:1}.finance-shortcut strong{display:block;font-size:15px}.finance-shortcut small{display:block;font-size:12px;color:var(--muted)}@media(max-width:420px){.finance-shortcut{padding:12px 10px;gap:7px}.finance-shortcut strong{font-size:13px}.finance-shortcut small{font-size:10px}.finance-shortcut-icon{font-size:23px}}
 
-/* Beta authentication gate: financial dashboard never appears before successful account approval */
+/* Beta authentication gate: financial dashboard never appears before verified self-service login */
 body:not(.finance-unlocked) main{display:none!important}
 body:not(.finance-unlocked) .finance-sidebar{display:none!important}
 body.finance-unlocked #auth-gate{display:none!important}
@@ -38,8 +38,8 @@ body.finance-unlocked #auth-gate{display:none!important}
 .auth-card #auth-reset-panel{padding-top:16px;border-top:1px solid var(--line)}
 @media(max-width:480px){#auth-gate{margin-top:4vh;padding:12px}.auth-card{padding:21px 17px}.auth-card h1{font-size:21px}}
 </style></head><body><div id="auth-gate" aria-label="ورود امن به My Finance"><div class="auth-card">
-<div class="auth-brand">MY FINANCE · PRIVATE BETA</div><h1>حساب مالی شخصی شما</h1>
-<p>با ایمیل و رمز عبور خودتان وارد شوید. اطلاعات هر کاربر مستقل است.</p>
+<div class="auth-brand">MY FINANCE · PRIVATE BETA</div><h1 id="auth-heading">ورود به حساب مالی شخصی</h1>
+<p id="auth-description">با ایمیل و رمز عبور خود وارد شوید. اطلاعات هر کاربر مستقل است.</p>
 <form id="auth-form" autocomplete="on">
 <label for="auth-email">نام کاربری (ایمیل)</label>
 <input id="auth-email" name="username" type="email" autocomplete="username" inputmode="email" dir="ltr" placeholder="your@email.com" required>
@@ -47,16 +47,11 @@ body.finance-unlocked #auth-gate{display:none!important}
 <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="10" placeholder="حداقل ۱۰ کاراکتر" required>
 <div class="auth-remember"><input id="auth-remember" type="checkbox" checked><label for="auth-remember">در این دستگاه وارد بمانم (پس از رفرش، ورود دوباره لازم نیست)</label></div><p class="auth-hint auth-trusted-device">فقط روی گوشی یا رایانه شخصی فعال بگذارید. در دستگاه مشترک، تیک را بردارید و پس از کار از حساب خارج شوید.</p>
 <div id="auth-registration-details" class="auth-registration-details" hidden>
- <p class="auth-registration-title">اطلاعات پروفایل · برای ساخت حساب جدید</p>
- <label for="auth-full-name">نام و نام خانوادگی (اختیاری)</label>
- <input id="auth-full-name" type="text" autocomplete="name" maxlength="120" placeholder="نام شما">
- <label for="auth-phone">شماره تماس (اختیاری)</label>
- <input id="auth-phone" type="tel" autocomplete="tel" maxlength="30" dir="ltr" placeholder="مثلاً ۰۹۱۲...">
- <label for="auth-city">شهر (اختیاری)</label>
- <input id="auth-city" type="text" maxlength="100" autocomplete="address-level2" placeholder="مثلاً تهران">
- <label for="auth-birth-date">تاریخ تولد (اختیاری)</label>
- <input id="auth-birth-date" type="date" autocomplete="bday">
- <p class="auth-profile-note">ثبت این اطلاعات اجباری نیست. عکس پروفایل را بعد از اولین ورود از «پروفایل من» اضافه کنید.</p>
+ <p class="auth-registration-title"><strong>حساب جدید My Finance</strong></p>
+ <p class="auth-hint">فقط ایمیل و رمز عبور کافی است؛ تکمیل پروفایل اختیاری و بعد از ورود است.</p>
+ <label for="auth-password-confirm">تکرار رمز عبور</label>
+ <input id="auth-password-confirm" name="password-confirm" type="password" autocomplete="new-password" minlength="10" placeholder="تکرار رمز عبور" disabled>
+ <p class="auth-hint">بعد از ثبت‌نام، برای دسترسی به داده‌های شخصی خودتان وارد می‌شوید. این صفحه داخل خود اپ باز می‌ماند.</p>
  </div>
 <div class="auth-actions"><button type="submit" id="auth-login">ورود</button><button type="button" id="auth-register" class="alt">ساخت حساب جدید</button></div>
 </form>
@@ -901,4 +896,4 @@ document.addEventListener('myfinance:rebound',reload);
 reload();
 window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
-</script><script defer src="./transaction-history.js?v=20261029r31"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r33"></script></body></html>
+</script><script defer src="./transaction-history.js?v=20261029r31"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r37"></script></body></html>

@@ -158,6 +158,7 @@ function gate(text,identity=null,error=false){
 function lock(text,identity=null,error=false){
  const before=!!user;identityEpoch++;user=null;dirty=new Set();seen=new Map();
  if(before)bridge.bindUser(null);
+ resetAdminBell();
  resetProfile();
  renderAuth();gate(text,identity,error);
 }
@@ -165,12 +166,12 @@ function validAccess(a){return a?.status==='active'&&(!a.expires_at||Date.parse(
 function pendingText(a){
  if(a.status==='suspended')return 'دسترسی این حساب توسط مدیر تعلیق شده است. داده‌ها حذف نشده‌اند.';
  if(a.status==='active')return 'اعتبار دسترسی آزمایشی به پایان رسیده است. مدیر می‌تواند آن را تمدید کند.';
- return 'ثبت‌نام انجام شده است. برای شروع استفاده، منتظر تأیید مدیر باشید.';
+ return 'در حال بررسی فعال‌سازی حساب شما؛ اگر مشکل ادامه داشت، دوباره تلاش کنید.';
 }
 async function getAccess(identity){
  let{data,error}=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
  if(error)throw error;if(data)return data;
- const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'pending'}).select('status,expires_at').single();
+ const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'active'}).select('status,expires_at').single();
  if(created.error){
   const retry=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
   if(retry.error||!retry.data)throw created.error;
@@ -178,58 +179,138 @@ async function getAccess(identity){
  }
  return created.data;
 }
+let adminEventsLoaded=false,adminLastEventId=0;
+function resetAdminBell(){
+ document.getElementById('finance-admin-bell')?.remove();
+ adminEventsLoaded=false;adminLastEventId=0;
+}
+async function showLatestAdminAlert(e){
+ if(!('Notification' in window)||Notification.permission!=='granted')return;
+ try{
+  const names={registered:'ثبت‌نام جدید',activated:'فعال‌سازی مجدد',suspended:'تعلیق دسترسی',pending:'در انتظار'};
+  const title='My Finance · '+(names[e.event_type]||'رویداد جدید');
+  const opts={body:e.subject_email,icon:'./icon-192-r4.png',tag:'my-finance-event-'+e.id};
+  if('serviceWorker' in navigator){
+   const reg=await navigator.serviceWorker.getRegistration('./')||await navigator.serviceWorker.register('./sw.js');
+   await reg.showNotification(title,opts);
+  }else new Notification(title,opts);
+ }catch(_ignored){}
+}
+async function refreshAdminEvents(){
+ const bell=document.getElementById('finance-admin-bell');
+ if(!user||!bell)return;
+ const {data,error}=await client.from('finance_admin_events').select('id,event_type,subject_email,read_at').order('id',{ascending:false}).limit(50);
+ if(error)return;
+ const arr=data||[],newest=arr[0]?.id||0;
+ if(adminEventsLoaded&&newest>adminLastEventId){
+  for(const e of arr.filter(x=>x.id>adminLastEventId).reverse().slice(-3))await showLatestAdminAlert(e);
+ }
+ adminEventsLoaded=true;adminLastEventId=Math.max(adminLastEventId,newest);
+ const unread=arr.filter(x=>!x.read_at).length;
+ bell.textContent=unread?'🔔 '+new Intl.NumberFormat('fa-IR').format(unread):'🔔';
+ bell.setAttribute('aria-label',unread?unread+' اعلان خوانده‌نشده · مدیریت My Finance':'مدیریت و اعلان‌های My Finance');
+ bell.title='رویدادهای مدیریتی My Finance';
+}
 async function showAdmin(){
  const link=byId('finance-admin-link');if(!link||!user)return;
  const{data,error}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
- link.hidden=!!error||!data;
-}
-/* Optional registration details are profile data, never access-control claims. */
-const signupDetails=byId('auth-registration-details');
-function clearSignupMode(){
- signupDetails.hidden=true;
- byId('auth-register').textContent='ساخت حساب جدید';
-}
-function signupMetadata(){
- const full_name=byId('auth-full-name').value.trim().slice(0,120);
- const phone=byId('auth-phone').value.trim().slice(0,30);
- const city=byId('auth-city').value.trim().slice(0,100);
- const birth_date=byId('auth-birth-date').value;
- if(birth_date&&(!/^\d{4}-\d{2}-\d{2}$/.test(birth_date)||birth_date>new Date().toISOString().slice(0,10)||birth_date<'1900-01-01'))throw Error('تاریخ تولد معتبر نیست. می‌توانید آن را خالی بگذارید.');
- return {full_name,phone,city,birth_date:birth_date||null};
-}
-byId('auth-login').addEventListener('click',event=>{
- if(!signupDetails.hidden){
-  event.preventDefault();clearSignupMode();
-  authStatus('حالت ورود فعال شد. برای ورود، دوباره «ورود» را بزنید.');
+ const allowed=!error&&!!data;
+ link.hidden=!allowed;
+ if(!allowed){resetAdminBell();return;}
+ if(!document.getElementById('finance-admin-bell')){
+  const bell=document.createElement('a');
+  bell.id='finance-admin-bell';bell.href='./admin.html';bell.textContent='🔔';
+  bell.style.cssText='position:fixed;bottom:96px;left:18px;z-index:1000;min-width:50px;height:50px;padding:0 12px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#124e73;color:white;font-weight:800;font-size:18px;box-shadow:0 5px 18px #102b4450;text-decoration:none;border:1px solid #ffffff66';
+  bell.setAttribute('aria-label','اعلان‌های مدیریت My Finance');
+  document.body.append(bell);
  }
+ await refreshAdminEvents();
+}
+setInterval(()=>{if(user&&!document.hidden)refreshAdminEvents().catch(()=>{})},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&user)refreshAdminEvents().catch(()=>{})});
+/* Mobile-safe login/registration is a single in-app view: no page navigation or external tab. */
+const signupDetails=byId('auth-registration-details');
+const authPasswordConfirm=byId('auth-password-confirm');
+const authPasswordInput=byId('auth-password');
+const authSubmitButton=byId('auth-login');
+const authSwitchButton=byId('auth-register');
+let authMode='login',authActionInFlight=false;
+function setAuthMode(nextMode){
+ authMode=nextMode==='signup'?'signup':'login';
+ const signup=authMode==='signup';
+ signupDetails.hidden=!signup;
+ authPasswordConfirm.disabled=!signup;
+ authPasswordConfirm.required=signup;
+ authPasswordConfirm.value='';
+ authPasswordInput.setAttribute('autocomplete',signup?'new-password':'current-password');
+ authSubmitButton.textContent=signup?'ساخت حساب و شروع':'ورود';
+ authSwitchButton.textContent=signup?'بازگشت به ورود':'ساخت حساب جدید';
+ byId('auth-heading').textContent=signup?'ساخت حساب جدید':'ورود به حساب مالی شخصی';
+ byId('auth-description').textContent=signup
+  ?'برای ثبت‌نام فقط ایمیل و رمز عبور دلخواه خود را وارد کنید.'
+  :'با ایمیل و رمز عبور خود وارد شوید. اطلاعات هر کاربر مستقل است.';
+ const remember=byId('auth-remember')?.closest('.auth-remember');
+ if(remember)remember.hidden=signup;
+ document.querySelector('.auth-trusted-device')?.toggleAttribute('hidden',signup);
+ document.getElementById('auth-gate')?.setAttribute('data-auth-mode',authMode);
+ confirmationHelp.hidden=true;
+ authStatus(signup?'صفحه ساخت حساب باز شد. ایمیل، رمز و تکرار آن را وارد کنید.':'برای ورود، ایمیل و رمز عبور خود را وارد کنید.');
+}
+function clearSignupMode(){setAuthMode('login');}
+function signupMetadata(){return {app_source:'my-finance'};}
+authSwitchButton.addEventListener('click',event=>{
+ event.preventDefault();
+ if(authActionInFlight)return;
+ setAuthMode(authMode==='login'?'signup':'login');
 });
 byId('auth-form').addEventListener('submit',async event=>{
- event.preventDefault();if(!signupDetails.hidden){byId('auth-register').click();return}const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
- if(!email||!password)return authStatus('ایمیل و رمز عبور لازم است.',true);
- saveRemembered();confirmationHelp.hidden=true;authStatus('در حال ورود…');
- const{error}=await client.auth.signInWithPassword({email,password});authPassword.value='';
- if(error){if(/email.not.confirmed|email_not_confirmed/i.test(String(error.code||'')+' '+String(error.message||''))){confirmationHelp.hidden=false;return authStatus('ابتدا ایمیل خود را تأیید کنید؛ در صورت نرسیدن ایمیل از گزینه ارسال مجدد استفاده کنید.',true);}return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);}
- await refreshIdentity();
-});
-byId('auth-register').addEventListener('click',async()=>{
- if(signupDetails.hidden){
-  signupDetails.hidden=false;byId('auth-register').textContent='تأیید و ساخت حساب';
-  authStatus('اطلاعات شخصی اختیاری هستند. بعد از تکمیل، «تأیید و ساخت حساب» را بزنید.');
-  byId('auth-full-name').focus();
-  return;
+ event.preventDefault();
+ if(authActionInFlight)return;
+ const requestedMode=authMode;
+ const accountEmail=authEmail.value.trim().toLowerCase();
+ const password=authPassword.value;
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(accountEmail))return authStatus('ایمیل معتبر وارد کنید.',true);
+ if(!password)return authStatus('رمز عبور لازم است.',true);
+ if(requestedMode==='signup'){
+  if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
+  if(password!==authPasswordConfirm.value)return authStatus('تکرار رمز عبور یکسان نیست.',true);
  }
- const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authStatus('ایمیل معتبر وارد کنید.',true);
- if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
- let profile;
- try{profile=signupMetadata()}catch(e){return authStatus(String(e.message||e),true)}
- saveRemembered();confirmationHelp.hidden=true;authStatus('در حال ساخت حساب…');
- const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname,data:profile}});
- authPassword.value='';
- if(error)return authStatus('ثبت‌نام انجام نشد. '+emailProblem(error),true);
- clearSignupMode();
- if(data.session)await refreshIdentity();
- else {confirmationHelp.hidden=false;authStatus('درخواست ثبت‌نام دریافت شد. ایمیل تأیید را بررسی کنید (از جمله Spam). سپس با رمز عبور وارد شوید. اگر ایمیل نرسید، ارسال مجدد را امتحان کنید.');}
+ authActionInFlight=true;
+ authSubmitButton.disabled=true;authSwitchButton.disabled=true;
+ saveRemembered();
+ confirmationHelp.hidden=true;
+ authStatus(requestedMode==='signup'?'در حال ساخت حساب…':'در حال ورود…');
+ try{
+  if(requestedMode==='signup'){
+   const {data,error}=await client.auth.signUp({
+    email:accountEmail,password,
+    options:{emailRedirectTo:location.origin+location.pathname,data:signupMetadata()}
+   });
+   if(error)return authStatus('ثبت‌نام انجام نشد. '+emailProblem(error),true);
+   authPassword.value='';authPasswordConfirm.value='';
+   clearSignupMode();
+   if(data?.session)await refreshIdentity();
+   else{
+    confirmationHelp.hidden=false;
+    authStatus('حساب ثبت شد، اما سرویس احراز هویت هنوز تأیید ایمیل را الزامی می‌داند. پس از تأیید ایمیل با همین حساب وارد شوید.');
+   }
+  }else{
+   const {error}=await client.auth.signInWithPassword({email:accountEmail,password});
+   if(error){
+    if(/email.not.confirmed|email_not_confirmed/i.test(String(error.code||'')+' '+String(error.message||''))){
+     confirmationHelp.hidden=false;
+     return authStatus('ایمیل حساب هنوز تأیید نشده است. ایمیل ارسالی را بررسی کنید.',true);
+    }
+    return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);
+   }
+   authPassword.value='';
+   await refreshIdentity();
+  }
+ }catch(e){
+  authStatus('ارتباط برقرار نشد. بدون بستن برنامه دوباره تلاش کنید: '+String(e?.message||'خطای شبکه'),true);
+ }finally{
+  authActionInFlight=false;authSubmitButton.disabled=false;authSwitchButton.disabled=false;
+ }
 });
 byId('auth-resend-confirm').addEventListener('click',async()=>{
  const value=authEmail.value.trim().toLowerCase();
