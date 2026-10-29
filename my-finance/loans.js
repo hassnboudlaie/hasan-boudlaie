@@ -8,7 +8,7 @@ const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1}).format(Num
 const toman=irr=>fmt(Number(irr||0)/10)+' تومان';
 const section=document.getElementById('loans')||document.createElement('section');
 section.id='loans';section.hidden=true;
-section.innerHTML='<div class="card"><h2>💳 وام‌ها و بدهی‌ها</h2><p class="muted">مانده‌های اعلام‌شده توسط بانک، برنامه اقساط و تعهدات آتی؛ پرداخت‌های گذشته مجدداً از حساب کسر نمی‌شوند.</p><div id="loans-overview" class="loan-summary"></div></div><div id="loans-items"></div>';
+section.innerHTML='<div class="mf-section-hero"><div><span class="mf-section-kicker">LOANS & INSTALLMENTS</span><h2>وام‌ها و اقساط</h2><p>مبلغ و سررسید اقساط، مانده بدهی و پیشرفت بازپرداخت</p></div></div><div class="card"><h2>نمای کلی وام‌ها</h2><p class="muted">مانده‌های اعلام‌شده توسط بانک، برنامه اقساط و تعهدات آتی؛ پرداخت‌های گذشته مجدداً از حساب کسر نمی‌شوند.</p><div id="loans-overview" class="loan-summary"></div></div><div id="loans-items"></div>';
 if(!section.isConnected)document.getElementById('reports').insertAdjacentElement('beforebegin',section);
 // The main router is a global lexical binding in index.html; register the dynamically-created section.
 if(typeof financeRoutes!=='undefined')financeRoutes.add('loans');
