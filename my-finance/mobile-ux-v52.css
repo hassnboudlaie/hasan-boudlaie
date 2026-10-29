@@ -64,3 +64,25 @@ body.finance-unlocked #finance-more-dialog .finance-more-links button,body.finan
 @media(prefers-reduced-motion:reduce){
  body.finance-unlocked .finance-quick-fab:active{transform:none}
 }
+
+/* Actionable recurring-bill alerts; pending never changes cash balance without confirmation. */
+body.finance-unlocked #home #upcoming-notice:not(:empty){
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+ background:var(--card);border:1px solid var(--line);border-inline-start:4px solid var(--accent);
+ color:var(--fg);border-radius:17px;padding:17px 18px;margin:0 0 16px;box-shadow:var(--mf-shadow)
+}
+body.finance-unlocked #home #upcoming-notice.finance-bills-alert-warning:not(:empty){
+ background:#fff1dc!important;border:2px solid #e5a23c!important;color:#79430e!important;box-shadow:0 8px 22px rgba(142,87,13,.12)
+}
+body.finance-unlocked #home #upcoming-notice.finance-bills-alert-critical:not(:empty){
+ background:#ffedec!important;border:2px solid #d35150!important;color:#91252b!important;box-shadow:0 8px 22px rgba(152,47,48,.14)
+}
+body.finance-unlocked #home .finance-bills-alert-copy{flex:1 1 245px;min-width:0;font-size:13px;font-weight:750;line-height:2;overflow-wrap:anywhere}
+body.finance-unlocked #home .finance-bills-alert-open{
+ flex:0 0 auto;min-height:43px;padding:9px 13px!important;border:1px solid currentColor!important;
+ border-radius:11px!important;color:inherit!important;background:transparent!important;
+ font-size:12px;font-weight:850;box-shadow:none
+}
+body.dark.finance-unlocked #home #upcoming-notice.finance-bills-alert-warning:not(:empty){background:#473117!important;color:#ffe3af!important}
+body.dark.finance-unlocked #home #upcoming-notice.finance-bills-alert-critical:not(:empty){background:#472026!important;color:#ffe2e2!important}
+@media(max-width:530px){body.finance-unlocked #home .finance-bills-alert-open{width:100%}}
