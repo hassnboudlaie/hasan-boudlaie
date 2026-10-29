@@ -1,5 +1,5 @@
-const CACHE='my-finance-release-20261029r4';
-const ASSETS=['./','./index.html','./premium.css?v=20261029r4','./voice-entry.js?v=20261029r4','./transaction-history.js?v=20261029r1','./commitments.js?v=20261028r4','./loans.js?v=20261028r2','./reports.js?v=20261028r6','./receivables-actions.js?v=20261028r5','./supabase-sync.js?v=20261029r2','./manifest.webmanifest?v=9','./icon-v3.svg?v=20261028r1','./icon-maskable-v3.svg?v=20261028r1','./icon-192-r4.png','./icon-512-r4.png','./icon-maskable-512-r4.png','./admin.html','./contracts.html','./assets.html'];
+const CACHE='my-finance-release-20261029r5';
+const ASSETS=['./','./index.html','./premium.css?v=20261029r4','./voice-entry.js?v=20261029r5','./transaction-history.js?v=20261029r1','./commitments.js?v=20261028r4','./loans.js?v=20261028r2','./reports.js?v=20261028r6','./receivables-actions.js?v=20261028r5','./supabase-sync.js?v=20261029r2','./manifest.webmanifest?v=9','./icon-v3.svg?v=20261028r1','./icon-maskable-v3.svg?v=20261028r1','./icon-192-r4.png','./icon-512-r4.png','./icon-maskable-512-r4.png','./admin.html','./contracts.html','./assets.html'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('my-finance-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
