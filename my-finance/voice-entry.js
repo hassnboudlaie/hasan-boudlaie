@@ -92,24 +92,40 @@ function loanRecipient(text){
  if(!match)return '';
  return match[1].replace(/\s+(?:قرض|وام|دادم|داده|پرداختم|پرداخت|مثلا|مثلاً|امروز|دیروز|بانک|حساب|کارت).*$/u,'').trim().slice(0,70);
 }
-function hasNaturalCorrection(text){
- return /(?:^|\s)(?:نه|اصلاح\s*می\s*کنم|ببخشید|منظورم|درستش|اشتباه\s*گفتم|یعنی)(?=\s|$)/.test(text);
+/* Free, on-device parsing of *explicit* spoken corrections.
+   Ambiguous revisions are rejected rather than silently posted. */
+function lastCorrection(text){
+ const markers=/(?:^|\s)(?:نه(?!\s+(?:هزار|میلیون|میلیارد|صد|تومان|ریال|دلار|یورو))|اصلاح\s*می\s*کنم|ببخشید|منظورم(?:\s+این(?:ه|است)\s+که)?|درستش|اشتباه\s*گفتم)(?=\s|$|[،,.])/g;
+ let result=null,match;
+ while((match=markers.exec(text)))result={before:text.slice(0,match.index).trim(),after:text.slice(match.index+match[0].length).trim(),marker:match[0].trim()};
+ return result;
+}
+function resolveFreeAmount(text,temporal){
+ const correction=lastCorrection(text);
+ if(!correction)return {amount:parseMoney(temporal.clean),warnings:[],corrected:false};
+ const normalized=correction.after.replace(/^[،,.\s]+/,'');
+ const corrected=normalized.replace(/^(?:نه|منظورم|یعنی|در واقع|درستش)\s+/,'');
+ const amount=parseMoney(corrected);
+ if(!(amount>0))return {error:'در گفتار، مبلغ را اصلاح کردید اما مبلغ نهایی روشن نیست. لطفاً آن را در کادر مشخص کنید و دوباره بررسی کنید.'};
+ // If unit is omitted after correction, inherit the denomination only if clearly mentioned elsewhere.
+ return {amount,corrected:true,warnings:['مبلغ از آخرین اصلاح گفتار برداشت شده است؛ قبل از ثبت حتماً آن را بررسی کنید.']};
 }
 function parse(raw,accounts=[]){
  const original=String(raw||'').trim().slice(0,1600);
  if(!original)return {error:'ابتدا صحبت کنید یا متن تراکنش را بنویسید.'};
  const text=norm(original),temporal=extractDate(text);
  if(temporal.invalid)return {error:'تاریخ گفته‌شده نامعتبر است؛ آن را اصلاح کنید.'};
- if(hasNaturalCorrection(text))return {error:'در جمله خودتان مبلغ یا اطلاعات را اصلاح کرده‌اید؛ برای جلوگیری از ثبت رقم اشتباه، این متن باید با مدل هوشمند تحلیل شود. فعلاً مبلغ نهایی را در متن روشن بنویسید یا دستی تأیید کنید.',requiresAI:true};
+ const revised=resolveFreeAmount(text,temporal);
+ if(revised.error)return {error:revised.error};
  const account=detectAccount(text,accounts);
  const isLoan=/(?:قرض\s*(?:دادم|داد|داده\s*شد|داده\s*ام|داده\s*ایم|می\s*دهم)|وام\s*دادم|وام\s*داده\s*شد)/.test(text);
  const unsupported=/(?:بین\s+حساب|از\s+(?:حساب|بانک)\s+.+\s+به\s+(?:حساب|بانک)|قرض\s+گرفت|وام\s+گرفت|پول\s+پیش|رهن\s+خانه|خرید\s+(?:طلا|سکه|دلار|یورو|سهام)|سرمایه\s+گذاری|سرمایه‌گذاری)/.test(text);
  if(unsupported&&!isLoan)return {error:'این گفتار مربوط به انتقال، وام دریافتی یا سرمایه‌گذاری است؛ برای جلوگیری از ثبت اشتباه باید در بخش مخصوص خودش بررسی شود.'};
- const amount=parseMoney(temporal.clean);
+ const amount=revised.amount;
  if(!amount)return {error:'مبلغ واضح تشخیص داده نشد. مثلاً «دو میلیون تومان به امیر نوری قرض دادم». هیچ موردی ثبت نشده است.'};
  const currency=/(?:usd|دلار)/.test(text)?'USD':/(?:eur|یورو)/.test(text)?'EUR':/ریال/.test(text)?'IRR':'IRT';
  if(isLoan){
-  const person=loanRecipient(text),warnings=[];
+  const person=loanRecipient(text),warnings=[...revised.warnings];
   if(!person)warnings.push('نام شخص روشن نیست و باید قبل از ثبت وارد شود.');
   if(!account)warnings.push('حساب مبدأ مشخص نیست؛ بدون حساب، فقط طلب ثبت می‌شود و موجودی تغییر نمی‌کند.');
   return {entryType:'loan_given',person,amount,currency,account,date:temporal.date,memo:original,warnings};
@@ -117,7 +133,7 @@ function parse(raw,accounts=[]){
  if(/(?:قرض|وام|طلب)/.test(text))return {error:'نوع قرض یا طلب مشخص نیست؛ جمله را کامل‌تر بیان کنید.'};
  const income=/(?:درآمد|حقوق|دستمزد|حق\s*الزحمه|دریافت\s+کرد|واریز\s+شد|به\s+حسابم\s+آمد|پول\s+گرفتم|فروش\s+کردم|سود\s+گرفتم)/.test(text);
  const expense=/(?:هزینه|پرداخت|خرید|دادم|خرج|برداشتم|کارت\s+کشیدم|بنزین\s+زدم|کرایه\s+دادم)/.test(text);
- const kind=income&&!expense?'income':'expense',warnings=[];
+ const kind=income&&!expense?'income':'expense',warnings=[...revised.warnings];
  if(!income&&!expense)warnings.push('نوع تراکنش از گفتار قطعی نیست؛ لطفاً «هزینه» بودن آن را بررسی کنید.');
  if(/(?:حساب|بانک|کارت|کیف\s+پول)/.test(text)&&!account)warnings.push('حساب موردنظر شناسایی نشد؛ آن را انتخاب کنید.');
  return {entryType:'transaction',amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/(?:شرکت|کاری|پروژه|بیزنس)/.test(text)?'business':'personal',warnings};
