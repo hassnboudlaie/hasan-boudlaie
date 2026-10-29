@@ -118,6 +118,10 @@ function parse(raw,accounts=[]){
  const original=String(raw||'').trim().slice(0,1600);
  if(!original)return {error:'ابتدا صحبت کنید یا متن تراکنش را بنویسید.'};
  const text=norm(original),temporal=extractDate(text);
+ // A request to change an existing balance is not evidence of a NEW expense.
+ const balanceAdjustment=/(?:موجودی|بالانس|مانده|حساب(?:م|مو)?)\S*.{0,70}(?:کم\s*(?:کن|بشه|شود)|کسر\s*کن|اصلاح\s*کن|بروز\s*کن|به\s*روز\s*کن)/u.test(text);
+ const explicitPayment=/(?:هزینه\s*کردم|پرداخت\s*کردم|خرید\s*کردم|کارت\s*کشیدم|انتقال\s*دادم)/u.test(text);
+ if(balanceAdjustment&&!explicitPayment)return {error:'این جمله دستور اصلاح موجودی یا تراکنش قبلی است، نه پرداخت جدید. برای جلوگیری از ثبت دوباره هزینه، حساب تراکنش قبلی باید اصلاح شود. اگر واقعاً پرداخت جدیدی انجام شده، شرح پرداخت را کامل وارد کنید.'};
  if(temporal.invalid)return {error:'تاریخ گفته‌شده نامعتبر است؛ آن را اصلاح کنید.'};
  const revised=resolveFreeAmount(text,temporal);
  if(revised.error)return {error:revised.error};
