@@ -307,6 +307,25 @@ async function initialize(){
  // Never bypass the sign-in screen, even when a previous session was remembered.
  showLogin();
 }
+// A PWA resumed from the launcher can reuse an already-running webview.
+// Require a fresh, explicit user confirmation after leaving the app too.
+let wasBackgrounded=false;
+function lockForNextEntry(){
+ if(!profile||profile.status!=='approved')return;
+ session=null;identity=null;profile=null;
+ clearOldSessions();
+ delete document.documentElement.dataset.kishRole;
+ showLogin();
+}
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){if(profile?.status==='approved')wasBackgrounded=true;return;}
+ if(wasBackgrounded){wasBackgrounded=false;lockForNextEntry();}
+});
+window.addEventListener('pagehide',()=>{if(profile?.status==='approved')wasBackgrounded=true;});
+window.addEventListener('pageshow',e=>{
+ if(e.persisted&&wasBackgrounded){wasBackgrounded=false;lockForNextEntry();}
+});
+
 setInterval(async()=>{
  if(!session?.access_token||!profile||document.hidden)return;
  try{
