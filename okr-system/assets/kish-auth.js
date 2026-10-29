@@ -242,8 +242,9 @@ function showAccount(){
 async function showAdmin(){
  if(profile?.role!=='super_admin')return;
  paint('مدیریت کاربران و تأیید دسترسی','ثبت‌نام‌های جدید را تأیید کنید و نقش مناسب را تعیین کنید.',
- '<div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('تازه‌سازی فهرست','kishRefresh')+'</div><p role="status" id="kishAuthNotice" class="kish-auth-notice"></p><div id="kishMembersList">در حال بارگذاری…</div>');
+ '<div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('تنظیمات حساب من','kishAdminAccount')+button('تازه‌سازی فهرست','kishRefresh')+'</div><p role="status" id="kishAuthNotice" class="kish-auth-notice"></p><div id="kishMembersList">در حال بارگذاری…</div>');
  document.getElementById('kishBack').onclick=unlock;
+ document.getElementById('kishAdminAccount').onclick=showAccount;
  document.getElementById('kishRefresh').onclick=loadAdminList;
  await loadAdminList();
 }
