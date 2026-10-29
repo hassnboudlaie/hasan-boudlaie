@@ -670,6 +670,10 @@ window.MyFinanceAI={
 };
 
 window.MyFinanceCloud={sync,authenticated:()=>!!user,currentUserId:()=>user?.id||null};
+// Avoid flashing the sign-in form on every refresh while a valid remembered session is being verified.
+byId('auth-form').hidden=true;
+byId('auth-pending').hidden=true;
+authStatus('در حال بررسی ورود امن شما…');
 renderAuth();
 // Keep the verified, tab-scoped Supabase session across reloads.
 // Auth callbacks from email confirmation/password recovery must be processed first.
