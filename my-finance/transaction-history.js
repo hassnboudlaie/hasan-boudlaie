@@ -14,7 +14,7 @@ const weekday=new Intl.DateTimeFormat('fa-IR',{timeZone:'Asia/Tehran',weekday:'l
 const months=['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const number=new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2});
 const labels={all:['همه','All'],day:['روز','Day'],week:['هفته','Week'],month:['ماه','Month']};
-let view='all',offset=0,search='';
+let view='all',offset=0,search='',kindFilter='',accountFilter='',categoryFilter='',transactionFilter='';
 const en=()=>document.documentElement.lang==='en';
 function parts(formatter,date){
  const p=Object.fromEntries(formatter.formatToParts(date).filter(x=>['year','month','day'].includes(x.type)).map(x=>[x.type,Number(x.value)]));
@@ -79,7 +79,7 @@ function searchText(t,accounts,date){
  return normal([kind,t.category,t.memo,t.scope,t.status,t.amount,number.format(t.amount),
   t.currency,account?.name,t.accountName,solarDate(date),dateText].join(' '));
 }
-function row(t,accounts,date){
+function row(t,accounts,date,expanded=false){
  const account=accounts.find(a=>a.id===t.account);
  const kind=t.kind==='income'?'income':t.kind==='expense'?'expense':t.kind==='investment'?'investment':'other';
  const type=t.kind==='investment'&&/قرض/.test(t.category||'')?(en()?'Loan paid':'پرداخت اصل قرض'):en()?({income:'Income',expense:'Expense',investment:'Investment',transfer:'Transfer'}[t.kind]||'Transaction'):({income:'درآمد',expense:'هزینه',investment:'سرمایه‌گذاری',transfer:'انتقال'}[t.kind]||'تراکنش');
@@ -90,22 +90,26 @@ function row(t,accounts,date){
  const accountName=account?.name||t.accountName||'';
  const amount=number.format(Number(t.amount)||0);
  const dateText=solarDate(date,true);
- return '<article class="tx-ledger-item" role="listitem">'
+ return '<details class="tx-ledger-item"'+(expanded?' open':'')+'><summary class="tx-ledger-summary">'
   +'<div class="tx-ledger-top"><div class="tx-ledger-heading"><span class="tx-ledger-type tx-'+kind+'">'+esc(type)+'</span><strong>'+esc(title)+'</strong></div>'
   +'<strong class="tx-ledger-amount tx-'+kind+'" dir="ltr">'+sign+esc(amount)+' <small>'+esc(currency)+'</small></strong></div>'
   +'<div class="tx-ledger-meta"><span>📅 '+esc(dateText)+'</span>'
   +(accountName?'<span>· '+esc(accountName)+'</span>':'')
   +(status?'<span>· '+esc(status)+'</span>':'')+'</div>'
-  +(t.memo?'<p class="tx-ledger-memo">'+esc(t.memo)+'</p>':'')
-  +'</article>';
+  +'<span class="tx-expand-hint">'+(en()?'Details':'جزئیات')+' ‹</span></summary>'
+  +'<div class="tx-ledger-detail"><div><span>'+(en()?'Account':'حساب')+'</span><strong>'+esc(accountName|| (en()?'Unassigned':'حساب نامشخص'))+'</strong></div>'
+  +'<div><span>'+(en()?'Type':'نوع تراکنش')+'</span><strong>'+esc(type)+'</strong></div>'
+  +'<div><span>'+(en()?'Category':'دسته‌بندی')+'</span><strong>'+esc(title)+'</strong></div>'
+  +'<div><span>'+(en()?'Status':'وضعیت')+'</span><strong>'+esc(status|| (en()?'Completed':'ثبت‌شده'))+'</strong></div>'
+  +(t.memo?'<p>'+esc(t.memo)+'</p>':'')+'</div></details>';
 }
 function renderHistory(){
  const data=bridge.getData();
  const accounts=data.accounts||[],all=(data.tx||[]).filter(t=>t.status!=='cancelled'),context=periodContext(),needle=normal(search);
  const selected=all.map((t,i)=>({t,i,date:parseDate(t.date||t.occurredAt)}))
-  .filter(({t,date})=>inPeriod(date,context)&&(!needle||searchText(t,accounts,date).includes(needle)))
+  .filter(({t,date})=>inPeriod(date,context)&&(!kindFilter||t.kind===kindFilter)&&(!accountFilter||t.account===accountFilter)&&(!categoryFilter||normal(t.category)===normal(categoryFilter))&&(!transactionFilter||t.id===transactionFilter)&&(!needle||searchText(t,accounts,date).includes(needle)))
   .sort((a,b)=>(b.date?.getTime()||0)-(a.date?.getTime()||0)||b.i-a.i);
- holder.innerHTML=selected.length?selected.map(({t,date})=>row(t,accounts,date)).join(''):
+ holder.innerHTML=selected.length?selected.map(({t,date})=>row(t,accounts,date,t.id===transactionFilter)).join(''):
   '<div class="tx-ledger-empty">'+(en()?'No transactions match the selected period or search.':'تراکنشی برای این بازه یا عبارت جست‌وجو پیدا نشد.')+'</div>';
  const count=byId('tx-results-count');
  if(count)count.textContent=en()?selected.length+' of '+all.length+' transactions':faNums(selected.length)+' از '+faNums(all.length)+' تراکنش';
@@ -120,6 +124,13 @@ function renderHistory(){
  });
  const searchBox=byId('tx-search');
  if(searchBox)searchBox.placeholder=en()?'Search transactions, amount, category…':'جست‌وجوی مبلغ، دسته‌بندی، نام، توضیح…';
+ const summary=byId('tx-active-filter'),summaryText=byId('tx-active-filter-text');
+ if(summary&&summaryText){
+  const accountName=accounts.find(a=>a.id===accountFilter)?.name||'';
+  const filters=[kindFilter?(kindFilter==='income'?(en()?'Income':'درآمد'):(en()?'Expenses':'هزینه‌ها')):'',
+   categoryFilter,accountName,transactionFilter?(en()?'Selected transaction':'تراکنش انتخاب‌شده'):''].filter(Boolean);
+  summary.hidden=!filters.length;summaryText.textContent=(en()?'Filter: ':'فیلتر: ')+filters.join(' · ');
+ }
 }
 document.querySelectorAll('[data-tx-range]').forEach(button=>{
  button.addEventListener('click',()=>{view=button.dataset.txRange;offset=0;renderHistory()});
@@ -127,6 +138,18 @@ document.querySelectorAll('[data-tx-range]').forEach(button=>{
 byId('tx-period-prev')?.addEventListener('click',()=>{offset--;renderHistory()});
 byId('tx-period-next')?.addEventListener('click',()=>{if(offset<0){offset++;renderHistory()}});
 byId('tx-search')?.addEventListener('input',event=>{search=event.target.value;renderHistory()});
+function openFiltered(opts={}){
+ view=['all','day','week','month'].includes(opts.period)?opts.period:'all';
+ offset=0;search='';kindFilter=['income','expense','investment'].includes(opts.kind)?opts.kind:'';
+ accountFilter=String(opts.accountId||'');categoryFilter=String(opts.category||'');
+ transactionFilter=String(opts.transactionId||'');
+ if(byId('tx-search'))byId('tx-search').value='';
+ if(typeof window.financeNavGo==='function')window.financeNavGo('transactions');
+ renderHistory();
+ requestAnimationFrame(()=>document.querySelector('.tx-history-card')?.scrollIntoView({block:'start',behavior:'smooth'}));
+}
+byId('tx-filter-reset')?.addEventListener('click',()=>openFiltered());
+window.MyFinanceHistory={openFiltered,renderHistory};
 window.renderTransactionHistory=renderHistory;
 document.addEventListener('myfinance:changed',renderHistory);
 document.addEventListener('myfinance:rebound',renderHistory);

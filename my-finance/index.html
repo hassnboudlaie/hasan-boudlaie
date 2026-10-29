@@ -1,4 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=9"><link rel="icon" href="./icon-192-r4.png?v=1" type="image/png"><link rel="apple-touch-icon" href="./icon-192-r4.png?v=1"><link rel="stylesheet" href="./premium.css?v=20261029r28"><title>داشبورد مالی من</title><style>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=9"><link rel="icon" href="./icon-192-r4.png?v=1" type="image/png"><link rel="apple-touch-icon" href="./icon-192-r4.png?v=1"><link rel="stylesheet" href="./premium.css?v=20261029r31"><title>داشبورد مالی من</title><style>
 :root{font-family:Tahoma,Arial,sans-serif;--bg:#f4f7f8;--card:white;--fg:#193139;--muted:#60757a;--line:#dce6e8;--accent:#087e75}body.dark{--bg:#0c1920;--card:#192a32;--fg:#e9f5f5;--muted:#afc1c4;--line:#35464c;--accent:#0a8f83}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg)}main{max-width:980px;margin:auto;padding:20px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:22px}h2{font-size:17px}button,input,select{font:inherit}button{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 15px;cursor:pointer}button.alt{background:var(--card);color:var(--fg);border:1px solid var(--line)}input,select{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:11px;min-width:0;width:100%}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric b{display:block;font-size:23px;margin-top:12px}.muted{color:var(--muted);font-size:13px}.entry{display:flex;gap:8px}.entry input{flex:1}.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:10px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap}section[hidden]{display:none}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:start;border-bottom:1px solid var(--line)}.scroll{overflow:auto}label{font-size:12px;color:var(--muted)}.notice{background:var(--bg);border-radius:10px;padding:12px}.danger{color:#d45d5d}@media(max-width:550px){.grid{grid-template-columns:repeat(2,1fr)}.metric b{font-size:17px}.fields{grid-template-columns:1fr}main{padding:12px}h1{font-size:19px}}
 
 /* Mobile-first refinement: visual only; financial storage schema unchanged */
@@ -83,9 +83,31 @@ body.finance-unlocked #auth-gate{display:none!important}
  <button type="button" class="finance-side-profile" onclick="financeNavGo('profile')" aria-label="باز کردن پروفایل شخصی"><span class="finance-user-avatar"><span class="finance-avatar-placeholder">👤</span><img class="finance-user-avatar-image" alt="" hidden></span><span class="finance-side-profile-text"><strong class="finance-identity-name">پروفایل من</strong><small class="finance-identity-email">حساب اختصاصی</small></span><span aria-hidden="true">‹</span></button>
 </aside><header class="finance-app-header"><button type="button" id="finance-header-profile" class="finance-header-profile" onclick="financeNavGo('profile')" aria-label="باز کردن پروفایل من"><span class="finance-user-avatar"><span class="finance-avatar-placeholder">👤</span><img class="finance-user-avatar-image" alt="" hidden></span><span class="finance-header-profile-name">پروفایل من</span></button><div class="brand-wrap"><div class="brand-mark" aria-hidden="true"><img src="./icon-192-r4.png?v=1" alt=""></div><div><div class="brand-tag">MY FINANCE</div><h1 id="title">داشبورد مالی من</h1><div id="cloud-indicator" class="cloud-status" role="status">حالت محلی · اتصال امن لازم است</div></div></div><div class="row"><button class="alt" onclick="toggleTheme()">☾</button><button class="alt" onclick="toggleLang()" id="lang">EN</button></div></header>
 <section id="home" class="finance-home">
-<div class="finance-home-heading"><div><small>MY FINANCE · OVERVIEW</small><h2 data-fa="نمای کلی مالی" data-en="Financial overview">نمای کلی مالی</h2><p class="muted" data-fa="تصویر روشن از پول و تعهدات شما" data-en="Your money and commitments at a glance">تصویر روشن از پول و تعهدات شما</p></div>
-<button type="button" class="finance-new-entry" onclick="document.getElementById('quick').focus()" data-fa="+ ثبت سریع" data-en="+ New entry">+ ثبت سریع</button></div>
-<div class="finance-dashboard-metrics"><div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div><div class="grid"><div class="card metric"><span data-fa="موجودی" data-en="Balance">موجودی</span><b id="balance">—</b></div><div class="card metric"><span data-fa="درآمد" data-en="Income">درآمد</span><b id="income">—</b></div><div class="card metric"><span data-fa="هزینه" data-en="Expense">هزینه</span><b id="expense">—</b></div><div class="card metric"><span data-fa="مطالبات" data-en="Receivables">مطالبات</span><b id="rcvcount">—</b></div></div>
+<div class="finance-home-heading">
+ <div><small>MY FINANCE / OVERVIEW</small><h2 data-fa="داشبورد من" data-en="My dashboard">داشبورد من</h2><p class="muted" data-fa="یک نگاه به وضعیت مالی شما" data-en="Your finances at a glance">یک نگاه به وضعیت مالی شما</p></div>
+ <button type="button" class="finance-new-entry" onclick="document.getElementById('quick').focus()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button>
+</div>
+<div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div>
+<div class="finance-dashboard-metrics" aria-label="نمای کلی مالی و مسیر جزئیات">
+ <button type="button" class="finance-balance-hero" onclick="financeOpenDetail('accounts')" aria-label="مشاهده جزئیات موجودی حساب‌های ریالی">
+  <span class="finance-hero-top"><span class="finance-hero-label" data-fa="موجودی حساب‌های ریالی" data-en="Cash in rial accounts">موجودی حساب‌های ریالی</span><span class="finance-hero-link"><span data-fa="جزئیات حساب‌ها" data-en="View accounts">جزئیات حساب‌ها</span><span aria-hidden="true">‹</span></span></span>
+  <span class="finance-hero-amount"><b id="balance" dir="auto">—</b></span>
+  <span class="finance-hero-foot"><span id="finance-account-count">حساب‌های متصل</span><span class="finance-hero-caption" data-fa="موجودی نقد · نه مجموع دارایی‌ها" data-en="Cash only · not total assets">موجودی نقد · نه مجموع دارایی‌ها</span></span>
+ </button>
+ <div class="finance-kpi-pair">
+  <button type="button" class="finance-kpi finance-kpi-income" onclick="financeOpenDetail('income')" aria-label="نمایش تراکنش‌های درآمد ماه جاری">
+   <span class="finance-kpi-top"><span class="finance-kpi-title" data-fa="درآمد این ماه" data-en="This month's income">درآمد این ماه</span><span class="finance-kpi-icon" aria-hidden="true">↗</span></span>
+   <b id="income" dir="auto">—</b><span class="finance-kpi-action" data-fa="تراکنش‌های درآمد ‹" data-en="Income details ›">تراکنش‌های درآمد ‹</span>
+  </button>
+  <button type="button" class="finance-kpi finance-kpi-expense" onclick="financeOpenDetail('expense')" aria-label="نمایش تراکنش‌های هزینه ماه جاری">
+   <span class="finance-kpi-top"><span class="finance-kpi-title" data-fa="هزینه این ماه" data-en="This month's spending">هزینه این ماه</span><span class="finance-kpi-icon" aria-hidden="true">↙</span></span>
+   <b id="expense" dir="auto">—</b><span class="finance-kpi-action" data-fa="تراکنش‌های هزینه ‹" data-en="Expense details ›">تراکنش‌های هزینه ‹</span>
+  </button>
+ </div>
+ <button type="button" class="finance-receivables-strip" onclick="financeOpenDetail('receivables')" aria-label="نمایش فهرست مطالبات">
+  <span class="finance-strip-label"><span class="finance-strip-icon" aria-hidden="true">◎</span><span data-fa="مطالبات در انتظار وصول" data-en="Outstanding receivables">مطالبات در انتظار وصول</span></span>
+  <span class="finance-strip-end"><b id="rcvcount">—</b><span aria-hidden="true">‹</span></span>
+ </button>
 </div>
 <div class="card"><h2 data-fa="ثبت سریع تراکنش" data-en="Quick entry">ثبت سریع تراکنش</h2><div class="entry"><input id="quick" type="text" inputmode="text" lang="fa" autocapitalize="off" autocomplete="off" placeholder="مثلاً: امروز ۵۰۰ هزار تومان هزینه کردم"><button type="button" id="voice-mic" title="شروع و پایان گفتار فارسی" aria-label="شروع یا توقف ضبط تراکنش صوتی" aria-pressed="false">🎙</button><button type="button" id="voice-parse" title="بررسی و پیش‌نمایش" aria-label="بررسی و پیش‌نمایش تراکنش">➜</button></div><p class="voice-free-hint">بدون هزینه API: دیکته با میکروفون گوشی یا مرورگر، سپس بررسی و تأیید تراکنش. در جمله‌های مبهم مبلغ و سرفصل را خودتان بررسی کنید.</p>
 <div class="personal-ai-shortcut-line"><button type="button" class="alt personal-ai-shortcut" data-fa="🤖 دستیار هوش مصنوعی شخصی (اختیاری)" data-en="🤖 Personal AI assistant (optional)" onclick="tab('settings');requestAnimationFrame(()=>document.getElementById('personal-ai-panel')?.scrollIntoView({behavior:'smooth',block:'start'}))">🤖 دستیار هوش مصنوعی شخصی (اختیاری)</button></div>
@@ -123,10 +145,21 @@ body.finance-unlocked #auth-gate{display:none!important}
 <p id="voice-loan-validation" class="voice-validation" role="status"></p>
 <div class="voice-review-actions"><button type="button" id="voice-loan-confirm">تأیید و ثبت قرض در مطالبات</button><button type="button" id="voice-loan-cancel" class="alt">انصراف</button></div>
 </div>
+<div class="finance-home-insights">
+ <div class="card finance-insight-card">
+  <div class="finance-insight-head"><div><span class="finance-eyebrow" data-fa="SPENDING / هزینه‌ها" data-en="SPENDING">SPENDING / هزینه‌ها</span><h3 data-fa="هزینه‌ها به تفکیک دسته" data-en="Spending by category">هزینه‌ها به تفکیک دسته</h3><p id="finance-month-label" class="muted"></p></div><button type="button" class="finance-section-link" onclick="financeOpenDetail('expense')" data-fa="مشاهده همه ‹" data-en="View all ›">مشاهده همه ‹</button></div>
+  <div id="finance-spending-categories" class="finance-category-list" aria-live="polite"></div>
+ </div>
+ <div class="card finance-insight-card">
+  <div class="finance-insight-head"><div><span class="finance-eyebrow" data-fa="ACTIVITY / فعالیت" data-en="ACTIVITY">ACTIVITY / فعالیت</span><h3 data-fa="آخرین تراکنش‌ها" data-en="Recent transactions">آخرین تراکنش‌ها</h3></div><button type="button" class="finance-section-link" onclick="financeOpenDetail('transactions')" data-fa="مشاهده همه ‹" data-en="View all ›">مشاهده همه ‹</button></div>
+  <div id="finance-recent-tx" class="finance-recent-list" aria-live="polite"></div>
+ </div>
+</div>
 <nav class="finance-shortcuts" aria-label="مدیریت دارایی و قرارداد"><a class="finance-shortcut" href="./assets.html"><span class="finance-shortcut-icon">◈</span><span><strong>دارایی‌ها</strong><small>طلا، ارز و خودرو</small></span></a><a class="finance-shortcut" href="./contracts.html"><span class="finance-shortcut-icon">▦</span><span><strong>قراردادها</strong><small>مطالبات و جلسات</small></span></a></nav>
 </section>
 <section id="transactions" hidden><div class="card"><h2 data-fa="ثبت درآمد یا هزینه" data-en="Add transaction">ثبت درآمد یا هزینه</h2><div class="fields"><select id="kind"><option value="expense">هزینه / Expense</option><option value="income">درآمد / Income</option></select><input id="amount" type="number" min="0" placeholder="مبلغ (تومان)"><select id="account"></select><select id="scope"><option value="personal">شخصی / Personal</option><option value="business">کاری / Business</option></select><input id="category" placeholder="دسته‌بندی"><input id="memo" placeholder="توضیح"></div><button onclick="saveTx()">بررسی و تأیید ثبت</button><p class="muted" id="tx-entry-date" aria-live="polite"></p></div>
 <div class="card tx-history-card"><h2>تراکنش‌های ثبت‌شده</h2>
+<div id="tx-active-filter" class="tx-active-filter" hidden><span id="tx-active-filter-text"></span><button type="button" id="tx-filter-reset" class="alt">نمایش همه ×</button></div>
 <div class="tx-history-controls">
 <div class="tx-filter-group" role="group" aria-label="فیلتر بر اساس بازه زمانی">
 <button type="button" data-tx-range="all" aria-pressed="true">همه</button>
@@ -266,6 +299,31 @@ function financeNavGo(id){
  tab(id);
  if(typeof window.scrollTo==='function')window.scrollTo({top:0,behavior:'auto'});
 }
+function financeOpenDetail(target){
+ if(!document.body.classList.contains('finance-unlocked'))return;
+ if(target==='income'||target==='expense'){
+  if(window.MyFinanceHistory?.openFiltered)return window.MyFinanceHistory.openFiltered({kind:target,period:'month'});
+  return financeNavGo('transactions');
+ }
+ if(target==='transactions'&&window.MyFinanceHistory?.openFiltered)return window.MyFinanceHistory.openFiltered();
+ financeNavGo(target);
+ if(target==='accounts')requestAnimationFrame(()=>$('accountlist')?.scrollIntoView({behavior:'smooth',block:'start'}));
+}
+function financeOpenAccount(id){
+ if(!document.body.classList.contains('finance-unlocked'))return;
+ if(window.MyFinanceHistory?.openFiltered)return window.MyFinanceHistory.openFiltered({accountId:id});
+ financeNavGo('transactions');
+}
+function financeOpenCategory(name){
+ if(!document.body.classList.contains('finance-unlocked'))return;
+ if(window.MyFinanceHistory?.openFiltered)return window.MyFinanceHistory.openFiltered({kind:'expense',period:'month',category:name});
+ financeNavGo('transactions');
+}
+function financeOpenTransaction(id){
+ if(!document.body.classList.contains('finance-unlocked'))return;
+ if(window.MyFinanceHistory?.openFiltered)return window.MyFinanceHistory.openFiltered({transactionId:id});
+ financeNavGo('transactions');
+}
 function toggleTheme(){document.body.classList.toggle('dark')}function toggleLang(){lang=lang==='fa'?'en':'fa';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='fa'?'EN':'فا';document.querySelectorAll('[data-fa]').forEach(x=>x.textContent=x.dataset[lang]);render()}
 function parsePersianNumber(raw){
  const text=digits(raw).replace(/[،,](?=\d{3}(?:\D|$))/g,'').replace(/\u200c/g,' ').replace(/ي/g,'ی').replace(/ك/g,'ک');
@@ -342,10 +400,85 @@ function balance(a){
    .reduce((sum,t)=>sum+(t.kind==='income'?inAccountCurrency(t):-inAccountCurrency(t)),0)
   +db.transfers.reduce((sum,t)=>sum+(t.to===a.id?t.receive:0)-(t.from===a.id?t.send+t.fee:0),0);
 }
-function render(){let opts=db.accounts.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name)+' ('+esc(a.currency)+')</option>').join('');['account','from','to'].forEach(id=>{let old=$(id).value;$(id).innerHTML='<option value="">انتخاب حساب</option>'+opts;$(id).value=old||''});$('accountlist').innerHTML='<h2>حساب‌ها</h2>'+(db.accounts.length?db.accounts.map(a=>'<p>'+esc(a.name)+' · '+fmt(balance(a))+' '+esc(a.currency)+(a.opening===null?' · موجودی اولیه نامشخص':'')+'</p>').join(''):'<p class="muted">هنوز حسابی تعریف نشده است.</p>');let cur=db.accounts.filter(a=>['IRT','IRR'].includes(a.currency));$('balance').textContent=cur.length?fmt(cur.reduce((s,a)=>s+balance(a)/(a.currency==='IRR'?10:1),0))+' تومان':'—';let tx=db.tx.filter(t=>['IRT','IRR'].includes(t.currency||db.accounts.find(a=>a.id===t.account)?.currency)&&!['pending','cancelled'].includes(t.status));const toman=t=>Number(t.amount)/( (t.currency||db.accounts.find(a=>a.id===t.account)?.currency)==='IRR'?10:1 );$('income').textContent=fmt(tx.filter(t=>t.kind==='income').reduce((s,t)=>s+toman(t),0));$('expense').textContent=fmt(tx.filter(t=>t.kind==='expense').reduce((s,t)=>s+toman(t),0));if(window.renderTransactionHistory)window.renderTransactionHistory();$('report').textContent='تعداد حساب‌ها: '+db.accounts.length+' | تراکنش‌ها: '+db.tx.filter(t=>t.status!=='cancelled').length+' | انتقال‌ها: '+db.transfers.length+' | مطالبات: '+db.receivables.length+' | تعهدات: '+db.commitments.length;
+function financeMonthKey(date){
+ if(!(date instanceof Date)||!Number.isFinite(date.getTime()))return '';
+ const parts=new Intl.DateTimeFormat('en-US-u-ca-persian',{year:'numeric',month:'2-digit',timeZone:'Asia/Tehran'}).formatToParts(date);
+ const year=parts.find(p=>p.type==='year')?.value,month=parts.find(p=>p.type==='month')?.value;
+ return year&&month?year+'-'+month.padStart(2,'0'):'';
+}
+function financeInToman(t){
+ const amount=Number(t.amount)||0;
+ return t.currency==='IRR'?amount/10:amount;
+}
+function financeMonthEntries(kind=null){
+ const month=financeMonthKey(new Date());
+ return (db.tx||[]).filter(t=>!['pending','cancelled'].includes(t.status)&&['IRT','IRR'].includes(t.currency)&&
+  (!kind||t.kind===kind)&&financeMonthKey(new Date(t.date||t.occurredAt))===month);
+}
+function renderHomeDashboard(){
+ const isEn=lang==='en',now=new Date();
+ const accounts=(db.accounts||[]).filter(a=>['IRT','IRR'].includes(a.currency));
+ const accountCount=$('finance-account-count');
+ if(accountCount)accountCount.textContent=isEn?accounts.length+' rial accounts':fmt(accounts.length)+' حساب ریالی';
+ const label=$('finance-month-label');
+ if(label)label.textContent=new Intl.DateTimeFormat(isEn?'en-US-u-ca-persian':'fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',month:'long',year:'numeric'}).format(now);
+ const entries=financeMonthEntries('expense'),byCategory=new Map();
+ for(const t of entries){
+  const key=String(t.category|| (isEn?'Other':'سایر')).trim() || (isEn?'Other':'سایر');
+  byCategory.set(key,(byCategory.get(key)||0)+financeInToman(t));
+ }
+ const categories=[...byCategory].sort((a,b)=>b[1]-a[1]).slice(0,4);
+ const total=[...byCategory.values()].reduce((a,b)=>a+b,0);
+ const target=$('finance-spending-categories');
+ if(target){
+  target.replaceChildren();
+  if(!categories.length){
+   const empty=document.createElement('p');empty.className='finance-empty';
+   empty.textContent=isEn?'No spending recorded this month.':'هنوز هزینه‌ای برای این ماه ثبت نشده است.';
+   target.append(empty);
+  }
+  for(const [category,amount] of categories){
+   const button=document.createElement('button');button.type='button';button.className='finance-category-row';
+   button.setAttribute('aria-label',(isEn?'View spending for ':'مشاهده هزینه‌های ')+category);
+   const top=document.createElement('span');top.className='finance-category-top';
+   const name=document.createElement('span');name.className='finance-category-name';name.textContent=category;
+   const number=document.createElement('strong');number.dir='auto';number.textContent=fmt(amount)+(isEn?' toman':' تومان');
+   top.append(name,number);
+   const track=document.createElement('span');track.className='finance-category-track';
+   const fill=document.createElement('span');fill.className='finance-category-fill';
+   fill.style.width=(total>0?Math.max(2,Math.min(100,amount/total*100)):0)+'%';track.append(fill);
+   button.append(top,track);button.addEventListener('click',()=>financeOpenCategory(category));target.append(button);
+  }
+ }
+ const activity=$('finance-recent-tx');if(!activity)return;
+ activity.replaceChildren();
+ const latest=(db.tx||[]).filter(t=>t.status==='completed'||!t.status)
+  .filter(t=>['income','expense','investment'].includes(t.kind))
+  .slice().sort((a,b)=>new Date(b.date||b.occurredAt)-new Date(a.date||a.occurredAt)).slice(0,3);
+ if(!latest.length){
+  const empty=document.createElement('p');empty.className='finance-empty';
+  empty.textContent=isEn?'Your transactions will appear here.':'تراکنش‌های ثبت‌شده اینجا نمایش داده می‌شوند.';activity.append(empty);
+ }
+ for(const t of latest){
+  const button=document.createElement('button');button.className='finance-activity-row';button.type='button';
+  const info=document.createElement('span');info.className='finance-activity-info';
+  const name=document.createElement('strong');name.textContent=String(t.category||t.memo||(isEn?'Transaction':'تراکنش'));
+  const desc=document.createElement('small');
+  const date=new Date(t.date||t.occurredAt);
+  const dateLabel=Number.isFinite(date.getTime())?new Intl.DateTimeFormat(isEn?'en-GB':'fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',day:'numeric',month:'short'}).format(date):'';
+  const account=db.accounts.find(a=>a.id===t.account)?.name||t.accountName||'';
+  desc.textContent=[dateLabel,account].filter(Boolean).join(' · ');
+  info.append(name,desc);
+  const amount=document.createElement('span');amount.className='finance-activity-amount '+(t.kind==='income'?'positive':'negative');
+  amount.textContent=(t.kind==='income'?'+':'−')+fmt(Number(t.amount)||0)+' '+(t.currency==='IRT'?'تومان':t.currency==='IRR'?'ریال':(t.currency||''));
+  button.append(info,amount);button.addEventListener('click',()=>financeOpenTransaction(t.id));activity.append(button);
+ }
+}
+function render(){let opts=db.accounts.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.name)+' ('+esc(a.currency)+')</option>').join('');['account','from','to'].forEach(id=>{let old=$(id).value;$(id).innerHTML='<option value="">انتخاب حساب</option>'+opts;$(id).value=old||''});$('accountlist').innerHTML='<h2>حساب‌ها</h2><p class="muted">برای مشاهده تراکنش‌های هر حساب، روی آن بزنید.</p>'+(db.accounts.length?db.accounts.map(a=>'<button type="button" class="finance-account-detail-row" data-account="'+esc(a.id)+'"><span><strong>'+esc(a.name)+'</strong><small>'+esc(a.currency)+(a.opening===null?' · موجودی اولیه نامشخص':'')+'</small></span><b>'+fmt(balance(a))+' '+esc(a.currency)+'</b><span aria-hidden="true">‹</span></button>').join(''):'<p class="muted">هنوز حسابی تعریف نشده است.</p>');$('accountlist').querySelectorAll('[data-account]').forEach(button=>button.addEventListener('click',()=>financeOpenAccount(button.dataset.account)));let cur=db.accounts.filter(a=>['IRT','IRR'].includes(a.currency));$('balance').textContent=cur.length?fmt(cur.reduce((s,a)=>s+balance(a)/(a.currency==='IRR'?10:1),0))+' تومان':'—';let tx=financeMonthEntries();const toman=t=>Number(t.amount)/( (t.currency||db.accounts.find(a=>a.id===t.account)?.currency)==='IRR'?10:1 );$('income').textContent=fmt(tx.filter(t=>t.kind==='income').reduce((s,t)=>s+toman(t),0));$('expense').textContent=fmt(tx.filter(t=>t.kind==='expense').reduce((s,t)=>s+toman(t),0));if(window.renderTransactionHistory)window.renderTransactionHistory();$('report').textContent='تعداد حساب‌ها: '+db.accounts.length+' | تراکنش‌ها: '+db.tx.filter(t=>t.status!=='cancelled').length+' | انتقال‌ها: '+db.transfers.length+' | مطالبات: '+db.receivables.length+' | تعهدات: '+db.commitments.length;
 $('rcvcount').textContent=db.receivables.length?fmt(db.receivables.filter(r=>r.status!=='paid').length)+' مورد':'—';
 $('rcvlist').innerHTML=db.receivables.length?db.receivables.slice().reverse().map(r=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(r.counterparty)+'</strong> · <span>'+esc(r.status==='paid'?'وصول‌شده':r.status==='partial'?'بخشی وصول‌شده':'در انتظار وصول')+'</span><p>'+fmt(r.principal)+' '+esc(r.currency)+' اصل سرمایه → '+(r.expected===null||r.expected===undefined?'بازپرداخت توافقی نامشخص':fmt(r.expected)+' '+esc(r.currency)+' مبلغ توافقی')+'</p><p class="muted">'+(r.expected===null||r.expected===undefined?'سود نامشخص':'سود توافقی: '+fmt(r.expected-r.principal)+' '+esc(r.currency))+(r.receivedAmount?' | وصول: '+fmt(r.receivedAmount)+' '+esc(r.currency):'')+' | سررسید: '+esc(monthText(r.dueMonth))+(r.termMonths?' | مدت: '+fmt(r.termMonths)+' ماه':'')+'</p><p class="muted">'+esc([r.location,r.sector,r.notes].filter(Boolean).join(' · '))+'</p></div>').join(''):'<p class="muted">هنوز طلب یا سرمایه‌گذاری ثبت نشده است.</p>';
 renderTransferList();
+renderHomeDashboard();
 }
 
 function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.filter(t=>t.status!=='cancelled').map(t=>[t.date,t.kind,t.amount,t.currency||db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name||t.accountName,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
@@ -699,4 +832,4 @@ document.addEventListener('myfinance:rebound',reload);
 reload();
 window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
-</script><script defer src="./transaction-history.js?v=20261029r7"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r30"></script></body></html>
+</script><script defer src="./transaction-history.js?v=20261029r31"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r30"></script></body></html>

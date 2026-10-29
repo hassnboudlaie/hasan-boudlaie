@@ -381,3 +381,120 @@ body.dark .finance-side-links button.finance-active{background:#244c4d!important
  .finance-new-entry{font-size:11px;padding:9px!important}
  .finance-mobile-nav button>span[data-fa]{font-size:9px!important}
 }
+
+/* Dashboard v31 — quiet, mobile-first overview with meaningful drill-down. */
+#home .finance-home-heading{margin:7px 0 18px;align-items:flex-end}
+#home .finance-home-heading small{font-size:10px;letter-spacing:.17em;color:var(--accent);font-weight:800}
+#home .finance-home-heading h2{font-size:clamp(23px,2.5vw,30px);font-weight:850;letter-spacing:-.045em}
+#home .finance-home-heading p{font-size:12px}
+#home .finance-new-entry{background:#edf5f3!important;border:1px solid #d8e9e4!important;color:#155b55!important;border-radius:14px!important;box-shadow:none!important;min-height:42px!important}
+body.dark #home .finance-new-entry{background:#24443f!important;color:#a2e7d7!important;border-color:#345951!important}
+#home .finance-dashboard-metrics{display:flex;flex-direction:column;gap:11px;margin:0 0 14px}
+#home .finance-dashboard-metrics button{font:inherit;cursor:pointer;text-align:start;min-width:0}
+#home .finance-balance-hero{position:relative;display:flex;flex-direction:column;gap:18px;width:100%;min-height:196px;padding:25px 27px;border:1px solid #2e4d5b!important;border-radius:23px!important;background:linear-gradient(123deg,#142c40 5%,#1d4452 78%,#174c4d)!important;color:#fff!important;box-shadow:0 14px 32px rgba(19,50,61,.12)!important;overflow:hidden}
+#home .finance-balance-hero:after{content:"";pointer-events:none;position:absolute;width:250px;height:250px;border:1px solid #ffffff12;border-radius:50%;left:-70px;top:-137px;box-shadow:0 0 0 65px #ffffff05}
+#home .finance-hero-top,#home .finance-hero-foot{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#home .finance-hero-label{font-size:14px;font-weight:750;color:#d5e7e9}
+#home .finance-hero-link{display:inline-flex;align-items:center;gap:5px;color:#b9e5de;font-size:12px;font-weight:700}
+#home .finance-hero-link span:last-child{font-size:24px;line-height:12px}
+#home .finance-hero-amount{display:block;position:relative;z-index:1}
+#home .finance-hero-amount b{display:block;font-size:clamp(27px,4.8vw,41px);font-weight:850;letter-spacing:-.065em;line-height:1.35;white-space:normal;overflow-wrap:anywhere;color:#fff;font-variant-numeric:tabular-nums}
+#home .finance-hero-foot{margin-top:auto;border-top:1px solid #ffffff21;padding-top:12px;color:#d0e1e4;font-size:11px}
+#home .finance-hero-caption{color:#bbd3d8}
+#home .finance-kpi-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+#home .finance-kpi{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:19px 19px 17px;min-height:141px;border-radius:19px!important;border:1px solid var(--line)!important;background:var(--card)!important;color:var(--fg)!important;box-shadow:0 3px 16px rgba(18,51,64,.035)!important}
+#home .finance-kpi-top{display:flex;align-items:center;justify-content:space-between;gap:7px}
+#home .finance-kpi-title{font-size:12px;font-weight:750;color:var(--muted)}
+#home .finance-kpi-icon{display:grid;place-items:center;height:30px;width:30px;flex-shrink:0;border-radius:10px;background:#eaf5f1;color:#21796e;font-size:18px}
+#home .finance-kpi-expense .finance-kpi-icon{background:#f9f0ef;color:#a96569}
+body.dark #home .finance-kpi-icon{background:#254c47;color:#8ce5cc}
+body.dark #home .finance-kpi-expense .finance-kpi-icon{background:#46383d;color:#f6b1b6}
+#home .finance-kpi b{font-size:clamp(18px,2.3vw,25px);line-height:1.35;font-weight:850;color:var(--fg);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#home .finance-kpi-action{margin-top:auto;color:var(--accent);font-size:11px;font-weight:750}
+#home .finance-receivables-strip{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 17px;min-height:59px;background:var(--card)!important;color:var(--fg)!important;border:1px solid var(--line)!important;border-radius:17px!important}
+#home .finance-strip-label,#home .finance-strip-end{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:750}
+#home .finance-strip-icon{font-size:22px;color:var(--accent);line-height:1}
+#home .finance-strip-end b{color:var(--fg);font-size:14px;font-weight:850}
+#home .finance-strip-end>span{color:var(--accent);font-size:24px;line-height:1}
+#home .finance-home-insights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start;margin:5px 0 0}
+#home .finance-insight-card{margin:0;padding:21px 20px;border-radius:21px;min-width:0;box-shadow:none}
+#home .finance-insight-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:16px}
+#home .finance-insight-head>div{min-width:0}
+#home .finance-eyebrow{display:block;font-size:10px;font-weight:850;color:var(--accent);letter-spacing:.08em;margin-bottom:3px}
+#home .finance-insight-head h3{margin:0;font-size:16px;line-height:1.6;color:var(--fg);font-weight:850}
+#home .finance-insight-head .muted{margin:0;font-size:11px}
+#home .finance-section-link{flex:0 0 auto;border:0!important;box-shadow:none!important;background:transparent!important;padding:6px 0!important;min-height:34px!important;color:var(--accent)!important;font-size:11px!important;font-weight:800!important;white-space:nowrap}
+#home .finance-category-list,#home .finance-recent-list{display:flex;flex-direction:column;gap:5px}
+#home .finance-category-row{display:flex;flex-direction:column;gap:7px;background:transparent!important;color:var(--fg)!important;padding:11px 0!important;min-height:49px;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important}
+#home .finance-category-row:last-child{border-bottom:0!important}
+#home .finance-category-top{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+#home .finance-category-name{font-size:12px;font-weight:700;max-width:57%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#home .finance-category-top strong{font-size:12px;white-space:nowrap;direction:ltr;text-align:end;font-weight:850;font-variant-numeric:tabular-nums}
+#home .finance-category-track{display:block;height:5px;width:100%;background:#e8eeed;border-radius:100px;overflow:hidden}
+#home .finance-category-fill{display:block;height:100%;background:#328d83;border-radius:100px}
+body.dark #home .finance-category-track{background:#344753}
+#home .finance-activity-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0!important;border:0!important;border-bottom:1px solid var(--line)!important;background:transparent!important;color:var(--fg)!important;min-height:62px;border-radius:0!important}
+#home .finance-activity-row:last-child{border-bottom:0!important}
+#home .finance-activity-info{display:flex;flex-direction:column;gap:3px;min-width:0}
+#home .finance-activity-info strong{font-size:12px;font-weight:750;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#home .finance-activity-info small{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#home .finance-activity-amount{font-size:12px;font-weight:850;direction:ltr;text-align:end;white-space:nowrap;font-variant-numeric:tabular-nums}
+#home .finance-activity-amount.positive{color:#21846c}
+#home .finance-activity-amount.negative{color:#ad6268}
+body.dark #home .finance-activity-amount.positive{color:#89dfc1}
+body.dark #home .finance-activity-amount.negative{color:#ffabb4}
+#home .finance-empty{margin:4px 0;padding:19px 6px;color:var(--muted);font-size:12px;text-align:center}
+#home .finance-balance-hero:hover,#home .finance-kpi:hover,#home .finance-receivables-strip:hover{filter:brightness(1.025);transform:translateY(-1px)}
+#home .finance-category-row:hover,#home .finance-activity-row:hover{filter:none;opacity:.82}
+#home button:focus-visible,.finance-account-detail-row:focus-visible,#transactions .tx-ledger-summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+#home .card:has(#quick){background:var(--card)!important;color:var(--fg)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:20px;padding:19px 20px!important;margin:13px 0 3px}
+#home .card:has(#quick) h2{font-size:16px;color:var(--fg)!important;margin:0}
+#home .card:has(#quick) h2:after{display:none}
+#home .card:has(#quick) .entry{margin-top:12px!important}
+#home .card:has(#quick) .entry input{border:1px solid var(--line);background:var(--bg);color:var(--fg);min-height:46px}
+#home .card:has(#quick) .entry button{background:#e2f2ed;color:#17665b;min-height:46px;border-radius:11px;padding:6px 11px!important}
+#home .card:has(#quick) .muted{color:var(--muted)!important}
+#home .card:has(#quick) .voice-free-hint,#home .card:has(#quick) .voice-privacy-note{font-size:10px;line-height:1.6;color:var(--muted);margin:8px 0}
+#home .card:has(#quick) .personal-ai-shortcut-line{margin-top:4px}
+#home .card:has(#quick) .personal-ai-shortcut{background:transparent!important;color:var(--accent)!important;border:0!important;text-align:start!important;min-height:32px;font-size:11px!important;padding:4px 0!important}
+#home .card:has(#quick) .voice-helper{margin-top:4px}
+#accountlist .finance-account-detail-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:1px solid var(--line)!important;border-radius:14px!important;padding:13px 14px!important;margin:8px 0;background:var(--bg)!important;color:var(--fg)!important;text-align:start!important}
+#accountlist .finance-account-detail-row>span:first-child{display:flex;flex-direction:column;min-width:0;flex:1}
+#accountlist .finance-account-detail-row strong{font-size:14px}
+#accountlist .finance-account-detail-row small{font-size:11px;color:var(--muted)}
+#accountlist .finance-account-detail-row b{font-size:13px;font-variant-numeric:tabular-nums}
+#accountlist .finance-account-detail-row>span:last-child{font-size:25px;color:var(--accent)}
+#transactions .tx-active-filter{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:10px 13px;border:1px solid var(--line);border-radius:13px;margin:5px 0 15px;background:var(--bg);font-size:12px;font-weight:700;color:var(--fg)}
+#transactions .tx-active-filter[hidden]{display:none!important}
+#transactions .tx-active-filter button{font-size:11px!important;padding:6px 10px!important;min-height:33px!important;flex-shrink:0}
+#transactions .tx-ledger-summary{display:block;cursor:pointer;list-style:none;padding:0;position:relative}
+#transactions .tx-ledger-summary::-webkit-details-marker{display:none}
+#transactions .tx-ledger-summary::marker{content:""}
+#transactions .tx-expand-hint{display:inline-flex;font-size:11px;font-weight:700;color:var(--accent);margin-top:6px}
+#transactions details[open] .tx-expand-hint{transform:rotate(-90deg)}
+#transactions .tx-ledger-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;border:1px solid var(--line);border-radius:13px;background:var(--bg);padding:13px;margin:12px 0 4px}
+#transactions .tx-ledger-detail>div{display:flex;flex-direction:column;gap:3px}
+#transactions .tx-ledger-detail>div>span{font-size:11px;color:var(--muted)}
+#transactions .tx-ledger-detail>div>strong{font-size:12px;overflow-wrap:anywhere}
+#transactions .tx-ledger-detail>p{grid-column:1/-1;margin:4px 0;font-size:12px;color:var(--fg);line-height:1.8}
+@media(max-width:760px){
+ #home .finance-home-insights{grid-template-columns:minmax(0,1fr)}
+ #home .finance-balance-hero{min-height:176px;padding:21px 20px;gap:15px}
+ #home .finance-hero-amount b{font-size:clamp(25px,6.2vw,35px)}
+ #home .finance-kpi{min-height:130px;padding:16px 15px}
+ #home .finance-kpi b{font-size:clamp(16px,4.6vw,22px)}
+}
+@media(max-width:390px){
+ #home .finance-home-heading{gap:5px}
+ #home .finance-home-heading h2{font-size:20px}
+ #home .finance-new-entry{font-size:11px!important;padding:8px 10px!important}
+ #home .finance-hero-link{font-size:10px}
+ #home .finance-balance-hero{padding:19px 16px}
+ #home .finance-hero-amount b{font-size:25px}
+ #home .finance-hero-foot{font-size:10px}
+ #home .finance-kpi{padding:14px 12px}
+ #home .finance-kpi b{font-size:16px}
+ #home .finance-kpi-title{font-size:11px}
+ #home .finance-insight-card{padding:17px 14px}
+ #home .finance-activity-amount{font-size:11px}
+}
