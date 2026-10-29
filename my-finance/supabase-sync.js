@@ -626,7 +626,7 @@ window.MyFinanceAI={
 
 window.MyFinanceCloud={sync,authenticated:()=>!!user,currentUserId:()=>user?.id||null};
 renderAuth();
-// A password is required on each fresh app navigation. Remember the email only.
+// Keep the verified, tab-scoped Supabase session across reloads.
 // Auth callbacks from email confirmation/password recovery must be processed first.
 function isAuthCallback(){
  const qs=new URLSearchParams(location.search);
@@ -634,11 +634,7 @@ function isAuthCallback(){
  return qs.has('code')||qs.has('token_hash')||qs.has('type')||hs.has('access_token')||hs.has('refresh_token')||hs.has('type');
 }
 (async()=>{
- if(!isAuthCallback()){
-  // Local scope: do not log the same user out of other devices.
-  const {error}=await client.auth.signOut({scope:'local'});
-  if(error){gate('خروج از نشست قبلی ممکن نشد. برای حفظ امنیت، برنامه را دوباره باز کنید.',null,true);return;}
- }
+ // Reuse the session provided by Supabase after reload; reverify authorization on each launch.
  bootstrapped=true;
  await refreshIdentity();
 })().catch(e=>gate('راه‌اندازی ورود امن با خطا روبه‌رو شد: '+String(e.message||e),null,true));
