@@ -14,12 +14,12 @@ const isoDay=d=>{const p=part(greg,d);return p.year+'-'+String(p.month).padStart
 const todayDay=()=>isoDay(new Date());
 function jalaliLabel(day){const d=new Date(day+'T12:00:00+03:30'),p=part(jalali,d);return fmt.format(p.day)+' '+words[p.month-1]+' '+fmt.format(p.year)}
 const status=(message,alert=false)=>{const e=$('voice-status');e.textContent=message;e.classList.toggle('voice-alert',alert)};
-function dateOffset(days){const d=new Date();d.setUTCDate(d.getUTCDate()+days);return isoDay(d)}
+function dateOffset(days){const d=new Date(todayDay()+'T12:00:00+03:30');d.setUTCDate(d.getUTCDate()+days);return isoDay(d)}
 function resolvePersian(day,month,year){
  const now=new Date(),p=part(jalali,now);
  if(year&&(year<p.year-6||year>p.year+1))return null;
  // Scan dates; accepts historical backfill but never silently shifts an invalid date.
- const base=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+ const base=new Date(todayDay()+'T12:00:00+03:30').getTime();
  for(let i=0;i<=2400;i++){
   const d=new Date(base-i*86400000),j=part(jalali,d);
   if(j.day===day&&j.month===month&&(!year||j.year===year))return isoDay(d);
@@ -49,6 +49,13 @@ function parseMoney(text){
  return result&&Number.isFinite(result)&&result>0?result:null;
 }
 function categoryOf(t,type){
+ if(type==='income'){
+  if(/حقوق|دستمزد/.test(t))return 'حقوق و درآمد ثابت';
+  if(/تدریس|کارگاه|آموزش/.test(t))return 'تدریس و آموزش';
+  if(/مشاوره|حق المشاوره/.test(t))return 'مشاوره';
+  if(/سود|اجاره دریافتی/.test(t))return 'سرمایه‌گذاری و اجاره';
+  return 'سایر درآمدها';
+ }
  if(/خیریه|صدقه|نذر|کمک مالی|کمک به خیریه|امور خیریه/.test(t))return 'خیریه و کمک‌های مردمی';
  if(/بنزین|گازوئیل|سوخت|اسنپ|تپسی|تاکسی|مترو|اتوبوس|کرایه ماشین|حمل و نقل/.test(t))return 'حمل‌ونقل و سوخت';
  if(/کله پاچه|صبحانه|ناهار|شام|رستوران|غذا|کافه|قهوه|سوپرمارکت|میوه|خواربار/.test(t))return 'خوراک و روزمره';
@@ -58,13 +65,6 @@ function categoryOf(t,type){
  if(/قسط|اقساط|بدهی|وام/.test(t))return 'اقساط و بدهی';
  if(/سفر|هتل|هواپیما|تفریح|سینما/.test(t))return 'سفر و تفریح';
  if(/آموزش|کتاب|دوره|کلاس/.test(t))return 'آموزش و حرفه‌ای';
- if(type==='income'){
-  if(/حقوق|دستمزد/.test(t))return 'حقوق و درآمد ثابت';
-  if(/تدریس|کارگاه|آموزش/.test(t))return 'تدریس و آموزش';
-  if(/مشاوره|حق المشاوره/.test(t))return 'مشاوره';
-  if(/سود|اجاره دریافتی/.test(t))return 'سرمایه‌گذاری و اجاره';
-  return 'سایر درآمدها';
- }
  return 'سایر هزینه‌ها';
 }
 function detectAccount(text,accounts){
@@ -95,7 +95,7 @@ function parse(raw,accounts=[]){
  if(temporal.invalid)return {error:'تاریخ گفته‌شده معتبر یا در محدوده ثبت نیست. تاریخ را اصلاح و دوباره بررسی کنید.'};
  const amount=parseMoney(temporal.clean);
  if(!amount)return {error:'مبلغ واضح تشخیص داده نشد. مثلاً بگویید «۳۵۰ هزار تومان بابت بنزین».',raw:original};
- const currency=/\b(?:usd|دلار)\b/.test(text)?'USD':/\b(?:eur|یورو)\b/.test(text)?'EUR':/ریال/.test(text)?'IRR':'IRT';
+ const currency=/(?:usd|دلار)/.test(text)?'USD':/(?:eur|یورو)/.test(text)?'EUR':/ریال/.test(text)?'IRR':'IRT';
  const income=/(?:درآمد|حقوق|دستمزد|حق\s*الزحمه|دریافت\s+کرد|واریز\s+شد|به\s+حسابم\s+آمد|پول\s+گرفتم|فروش\s+کردم|سود\s+گرفتم)/.test(text);
  const expense=/(?:هزینه|پرداخت|خرید|دادم|خرج|برداشتم|کارت\s+کشیدم|بنزین\s+زدم|کرایه\s+دادم)/.test(text);
  const kind=income&&!expense?'income':'expense';
@@ -103,7 +103,7 @@ function parse(raw,accounts=[]){
  if(!income&&!expense)warnings.push('نوع تراکنش از متن کاملاً مشخص نیست؛ «هزینه» انتخاب شده است. لطفاً بررسی کنید.');
  const account=detectAccount(text,accounts);
  if(/(?:حساب|بانک|کارت|کیف\s+پول)/.test(text)&&!account)warnings.push('حساب یا کارت گفته‌شده به‌طور قطعی شناسایی نشد؛ حساب را انتخاب کنید.');
- return {amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/\b(?:شرکت|کاری|پروژه|بیزنس)\b/.test(text)?'business':'personal',warnings};
+ return {amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/(?:شرکت|کاری|پروژه|بیزنس)/.test(text)?'business':'personal',warnings};
 }
 let recognition=null,listening=false,hasSaved=false;
 function setMic(active){const b=$('voice-mic');if(!b)return;b.setAttribute('aria-pressed',String(active));b.textContent=active?'■':'🎙';b.title=active?'توقف ضبط صدا':'شروع ثبت صوتی'}
