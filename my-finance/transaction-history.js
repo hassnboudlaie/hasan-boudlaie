@@ -81,12 +81,12 @@ function searchText(t,accounts,date){
 }
 function row(t,accounts,date){
  const account=accounts.find(a=>a.id===t.account);
- const kind=t.kind==='income'?'income':t.kind==='expense'?'expense':'other';
- const type=en()?({income:'Income',expense:'Expense',investment:'Investment',transfer:'Transfer'}[t.kind]||'Transaction'):({income:'درآمد',expense:'هزینه',investment:'سرمایه‌گذاری',transfer:'انتقال'}[t.kind]||'تراکنش');
+ const kind=t.kind==='income'?'income':t.kind==='expense'?'expense':t.kind==='investment'?'investment':'other';
+ const type=t.kind==='investment'&&/قرض/.test(t.category||'')?(en()?'Loan paid':'پرداخت اصل قرض'):en()?({income:'Income',expense:'Expense',investment:'Investment',transfer:'Transfer'}[t.kind]||'Transaction'):({income:'درآمد',expense:'هزینه',investment:'سرمایه‌گذاری',transfer:'انتقال'}[t.kind]||'تراکنش');
  const status=t.status==='pending'?(en()?'Pending':'در انتظار پرداخت'):t.status==='cancelled'?(en()?'Cancelled':'لغوشده'):'';
  const title=String(t.category||type).trim();
  const currency=t.currency||account?.currency||'';
- const sign=kind==='expense'?'−':kind==='income'?'+':'';
+ const sign=['expense','investment'].includes(kind)?'−':kind==='income'?'+':'';
  const accountName=account?.name||t.accountName||'';
  const amount=number.format(Number(t.amount)||0);
  const dateText=solarDate(date,true);
