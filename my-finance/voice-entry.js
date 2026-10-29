@@ -114,7 +114,7 @@ function setMic(active){
 }
 function clearVoiceTimer(){if(voiceTimer!==null){clearTimeout(voiceTimer);voiceTimer=null}}
 function stopListening(message='',isError=false){
- clearVoiceTimer();
+ ++voiceToken;clearVoiceTimer();
  const current=recognition;recognition=null;listening=false;setMic(false);
  if(current){try{current.abort()}catch(e){}}
  if(message)status(message,isError);
