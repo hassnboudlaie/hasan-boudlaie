@@ -592,7 +592,17 @@ async function refreshIdentity(){
   byId('account-access-summary').textContent='حساب فعال: '+next.email+(access.expires_at?' · تا '+new Date(access.expires_at).toLocaleDateString('fa-IR'):' · بدون سررسید');
   showAdmin().catch(()=>{});
   if(loadedProfileFor!==next.id)loadProfile().catch(e=>profileStatus('بارگیری پروفایل موفق نبود: '+String(e.message||e),true));
- }catch(e){lock('دسترسی امن تأیید نشد. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید. '+String(e.message||''),next,true)}
+ }catch(e){
+  // Network failures must not be interpreted as explicit logout.
+  // Only a server-verified identity may unlock financial data.
+  let storedSession=null;
+  try{const {data}=await client.auth.getSession();storedSession=data?.session||null}catch(_ignored){}
+  if(storedSession){
+   lock('اتصال برای بررسی حساب برقرار نیست؛ نشست این دستگاه محفوظ است. پس از برقراری اینترنت «بررسی مجدد وضعیت دسترسی» را بزنید.',storedSession.user||next||{email:authEmail.value},true);
+  }else{
+   lock('ورود امن تأیید نشد. اتصال اینترنت را بررسی کنید و اگر نشست پایان یافته، دوباره وارد شوید.',null,true);
+  }
+ }
  finally{authPending=false}
 }
 byId('supabase-send').addEventListener('click',async()=>{
