@@ -118,7 +118,16 @@ function render(){
    addNotice(c.title,d,c.amount,c.currency,'scheduled');
  }
  const target=$('upcoming-notice');
- target.textContent=notices.length?(severity===2?'🔴 ':severity===1?'🟠 ':'📅 ')+(severity===2?'پرداخت نیازمند توجه: ':severity===1?'سررسید نزدیک: ':'یادآوری: ')+notices.slice(0,3).join(' | ')+(notices.length>3?' · و '+fmt(notices.length-3)+' مورد دیگر':''):'';
+ target.replaceChildren();
+ if(notices.length){
+  const copy=document.createElement('span');
+  copy.className='finance-bills-alert-copy';
+  copy.textContent=(severity===2?'🔴 ':severity===1?'🟠 ':'📅 ')+(severity===2?'پرداخت نیازمند توجه: ':severity===1?'سررسید نزدیک: ':'یادآوری: ')+notices.slice(0,3).join(' | ')+(notices.length>3?' · و '+fmt(notices.length-3)+' مورد دیگر':'');
+  const open=document.createElement('button');
+  open.type='button';open.className='finance-bills-alert-open';open.textContent='مشاهده تعهدات';
+  open.addEventListener('click',()=>financeNavGo('commitments'));
+  target.append(copy,open);
+ }
  target.classList.toggle('finance-bills-alert-critical',notices.length>0&&severity===2);
  target.classList.toggle('finance-bills-alert-warning',notices.length>0&&severity===1);
  target.setAttribute('role',severity===2?'alert':'status');
