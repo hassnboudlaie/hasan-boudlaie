@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">The Life Organization</title><desc id="desc">Six connected dimensions orbit a life compass.</desc>
+<rect width="512" height="512" rx="128" fill="#183f48"/>
+<circle cx="256" cy="256" r="170" fill="none" stroke="#63948e" stroke-opacity=".42" stroke-width="3"/>
+<circle cx="256" cy="256" r="124" fill="none" stroke="#acc9b7" stroke-opacity=".37" stroke-dasharray="9 15" stroke-width="3"/>
+<g fill="#e8f0e8"><circle cx="256" cy="86" r="13"/><circle cx="403" cy="171" r="13"/><circle cx="403" cy="341" r="13"/><circle cx="256" cy="426" r="13"/><circle cx="109" cy="341" r="13"/><circle cx="109" cy="171" r="13"/></g>
+<path d="M256 166 288 225 346 256 288 287 256 346 224 287 166 256 224 225Z" fill="#e4c58a" />
+<circle cx="256" cy="256" r="36" fill="#183f48"/>
+<circle cx="256" cy="256" r="15" fill="#f5e8c6"/>
+</svg>
