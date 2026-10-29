@@ -1,6 +1,6 @@
 /* My Finance · authenticated cloud sync v3. No service credentials belong in a public PWA. */
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
-const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:sessionStorage,storageKey:'myfinance-supabase-session-v1',autoRefreshToken:true,detectSessionInUrl:true}});
 const bridge=window.MyFinanceBridge;
 const byId=id=>document.getElementById(id);
 const login=byId('supabase-login'),actions=byId('supabase-actions'),email=byId('supabase-email');
