@@ -253,7 +253,7 @@ function saveLoan(){
  hasSaved=true;$('voice-loan-confirm').disabled=true;
  try{
   bridge.commitData({...data,receivables:[...(data.receivables||[]),claim],tx:entries});
-  $('quick').value='';clearPreview();
+  $('quick').value='';$('voice-review').hidden=true;$('voice-loan-review').hidden=true;
   status('✓ قرض در مطالبات ثبت شد.'+(tx?' خروج وجه نیز در حساب مبدأ ثبت شد؛ در گزارش هزینه حساب نمی‌شود.':' به‌دلیل نامشخص‌بودن حساب، موجودی تغییر نکرد.'));
  }catch(e){hasSaved=false;updateLoanReview();status('ثبت قرض ناموفق: '+String(e.message||e),true)}
 }
