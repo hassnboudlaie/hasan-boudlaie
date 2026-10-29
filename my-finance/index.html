@@ -306,6 +306,7 @@ window.addEventListener('hashchange',importChatGPTDraft);
 if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{reg.update().catch(()=>{});}).catch(()=>{});}
 window.MyFinanceBridge={
  getData:()=>JSON.parse(JSON.stringify(db)),
+ getPreferenceNamespace:()=>KEY,
  bindUser:(uid)=>{
   const nextKey=uid?'my-finance-user-'+uid:'my-finance-preview-v1';
   if(nextKey===KEY)return;
