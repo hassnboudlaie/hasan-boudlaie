@@ -35,7 +35,7 @@ function restoreSavedSession(){
  }
 }
 function offerSavePassword(email,password){
- if(!saveCredentials||typeof PasswordCredential==='undefined'||!navigator.credentials?.store)return;
+ if(typeof PasswordCredential==='undefined'||!navigator.credentials?.store)return;
  // The browser/OS decides whether to offer saving. Never persist the password in app storage.
  try{
   const credential=new PasswordCredential({id:email,password,name:'OKR کیش'});
@@ -104,6 +104,28 @@ function paint(head,detail,html){
 }
 function button(text,id,extra){return '<button type="button" class="kish-auth-btn '+(extra||'')+'" id="'+id+'">'+esc(text)+'</button>';}
 function loginNotice(t){const el=document.getElementById('kishAuthNotice');if(el)el.textContent=t;}
+async function fillSavedPassword(){
+ if(working)return;
+ const email=document.getElementById('kishEmail'),pass=document.getElementById('kishPassword');
+ if(!email||!pass)return;
+ if(!navigator.credentials?.get){
+  loginNotice('در این مرورگر بازیابی مستقیم رمز پشتیبانی نمی‌شود. روی کادر رمز بزنید و از Google Password Manager رمز ذخیره‌شده را انتخاب کنید.');
+  pass.focus();return;
+ }
+ try{
+  const credential=await navigator.credentials.get({password:true,mediation:'required'});
+  if(!credential||credential.type!=='password'||typeof credential.password!=='string'){
+   loginNotice('رمز ذخیره‌شده‌ای انتخاب نشد. اگر قبلاً ذخیره نکرده‌اید، یک‌بار رمز را وارد و درخواست ذخیره Google Password Manager را تأیید کنید.');
+   pass.focus();return;
+  }
+  if(credential.id)email.value=credential.id;
+  pass.value=credential.password;
+  loginNotice('ایمیل و رمز ذخیره‌شده انتخاب شد. برای ورود، دکمه «ورود به سامانه» را بزنید.');
+ }catch{
+  loginNotice('امکان دریافت رمز از Password Manager فراهم نشد. روی فیلد رمز بزنید و Autofill گوشی را امتحان کنید.');
+  pass.focus();
+ }
+}
 function showLogin(note=''){
  mode='login';
  paint('ورود به سامانه کیش','ورود با ایمیل و رمز عبور شخصی. برای نخستین ورود ابتدا ثبت‌نام کنید.',
@@ -111,14 +133,16 @@ function showLogin(note=''){
  '<label>ایمیل<input type="email" name="username" id="kishEmail" list="kishSavedEmails" inputmode="email" autocomplete="username" dir="ltr" required maxlength="254"></label>'+
  '<datalist id="kishSavedEmails"><option value="'+esc(lastEmail())+'"></datalist>'+
  '<label>رمز عبور<input type="password" name="password" id="kishPassword" autocomplete="current-password" minlength="8" required></label>'+
- '<label class="kish-remember-label"><input type="checkbox" id="kishSaveCredentials" '+(saveCredentials?'checked':'')+'> ذخیره حساب برای ورود با تأیید من در دفعات بعد</label>'+
+ '<label class="kish-remember-label"><input type="checkbox" id="kishSaveCredentials" '+(saveCredentials?'checked':'')+'> حفظ حساب برای ورود یک‌کلیکی در دفعات بعد</label>'+
  '<button class="kish-auth-btn primary" type="submit">ورود به سامانه</button></form>'+
- '<p class="kish-auth-detail kish-autofill-hint">دفعه اول ایمیل و رمز را وارد کنید؛ دفعات بعد فقط روی «ورود به حساب ذخیره‌شده» بزنید. رمز در خود برنامه ذخیره نمی‌شود.</p>'+
+ '<div class="kish-auth-inline">'+button('🔑 انتخاب رمز ذخیره‌شده در گوشی','kishSavedPassword')+'</div>'+ 
+ '<p class="kish-auth-detail kish-autofill-hint">تیک «حفظ حساب» فقط نشست ورود را نگه می‌دارد؛ رمز در برنامه ذخیره نمی‌شود. برای ذخیره رمز در Chrome، هنگام اولین ورود گزینه Save در Google Password Manager را تأیید کنید. سپس رمز را با Autofill یا دکمه بالا انتخاب کنید.</p>'+
  '<p class="kish-auth-notice" id="kishAuthNotice" role="status">'+esc(note)+'</p>'+
  '<div class="kish-auth-inline">'+button('ایجاد حساب جدید','kishSignUp')+button('بازیابی رمز عبور','kishForgot')+'</div>');
  document.getElementById('kishAuthForm').onsubmit=onLogin;
  document.getElementById('kishEmail').value=lastEmail();
  document.getElementById('kishSaveCredentials').onchange=e=>setSaveCredentials(e.target.checked);
+ document.getElementById('kishSavedPassword').onclick=fillSavedPassword;
  document.getElementById('kishSignUp').onclick=showSignUp;
  document.getElementById('kishForgot').onclick=onForgot;
 }
@@ -167,7 +191,7 @@ function showSignUp(){
  '<form id="kishAuthForm" class="kish-auth-form">'+
  '<label>نام و نام خانوادگی<input type="text" id="kishName" autocomplete="name" required maxlength="120"></label>'+
  '<label>ایمیل<input type="email" id="kishEmail" inputmode="email" autocomplete="username" dir="ltr" required maxlength="254"></label>'+
- '<label>رمز عبور (حداقل ۸ نویسه)<input type="password" id="kishPassword" autocomplete="new-password" minlength="8" required></label>'+
+ '<label>رمز عبور (حداقل ۸ نویسه)<input type="password" name="new-password" id="kishPassword" autocomplete="new-password" minlength="8" required></label>'+
  '<button type="submit" class="kish-auth-btn primary">ثبت‌نام</button></form>'+
  '<p class="kish-auth-notice" role="status" id="kishAuthNotice"></p>'+
  '<div class="kish-auth-inline">'+button('قبلاً حساب ساخته‌ام؛ ورود','kishSwitchLogin')+'</div>');
