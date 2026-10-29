@@ -44,6 +44,10 @@ function extractDate(text){
 }
 function parseMoney(text){
  let input=text.replace(/(\d)[٬،,](?=\d{3}(?:\D|$))/g,'$1').replace(/(\d)\.(?=\d{3}(?:\D|$))/g,'$1').replace(/٫/g,'.');
+ // Speech-to-text sometimes repeats «مبلغ» between a number and its multiplier.
+ input=input.replace(/(?:^|\s)مبلغ(?:\s+مبلغ)+(?=\s|$)/g,' مبلغ');
+ input=input.replace(/(\d+|یک|یه|دو|سه|چهار|پنج|شش|هفت|هشت|نه|ده)\s+مبلغ\s+\1(?=\s+(?:میلیون|هزار|میلیارد|تومان|تومن|ریال|دلار|یورو))/g,'$1');
+ input=input.replace(/(^|\s)(\d+|یک|یه|دو|سه|چهار|پنج|شش|هفت|هشت|نه|ده)(?:\s+\2)+(?=\s+(?:میلیون|هزار|میلیارد|تومان|تومن|ریال|دلار|یورو))/g,'$1$2');
  input=input.replace(/(یک|یه|دو|سه|چهار|پنج|شش|هفت|هشت|نه|\d+)\s+میلیون\s+و\s+نیم/g,'$1 و نیم میلیون');
  let result=typeof window.parsePersianNumber==='function'?window.parsePersianNumber(input):null;
  return result&&Number.isFinite(result)&&result>0?result:null;
