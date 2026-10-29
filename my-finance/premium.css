@@ -498,3 +498,43 @@ body.dark #home .finance-activity-amount.negative{color:#ffabb4}
  #home .finance-insight-card{padding:17px 14px}
  #home .finance-activity-amount{font-size:11px}
 }
+
+
+/* Cash-flow audit v32: accessible six-month comparison; no external charting dependency. */
+#home .finance-cashflow-card{margin:1px 0 13px;min-width:0;border:1px solid var(--line);border-radius:21px;box-shadow:none;padding:19px 20px 16px}
+#home .finance-flow-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:0 0 12px}
+#home .finance-flow-head h3{font-size:16px;font-weight:850;margin:3px 0;color:var(--fg)}
+#home .finance-flow-head p.muted{font-size:11px;margin:0}
+#home .finance-flow-summary{display:flex;align-items:baseline;gap:8px 13px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:11px}
+#home .finance-flow-net-label{font-size:12px;font-weight:700;color:var(--muted)}
+#home #finance-flow-net{font-weight:900;font-size:clamp(20px,2.5vw,27px);line-height:1.4;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#home #finance-flow-net[data-sign="positive"]{color:#128269}
+#home #finance-flow-net[data-sign="negative"]{color:#a95d62}
+#home #finance-flow-net[data-sign="neutral"]{color:var(--fg)}
+body.dark #home #finance-flow-net[data-sign="positive"]{color:#81e0b9}
+body.dark #home #finance-flow-net[data-sign="negative"]{color:#f3a9b3}
+#home #finance-flow-note{font-size:11px;flex:1 1 160px;text-align:start}
+#home .finance-flow-chart{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;align-items:end;min-height:148px;padding:15px 4px 4px}
+#home .finance-flow-month{min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+#home .finance-flow-bars{height:104px;display:flex;align-items:flex-end;justify-content:center;gap:5px;width:100%;border-bottom:1px solid var(--line)}
+#home .finance-flow-bar{display:block;width:clamp(8px,28%,20px);border-radius:5px 5px 1px 1px;transition:height .2s ease}
+#home .finance-flow-bar.income{background:#279481}
+#home .finance-flow-bar.expense{background:#d5a17d}
+#home .finance-flow-month-label{color:var(--muted);font-size:10px;font-weight:750;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+#home .finance-flow-legend{display:flex;align-items:center;gap:18px;justify-content:center;margin:4px 0 1px}
+#home .finance-flow-legend>span{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+#home .flow-swatch{height:8px;width:8px;display:inline-block;border-radius:2px}
+#home .flow-swatch.income{background:#279481}
+#home .flow-swatch.expense{background:#d5a17d}
+#home .finance-flow-empty{position:absolute;inset:20px 4px 35px;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font-size:12px;line-height:1.8;background:color-mix(in srgb,var(--card) 85%,transparent);color:var(--muted)}
+.auth-card .auth-trusted-device{font-size:11px;line-height:1.8;margin:2px 0 12px;color:var(--muted)}
+@media(max-width:480px){
+ #home .finance-cashflow-card{padding:16px 13px 14px}
+ #home .finance-flow-chart{gap:5px}
+ #home .finance-flow-bars{gap:3px}
+ #home .finance-flow-month-label{font-size:9px}
+ #home #finance-flow-net{font-size:20px}
+ #home .finance-flow-head h3{font-size:15px}
+ #home #finance-flow-note{flex-basis:100%;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){#home .finance-flow-bar{transition:none}}
