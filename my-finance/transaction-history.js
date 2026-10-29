@@ -152,6 +152,7 @@ byId('tx-filter-reset')?.addEventListener('click',()=>openFiltered());
 window.MyFinanceHistory={openFiltered,renderHistory};
 window.renderTransactionHistory=renderHistory;
 document.addEventListener('myfinance:changed',renderHistory);
+document.addEventListener('myfinance:cloud-synced',renderHistory);
 document.addEventListener('myfinance:rebound',renderHistory);
 renderHistory();
 })();
