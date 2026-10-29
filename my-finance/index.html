@@ -513,50 +513,6 @@ window.addEventListener('hashchange',showAssistantFromLink);
 showAssistantFromLink();
 importChatGPTDraft();
 /* Authentication and synchronization are handled exclusively by Supabase. */
-</script><script>
-/* Navigation skin only: finance sections, data, and persistence stay unchanged. */
-(()=>{
- const original=window.tab;
- if(typeof original!=='function')return;
- let current='home';
- const more=()=>document.getElementById('finance-more-dialog');
- function closeMore(){if(more()?.open)more().close()}
- function highlight(route){
-  document.querySelectorAll('[data-finance-route]').forEach(el=>{
-   const selected=el.dataset.financeRoute===route;
-   el.classList.toggle('finance-active',selected);
-   if(selected)el.setAttribute('aria-current','page');
-   else el.removeAttribute('aria-current');
-  });
- }
- window.financeShowMore=()=>{
-  const d=more();if(d&&!d.open){d.showModal();d.querySelector('.finance-more-top button')?.focus()}
- };
- window.financeCloseMore=closeMore;
- window.financeNavGo=route=>{
-  const special={profile:['settings','finance-profile-card'],assistant:['settings','personal-ai-panel']};
-  const sections=['transactions','accounts','transfers','receivables','reports','settings'];
-  const to=special[route];
-  if(!to&&route!=='home'&&!sections.includes(route))return;
-  closeMore();
-  if(to)original(to[0]);
-  else original(route==='home'?'transactions':route);
-  current=route;
-  highlight(route);
-  const target=route==='home'?null:document.getElementById(to?to[1]:route);
-  if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
-  else window.scrollTo({top:0,behavior:'smooth'});
- };
- window.tab=function(id){
-  original(id);
-  current=id==='transactions'?'home':id;
-  highlight(current);
- };
- more()?.addEventListener('click',e=>{if(e.target===more())closeMore()});
- const visible=[...document.querySelectorAll('main section')].find(e=>!e.hidden);
- current=visible?.id==='settings'?'settings':'home';
- highlight(current);
-})();
 </script><script defer src="./voice-entry.js?v=20261029r7"></script><script>
 /* My Finance: optional one-tap ChatGPT-to-preview link; no API costs. */
 (()=>{
