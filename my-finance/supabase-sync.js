@@ -269,7 +269,7 @@ byId('auth-form').addEventListener('submit',async event=>{
  const requestedMode=authMode;
  const accountEmail=authEmail.value.trim().toLowerCase();
  const password=authPassword.value;
- if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(accountEmail))return authStatus('ایمیل معتبر وارد کنید.',true);
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(accountEmail))return authStatus('ایمیل معتبر وارد کنید.',true);
  if(!password)return authStatus('رمز عبور لازم است.',true);
  if(requestedMode==='signup'){
   if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
