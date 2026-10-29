@@ -133,6 +133,32 @@ body.finance-unlocked #auth-gate{display:none!important}
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
 <section id="settings" hidden><div class="card"><h2>حساب من</h2><p id="account-access-summary" class="muted">دسترسی در حال بررسی است.</p><a id="finance-admin-link" href="./admin.html" hidden>مدیریت کاربران آزمایشی</a></div><div class="card" id="supabase-sync"><h2>Supabase · Private Sync</h2><p class="muted">ورود امن و همگام‌سازی خصوصی اطلاعات مالی</p><div id="supabase-login"><input type="email" id="supabase-email" placeholder="ایمیل ورود"><button type="button" id="supabase-send">ارسال لینک ورود</button></div><div id="supabase-actions" hidden><button type="button" id="supabase-pull">دریافت تراکنش‌ها</button><button type="button" id="supabase-push">انتقال تراکنش‌های محلی</button><button type="button" id="supabase-logout">خروج</button><button type="button" id="supabase-pair">اتصال یک‌باره به ChatGPT</button></div><p id="supabase-status" role="status"></p><p id="supabase-pair-status" role="status" class="muted">برای ثبت مستقیم هزینه از ویس همین چت، پس از ورود امن یک‌بار کد اتصال بسازید.</p></div>
+<div class="card" id="personal-ai-panel">
+ <h2>دستیار هوش مصنوعی شخصی · اختیاری</h2>
+ <p class="muted">بدون اتصال پولی اجباری. استفاده عادی از My Finance مستقل از این بخش است.</p>
+ <label class="personal-ai-label" for="personal-ai-mode">روش استفاده از دستیار شخصی</label>
+ <select id="personal-ai-mode" aria-label="روش دستیار شخصی">
+  <option value="off">خاموش · فقط تحلیل داخلی رایگان</option>
+  <option value="chatgpt">ChatGPT شخصی من · انتقال دستی امن</option>
+  <option value="other">هوش مصنوعی دیگر · انتقال دستی</option>
+ </select>
+ <div id="personal-ai-workflow" hidden>
+  <p class="personal-ai-notice">این روش <strong>اتصال خودکار حساب ChatGPT نیست</strong>؛ متن فقط با اقدام خودتان کپی می‌شود و پاسخ را برای بررسی به اپ برمی‌گردانید. رمز و API Key لازم نیست.</p>
+  <label class="personal-ai-label" for="personal-ai-text">متنی که می‌خواهید دستیار تحلیل کند</label>
+  <textarea id="personal-ai-text" rows="3" maxlength="1600" placeholder="مثلاً: دو میلیون، نه سه میلیون تومان به امیر نوری قرض دادم"></textarea>
+  <div class="personal-ai-buttons">
+   <button id="personal-ai-from-quick" type="button" class="alt">برداشتن متن ثبت سریع</button>
+   <button id="personal-ai-copy" type="button">۱. کپی متن و دستور تحلیل</button>
+   <button id="personal-ai-open" type="button" class="alt">۲. باز کردن ChatGPT</button>
+  </div>
+  <p class="muted">در ChatGPT خودتان پیام کپی‌شده را Paste و ارسال کنید. سپس فقط پاسخ JSON آن را کپی و اینجا وارد کنید. اطلاعات حساب‌ها و موجودی شما خودکار ارسال نمی‌شوند.</p>
+  <label class="personal-ai-label" for="personal-ai-response">۳. پاسخ JSON دستیار را اینجا بچسبانید</label>
+  <textarea id="personal-ai-response" rows="5" spellcheck="false" dir="ltr" maxlength="7000" placeholder='{"action":"loan_given","amount":3000000,...}'></textarea>
+  <div class="personal-ai-buttons"><button type="button" id="personal-ai-review">بررسی پاسخ و ساخت پیش‌نمایش</button><button id="personal-ai-clear" type="button" class="alt">پاک‌کردن متن‌ها</button></div>
+  <p id="personal-ai-status" role="status" aria-live="polite" class="muted">هیچ اطلاعاتی بدون تأیید شما در حساب مالی ثبت نمی‌شود.</p>
+ </div>
+ <p class="muted" id="personal-ai-future">اتصال مستقیم امن به سرویس AI شخصی در ارتقای آینده بررسی می‌شود؛ فعلاً ورود با حساب ChatGPT به معنی اتصال API نیست.</p>
+</div>
 <div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در این دستگاه ذخیره می‌شوند و پس از ورود امن، در فضای خصوصی Supabase همگام خواهند شد. داده‌های محلی رمزگذاری نشده‌اند؛ در دستگاه مشترک از آن استفاده نکنید. اطلاعات واقعی در GitHub ثبت نمی‌شوند.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود اطلاعات از ChatGPT پس از اتصال امن انجام می‌شود. پیش‌نویس‌های قدیمی همچنان قابل واردکردن هستند.</p></div></section>
 <footer class="muted">My Finance · Private Finances · Secure cloud sync · No financial data on GitHub</footer></main>
 <script>
@@ -307,4 +333,4 @@ window.MyFinanceBridge={
 render();tab('transactions');
 importChatGPTDraft();
 /* Authentication and synchronization are handled exclusively by Supabase. */
-</script><script defer src="./voice-entry.js?v=20261029r7"></script><script defer src="./transaction-history.js?v=20261029r6"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r6"></script></body></html>
+</script><script defer src="./voice-entry.js?v=20261029r7"></script><script defer src="./personal-ai-handoff.js?v=20261029r8"></script><script defer src="./transaction-history.js?v=20261029r6"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r6"></script></body></html>
