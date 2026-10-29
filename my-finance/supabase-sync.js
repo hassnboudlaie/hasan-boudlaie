@@ -305,7 +305,7 @@ async function refreshIdentity(){
    try{dirty=new Set(JSON.parse(localStorage.getItem(dirtyKey())||'[]'))}catch(e){}
   }
   if(!same||!document.body.classList.contains('finance-unlocked'))await sync();
-  renderAuth();document.body.classList.add('finance-unlocked');
+  renderAuth();document.body.classList.add('finance-unlocked');document.dispatchEvent(new Event('myfinance:unlocked'));
   byId('account-access-summary').textContent='حساب فعال: '+next.email+(access.expires_at?' · تا '+new Date(access.expires_at).toLocaleDateString('fa-IR'):' · بدون سررسید');
   showAdmin().catch(()=>{});
  }catch(e){lock('دسترسی امن تأیید نشد. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید. '+String(e.message||''),next,true)}
