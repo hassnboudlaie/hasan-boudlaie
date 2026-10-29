@@ -77,6 +77,7 @@ const assert=require('node:assert/strict');
   assert.equal(updated.status,'approved');
   assert.equal(updated.role,'assistant');
   
+  await page.getByRole('button',{name:'بازگشت به سامانه'}).click();
   // Check the device setting: opt out of persistent login and browser autofill metadata.
   await page.locator('#kishAccountButton').click();
   const toggle=page.locator('#kishStaySigned');
