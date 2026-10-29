@@ -148,6 +148,7 @@ body.finance-unlocked #auth-gate{display:none!important}
    <strong>روش سریع با یک لمس، بدون هزینه API</strong>
    <p class="muted">یک‌بار دستور زیر را در ChatGPT شخصی‌تان ارسال کنید. بعد برای هر هزینه، درآمد یا قرض پرداختی، با لمس لینک پاسخ، فرم بررسی My Finance باز می‌شود.</p>
    <button type="button" id="personal-ai-direct-copy">کپی دستور ساخت لینک یک‌لمسی</button>
+   <button type="button" id="personal-ai-open" class="alt">باز کردن ChatGPT</button>
    <p class="muted">ثبت خودکار نیست؛ لینک فقط فرم قابل اصلاح را باز می‌کند و ثبت نیازمند تأیید شماست.</p>
   </div>
   <details class="personal-ai-manual"><summary>روش جایگزین: انتقال دستی متن و JSON</summary>
@@ -156,7 +157,7 @@ body.finance-unlocked #auth-gate{display:none!important}
   <div class="personal-ai-buttons">
    <button id="personal-ai-from-quick" type="button" class="alt">برداشتن متن ثبت سریع</button>
    <button id="personal-ai-copy" type="button">۱. کپی متن و دستور تحلیل</button>
-   <button id="personal-ai-open" type="button" class="alt">۲. باز کردن ChatGPT</button>
+   
   </div>
   <p class="muted">در ChatGPT خودتان پیام کپی‌شده را Paste و ارسال کنید. سپس فقط پاسخ JSON آن را کپی و اینجا وارد کنید. اطلاعات حساب‌ها و موجودی شما خودکار ارسال نمی‌شوند.</p>
   <label class="personal-ai-label" for="personal-ai-response">۳. پاسخ JSON دستیار را اینجا بچسبانید</label>
@@ -460,8 +461,9 @@ $('personal-ai-direct-copy').addEventListener('click',async()=>{
   await navigator.clipboard.writeText(instruction);
   status('دستور یک‌بارۀ ChatGPT کپی شد. آن را در یک گفتگوی شخصی بفرستید؛ سپس با ویس تراکنش بگویید و لینک را لمس کنید.');
  }catch(e){
-  utterance.value=instruction.slice(0,1600);
-  status('کپی خودکار در این مرورگر ممکن نبود؛ متن دستور در کادر قرار گرفت تا خودتان کپی کنید.',true);
+  response.value=instruction.slice(0,7000);
+  document.querySelector('.personal-ai-manual').open=true;
+  status('کپی خودکار ممکن نبود؛ دستور کامل در کادر پایینی قرار گرفت تا آن را انتخاب و کپی کنید.',true);
  }
 });
 $('personal-ai-from-quick').addEventListener('click',()=>{
