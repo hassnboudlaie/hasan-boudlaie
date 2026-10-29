@@ -362,6 +362,22 @@ byId('supabase-logout').addEventListener('click',async()=>{
  if(error)notice('خروج ناموفق: '+error.message);
  else await refreshIdentity();
 });
+byId('supabase-signout-wipe').addEventListener('click',async()=>{
+ if(!user)return notice('ابتدا وارد حساب خود شوید.');
+ if(!confirm('پس از همگام‌سازی، داده‌های محلی این حساب و نسخه پیش‌نمایش قدیمی از این دستگاه پاک شوند؟ اطلاعات ذخیره‌شده در Cloud باقی می‌مانند. ادامه می‌دهید؟'))return;
+ const ownerId=user.id;
+ try{
+  const synced=await sync();
+  if(!synced||user?.id!==ownerId||dirty.size)throw Error('ابتدا همگام‌سازی کامل و بدون خطا لازم است؛ داده‌های محلی حذف نشدند.');
+  const {error}=await client.auth.signOut({scope:'local'});
+  if(error)throw error;
+  localStorage.removeItem('my-finance-user-'+ownerId);
+  localStorage.removeItem('my-finance-dirty-'+ownerId);
+  localStorage.removeItem('my-finance-backup-before-id-repair-'+ownerId);
+  localStorage.removeItem('my-finance-preview-v1');
+  lock('با موفقیت خارج شدید و داده‌های محلی این حساب از این دستگاه پاک شدند.');
+ }catch(e){notice('پاکسازی انجام نشد: '+String(e.message||e),false)}
+});
 byId('supabase-pull').addEventListener('click',()=>sync().catch(()=>{}));
 byId('supabase-push').addEventListener('click',()=>sync().catch(()=>{}));
 document.addEventListener('myfinance:changed',setDirty);
