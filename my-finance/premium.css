@@ -148,3 +148,10 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 .voice-review-actions button:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:560px){.voice-fields{gap:10px}.voice-fields input,.voice-fields select,.voice-fields textarea{font-size:16px}.voice-review-actions button{font-size:13px;padding:9px}}
 @media(max-width:355px){.voice-fields{grid-template-columns:1fr}}
+
+/* Speech recognition fallbacks: visible on phones, no misleading perpetual listening */
+.voice-helper{display:flex;align-items:center;flex-wrap:wrap;gap:7px 10px;margin:13px 0 3px;font-size:12px;color:#e6f8f4}
+.voice-helper button.alt{background:#e7f6f2;color:#104a4e;border-color:transparent;font-size:12px;font-weight:750;min-height:38px;padding:8px 13px;border-radius:11px}
+.voice-helper button.alt:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.card:has(#quick) #voice-status{margin:10px 0 0!important;font-size:13px;line-height:1.9}
+@media(max-width:420px){.voice-helper{align-items:flex-start;justify-content:space-between}.voice-helper span{flex:1 1 120px}.voice-helper button.alt{flex:0 1 auto;font-size:11px}}
