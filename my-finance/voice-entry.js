@@ -468,6 +468,7 @@ function applyAI(packet){
  const accounts=bridge.getData().accounts||[];
  const match=accounts.filter(a=>norm(a.name)===norm(r.account_name));
  const account=match.length===1?match[0].id:null;
+ if(['loan_given','income','expense'].includes(r.action)&&typeof window.tab==='function')window.tab('home');
  if(r.action==='loan_given'){
   return previewLoan({
    entryType:'loan_given',person:String(r.person||'').slice(0,150),amount:Number(r.amount),currency,account,date,
