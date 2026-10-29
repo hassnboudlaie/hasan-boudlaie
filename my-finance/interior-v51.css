@@ -1,0 +1,128 @@
+/* My Finance · Interior Experience v51
+   Visual-only improvements to authenticated financial screens; no financial values or tokens.
+   Loaded after design-v49.css, leaves banking/reconciliation functions untouched.
+*/
+:root{--mf-interior-focus:color-mix(in srgb,var(--accent) 20%,transparent)}
+/* Page headings differentiate navigation from content and work at all widths. */
+body.finance-unlocked .mf-section-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 0 20px;padding:3px 2px 16px;border-bottom:1px solid var(--line)}
+body.finance-unlocked .mf-section-hero h2{font-size:clamp(22px,2.8vw,29px)!important;font-weight:850;line-height:1.48;letter-spacing:0;margin:4px 0!important;color:var(--fg)}
+body.finance-unlocked .mf-section-kicker{display:block;font-size:10px;letter-spacing:.1em;color:var(--accent);font-weight:850}
+body.finance-unlocked .mf-section-hero p{font-size:12px;line-height:1.85;color:var(--muted);margin:0;max-width:680px}
+body.finance-unlocked section:not(#home)>.card{padding:clamp(17px,2.5vw,25px)!important;margin:0 0 15px!important;border-radius:19px!important}
+body.finance-unlocked section:not(#home) .card>h2:first-child{font-size:17px!important;line-height:1.6;font-weight:850;margin:0 0 12px}
+body.finance-unlocked section:not(#home) .card>.muted{font-size:12px;line-height:1.9}
+body.finance-unlocked section:not(#home) .card>button:not(.alt){min-height:44px;border-radius:12px!important;background:var(--accent)!important;color:#fff!important;border:1px solid var(--accent)!important;font-size:13px;font-weight:800;padding:10px 17px}
+body.finance-unlocked section:not(#home) .card>button.alt{min-height:42px;border-radius:12px!important}
+body.finance-unlocked section:not(#home) .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 13px;margin:16px 0}
+body.finance-unlocked .mf-field{display:flex;flex-direction:column;align-items:stretch;gap:7px;min-width:0;font-size:12px;font-weight:750;color:var(--fg)!important}
+body.finance-unlocked .mf-field-name{font-size:12px;font-weight:750;color:var(--fg);line-height:1.6}
+body.finance-unlocked .mf-field input,body.finance-unlocked .mf-field select,body.finance-unlocked .mf-field textarea{display:block;width:100%;min-width:0;min-height:47px;font-size:14px;line-height:1.65;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0;box-shadow:none}
+body.finance-unlocked .mf-field input:focus-visible,body.finance-unlocked .mf-field select:focus-visible{outline:2px solid var(--accent)!important;outline-offset:1px;border-color:var(--accent)}
+body.finance-unlocked .mf-field input::placeholder{opacity:.65;color:var(--muted)}
+body.finance-unlocked #transactions #memo,body.finance-unlocked #receivables #rcvnotes{width:100%}
+body.finance-unlocked #transactions>.card:first-of-type,body.finance-unlocked #accounts>.card:first-of-type,
+body.finance-unlocked #transfers>.card:first-of-type,body.finance-unlocked #receivables>.card:first-of-type{box-shadow:var(--mf-shadow)!important}
+body.finance-unlocked #transactions #tx-entry-date{font-size:12px;margin:10px 0 0;color:var(--muted)}
+/* Transaction ledger: tidy filters, expanded details, state and amount hierarchy */
+body.finance-unlocked #transactions .tx-history-card{padding-bottom:16px!important}
+body.finance-unlocked #transactions .tx-history-controls{display:grid;gap:12px;padding:15px 0 17px;border-bottom:1px solid var(--line);margin-bottom:5px}
+body.finance-unlocked #transactions .tx-filter-group{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:var(--bg);border-radius:13px;padding:4px}
+body.finance-unlocked #transactions .tx-filter-group button{flex:auto;min-height:42px;padding:10px 5px;border:1px solid transparent!important;border-radius:10px!important;background:transparent!important;color:var(--muted)!important;font-weight:750;font-size:12px;box-shadow:none!important}
+body.finance-unlocked #transactions .tx-filter-group button[aria-pressed=true]{color:var(--accent)!important;background:var(--card)!important;border-color:var(--line)!important;box-shadow:0 1px 7px #0b37410a!important}
+body.finance-unlocked #transactions .tx-search-label{font-size:12px;font-weight:750;color:var(--fg)}
+body.finance-unlocked #transactions #tx-search{margin-top:7px;min-height:48px;border-radius:13px;padding:11px 14px;background:var(--card);font-size:14px}
+body.finance-unlocked #transactions #tx-results-count{color:var(--muted);font-size:12px}
+body.finance-unlocked #transactions .tx-ledger{border-top:0}
+body.finance-unlocked #transactions .tx-ledger-item{border:1px solid var(--line);background:var(--card);border-radius:14px;margin:9px 0;padding:0;overflow:hidden;min-width:0}
+body.finance-unlocked #transactions .tx-ledger-item:last-child{border-bottom:1px solid var(--line);padding-bottom:0}
+body.finance-unlocked #transactions .tx-ledger-summary{cursor:pointer;display:block;padding:15px 16px;min-height:66px;list-style:none}
+body.finance-unlocked #transactions .tx-ledger-summary::-webkit-details-marker{display:none}
+body.finance-unlocked #transactions .tx-ledger-heading strong{font-size:13px;line-height:1.6}
+body.finance-unlocked #transactions .tx-ledger-type{border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;padding:4px 9px}
+body.finance-unlocked #transactions .tx-ledger-amount{font-size:clamp(14px,1.7vw,16px);font-weight:850;line-height:1.6;font-variant-numeric:tabular-nums}
+body.finance-unlocked #transactions .tx-ledger-meta{font-size:11px;margin-top:5px;color:var(--muted)}
+body.finance-unlocked #transactions .tx-expand-hint{display:inline-flex;margin-top:7px;font-size:11px;color:var(--accent);font-weight:750}
+body.finance-unlocked #transactions .tx-ledger-item[open]{border-color:color-mix(in srgb,var(--accent) 35%,var(--line));box-shadow:0 5px 20px rgba(12,74,70,.04)}
+body.finance-unlocked #transactions .tx-ledger-item[open] .tx-ledger-detail{border-top:1px solid var(--line);padding:14px 16px;background:var(--bg)}
+body.finance-unlocked #transactions .tx-ledger-empty{padding:28px 16px;border:1px dashed var(--line);border-radius:14px;margin:12px 0;background:var(--bg);color:var(--muted)}
+/* Accounts and transfers: amounts and entries must stay readable at 320–390 px */
+body.finance-unlocked #accountlist{display:block}
+body.finance-unlocked #accountlist>h2{margin-bottom:12px}
+body.finance-unlocked #accountlist .finance-account-detail-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+ background:var(--card)!important;border:1px solid var(--line)!important;padding:14px 15px!important;margin:8px 0;border-radius:14px!important;min-height:64px;color:var(--fg)}
+body.finance-unlocked #accountlist .finance-account-detail-row:hover{background:var(--bg)!important}
+body.finance-unlocked #accountlist .finance-account-detail-row strong{font-size:13px;font-weight:800}
+body.finance-unlocked #accountlist .finance-account-detail-row small{display:block;color:var(--muted);font-size:11px;margin-top:5px;line-height:1.7}
+body.finance-unlocked #accountlist .finance-account-detail-row b{font-size:clamp(14px,2vw,17px);font-weight:850;font-variant-numeric:tabular-nums;text-align:end;overflow-wrap:anywhere}
+body.finance-unlocked #transfers .scroll{max-width:100%;overflow:auto;border:1px solid var(--line)}
+body.finance-unlocked #transfers table{min-width:520px;width:100%}
+body.finance-unlocked #transfers th,body.finance-unlocked #transfers td{font-size:12px;padding:14px 11px}
+body.finance-unlocked #transfers input[type=number]{font-variant-numeric:tabular-nums}
+/* Receivables: separate principal, expected repayment, and collection actions */
+body.finance-unlocked #receivables #rcvlist{display:grid;gap:10px}
+body.finance-unlocked #receivables #rcvlist .notice{margin:0!important;padding:16px;background:var(--bg);border:1px solid var(--line);border-radius:14px}
+body.finance-unlocked #receivables #rcvlist .notice strong{font-size:14px;line-height:1.8;overflow-wrap:anywhere}
+body.finance-unlocked #receivables #rcvlist .notice p{margin:8px 0 4px;line-height:1.9;font-size:12px}
+body.finance-unlocked #receivables #rcvlist .notice button{min-height:42px;padding:9px 13px;font-size:12px;border-radius:11px}
+body.finance-unlocked #receivables #rcvimport{display:block;max-width:100%;width:100%;padding:11px 12px;border-radius:13px;border:1px dashed var(--line);background:var(--bg);font-size:12px}
+body.finance-unlocked #receivables #rcvimport::file-selector-button{background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--fg);padding:8px 12px;margin-inline-end:10px;cursor:pointer}
+body.finance-unlocked #receivables .card:has(#rcvimport) .muted{font-size:11px}
+/* Reports: use comparable per-currency summary cards, avoid arithmetic across currencies */
+body.finance-unlocked #reports .report-unit{padding:7px 0 23px;border-bottom:1px solid var(--line)}
+body.finance-unlocked #reports .report-unit h3{font-size:16px;line-height:1.6;font-weight:850;margin:8px 0 15px}
+body.finance-unlocked #reports .report-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+body.finance-unlocked #reports .finance-stat{background:var(--bg);border:1px solid var(--line);border-radius:15px;padding:15px;min-width:0}
+body.finance-unlocked #reports .finance-stat span{font-size:11px;font-weight:750;color:var(--muted);line-height:1.65}
+body.finance-unlocked #reports .finance-stat strong{font-size:clamp(18px,2.2vw,22px);font-weight:850;line-height:1.5}
+body.finance-unlocked #reports .expense-row{margin:12px 0}
+body.finance-unlocked #reports .expense-track{height:7px;background:var(--line)}
+body.finance-unlocked #reports .expense-track span{background:var(--accent)}
+body.finance-unlocked #reports .scroll{max-width:100%;overflow:auto}
+body.finance-unlocked #reports .scroll table{width:100%}
+body.finance-unlocked #reports .report-unit .muted{font-size:12px}
+/* Profile: more readable controls and clear action areas */
+body.finance-unlocked #settings #finance-profile-card{border:1px solid var(--line)}
+body.finance-unlocked #settings #finance-profile-card .profile-fields{gap:13px}
+body.finance-unlocked #settings .profile-fields label{font-size:12px;font-weight:750;color:var(--fg);line-height:1.7}
+body.finance-unlocked #settings .profile-fields input{border:1px solid var(--line);border-radius:12px;min-height:47px;background:var(--card);margin-top:6px}
+body.finance-unlocked #settings #profile-status{font-size:12px;line-height:1.9}
+/* Recurring commitments: accessible UI, pending badge and clear payment confirmation */
+body.finance-unlocked #commitments .card{margin-bottom:14px}
+body.finance-unlocked #commitments .fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body.finance-unlocked #commitments .fields>input,body.finance-unlocked #commitments .fields>select,body.finance-unlocked #commitments .fields>label{width:100%;min-width:0;min-height:47px}
+body.finance-unlocked #commitments .fields>label{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:750}
+body.finance-unlocked #commitments .fields>label input{width:100%;min-width:0;min-height:47px}
+body.finance-unlocked #commitments .notice{display:block;margin:9px 0!important;padding:17px;border:1px solid var(--line);background:var(--bg);border-radius:15px}
+body.finance-unlocked #commitments .notice strong{font-size:14px;font-weight:850}
+body.finance-unlocked #commitments .notice button{min-height:42px;border-radius:11px;padding:9px 14px;font-weight:800}
+body.finance-unlocked #commitments .notice button[data-action=pay]{background:var(--accent)!important;color:#fff!important;border:1px solid var(--accent)!important}
+body.finance-unlocked #commitments .notice button[data-action=toggle]{background:var(--card)!important;color:var(--fg)!important;border:1px solid var(--line)!important}
+body.finance-unlocked #home #upcoming-notice:not(:empty){padding:14px 17px;border-radius:14px;background:var(--mf-soft);border:1px solid color-mix(in srgb,var(--accent) 20%,var(--line));color:var(--fg);font-size:12px;line-height:1.9;margin:0 0 15px}
+/* Touch and localization */
+body.finance-unlocked section:not(#home) :is(button,input,select,textarea):focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+body.finance-unlocked section:not(#home) :is(input,textarea,select):disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:850px){
+ body.finance-unlocked #reports .report-overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:640px){
+ body.finance-unlocked .mf-section-hero{margin-bottom:16px;padding-bottom:13px}
+ body.finance-unlocked .mf-section-hero h2{font-size:22px!important}
+ body.finance-unlocked .mf-section-hero p{font-size:11px}
+ body.finance-unlocked section:not(#home) .fields{gap:12px 9px}
+ body.finance-unlocked #reports .finance-stat{padding:12px}
+ body.finance-unlocked #reports .finance-stat strong{font-size:17px}
+}
+@media(max-width:540px){
+ body.finance-unlocked section:not(#home) .fields,body.finance-unlocked #commitments .fields{grid-template-columns:minmax(0,1fr)}
+ body.finance-unlocked #transactions .tx-ledger-summary{padding:13px 12px}
+ body.finance-unlocked #transactions .tx-ledger-top{flex-wrap:wrap}
+ body.finance-unlocked #transactions .tx-ledger-amount{flex-shrink:0;font-size:14px}
+ body.finance-unlocked #accountlist .finance-account-detail-row{padding:13px 12px!important}
+ body.finance-unlocked #accountlist .finance-account-detail-row b{font-size:14px}
+ body.finance-unlocked #reports .finance-stat strong{font-size:16px}
+}
+@media(max-width:350px){
+ body.finance-unlocked #reports .report-overview{grid-template-columns:minmax(0,1fr)}
+ body.finance-unlocked #transactions .tx-filter-group button{font-size:11px;padding-inline:4px}
+}
+@media(prefers-reduced-motion:reduce){body.finance-unlocked #transactions .tx-ledger-item{transition:none!important}}
