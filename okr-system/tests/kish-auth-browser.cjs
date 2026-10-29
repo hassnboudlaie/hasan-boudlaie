@@ -7,14 +7,14 @@ const assert=require('node:assert/strict');
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const owner='07f9f4c8-9c1b-42e5-bbf6-a6eece1b7cfe';
  const guest='11111111-1111-4111-8111-111111111111';
- let approved=false,updated=null,signups=0;
+ let approved=false,updated=null,signups=0,refreshCount=0;
  await page.route('https://hxcjkewlaniahvuqwwbb.supabase.co/**',async route=>{
   const request=route.request(),url=new URL(request.url()),m=request.method();
   const cors={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'apikey,authorization,content-type,prefer,x-client-info','Access-Control-Allow-Methods':'GET,POST,PATCH,OPTIONS','Content-Type':'application/json'};
   if(m==='OPTIONS')return route.fulfill({status:204,headers:cors,body:''});
   let status=200,data={};
   if(url.pathname==='/auth/v1/signup'){signups++;data={id:guest,email:'foujan@example.test',identities:[{id:'test'}]};}
-  else if(url.pathname==='/auth/v1/token'){data={access_token:'test-token',refresh_token:'test-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer'};}
+  else if(url.pathname==='/auth/v1/token'){if(url.searchParams.get('grant_type')==='refresh_token')refreshCount++;data={access_token:'test-token',refresh_token:'test-refresh-'+refreshCount,expires_in:3600,token_type:'bearer'};}
   else if(url.pathname==='/auth/v1/user'){data={id:owner,email:'owner@example.test'};}
   else if(url.pathname==='/auth/v1/logout'){data={};}
   else if(url.pathname==='/auth/v1/recover'){data={};}
@@ -50,6 +50,23 @@ const assert=require('node:assert/strict');
   await page.getByRole('button',{name:'بررسی مجدد'}).click();
   await page.locator('#kishMembersButton').waitFor();
   assert.equal(await page.locator('#executionApp').isVisible(),true,'verified approved user sees app');
+  // After a successful login, reopening the installed app must not ask for credentials.
+  await page.reload();
+  await page.locator('#kishMembersButton').waitFor({timeout:15000});
+  assert.equal(await page.locator('#kishEmail').count(),0,'automatic login must bypass email/password form');
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish-okr-auth-session-v1')));
+  assert.ok(saved?.access_token&&saved?.refresh_token&&saved.expires_at,'session and computed expiry persisted across reloads');
+  const stored=await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1'));
+  assert.equal(stored.includes('safe-e2e-test-password'),false,'plaintext password must never be stored');
+  // An expired access token should be silently replaced using the one-time refresh token.
+  await page.evaluate(()=>{
+   const s=JSON.parse(localStorage.getItem('kish-okr-auth-session-v1'));s.expires_at=1;
+   localStorage.setItem('kish-okr-auth-session-v1',JSON.stringify(s));
+  });
+  await page.reload();
+  await page.locator('#kishMembersButton').waitFor({timeout:15000});
+  assert.ok(refreshCount>=1,'expired session must silently refresh');
+  assert.equal(await page.locator('#kishEmail').count(),0,'refresh must not prompt for password');
   await page.locator('#kishMembersButton').click();
   await page.getByRole('heading',{name:'مدیریت کاربران و تأیید دسترسی'}).waitFor();
   const guestRow=page.locator('.kish-member-row').filter({hasText:'foujan@example.test'});
@@ -59,6 +76,15 @@ const assert=require('node:assert/strict');
   await guestRow.getByRole('button',{name:'ذخیره شد'}).waitFor();
   assert.equal(updated.status,'approved');
   assert.equal(updated.role,'assistant');
+  
+  await page.locator('#kishAdminAccount').click();
+  const toggle=page.locator('#kishStaySigned');
+  assert.equal(await toggle.isChecked(),true);
+  await toggle.uncheck();
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),null,'opt-out clears persistent tokens');
+  assert.ok(await page.evaluate(()=>sessionStorage.getItem('kish-okr-auth-session-v1')),'opt-out preserves only this tab session');
+  await toggle.check();
+  assert.ok(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),'opt-in restores persistent tokens');
   
   // Recovery links must never fall back to the GitHub Pages root domain.
   await page.goto('http://127.0.0.1:8765/okr-system/?qa=recovery-ci#access_token=test-token&refresh_token=test-refresh&expires_in=3600&type=recovery');

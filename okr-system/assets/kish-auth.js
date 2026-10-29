@@ -4,12 +4,53 @@
 const API='https://hxcjkewlaniahvuqwwbb.supabase.co';
 const KEY='sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6';
 const STORAGE='kish-okr-auth-session-v1';
+const REMEMBER='kish-okr-remember-device-v1', LAST_EMAIL='kish-okr-last-email-v1';
+// Keep the authenticated session, never the user's password. Existing saved sessions remain compatible.
+let rememberDevice=localStorage.getItem(REMEMBER)!=='0';
+let refreshInFlight=null;
+function setRemember(enabled){
+ rememberDevice=Boolean(enabled);
+ localStorage.setItem(REMEMBER,rememberDevice?'1':'0');
+ if(session)saveSession(session);
+}
+function lastEmail(){return localStorage.getItem(LAST_EMAIL)||'';}
+function rememberEmail(email){if(rememberDevice)localStorage.setItem(LAST_EMAIL,email);else localStorage.removeItem(LAST_EMAIL);}
+
 const layer=document.getElementById('kishAuthLayer');
 let session=null, identity=null, profile=null, working=false, mode='login';
 const titles={super_admin:'مدیر کل سامانه',org_admin:'مدیر سازمان',assistant:'دستیار مدیر',department_manager:'مدیر واحد',employee:'کارمند',viewer:'مشاهده‌گر'};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function message(err){const e=String(err?.message||err||'خطای ناشناخته');if(/Invalid login credentials/i.test(e))return 'ایمیل یا رمز عبور نادرست است.';if(/Email not confirmed/i.test(e))return 'ابتدا ایمیل تأیید حساب را باز کنید.';if(/rate limit/i.test(e))return 'محدودیت ارسال ایمیل فعال است؛ بعداً دوباره امتحان کنید.';return e;}
-function saveSession(s){session=s;if(!s)localStorage.removeItem(STORAGE);else localStorage.setItem(STORAGE,JSON.stringify(s));}
+function saveSession(s){
+ if(!s){
+  session=null;
+  localStorage.removeItem(STORAGE);
+  sessionStorage.removeItem(STORAGE);
+  return;
+ }
+ // GoTrue REST responses include expires_in but may omit expires_at; calculate it at issue time.
+ const expiry=Number(s.expires_at)||Math.floor(Date.now()/1000)+Math.max(60,Number(s.expires_in)||3600);
+ session={access_token:s.access_token,refresh_token:s.refresh_token,expires_at:expiry,token_type:s.token_type||'bearer'};
+ const target=rememberDevice?localStorage:sessionStorage;
+ const other=rememberDevice?sessionStorage:localStorage;
+ target.setItem(STORAGE,JSON.stringify(session));
+ other.removeItem(STORAGE);
+}
+function restoreSession(){
+ // Do not reset an existing token's age: if its expiry is missing, refresh it rather than guessing.
+ let raw=null;
+ try{raw=(rememberDevice?localStorage:sessionStorage).getItem(STORAGE);}catch{}
+ if(!raw)return null;
+ try{
+  const s=JSON.parse(raw);
+  if(!s||!s.refresh_token||!s.access_token)throw Error('Missing token');
+  return s;
+ }catch{
+  localStorage.removeItem(STORAGE);sessionStorage.removeItem(STORAGE);
+  return null;
+ }
+}
+
 function userToken(){return session&&session.access_token;}
 function headers(auth){const h={'apikey':KEY,'Content-Type':'application/json'};if(auth&&userToken())h.Authorization='Bearer '+userToken();return h;}
 async function req(path,options={},auth=false){
@@ -19,16 +60,35 @@ async function req(path,options={},auth=false){
  return data;
 }
 async function refresh(){
+ if(refreshInFlight)return refreshInFlight;
  if(!session?.refresh_token)throw Error('نشست منقضی شده است.');
- const s=await req('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})});
- if(!s?.access_token)throw Error('تمدید نشست ناموفق بود.');
- saveSession(s);return s;
+ // Supabase refresh tokens are single use. Never issue two simultaneous refresh requests.
+ refreshInFlight=(async()=>{
+  const s=await req('/auth/v1/token?grant_type=refresh_token',{
+   method:'POST',body:JSON.stringify({refresh_token:session.refresh_token})
+  });
+  if(!s?.access_token||!s?.refresh_token)throw Error('تمدید نشست ناموفق بود.');
+  saveSession(s);
+  return s;
+ })();
+ try{return await refreshInFlight;}finally{refreshInFlight=null;}
+}
+function isSessionExpired(){
+ return !Number.isFinite(Number(session?.expires_at)) ||
+   !Number(session?.expires_at) ||
+   (Date.now()/1000)>=Number(session.expires_at)-90;
 }
 async function authReady(){
  if(!session?.access_token)throw Error('وارد نشده‌اید.');
- if(session.expires_at&&Date.now()/1000>session.expires_at-75)await refresh();
+ if(isSessionExpired())await refresh();
  try{return await req('/auth/v1/user',{},true);}
- catch(e){if(/jwt|401|token|unauthor/i.test(message(e))){await refresh();return req('/auth/v1/user',{},true);}throw e;}
+ catch(e){
+  if(/jwt|401|token|unauthor|expired|invalid claim/i.test(message(e))){
+   await refresh();
+   return req('/auth/v1/user',{},true);
+  }
+  throw e;
+ }
 }
 async function listOwn(){
  const uid=encodeURIComponent(identity.id);
@@ -44,13 +104,17 @@ function loginNotice(t){const el=document.getElementById('kishAuthNotice');if(el
 function showLogin(note=''){
  mode='login';
  paint('ورود به سامانه کیش','ورود با ایمیل و رمز عبور شخصی. برای نخستین ورود ابتدا ثبت‌نام کنید.',
- '<form id="kishAuthForm" class="kish-auth-form">'+
- '<label>ایمیل<input type="email" id="kishEmail" inputmode="email" autocomplete="username" dir="ltr" required maxlength="254"></label>'+
- '<label>رمز عبور<input type="password" id="kishPassword" autocomplete="current-password" minlength="8" required></label>'+
+ '<form id="kishAuthForm" name="kish-login" class="kish-auth-form">'+
+ '<label>ایمیل<input type="email" name="username" id="kishEmail" inputmode="email" autocomplete="username" dir="ltr" required maxlength="254"></label>'+
+ '<label>رمز عبور<input type="password" name="password" id="kishPassword" autocomplete="current-password" minlength="8" required></label>'+
+ '<label class="kish-remember-label"><input type="checkbox" id="kishRememberDevice" '+(rememberDevice?'checked':'')+'> مرا در این دستگاه وارد نگه دار</label>'+
  '<button class="kish-auth-btn primary" type="submit">ورود به سامانه</button></form>'+
+ '<p class="kish-auth-detail kish-autofill-hint">رمز عبور در خود اپ ذخیره نمی‌شود؛ برای تکمیل خودکار آن می‌توانید از مدیریت رمزهای گوشی استفاده کنید.</p>'+
  '<p class="kish-auth-notice" id="kishAuthNotice" role="status">'+esc(note)+'</p>'+
  '<div class="kish-auth-inline">'+button('ایجاد حساب جدید','kishSignUp')+button('بازیابی رمز عبور','kishForgot')+'</div>');
  document.getElementById('kishAuthForm').onsubmit=onLogin;
+ document.getElementById('kishEmail').value=lastEmail();
+ document.getElementById('kishRememberDevice').onchange=e=>setRemember(e.target.checked);
  document.getElementById('kishSignUp').onclick=showSignUp;
  document.getElementById('kishForgot').onclick=onForgot;
 }
@@ -71,9 +135,14 @@ async function onLogin(e){
  e.preventDefault();if(working)return;
  working=true;const button=e.target.querySelector('[type=submit]');button.disabled=true;loginNotice('در حال بررسی حساب…');
  try{
- const data=await req('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email:document.getElementById('kishEmail').value.trim(),password:document.getElementById('kishPassword').value})});
- if(!data?.access_token)throw Error('نشست کاربری دریافت نشد.');
- saveSession(data);document.getElementById('kishPassword').value='';await checkAccess();
+ const email=document.getElementById('kishEmail').value.trim();
+ const data=await req('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password:document.getElementById('kishPassword').value})});
+ if(!data?.access_token||!data?.refresh_token)throw Error('نشست کاربری دریافت نشد.');
+ setRemember(document.getElementById('kishRememberDevice').checked);
+ rememberEmail(email);
+ saveSession(data);
+ // Let the device password manager detect a successful sign-in; do not persist a plaintext password.
+ await checkAccess();
  }catch(err){loginNotice(message(err));}
  finally{working=false;if(button.isConnected)button.disabled=false;}
 }
@@ -166,14 +235,16 @@ function unlock(){
 }
 function showAccount(){
  const detail=(identity?.email||'')+' · '+(titles[profile.role]||profile.role);
- paint('حساب کاربری من',detail,'<div class="kish-auth-note">حساب شما تأیید شده است. داده‌های ویرایشی نسخه جاری OKR هنوز روی همین مرورگر ذخیره می‌شوند و بین دستگاه‌ها همگام نیستند.</div><div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('خروج از حساب','kishLogout')+'</div>');
+ paint('حساب کاربری من',detail,'<div class="kish-auth-note">حساب شما تأیید شده است. داده‌های ویرایشی نسخه جاری OKR هنوز روی همین مرورگر ذخیره می‌شوند و بین دستگاه‌ها همگام نیستند.</div><label class="kish-remember-label kish-account-remember"><input type="checkbox" id="kishStaySigned" '+(rememberDevice?'checked':'')+'> ورود خودکار روی این دستگاه فعال باشد</label><div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('خروج از حساب','kishLogout')+'</div>');
+ document.getElementById('kishStaySigned').onchange=e=>setRemember(e.target.checked);
  document.getElementById('kishBack').onclick=unlock;document.getElementById('kishLogout').onclick=signOut;
 }
 async function showAdmin(){
  if(profile?.role!=='super_admin')return;
  paint('مدیریت کاربران و تأیید دسترسی','ثبت‌نام‌های جدید را تأیید کنید و نقش مناسب را تعیین کنید.',
- '<div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('تازه‌سازی فهرست','kishRefresh')+'</div><p role="status" id="kishAuthNotice" class="kish-auth-notice"></p><div id="kishMembersList">در حال بارگذاری…</div>');
+ '<div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('تنظیمات حساب من','kishAdminAccount')+button('تازه‌سازی فهرست','kishRefresh')+'</div><p role="status" id="kishAuthNotice" class="kish-auth-notice"></p><div id="kishMembersList">در حال بارگذاری…</div>');
  document.getElementById('kishBack').onclick=unlock;
+ document.getElementById('kishAdminAccount').onclick=showAccount;
  document.getElementById('kishRefresh').onclick=loadAdminList;
  await loadAdminList();
 }
@@ -233,12 +304,12 @@ async function initialize(){
   return;
  }
  paint('بررسی وضعیت ورود','در حال اتصال امن به سرویس احراز هویت…','<p class="kish-auth-notice">لطفاً اتصال اینترنت را بررسی کنید.</p>');
- try{const raw=localStorage.getItem(STORAGE);if(raw)session=JSON.parse(raw);}catch{saveSession(null);}
+ session=restoreSession();
  if(await handleEmailCallback())return;
  if(!session?.access_token){showLogin();return;}
  try{await checkAccess();}
  catch(err){
-  if(/jwt|token|unauthor|invalid refresh|session expired|منقض/i.test(message(err))){saveSession(null);showLogin('لطفاً دوباره وارد شوید.');}
+  if(/refresh token not found|invalid refresh token|refresh token has been revoked|نشست منقضی|وارد نشده|unauthorized|invalid_grant/i.test(message(err).toLowerCase())){saveSession(null);showLogin('نشست شما به پایان رسیده است. لطفاً دوباره وارد شوید.');}
   else {
    paint('بررسی دسترسی ممکن نشد','ارتباط با سرویس احراز هویت برقرار نشد. برای حفاظت از حساب، دسترسی بدون تأیید باز نمی‌شود.',
     '<p class="kish-auth-notice" id="kishAuthNotice">'+esc(message(err))+'</p><div class="kish-auth-inline">'+button('تلاش دوباره','kishReconnect','primary')+button('ورود مجدد','kishNewLogin')+'</div>');
