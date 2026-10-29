@@ -161,3 +161,6 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 .voice-ai-option input{flex:0 0 18px;width:18px!important;height:18px!important;min-height:18px!important;accent-color:#a5ead9;align-self:flex-start;margin:4px 0}
 .voice-ai-option strong{font-size:13px;line-height:1.8}
 .voice-ai-option small{display:block;flex:1 0 100%;padding-inline-start:26px;color:#e0f3ef;font-weight:400;line-height:1.7}
+
+/* No-fee voice entry: show its limits clearly without an inactive AI toggle */
+.voice-free-hint{font-size:12px;line-height:1.85;color:#e1f6ef;margin:12px 0 0;padding:9px 10px;border:1px solid rgba(204,243,230,.3);border-radius:10px;background:rgba(255,255,255,.07)}
