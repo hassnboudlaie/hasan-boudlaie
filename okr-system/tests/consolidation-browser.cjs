@@ -1,6 +1,6 @@
 'use strict';
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
-module.exports=async function(){const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1000},locale:'fa-IR',timezoneId:'Asia/Tehran',reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=consolidation';
+module.exports=async function(){const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1000},locale:'fa-IR',timezoneId:'Asia/Tehran',reducedMotion:'reduce'}),errors=[];await page.addInitScript(()=>{window.__kishAuthTestBypass=true;});page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=consolidation';
 try{
  await page.goto(root+'#explore');await page.locator('.kx-app').waitFor();
  const signature=()=>page.evaluate(()=>{const d=window.KishExploreBridge.snapshot();return JSON.stringify({goals:d.goals,strategy:d.strategy,teams:d.teams.map(t=>({id:t.id,okrs:t.okrs,kpis:t.kpis}))});});const initial=await signature();
