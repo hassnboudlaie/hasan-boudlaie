@@ -40,7 +40,7 @@ function next(iso,cadence,anchor){
  return [yy,String(mm+1).padStart(2,'0'),String(Math.min(anchor||d,last)).padStart(2,'0')].join('-');
 }
 const sec=$('commitments')||document.createElement('section');sec.id='commitments';sec.hidden=true;
-sec.innerHTML='<div class="card"><h2>تعهدات و هزینه‌های ثابت</h2><p class="muted">در سررسید، هزینه با وضعیت «در انتظار پرداخت» ثبت می‌شود؛ موجودی فقط پس از تأیید پرداخت تغییر می‌کند.</p>'+
+sec.innerHTML='<div class="mf-section-hero"><div><span class="mf-section-kicker">RECURRING PAYMENTS</span><h2>تعهدات و هزینه‌های ثابت</h2><p>برنامه پرداخت‌های تکراری، موارد در انتظار و تأیید پرداخت</p></div></div><div class="card"><h2>ثبت تعهد جدید</h2><p class="muted">در سررسید، هزینه با وضعیت «در انتظار پرداخت» ثبت می‌شود؛ موجودی فقط پس از تأیید پرداخت تغییر می‌کند.</p>'+
 '<div class="fields"><input id="com-title" aria-label="عنوان تعهد" maxlength="120" placeholder="عنوان، مثلاً اجاره یا اشتراک"><input id="com-amount" aria-label="مبلغ تعهد" type="number" min="0.01" step="any" placeholder="مبلغ">'+
 '<select id="com-currency" aria-label="ارز تعهد"><option value="IRT">تومان · IRT</option><option value="IRR">ریال · IRR</option><option value="USD">دلار · USD</option><option value="EUR">یورو · EUR</option></select>'+
 '<select id="com-cadence" aria-label="دوره تکرار تعهد"><option value="monthly">ماهانه</option><option value="weekly">هفتگی</option><option value="yearly">سالانه</option><option value="jalali-month-end">ماهانه · آخر ماه شمسی</option></select>'+
