@@ -105,8 +105,30 @@ function parse(raw,accounts=[]){
  if(/(?:حساب|بانک|کارت|کیف\s+پول)/.test(text)&&!account)warnings.push('حساب یا کارت گفته‌شده به‌طور قطعی شناسایی نشد؛ حساب را انتخاب کنید.');
  return {amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/(?:شرکت|کاری|پروژه|بیزنس)/.test(text)?'business':'personal',warnings};
 }
-let recognition=null,listening=false,hasSaved=false;
-function setMic(active){const b=$('voice-mic');if(!b)return;b.setAttribute('aria-pressed',String(active));b.textContent=active?'■':'🎙';b.title=active?'توقف ضبط صدا':'شروع ثبت صوتی'}
+let recognition=null,listening=false,hasSaved=false,voiceTimer=null,voiceToken=0,transcript='',voiceError='',hadAudio=false;
+function setMic(active){
+ const b=$('voice-mic');if(!b)return;
+ b.setAttribute('aria-pressed',String(active));b.textContent=active?'■':'🎙';
+ b.title=active?'پایان شنیدن و بررسی نتیجه':'شروع تشخیص گفتار';
+ b.setAttribute('aria-label',active?'توقف شنیدن':'شروع ثبت صوتی');
+}
+function clearVoiceTimer(){if(voiceTimer!==null){clearTimeout(voiceTimer);voiceTimer=null}}
+function stopListening(message='',isError=false){
+ clearVoiceTimer();
+ const current=recognition;recognition=null;listening=false;setMic(false);
+ if(current){try{current.abort()}catch(e){}}
+ if(message)status(message,isError);
+}
+function keyboardDictation(){
+ if(listening)stopListening();
+ const input=$('quick');
+ input.focus();
+ try{input.setSelectionRange(input.value.length,input.value.length)}catch(e){}
+ status('صفحه‌کلید گوشی را باز کنید، روی علامت میکروفون کیبورد بزنید و فارسی صحبت کنید. بعد از ظاهرشدن متن، «بررسی» را بزنید.');
+}
+function recognitionFallback(reason){
+ return reason+' از دکمه «دیکته با کیبورد» زیر کادر استفاده کنید؛ سپس «بررسی» را بزنید.';
+}
 function clearPreview(){hasSaved=false;$('voice-review').hidden=true}
 function accountOptions(selected){
  const a=bridge.getData().accounts||[];
@@ -164,24 +186,97 @@ function preview(raw){
 }
 function previewFromInput(){return preview($('quick').value)}
 function start(){
- if(listening){recognition?.stop();return}
+ if(listening){
+  // Deliberately stop on a second tap. Preserve the best partial transcript.
+  const last=transcript.trim();stopListening();
+  if(last){$('quick').value=last;preview(last)}
+  else status(recognitionFallback('شنیدن متوقف شد ولی متنی دریافت نشد.'),true);
+  return;
+ }
  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!Speech){status('تشخیص گفتار در این مرورگر پشتیبانی نمی‌شود. می‌توانید از میکروفون صفحه‌کلید برای تبدیل صدا به متن استفاده کنید، یا متن را تایپ کنید.',true);$('quick').focus();return}
+ if(!Speech){
+  status(recognitionFallback('تشخیص گفتار داخلی در این مرورگر پشتیبانی نمی‌شود.'),true);
+  return;
+ }
+ if(!document.body.classList.contains('finance-unlocked')){
+  status('ابتدا وارد حساب شخصی خود شوید.',true);return;
+ }
+ const token=++voiceToken;
+ transcript='';voiceError='';hadAudio=false;
  try{
-  recognition=new Speech();recognition.lang='fa-IR';recognition.interimResults=false;recognition.maxAlternatives=1;recognition.continuous=false;
-  recognition.onstart=()=>{listening=true;setMic(true);status('در حال شنیدن… تراکنش را واضح بیان کنید.')};
-  recognition.onresult=event=>{
-   const transcript=event.results?.[0]?.[0]?.transcript?.trim();
-   if(!transcript)return status('صدای قابل تشخیص دریافت نشد. دوباره تلاش کنید.',true);
-   $('quick').value=transcript;preview(transcript);
+  const r=new Speech();
+  recognition=r;
+  r.lang='fa-IR';r.interimResults=true;r.maxAlternatives=1;r.continuous=false;
+  let finished=false;
+  const finish=(message='',isError=false)=>{
+   if(finished||token!==voiceToken)return;
+   finished=true;clearVoiceTimer();recognition=null;listening=false;setMic(false);
+   if(transcript.trim()){
+    $('quick').value=transcript.trim();
+    preview(transcript.trim());
+    if(voiceError)status('بخشی از گفتار دریافت شد؛ متن را بررسی کنید و سپس تأیید کنید.');
+   }else status(message||recognitionFallback('گفتاری به متن تبدیل نشد.'),isError||!message);
   };
-  recognition.onerror=event=>{
-   const m=event.error==='not-allowed'||event.error==='service-not-allowed'?'اجازه میکروفون داده نشده است. مجوز میکروفون را در تنظیمات مرورگر فعال کنید.':event.error==='no-speech'?'صدایی تشخیص داده نشد. دوباره تلاش کنید.':event.error==='network'?'سرویس تشخیص گفتار در دسترس نیست؛ ورود متنی را امتحان کنید.':'خطای تشخیص گفتار: '+event.error;
-   status(m,true);
+  r.onstart=()=>{
+   if(token!==voiceToken)return;
+   listening=true;setMic(true);
+   status('در حال شنیدن… صحبت کنید. با لمس مجدد میکروفون می‌توانید ضبط را متوقف کنید.');
   };
-  recognition.onend=()=>{listening=false;setMic(false)};
-  recognition.start();
- }catch(e){listening=false;setMic(false);status('امکان شروع ضبط نیست. مجوز میکروفون یا پشتیبانی مرورگر را بررسی کنید.',true)}
+  r.onaudiostart=()=>{if(token===voiceToken)hadAudio=true};
+  r.onspeechstart=()=>{
+   if(token===voiceToken)status('صدا دریافت شد؛ در حال تبدیل گفتار به متن…');
+  };
+  r.onresult=event=>{
+   if(token!==voiceToken)return;
+   const candidates=[];
+   for(let i=0;i<(event.results?.length||0);i++){
+    const txt=event.results[i]?.[0]?.transcript?.trim();
+    if(txt)candidates.push(txt);
+   }
+   if(!candidates.length)return;
+   transcript=candidates.join(' ').trim();
+   $('quick').value=transcript;
+   const isFinal=[...event.results].every(result=>result.isFinal);
+   if(isFinal){
+    try{r.stop()}catch(e){}
+    finish();
+   }else status('متن در حال دریافت: '+transcript+' · پس از پایان صحبت، پیش‌نمایش نمایش داده می‌شود.');
+  };
+  r.onnomatch=()=>{voiceError='no-match';status(recognitionFallback('صدا شنیده شد اما تشخیص داده نشد.'),true)};
+  r.onerror=event=>{
+   if(token!==voiceToken)return;
+   voiceError=event.error||'unknown';
+   const reason={
+    'not-allowed':'مجوز میکروفون رد شده است. دسترسی Microphone را در تنظیمات مرورگر فعال کنید.',
+    'service-not-allowed':'سرویس تشخیص صدا در این مرورگر مجاز نیست.',
+    'no-speech':'صدایی دریافت نشد.',
+    'audio-capture':'میکروفون گوشی در دسترس نیست.',
+    'language-not-supported':'تشخیص زبان فارسی در این سرویس پشتیبانی نمی‌شود.',
+    'network':'سرویس اینترنتی تشخیص گفتار پاسخ نداد.',
+    'aborted':'تشخیص صدا متوقف شد.'
+   }[voiceError]||'تشخیص صدا ناموفق بود.';
+   status(recognitionFallback(reason),true);
+  };
+  r.onend=()=>{
+   if(token!==voiceToken)return;
+   const msg=voiceError?recognitionFallback('تشخیص گفتار پایان یافت و نتیجه‌ای دریافت نشد.'):
+     recognitionFallback(hadAudio?'میکروفون فعال شد اما متن دریافت نشد.':'سرویس گفتار بدون دریافت صدا متوقف شد.');
+   finish(msg,true);
+  };
+  listening=true;setMic(true);
+  status('در حال اتصال به میکروفون… لطفاً فارسی صحبت کنید.');
+  voiceTimer=setTimeout(()=>{
+   if(token!==voiceToken||finished)return;
+   const hasText=!!transcript.trim();
+   // A browser service can fire "start" but never produce results or "end".
+   try{r.abort()}catch(e){}
+   finish(hasText?'':'تشخیص صدا پس از ۲۰ ثانیه پاسخی نداد. از دیکته با کیبورد استفاده کنید.',!hasText);
+  },20000);
+  r.start();
+ }catch(e){
+  if(token!==voiceToken)return;
+  stopListening(recognitionFallback('شروع تشخیص گفتار ممکن نشد. اجازه میکروفون را بررسی کنید.'),true);
+ }
 }
 function save(){
  if(hasSaved)return;
@@ -200,13 +295,15 @@ function save(){
  catch(e){hasSaved=false;updateDetails();status('ثبت انجام نشد: '+String(e.message||e),true)}
 }
 $('voice-mic').addEventListener('click',start);
+$('voice-keyboard').addEventListener('click',keyboardDictation);
 $('voice-parse').addEventListener('click',previewFromInput);
 $('quick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();previewFromInput()}});
 $('voice-confirm').addEventListener('click',save);
 $('voice-cancel').addEventListener('click',()=>{clearPreview();status('پیش‌نمایش لغو شد؛ چیزی ثبت نشده است.')});
 for(const id of ['voice-amount','voice-currency','voice-kind','voice-category','voice-account','voice-date','voice-scope','voice-memo'])
  $(id).addEventListener('input',updateDetails);
-document.addEventListener('myfinance:rebound',()=>{clearPreview();accountOptions(null)});
-window.MyFinanceVoiceEntry={parse,previewFromInput,start};
+document.addEventListener('myfinance:rebound',()=>{stopListening();clearPreview();accountOptions(null)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&listening)stopListening('تشخیص گفتار به دلیل خروج از اپ متوقف شد؛ چیزی ثبت نشده است.')});
+window.MyFinanceVoiceEntry={parse,previewFromInput,start,keyboardDictation};
 setMic(false);
 })();
