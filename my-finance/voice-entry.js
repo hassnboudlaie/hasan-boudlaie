@@ -551,20 +551,23 @@ async function startAIRecording(){
   recorder.start(400);setMic(true);
   status('🎙 ضبط کامل صدا شروع شد؛ طبیعی صحبت کنید و خودتان را اصلاح کنید. برای پایان دوباره روی میکروفون بزنید.');
   aiTimer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop()},75000);
- }catch(e){aiClearRecorder();status('اجازه ضبط صدا داده نشد یا میکروفون در دسترس نیست. از ورود متنی استفاده کنید.',true)}
+ }catch(e){aiClearRecorder();status('میکروفون در دسترس نیست ('+String(e?.name||'خطای نامشخص')+'). در تنظیمات Safari مجوز Microphone را بررسی کنید یا لینک را مستقیم در Safari باز کنید.',true)}
 }
 function startSelected(){
  if(aiRecorder&&aiRecorder.state==='recording')return startAIRecording();
  const apple=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
  if(apple){
   if(listening)stopListening();
-  if(window.MyFinanceAI&&navigator.mediaDevices?.getUserMedia&&typeof MediaRecorder!=='undefined'){
-   status('در حال آماده‌سازی ضبط واقعی صدا در آیفون…');
-   return startAIRecording();
+  if(!navigator.mediaDevices?.getUserMedia){
+   status('مرورگر آیفون به میکروفون دسترسی ندارد. لینک را مستقیماً در Safari باز کنید (نه مرورگر داخل پیام‌رسان) و دوباره امتحان کنید.',true);
+   return;
   }
-  keyboardDictation();
-  status('ضبط مستقیم و تبدیل گفتار در این نسخه Safari در دسترس نیست. میکروفون صفحه‌کلید آیفون را بزنید، صحبت کنید و سپس «بررسی» را انتخاب کنید.',true);
-  return;
+  if(typeof MediaRecorder==='undefined'){
+   status('ضبط صدا در این نسخه مرورگر پشتیبانی نمی‌شود؛ از دیکته صفحه‌کلید آیفون استفاده کنید.',true);
+   return;
+  }
+  status('درخواست اجازه میکروفون از آیفون…');
+  return startAIRecording();
  }
  if($('voice-ai-consent')?.checked){if(listening)stopListening();return startAIRecording()}
  if(aiRecorder){aiClearRecorder();return}
