@@ -32,8 +32,7 @@ if(moreLinks&&!moreLinks.querySelector('[data-loans-more]')){
 const nav=document.querySelector('.tabs');
 const btn=document.createElement('button');btn.className='alt';btn.textContent='وام‌ها';
 btn.setAttribute('onclick',"financeNavGo('loans')");btn.setAttribute('data-finance-route','loans');btn.setAttribute('data-fa','وام‌ها و اقساط');btn.setAttribute('data-en','Loans & Installments');
-const reportButton=[...nav.querySelectorAll('button')].find(b=>b.getAttribute('onclick')==="tab('reports')");
-nav.insertBefore(btn,reportButton||null);
+if(nav){const reportButton=[...nav.querySelectorAll('button')].find(b=>b.getAttribute('onclick')==="tab('reports')");nav.insertBefore(btn,reportButton||null);}
 const style=document.createElement('style');
 style.textContent=`
 .loan-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
@@ -86,7 +85,7 @@ function dueReminders(loans){
  const today=nextJalali(0),upcoming=[],overdue=[],later=[];
  for(const loan of loans){
   const due=String(loan.nextDueJalali||'').replace(/-/g,'/');
-  if(!/^\\d{4}\\/\\d{2}\\/\\d{2}$/.test(due))continue;
+  if(!/^\d{4}[/]\d{2}[/]\d{2}$/.test(due))continue;
   const amount=(loan.currency==='IRR'?toman(loan.installment):fmt(loan.installment)+' '+(loan.currency==='IRT'?'تومان':loan.currency||''));
   const title=String(loan.title||'وام');
   const days=Array.from({length:6},(_,i)=>i).find(i=>nextJalali(i)===due);
