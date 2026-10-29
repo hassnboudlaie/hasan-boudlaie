@@ -25,6 +25,7 @@ async function stableLegacyUUID(kind,original){
 }
 async function repairLegacyIds(){
  if(!user)return 0;
+ const ownerId=user.id,epoch=identityEpoch;
  const original=bridge.getData();
  const next=JSON.parse(JSON.stringify(original));
  const remap={account:new Map(),receivable:new Map(),transfer:new Map(),commitment:new Map(),tx:new Map()};
@@ -42,6 +43,7 @@ async function repairLegacyIds(){
   }
  }
  if(!repaired)return 0;
+ assertIdentity(ownerId,epoch);
  const mapRef=(kind,id)=>id==null?id:remap[kind].get(String(id))||id;
  for(const t of next.tx||[]){
   t.account=mapRef('account',t.account);
@@ -52,7 +54,8 @@ async function repairLegacyIds(){
   t.to=mapRef('account',t.to);
  }
  for(const c of next.commitments||[])c.account=mapRef('account',c.account);
- const backupKey='my-finance-backup-before-id-repair-'+user.id;
+ assertIdentity(ownerId,epoch);
+ const backupKey='my-finance-backup-before-id-repair-'+ownerId;
  if(!localStorage.getItem(backupKey))localStorage.setItem(backupKey,JSON.stringify(original));
  const updatedDirty=new Set();
  for(const key of dirty){
@@ -66,6 +69,7 @@ async function repairLegacyIds(){
   for(const item of next[collection]||[]){if(item?.legacyId&&remap[kind].get(item.legacyId)===item.id)updatedDirty.add(kind+':'+item.id)}
  }
  dirty=updatedDirty;
+ assertIdentity(ownerId,epoch);
  bridge.replaceData(next);
  localStorage.setItem(dirtyKey(),JSON.stringify([...dirty]));
  return repaired;
