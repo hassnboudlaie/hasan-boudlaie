@@ -122,3 +122,29 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
  .tx-ledger-amount{font-size:14px}
  .tx-ledger-meta{font-size:11px}
 }
+
+
+/* My Finance · Voice Entry review. Compact, high contrast and mobile safe. */
+#voice-mic[aria-pressed="true"]{background:#ffe9df!important;color:#9b3221!important;animation:voice-pulse 1.25s ease-in-out infinite}
+@keyframes voice-pulse{50%{box-shadow:0 0 0 6px rgba(255,255,255,.25)}}
+.voice-privacy-note{font-size:11px;color:#d4eae8;line-height:1.7;margin:9px 0 0}
+#voice-status.voice-alert{color:#ffe7c4!important}
+.voice-preview[hidden]{display:none!important}
+.voice-preview{border:1px solid var(--accent);background:var(--card)}
+.voice-preview-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.voice-preview-head h2{margin:0;font-size:19px}
+.voice-review-tag{border:1px solid var(--line);border-radius:99px;color:var(--muted);font-size:12px;padding:4px 10px}
+.voice-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
+.voice-fields label{display:block;font-size:12px;font-weight:700;color:var(--muted)}
+.voice-fields input,.voice-fields select,.voice-fields textarea{display:block;width:100%;min-width:0;margin-top:5px;border-radius:11px;min-height:46px;background:var(--card);border:1px solid var(--line);font-size:15px;color:var(--fg);padding:9px 11px}
+.voice-fields textarea{min-height:70px;resize:vertical;font:inherit}
+.voice-field-wide{grid-column:1/-1}
+.voice-warnings{font-size:12px;line-height:1.7;color:#9e6122}
+.voice-warnings:empty{display:none}
+.voice-validation{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:11px 13px;font-size:13px;line-height:1.8;color:var(--fg)}
+.voice-validation.voice-alert{color:#b3363b;border-color:#e8a4a6}
+.voice-review-actions{display:flex;gap:9px;flex-wrap:wrap}
+.voice-review-actions button{flex:1 1 145px;min-height:46px}
+.voice-review-actions button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:560px){.voice-fields{gap:10px}.voice-fields input,.voice-fields select,.voice-fields textarea{font-size:16px}.voice-review-actions button{font-size:13px;padding:9px}}
+@media(max-width:355px){.voice-fields{grid-template-columns:1fr}}
