@@ -48,6 +48,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div class="auth-actions"><button type="submit" id="auth-login">ورود</button><button type="button" id="auth-register" class="alt">ساخت حساب جدید</button></div>
 </form>
 <div id="auth-status" role="status" aria-live="polite">برای ادامه، وارد حساب اختصاصی خودتان شوید.</div>
+<div id="auth-confirm-help" hidden><p class="auth-hint">اگر ایمیل تأیید دریافت نکردید، پوشه Spam را هم بررسی کنید. ارسال ایمیل به تنظیمات سرویس ایمیل اپ بستگی دارد.</p><button type="button" id="auth-resend-confirm" class="alt">ارسال مجدد ایمیل تأیید</button></div>
 <div id="auth-pending" hidden><p id="auth-pending-email" dir="ltr"></p><button type="button" id="auth-logout" class="alt">خروج از حساب</button><button type="button" id="auth-recheck">بررسی مجدد وضعیت دسترسی</button></div>
 <div class="auth-bottom"><button type="button" id="auth-forgot">فراموشی رمز عبور</button></div>
 <div id="auth-reset-panel" hidden><label for="auth-new-password">رمز جدید</label><input id="auth-new-password" type="password" autocomplete="new-password" minlength="10" placeholder="حداقل ۱۰ کاراکتر"><button type="button" id="auth-set-password">تغییر رمز عبور</button></div>
@@ -323,12 +324,8 @@ window.MyFinanceBridge={
   KEY=nextKey;
   let next=null;
   try{next=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
-  if(!next&&uid){
-   let legacy=null;try{legacy=JSON.parse(localStorage.getItem('my-finance-preview-v1')||'null')}catch(e){}
-   if(legacy&&(legacy.accounts?.length||legacy.tx?.length||legacy.receivables?.length||legacy.transfers?.length)){
-    if(confirm('اطلاعات محلی قبلی این گوشی متعلق به همین حساب است و به حساب خصوصی منتقل شود؟'))next=legacy;
-   }
-  }
+  // Never auto-associate data from a previous local profile with a newly signed-in user.
+  // Old local snapshots remain intact for deliberate, user-reviewed backup/restore.
   db={accounts:Array.isArray(next?.accounts)?next.accounts:[],tx:Array.isArray(next?.tx)?next.tx:[],transfers:Array.isArray(next?.transfers)?next.transfers:[],receivables:Array.isArray(next?.receivables)?next.receivables:[],commitments:Array.isArray(next?.commitments)?next.commitments:[],loans:Array.isArray(next?.loans)?next.loans:[]};
   localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:rebound'));
  },
