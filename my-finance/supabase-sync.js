@@ -396,7 +396,7 @@ window.MyFinanceAI={
  }
 };
 
-window.MyFinanceCloud={sync,authenticated:()=>!!user};
+window.MyFinanceCloud={sync,authenticated:()=>!!user,currentUserId:()=>user?.id||null};
 renderAuth();
 // A password is required on each fresh app navigation. Remember the email only.
 // Auth callbacks from email confirmation/password recovery must be processed first.
