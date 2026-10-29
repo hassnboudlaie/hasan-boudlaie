@@ -333,6 +333,13 @@ window.MyFinanceBridge={
  }
 };
 render();tab('transactions');
+function showAssistantFromLink(){
+ if(location.hash!=='#assistant')return;
+ tab('settings');
+ requestAnimationFrame(()=>document.getElementById('personal-ai-panel')?.scrollIntoView({behavior:'smooth',block:'start'}));
+}
+window.addEventListener('hashchange',showAssistantFromLink);
+showAssistantFromLink();
 importChatGPTDraft();
 /* Authentication and synchronization are handled exclusively by Supabase. */
 </script><script defer src="./voice-entry.js?v=20261029r7"></script><script>
