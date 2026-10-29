@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#09264E">
-<title>مدیریت دسترسی آزمایشی | My Finance</title>
+<title>مدیریت کاربران و اعلان‌ها | My Finance</title>
 <style>
 :root{font-family:Tahoma,Arial,sans-serif;color-scheme:light;--bg:#f4f7fa;--ink:#203544;--line:#d8e2e9;--accent:#116e65;--muted:#586e79}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);line-height:1.8}
@@ -26,14 +26,24 @@ button.primary{background:var(--accent);border-color:var(--accent);color:white}
 button.danger{color:#a32e37;border-color:#f0c2c7}
 button:disabled{opacity:.45;cursor:not-allowed}
 #notice{font-size:14px}#notice.error{color:#af293b}
+.event{border-bottom:1px solid var(--line);padding:10px 0;display:flex;flex-direction:column;gap:2px}
+.event:last-child{border-bottom:0}.event.unread{border-right:3px solid var(--accent);padding-right:10px}
+.events-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.event-type{font-weight:700}.event-meta{color:var(--muted);font-size:12px;direction:ltr;text-align:right}
+#events-list{max-height:400px;overflow:auto}#events-count{font-size:13px;font-weight:700}
+.event-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 @media(max-width:540px){header h1{font-size:18px}.actions button{flex:1 1 45%}}
 </style></head><body><main>
-<header><div><h1>مدیریت کاربران آزمایشی</h1><p class="muted">My Finance · Private Admin</p></div><a href="./">بازگشت به My Finance</a></header>
+<header><div><h1>مدیریت کاربران و رویدادها</h1><p class="muted">My Finance · Private Admin</p></div><a href="./">بازگشت به My Finance</a></header>
 <section class="card"><p id="notice" role="status">در حال بررسی هویت مدیر…</p>
 <p class="muted">فقط وضعیت دسترسی و ایمیل کاربران قابل مشاهده است؛ اطلاعات مالی آن‌ها در این پنل نمایش داده نمی‌شود.</p>
 <button type="button" id="reload" hidden>به‌روزرسانی فهرست</button></section>
+<section class="card" id="events-panel" hidden><div class="events-top"><h2>🔔 اعلان‌های مدیریت</h2><span id="events-count"></span></div>
+<p class="muted">ثبت‌نام جدید، فعال‌سازی مجدد و تعلیق دسترسی. این قسمت هیچ تراکنش یا اطلاعات مالی کاربران را نمایش نمی‌دهد.</p>
+<div class="event-actions"><button type="button" id="enable-alerts">فعال‌سازی اعلان روی این دستگاه</button><button type="button" id="read-all-events">خوانده‌شدن همه</button><button type="button" id="reload-events">تازه‌سازی رویدادها</button></div>
+<div id="events-list" role="list"></div></section>
 <section class="card" id="panel" hidden><h2>کاربران و وضعیت دسترسی</h2>
-<p class="muted">کاربر ابتدا با ایمیل و رمز عبور ثبت‌نام می‌کند. شما بعد از ثبت‌نام، دسترسی آزمایشی او را فعال یا تمدید می‌کنید.</p>
+<p class="muted">ثبت‌نام کاربران جدید به‌صورت خودکار فعال می‌شود؛ نیازی به تأیید دستی نیست. از این قسمت فقط برای تعلیق یا فعال‌سازی مجدد استفاده کنید.</p>
 <div id="list"></div></section>
 </main>
 <script type="module">
@@ -41,7 +51,52 @@ import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76
 const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:sessionStorage,storageKey:'myfinance-supabase-session-v1',autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id),notice=(msg,error=false)=>{$('notice').textContent=msg;$('notice').classList.toggle('error',error)};
 const fmt=new Intl.DateTimeFormat('fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'long',day:'numeric'});
-let selfId='';
+let selfId='',lastEventId=0,eventsLoaded=false;
+const eventText={registered:'ثبت‌نام و فعال‌سازی خودکار',activated:'فعال‌سازی مجدد',suspended:'تعلیق دسترسی',pending:'در انتظار بررسی'};
+const eventDate=value=>fmt.format(new Date(value))+' · '+new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Tehran'}).format(new Date(value));
+async function showDeviceAlert(event){
+ if(!('Notification' in window)||Notification.permission!=='granted')return;
+ try{
+  const title='My Finance · '+(eventText[event.event_type]||'رویداد جدید');
+  const options={body:event.subject_email,tag:'my-finance-event-'+event.id,icon:'./icon-192-r4.png'};
+  if('serviceWorker' in navigator){
+   const reg=await navigator.serviceWorker.getRegistration('./')||await navigator.serviceWorker.register('./sw.js');
+   await reg.showNotification(title,options);
+  }else new Notification(title,options);
+ }catch(e){/* Browser permission and notification support differ across devices. */}
+}
+async function loadEvents(){
+ const{data,error}=await client.from('finance_admin_events').select('id,event_type,subject_email,created_at,read_at').order('id',{ascending:false}).limit(50);
+ if(error){notice('خواندن رویدادها ناموفق بود: '+error.message,true);return}
+ const events=data||[],latest=events[0]?.id||0;
+ if(eventsLoaded&&latest>lastEventId){
+  for(const event of events.filter(e=>e.id>lastEventId).reverse().slice(-3))await showDeviceAlert(event);
+ }
+ eventsLoaded=true;lastEventId=Math.max(lastEventId,latest);
+ $('events-count').textContent=events.filter(e=>!e.read_at).length+' خوانده‌نشده از '+events.length+' رویداد اخیر';
+ $('events-list').replaceChildren();
+ if(!events.length)$('events-list').append(newEl('p','muted','هنوز رویدادی ثبت نشده است.'));
+ for(const event of events){
+  const item=newEl('div','event'+(event.read_at?'':' unread'));
+  item.append(newEl('div','event-type',(eventText[event.event_type]||'رویداد')+' · '+event.subject_email));
+  item.append(newEl('div','event-meta',eventDate(event.created_at)));
+  $('events-list').append(item);
+ }
+ $('events-panel').hidden=false;
+}
+async function markEventsRead(){
+ const {error}=await client.from('finance_admin_events').update({read_at:new Date().toISOString()}).is('read_at',null);
+ if(error)notice('علامت‌گذاری اعلان‌ها ناموفق بود: '+error.message,true);
+ else await loadEvents();
+}
+async function enableNotifications(){
+ if(!('Notification' in window))return notice('این مرورگر اعلان را پشتیبانی نمی‌کند؛ فهرست داخل پنل فعال است.',true);
+ try{
+  const permission=await Notification.requestPermission();
+  notice(permission==='granted'?'اعلان دستگاه فعال شد؛ برای دریافت آن هنگام بسته بودن برنامه، Push مستقل لازم است.':'مجوز اعلان صادر نشد؛ رویدادها در این پنل ثبت می‌شوند.',permission!=='granted');
+ }catch(e){notice('مجوز اعلان در این مرورگر قابل فعال‌سازی نیست.',true)}
+}
+
 const newEl=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 const dateText=value=>value?fmt.format(new Date(value)):'بدون سررسید';
 async function action(row,kind){
@@ -50,9 +105,7 @@ async function action(row,kind){
  const now=Date.now(),isActive=row.status==='active'&&(!row.expires_at||new Date(row.expires_at).getTime()>now);
  let status='active',expires_at=null;
  if(kind==='suspend'){status='suspended';expires_at=row.expires_at}
- else if(kind==='approve'){expires_at=new Date(now+30*86400000).toISOString()}
- else if(kind==='extend'){expires_at=new Date(Math.max(now,isActive&&row.expires_at?new Date(row.expires_at).getTime():now)+30*86400000).toISOString()}
- else if(kind==='forever'){expires_at=null}
+ else if(kind==='activate'){expires_at=null}
  else return;
  notice('در حال اعمال تغییر…');
  const {error}=await client.from('finance_access').update({status,expires_at,updated_at:new Date().toISOString()}).eq('user_id',row.user_id);
@@ -68,9 +121,7 @@ function renderUser(row){
  card.append(top,newEl('p','muted','اعتبار: '+(row.expires_at?('تا '+dateText(row.expires_at)):'نامحدود')));
  const actions=newEl('div','actions');
  const buttons=[
- ['approve','فعال‌سازی ۳۰ روزه','primary'],
- ['extend','تمدید ۳۰ روز',''],
- ['forever','فعال‌سازی بدون سررسید',''],
+ ['activate','فعال‌سازی مجدد','primary'],
  ['suspend','تعلیق دسترسی','danger']
  ];
  for(const [kind,label,cls]of buttons){
@@ -94,8 +145,13 @@ async function start(){
  if(error||!user){notice('برای مدیریت کاربران، ابتدا در My Finance با حساب مدیر وارد شوید.',true);return}
  const{data:admin,error:check}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
  if(check||!admin){notice('این حساب مجوز مدیریت کاربران را ندارد.',true);return}
- selfId=user.id;notice('ورود مدیر تأیید شد.');await load();
+ selfId=user.id;notice('ورود مدیر تأیید شد.');await Promise.all([load(),loadEvents()]);
+setInterval(()=>{if(!document.hidden)loadEvents().catch(()=>{})},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadEvents().catch(()=>{})});
 }
 $('reload').addEventListener('click',load);
+$('reload-events').addEventListener('click',loadEvents);
+$('read-all-events').addEventListener('click',markEventsRead);
+$('enable-alerts').addEventListener('click',enableNotifications);
 start();
 </script></body></html>
