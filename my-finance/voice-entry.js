@@ -12,7 +12,7 @@ const norm=s=>digits(s).toLowerCase().replace(/ي|ى/g,'ی').replace(/ك/g,'ک')
 const part=(formatter,d)=>Object.fromEntries(formatter.formatToParts(d).filter(x=>['year','month','day'].includes(x.type)).map(x=>[x.type,Number(x.value)]));
 const isoDay=d=>{const p=part(greg,d);return p.year+'-'+String(p.month).padStart(2,'0')+'-'+String(p.day).padStart(2,'0')};
 const todayDay=()=>isoDay(new Date());
-function jalaliLabel(day){const d=new Date(day+'T12:00:00+03:30'),p=part(jalali,d);return fmt.format(p.day)+' '+words[p.month-1]+' '+fmt.format(p.year)}
+function jalaliLabel(day){const d=new Date(day+'T12:00:00+03:30'),p=part(jalali,d);return String(p.day).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)])+' '+words[p.month-1]+' '+String(p.year).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[Number(d)])}
 const status=(message,alert=false)=>{const e=$('voice-status');e.textContent=message;e.classList.toggle('voice-alert',alert)};
 function dateOffset(days){const d=new Date(todayDay()+'T12:00:00+03:30');d.setUTCDate(d.getUTCDate()+days);return isoDay(d)}
 function resolvePersian(day,month,year){
