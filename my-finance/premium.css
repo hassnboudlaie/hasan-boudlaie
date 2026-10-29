@@ -226,3 +226,121 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 #finance-profile-card button:disabled{opacity:.55;cursor:not-allowed}
 #finance-profile-card #profile-status{margin:14px 0 0}
 @media(max-width:530px){#finance-profile-card .profile-fields{grid-template-columns:1fr;gap:10px}#finance-profile-card .profile-avatar-shell{height:66px;width:66px}#finance-profile-card .profile-intro{gap:10px}}
+
+
+/* My Finance Navigation v27 | audited against Monarch, YNAB and Copilot.
+   Right-hand RTL desktop rail; 5 compact mobile routes; always-visible private avatar. */
+.finance-sidebar,.finance-mobile-nav{font-family:inherit}
+.finance-app-header{display:flex;align-items:center;gap:12px}
+.finance-header-profile{
+ display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:185px;
+ padding:6px 10px!important;background:var(--card)!important;color:var(--fg)!important;
+ border:1px solid var(--line)!important;border-radius:16px!important;
+ font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;
+}
+.finance-header-profile-name{max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.finance-user-avatar{
+ position:relative;display:inline-grid;place-items:center;width:38px;height:38px;min-width:38px;
+ overflow:hidden;border:2px solid #d8e9e6;border-radius:50%;background:#e9f3f1;
+ color:#194942;font-size:20px;box-shadow:0 2px 9px #0927240d
+}
+.finance-user-avatar .finance-user-avatar-image{display:block;width:100%;height:100%;object-fit:cover}
+.finance-user-avatar .finance-user-avatar-image[hidden],.finance-avatar-placeholder[hidden]{display:none!important}
+.finance-sidebar{
+ display:none;box-sizing:border-box;background:var(--card);border:1px solid var(--line);
+ border-radius:24px;box-shadow:0 14px 46px rgba(18,45,57,.06);padding:17px 12px;
+}
+.finance-side-brand{display:flex;align-items:center;gap:11px;padding:6px 9px 19px;border-bottom:1px solid var(--line)}
+.finance-side-brand img{border-radius:12px;object-fit:contain}
+.finance-side-brand span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.finance-side-brand strong{font-size:16px;color:var(--fg);font-weight:850}
+.finance-side-brand small{font-size:10px;color:var(--muted)}
+.finance-side-links{display:flex;flex-direction:column;gap:4px;padding:11px 0;overflow-y:auto;min-height:0}
+.finance-side-section{font-size:11px;color:var(--muted);font-weight:750;margin:10px 12px 5px}
+.finance-side-links button,.finance-side-links a{
+ display:flex;align-items:center;gap:12px;min-height:43px;padding:9px 12px;
+ width:100%;box-sizing:border-box;background:transparent!important;color:var(--fg)!important;
+ text-decoration:none;border:0!important;border-radius:13px!important;font-size:13px;
+ font-weight:650;line-height:1.4;text-align:start;white-space:nowrap;cursor:pointer;
+}
+.finance-side-links button>span,.finance-side-links a>span{font-size:19px;width:23px;min-width:23px;text-align:center;color:var(--accent)}
+.finance-side-links button.finance-active,.finance-side-links button[aria-current="page"]{
+ background:#e7f4f0!important;color:#115b53!important;font-weight:800
+}
+.finance-side-links button:hover,.finance-side-links a:hover{background:var(--bg)!important}
+body.dark .finance-side-links button.finance-active{background:#244c4d!important;color:#eafff5!important}
+.finance-side-profile{
+ display:flex;align-items:center;gap:10px;width:100%;margin-top:auto;padding:13px 8px 2px!important;
+ background:transparent!important;color:var(--fg)!important;text-align:start;border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important
+}
+.finance-side-profile-text{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0}
+.finance-side-profile-text strong{font-size:12px;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.finance-side-profile-text small{font-size:10px;color:var(--muted);max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:right}
+.finance-side-profile>span:last-child{font-size:23px;color:var(--muted)}
+.finance-mobile-nav{display:none}
+.finance-more-dialog{padding:0;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.finance-more-dialog::backdrop{background:rgba(10,28,40,.35)}
+.finance-more-top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.finance-more-top strong{font-size:17px}
+.finance-more-top button{background:transparent!important;color:var(--fg)!important;padding:0!important;font-size:29px;min-height:36px;min-width:36px}
+.finance-more-links{display:grid;gap:6px;padding:12px 16px 20px;max-height:65dvh;overflow-y:auto}
+.finance-more-links a,.finance-more-links button{display:block;border:0!important;background:var(--bg)!important;color:var(--fg)!important;border-radius:13px;text-align:start;text-decoration:none;padding:14px 17px!important;font-size:14px;font-weight:700;min-height:44px}
+.finance-more-links a:hover,.finance-more-links button:hover{filter:brightness(.96)}
+.finance-app-header .finance-header-profile:focus-visible,
+.finance-side-links button:focus-visible,.finance-mobile-nav button:focus-visible,.finance-more-links button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#finance-profile-card,#personal-ai-panel,main section{scroll-margin-top:25px}
+
+@media(min-width:1024px){
+ body.finance-unlocked main{max-width:1340px;padding:18px 28px 44px;padding-inline-start:278px}
+ body.finance-unlocked .finance-sidebar{
+  position:fixed;z-index:20;top:18px;right:max(18px,calc((100vw - 1340px)/2 + 20px));
+  width:232px;height:calc(100dvh - 36px);display:flex;flex-direction:column
+ }
+ body.finance-unlocked main>.tabs{display:none!important}
+ body.finance-unlocked .finance-mobile-nav{display:none!important}
+ body.finance-unlocked .finance-app-header{padding:8px 0 19px}
+ body.finance-unlocked .finance-side-links{scrollbar-width:thin}
+}
+@media(max-width:1023px){
+ body.finance-unlocked .finance-sidebar{display:none!important}
+ body.finance-unlocked main>.tabs{display:none!important}
+ body.finance-unlocked main{padding-bottom:calc(106px + env(safe-area-inset-bottom))}
+ body.finance-unlocked .finance-mobile-nav{
+  position:fixed;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  bottom:0;left:0;right:0;z-index:50;gap:3px;
+  padding:7px 8px calc(7px + env(safe-area-inset-bottom));
+  background:var(--card);border-top:1px solid var(--line);
+  box-shadow:0 -7px 28px rgba(11,36,45,.1);
+ }
+ .finance-mobile-nav button{
+  min-width:0;min-height:59px;padding:7px 1px!important;display:flex;flex-direction:column;gap:3px;
+  align-items:center;justify-content:center;background:transparent!important;
+  border:0!important;border-radius:11px!important;color:var(--muted)!important;
+  font-size:10px!important;line-height:1.4;font-weight:750!important;white-space:nowrap;
+ }
+ .finance-mobile-nav button>span{font-size:22px;line-height:1.15;color:var(--muted)}
+ .finance-mobile-nav button.finance-active{background:color-mix(in srgb,var(--accent) 10%,var(--card))!important;color:var(--accent)!important}
+ .finance-mobile-nav button.finance-active>span{color:var(--accent)}
+ .finance-more-dialog{
+  position:fixed;left:0;right:0;top:auto;bottom:0;margin:0;width:100%;
+  max-width:none;max-height:85dvh;border-radius:22px 22px 0 0;
+  padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -13px 30px #061c2833;
+ }
+ .finance-app-header{flex-wrap:nowrap}
+}
+@media(max-width:700px){
+ .finance-app-header{gap:7px}
+ .finance-header-profile{padding:5px!important;min-width:43px;max-width:45px}
+ .finance-header-profile-name{display:none}
+ .finance-header-profile .finance-user-avatar{width:34px;height:34px;min-width:34px;font-size:18px}
+ .finance-app-header .brand-wrap{gap:8px;min-width:0;flex:1}
+ .finance-app-header h1{font-size:17px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .finance-app-header .brand-mark{width:39px;height:39px;min-width:39px}
+ .finance-app-header .row{gap:4px;flex-wrap:nowrap}
+ .finance-app-header .row button.alt{width:38px;min-width:38px}
+}
+@media(max-width:360px){
+ .finance-app-header h1{font-size:15px!important}
+ .finance-app-header .brand-mark{width:34px;height:34px;min-width:34px}
+ .finance-mobile-nav button{font-size:9px!important}
+}
