@@ -158,6 +158,7 @@ function gate(text,identity=null,error=false){
 function lock(text,identity=null,error=false){
  const before=!!user;identityEpoch++;user=null;dirty=new Set();seen=new Map();
  if(before)bridge.bindUser(null);
+ resetAdminBell();
  resetProfile();
  renderAuth();gate(text,identity,error);
 }
@@ -165,12 +166,12 @@ function validAccess(a){return a?.status==='active'&&(!a.expires_at||Date.parse(
 function pendingText(a){
  if(a.status==='suspended')return 'دسترسی این حساب توسط مدیر تعلیق شده است. داده‌ها حذف نشده‌اند.';
  if(a.status==='active')return 'اعتبار دسترسی آزمایشی به پایان رسیده است. مدیر می‌تواند آن را تمدید کند.';
- return 'ثبت‌نام انجام شده است. برای شروع استفاده، منتظر تأیید مدیر باشید.';
+ return 'در حال بررسی فعال‌سازی حساب شما؛ اگر مشکل ادامه داشت، دوباره تلاش کنید.';
 }
 async function getAccess(identity){
  let{data,error}=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
  if(error)throw error;if(data)return data;
- const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'pending'}).select('status,expires_at').single();
+ const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'active'}).select('status,expires_at').single();
  if(created.error){
   const retry=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
   if(retry.error||!retry.data)throw created.error;
@@ -178,11 +179,55 @@ async function getAccess(identity){
  }
  return created.data;
 }
+let adminEventsLoaded=false,adminLastEventId=0;
+function resetAdminBell(){
+ document.getElementById('finance-admin-bell')?.remove();
+ adminEventsLoaded=false;adminLastEventId=0;
+}
+async function showLatestAdminAlert(e){
+ if(!('Notification' in window)||Notification.permission!=='granted')return;
+ try{
+  const names={registered:'ثبت‌نام جدید',activated:'فعال‌سازی مجدد',suspended:'تعلیق دسترسی',pending:'در انتظار'};
+  const title='My Finance · '+(names[e.event_type]||'رویداد جدید');
+  const opts={body:e.subject_email,icon:'./icon-192-r4.png',tag:'my-finance-event-'+e.id};
+  if('serviceWorker' in navigator){
+   const reg=await navigator.serviceWorker.getRegistration('./')||await navigator.serviceWorker.register('./sw.js');
+   await reg.showNotification(title,opts);
+  }else new Notification(title,opts);
+ }catch(_ignored){}
+}
+async function refreshAdminEvents(){
+ const bell=document.getElementById('finance-admin-bell');
+ if(!user||!bell)return;
+ const {data,error}=await client.from('finance_admin_events').select('id,event_type,subject_email,read_at').order('id',{ascending:false}).limit(50);
+ if(error)return;
+ const arr=data||[],newest=arr[0]?.id||0;
+ if(adminEventsLoaded&&newest>adminLastEventId){
+  for(const e of arr.filter(x=>x.id>adminLastEventId).reverse().slice(-3))await showLatestAdminAlert(e);
+ }
+ adminEventsLoaded=true;adminLastEventId=Math.max(adminLastEventId,newest);
+ const unread=arr.filter(x=>!x.read_at).length;
+ bell.textContent=unread?'🔔 '+new Intl.NumberFormat('fa-IR').format(unread):'🔔';
+ bell.setAttribute('aria-label',unread?unread+' اعلان خوانده‌نشده · مدیریت My Finance':'مدیریت و اعلان‌های My Finance');
+ bell.title='رویدادهای مدیریتی My Finance';
+}
 async function showAdmin(){
  const link=byId('finance-admin-link');if(!link||!user)return;
- const{data,error}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
- link.hidden=!!error||!data;
+ const{data,error}=await client.from('finance_admins').select('user_id').eq('user.id').maybeSingle();
+ const allowed=!error&&!!data;
+ link.hidden=!allowed;
+ if(!allowed){resetAdminBell();return;}
+ if(!document.getElementById('finance-admin-bell')){
+  const bell=document.createElement('a');
+  bell.id='finance-admin-bell';bell.href='./admin.html';bell.textContent='🔔';
+  bell.style.cssText='position:fixed;bottom:96px;left:18px;z-index:1000;min-width:50px;height:50px;padding:0 12px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#124e73;color:white;font-weight:800;font-size:18px;box-shadow:0 5px 18px #102b4450;text-decoration:none;border:1px solid #ffffff66';
+  bell.setAttribute('aria-label','اعلان‌های مدیریت My Finance');
+  document.body.append(bell);
+ }
+ await refreshAdminEvents();
 }
+setInterval(()=>{if(user&&!document.hidden)refreshAdminEvents().catch(()=>{})},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&user)refreshAdminEvents().catch(()=>{})});
 /* Optional registration details are profile data, never access-control claims. */
 const signupDetails=byId('auth-registration-details');
 function clearSignupMode(){
@@ -195,7 +240,7 @@ function signupMetadata(){
  const city=byId('auth-city').value.trim().slice(0,100);
  const birth_date=byId('auth-birth-date').value;
  if(birth_date&&(!/^\d{4}-\d{2}-\d{2}$/.test(birth_date)||birth_date>new Date().toISOString().slice(0,10)||birth_date<'1900-01-01'))throw Error('تاریخ تولد معتبر نیست. می‌توانید آن را خالی بگذارید.');
- return {full_name,phone,city,birth_date:birth_date||null};
+ return {full_name,phone,city,birth_date:birth_date||null,app_source:'my-finance'};
 }
 byId('auth-login').addEventListener('click',event=>{
  if(!signupDetails.hidden){
@@ -229,7 +274,7 @@ byId('auth-register').addEventListener('click',async()=>{
  if(error)return authStatus('ثبت‌نام انجام نشد. '+emailProblem(error),true);
  clearSignupMode();
  if(data.session)await refreshIdentity();
- else {confirmationHelp.hidden=false;authStatus('درخواست ثبت‌نام دریافت شد. ایمیل تأیید را بررسی کنید (از جمله Spam). سپس با رمز عبور وارد شوید. اگر ایمیل نرسید، ارسال مجدد را امتحان کنید.');}
+ else {confirmationHelp.hidden=false;authStatus('حساب ساخته شد، اما تنظیمات سرویس هنوز تأیید ایمیل را الزامی می‌داند. تا زمان غیرفعال‌شدن این الزام در Supabase، ایمیل را تأیید کنید و سپس وارد شوید.');}
 });
 byId('auth-resend-confirm').addEventListener('click',async()=>{
  const value=authEmail.value.trim().toLowerCase();
