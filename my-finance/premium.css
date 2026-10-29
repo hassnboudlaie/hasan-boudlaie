@@ -79,3 +79,46 @@ footer{font-size:11px;opacity:.65;padding:18px 0;text-align:center}
 @media(max-width:700px){.report-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-stat{padding:13px}.finance-stat strong{font-size:16px}}
 
 #supabase-pair-status{background:var(--bg);border:1px dashed var(--line);border-radius:14px;padding:13px 15px;line-height:1.9;font-size:13px}#supabase-pair{background:#173c4a;color:#fff}body.dark #supabase-pair{background:#286172}
+
+
+/* Searchable transaction history · Jalali/Tehran, accessible, mobile-first */
+.tx-history-card h2{margin-bottom:15px}
+.tx-history-controls{display:grid;gap:12px;margin-bottom:10px}
+.tx-filter-group{display:flex;gap:7px;flex-wrap:wrap}
+.tx-filter-group button{flex:1 1 70px;min-height:40px;padding:8px 10px;border-radius:12px;background:var(--bg)!important;color:var(--fg)!important;border:1px solid var(--line);font-size:13px;white-space:nowrap}
+.tx-filter-group button[aria-pressed="true"]{background:var(--ink)!important;color:var(--card)!important;border-color:var(--ink)}
+body.dark .tx-filter-group button[aria-pressed="true"]{background:#e4f4f0!important;color:#142c3b!important;border-color:#e4f4f0}
+.tx-search-label{display:block;font-size:12px;font-weight:700;color:var(--muted)}
+.tx-search-label input{display:block;width:100%;margin-top:5px;min-height:44px;font-size:14px;direction:inherit;padding-inline:14px;background:var(--card)}
+.tx-search-label input::-webkit-search-cancel-button{cursor:pointer}
+.tx-period-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+.tx-period-nav[hidden]{display:none!important}
+.tx-period-nav strong{font-size:13px;text-align:center;line-height:1.8;flex:1}
+.tx-period-nav button{flex:0 0 auto;font-size:12px;min-height:38px;padding:7px 11px}
+.tx-period-nav button:disabled{opacity:.35;cursor:default}
+#tx-results-count{font-size:12px}
+.tx-ledger{border-top:1px solid var(--line)}
+.tx-ledger-item{padding:15px 0;border-bottom:1px solid var(--line);min-width:0}
+.tx-ledger-item:last-child{border-bottom:0;padding-bottom:3px}
+.tx-ledger-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.tx-ledger-heading{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0;overflow-wrap:anywhere}
+.tx-ledger-heading strong{color:var(--fg);font-size:14px}
+.tx-ledger-type{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--bg);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tx-ledger-amount{font-size:15px;line-height:1.7;white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums}
+.tx-ledger-amount small{font-size:11px;font-weight:600}
+.tx-ledger-amount.tx-income{color:#0c826b}
+.tx-ledger-amount.tx-expense{color:#ad4d52}
+body.dark .tx-ledger-amount.tx-income{color:#5cd5b5}
+body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
+.tx-ledger-meta{display:flex;align-items:center;gap:4px 8px;flex-wrap:wrap;margin-top:5px;color:var(--muted);font-size:12px;line-height:1.9}
+.tx-ledger-memo{margin:5px 0 0;font-size:12px;line-height:1.8;color:var(--muted);overflow-wrap:anywhere}
+.tx-ledger-empty{text-align:center;color:var(--muted);font-size:13px;padding:28px 8px}
+#tx-entry-date{font-size:12px;margin:8px 0 0}
+@media(max-width:540px){
+ .tx-history-card{padding:17px 14px}
+ .tx-filter-group{gap:6px}
+ .tx-filter-group button{flex:1 1 20%;padding:8px 4px;font-size:12px;min-width:0}
+ .tx-ledger-heading strong{font-size:13px}
+ .tx-ledger-amount{font-size:14px}
+ .tx-ledger-meta{font-size:11px}
+}
