@@ -1,6 +1,38 @@
 /* My Finance · authenticated cloud sync v3. No service credentials belong in a public PWA. */
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
-const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:sessionStorage,storageKey:'myfinance-supabase-session-v1',autoRefreshToken:true,detectSessionInUrl:true}});
+/* Keep a verified session through refresh/relaunch on trusted devices.
+   Supabase persists refresh tokens, never passwords. Opt-out uses sessionStorage only.
+   The adapter also migrates a legitimate existing tab session when the user opts in. */
+const AUTH_SESSION_KEY='myfinance-supabase-session-v1';
+const KEEP_SIGNED_IN_KEY='myfinance-keep-signed-in-v1';
+const keepSignedIn=()=>localStorage.getItem(KEEP_SIGNED_IN_KEY)!=='no';
+const financeAuthStorage={
+ getItem(key){
+  if(!keepSignedIn())return sessionStorage.getItem(key);
+  const persisted=localStorage.getItem(key);
+  if(persisted!==null)return persisted;
+  const temporary=sessionStorage.getItem(key);
+  if(temporary!==null){
+   localStorage.setItem(key,temporary);
+   sessionStorage.removeItem(key);
+  }
+  return temporary;
+ },
+ setItem(key,value){
+  if(keepSignedIn()){
+   localStorage.setItem(key,value);
+   sessionStorage.removeItem(key);
+  }else{
+   sessionStorage.setItem(key,value);
+   localStorage.removeItem(key);
+  }
+ },
+ removeItem(key){
+  sessionStorage.removeItem(key);
+  localStorage.removeItem(key);
+ }
+};
+const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:financeAuthStorage,storageKey:AUTH_SESSION_KEY,autoRefreshToken:true,detectSessionInUrl:true}});
 const bridge=window.MyFinanceBridge;
 const byId=id=>document.getElementById(id);
 const login=byId('supabase-login'),actions=byId('supabase-actions'),email=byId('supabase-email');
@@ -94,16 +126,29 @@ function renderAuth(){
  else {notice('حساب متصل: '+user.email,true);refreshPairStatus().catch(()=>{});}
 }
 
-/* Account-gated beta. Browser remembers email only; Supabase handles passwords and sessions. */
+/* Account-gated beta. A verified session can persist on a trusted device; passwords are never saved here. */
 const rememberKey='myfinance-saved-email-v1';
 const confirmationHelp=byId('auth-confirm-help');
 const emailProblem=e=>{const msg=String(e?.code||'')+' '+String(e?.message||'');if(/email.address.not.authorized|email_address_not_authorized/i.test(msg))return 'ارسال تأییدیه برای این ایمیل در تنظیمات فعلی سرور مجاز نیست. مدیر باید سرویس ارسال ایمیل (Custom SMTP) را فعال کند.';if(/rate.limit|over_email_send_rate_limit|too.many.requests/i.test(msg))return 'محدودیت تعداد ایمیل‌های سرور فعال شده است. بعداً دوباره تلاش کنید؛ مدیر باید سرویس ایمیل مستقل را تنظیم کند.';return 'درخواست ایمیل ناموفق بود. لطفاً آدرس و اتصال اینترنت را بررسی کنید. جزئیات: '+String(e?.message||'خطای نامشخص');};
 const authEmail=byId('auth-email'),authPassword=byId('auth-password'),authRemember=byId('auth-remember');
 const remembered=localStorage.getItem(rememberKey);
-if(remembered){authEmail.value=remembered;authRemember.checked=true}else authRemember.checked=false;
+if(remembered)authEmail.value=remembered;
+authRemember.checked=keepSignedIn();
 let recovery=false;
 function authStatus(text,error=false){const e=byId('auth-status');e.textContent=text;e.classList.toggle('error',error)}
-function saveRemembered(){if(authRemember.checked)localStorage.setItem(rememberKey,authEmail.value.trim().toLowerCase());else localStorage.removeItem(rememberKey)}
+function saveRemembered(){
+ const stay=!!authRemember.checked;
+ localStorage.setItem(KEEP_SIGNED_IN_KEY,stay?'yes':'no');
+ if(stay){
+  const old=sessionStorage.getItem(AUTH_SESSION_KEY);
+  if(old!==null){localStorage.setItem(AUTH_SESSION_KEY,old);sessionStorage.removeItem(AUTH_SESSION_KEY)}
+  localStorage.setItem(rememberKey,authEmail.value.trim().toLowerCase());
+ }else{
+  const old=localStorage.getItem(AUTH_SESSION_KEY);
+  if(old!==null){sessionStorage.setItem(AUTH_SESSION_KEY,old);localStorage.removeItem(AUTH_SESSION_KEY)}
+  localStorage.removeItem(rememberKey);
+ }
+}
 function gate(text,identity=null,error=false){
  document.body.classList.remove('finance-unlocked');
  byId('auth-form').hidden=!!identity;byId('auth-pending').hidden=!identity;
