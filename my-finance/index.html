@@ -253,13 +253,34 @@ async function backupCryptoKey(pass,salt,usage){
  const material=await crypto.subtle.importKey('raw',backupEncoder.encode(pass),'PBKDF2',false,['deriveKey']);
  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,[usage]);
 }
+function askEncryptedBackupPassword(message){
+ return new Promise(resolve=>{
+  const dialog=document.createElement('dialog');
+  dialog.setAttribute('dir','rtl');
+  dialog.setAttribute('aria-label','رمز پشتیبان مالی');
+  dialog.style.cssText='border:1px solid var(--line);border-radius:18px;padding:22px;max-width:min(92vw,420px);width:100%;color:var(--fg);background:var(--card);box-shadow:0 16px 60px #0004';
+  const form=document.createElement('form');form.setAttribute('novalidate','');
+  const label=document.createElement('label');label.textContent=message;label.style.cssText='display:block;font-size:14px;line-height:1.8;font-weight:600;margin-bottom:12px';
+  const field=document.createElement('input');field.type='password';field.name='backup-secret';field.autocomplete='off';field.required=true;field.style.cssText='width:100%;min-height:48px;direction:ltr;margin-bottom:16px';
+  const actions=document.createElement('div');actions.style.cssText='display:flex;gap:10px;justify-content:flex-end';
+  const ok=document.createElement('button');ok.type='submit';ok.textContent='تأیید';
+  const cancel=document.createElement('button');cancel.type='button';cancel.className='alt';cancel.textContent='انصراف';
+  actions.append(cancel,ok);form.append(label,field,actions);dialog.append(form);document.body.append(dialog);
+  let complete=false;
+  const finish=value=>{if(complete)return;complete=true;const current=field.value;field.value='';dialog.close();dialog.remove();resolve(value===null?null:current)};
+  form.addEventListener('submit',e=>{e.preventDefault();if(field.value)finish(field.value)});
+  cancel.addEventListener('click',()=>finish(null));
+  dialog.addEventListener('cancel',e=>{e.preventDefault();finish(null)});
+  dialog.showModal();field.focus();
+ });
+}
 async function backup(){
  if(!window.MyFinanceCloud?.authenticated())return alert('برای تهیه پشتیبان، ابتدا وارد حساب تأییدشده شوید.');
  if(!crypto?.subtle)return alert('این مرورگر از پشتیبان رمزگذاری‌شده پشتیبانی نمی‌کند.');
- const pass=prompt('یک رمز مستقل برای فایل پشتیبان تعیین کنید (حداقل ۱۲ کاراکتر). این رمز قابل بازیابی نیست.');
+ const pass=await askEncryptedBackupPassword('یک رمز مستقل برای فایل پشتیبان تعیین کنید (حداقل ۱۲ کاراکتر). این رمز قابل بازیابی نیست.');
  if(pass===null)return;
  if(pass.length<12)return alert('رمز پشتیبان باید حداقل ۱۲ کاراکتر باشد.');
- const repeated=prompt('رمز پشتیبان را دوباره وارد کنید.');
+ const repeated=await askEncryptedBackupPassword('رمز فایل پشتیبان را دوباره وارد کنید.');
  if(repeated!==pass)return alert('دو رمز یکسان نیستند؛ فایل ساخته نشد.');
  try{
   const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
@@ -280,7 +301,7 @@ async function restoreFile(input){
   if(d?.format===ENCRYPTED_BACKUP_FORMAT){
    if(d.version!==1||d.iterations!==310000||typeof d.data!=='string'||typeof d.iv!=='string'||typeof d.salt!=='string')throw Error('ساختار فایل رمزگذاری‌شده معتبر نیست.');
    if(d.owner_id&&d.owner_id!==window.MyFinanceCloud.currentUserId())throw Error('این فایل متعلق به حساب کاربری دیگری است.');
-   const pass=prompt('رمز فایل پشتیبان رمزگذاری‌شده را وارد کنید.');
+   const pass=await askEncryptedBackupPassword('رمز فایل پشتیبان رمزگذاری‌شده را وارد کنید.');
    if(pass===null)return;
    try{
     const key=await backupCryptoKey(pass,backupFromBase64(d.salt),'decrypt');
