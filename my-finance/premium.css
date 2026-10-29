@@ -164,3 +164,24 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 
 /* No-fee voice entry: show its limits clearly without an inactive AI toggle */
 .voice-free-hint{font-size:12px;line-height:1.85;color:#e1f6ef;margin:12px 0 0;padding:9px 10px;border:1px solid rgba(204,243,230,.3);border-radius:10px;background:rgba(255,255,255,.07)}
+
+/* Opt-in personal assistant bridge: non-API/manual handoff, scoped per user */
+#personal-ai-panel{scroll-margin-top:25px}
+#personal-ai-panel h2{font-size:18px;line-height:1.8}
+#personal-ai-workflow[hidden],#personal-ai-open[hidden]{display:none!important}
+.personal-ai-label{display:block;margin:15px 0 6px;font-size:13px;font-weight:750;color:var(--fg)}
+#personal-ai-mode,#personal-ai-text,#personal-ai-response{display:block;width:100%;max-width:100%;min-width:0;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:12px;font-size:15px;padding:11px;line-height:1.8}
+#personal-ai-mode{min-height:47px}
+#personal-ai-text,#personal-ai-response{resize:vertical;min-height:95px}
+#personal-ai-response{direction:ltr;text-align:left;font:12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;max-height:310px}
+.personal-ai-notice{padding:12px 13px;font-size:12px;line-height:1.95;background:var(--bg);border:1px solid var(--line);border-radius:12px;color:var(--fg);margin-top:14px}
+.personal-ai-buttons{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.personal-ai-buttons button{flex:1 1 145px;min-height:42px;font-size:12px;line-height:1.6}
+#personal-ai-status{min-height:22px}
+#personal-ai-status.personal-ai-error{color:#bc3f4a}
+@media(max-width:500px){
+ #personal-ai-panel{padding:17px 14px}
+ .personal-ai-buttons{gap:7px}
+ .personal-ai-buttons button{flex:1 1 45%}
+ #personal-ai-mode,#personal-ai-text{font-size:16px}
+}
