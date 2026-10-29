@@ -38,6 +38,14 @@ body.finance-unlocked #auth-gate{display:none!important}
 .auth-card .auth-hint{font-size:12px}
 .auth-card #auth-reset-panel{padding-top:16px;border-top:1px solid var(--line)}
 @media(max-width:480px){#auth-gate{margin-top:4vh;padding:12px}.auth-card{padding:21px 17px}.auth-card h1{font-size:21px}}
+ 
+.loan-reminder-banner{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:16px 18px;margin:14px 0 18px;border:1px solid var(--line);border-radius:17px;background:var(--card);box-shadow:0 5px 22px #0b37430d}
+.loan-reminder-banner[hidden]{display:none!important}
+.loan-reminder-banner .loan-reminder-copy{flex:1;min-width:180px}
+.loan-reminder-banner strong{display:block;font-size:16px;font-weight:800}
+.loan-reminder-banner p{font-size:13px;color:inherit;margin:5px 0 0;line-height:1.9}
+.loan-reminder-banner button{min-height:42px;white-space:nowrap}
+@media(max-width:480px){.loan-reminder-banner button{width:100%}}
 </style></head><body><div id="auth-gate" aria-label="ورود امن به My Finance"><div class="auth-card">
 <div class="auth-brand">MY FINANCE · PRIVATE BETA</div><h1 id="auth-heading">ورود به حساب مالی شخصی</h1>
 <p id="auth-description">با ایمیل و رمز عبور خود وارد شوید. اطلاعات هر کاربر مستقل است.</p>
@@ -83,6 +91,10 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div class="finance-home-heading">
  <div><small>MY FINANCE / OVERVIEW</small><h2 data-fa="داشبورد من" data-en="My dashboard">داشبورد من</h2><p class="muted" data-fa="یک نگاه به وضعیت مالی شما" data-en="Your finances at a glance">یک نگاه به وضعیت مالی شما</p></div>
  <div class="finance-head-actions"><button type="button" class="alt" onclick="financeNavGo('loans')" aria-label="نمایش اقساط">◷ اقساط</button><button type="button" class="finance-new-entry" onclick="document.getElementById('quick').focus()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button></div>
+</div>
+<div id="loan-due-notice" class="loan-reminder-banner" role="status" aria-live="polite">
+ <div class="loan-reminder-copy"><strong id="loan-reminder-title">📅 برنامه سررسید اقساط</strong><p id="loan-reminder-detail">پس از همگام‌سازی اطلاعات، نزدیک‌ترین سررسید اینجا نمایش داده می‌شود. هشدار نارنجی از ۵ روز قبل فعال می‌شود.</p></div>
+ <button type="button" id="loan-reminder-open" onclick="financeNavGo('loans')">مشاهده اقساط</button>
 </div>
 <div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div>
 <div class="finance-overview-meta"><span id="finance-period-pill" class="finance-period-pill" aria-live="polite">ماه جاری</span><span class="finance-overview-caption" data-fa="نمای اختصاصی · بر اساس اطلاعات ثبت‌شده" data-en="Private overview · from recorded transactions">نمای اختصاصی · بر اساس اطلاعات ثبت‌شده</span></div>
@@ -208,6 +220,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div class="card"><h2>مطالبات ثبت‌شده / Receivables</h2><div id="rcvlist"></div></div>
 <div class="card"><h2>ورود رکورد خصوصی / Private import</h2><input type="file" id="rcvimport" accept=".json,application/json" onchange="importReceivableFile(this)"><p class="muted">این فایل فقط در مرورگر شما خوانده می‌شود. فایل خصوصی را در GitHub منتشر نکنید؛ داده محلی رمزگذاری نشده است.</p></div>
 </section>
+<section id="loans" hidden><div class="card"><h2>وام‌ها و اقساط</h2><p class="muted">در حال بارگذاری اطلاعات خصوصی اقساط…</p></div></section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
 <section id="settings" hidden>
  <div class="card" id="finance-profile-card">
