@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09264E">
+<title>مدیریت دسترسی آزمایشی | My Finance</title>
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color-scheme:light;--bg:#f4f7fa;--ink:#203544;--line:#d8e2e9;--accent:#116e65;--muted:#586e79}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);line-height:1.8}
+main{max-width:960px;margin:auto;padding:24px 16px 100px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+a{color:var(--accent);font-weight:700;text-decoration:none}
+h1{font-size:22px;margin:0}h2{font-size:16px;margin:0}p{margin:5px 0 12px}
+.card{background:white;border:1px solid var(--line);border-radius:18px;padding:17px;margin:12px 0;box-shadow:0 6px 18px #193b4c0a}
+.muted{color:var(--muted);font-size:13px}
+#list{display:grid;gap:10px}
+.user-card{padding:18px;border:1px solid var(--line);border-radius:14px;min-width:0}
+.user-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.email{direction:ltr;text-align:left;overflow-wrap:anywhere;font-size:13px}
+.status{border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700}
+.status.active{color:#08755c;background:#eff9f3}
+.status.suspended{color:#a32e37;background:#fff3f3}
+.status.pending{color:#866216;background:#fff8e4}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+button{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 13px;border-radius:11px;min-height:43px;font:inherit;font-size:12px;font-weight:700}
+button.primary{background:var(--accent);border-color:var(--accent);color:white}
+button.danger{color:#a32e37;border-color:#f0c2c7}
+button:disabled{opacity:.45;cursor:not-allowed}
+#notice{font-size:14px}#notice.error{color:#af293b}
+@media(max-width:540px){header h1{font-size:18px}.actions button{flex:1 1 45%}}
+</style></head><body><main>
+<header><div><h1>مدیریت کاربران آزمایشی</h1><p class="muted">My Finance · Private Admin</p></div><a href="./">بازگشت به My Finance</a></header>
+<section class="card"><p id="notice" role="status">در حال بررسی هویت مدیر…</p>
+<p class="muted">فقط وضعیت دسترسی و ایمیل کاربران قابل مشاهده است؛ اطلاعات مالی آن‌ها در این پنل نمایش داده نمی‌شود.</p>
+<button type="button" id="reload" hidden>به‌روزرسانی فهرست</button></section>
+<section class="card" id="panel" hidden><h2>کاربران و وضعیت دسترسی</h2>
+<p class="muted">کاربر ابتدا با ایمیل و رمز عبور ثبت‌نام می‌کند. شما بعد از ثبت‌نام، دسترسی آزمایشی او را فعال یا تمدید می‌کنید.</p>
+<div id="list"></div></section>
+</main>
+<script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
+const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id),notice=(msg,error=false)=>{$('notice').textContent=msg;$('notice').classList.toggle('error',error)};
+const fmt=new Intl.DateTimeFormat('fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'long',day:'numeric'});
+let selfId='';
+const newEl=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
+const dateText=value=>value?fmt.format(new Date(value)):'بدون سررسید';
+async function action(row,kind){
+ if(row.user_id===selfId)return;
+ if(kind==='suspend'&&!confirm('دسترسی این کاربر تعلیق شود؟ اطلاعات مالی او حذف نمی‌شوند.'))return;
+ const now=Date.now(),isActive=row.status==='active'&&(!row.expires_at||new Date(row.expires_at).getTime()>now);
+ let status='active',expires_at=null;
+ if(kind==='suspend'){status='suspended';expires_at=row.expires_at}
+ else if(kind==='approve'){expires_at=new Date(now+30*86400000).toISOString()}
+ else if(kind==='extend'){expires_at=new Date(Math.max(now,isActive&&row.expires_at?new Date(row.expires_at).getTime():now)+30*86400000).toISOString()}
+ else if(kind==='forever'){expires_at=null}
+ else return;
+ notice('در حال اعمال تغییر…');
+ const {error}=await client.from('finance_access').update({status,expires_at,updated_at:new Date().toISOString()}).eq('user_id',row.user_id);
+ if(error){notice('خطای تغییر دسترسی: '+error.message,true);return}
+ notice('تغییر دسترسی با موفقیت ثبت شد.');
+ await load();
+}
+function renderUser(row){
+ const card=newEl('article','user-card'),top=newEl('div','user-top'),group=newEl('div');
+ const status=row.status==='active'&&row.expires_at&&new Date(row.expires_at)<new Date()?'expired':row.status;
+ group.append(newEl('strong','email',row.email));group.append(newEl('div','muted','شناسه کاربری مستقل'));
+ top.append(group,newEl('span','status '+row.status,({pending:'در انتظار تأیید',active:'فعال',suspended:'تعلیق‌شده',expired:'منقضی‌شده'}[status]||status)));
+ card.append(top,newEl('p','muted','اعتبار: '+(row.expires_at?('تا '+dateText(row.expires_at)):'نامحدود')));
+ const actions=newEl('div','actions');
+ const buttons=[
+ ['approve','فعال‌سازی ۳۰ روزه','primary'],
+ ['extend','تمدید ۳۰ روز',''],
+ ['forever','فعال‌سازی بدون سررسید',''],
+ ['suspend','تعلیق دسترسی','danger']
+ ];
+ for(const [kind,label,cls]of buttons){
+  const btn=newEl('button',cls,label);btn.type='button';btn.disabled=row.user_id===selfId;
+  btn.addEventListener('click',async()=>{const all=actions.querySelectorAll('button');all.forEach(b=>b.disabled=true);try{await action(row,kind)}finally{all.forEach(b=>b.disabled=row.user_id===selfId)}});
+  actions.append(btn);
+ }
+ if(row.user_id===selfId)actions.append(newEl('span','muted','حساب مدیر از این پنل قابل تعلیق نیست.'));
+ card.append(actions);return card;
+}
+async function load(){
+ const{data,error}=await client.from('finance_access').select('user_id,email,status,expires_at,created_at').order('created_at',{ascending:false});
+ if(error){notice('فهرست کاربران دریافت نشد: '+error.message,true);return}
+ const list=$('list');list.replaceChildren();
+ for(const row of data||[])list.append(renderUser(row));
+ if(!data?.length)list.append(newEl('p','muted','هنوز کاربر آزمایشی ثبت‌نام نکرده است.'));
+ $('panel').hidden=false;$('reload').hidden=false;
+}
+async function start(){
+ const{data:{user},error}=await client.auth.getUser();
+ if(error||!user){notice('برای مدیریت کاربران، ابتدا در My Finance با حساب مدیر وارد شوید.',true);return}
+ const{data:admin,error:check}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
+ if(check||!admin){notice('این حساب مجوز مدیریت کاربران را ندارد.',true);return}
+ selfId=user.id;notice('ورود مدیر تأیید شد.');await load();
+}
+$('reload').addEventListener('click',load);
+start();
+</script></body></html>
