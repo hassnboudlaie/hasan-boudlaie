@@ -31,3 +31,9 @@ html.kish-auth-pending body{overflow:hidden!important}
 .kish-member-controls input,.kish-member-controls select{min-width:0;width:100%;padding:9px;font:14px Vazirmatn,Tahoma,sans-serif;color:#163e56;background:white;border:1px solid #c3d3dd;border-radius:9px}
 .kish-member-controls .kish-auth-btn{grid-column:2}
 @media(max-width:600px){#kishAuthLayer{padding:13px}.kish-auth-panel{padding:22px 17px;border-radius:14px}.kish-auth-brand strong{font-size:16px}.kish-auth-brand img{width:48px;height:48px}.kish-member-controls{grid-template-columns:1fr}.kish-member-controls .kish-auth-btn{grid-column:1}}
+
+/* Keep-me-signed-in & password-manager accessibility */
+.kish-remember-label{display:flex!important;flex-direction:row;align-items:center;gap:11px;cursor:pointer;font-size:14px;font-weight:750;color:#183b53;line-height:1.8;margin:8px 0}
+.kish-remember-label input[type=checkbox]{display:inline-block;width:20px;height:20px;min-height:20px;accent-color:#1e5280;flex:0 0 20px;cursor:pointer}
+.kish-account-remember{padding:14px 12px;border:1px solid #cedfe8;border-radius:12px;background:#f5f9fc;margin-top:16px}
+.kish-autofill-hint{font-size:12px;margin:12px 0 0;line-height:1.8}
