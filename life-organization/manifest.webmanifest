@@ -1,10 +1,10 @@
 {
-  "id": "./",
+  "id": "/hasan-boudlaie/life-organization/?app=tlo-life-superapp",
   "name": "سازمان عالی زندگی من | The Life Organization",
   "short_name": "Life Org",
   "description": "A modular personal life design and management system",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/hasan-boudlaie/life-organization/?launch=app",
+  "scope": "/hasan-boudlaie/life-organization/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#f7f8f6",
