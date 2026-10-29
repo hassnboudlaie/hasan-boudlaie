@@ -198,7 +198,7 @@ async function onSignup(e){
  working=true;const button=e.target.querySelector('[type=submit]');button.disabled=true;loginNotice('در حال ثبت‌نام…');
  try{
  const email=document.getElementById('kishEmail').value.trim(),name=document.getElementById('kishName').value.trim(),password=document.getElementById('kishPassword').value;
- const data=await req('/auth/v1/signup?redirect_to='+encodeURIComponent(APP_CALLBACK),{method:'POST',body:JSON.stringify({email,password,data:{full_name:name}})});
+ const data=await req('/auth/v1/signup?redirect_to='+encodeURIComponent(APP_CALLBACK),{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,app_source:'kish-okr'}})});
  document.getElementById('kishPassword').value='';
  if(data?.access_token){saveSession(data);await checkAccess();}
  else showLogin('درخواست ثبت شد. ایمیل تأیید را بررسی کنید؛ پس از تأیید، در همین صفحه وارد شوید. سپس منتظر تأیید مدیر سامانه بمانید.');
