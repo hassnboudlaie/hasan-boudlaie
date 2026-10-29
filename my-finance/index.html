@@ -46,7 +46,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 .loan-reminder-banner p{font-size:13px;color:inherit;margin:5px 0 0;line-height:1.9}
 .loan-reminder-banner button{min-height:42px;white-space:nowrap}
 @media(max-width:480px){.loan-reminder-banner button{width:100%}}
-</style></head><body><div id="auth-gate" aria-label="ورود امن به My Finance"><div class="auth-card">
+</style><link rel="stylesheet" href="./interior-v51.css?v=20261029r51"></head><body><div id="auth-gate" aria-label="ورود امن به My Finance"><div class="auth-card">
 <div class="auth-brand">MY FINANCE · PRIVATE BETA</div><h1 id="auth-heading">ورود به حساب مالی شخصی</h1>
 <p id="auth-description">با ایمیل و رمز عبور خود وارد شوید. اطلاعات هر کاربر مستقل است.</p>
 <form id="auth-form" autocomplete="on">
@@ -224,7 +224,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <section id="commitments" hidden><div class="card"><h2>تعهدات و هزینه‌های ثابت</h2><p class="muted">در حال بارگذاری برنامه تعهدات…</p></div></section>
 <section id="loans" hidden><div class="card"><h2>وام‌ها و اقساط</h2><p class="muted">در حال بارگذاری اطلاعات خصوصی اقساط…</p></div></section>
 <section id="reports" hidden><div class="mf-section-hero"><div><span class="mf-section-kicker">REPORTS</span><h2>گزارش‌های مالی</h2><p>خلاصه مالی در ارزهای مجزا، بدون جمع‌زدن ارزهای متفاوت</p></div></div><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
-<section id="settings" hidden><div class="mf-section-hero"><div><span class="mf-section-kicker">SETTINGS</span><h2>تنظیمات و پروفایل</h2><p>اطلاعات شخصی، دستیار اختیاری و تنظیمات حساب</p></div></div>
+<section id="settings" hidden>
  <div class="card" id="finance-profile-card">
   <div class="profile-intro"><div class="profile-avatar-shell"><span id="profile-avatar-placeholder" aria-hidden="true">👤</span><img id="profile-avatar" alt="عکس پروفایل شما" hidden></div>
    <div><h2>پروفایل من</h2><p id="profile-summary" class="muted">اطلاعات اختصاصی حساب شما</p></div></div>
