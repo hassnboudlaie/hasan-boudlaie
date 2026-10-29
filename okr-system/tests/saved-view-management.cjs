@@ -1,0 +1,12 @@
+'use strict';
+const {chromium}=require('playwright'),assert=require('node:assert/strict');
+(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage();await page.addInitScript(()=>window.__kishAuthTestBypass=true);
+try{await page.goto('http://127.0.0.1:8765/okr-system/?qa=saved-view-management#explore');await page.locator('.kx-app').waitFor();
+const original=await page.evaluate(()=>JSON.stringify(window.KishExploreBridge.snapshot().goals));
+await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-action=save-view]').click();await page.locator('[data-kx-save] [name=name]').fill('QA original view');await page.locator('[data-kx-save] [type=submit]').click();const id=await page.locator('[data-kx-saved]').inputValue();
+await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-search] [name=q]').fill('QA unmatched');await page.locator('[data-kx-search] [type=submit]').click();await page.locator('[data-kx-action=view-edit]').click();await page.locator('[data-kx-view-manage] [name=name]').fill('QA revised view');await page.locator('[data-kx-view-manage] [type=submit]').click();
+await page.reload();await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-saved]').selectOption(id);assert.equal(await page.locator('[data-kx-search] [name=q]').inputValue(),'QA unmatched');assert.match(await page.locator('[data-kx-saved] option:checked').innerText(),/QA revised view/);
+const dashboard=await page.evaluate(id=>{const b=window.KishExploreBridge,d=b.dashboard('create',{title:'QA dependent dashboard'});b.dashboard('widget',{dashboardId:d,type:'count',viewId:id});return d;},id);
+await page.locator('[data-kx-action=view-delete]').click();await page.locator('[data-kx-view-manage] [type=submit]').click();await page.reload();assert.equal(await page.evaluate(id=>window.KishExploreBridge.snapshot().views.some(v=>v.id===id),id),false);assert.equal(await page.evaluate(()=>JSON.stringify(window.KishExploreBridge.snapshot().goals)),original);
+await page.goto('http://127.0.0.1:8765/okr-system/?qa=saved-view-management#dashboards/custom/'+dashboard);await page.getByText('نمای ذخیره‌شده حذف شده است؛ تنظیمات ویجت را اصلاح کنید.').waitFor();console.log('PASS saved-view rename, filter replacement, reload, delete, dependent widget warning and unchanged goals');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1)});

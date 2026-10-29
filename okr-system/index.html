@@ -4460,6 +4460,8 @@ function pdEnhanceDialogVisual(kind){
    const widget={id:at>=0?dash.widgets[at].id:id(),type:values.type,title,recordId:values.recordId||'',viewId:values.viewId||'',text,width:values.width==='full'?'full':'half'};
    if(at>=0)dash.widgets[at]=widget;else dash.widgets.push(widget);
   });return result;},
+  updateView(viewId,view){transact('Explore view updated',()=>{const target=(pEnsure().exploreViews||[]).find(v=>v.id===viewId);if(!target)throw Error('نمای ذخیره‌شده پیدا نشد.');const name=String(view.name||'').trim();if(!name||name.length>100)throw Error('نام نما باید بین ۱ تا ۱۰۰ نویسه باشد.');Object.assign(target,{name,filters:clone(view.filters||{}),view:view.view,sort:view.sort,board:clone(view.board||{}),updatedAt:new Date().toISOString()});});},
+  deleteView(viewId){transact('Explore view deleted',()=>{const p=pEnsure();p.exploreViews=(p.exploreViews||[]).filter(v=>v.id!==viewId);});},
   saveView(view){transact('Explore view saved',()=>{const p=pEnsure();p.exploreViews||=[];p.exploreViews.push({...view,id:id(),visibility:'local',createdAt:new Date().toISOString()});});},
   pillar(values,recordId){transact('Strategic pillar updated',()=>{const title=String(values.title||'').trim();if(!title)throw Error('عنوان رکن الزامی است.');const pillars=state.strategy.pillars,old=pillars.find(p=>p.id===recordId);if(recordId&&!old)throw Error('رکن پیدا نشد.');const pid=old?.id||id();window.KishExploreModel.assertParent(pillars,pid,values.parentId||'');const item={...old,id:pid,title,description:String(values.description||''),parentId:values.parentId||''};if(old)Object.assign(old,item);else pillars.push(item);});},
   refresh(){if(location.hash.startsWith('#explore'))pRender('explore');else if(location.hash.startsWith('#start'))renderStart();else if(location.hash.startsWith('#dashboards/custom'))pRender('dashboards','custom',location.hash.split('/')[2]||'');},
@@ -4585,7 +4587,7 @@ Promise.resolve().then(dsInitialize);
 <script defer src="assets/kish-strategy-map-20261025.js?v=3"></script>
 <script defer src="assets/kish-team-dashboard-20261025.js?v=1"></script>
 <script defer src="assets/kish-explore-model.js?v=5"></script>
-<script defer src="assets/kish-explore.js?v=10"></script>
+<script defer src="assets/kish-explore.js?v=11"></script>
 <script defer src="assets/kish-dashboards.js?v=1"></script>
 <script src="./assets/kish-pwa-install.js?v=1" defer></script>
 <script src="assets/kish-auth.js?v=5" defer></script>
