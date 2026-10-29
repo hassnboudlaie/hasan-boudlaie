@@ -36,9 +36,16 @@ style.textContent=`
 .loan-schedule table{margin-top:9px;font-size:13px}
 @media(max-width:390px){.loan-summary,.loan-metrics{grid-template-columns:1fr}.loan-stat strong{font-size:19px}}
 `;
+style.textContent+=`
+#loan-due-notice:not([hidden]){display:block!important;position:relative;z-index:3;margin:12px 0 20px;padding:22px 24px;border-radius:18px;background:#fff0d6;color:#713b06;border:2px solid #f5a623;box-shadow:0 8px 26px rgba(177,102,12,.15);font-size:17px;font-weight:800;line-height:1.9;white-space:normal}
+#loan-due-notice.loan-alert-critical:not([hidden]){background:#fff0ef;color:#8b1d20;border-color:#dc4848;box-shadow:0 8px 26px rgba(180,35,35,.14)}
+body.dark #loan-due-notice:not([hidden]){background:#4b341b;color:#ffe0a7}
+body.dark #loan-due-notice.loan-alert-critical:not([hidden]){background:#4c2328;color:#ffd5d5}
+@media(max-width:600px){#loan-due-notice:not([hidden]){font-size:15px;padding:18px}}
+`;
 document.head.appendChild(style);
 const reminder=document.createElement('div');reminder.id='loan-due-notice';reminder.className='upcoming-notice';reminder.hidden=true;
-document.getElementById('upcoming-notice')?.insertAdjacentElement('afterend',reminder);
+document.querySelector('main')?.insertAdjacentElement('afterbegin',reminder);
 const persianDate=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'});
 function nextJalali(daysAhead){
  const parts=persianDate.formatToParts(new Date(Date.now()+daysAhead*86400000));
@@ -46,16 +53,18 @@ function nextJalali(daysAhead){
  return p('year')+'/'+p('month').padStart(2,'0')+'/'+p('day').padStart(2,'0');
 }
 function dueReminders(loans){
- const today=nextJalali(0),dates=[0,1,3,7],notices=[];
+ const today=nextJalali(0),notices=[];let overdue=false,urgent=false;
  for(const loan of loans){
   const due=String(loan.nextDueJalali||'');
   if(!due)continue;
-  const d=dates.find(offset=>nextJalali(offset)===due);
-  if(d!==undefined)notices.push((loan.title||'وام')+' · '+(d===0?'امروز':d+' روز تا سررسید')+' · '+toman(loan.installment));
-  else if(due<today)notices.push((loan.title||'وام')+' · سررسید گذشته؛ وضعیت پرداخت را بررسی کنید');
+  const d=Array.from({length:6},(_,i)=>i).find(offset=>nextJalali(offset)===due);
+  if(d!==undefined){if(d<=1)urgent=true;notices.push((loan.title||'وام')+' · '+(d===0?'امروز':d+' روز تا سررسید')+' · '+toman(loan.installment));}
+  else if(due<today){overdue=true;notices.push((loan.title||'وام')+' · سررسید گذشته؛ وضعیت پرداخت را بررسی کنید');}
  }
  reminder.hidden=notices.length===0;
- reminder.textContent=notices.length?'⏰ اقساط: '+notices.join(' | '):'';
+ reminder.classList.toggle('loan-alert-critical',overdue||urgent);
+ reminder.setAttribute('role',notices.length?'alert':'status');
+ reminder.textContent=notices.length?'🔔 یادآوری مهم اقساط · '+notices.join(' | '):'';
 }
 function dueSchedule(loan){
  const due=String(loan.nextDueJalali||'');
