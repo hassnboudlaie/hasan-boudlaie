@@ -23,7 +23,7 @@ if(sidebar&&!sidebar.querySelector('[data-finance-route="loans"]')){
  sidebar.insertBefore(sideButton,before||null);
 }
 const moreLinks=document.querySelector('.finance-more-links');
-if(moreLinks&&!moreLinks.querySelector('[data-loans-more]')){
+if(moreLinks&&!moreLinks.querySelector('[data-loans-more]')&&!moreLinks.querySelector('button[onclick*="loans"]')){
  const moreButton=document.createElement('button');
  moreButton.type='button';moreButton.dataset.loansMore='1';moreButton.textContent='◷ وام‌ها و اقساط';
  moreButton.addEventListener('click',()=>financeNavGo('loans'));
