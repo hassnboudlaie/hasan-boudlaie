@@ -519,6 +519,7 @@ async function refreshIdentity(){
   if(recovery){lock('رمز عبور جدید را تعیین کنید.',next);byId('auth-reset-panel').hidden=false;return}
   const same=user?.id===next.id;
   if(!same){
+   resetProfile(); // Never display previous user's profile while the new account loads.
    identityEpoch++;
    user=next;dirty=new Set();seen=new Map();bridge.bindUser(user.id);
    try{dirty=new Set(JSON.parse(localStorage.getItem(dirtyKey())||'[]'))}catch(e){}
