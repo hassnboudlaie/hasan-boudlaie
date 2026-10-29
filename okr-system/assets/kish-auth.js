@@ -82,17 +82,65 @@ async function onSignup(e){
  working=true;const button=e.target.querySelector('[type=submit]');button.disabled=true;loginNotice('در حال ثبت‌نام…');
  try{
  const email=document.getElementById('kishEmail').value.trim(),name=document.getElementById('kishName').value.trim(),password=document.getElementById('kishPassword').value;
- const data=await req('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name}})});
+ const data=await req('/auth/v1/signup?redirect_to='+encodeURIComponent(APP_CALLBACK),{method:'POST',body:JSON.stringify({email,password,data:{full_name:name}})});
  document.getElementById('kishPassword').value='';
  if(data?.access_token){saveSession(data);await checkAccess();}
  else showLogin('درخواست ثبت شد. ایمیل تأیید را بررسی کنید؛ پس از تأیید، در همین صفحه وارد شوید. سپس منتظر تأیید مدیر سامانه بمانید.');
  }catch(err){loginNotice(message(err));}
  finally{working=false;if(button.isConnected)button.disabled=false;}
 }
+const APP_CALLBACK=location.origin+location.pathname;
+/* Supabase implicit recovery callback, never put tokens in requests or logs to GitHub Pages. */
+async function handleEmailCallback(){
+ const callbackHash=window.__kishAuthReturnFragment||location.hash;
+ delete window.__kishAuthReturnFragment;
+ const p=new URLSearchParams(callbackHash.startsWith('#')?callbackHash.slice(1):'');
+ if(p.get('error_code')){
+  const note=p.get('error_description')||'لینک تأیید منقضی یا نامعتبر شده است؛ دوباره درخواست بدهید.';
+  history.replaceState(null,'',location.pathname+location.search+'#start');
+  showLogin(note);
+  return true;
+ }
+ const access=p.get('access_token'),refreshToken=p.get('refresh_token');
+ if(!access||!refreshToken)return false;
+ const type=p.get('type');
+ const expires=Number(p.get('expires_in'))||3600;
+ saveSession({access_token:access,refresh_token:refreshToken,token_type:'bearer',expires_at:Math.floor(Date.now()/1000)+Math.max(60,expires)});
+ history.replaceState(null,'',location.pathname+location.search+'#start');
+ if(type==='recovery'){
+  try{identity=await authReady();showPasswordReset();}
+  catch(e){saveSession(null);showLogin('اعتبار لینک بازیابی قابل تأیید نبود. دوباره درخواست بدهید.');}
+  return true;
+ }
+ return false;
+}
+function showPasswordReset(){
+ paint('تعیین رمز عبور جدید','ایمیل حساب شما تأیید شد. برای ورود بعدی رمز عبور تازه انتخاب کنید.',
+ '<form id="kishResetForm" class="kish-auth-form">'+
+ '<label>رمز عبور جدید (حداقل ۸ نویسه)<input type="password" id="kishNewPassword" autocomplete="new-password" minlength="8" required></label>'+
+ '<label>تکرار رمز عبور جدید<input type="password" id="kishConfirmNewPassword" autocomplete="new-password" minlength="8" required></label>'+
+ '<button type="submit" class="kish-auth-btn primary">ذخیره رمز جدید</button></form>'+
+ '<p id="kishAuthNotice" class="kish-auth-notice" role="status"></p>');
+ document.getElementById('kishResetForm').onsubmit=async e=>{
+  e.preventDefault();if(working)return;
+  const pass=document.getElementById('kishNewPassword').value,again=document.getElementById('kishConfirmNewPassword').value;
+  if(pass!==again){loginNotice('تکرار رمز عبور یکسان نیست.');return;}
+  working=true;const button=e.target.querySelector('[type=submit]');button.disabled=true;
+  try{
+   await req('/auth/v1/user',{method:'PUT',body:JSON.stringify({password:pass})},true);
+   saveSession(null);identity=null;profile=null;
+   showLogin('✅ رمز جدید ثبت شد. اکنون با ایمیل و رمز جدید وارد شوید.');
+  }catch(e){loginNotice(message(e));button.disabled=false;}
+  finally{working=false;}
+ };
+}
 async function onForgot(){
  const email=window.prompt('ایمیل حساب خود را برای بازیابی رمز عبور وارد کنید:');if(!email)return;
- try{await req('/auth/v1/recover',{method:'POST',body:JSON.stringify({email:email.trim()})});loginNotice('اگر حساب وجود داشته باشد، ایمیل بازیابی ارسال می‌شود. پس از تغییر رمز، به همین اپ برگردید.');}
- catch(e){loginNotice(message(e));}
+ try{
+  const target='/auth/v1/recover?redirect_to='+encodeURIComponent(APP_CALLBACK);
+  await req(target,{method:'POST',body:JSON.stringify({email:email.trim()})});
+  loginNotice('اگر حساب وجود داشته باشد، ایمیل بازیابی ارسال می‌شود. لینک ایمیل باید به آدرس اپ کیش برگردد؛ اگر به صفحه ۴۰۴ رفت، تنظیم Redirect URLs سرور نیاز به اصلاح دارد.');
+ }catch(e){loginNotice(message(e));}
 }
 function showPending(){
  paint(profile?.status==='suspended'?'دسترسی شما غیرفعال شده است':'در انتظار تأیید مدیر',
@@ -186,6 +234,7 @@ async function initialize(){
  }
  paint('بررسی وضعیت ورود','در حال اتصال امن به سرویس احراز هویت…','<p class="kish-auth-notice">لطفاً اتصال اینترنت را بررسی کنید.</p>');
  try{const raw=localStorage.getItem(STORAGE);if(raw)session=JSON.parse(raw);}catch{saveSession(null);}
+ if(await handleEmailCallback())return;
  if(!session?.access_token){showLogin();return;}
  try{await checkAccess();}
  catch(err){

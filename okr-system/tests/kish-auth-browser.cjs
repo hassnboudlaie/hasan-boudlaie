@@ -17,6 +17,8 @@ const assert=require('node:assert/strict');
   else if(url.pathname==='/auth/v1/token'){data={access_token:'test-token',refresh_token:'test-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer'};}
   else if(url.pathname==='/auth/v1/user'){data={id:owner,email:'owner@example.test'};}
   else if(url.pathname==='/auth/v1/logout'){data={};}
+  else if(url.pathname==='/auth/v1/recover'){data={};}
+  else if(url.pathname==='/auth/v1/user'&&m==='PUT'){data={id:owner,email:'owner@example.test',updated_at:new Date().toISOString()};}
   else if(url.pathname==='/rest/v1/kish_members' && m==='GET'){
    const main={user_id:owner,email:'owner@example.test',full_name:'مالک',role:'super_admin',status:approved?'approved':'pending',department:''};
    if(url.searchParams.has('user_id'))data=[main];
@@ -57,6 +59,17 @@ const assert=require('node:assert/strict');
   await guestRow.getByRole('button',{name:'ذخیره شد'}).waitFor();
   assert.equal(updated.status,'approved');
   assert.equal(updated.role,'assistant');
+  
+  // Recovery links must never fall back to the GitHub Pages root domain.
+  await page.goto('http://127.0.0.1:8765/okr-system/?qa=recovery-ci#access_token=test-token&refresh_token=test-refresh&expires_in=3600&type=recovery');
+  await page.getByRole('heading',{name:'تعیین رمز عبور جدید'}).waitFor();
+  assert.equal(page.url().includes('access_token'),false,'tokens must be stripped from browser URL');
+  await page.locator('#kishNewPassword').fill('some-secure-test-password');
+  await page.locator('#kishConfirmNewPassword').fill('some-secure-test-password');
+  await page.getByRole('button',{name:'ذخیره رمز جدید'}).click();
+  await page.getByText('رمز جدید ثبت شد',{exact:false}).waitFor();
+  assert.equal(await page.locator('#kishEmail').isVisible(),true,'after update, user must log in with new password');
+  
   assert.deepEqual(errors,[]);
   console.log('PASS Kish auth: gated entry, signup, pending, owner approval, assistant role');
  }finally{await browser.close();}
