@@ -6,19 +6,33 @@ const KEY='sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6';
 const STORAGE='kish-okr-auth-session-v1';
 const LAST_EMAIL='kish-okr-last-email-v1';
 const CREDENTIAL_PREF='kish-okr-credential-pref-v1';
-let saveCredentials=localStorage.getItem(CREDENTIAL_PREF)==='1';
+let saveCredentials=localStorage.getItem(CREDENTIAL_PREF)!=='0';
 let refreshInFlight=null;
 function setSaveCredentials(enabled){
  saveCredentials=Boolean(enabled);
  localStorage.setItem(CREDENTIAL_PREF,saveCredentials?'1':'0');
+ if(!saveCredentials){localStorage.removeItem(STORAGE);localStorage.removeItem(LAST_EMAIL);}
+ else if(session?.access_token&&session?.refresh_token)localStorage.setItem(STORAGE,JSON.stringify(session));
 }
 function lastEmail(){return localStorage.getItem(LAST_EMAIL)||'';}
-function rememberEmail(email){if(saveCredentials)localStorage.setItem(LAST_EMAIL,email);}
+function rememberEmail(email){if(saveCredentials)localStorage.setItem(LAST_EMAIL,email);else localStorage.removeItem(LAST_EMAIL);}
 function clearOldSessions(){
- // Remove previously-persisted tokens; the user now explicitly confirms every new app launch.
  localStorage.removeItem(STORAGE);
  sessionStorage.removeItem(STORAGE);
  localStorage.removeItem('kish-okr-remember-device-v1');
+}
+function restoreSavedSession(){
+ if(!saveCredentials)return null;
+ try{
+  const raw=localStorage.getItem(STORAGE);
+  if(!raw)return null;
+  const parsed=JSON.parse(raw);
+  if(!parsed||typeof parsed.access_token!=='string'||typeof parsed.refresh_token!=='string'||!parsed.access_token||!parsed.refresh_token)throw Error('Invalid session');
+  return parsed;
+ }catch{
+  clearOldSessions();
+  return null;
+ }
 }
 function offerSavePassword(email,password){
  if(!saveCredentials||typeof PasswordCredential==='undefined'||!navigator.credentials?.store)return;
@@ -36,9 +50,9 @@ function message(err){const e=String(err?.message||err||'خطای ناشناخت
 function saveSession(s){
  if(!s){session=null;clearOldSessions();return;}
  const expiry=Number(s.expires_at)||Math.floor(Date.now()/1000)+Math.max(60,Number(s.expires_in)||3600);
- // A session remains in memory only until the app is reopened/reloaded.
  session={access_token:s.access_token,refresh_token:s.refresh_token,expires_at:expiry,token_type:s.token_type||'bearer'};
- clearOldSessions();
+ if(saveCredentials)localStorage.setItem(STORAGE,JSON.stringify(session));
+ else clearOldSessions();
 }
 function userToken(){return session&&session.access_token;}
 function headers(auth){const h={'apikey':KEY,'Content-Type':'application/json'};if(auth&&userToken())h.Authorization='Bearer '+userToken();return h;}
@@ -97,16 +111,55 @@ function showLogin(note=''){
  '<label>ایمیل<input type="email" name="username" id="kishEmail" list="kishSavedEmails" inputmode="email" autocomplete="username" dir="ltr" required maxlength="254"></label>'+
  '<datalist id="kishSavedEmails"><option value="'+esc(lastEmail())+'"></datalist>'+
  '<label>رمز عبور<input type="password" name="password" id="kishPassword" autocomplete="current-password" minlength="8" required></label>'+
- '<label class="kish-remember-label"><input type="checkbox" id="kishSaveCredentials" '+(saveCredentials?'checked':'')+'> پیشنهاد ذخیره مشخصات ورود در مدیریت رمزهای گوشی</label>'+
+ '<label class="kish-remember-label"><input type="checkbox" id="kishSaveCredentials" '+(saveCredentials?'checked':'')+'> ذخیره حساب برای ورود با تأیید من در دفعات بعد</label>'+
  '<button class="kish-auth-btn primary" type="submit">ورود به سامانه</button></form>'+
- '<p class="kish-auth-detail kish-autofill-hint">هر بار «ورود» را تأیید کنید. برای دفعات بعد، ایمیل را از پیشنهادها انتخاب کنید تا مدیریت رمزهای گوشی، رمز ذخیره‌شده را تکمیل کند.</p>'+
+ '<p class="kish-auth-detail kish-autofill-hint">دفعه اول ایمیل و رمز را وارد کنید؛ دفعات بعد فقط روی «ورود به حساب ذخیره‌شده» بزنید. رمز در خود برنامه ذخیره نمی‌شود.</p>'+
  '<p class="kish-auth-notice" id="kishAuthNotice" role="status">'+esc(note)+'</p>'+
  '<div class="kish-auth-inline">'+button('ایجاد حساب جدید','kishSignUp')+button('بازیابی رمز عبور','kishForgot')+'</div>');
  document.getElementById('kishAuthForm').onsubmit=onLogin;
- document.getElementById('kishEmail').value='';
+ document.getElementById('kishEmail').value=lastEmail();
  document.getElementById('kishSaveCredentials').onchange=e=>setSaveCredentials(e.target.checked);
  document.getElementById('kishSignUp').onclick=showSignUp;
  document.getElementById('kishForgot').onclick=onForgot;
+}
+function showRememberedLogin(note=''){
+ const email=lastEmail()||'حساب ذخیره‌شده';
+ mode='remembered';
+ paint('ورود به سامانه کیش','برای ادامه، ورود به حساب خودتان را تأیید کنید.',
+  '<div class="kish-auth-note kish-account-choice"><strong dir="ltr">'+esc(email)+'</strong><span>حساب ثبت‌شده در این دستگاه</span></div>'+
+  '<div class="kish-auth-inline">'+button('ورود به حساب ذخیره‌شده','kishConfirmSaved','primary')+
+  button('ورود با حساب دیگر','kishDifferentAccount')+'</div>'+
+  '<p class="kish-auth-notice" role="status" id="kishAuthNotice">'+esc(note)+'</p>'+
+  '<p class="kish-auth-detail kish-autofill-hint">بدون تایپ مجدد رمز؛ با تأیید شما، اعتبار حساب از سرور بررسی می‌شود.</p>');
+ document.getElementById('kishConfirmSaved').onclick=confirmRememberedLogin;
+ document.getElementById('kishDifferentAccount').onclick=async()=>{
+  // Revoke only Kish's current device session, not other products.
+  const token=userToken();saveSession(null);identity=null;profile=null;
+  if(token){try{await fetch(API+'/auth/v1/logout?scope=local',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token}});}catch{}}
+  showLogin();
+ };
+}
+async function confirmRememberedLogin(){
+ if(working)return;
+ working=true;
+ const button=document.getElementById('kishConfirmSaved');
+ if(button)button.disabled=true;
+ loginNotice('در حال تأیید حساب…');
+ try{
+  session=session||restoreSavedSession();
+  if(!session)throw Error('حساب ذخیره‌شده پیدا نشد.');
+  await checkAccess();
+ }catch(e){
+  const txt=message(e);
+  const expired=/refresh token|invalid_grant|session.*expired|invalid token|jwt expired|حساب ذخیره‌شده پیدا نشد|not found/i.test(txt);
+  if(expired){
+   saveSession(null);
+   showLogin('نشست ذخیره‌شده معتبر نیست. لطفاً یک‌بار دیگر با رمز عبور وارد شوید.');
+  }else showRememberedLogin('ارتباط با سرور برقرار نشد: '+txt);
+ }finally{
+  working=false;
+  if(button?.isConnected)button.disabled=false;
+ }
 }
 function showSignUp(){
  mode='signup';
@@ -232,7 +285,7 @@ function unlock(){
 }
 function showAccount(){
  const detail=(identity?.email||'')+' · '+(titles[profile.role]||profile.role);
- paint('حساب کاربری من',detail,'<div class="kish-auth-note">حساب شما تأیید شده است. داده‌های ویرایشی نسخه جاری OKR هنوز روی همین مرورگر ذخیره می‌شوند و بین دستگاه‌ها همگام نیستند.</div><div class="kish-auth-note">ورود در هر بار بازکردن اپ نیازمند تأیید شماست. رمز عبور فقط توسط مدیریت رمزهای گوشی، در صورت انتخاب و پشتیبانی، پیشنهاد می‌شود.</div><label class="kish-remember-label kish-account-remember"><input type="checkbox" id="kishCredentialPreference" '+(saveCredentials?'checked':'')+'> پیشنهاد ذخیره اطلاعات ورود در گوشی</label><div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('خروج از حساب','kishLogout')+'</div>');
+ paint('حساب کاربری من',detail,'<div class="kish-auth-note">حساب شما تأیید شده است. داده‌های ویرایشی نسخه جاری OKR هنوز روی همین مرورگر ذخیره می‌شوند و بین دستگاه‌ها همگام نیستند.</div><div class="kish-auth-note">هر بار که اپ را باز کنید، با زدن دکمه «ورود به حساب ذخیره‌شده» ورودتان را تأیید می‌کنید. رمز عبور در حافظه اپ نگهداری نمی‌شود.</div><label class="kish-remember-label kish-account-remember"><input type="checkbox" id="kishCredentialPreference" '+(saveCredentials?'checked':'')+'> ذخیره حساب برای ورود یک‌کلیکی</label><div class="kish-auth-inline">'+button('بازگشت به سامانه','kishBack','primary')+button('خروج از حساب','kishLogout')+'</div>');
  document.getElementById('kishCredentialPreference').onchange=e=>setSaveCredentials(e.target.checked);
  document.getElementById('kishBack').onclick=unlock;document.getElementById('kishLogout').onclick=signOut;
 }
@@ -301,21 +354,22 @@ async function initialize(){
   return;
  }
  paint('بررسی وضعیت ورود','در حال اتصال امن به سرویس احراز هویت…','<p class="kish-auth-notice">لطفاً اتصال اینترنت را بررسی کنید.</p>');
- session=null;
- clearOldSessions();
+ session=restoreSavedSession();
+ // Email-confirmation and password-recovery callbacks retain their separate secure flow.
  if(await handleEmailCallback())return;
- // Never bypass the sign-in screen, even when a previous session was remembered.
- showLogin();
+ if(session)showRememberedLogin();
+ else showLogin();
 }
 // A PWA resumed from the launcher can reuse an already-running webview.
 // Require a fresh, explicit user confirmation after leaving the app too.
 let wasBackgrounded=false;
 function lockForNextEntry(){
  if(!profile||profile.status!=='approved')return;
- session=null;identity=null;profile=null;
- clearOldSessions();
+ identity=null;profile=null;
  delete document.documentElement.dataset.kishRole;
- showLogin();
+ // Never open the workspace automatically when the PWA returns to foreground.
+ if(saveCredentials&&restoreSavedSession())showRememberedLogin();
+ else {session=null;showLogin();}
 }
 document.addEventListener('visibilitychange',()=>{
  if(document.hidden){if(profile?.status==='approved')wasBackgrounded=true;return;}
