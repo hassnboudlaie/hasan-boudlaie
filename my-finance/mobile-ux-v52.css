@@ -86,3 +86,15 @@ body.finance-unlocked #home .finance-bills-alert-open{
 body.dark.finance-unlocked #home #upcoming-notice.finance-bills-alert-warning:not(:empty){background:#473117!important;color:#ffe3af!important}
 body.dark.finance-unlocked #home #upcoming-notice.finance-bills-alert-critical:not(:empty){background:#472026!important;color:#ffe2e2!important}
 @media(max-width:530px){body.finance-unlocked #home .finance-bills-alert-open{width:100%}}
+
+/* Gentle PWA update notice, not a forced reload. */
+body.finance-unlocked #mf-update-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+ padding:13px 16px;margin:0 0 16px;border:1px solid color-mix(in srgb,var(--accent) 27%,var(--line));
+ border-radius:15px;background:var(--mf-soft);box-shadow:none;color:var(--fg)}
+body.finance-unlocked #mf-update-notice[hidden]{display:none!important}
+body.finance-unlocked #mf-update-notice>span{display:flex;flex:1 1 160px;flex-direction:column;gap:3px;min-width:0}
+body.finance-unlocked #mf-update-notice strong{font-size:13px;font-weight:850;line-height:1.6}
+body.finance-unlocked #mf-update-notice small{font-size:11px;color:var(--muted);line-height:1.7}
+body.finance-unlocked #mf-update-apply{border:1px solid var(--accent)!important;border-radius:11px!important;
+ background:var(--accent)!important;color:#fff!important;min-height:42px;padding:9px 12px;font-weight:800;font-size:12px;box-shadow:none}
+@media(max-width:470px){body.finance-unlocked #mf-update-apply{width:100%}}
