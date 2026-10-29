@@ -113,6 +113,7 @@ function gate(text,identity=null,error=false){
 function lock(text,identity=null,error=false){
  const before=!!user;identityEpoch++;user=null;dirty=new Set();seen=new Map();
  if(before)bridge.bindUser(null);
+ resetProfile();
  renderAuth();gate(text,identity,error);
 }
 function validAccess(a){return a?.status==='active'&&(!a.expires_at||Date.parse(a.expires_at)>Date.now())}
@@ -339,6 +340,173 @@ async function sync(){
   if(queued)queueSync();
  }
 }
+
+/* PRIVATE PERSONAL PROFILE
+ * Name/phone/city/DOB are optional. Photos are compressed, re-encoded and saved in a private
+ * Supabase Storage bucket with per-user RLS. Never copy images into GitHub or finance tx data. */
+const PROFILE_BUCKET='finance-profile-photos';
+let loadedProfileFor=null,profileEpoch=0,avatarObjectURL=null,pendingPhoto=null;
+const profileStatus=(message,error=false)=>{
+ const el=byId('profile-status');if(!el)return;
+ el.textContent=message;el.classList.toggle('danger',error);
+};
+const profilePath=id=>id+'/avatar.webp';
+const profileAlive=(id,epoch)=>!!user&&user.id===id&&identityEpoch===epoch;
+function releaseAvatar(){
+ if(avatarObjectURL){URL.revokeObjectURL(avatarObjectURL);avatarObjectURL=null}
+}
+function displayAvatar(blob){
+ releaseAvatar();
+ const image=byId('profile-avatar'),placeholder=byId('profile-avatar-placeholder');
+ if(blob){
+  avatarObjectURL=URL.createObjectURL(blob);image.src=avatarObjectURL;
+  image.hidden=false;placeholder.hidden=true;
+ }else{image.hidden=true;image.removeAttribute('src');placeholder.hidden=false}
+}
+function resetProfile(){
+ loadedProfileFor=null;profileEpoch++;
+ pendingPhoto=null;
+ byId('profile-photo-save').disabled=true;
+ byId('profile-photo').value='';
+ for(const key of ['full-name','phone','city','birth-date'])byId('profile-'+key).value='';
+ byId('profile-summary').textContent='اطلاعات اختصاصی حساب شما';
+ profileStatus('اطلاعات این بخش فقط در حساب شخصی شما نمایش داده می‌شود.');
+ displayAvatar(null);
+}
+function sanitizeProfile(input){
+ const name=String(input?.full_name||'').trim().slice(0,120);
+ const phone=String(input?.phone||'').trim().slice(0,30);
+ const city=String(input?.city||'').trim().slice(0,100);
+ const date=String(input?.birth_date||'').trim();
+ if(date&&(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<'1900-01-01'||date>new Date().toISOString().slice(0,10)||
+   !Number.isFinite(Date.parse(date+'T12:00:00Z'))||
+   new Date(date+'T12:00:00Z').toISOString().slice(0,10)!==date))
+   throw Error('تاریخ تولد نامعتبر است. می‌توانید این فیلد را خالی بگذارید.');
+ return {full_name:name,phone,city,birth_date:date||null};
+}
+function displayProfile(info,id){
+ if(!user||user.id!==id)return;
+ byId('profile-full-name').value=info.full_name||'';
+ byId('profile-phone').value=info.phone||'';
+ byId('profile-city').value=info.city||'';
+ byId('profile-birth-date').value=info.birth_date||'';
+ byId('profile-summary').textContent=(info.full_name||'کاربر My Finance')+' · '+user.email;
+}
+async function loadAvatar(id,path,epoch){
+ if(!profileAlive(id,epoch))return;
+ if(!path){displayAvatar(null);return}
+ if(path!==profilePath(id)){displayAvatar(null);return}
+ const {data,error}=await client.storage.from(PROFILE_BUCKET).download(path);
+ if(!profileAlive(id,epoch))return;
+ if(error||!data){displayAvatar(null);profileStatus('مشخصات بارگیری شد اما تصویر در دسترس نیست. می‌توانید عکس جدید انتخاب کنید.',true);return}
+ displayAvatar(data);
+}
+async function loadProfile(force=false){
+ if(!user||!document.body.classList.contains('finance-unlocked'))return;
+ const uid=user.id,epoch=identityEpoch,token=++profileEpoch;
+ if(!force&&loadedProfileFor===uid)return;
+ profileStatus('در حال دریافت پروفایل خصوصی شما…');
+ let {data,error}=await client.from('finance_profiles').select('full_name,phone,city,birth_date,avatar_path').eq('user_id',uid).maybeSingle();
+ if(!profileAlive(uid,epoch)||token!==profileEpoch)return;
+ if(error)throw error;
+ if(!data){
+  const initial=sanitizeProfile(user.user_metadata||{});
+  const created=await client.from('finance_profiles').insert({user_id:uid,...initial}).select('full_name,phone,city,birth_date,avatar_path').single();
+  if(created.error){
+   const reread=await client.from('finance_profiles').select('full_name,phone,city,birth_date,avatar_path').eq('user_id',uid).maybeSingle();
+   if(reread.error||!reread.data)throw created.error;
+   data=reread.data;
+  }else data=created.data;
+ }
+ if(!profileAlive(uid,epoch)||token!==profileEpoch)return;
+ loadedProfileFor=uid;
+ displayProfile(data,uid);
+ profileStatus('اطلاعات شما به‌صورت خصوصی ذخیره شده است. تاریخ تولد و سایر اطلاعات اختیاری‌اند.');
+ await loadAvatar(uid,data.avatar_path,epoch);
+}
+byId('profile-save').addEventListener('click',async()=>{
+ if(!user||!document.body.classList.contains('finance-unlocked'))return profileStatus('برای ذخیره ابتدا وارد حساب خود شوید.',true);
+ const uid=user.id,epoch=identityEpoch,btn=byId('profile-save');
+ let data;
+ try{data=sanitizeProfile({full_name:byId('profile-full-name').value,phone:byId('profile-phone').value,
+ city:byId('profile-city').value,birth_date:byId('profile-birth-date').value})}
+ catch(e){return profileStatus(String(e.message||e),true)}
+ btn.disabled=true;profileStatus('در حال ذخیره اطلاعات شخصی…');
+ try{
+  const {error}=await client.from('finance_profiles').upsert({user_id:uid,...data,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+  if(error)throw error;
+  if(!profileAlive(uid,epoch))return;
+  byId('profile-summary').textContent=(data.full_name||'کاربر My Finance')+' · '+user.email;
+  profileStatus('✓ مشخصات پروفایل ذخیره شد.');
+ }catch(e){if(profileAlive(uid,epoch))profileStatus('ذخیره موفق نبود: '+String(e.message||e),true)}
+ finally{btn.disabled=false}
+});
+byId('profile-photo').addEventListener('change',event=>{
+ const file=event.target.files?.[0];
+ pendingPhoto=null;byId('profile-photo-save').disabled=true;
+ if(!file)return;
+ if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>6*1024*1024||file.size<100)
+  return profileStatus('فقط عکس JPG، PNG یا WebP با حجم حداکثر ۶ مگابایت انتخاب کنید.',true);
+ if(!user||!document.body.classList.contains('finance-unlocked'))
+  return profileStatus('برای انتخاب عکس ابتدا وارد حساب شخصی شوید.',true);
+ pendingPhoto=file;
+ displayAvatar(file);
+ byId('profile-photo-save').disabled=false;
+ profileStatus('عکس انتخاب شد، اما هنوز ذخیره نشده است. برای بارگذاری «ذخیره عکس انتخاب‌شده» را بزنید.');
+});
+async function compressedPhoto(file){
+ let bitmap=null,objectURL=null,img;
+ try{
+  if(typeof createImageBitmap==='function')bitmap=await createImageBitmap(file);
+  if(!bitmap){
+   img=new Image();objectURL=URL.createObjectURL(file);img.src=objectURL;await img.decode();
+  }
+  const width=bitmap?.width||img.naturalWidth,height=bitmap?.height||img.naturalHeight;
+  if(!(width>0&&height>0)||width>12000||height>12000)throw Error('ابعاد عکس نامعتبر است.');
+  const scale=Math.min(1,512/Math.max(width,height)),canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+  canvas.getContext('2d').drawImage(bitmap||img,0,0,canvas.width,canvas.height);
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.82));
+  if(!blob||blob.type!=='image/webp'||blob.size>2*1024*1024)throw Error('فشرده‌سازی عکس انجام نشد. تصویر کوچک‌تری انتخاب کنید.');
+  return blob;
+ }finally{if(bitmap)bitmap.close();if(objectURL)URL.revokeObjectURL(objectURL)}
+}
+byId('profile-photo-save').addEventListener('click',async()=>{
+ if(!pendingPhoto||!user||!document.body.classList.contains('finance-unlocked'))return profileStatus('ابتدا عکس را انتخاب کنید.',true);
+ const uid=user.id,epoch=identityEpoch,button=byId('profile-photo-save'),file=pendingPhoto;
+ button.disabled=true;profileStatus('در حال کوچک‌سازی و ذخیره خصوصی عکس…');
+ try{
+  const image=await compressedPhoto(file);
+  if(!profileAlive(uid,epoch))return;
+  const path=profilePath(uid);
+  const {error}=await client.storage.from(PROFILE_BUCKET).upload(path,image,{upsert:true,contentType:'image/webp',cacheControl:'3600'});
+  if(error)throw error;
+  if(!profileAlive(uid,epoch))return;
+  const {error:profileError}=await client.from('finance_profiles').upsert({user_id:uid,avatar_path:path,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+  if(profileError)throw profileError;
+  if(!profileAlive(uid,epoch))return;
+  pendingPhoto=null;byId('profile-photo').value='';
+  displayAvatar(image);profileStatus('✓ عکس پروفایل در فضای خصوصی شما ذخیره شد.');
+ }catch(e){if(profileAlive(uid,epoch)){profileStatus('بارگذاری عکس ناموفق بود: '+String(e.message||e),true);button.disabled=!pendingPhoto}}
+});
+byId('profile-photo-remove').addEventListener('click',async()=>{
+ if(!user||!document.body.classList.contains('finance-unlocked'))return profileStatus('ابتدا وارد حساب خود شوید.',true);
+ if(!confirm('عکس پروفایل خود را حذف می‌کنید؟'))return;
+ const uid=user.id,epoch=identityEpoch,button=byId('profile-photo-remove');
+ button.disabled=true;profileStatus('در حال حذف عکس خصوصی…');
+ try{
+  const {error}=await client.storage.from(PROFILE_BUCKET).remove([profilePath(uid)]);
+  if(error)throw error;
+  if(!profileAlive(uid,epoch))return;
+  const {error:e}=await client.from('finance_profiles').update({avatar_path:null,updated_at:new Date().toISOString()}).eq('user_id',uid);
+  if(e)throw e;
+  if(!profileAlive(uid,epoch))return;
+  pendingPhoto=null;byId('profile-photo').value='';byId('profile-photo-save').disabled=true;
+  displayAvatar(null);profileStatus('✓ عکس پروفایل حذف شد.');
+ }catch(e){if(profileAlive(uid,epoch))profileStatus('حذف عکس کامل نشد: '+String(e.message||e),true)}
+ finally{button.disabled=false}
+});
+
 async function refreshIdentity(){
  if(!bootstrapped||authPending)return;
  authPending=true;let next=null;
@@ -364,6 +532,7 @@ async function refreshIdentity(){
   renderAuth();document.body.classList.add('finance-unlocked');document.dispatchEvent(new Event('myfinance:unlocked'));
   byId('account-access-summary').textContent='حساب فعال: '+next.email+(access.expires_at?' · تا '+new Date(access.expires_at).toLocaleDateString('fa-IR'):' · بدون سررسید');
   showAdmin().catch(()=>{});
+  if(loadedProfileFor!==next.id)loadProfile().catch(e=>profileStatus('بارگیری پروفایل موفق نبود: '+String(e.message||e),true));
  }catch(e){lock('دسترسی امن تأیید نشد. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید. '+String(e.message||''),next,true)}
  finally{authPending=false}
 }
