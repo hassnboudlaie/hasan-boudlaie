@@ -48,7 +48,24 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </main>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
-const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:sessionStorage,storageKey:'myfinance-supabase-session-v1',autoRefreshToken:true,detectSessionInUrl:true}});
+const AUTH_SESSION_KEY='myfinance-supabase-session-v1';
+const keepSignedIn=()=>localStorage.getItem('myfinance-keep-signed-in-v1')!=='no';
+const financeAuthStorage={
+ getItem(key){
+  if(!keepSignedIn())return sessionStorage.getItem(key);
+  const persisted=localStorage.getItem(key);
+  if(persisted!==null)return persisted;
+  const temp=sessionStorage.getItem(key);
+  if(temp!==null){localStorage.setItem(key,temp);sessionStorage.removeItem(key)}
+  return temp;
+ },
+ setItem(key,value){
+  if(keepSignedIn()){localStorage.setItem(key,value);sessionStorage.removeItem(key)}
+  else{sessionStorage.setItem(key,value);localStorage.removeItem(key)}
+ },
+ removeItem(key){localStorage.removeItem(key);sessionStorage.removeItem(key)}
+};
+const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:financeAuthStorage,storageKey:AUTH_SESSION_KEY,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id),notice=(msg,error=false)=>{$('notice').textContent=msg;$('notice').classList.toggle('error',error)};
 const fmt=new Intl.DateTimeFormat('fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'long',day:'numeric'});
 let selfId='',lastEventId=0,eventsLoaded=false;
