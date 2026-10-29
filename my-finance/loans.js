@@ -6,10 +6,10 @@ if(!bridge||!document.getElementById('reports'))return;
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1}).format(Number(n)||0);
 const toman=irr=>fmt(Number(irr||0)/10)+' تومان';
-const section=document.createElement('section');
+const section=document.getElementById('loans')||document.createElement('section');
 section.id='loans';section.hidden=true;
 section.innerHTML='<div class="card"><h2>💳 وام‌ها و بدهی‌ها</h2><p class="muted">مانده‌های اعلام‌شده توسط بانک، برنامه اقساط و تعهدات آتی؛ پرداخت‌های گذشته مجدداً از حساب کسر نمی‌شوند.</p><div id="loans-overview" class="loan-summary"></div></div><div id="loans-items"></div>';
-document.getElementById('reports').insertAdjacentElement('beforebegin',section);
+if(!section.isConnected)document.getElementById('reports').insertAdjacentElement('beforebegin',section);
 // The main router is a global lexical binding in index.html; register the dynamically-created section.
 if(typeof financeRoutes!=='undefined')financeRoutes.add('loans');
 // Keep loans reachable on desktop, tablet and mobile (the legacy .tabs row is hidden at those breakpoints).
@@ -70,10 +70,10 @@ body.dark .loan-reminder-banner.loan-alert-red{background:#492127!important;colo
 `;
 document.head.appendChild(style);
 // Place the status inside #home, not directly under <main>; only the home view should show it.
-const reminder=document.createElement('div');
-reminder.id='loan-due-notice';reminder.className='loan-reminder-banner';reminder.hidden=true;
-reminder.innerHTML='<div class="loan-reminder-copy"><strong id="loan-reminder-title"></strong><p id="loan-reminder-detail"></p></div><button type="button" id="loan-reminder-open">مشاهده اقساط</button>';
-document.querySelector('#home .finance-home-heading')?.insertAdjacentElement('afterend',reminder);
+const reminder=document.getElementById('loan-due-notice')||document.createElement('div');
+reminder.id='loan-due-notice';reminder.classList.add('loan-reminder-banner');reminder.hidden=true;
+if(!reminder.querySelector('#loan-reminder-title'))reminder.innerHTML='<div class="loan-reminder-copy"><strong id="loan-reminder-title"></strong><p id="loan-reminder-detail"></p></div><button type="button" id="loan-reminder-open">مشاهده اقساط</button>';
+if(!reminder.isConnected)document.querySelector('#home .finance-home-heading')?.insertAdjacentElement('afterend',reminder);
 document.getElementById('loan-reminder-open')?.addEventListener('click',()=>financeNavGo('loans'));
 const persianDate=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'});
 function nextJalali(daysAhead){
