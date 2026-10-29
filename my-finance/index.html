@@ -69,14 +69,14 @@ body.finance-unlocked #auth-gate{display:none!important}
 </div></div><main><aside class="finance-sidebar" aria-label="منوی اصلی My Finance">
  <div class="finance-side-brand"><img src="./icon-192-r4.png" alt="" width="38" height="38"><span><strong>My Finance</strong><small>مدیریت مالی شخصی</small></span></div>
  <nav class="finance-side-links" aria-label="بخش‌های اصلی"><span class="finance-side-section">مدیریت مالی</span>
- <button type="button" data-finance-route="home" onclick="financeNavGo('home')"><span aria-hidden="true">⌂</span>خانه و نمای کلی</button>
-<button type="button" data-finance-route="transactions" onclick="financeNavGo('transactions')"><span aria-hidden="true">≡</span>تراکنش‌ها</button>
-<button type="button" data-finance-route="accounts" onclick="financeNavGo('accounts')"><span aria-hidden="true">▣</span>حساب‌ها</button>
-<button type="button" data-finance-route="transfers" onclick="financeNavGo('transfers')"><span aria-hidden="true">⇄</span>انتقال و ارز</button>
-<button type="button" data-finance-route="receivables" onclick="financeNavGo('receivables')"><span aria-hidden="true">◎</span>مطالبات</button>
-<button type="button" data-finance-route="reports" onclick="financeNavGo('reports')"><span aria-hidden="true">▥</span>گزارش‌ها</button>
-<button type="button" data-finance-route="assistant" onclick="financeNavGo('assistant')"><span aria-hidden="true">✳</span>دستیار هوشمند</button>
-<button type="button" data-finance-route="settings" onclick="financeNavGo('settings')"><span aria-hidden="true">⚙</span>تنظیمات</button>
+ <button type="button" data-finance-route="home" onclick="financeNavGo('home')"><span aria-hidden="true">⌂</span><span data-fa="خانه و نمای کلی" data-en="Dashboard">خانه و نمای کلی</span></button>
+<button type="button" data-finance-route="transactions" onclick="financeNavGo('transactions')"><span aria-hidden="true">≡</span><span data-fa="تراکنش‌ها" data-en="Transactions">تراکنش‌ها</span></button>
+<button type="button" data-finance-route="accounts" onclick="financeNavGo('accounts')"><span aria-hidden="true">▣</span><span data-fa="حساب‌ها" data-en="Accounts">حساب‌ها</span></button>
+<button type="button" data-finance-route="transfers" onclick="financeNavGo('transfers')"><span aria-hidden="true">⇄</span><span data-fa="انتقال و ارز" data-en="Transfers & FX">انتقال و ارز</span></button>
+<button type="button" data-finance-route="receivables" onclick="financeNavGo('receivables')"><span aria-hidden="true">◎</span><span data-fa="مطالبات" data-en="Receivables">مطالبات</span></button>
+<button type="button" data-finance-route="reports" onclick="financeNavGo('reports')"><span aria-hidden="true">▥</span><span data-fa="گزارش‌ها" data-en="Reports">گزارش‌ها</span></button>
+<button type="button" data-finance-route="assistant" onclick="financeNavGo('assistant')"><span aria-hidden="true">✳</span><span data-fa="دستیار هوشمند" data-en="AI Assistant">دستیار هوشمند</span></button>
+<button type="button" data-finance-route="settings" onclick="financeNavGo('settings')"><span aria-hidden="true">⚙</span><span data-fa="تنظیمات" data-en="Settings">تنظیمات</span></button>
  <span class="finance-side-section">بیشتر</span>
  <a href="./assets.html"><span aria-hidden="true">◇</span>دارایی‌ها</a>
  <a href="./contracts.html"><span aria-hidden="true">▤</span>قراردادها</a></nav>
@@ -221,7 +221,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 </div>
 <div class="card"><h2>حساب من</h2><p id="account-access-summary" class="muted">دسترسی در حال بررسی است.</p><a id="finance-admin-link" href="./admin.html" hidden>مدیریت کاربران آزمایشی</a></div><div class="card" id="supabase-sync"><h2>Supabase · Private Sync</h2><p class="muted">ورود امن و همگام‌سازی خصوصی اطلاعات مالی</p><div id="supabase-login"><input type="email" id="supabase-email" placeholder="ایمیل ورود"><button type="button" id="supabase-send">ارسال لینک ورود</button></div><div id="supabase-actions" hidden><button type="button" id="supabase-pull">دریافت تراکنش‌ها</button><button type="button" id="supabase-push">انتقال تراکنش‌های محلی</button><button type="button" id="supabase-logout">خروج</button><button type="button" id="supabase-signout-wipe" class="alt">خروج و پاکسازی امن این دستگاه</button><button type="button" id="supabase-pair">اتصال یک‌باره به ChatGPT</button></div><p id="supabase-status" role="status"></p><p id="supabase-pair-status" role="status" class="muted">برای ثبت مستقیم هزینه از ویس همین چت، پس از ورود امن یک‌بار کد اتصال بسازید.</p></div>
 <div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در این دستگاه ذخیره می‌شوند و پس از ورود امن، در فضای خصوصی Supabase همگام خواهند شد. داده‌های محلی رمزگذاری نشده‌اند؛ در دستگاه مشترک از آن استفاده نکنید. اطلاعات واقعی در GitHub ثبت نمی‌شوند.</p><button onclick="backup()">🔐 دریافت پشتیبان رمزگذاری‌شده</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">فایل پشتیبان جدید با رمز مستقل (AES‑256‑GCM) محافظت می‌شود. رمز را فراموش نکنید؛ قابل بازیابی نیست. اطلاعات ذخیره‌شده داخل مرورگر هنوز رمزگذاری نشده‌اند.</p><p class="muted">ورود اطلاعات از ChatGPT پس از اتصال امن انجام می‌شود. پیش‌نویس‌های قدیمی همچنان قابل واردکردن هستند.</p></div></section>
-<nav class="finance-mobile-nav" aria-label="منوی اصلی موبایل"><button type="button" data-finance-route="home" onclick="financeNavGo('home')"><span aria-hidden="true">⌂</span>خانه</button><button type="button" data-finance-route="transactions" onclick="financeNavGo('transactions')"><span aria-hidden="true">≡</span>تراکنش‌ها</button><button type="button" data-finance-route="accounts" onclick="financeNavGo('accounts')"><span aria-hidden="true">▣</span>حساب‌ها</button><button type="button" data-finance-route="receivables" onclick="financeNavGo('receivables')"><span aria-hidden="true">◎</span>مطالبات</button><button type="button" id="finance-open-more" onclick="financeShowMore()"><span aria-hidden="true">☰</span>بیشتر</button></nav>
+<nav class="finance-mobile-nav" aria-label="منوی اصلی موبایل"><button type="button" data-finance-route="home" onclick="financeNavGo('home')"><span aria-hidden="true">⌂</span><span data-fa="خانه" data-en="Home">خانه</span></button><button type="button" data-finance-route="transactions" onclick="financeNavGo('transactions')"><span aria-hidden="true">≡</span><span data-fa="تراکنش‌ها" data-en="Entries">تراکنش‌ها</span></button><button type="button" data-finance-route="accounts" onclick="financeNavGo('accounts')"><span aria-hidden="true">▣</span><span data-fa="حساب‌ها" data-en="Accounts">حساب‌ها</span></button><button type="button" data-finance-route="receivables" onclick="financeNavGo('receivables')"><span aria-hidden="true">◎</span><span data-fa="مطالبات" data-en="Claims">مطالبات</span></button><button type="button" id="finance-open-more" onclick="financeShowMore()"><span aria-hidden="true">☰</span><span data-fa="بیشتر" data-en="More">بیشتر</span></button></nav>
 <dialog id="finance-more-dialog" class="finance-more-dialog" aria-label="منوی بیشتر"><div class="finance-more-top"><strong>بیشتر</strong><button type="button" onclick="financeCloseMore()" aria-label="بستن منو">×</button></div><div class="finance-more-links"><button type="button" onclick="financeNavGo('profile')">👤 پروفایل من</button><button type="button" onclick="financeNavGo('reports')">▥ گزارش‌های مالی</button><button type="button" onclick="financeNavGo('transfers')">⇄ انتقال و ارز</button><button type="button" onclick="financeNavGo('assistant')">✳ دستیار هوشمند</button><button type="button" onclick="financeNavGo('settings')">⚙ تنظیمات</button><a href="./assets.html">◇ دارایی‌ها</a><a href="./contracts.html">▤ قراردادها</a></div></dialog><footer class="muted">My Finance · Private Finances · Secure cloud sync · No financial data on GitHub</footer></main>
 <script>
 let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];if(!Array.isArray(db.loans))db.loans=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const financeRoutes=new Set(['home','transactions','accounts','transfers','receivables','reports','settings']);
@@ -241,15 +241,24 @@ function tab(id){
  document.querySelectorAll('[data-finance-route]').forEach(button=>{
   const active=button.dataset.financeRoute===id;
   button.setAttribute('aria-current',active?'page':'false');
+  button.classList.toggle('finance-active',active);
  });
  const more=document.getElementById('finance-open-more');
- if(more)more.setAttribute('aria-current',['home','transactions','accounts','receivables'].includes(id)?'false':'page');
+ if(more){
+  const active=!['home','transactions','accounts','receivables'].includes(id);
+  more.setAttribute('aria-current',active?'page':'false');
+  more.classList.toggle('finance-active',active);
+ }
  document.body.dataset.financeView=id;
  financeCloseMore();
 }
 function financeNavGo(id){
  if(id==='profile'||id==='assistant'){
   tab('settings');
+  if(id==='assistant'){
+   const nav=document.querySelector('[data-finance-route="assistant"]');
+   if(nav){nav.classList.add('finance-active');nav.setAttribute('aria-current','page')}
+  }
   const target=id==='profile'?'finance-profile-card':'personal-ai-panel';
   requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({behavior:'smooth',block:'start'}));
   return;
