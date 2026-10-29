@@ -4,7 +4,7 @@ const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publish
 const bridge=window.MyFinanceBridge;
 const byId=id=>document.getElementById(id);
 const login=byId('supabase-login'),actions=byId('supabase-actions'),email=byId('supabase-email');
-let user=null,busy=false,queued=false,authPending=false,seen=new Map(),identityEpoch=0;
+let user=null,busy=false,queued=false,authPending=false,seen=new Map(),identityEpoch=0,bootstrapped=false;
 const assertIdentity=(uid,epoch)=>{if(!user||user.id!==uid||identityEpoch!==epoch)throw Error('SYNC_SESSION_CHANGED');};
 const collections={account:'accounts',receivable:'receivables',transfer:'transfers',commitment:'commitments',loan:'loans'};
 let dirty=new Set();
@@ -164,7 +164,7 @@ byId('auth-resend-confirm').addEventListener('click',async()=>{
  authStatus(error?emailProblem(error):'اگر حساب نیاز به تأیید داشته باشد، ایمیل ارسال می‌شود. Inbox و Spam را بررسی کنید.',!!error);
 });
 byId('auth-logout').addEventListener('click',async()=>{
- const{error}=await client.auth.signOut();
+ const{error}=await client.auth.signOut({scope:'local'});
  if(error)return authStatus('خروج ناموفق: '+error.message,true);
  lock('از حساب خارج شدید؛ برای ورود مجدد از ایمیل و رمز عبور استفاده کنید.');
 });
@@ -311,7 +311,7 @@ async function sync(){
  }
 }
 async function refreshIdentity(){
- if(authPending)return;
+ if(!bootstrapped||authPending)return;
  authPending=true;let next=null;
  try{
   const{data,error}=await client.auth.getUser();if(error)throw error;
@@ -358,7 +358,7 @@ byId('supabase-pair').addEventListener('click',async()=>{
  byId('supabase-pair-status').textContent='کد اتصال شما: '+code+' · این کد فقط ۱۵ دقیقه معتبر است. آن را یک‌بار در همین گفتگوی ChatGPT اعلام کنید.';
 });
 byId('supabase-logout').addEventListener('click',async()=>{
- const {error}=await client.auth.signOut();
+ const {error}=await client.auth.signOut({scope:'local'});
  if(error)notice('خروج ناموفق: '+error.message);
  else await refreshIdentity();
 });
@@ -397,4 +397,20 @@ window.MyFinanceAI={
 };
 
 window.MyFinanceCloud={sync,authenticated:()=>!!user};
-renderAuth();refreshIdentity();
+renderAuth();
+// A password is required on each fresh app navigation. Remember the email only.
+// Auth callbacks from email confirmation/password recovery must be processed first.
+function isAuthCallback(){
+ const qs=new URLSearchParams(location.search);
+ const hs=new URLSearchParams(location.hash.replace(/^#/,''));
+ return qs.has('code')||qs.has('token_hash')||qs.has('type')||hs.has('access_token')||hs.has('refresh_token')||hs.has('type');
+}
+(async()=>{
+ if(!isAuthCallback()){
+  // Local scope: do not log the same user out of other devices.
+  const {error}=await client.auth.signOut({scope:'local'});
+  if(error){gate('خروج از نشست قبلی ممکن نشد. برای حفظ امنیت، برنامه را دوباره باز کنید.',null,true);return;}
+ }
+ bootstrapped=true;
+ await refreshIdentity();
+})().catch(e=>gate('راه‌اندازی ورود امن با خطا روبه‌رو شد: '+String(e.message||e),null,true));
