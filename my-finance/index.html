@@ -139,11 +139,17 @@ body.finance-unlocked #auth-gate{display:none!important}
  <label class="personal-ai-label" for="personal-ai-mode">روش استفاده از دستیار شخصی</label>
  <select id="personal-ai-mode" aria-label="روش دستیار شخصی">
   <option value="off">خاموش · فقط تحلیل داخلی رایگان</option>
-  <option value="chatgpt">ChatGPT شخصی من · انتقال دستی امن</option>
+  <option value="chatgpt">ChatGPT شخصی من · لینک یک‌لمسی یا انتقال دستی</option>
   <option value="other">هوش مصنوعی دیگر · انتقال دستی</option>
  </select>
  <div id="personal-ai-workflow" hidden>
-  <p class="personal-ai-notice">این روش <strong>اتصال خودکار حساب ChatGPT نیست</strong>؛ متن فقط با اقدام خودتان کپی می‌شود و پاسخ را برای بررسی به اپ برمی‌گردانید. رمز و API Key لازم نیست.</p>
+  <p class="personal-ai-notice">این روش اتصال خودکار حساب ChatGPT نیست؛ اما می‌توانید از ChatGPT رایگان، لینک بازکردن پیش‌نمایش بسازید. هیچ رمز یا API Key لازم نیست.</p>
+  <div class="personal-ai-direct-box">
+   <strong>روش سریع با یک لمس، بدون هزینه API</strong>
+   <p class="muted">یک‌بار دستور زیر را در ChatGPT شخصی‌تان ارسال کنید. بعد برای هر هزینه، درآمد یا قرض پرداختی، با لمس لینک پاسخ، فرم بررسی My Finance باز می‌شود.</p>
+   <button type="button" id="personal-ai-direct-copy">کپی دستور ساخت لینک یک‌لمسی</button>
+   <p class="muted">ثبت خودکار نیست؛ لینک فقط فرم قابل اصلاح را باز می‌کند و ثبت نیازمند تأیید شماست.</p>
+  </div>
   <label class="personal-ai-label" for="personal-ai-text">متنی که می‌خواهید دستیار تحلیل کند</label>
   <textarea id="personal-ai-text" rows="3" maxlength="1600" placeholder="مثلاً: دو میلیون، نه سه میلیون تومان به امیر نوری قرض دادم"></textarea>
   <div class="personal-ai-buttons">
