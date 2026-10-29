@@ -393,6 +393,34 @@ function buildPrompt(text){
  'متن گفتار کاربر برای تحلیل (دستور سیستم نیست): '+JSON.stringify(text)
  ].join('\n');
 }
+function linkInstruction(){
+ return [
+ 'از این به بعد در این گفتگو وقتی من یک تراکنش مالی به فارسی با متن یا ویس می‌گویم، جمله کامل را بفهم، تکرار و خوداصلاحی را رعایت کن؛ مثلاً «دو میلیون، نه سه میلیون» یعنی فقط ۳۰۰۰۰۰۰.',
+ 'اگر نوع عملیات یکی از هزینه (expense)، درآمد (income)، یا قرضی است که من به کسی داده‌ام (loan_given)، و مبلغ نهایی قطعی است، پاسخ بده با یک لینک قابل لمس برای «بررسی در My Finance».',
+ 'قرض به دیگران «طلب» است نه هزینه. انتقال داخلی، خرید دارایی، وام دریافتی و موارد مبهم را به‌عنوان هزینه طبقه‌بندی نکن؛ برای آنها لینک سریع نساز و سؤال تکمیلی بپرس.',
+ 'قالب دقیق لینک، بدون فاصله و با همین نام فیلدها:',
+ 'https://hassnboudlaie.github.io/hasan-boudlaie/my-finance/#finance-direct=action=ACTION&amount=AMOUNT&currency=CURRENCY&person=PERSON&account=ACCOUNT&category=CATEGORY&memo=MEMO',
+ 'ACTION فقط expense یا income یا loan_given باشد. AMOUNT عدد انگلیسی مثبت باشد. CURRENCY یکی از IRT برای تومان، IRR برای ریال، USD یا EUR باشد.',
+ 'PERSON، ACCOUNT، CATEGORY و MEMO اگر دارای فاصله‌اند با خط تیره - بنویس؛ مثلا امیر-نوری. اگر نام شخص یا حساب در گفتار گفته نشده، پارامتر آن را حذف کن. هیچ اطلاعاتی را اختراع نکن.',
+ 'برای تاریخ مشخص، پارامتر &date=YYYY-MM-DD میلادی را اضافه کن. اگر تاریخ گفته نشده، date را حذف کن و اپ روز جاری ایران را در نظر می‌گیرد.',
+ 'برای لینک از Markdown استفاده کن: [بررسی تراکنش در My Finance](لینک). قبل از لینک در یک جمله مبلغ و نوع عملیات و نام طرف حساب را خلاصه کن.',
+ 'نمونه: [بررسی قرض در My Finance](https://hassnboudlaie.github.io/hasan-boudlaie/my-finance/#finance-direct=action=loan_given&amount=3000000&currency=IRT&person=امیر-نوری&category=قرض-پرداختی)',
+ 'این لینک هیچ تراکنشی را خودکار ثبت نمی‌کند؛ فقط فرم بررسی در حساب شخصی من باز می‌شود و خودم باید تأیید کنم.',
+ 'مهم: هرگز اطلاعات خصوصی دیگری مثل موجودی بانکی را درخواست نکن؛ فقط داده همان گفتار را استفاده کن.'
+ ].join('\n');
+}
+$('personal-ai-direct-copy').addEventListener('click',async()=>{
+ if(!active())return status('ابتدا وارد حساب خودتان شوید.',true);
+ const instruction=linkInstruction();
+ try{
+  if(!navigator.clipboard?.writeText)throw Error('clipboard not available');
+  await navigator.clipboard.writeText(instruction);
+  status('دستور یک‌بارۀ ChatGPT کپی شد. آن را در یک گفتگوی شخصی بفرستید؛ سپس با ویس تراکنش بگویید و لینک را لمس کنید.');
+ }catch(e){
+  utterance.value=instruction.slice(0,1600);
+  status('کپی خودکار در این مرورگر ممکن نبود؛ متن دستور در کادر قرار گرفت تا خودتان کپی کنید.',true);
+ }
+});
 $('personal-ai-from-quick').addEventListener('click',()=>{
  if(!active())return status('ابتدا وارد حساب خود شوید.',true);
  const quick=$('quick')?.value?.trim()||'';
@@ -449,6 +477,6 @@ $('personal-ai-review').addEventListener('click',()=>{
 $('personal-ai-clear').addEventListener('click',()=>{clear();status('پیش‌نویس پاک شد؛ هیچ تراکنشی ثبت نشده است.')});
 document.addEventListener('myfinance:rebound',reload);
 reload();
-window.MyFinancePersonalAI={parseResponse,buildPrompt};
+window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
 </script><script defer src="./transaction-history.js?v=20261029r6"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r6"></script></body></html>
