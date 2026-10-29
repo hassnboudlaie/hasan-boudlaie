@@ -170,7 +170,7 @@ body.finance-unlocked #auth-gate{display:none!important}
  <p class="muted" id="personal-ai-future">اتصال مستقیم امن به سرویس AI شخصی در ارتقای آینده بررسی می‌شود؛ فعلاً ورود با حساب ChatGPT به معنی اتصال API نیست.</p>
 </div>
 <div class="card"><h2>حساب من</h2><p id="account-access-summary" class="muted">دسترسی در حال بررسی است.</p><a id="finance-admin-link" href="./admin.html" hidden>مدیریت کاربران آزمایشی</a></div><div class="card" id="supabase-sync"><h2>Supabase · Private Sync</h2><p class="muted">ورود امن و همگام‌سازی خصوصی اطلاعات مالی</p><div id="supabase-login"><input type="email" id="supabase-email" placeholder="ایمیل ورود"><button type="button" id="supabase-send">ارسال لینک ورود</button></div><div id="supabase-actions" hidden><button type="button" id="supabase-pull">دریافت تراکنش‌ها</button><button type="button" id="supabase-push">انتقال تراکنش‌های محلی</button><button type="button" id="supabase-logout">خروج</button><button type="button" id="supabase-pair">اتصال یک‌باره به ChatGPT</button></div><p id="supabase-status" role="status"></p><p id="supabase-pair-status" role="status" class="muted">برای ثبت مستقیم هزینه از ویس همین چت، پس از ورود امن یک‌بار کد اتصال بسازید.</p></div>
-<div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در این دستگاه ذخیره می‌شوند و پس از ورود امن، در فضای خصوصی Supabase همگام خواهند شد. داده‌های محلی رمزگذاری نشده‌اند؛ در دستگاه مشترک از آن استفاده نکنید. اطلاعات واقعی در GitHub ثبت نمی‌شوند.</p><button onclick="backup()">دریافت پشتیبان JSON</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">نسخه آزمایشی: فایل پشتیبان رمزگذاری نشده است.</p><p class="muted">ورود اطلاعات از ChatGPT پس از اتصال امن انجام می‌شود. پیش‌نویس‌های قدیمی همچنان قابل واردکردن هستند.</p></div></section>
+<div class="card"><h2>حریم خصوصی و داده‌ها</h2><p class="muted">اطلاعات در این دستگاه ذخیره می‌شوند و پس از ورود امن، در فضای خصوصی Supabase همگام خواهند شد. داده‌های محلی رمزگذاری نشده‌اند؛ در دستگاه مشترک از آن استفاده نکنید. اطلاعات واقعی در GitHub ثبت نمی‌شوند.</p><button onclick="backup()">🔐 دریافت پشتیبان رمزگذاری‌شده</button> <input type="file" id="restore" accept="application/json" onchange="restoreFile(this)"><p class="muted">فایل پشتیبان جدید با رمز مستقل (AES‑256‑GCM) محافظت می‌شود. رمز را فراموش نکنید؛ قابل بازیابی نیست. اطلاعات ذخیره‌شده داخل مرورگر هنوز رمزگذاری نشده‌اند.</p><p class="muted">ورود اطلاعات از ChatGPT پس از اتصال امن انجام می‌شود. پیش‌نویس‌های قدیمی همچنان قابل واردکردن هستند.</p></div></section>
 <footer class="muted">My Finance · Private Finances · Secure cloud sync · No financial data on GitHub</footer></main>
 <script>
 let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];if(!Array.isArray(db.loans))db.loans=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));function tab(id){document.querySelectorAll('section').forEach(s=>s.hidden=s.id!==id);document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',String((b.getAttribute('onclick')||'').includes("'"+id+"'"))))}function toggleTheme(){document.body.classList.toggle('dark')}function toggleLang(){lang=lang==='fa'?'en':'fa';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';$('lang').textContent=lang==='fa'?'EN':'فا';document.querySelectorAll('[data-fa]').forEach(x=>x.textContent=x.dataset[lang]);render()}
@@ -243,7 +243,58 @@ renderTransferList();
 }
 
 function exportCSV(){let rows=[['date','kind','amount','currency','account','scope','category','memo'],...db.tx.map(t=>[t.date,t.kind,t.amount,t.currency||db.accounts.find(a=>a.id===t.account)?.currency,db.accounts.find(a=>a.id===t.account)?.name||t.accountName,t.scope,t.category,t.memo])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8'}),'finance.csv')}
-function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}function backup(){download(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),'my-finance-backup.json')}async function restoreFile(input){let f=input.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.accounts)||!Array.isArray(d.tx)||!Array.isArray(d.transfers))throw Error();if(confirm('داده‌های فعلی با پشتیبان جایگزین شوند؟')){db={accounts:d.accounts,tx:d.tx,transfers:d.transfers,receivables:Array.isArray(d.receivables)?d.receivables:[],commitments:Array.isArray(d.commitments)?d.commitments:[],loans:Array.isArray(d.loans)?d.loans:[]};save()}}catch(e){alert('فایل معتبر نیست')}}
+function download(blob,name){let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}// Portable encrypted backups: AES-256-GCM + PBKDF2 SHA-256 (310k iterations).
+const ENCRYPTED_BACKUP_FORMAT='my-finance-encrypted-backup';
+const backupEncoder=new TextEncoder();
+const backupDecoder=new TextDecoder();
+const backupBase64=b=>{let out='';for(let i=0;i<b.length;i+=16384)out+=String.fromCharCode(...b.subarray(i,i+16384));return btoa(out)};
+const backupFromBase64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function backupCryptoKey(pass,salt,usage){
+ const material=await crypto.subtle.importKey('raw',backupEncoder.encode(pass),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,[usage]);
+}
+async function backup(){
+ if(!window.MyFinanceCloud?.authenticated())return alert('برای تهیه پشتیبان، ابتدا وارد حساب تأییدشده شوید.');
+ if(!crypto?.subtle)return alert('این مرورگر از پشتیبان رمزگذاری‌شده پشتیبانی نمی‌کند.');
+ const pass=prompt('یک رمز مستقل برای فایل پشتیبان تعیین کنید (حداقل ۱۲ کاراکتر). این رمز قابل بازیابی نیست.');
+ if(pass===null)return;
+ if(pass.length<12)return alert('رمز پشتیبان باید حداقل ۱۲ کاراکتر باشد.');
+ const repeated=prompt('رمز پشتیبان را دوباره وارد کنید.');
+ if(repeated!==pass)return alert('دو رمز یکسان نیستند؛ فایل ساخته نشد.');
+ try{
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const key=await backupCryptoKey(pass,salt,'encrypt');
+  const plaintext=backupEncoder.encode(JSON.stringify(db));
+  const ciphertext=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,plaintext));
+  const result={format:ENCRYPTED_BACKUP_FORMAT,version:1,algorithm:'AES-256-GCM',kdf:'PBKDF2-SHA256',iterations:310000,owner_id:window.MyFinanceCloud.currentUserId(),salt:backupBase64(salt),iv:backupBase64(iv),data:backupBase64(ciphertext)};
+  download(new Blob([JSON.stringify(result)],{type:'application/json'}),'my-finance-encrypted-backup.json');
+  alert('پشتیبان رمزگذاری‌شده ایجاد شد؛ رمز آن را جدا از فایل و در محلی امن نگه دارید.');
+ }catch(e){alert('ایجاد پشتیبان امن ناموفق بود. اطلاعات قبلی تغییر نکردند.')}
+}
+async function restoreFile(input){
+ const file=input.files?.[0];if(!file)return;
+ try{
+  if(!window.MyFinanceCloud?.authenticated())throw Error('برای بازیابی، ابتدا وارد حساب تأییدشده شوید.');
+  if(file.size>25_000_000)throw Error('حجم فایل بیش از حد مجاز است.');
+  let d=JSON.parse(await file.text());
+  if(d?.format===ENCRYPTED_BACKUP_FORMAT){
+   if(d.version!==1||d.iterations!==310000||typeof d.data!=='string'||typeof d.iv!=='string'||typeof d.salt!=='string')throw Error('ساختار فایل رمزگذاری‌شده معتبر نیست.');
+   if(d.owner_id&&d.owner_id!==window.MyFinanceCloud.currentUserId())throw Error('این فایل متعلق به حساب کاربری دیگری است.');
+   const pass=prompt('رمز فایل پشتیبان رمزگذاری‌شده را وارد کنید.');
+   if(pass===null)return;
+   try{
+    const key=await backupCryptoKey(pass,backupFromBase64(d.salt),'decrypt');
+    const clear=await crypto.subtle.decrypt({name:'AES-GCM',iv:backupFromBase64(d.iv)},key,backupFromBase64(d.data));
+    d=JSON.parse(backupDecoder.decode(clear));
+   }catch(e){throw Error('رمز نادرست است یا فایل آسیب دیده است.');}
+  }else if(!confirm('هشدار: این یک فایل پشتیبان قدیمی و بدون رمزگذاری است. فقط اگر آن را از منبع مطمئن گرفته‌اید ادامه دهید.'))return;
+  if(!Array.isArray(d?.accounts)||!Array.isArray(d?.tx)||!Array.isArray(d?.transfers))throw Error('ساختار پشتیبان معتبر نیست.');
+  if(!confirm('اطلاعات فعلی این حساب با داده‌های فایل پشتیبان جایگزین شوند؟'))return;
+  db={accounts:d.accounts,tx:d.tx,transfers:d.transfers,receivables:Array.isArray(d.receivables)?d.receivables:[],commitments:Array.isArray(d.commitments)?d.commitments:[],loans:Array.isArray(d.loans)?d.loans:[]};
+  save();
+  alert('بازیابی انجام شد. وضعیت همگام‌سازی را بررسی کنید.');
+ }catch(e){alert('بازیابی انجام نشد: '+String(e.message||e))}finally{input.value=''}
+}
 // Safe, confirmation-required handoff from ChatGPT. URL fragment never reaches hosting server.
 function importChatGPTDraft(){
  const marker='#finance-import=';
@@ -521,4 +572,4 @@ document.addEventListener('myfinance:rebound',reload);
 reload();
 window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
-</script><script defer src="./transaction-history.js?v=20261029r6"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r12"></script></body></html>
+</script><script defer src="./transaction-history.js?v=20261029r6"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r15"></script></body></html>
