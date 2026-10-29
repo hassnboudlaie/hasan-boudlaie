@@ -41,6 +41,7 @@ body.finance-unlocked .finance-app-header .row button.alt{border:1px solid var(-
 #home .finance-home-heading h2{font-size:clamp(22px,3vw,29px);font-weight:850;letter-spacing:0;line-height:1.4}
 #home .finance-home-heading p.muted{font-size:12px;line-height:1.8}
 #home .finance-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#home .finance-home-heading>.finance-head-actions{flex:0 0 auto;min-width:auto}
 #home .finance-head-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:13px!important;font-weight:800;box-shadow:none!important}
 #home .finance-head-actions button.alt{background:var(--card)!important;color:var(--fg)!important;border:1px solid var(--line)!important}
 #home .finance-head-actions .finance-new-entry{background:var(--accent)!important;color:#fff!important;border:1px solid transparent!important}
