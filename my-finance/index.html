@@ -1,4 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=9"><link rel="icon" href="./icon-192-r4.png?v=1" type="image/png"><link rel="apple-touch-icon" href="./icon-192-r4.png?v=1"><link rel="stylesheet" href="./premium.css?v=20261029r32"><title>داشبورد مالی من</title><style>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=9"><link rel="icon" href="./icon-192-r4.png?v=1" type="image/png"><link rel="apple-touch-icon" href="./icon-192-r4.png?v=1"><link rel="stylesheet" href="./premium.css?v=20261029r32"><link rel="stylesheet" href="./dashboard-r33.css?v=20261029r33"><title>داشبورد مالی من</title><style>
 :root{font-family:Tahoma,Arial,sans-serif;--bg:#f4f7f8;--card:white;--fg:#193139;--muted:#60757a;--line:#dce6e8;--accent:#087e75}body.dark{--bg:#0c1920;--card:#192a32;--fg:#e9f5f5;--muted:#afc1c4;--line:#35464c;--accent:#0a8f83}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg)}main{max-width:980px;margin:auto;padding:20px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:22px}h2{font-size:17px}button,input,select{font:inherit}button{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 15px;cursor:pointer}button.alt{background:var(--card);color:var(--fg);border:1px solid var(--line)}input,select{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:11px;min-width:0;width:100%}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric b{display:block;font-size:23px;margin-top:12px}.muted{color:var(--muted);font-size:13px}.entry{display:flex;gap:8px}.entry input{flex:1}.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:10px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap}section[hidden]{display:none}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:start;border-bottom:1px solid var(--line)}.scroll{overflow:auto}label{font-size:12px;color:var(--muted)}.notice{background:var(--bg);border-radius:10px;padding:12px}.danger{color:#d45d5d}@media(max-width:550px){.grid{grid-template-columns:repeat(2,1fr)}.metric b{font-size:17px}.fields{grid-template-columns:1fr}main{padding:12px}h1{font-size:19px}}
 
 /* Mobile-first refinement: visual only; financial storage schema unchanged */
@@ -88,6 +88,7 @@ body.finance-unlocked #auth-gate{display:none!important}
  <button type="button" class="finance-new-entry" onclick="document.getElementById('quick').focus()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button>
 </div>
 <div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div>
+<div class="finance-overview-meta"><span id="finance-period-pill" class="finance-period-pill" aria-live="polite">ماه جاری</span><span class="finance-overview-caption" data-fa="نمای اختصاصی · بر اساس اطلاعات ثبت‌شده" data-en="Private overview · from recorded transactions">نمای اختصاصی · بر اساس اطلاعات ثبت‌شده</span></div>
 <div class="finance-dashboard-metrics" aria-label="نمای کلی مالی و مسیر جزئیات">
  <button type="button" class="finance-balance-hero" onclick="financeOpenDetail('accounts')" aria-label="مشاهده جزئیات موجودی حساب‌های ریالی">
   <span class="finance-hero-top"><span class="finance-hero-label" data-fa="موجودی حساب‌های ریالی" data-en="Cash in rial accounts">موجودی حساب‌های ریالی</span><span class="finance-hero-link"><span data-fa="جزئیات حساب‌ها" data-en="View accounts">جزئیات حساب‌ها</span><span aria-hidden="true">‹</span></span></span>
@@ -102,6 +103,10 @@ body.finance-unlocked #auth-gate{display:none!important}
   <button type="button" class="finance-kpi finance-kpi-expense" onclick="financeOpenDetail('expense')" aria-label="نمایش تراکنش‌های هزینه ماه جاری">
    <span class="finance-kpi-top"><span class="finance-kpi-title" data-fa="هزینه این ماه" data-en="This month's spending">هزینه این ماه</span><span class="finance-kpi-icon" aria-hidden="true">↙</span></span>
    <b id="expense" dir="auto">—</b><span class="finance-kpi-action" data-fa="تراکنش‌های هزینه ‹" data-en="Expense details ›">تراکنش‌های هزینه ‹</span>
+  </button>
+  <button type="button" id="finance-net-card" class="finance-kpi finance-kpi-net" onclick="financeOpenDetail('transactions')" aria-label="جزئیات خالص جریان نقدی ماه">
+   <span class="finance-kpi-top"><span class="finance-kpi-title" data-fa="خالص جریان نقدی این ماه" data-en="Net cash flow this month">خالص جریان نقدی این ماه</span><span class="finance-kpi-icon" aria-hidden="true">≈</span></span>
+   <b id="finance-kpi-net" dir="auto">—</b><span class="finance-kpi-action" data-fa="جزئیات جریان پول ‹" data-en="Explore cash flow ›">جزئیات جریان پول ‹</span>
   </button>
  </div>
  <button type="button" class="finance-receivables-strip" onclick="financeOpenDetail('receivables')" aria-label="نمایش فهرست مطالبات">
@@ -422,6 +427,7 @@ function financeMonthEntries(kind=null){
  return (db.tx||[]).filter(t=>!['pending','cancelled'].includes(t.status)&&['IRT','IRR'].includes(t.currency)&&
   (!kind||t.kind===kind)&&financeMonthKey(new Date(t.date||t.occurredAt))===month);
 }
+function hasFinanceCashflow(p){return p.income>0||p.expense>0}
 function renderFinanceCashflow(){
  const now=new Date(),dateParts=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit'}).formatToParts(now);
  const year=Number(dateParts.find(p=>p.type==='year')?.value),month=Number(dateParts.find(p=>p.type==='month')?.value);
@@ -448,6 +454,9 @@ function renderFinanceCashflow(){
   display.dataset.sign=net>0?'positive':net<0?'negative':'neutral';
  }
  if(note)note.textContent=(lang==='en'?'Income '+fmt(current.income)+' · Spending '+fmt(current.expense):'درآمد '+fmt(current.income)+' · هزینه '+fmt(current.expense));
+ const netKpi=$('finance-kpi-net'),netCard=$('finance-net-card');
+ if(netKpi)netKpi.textContent=hasFinanceCashflow(current)?(net>0?'+':net<0?'−':'')+fmt(Math.abs(net))+(lang==='en'?' toman':' تومان'):'—';
+ if(netCard)netCard.dataset.tone=net>0?'positive':net<0?'negative':'neutral';
  if(!chart)return;
  chart.replaceChildren();
  const max=Math.max(1,...periods.flatMap(p=>[p.income,p.expense]));
@@ -480,6 +489,8 @@ function renderHomeDashboard(){
  if(accountCount)accountCount.textContent=isEn?accounts.length+' rial accounts':fmt(accounts.length)+' حساب ریالی';
  const label=$('finance-month-label');
  if(label)label.textContent=new Intl.DateTimeFormat(isEn?'en-US-u-ca-persian':'fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',month:'long',year:'numeric'}).format(now);
+ const period=$('finance-period-pill');
+ if(period)period.textContent=new Intl.DateTimeFormat(isEn?'en-US-u-ca-persian':'fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',month:'long',year:'numeric'}).format(now);
  const entries=financeMonthEntries('expense'),byCategory=new Map();
  for(const t of entries){
   const key=String(t.category|| (isEn?'Other':'سایر')).trim() || (isEn?'Other':'سایر');
@@ -890,4 +901,4 @@ document.addEventListener('myfinance:rebound',reload);
 reload();
 window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
-</script><script defer src="./transaction-history.js?v=20261029r31"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r32"></script></body></html>
+</script><script defer src="./transaction-history.js?v=20261029r31"></script><script src="./commitments.js?v=20261028r4" defer></script><script src="./loans.js?v=20261028r2" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script type="module" src="./supabase-sync.js?v=20261029r33"></script></body></html>

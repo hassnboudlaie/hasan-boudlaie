@@ -1,0 +1,63 @@
+
+/* My Finance r33 · modern responsive financial command center */
+#home .finance-home-heading{margin:7px 0 8px}
+#home .finance-home-heading h2{font-size:clamp(23px,3vw,32px);letter-spacing:-.02em}
+#home .finance-home-heading p{font-size:13px}
+#home .finance-overview-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin:0 0 14px}
+#home .finance-period-pill{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:#265868;border:1px solid #dce9e9;background:#eef6f4;border-radius:90px;padding:5px 12px;min-height:31px}
+#home .finance-period-pill:before{content:"";width:7px;height:7px;border-radius:50%;background:#1d9681}
+#home .finance-overview-caption{font-size:11px;color:var(--muted)}
+#home .finance-dashboard-metrics{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,1fr);grid-template-rows:minmax(0,auto) auto;gap:12px;margin-bottom:17px;align-items:stretch}
+#home .finance-balance-hero{grid-column:1;grid-row:1/3;justify-content:space-between;min-height:305px;gap:19px;padding:27px 28px 23px;border:1px solid #224359!important;border-radius:23px!important;background:radial-gradient(circle at 15% 90%,#226c76 0,transparent 46%),linear-gradient(145deg,#0e263b 8%,#163950 55%,#0f3845)!important;box-shadow:0 13px 33px #0d334019!important}
+#home .finance-balance-hero:after{width:310px;height:310px;left:-90px;top:-145px;border-color:#ffffff17;box-shadow:0 0 0 62px #ffffff06,0 0 0 124px #ffffff04}
+#home .finance-balance-hero:before{content:"";position:absolute;width:175px;height:175px;bottom:-102px;right:20%;background:radial-gradient(circle,#63cbc823 0,transparent 70%);pointer-events:none}
+#home .finance-hero-label{font-size:13px;color:#d4e7ea}
+#home .finance-hero-amount b{font-size:clamp(29px,3.7vw,44px);letter-spacing:-.035em;line-height:1.3;overflow-wrap:anywhere}
+#home .finance-hero-foot{padding-top:15px;font-size:12px;border-color:#ffffff2c}
+#home .finance-hero-caption{font-size:10px}
+#home .finance-kpi-pair{grid-column:2;grid-row:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;gap:11px}
+#home .finance-kpi{min-height:124px;padding:15px 15px 13px;gap:10px;border-radius:18px!important;box-shadow:0 4px 16px #102d3e08!important;transition:transform .16s ease,box-shadow .16s ease}
+#home .finance-kpi b{font-size:clamp(17px,1.8vw,23px);letter-spacing:-.02em;overflow-wrap:anywhere}
+#home .finance-kpi-title{font-size:11px}
+#home .finance-kpi-action{font-size:10px}
+#home .finance-kpi-icon{width:29px;height:29px}
+#home .finance-kpi-net{grid-column:1/-1;min-height:112px;background:linear-gradient(115deg,#f2f9f8,#fff)!important}
+#home .finance-kpi-net .finance-kpi-icon{color:#1b7775;background:#deefed}
+#home .finance-kpi-net b{font-size:clamp(20px,2.1vw,28px)}
+#home .finance-kpi-net[data-tone="positive"] b{color:#197963}
+#home .finance-kpi-net[data-tone="negative"] b{color:#ad6268}
+#home .finance-receivables-strip{grid-column:2;grid-row:2;min-height:53px;background:#f9fbfb!important;border-radius:15px!important}
+#home .finance-strip-label{font-size:12px}
+#home .finance-cashflow-card,#home .finance-insight-card{box-shadow:0 4px 20px #1234440a!important;border-radius:20px}
+#home .finance-cashflow-card{padding:22px 24px 16px;margin-bottom:12px}
+#home .finance-balance-hero:focus-visible,#home .finance-kpi:focus-visible,#home .finance-receivables-strip:focus-visible{outline:3px solid #31b4a3;outline-offset:3px}
+body.dark #home .finance-period-pill{color:#c3e8e1;background:#1d3c42;border-color:#31575e}
+body.dark #home .finance-kpi-net{background:linear-gradient(120deg,#1b363d,#1b2b37)!important}
+body.dark #home .finance-receivables-strip{background:var(--card)!important}
+body.dark #home .finance-kpi-net[data-tone="positive"] b{color:#83dcc0}
+body.dark #home .finance-kpi-net[data-tone="negative"] b{color:#ffabb4}
+@media(max-width:760px){
+#home .finance-dashboard-metrics{display:flex;flex-direction:column;gap:11px}
+#home .finance-balance-hero{min-height:185px;padding:21px 20px 18px}
+#home .finance-kpi-pair{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#home .finance-kpi{min-height:120px}
+#home .finance-kpi-net{grid-column:1/-1;min-height:90px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 10px}
+#home .finance-kpi-net .finance-kpi-top{grid-column:1}
+#home .finance-kpi-net b{grid-column:2;grid-row:1/3;font-size:clamp(18px,4.6vw,25px);text-align:end}
+#home .finance-kpi-net .finance-kpi-action{grid-column:1}
+#home .finance-receivables-strip{min-height:55px}
+}
+@media(max-width:440px){
+#home .finance-home-heading h2{font-size:22px}
+#home .finance-home-heading p{font-size:12px}
+#home .finance-overview-caption{font-size:10px}
+#home .finance-balance-hero{min-height:180px;padding:20px 17px}
+#home .finance-hero-label{font-size:12px}
+#home .finance-hero-amount b{font-size:clamp(25px,6vw,32px)}
+#home .finance-kpi{padding:14px 12px;min-height:112px}
+#home .finance-kpi b{font-size:clamp(16px,4.1vw,20px)}
+#home .finance-kpi-title{font-size:10px}
+#home .finance-kpi-net b{font-size:clamp(17px,4.3vw,23px)}
+#home .finance-cashflow-card{padding:17px 15px}
+}
+@media(prefers-reduced-motion:reduce){#home .finance-kpi{transition:none}}
