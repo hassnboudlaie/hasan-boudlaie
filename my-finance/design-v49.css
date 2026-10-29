@@ -94,6 +94,10 @@ body.dark #home .loan-reminder-banner.loan-alert-red{background:#4e282d!importan
 #home .finance-quick-card #voice-mic{width:52px;min-width:52px;min-height:52px;background:var(--mf-soft)!important;color:var(--accent)!important;border:1px solid color-mix(in srgb,var(--accent) 17%,var(--line));border-radius:13px;font-size:19px}
 #home .finance-quick-card #voice-parse{min-width:77px;min-height:52px;background:var(--accent)!important;color:#fff!important;border-radius:13px;padding:0 12px;font-size:13px;font-weight:850}
 #home .finance-quick-card #voice-status{font-size:12px;margin:10px 0 0;line-height:1.7}
+#home .finance-quick-fallback{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;margin:8px 0 2px;padding:4px 0}
+#home .finance-quick-fallback span{font-size:11px;color:var(--muted);font-weight:650}
+#home .finance-quick-fallback button.alt{min-height:34px;padding:6px 10px!important;font-size:11px;color:var(--accent)!important;background:var(--mf-soft)!important;border:1px solid var(--line)!important;border-radius:10px!important}
+body.dark #home .finance-head-actions .finance-new-entry,body.dark #home .finance-quick-card #voice-parse{background:#0d716a!important;color:#fff!important}
 #home .finance-quick-help{margin:9px 0 0;padding:8px 1px 0;border-top:1px solid var(--line)}
 #home .finance-quick-help summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;font-weight:750}
 #home .finance-quick-help summary::-webkit-details-marker{display:none}
