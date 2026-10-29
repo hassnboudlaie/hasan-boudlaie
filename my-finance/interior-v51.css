@@ -2,7 +2,13 @@
    Visual-only improvements to authenticated financial screens; no financial values or tokens.
    Loaded after design-v49.css, leaves banking/reconciliation functions untouched.
 */
-:root{--mf-interior-focus:color-mix(in srgb,var(--accent) 20%,transparent)}
+:root{
+ --bg:#f5f7f6;--card:#fff;--fg:#17313a;--muted:#617780;--line:#e0e8e7;--accent:#087a71;
+ --mf-interior-focus:color-mix(in srgb,var(--accent) 20%,transparent)
+}
+body.dark{
+ --bg:#101b21;--card:#192a32;--fg:#eff6f4;--muted:#b5c8c9;--line:#30474d;--accent:#62c9b5
+}
 /* Page headings differentiate navigation from content and work at all widths. */
 body.finance-unlocked .mf-section-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 0 20px;padding:3px 2px 16px;border-bottom:1px solid var(--line)}
 body.finance-unlocked .mf-section-hero h2{font-size:clamp(22px,2.8vw,29px)!important;font-weight:850;line-height:1.48;letter-spacing:0;margin:4px 0!important;color:var(--fg)}
