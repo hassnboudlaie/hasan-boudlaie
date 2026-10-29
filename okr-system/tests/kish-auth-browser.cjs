@@ -43,6 +43,7 @@ const assert=require('node:assert/strict');
   assert.equal(await page.locator('#executionApp').isVisible(),false,'new user is not allowed into workspace');
   await page.locator('#kishEmail').fill('owner@example.test');
   await page.locator('#kishPassword').fill('safe-e2e-test-password');
+  await page.locator('#kishSaveCredentials').check();
   await page.getByRole('button',{name:'ورود به سامانه'}).click();
   await page.getByRole('heading',{name:'در انتظار تأیید مدیر'}).waitFor();
   assert.equal(await page.locator('#executionApp').isVisible(),false,'pending user must remain locked');
