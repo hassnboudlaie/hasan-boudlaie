@@ -53,3 +53,17 @@ body.kish-perdoo #authScreen .home-intro h1:focus{outline:none}
 body.kish-perdoo #authScreen .execution-choice{background:#153f58!important;box-shadow:none!important}
 body.kish-perdoo #authScreen .execution-choice .btn{background:#fff!important;color:#123c55!important;border-color:#fff!important}
 body.kish-perdoo #authScreen .document-entry{background:#f6f9fb!important;box-shadow:none!important}
+
+/* Operational Home uses the same readable light surface as Explore. */
+body.kish-perdoo #view-start .p-card{background:#fff;color:#17394f;border:1px solid #d5e1e9;margin-block:16px}
+body.kish-perdoo #view-start :is(h1,h2,h3,b,strong){color:#17394f}
+body.kish-perdoo #view-start :is(p,small,.p-empty){color:#4c6576}
+body.kish-perdoo #view-start .p-row{border-color:#d5e1e9;gap:16px;flex-wrap:wrap}
+body.kish-perdoo .p-stat{background:#fff!important;color:#17394f!important}
+body.kish-perdoo .p-stat strong{color:#17394f!important}
+body.kish-perdoo .p-stat :is(span,small){color:#4c6576!important}
+/* The canonical sidebar and contextual tabs replace the legacy module rail. */
+body.kish-perdoo .pd-module-tabs{display:none!important}
+body.kish-perdoo #view-start .p-empty{background:#f5f9fc!important;border-color:#d5e1e9!important;color:#17394f!important;padding:24px}
+body.kish-perdoo #view-start .p-empty :is(b,p,small){color:#4c6576!important}
+body.kish-perdoo #view-start .ds-empty-symbol{background:#e5f0f7!important;color:#28566c!important}
