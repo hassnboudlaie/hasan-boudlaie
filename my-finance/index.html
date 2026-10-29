@@ -71,6 +71,22 @@ body.finance-unlocked #auth-gate{display:none!important}
 <p class="muted" id="voice-account-note"></p><p id="voice-validation" class="voice-validation" role="status"></p>
 <div class="voice-review-actions"><button type="button" id="voice-confirm">✓ تأیید و ثبت تراکنش</button><button type="button" id="voice-cancel" class="alt">انصراف</button></div>
 </div>
+<div id="voice-loan-review" class="card voice-preview" hidden>
+<div class="voice-preview-head"><h2>قرض پرداختی ← مطالبات از اشخاص</h2><span class="voice-review-tag">پیش‌نمایش · ثبت نشده</span></div>
+<p class="muted">قرض، هزینه نیست. پس از تأیید، یک طلب ثبت می‌شود؛ اگر حساب پرداخت‌کننده را مشخص کنید، خروج پول نیز بدون افزایش هزینه‌ها ثبت می‌شود.</p>
+<div id="voice-loan-warnings" class="voice-warnings" role="status"></div>
+<div class="voice-fields">
+<label>گیرنده قرض<input id="voice-loan-person" maxlength="150" placeholder="مثلاً امیر نوری"></label>
+<label>مبلغ<input type="number" id="voice-loan-amount" min="0.01" step="any" inputmode="decimal"></label>
+<label>ارز<select id="voice-loan-currency"><option value="IRT">تومان</option><option value="IRR">ریال</option><option value="USD">دلار</option><option value="EUR">یورو</option></select></label>
+<label>تاریخ پرداخت<input type="date" id="voice-loan-date"></label>
+<label class="voice-field-wide">حساب پرداخت‌کننده<select id="voice-loan-account"></select></label>
+<label>سررسید اختیاری (شمسی YYYY/MM)<input id="voice-loan-due" maxlength="7" placeholder="مثلاً ۱۴۰۵/۱۲"></label>
+<label class="voice-field-wide">توضیحات<input id="voice-loan-notes" maxlength="600"></label>
+</div>
+<p id="voice-loan-validation" class="voice-validation" role="status"></p>
+<div class="voice-review-actions"><button type="button" id="voice-loan-confirm">تأیید و ثبت قرض در مطالبات</button><button type="button" id="voice-loan-cancel" class="alt">انصراف</button></div>
+</div>
 <div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div><div class="grid"><div class="card metric"><span data-fa="موجودی" data-en="Balance">موجودی</span><b id="balance">—</b></div><div class="card metric"><span data-fa="درآمد" data-en="Income">درآمد</span><b id="income">—</b></div><div class="card metric"><span data-fa="هزینه" data-en="Expense">هزینه</span><b id="expense">—</b></div><div class="card metric"><span data-fa="مطالبات" data-en="Receivables">مطالبات</span><b id="rcvcount">—</b></div></div>
 <nav class="finance-shortcuts" aria-label="مدیریت دارایی و قرارداد"><a class="finance-shortcut" href="./assets.html"><span class="finance-shortcut-icon">◈</span><span><strong>دارایی‌ها</strong><small>طلا، ارز و خودرو</small></span></a><a class="finance-shortcut" href="./contracts.html"><span class="finance-shortcut-icon">▦</span><span><strong>قراردادها</strong><small>مطالبات و جلسات</small></span></a></nav><div class="tabs"><button class="alt" onclick="tab('transactions')" data-fa="تراکنش‌ها" data-en="Transactions">تراکنش‌ها</button><button class="alt" onclick="tab('accounts')" data-fa="حساب‌ها" data-en="Accounts">حساب‌ها</button><button class="alt" onclick="tab('transfers')" data-fa="انتقال و ارز" data-en="Transfers">انتقال و ارز</button><button class="alt" onclick="tab('receivables')" data-fa="مطالبات" data-en="Receivables">مطالبات</button><button class="alt" onclick="tab('reports')" data-fa="گزارش" data-en="Reports">گزارش</button><button class="alt" onclick="tab('settings')" data-fa="تنظیمات" data-en="Settings">تنظیمات</button></div>
 <section id="transactions"><div class="card"><h2 data-fa="ثبت درآمد یا هزینه" data-en="Add transaction">ثبت درآمد یا هزینه</h2><div class="fields"><select id="kind"><option value="expense">هزینه / Expense</option><option value="income">درآمد / Income</option></select><input id="amount" type="number" min="0" placeholder="مبلغ (تومان)"><select id="account"></select><select id="scope"><option value="personal">شخصی / Personal</option><option value="business">کاری / Business</option></select><input id="category" placeholder="دسته‌بندی"><input id="memo" placeholder="توضیح"></div><button onclick="saveTx()">بررسی و تأیید ثبت</button><p class="muted" id="tx-entry-date" aria-live="polite"></p></div>
