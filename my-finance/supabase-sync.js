@@ -358,10 +358,18 @@ function releaseAvatar(){
 function displayAvatar(blob){
  releaseAvatar();
  const image=byId('profile-avatar'),placeholder=byId('profile-avatar-placeholder');
+ const otherImages=document.querySelectorAll('.finance-user-avatar-image');
+ const otherPlaceholders=document.querySelectorAll('.finance-avatar-placeholder');
  if(blob){
   avatarObjectURL=URL.createObjectURL(blob);image.src=avatarObjectURL;
   image.hidden=false;placeholder.hidden=true;
- }else{image.hidden=true;image.removeAttribute('src');placeholder.hidden=false}
+  otherImages.forEach(img=>{img.src=avatarObjectURL;img.hidden=false});
+  otherPlaceholders.forEach(el=>{el.hidden=true});
+ }else{
+  image.hidden=true;image.removeAttribute('src');placeholder.hidden=false;
+  otherImages.forEach(img=>{img.hidden=true;img.removeAttribute('src')});
+  otherPlaceholders.forEach(el=>{el.hidden=false});
+ }
 }
 function resetProfile(){
  loadedProfileFor=null;profileEpoch++;
@@ -370,6 +378,8 @@ function resetProfile(){
  byId('profile-photo').value='';
  for(const key of ['full-name','phone','city','birth-date'])byId('profile-'+key).value='';
  byId('profile-summary').textContent='اطلاعات اختصاصی حساب شما';
+ document.querySelectorAll('.finance-identity-name,.finance-header-profile-name').forEach(el=>{el.textContent='پروفایل من'});
+ document.querySelectorAll('.finance-identity-email').forEach(el=>{el.textContent='حساب اختصاصی'});
  profileStatus('اطلاعات این بخش فقط در حساب شخصی شما نمایش داده می‌شود.');
  displayAvatar(null);
 }
@@ -391,6 +401,8 @@ function displayProfile(info,id){
  byId('profile-city').value=info.city||'';
  byId('profile-birth-date').value=info.birth_date||'';
  byId('profile-summary').textContent=(info.full_name||'کاربر My Finance')+' · '+user.email;
+ document.querySelectorAll('.finance-identity-name,.finance-header-profile-name').forEach(el=>{el.textContent=info.full_name||'پروفایل من'});
+ document.querySelectorAll('.finance-identity-email').forEach(el=>{el.textContent=user.email||'حساب اختصاصی'});
 }
 async function loadAvatar(id,path,epoch){
  if(!profileAlive(id,epoch))return;
@@ -437,6 +449,7 @@ byId('profile-save').addEventListener('click',async()=>{
   if(error)throw error;
   if(!profileAlive(uid,epoch))return;
   byId('profile-summary').textContent=(data.full_name||'کاربر My Finance')+' · '+user.email;
+  document.querySelectorAll('.finance-identity-name,.finance-header-profile-name').forEach(el=>{el.textContent=data.full_name||'پروفایل من'});
   profileStatus('✓ مشخصات پروفایل ذخیره شد.');
  }catch(e){if(profileAlive(uid,epoch))profileStatus('ذخیره موفق نبود: '+String(e.message||e),true)}
  finally{btn.disabled=false}
