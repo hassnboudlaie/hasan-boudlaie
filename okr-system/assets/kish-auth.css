@@ -1,0 +1,33 @@
+/* Isolated login layer for Kish PWA; deliberately does not modify Perdoo components. */
+html.kish-auth-pending body > :not(#kishAuthLayer){visibility:hidden!important}
+html.kish-auth-pending body{overflow:hidden!important}
+#kishAuthLayer[hidden]{display:none!important}
+#kishAuthLayer{position:fixed;inset:0;z-index:2147483600;background:linear-gradient(145deg,#09263d,#1d426a 60%,#087c90);overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:clamp(18px,5vw,60px);font-family:Vazirmatn,Tahoma,sans-serif;color:#142e46;direction:rtl;box-sizing:border-box}
+#kishAuthLayer *{box-sizing:border-box}
+.kish-auth-panel{width:min(100%,730px);margin:auto;background:white;border-radius:22px;box-shadow:0 23px 70px #07192e65;padding:clamp(22px,4vw,42px);text-align:right}
+.kish-auth-brand{display:flex;align-items:center;gap:14px;padding-bottom:19px;border-bottom:1px solid #e5edf2;margin-bottom:24px}
+.kish-auth-brand img{width:58px;height:58px;object-fit:contain}
+.kish-auth-brand strong{display:block;font-size:19px;font-weight:900;color:#143654}
+.kish-auth-brand small{display:block;color:#56809c;font-size:11px;direction:ltr;letter-spacing:.04em;margin-top:4px;text-align:right}
+.kish-auth-panel h1{margin:0 0 12px;font-size:24px;color:#122e49;line-height:1.5}
+.kish-auth-detail{font-size:15px;line-height:1.95;color:#4e6473;margin:0 0 18px}
+.kish-auth-form{display:grid;gap:15px}
+.kish-auth-form label{display:grid;gap:7px;color:#183b53;font-size:14px;font-weight:750}
+.kish-auth-form input{width:100%;min-height:48px;font-family:inherit;font-size:16px;padding:10px 13px;border:1px solid #b7cbd6;background:#fff;color:#102f46;border-radius:10px}
+.kish-auth-form input:focus,.kish-member-controls :is(input,select):focus{outline:3px solid #9bdce7;border-color:#267c91}
+.kish-auth-btn{font:750 14px Vazirmatn,Tahoma,sans-serif;min-height:45px;padding:10px 15px;border:1px solid #8eacbf;border-radius:10px;background:#f4f8fb;color:#173c56;cursor:pointer}
+.kish-auth-btn.primary{color:white;background:#1e5280;border-color:#1e5280}
+.kish-auth-btn:disabled{opacity:.55;cursor:not-allowed}
+.kish-auth-form .kish-auth-btn{margin-top:7px;width:100%}
+.kish-auth-inline{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.kish-auth-inline .kish-auth-btn{flex:1;min-width:170px}
+.kish-auth-notice{min-height:22px;color:#9b4539;font-size:14px;line-height:1.8;margin:14px 0 0}
+.kish-auth-note{font-size:14px;line-height:1.9;border:1px solid #d7e6ef;border-radius:12px;background:#eff7fb;padding:15px;color:#27475c}
+.kish-auth-foot{border-top:1px solid #e7edf2;padding-top:16px;margin:24px 0 0;color:#718797;font-size:12px}
+#kishMembersList{margin-top:20px;max-height:58vh;overflow:auto}
+.kish-member-row{border:1px solid #d9e8ef;border-radius:12px;padding:16px;margin:10px 0;background:#fcfeff}
+.kish-member-row strong{display:block;font-size:14px;overflow-wrap:anywhere;margin-bottom:10px}
+.kish-member-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.kish-member-controls input,.kish-member-controls select{min-width:0;width:100%;padding:9px;font:14px Vazirmatn,Tahoma,sans-serif;color:#163e56;background:white;border:1px solid #c3d3dd;border-radius:9px}
+.kish-member-controls .kish-auth-btn{grid-column:2}
+@media(max-width:600px){#kishAuthLayer{padding:13px}.kish-auth-panel{padding:22px 17px;border-radius:14px}.kish-auth-brand strong{font-size:16px}.kish-auth-brand img{width:48px;height:48px}.kish-member-controls{grid-template-columns:1fr}.kish-member-controls .kish-auth-btn{grid-column:1}}

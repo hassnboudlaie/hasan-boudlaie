@@ -1,6 +1,6 @@
 'use strict';
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
-(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const context=await browser.newContext({viewport:{width:1440,height:1000},locale:'fa-IR',timezoneId:'Asia/Tehran'});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=parity-ci';
+(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const context=await browser.newContext({viewport:{width:1440,height:1000},locale:'fa-IR',timezoneId:'Asia/Tehran'});await context.addInitScript(()=>{window.__kishAuthTestBypass=true;});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=parity-ci';
 const fill=async values=>{for(const [k,v] of Object.entries(values))await page.locator('#pf-'+k).fill(v);};
 const row=id=>page.locator('[data-kx-record="'+id+'"]');
 const action=async(id,name)=>{const r=row(id);await r.locator('.kx-more summary').click();await r.getByRole('button',{name,exact:true}).click();};

@@ -5,6 +5,7 @@ const assert=require('node:assert/strict');
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const failures=[];
  const page=await browser.newPage({viewport:{width:1365,height:850},locale:'fa-IR',timezoneId:'Asia/Tehran'});
+ await page.addInitScript(()=>{window.__kishAuthTestBypass=true;});
  page.on('pageerror',error=>failures.push(error.message));
  const root='http://127.0.0.1:8765/okr-system/';
  try{

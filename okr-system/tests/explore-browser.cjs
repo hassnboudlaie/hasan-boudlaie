@@ -1,6 +1,6 @@
 'use strict';
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
-(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const context=await browser.newContext({viewport:{width:1365,height:850},locale:'fa-IR',timezoneId:'Asia/Tehran'});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=explore-ci';
+(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const context=await browser.newContext({viewport:{width:1365,height:850},locale:'fa-IR',timezoneId:'Asia/Tehran'});await context.addInitScript(()=>{window.__kishAuthTestBypass=true;});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=explore-ci';
 const fill=async(values)=>{for(const [key,value] of Object.entries(values))await page.locator('#pf-'+key).fill(value);};
 try{
  await page.goto(root+'#explore');await page.waitForSelector('.kx-app');const initial=await page.locator('[data-kx-record]').count();assert.ok(initial>=90);

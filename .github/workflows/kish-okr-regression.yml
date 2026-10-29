@@ -26,6 +26,7 @@ jobs:
           node --check okr-system/assets/kish-strategy-map-20261025.js
           node --check okr-system/assets/kish-team-dashboard-20261025.js
           node --check okr-system/assets/kish-explore-model.js
+          node --check okr-system/assets/kish-auth.js
           node --check okr-system/assets/kish-explore.js
       - name: Run cross-view map regression tests
         run: node okr-system/tests/perdoo3-map-regression.cjs
@@ -39,6 +40,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/kish-okr-server.log 2>&1 &
           sleep 3
+          node okr-system/tests/kish-auth-browser.cjs
           node okr-system/tests/browser-smoke.cjs
           node okr-system/tests/explore-browser.cjs
           node okr-system/tests/parity-browser.cjs

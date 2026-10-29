@@ -7,7 +7,8 @@ const path=require('node:path');
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:1365,height:850},locale:'fa-IR',timezoneId:'Asia/Tehran'});
- const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ const errors=[];await page.addInitScript(()=>{window.__kishAuthTestBypass=true;});
+ page.on('pageerror',error=>errors.push(error.message));
  const url='http://127.0.0.1:8765/okr-system/?qa=explore-ux-a11y#explore';
  const output=path.join(__dirname,'artifacts');
  fs.mkdirSync(output,{recursive:true});
