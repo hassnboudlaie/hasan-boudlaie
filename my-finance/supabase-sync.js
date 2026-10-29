@@ -137,8 +137,28 @@ async function showAdmin(){
  const{data,error}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
  link.hidden=!!error||!data;
 }
+/* Optional registration details are profile data, never access-control claims. */
+const signupDetails=byId('auth-registration-details');
+function clearSignupMode(){
+ signupDetails.hidden=true;
+ byId('auth-register').textContent='ساخت حساب جدید';
+}
+function signupMetadata(){
+ const full_name=byId('auth-full-name').value.trim().slice(0,120);
+ const phone=byId('auth-phone').value.trim().slice(0,30);
+ const city=byId('auth-city').value.trim().slice(0,100);
+ const birth_date=byId('auth-birth-date').value;
+ if(birth_date&&(!/^\d{4}-\d{2}-\d{2}$/.test(birth_date)||birth_date>new Date().toISOString().slice(0,10)||birth_date<'1900-01-01'))throw Error('تاریخ تولد معتبر نیست. می‌توانید آن را خالی بگذارید.');
+ return {full_name,phone,city,birth_date:birth_date||null};
+}
+byId('auth-login').addEventListener('click',event=>{
+ if(!signupDetails.hidden){
+  event.preventDefault();clearSignupMode();
+  authStatus('حالت ورود فعال شد. برای ورود، دوباره «ورود» را بزنید.');
+ }
+});
 byId('auth-form').addEventListener('submit',async event=>{
- event.preventDefault();const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
+ event.preventDefault();if(!signupDetails.hidden){byId('auth-register').click();return}const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
  if(!email||!password)return authStatus('ایمیل و رمز عبور لازم است.',true);
  saveRemembered();confirmationHelp.hidden=true;authStatus('در حال ورود…');
  const{error}=await client.auth.signInWithPassword({email,password});authPassword.value='';
@@ -146,13 +166,22 @@ byId('auth-form').addEventListener('submit',async event=>{
  await refreshIdentity();
 });
 byId('auth-register').addEventListener('click',async()=>{
+ if(signupDetails.hidden){
+  signupDetails.hidden=false;byId('auth-register').textContent='تأیید و ساخت حساب';
+  authStatus('اطلاعات شخصی اختیاری هستند. بعد از تکمیل، «تأیید و ساخت حساب» را بزنید.');
+  byId('auth-full-name').focus();
+  return;
+ }
  const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authStatus('ایمیل معتبر وارد کنید.',true);
  if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
+ let profile;
+ try{profile=signupMetadata()}catch(e){return authStatus(String(e.message||e),true)}
  saveRemembered();confirmationHelp.hidden=true;authStatus('در حال ساخت حساب…');
- const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+ const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname,data:profile}});
  authPassword.value='';
  if(error)return authStatus('ثبت‌نام انجام نشد. '+emailProblem(error),true);
+ clearSignupMode();
  if(data.session)await refreshIdentity();
  else {confirmationHelp.hidden=false;authStatus('درخواست ثبت‌نام دریافت شد. ایمیل تأیید را بررسی کنید (از جمله Spam). سپس با رمز عبور وارد شوید. اگر ایمیل نرسید، ارسال مجدد را امتحان کنید.');}
 });
