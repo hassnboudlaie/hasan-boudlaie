@@ -192,3 +192,9 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 .personal-ai-shortcut-line button.personal-ai-shortcut:focus-visible{outline:3px solid #f9ca73;outline-offset:2px}
 #personal-ai-panel{scroll-margin-top:85px}
 @media(max-width:420px){.personal-ai-shortcut-line button.personal-ai-shortcut{font-size:12px;max-width:100%;white-space:normal;text-align:center}}
+
+/* Optional one-tap ChatGPT link: no API and no automatic financial posting. */
+.personal-ai-direct-box{margin:12px 0 14px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.personal-ai-direct-box>strong{display:block;font-size:13px;color:var(--fg);margin-bottom:7px}
+.personal-ai-direct-box .muted{margin:6px 0 10px;font-size:12px}
+.personal-ai-direct-box button{width:100%;min-height:47px;font-size:13px;line-height:1.75}
