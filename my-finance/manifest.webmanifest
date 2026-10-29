@@ -1,6 +1,6 @@
 {
-  "name": "My Finance | داشبورد مالی من",
-  "short_name": "My Finance",
+  "name": "مدیریت مالی من",
+  "short_name": "مدیریت مالی من",
   "id": "./?app=my-finance",
   "start_url": "./",
   "scope": "./",
