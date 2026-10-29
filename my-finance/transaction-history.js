@@ -101,7 +101,7 @@ function row(t,accounts,date){
 }
 function renderHistory(){
  const data=bridge.getData();
- const accounts=data.accounts||[],all=data.tx||[],context=periodContext(),needle=normal(search);
+ const accounts=data.accounts||[],all=(data.tx||[]).filter(t=>t.status!=='cancelled'),context=periodContext(),needle=normal(search);
  const selected=all.map((t,i)=>({t,i,date:parseDate(t.date||t.occurredAt)}))
   .filter(({t,date})=>inPeriod(date,context)&&(!needle||searchText(t,accounts,date).includes(needle)))
   .sort((a,b)=>(b.date?.getTime()||0)-(a.date?.getTime()||0)||b.i-a.i);
