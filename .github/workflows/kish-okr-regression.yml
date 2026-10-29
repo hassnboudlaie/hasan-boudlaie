@@ -28,6 +28,7 @@ jobs:
           node --check okr-system/assets/kish-explore-model.js
           node --check okr-system/assets/kish-auth.js
           node --check okr-system/assets/kish-explore.js
+          node --check okr-system/assets/kish-dashboards.js
       - name: Run cross-view map regression tests
         run: node okr-system/tests/perdoo3-map-regression.cjs
       - name: Test unified Explore data model
@@ -45,6 +46,10 @@ jobs:
           node okr-system/tests/explore-browser.cjs
           node okr-system/tests/parity-browser.cjs
           node okr-system/tests/explore-ux-a11y.cjs
+          node okr-system/tests/functional-completion.cjs
+          node okr-system/tests/custom-dashboards.cjs
+          node okr-system/tests/advanced-clone.cjs
+          node okr-system/tests/saved-view-management.cjs
 
       - name: Upload Explore QA snapshots
         if: always()
