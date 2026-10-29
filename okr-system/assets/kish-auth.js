@@ -174,7 +174,7 @@ async function checkAccess(){
 async function signOut(){
  const token=userToken();
  saveSession(null);identity=null;profile=null;
- if(token){try{await fetch(API+'/auth/v1/logout',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token}});}catch{}}
+ if(token){try{await fetch(API+'/auth/v1/logout?scope=local',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token}});}catch{}}
  location.reload();
 }
 async function initialize(){
