@@ -119,6 +119,39 @@ body.dark #home .loan-reminder-banner.loan-alert-red{background:#4e282d!importan
 #home .finance-shortcuts{margin:2px 0 12px;gap:12px}
 #home .finance-shortcut{border-radius:17px;box-shadow:none;border-color:var(--line);transition:transform .16s,box-shadow .16s}
 #home .finance-shortcut:hover{transform:translateY(-1px);box-shadow:var(--mf-shadow)}
+/* Detail views keep the same visual grammar as Home */
+body.finance-unlocked section:not(#home) .fields{gap:12px;margin:15px 0}
+body.finance-unlocked section:not(#home) .card p.muted{line-height:1.9}
+body.finance-unlocked section:not(#home) .notice{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:15px}
+body.finance-unlocked section:not(#home) .scroll{border-radius:13px}
+body.finance-unlocked section:not(#home) th{font-size:12px;color:var(--muted);font-weight:800;white-space:nowrap}
+body.finance-unlocked section:not(#home) td{font-size:13px;line-height:1.7}
+body.finance-unlocked section:not(#home) label{font-size:12px;color:var(--muted)}
+body.finance-unlocked #loans .loan-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body.finance-unlocked #loans .loan-stat{border:1px solid var(--line);border-radius:16px;background:var(--bg);padding:16px}
+body.finance-unlocked #loans .loan-stat span{font-size:12px;color:var(--muted);font-weight:700}
+body.finance-unlocked #loans .loan-stat strong{font-size:clamp(20px,2.8vw,26px);font-weight:850;margin:7px 0;color:var(--fg);overflow-wrap:anywhere}
+body.finance-unlocked #loans .loan-stat small{font-size:11px;color:var(--muted);line-height:1.6}
+body.finance-unlocked #loans .loan-item{padding:22px;margin-top:13px}
+body.finance-unlocked #loans .loan-item h3{font-size:17px;font-weight:850;line-height:1.6}
+body.finance-unlocked #loans .loan-item .loan-pill{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;color:var(--muted);font-size:11px}
+body.finance-unlocked #loans .loan-progress{height:7px;background:var(--line);border-radius:99px;margin:15px 0}
+body.finance-unlocked #loans .loan-progress>i{background:var(--accent)}
+body.finance-unlocked #loans .loan-metrics{gap:11px}
+body.finance-unlocked #loans .loan-metrics>div{padding:14px;background:var(--bg);border:1px solid var(--line);border-radius:13px}
+body.finance-unlocked #loans .loan-metrics small{font-size:11px;line-height:1.7}
+body.finance-unlocked #loans .loan-metrics b{font-size:15px;line-height:1.65;font-weight:850;overflow-wrap:anywhere}
+body.finance-unlocked #loans .loan-schedule summary{color:var(--accent);font-size:13px;min-height:44px;padding-top:8px}
+body.finance-unlocked #finance-profile-card .profile-intro{margin-bottom:16px}
+body.finance-unlocked .finance-account-detail-row{border:1px solid var(--line)!important;border-radius:13px!important;margin:7px 0}
+@media(max-width:480px){
+ body.finance-unlocked #loans .loan-stat{padding:13px}
+ body.finance-unlocked #loans .loan-stat strong{font-size:18px}
+ body.finance-unlocked #loans .loan-item{padding:17px}
+ body.finance-unlocked #loans .loan-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.finance-unlocked #loans .loan-metrics>div{padding:10px}
+ body.finance-unlocked #loans .loan-metrics b{font-size:13px}
+}
 /* App navigation: consistent icons, calm selected state, excellent hit targets */
 body.finance-unlocked .finance-sidebar{border:1px solid var(--line);border-radius:21px;box-shadow:var(--mf-shadow);background:var(--card)}
 body.finance-unlocked .finance-side-links{gap:3px}
