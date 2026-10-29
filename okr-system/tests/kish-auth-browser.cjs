@@ -51,38 +51,29 @@ const assert=require('node:assert/strict');
   await page.getByRole('button',{name:'بررسی مجدد'}).click();
   await page.locator('#kishMembersButton').waitFor();
   assert.equal(await page.locator('#executionApp').isVisible(),true,'verified approved user sees app');
-  // Opt in once; a relaunch must present a confirmation rather than enter automatically.
-  await page.reload();
-  await page.locator('#kishEmail').waitFor({timeout:15000});
-  assert.equal(await page.locator('#kishMembersButton').count(),0);
-  await page.locator('#kishEmail').fill('owner@example.test');
-  await page.locator('#kishPassword').fill('safe-e2e-test-password');
-  await page.locator('#kishSaveCredentials').check();
-  await page.getByRole('button',{name:'ورود به سامانه'}).click();
-  await page.locator('#kishMembersButton').waitFor({timeout:15000});
+  // First login has already opted into remembering the account.
   const persisted=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish-okr-auth-session-v1')));
-  assert.ok(persisted?.access_token&&persisted?.refresh_token,'session saved after one-time opt-in');
-  assert.ok(!(await page.evaluate(()=>JSON.stringify(localStorage))).includes('safe-e2e-test-password'),'password must not be stored');
+  assert.ok(persisted?.access_token&&persisted?.refresh_token,'approved session is remembered');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-last-email-v1')),'owner@example.test');
+  assert.ok(!(await page.evaluate(()=>JSON.stringify(localStorage))).includes('safe-e2e-test-password'),'password must not be in storage');
   await page.reload();
   await page.locator('#kishConfirmLogin').waitFor({timeout:15000});
-  assert.equal(await page.locator('#kishEmail').count(),0,'saved account shown without typing');
-  assert.equal(await page.locator('#kishMembersButton').count(),0,'relaunch must not auto-approve');
+  assert.equal(await page.locator('#kishEmail').count(),0,'no typing to access remembered account');
+  assert.equal(await page.locator('#kishMembersButton').count(),0,'app does not auto-login');
   assert.ok((await page.locator('.kish-saved-account').innerText()).includes('owner@example.test'));
   await page.locator('#kishConfirmLogin').click();
   await page.locator('#kishMembersButton').waitFor({timeout:15000});
-  // After token expiry, a fresh confirmation silently refreshes the token.
+  // Expired access tokens refresh ONLY after the user approves the next launch.
   await page.evaluate(()=>{
-    const key='kish-okr-auth-session-v1';
-    const saved=JSON.parse(localStorage.getItem(key));saved.expires_at=1;
-    localStorage.setItem(key,JSON.stringify(saved));
+   const k='kish-okr-auth-session-v1',v=JSON.parse(localStorage.getItem(k));
+   v.expires_at=1;localStorage.setItem(k,JSON.stringify(v));
   });
   await page.reload();
   await page.locator('#kishConfirmLogin').waitFor({timeout:15000});
+  assert.equal(refreshCount,0,'no token refresh before explicit confirmation');
   await page.locator('#kishConfirmLogin').click();
   await page.locator('#kishMembersButton').waitFor({timeout:15000});
-  assert.ok(refreshCount>=1,'expired token refreshed with consent');
-  // An app returning from background requires another explicit confirmation.
-  await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
+  assert.ok(refreshCount>=1,'expired session silently refreshed after confirmation');
   await page.locator('#kishMembersButton').click();
   await page.getByRole('heading',{name:'مدیریت کاربران و تأیید دسترسی'}).waitFor();
   const guestRow=page.locator('.kish-member-row').filter({hasText:'foujan@example.test'});
