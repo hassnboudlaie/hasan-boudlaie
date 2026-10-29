@@ -427,7 +427,8 @@ async function sync(){
   }
   next.tx=[...transactions.values()];
   assertIdentity(ownerId,epoch);
-  bridge.replaceData(next); // Deliberately does not emit local-change event.
+  bridge.replaceData(next); // Do not mark cloud downloads as locally edited.
+  document.dispatchEvent(new CustomEvent('myfinance:cloud-synced',{detail:{transactions:cloudEntries.length}}));
   const outgoingEntries=[],outgoingObjects=[];
   const errors=[];
   for(const t of next.tx){
