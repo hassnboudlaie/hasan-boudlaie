@@ -38,7 +38,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </main>
 <script type="module">
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.1/+esm';
-const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6',{auth:{persistSession:true,storage:sessionStorage,storageKey:'myfinance-supabase-session-v1',autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id),notice=(msg,error=false)=>{$('notice').textContent=msg;$('notice').classList.toggle('error',error)};
 const fmt=new Intl.DateTimeFormat('fa-IR-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'long',day:'numeric'});
 let selfId='';
