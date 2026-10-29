@@ -92,10 +92,37 @@ function render(){
  $('com-pending').innerHTML=pending.length?pending.map(t=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(t.memo)+'</strong> · '+fmt(t.amount)+' '+esc(t.currency)+'<p class="muted">سررسید '+fdate(t.dueDate)+'</p><button data-action="pay" data-id="'+esc(t.id)+'">تأیید پرداخت</button></div>').join(''):'<p class="muted">پرداختی در انتظار نیست.</p>';
  const cs=data.commitments||[];
  $('com-list').innerHTML=cs.length?cs.map(c=>'<div class="notice" style="margin-bottom:10px"><strong>'+esc(c.title)+'</strong> · '+fmt(c.amount)+' '+esc(c.currency)+'<p class="muted">سررسید بعدی '+fdate(c.nextDue)+' · '+(c.cadence==='weekly'?'هفتگی':c.cadence==='yearly'?'سالانه':c.cadence==='jalali-month-end'?'آخر هر ماه شمسی':'ماهانه')+' · یادآورها: '+esc((c.reminders||[]).join('، '))+'</p><button class="alt" data-action="toggle" data-id="'+esc(c.id)+'">'+(c.active?'توقف موقت':'فعال‌سازی')+'</button></div>').join(''):'<p class="muted">هنوز تعهدی ثبت نشده است.</p>';
- const alerts=[];
- for(const c of cs.filter(c=>c.active)){const d=days(c.nextDue);if(d<0||(c.reminders||[7,3,1,0]).includes(d))alerts.push(c.title+' · '+(d<0?'سررسید گذشته':d===0?'امروز':d+' روز مانده'))}
- for(const t of pending.filter(t=>days(t.dueDate)<0))if(!alerts.some(x=>x.startsWith(t.memo+' ·')))alerts.push(t.memo+' · پرداخت معوق');
- $('upcoming-notice').textContent=alerts.length?'⏰ یادآوری: '+alerts.slice(0,3).join(' | '):'';
+ // Visual reminders never complete a transaction or deduct any account balance.
+ const notices=[],named=new Set();let severity=0;
+ const addNotice=(title,d,amount,currency,state)=>{
+  const name=String(title||'تعهد مالی');
+  if(named.has(name))return;
+  named.add(name);
+  const level=d<=1?2:d<=5?1:0;
+  severity=Math.max(severity,level);
+  const remaining=d<0?'معوق ('+fmt(-d)+' روز)':d===0?'سررسید امروز':fmt(d)+' روز مانده';
+  const label=currency==='IRT'?'تومان':currency==='IRR'?'ریال':currency||'';
+  const amountText=Number(amount)>0?' · '+fmt(amount)+' '+label:'';
+  notices.push(name+' · '+remaining+amountText+(state==='pending'?' · تأیید پرداخت نشده':''));
+ };
+ // Pending installments are examined first: generate() rolls the next due date
+ // forward on the due day, but the unconfirmed payment still needs an alert.
+ for(const t of pending){
+  if(!valid(t.dueDate))continue;
+  const d=days(t.dueDate);
+  if(d<=5)addNotice(t.memo||t.category,d,t.amount,t.currency,'pending');
+ }
+ for(const c of cs.filter(x=>x.active&&valid(x.nextDue))){
+  const d=days(c.nextDue);
+  if(d<=5||(c.reminders||[7,5,3,1,0]).includes(d))
+   addNotice(c.title,d,c.amount,c.currency,'scheduled');
+ }
+ const target=$('upcoming-notice');
+ target.textContent=notices.length?(severity===2?'🔴 ':severity===1?'🟠 ':'📅 ')+(severity===2?'پرداخت نیازمند توجه: ':severity===1?'سررسید نزدیک: ':'یادآوری: ')+notices.slice(0,3).join(' | ')+(notices.length>3?' · و '+fmt(notices.length-3)+' مورد دیگر':''):'';
+ target.classList.toggle('finance-bills-alert-critical',notices.length>0&&severity===2);
+ target.classList.toggle('finance-bills-alert-warning',notices.length>0&&severity===1);
+ target.setAttribute('role',severity===2?'alert':'status');
+ target.setAttribute('aria-live',severity===2?'assertive':'polite');
 }
 $('com-create').addEventListener('click',create);
 sec.addEventListener('click',e=>{
