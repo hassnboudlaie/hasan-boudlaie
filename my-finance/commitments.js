@@ -1,6 +1,7 @@
 /* My Finance · recurring commitments, pending payments and in-app reminders */
 (()=>{
 const bridge=window.MyFinanceBridge,$=id=>document.getElementById(id);
+if(!bridge||!$('reports'))return;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(Number(n)||0);
 function today(){const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const v=t=>p.find(x=>x.type===t).value;return v('year')+'-'+v('month')+'-'+v('day')}
@@ -38,17 +39,17 @@ function next(iso,cadence,anchor){
  const last=new Date(Date.UTC(yy,mm+1,0)).getUTCDate();
  return [yy,String(mm+1).padStart(2,'0'),String(Math.min(anchor||d,last)).padStart(2,'0')].join('-');
 }
-const sec=document.createElement('section');sec.id='commitments';sec.hidden=true;
+const sec=$('commitments')||document.createElement('section');sec.id='commitments';sec.hidden=true;
 sec.innerHTML='<div class="card"><h2>تعهدات و هزینه‌های ثابت</h2><p class="muted">در سررسید، هزینه با وضعیت «در انتظار پرداخت» ثبت می‌شود؛ موجودی فقط پس از تأیید پرداخت تغییر می‌کند.</p>'+
-'<div class="fields"><input id="com-title" maxlength="120" placeholder="عنوان، مثلاً اجاره یا اشتراک"><input id="com-amount" type="number" min="0.01" step="any" placeholder="مبلغ">'+
-'<select id="com-currency"><option value="IRT">تومان · IRT</option><option value="IRR">ریال · IRR</option><option value="USD">دلار · USD</option><option value="EUR">یورو · EUR</option></select>'+
-'<select id="com-cadence"><option value="monthly">ماهانه</option><option value="weekly">هفتگی</option><option value="yearly">سالانه</option><option value="jalali-month-end">ماهانه · آخر ماه شمسی</option></select>'+
-'<label>اولین سررسید (میلادی)<input id="com-due" type="date"></label><label>روزهای یادآوری قبل از سررسید<input id="com-reminders" value="7,3,1,0" dir="ltr"></label>'+
-'<select id="com-account"><option value="">حساب نامشخص</option></select><input id="com-category" placeholder="دسته‌بندی"></div><button id="com-create">افزودن تعهد</button></div>'+
+'<div class="fields"><input id="com-title" aria-label="عنوان تعهد" maxlength="120" placeholder="عنوان، مثلاً اجاره یا اشتراک"><input id="com-amount" aria-label="مبلغ تعهد" type="number" min="0.01" step="any" placeholder="مبلغ">'+
+'<select id="com-currency" aria-label="ارز تعهد"><option value="IRT">تومان · IRT</option><option value="IRR">ریال · IRR</option><option value="USD">دلار · USD</option><option value="EUR">یورو · EUR</option></select>'+
+'<select id="com-cadence" aria-label="دوره تکرار تعهد"><option value="monthly">ماهانه</option><option value="weekly">هفتگی</option><option value="yearly">سالانه</option><option value="jalali-month-end">ماهانه · آخر ماه شمسی</option></select>'+
+'<label>اولین سررسید (میلادی)<input id="com-due" type="date"></label><label>روزهای یادآوری قبل از سررسید<input id="com-reminders" value="7,5,3,1,0" dir="ltr"></label>'+
+'<select id="com-account" aria-label="حساب پرداخت‌کننده"><option value="">حساب نامشخص</option></select><input id="com-category" aria-label="دسته‌بندی تعهد" placeholder="دسته‌بندی"></div><button id="com-create">افزودن تعهد</button></div>'+
 '<div class="card"><h2>پرداخت‌های در انتظار</h2><div id="com-pending"></div></div>'+
 '<div class="card"><h2>برنامه تعهدات</h2><div id="com-list"></div><p class="muted">یادآوری‌ها هنگام باز بودن اپ نمایش داده می‌شوند؛ اعلان زمان بسته بودن به Push جداگانه نیاز دارد.</p></div>';
-$('reports').insertAdjacentElement('beforebegin',sec);
-const btn=document.createElement('button');btn.className='alt';btn.textContent='تعهدات';btn.setAttribute('onclick',"tab('commitments')");document.querySelector('.tabs').append(btn);
+if(!sec.isConnected)$('reports').insertAdjacentElement('beforebegin',sec);
+const btn=document.createElement('button');btn.className='alt';btn.textContent='تعهدات';btn.setAttribute('onclick',"tab('commitments')");document.querySelector('.tabs')?.append(btn);
 $('com-due').value=today();
 function commit(data){bridge.commitData(data)}
 function generate(){
