@@ -67,11 +67,19 @@ body.mf-subpage .bottom button{background:var(--mf-teal)!important;color:#fff!im
 body.mf-subpage progress{height:9px;width:100%;accent-color:var(--mf-teal);border-radius:99px}
 body.mf-subpage .mf-empty{border:1px dashed var(--mf-line);border-radius:18px;padding:26px 18px;text-align:center;color:var(--mf-muted);background:var(--mf-card);font-size:14px}
 body.mf-subpage .mf-footnote{font-size:11px;margin-top:25px;text-align:center;color:var(--mf-muted)}
+/* Respect the explicit main-app choice across standalone financial views.
+   OS theme remains the default until the user chooses a preference. */
 @media(prefers-color-scheme:dark){
- :root{color-scheme:dark;--mf-bg:#111d23;--mf-card:#1c2c34;--mf-ink:#eef7f5;--mf-muted:#b4c8c9;
+ :root:not([data-mf-theme="light"]){color-scheme:dark;--mf-bg:#111d23;--mf-card:#1c2c34;--mf-ink:#eef7f5;--mf-muted:#b4c8c9;
  --mf-line:#34484e;--mf-teal:#84d8c5;--mf-soft:#1f3c3a;--mf-shadow:0 8px 28px rgba(0,0,0,.16)}
- body.mf-subpage .tag.warn{background:#4f381e;color:#ffe2ab}
+ :root:not([data-mf-theme="light"]) body.mf-subpage .tag.warn{background:#4f381e;color:#ffe2ab}
 }
+:root[data-mf-theme="dark"]{color-scheme:dark;--mf-bg:#111d23;--mf-card:#1c2c34;--mf-ink:#eef7f5;--mf-muted:#b4c8c9;
+ --mf-line:#34484e;--mf-teal:#84d8c5;--mf-soft:#1f3c3a;--mf-shadow:0 8px 28px rgba(0,0,0,.16)}
+:root[data-mf-theme="dark"] body.mf-subpage .tag.warn{background:#4f381e;color:#ffe2ab}
+:root[data-mf-theme="light"]{color-scheme:light;--mf-bg:#f5f7f6;--mf-card:#fff;--mf-ink:#17313a;--mf-muted:#687d83;
+ --mf-line:#e0e9e7;--mf-teal:#087a71;--mf-soft:#eef6f2;--mf-shadow:0 6px 25px rgba(17,53,65,.045)}
+:root[data-mf-theme="light"] body.mf-subpage .tag.warn{background:#fff0da;color:#965b12}
 @media(max-width:760px){
  body.mf-subpage main{padding:17px 15px 50px}
  body.mf-subpage .mf-shell-header{margin-bottom:20px}
