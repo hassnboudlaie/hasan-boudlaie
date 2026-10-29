@@ -77,6 +77,16 @@ const assert=require('node:assert/strict');
   assert.equal(updated.status,'approved');
   assert.equal(updated.role,'assistant');
   
+  // Check the device setting: opt out of persistent login and browser autofill metadata.
+  await page.locator('#kishAccountButton').click();
+  const toggle=page.locator('#kishStaySigned');
+  assert.equal(await toggle.isChecked(),true);
+  await toggle.uncheck();
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),null,'opt-out clears persistent tokens');
+  assert.ok(await page.evaluate(()=>sessionStorage.getItem('kish-okr-auth-session-v1')),'opt-out preserves only this tab session');
+  await toggle.check();
+  assert.ok(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),'opt-in restores persistent tokens');
+  
   // Recovery links must never fall back to the GitHub Pages root domain.
   await page.goto('http://127.0.0.1:8765/okr-system/?qa=recovery-ci#access_token=test-token&refresh_token=test-refresh&expires_in=3600&type=recovery');
   await page.getByRole('heading',{name:'تعیین رمز عبور جدید'}).waitFor();
@@ -87,16 +97,7 @@ const assert=require('node:assert/strict');
   await page.getByText('رمز جدید ثبت شد',{exact:false}).waitFor();
   assert.equal(await page.locator('#kishEmail').isVisible(),true,'after update, user must log in with new password');
   
-  // Check the device setting: opt out of persistent login and browser autofill metadata.
-  await page.locator('#kishAccountButton').click();
-  const toggle=page.locator('#kishStaySigned');
-  assert.equal(await toggle.isChecked(),true);
-  await toggle.uncheck();
-  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),null,'opt-out clears persistent tokens');
-  assert.ok(await page.evaluate(()=>sessionStorage.getItem('kish-okr-auth-session-v1')),'opt-out preserves only this tab session');
-  await toggle.check();
-  assert.ok(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),'opt-in restores persistent tokens');
-    assert.deepEqual(errors,[]);
+  assert.deepEqual(errors,[]);
   console.log('PASS Kish auth: gated entry, signup, pending, owner approval, assistant role');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1);});
