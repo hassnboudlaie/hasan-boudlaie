@@ -213,7 +213,7 @@ async function refreshAdminEvents(){
 }
 async function showAdmin(){
  const link=byId('finance-admin-link');if(!link||!user)return;
- const{data,error}=await client.from('finance_admins').select('user_id').eq('user.id').maybeSingle();
+ const{data,error}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
  const allowed=!error&&!!data;
  link.hidden=!allowed;
  if(!allowed){resetAdminBell();return;}
