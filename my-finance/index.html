@@ -150,7 +150,8 @@ body.finance-unlocked #auth-gate{display:none!important}
    <button type="button" id="personal-ai-direct-copy">کپی دستور ساخت لینک یک‌لمسی</button>
    <p class="muted">ثبت خودکار نیست؛ لینک فقط فرم قابل اصلاح را باز می‌کند و ثبت نیازمند تأیید شماست.</p>
   </div>
-  <label class="personal-ai-label" for="personal-ai-text">متنی که می‌خواهید دستیار تحلیل کند</label>
+  <details class="personal-ai-manual"><summary>روش جایگزین: انتقال دستی متن و JSON</summary>
+<label class="personal-ai-label" for="personal-ai-text">متنی که می‌خواهید دستیار تحلیل کند</label>
   <textarea id="personal-ai-text" rows="3" maxlength="1600" placeholder="مثلاً: دو میلیون، نه سه میلیون تومان به امیر نوری قرض دادم"></textarea>
   <div class="personal-ai-buttons">
    <button id="personal-ai-from-quick" type="button" class="alt">برداشتن متن ثبت سریع</button>
@@ -161,7 +162,8 @@ body.finance-unlocked #auth-gate{display:none!important}
   <label class="personal-ai-label" for="personal-ai-response">۳. پاسخ JSON دستیار را اینجا بچسبانید</label>
   <textarea id="personal-ai-response" rows="5" spellcheck="false" dir="ltr" maxlength="7000" placeholder='{"action":"loan_given","amount":3000000,...}'></textarea>
   <div class="personal-ai-buttons"><button type="button" id="personal-ai-review">بررسی پاسخ و ساخت پیش‌نمایش</button><button id="personal-ai-clear" type="button" class="alt">پاک‌کردن متن‌ها</button></div>
-  <p id="personal-ai-status" role="status" aria-live="polite" class="muted">هیچ اطلاعاتی بدون تأیید شما در حساب مالی ثبت نمی‌شود.</p>
+  </details>
+<p id="personal-ai-status" role="status" aria-live="polite" class="muted">هیچ اطلاعاتی بدون تأیید شما در حساب مالی ثبت نمی‌شود.</p>
  </div>
  <p class="muted" id="personal-ai-future">اتصال مستقیم امن به سرویس AI شخصی در ارتقای آینده بررسی می‌شود؛ فعلاً ورود با حساب ChatGPT به معنی اتصال API نیست.</p>
 </div>
