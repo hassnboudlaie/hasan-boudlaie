@@ -155,3 +155,9 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 .voice-helper button.alt:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .card:has(#quick) #voice-status{margin:10px 0 0!important;font-size:13px;line-height:1.9}
 @media(max-width:420px){.voice-helper{align-items:flex-start;justify-content:space-between}.voice-helper span{flex:1 1 120px}.voice-helper button.alt{flex:0 1 auto;font-size:11px}}
+
+/* Optional private AI interpretation */
+.voice-ai-option{display:flex;align-items:flex-start;gap:9px;margin:14px 0 3px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.36);background:rgba(255,255,255,.1);font-size:12px;color:#fff;cursor:pointer;line-height:1.8;flex-wrap:wrap}
+.voice-ai-option input{flex:0 0 18px;width:18px!important;height:18px!important;min-height:18px!important;accent-color:#a5ead9;align-self:flex-start;margin:4px 0}
+.voice-ai-option strong{font-size:13px;line-height:1.8}
+.voice-ai-option small{display:block;flex:1 0 100%;padding-inline-start:26px;color:#e0f3ef;font-weight:400;line-height:1.7}
