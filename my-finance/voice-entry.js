@@ -85,25 +85,42 @@ function textIncludesWord(haystack,needle){
  if(pos<0)return false;
  return (pos===0||!/[آ-ی\w]/.test(haystack[pos-1]))&&(pos+needle.length===haystack.length||!/[آ-ی\w]/.test(haystack[pos+needle.length]));
 }
+function loanRecipient(text){
+ // Name can precede or follow the verb; do not turn "حساب بانک" into a person.
+ let match=text.match(/(?:^|\s)(?:به|برای)\s+([آ-ی]+(?:\s+[آ-ی]+){0,3})(?=\s+(?:قرض|وام|دادم|داده|پرداختم|پرداخت|امروز|دیروز)|[،,.]|$)/u);
+ if(!match)match=text.match(/(?:قرض\s*(?:دادم|داد|داده\s*شد|داده\s*ام|داده\s*ایم))\s+(?:به|برای)\s+([آ-ی]+(?:\s+[آ-ی]+){0,3})/u);
+ if(!match)return '';
+ return match[1].replace(/\s+(?:مثلا|مثلاً|امروز|دیروز|بانک|حساب|کارت).*$/u,'').trim().slice(0,70);
+}
+function hasNaturalCorrection(text){
+ return /(?:^|\s)(?:نه|اصلاح\s*می\s*کنم|ببخشید|منظورم|درستش|اشتباه\s*گفتم|یعنی)(?=\s|$)/.test(text);
+}
 function parse(raw,accounts=[]){
  const original=String(raw||'').trim().slice(0,1600);
- if(!original)return {error:'ابتدا صحبت کنید یا توضیح تراکنش را بنویسید.'};
- const text=norm(original);
- const temporal=extractDate(text);
- const unsupported=/(?:بین\s+حساب|از\s+(?:حساب|بانک)\s+.+\s+به\s+(?:حساب|بانک)|قرض\s+داد|قرض\s+گرفت|وام\s+گرفت|وام\s+داد|پول\s+پیش|رهن\s+خانه|خرید\s+(?:طلا|سکه|دلار|یورو|سهام)|سرمایه\s+گذاری|سرمایه‌گذاری|طلبکار|مطالبه)/.test(text);
- if(unsupported)return {error:'این مورد ممکن است انتقال داخلی، وام، دارایی یا طلب باشد. برای جلوگیری از ثبت اشتباه به‌عنوان هزینه، آن را از بخش مخصوص خودش ثبت کنید.'};
- if(temporal.invalid)return {error:'تاریخ گفته‌شده معتبر یا در محدوده ثبت نیست. تاریخ را اصلاح و دوباره بررسی کنید.'};
+ if(!original)return {error:'ابتدا صحبت کنید یا متن تراکنش را بنویسید.'};
+ const text=norm(original),temporal=extractDate(text);
+ if(temporal.invalid)return {error:'تاریخ گفته‌شده نامعتبر است؛ آن را اصلاح کنید.'};
+ if(hasNaturalCorrection(text))return {error:'در جمله خودتان مبلغ یا اطلاعات را اصلاح کرده‌اید؛ برای جلوگیری از ثبت رقم اشتباه، این متن باید با مدل هوشمند تحلیل شود. فعلاً مبلغ نهایی را در متن روشن بنویسید یا دستی تأیید کنید.',requiresAI:true};
+ const account=detectAccount(text,accounts);
+ const isLoan=/(?:قرض\s*(?:دادم|داد|داده\s*شد|داده\s*ام|داده\s*ایم|می\s*دهم)|وام\s*دادم|وام\s*داده\s*شد)/.test(text);
+ const unsupported=/(?:بین\s+حساب|از\s+(?:حساب|بانک)\s+.+\s+به\s+(?:حساب|بانک)|قرض\s+گرفت|وام\s+گرفت|پول\s+پیش|رهن\s+خانه|خرید\s+(?:طلا|سکه|دلار|یورو|سهام)|سرمایه\s+گذاری|سرمایه‌گذاری)/.test(text);
+ if(unsupported&&!isLoan)return {error:'این گفتار مربوط به انتقال، وام دریافتی یا سرمایه‌گذاری است؛ برای جلوگیری از ثبت اشتباه باید در بخش مخصوص خودش بررسی شود.'};
  const amount=parseMoney(temporal.clean);
- if(!amount)return {error:'مبلغ واضح تشخیص داده نشد. مثلاً بگویید «۳۵۰ هزار تومان بابت بنزین».',raw:original};
+ if(!amount)return {error:'مبلغ واضح تشخیص داده نشد. مثلاً «دو میلیون تومان به امیر نوری قرض دادم». هیچ موردی ثبت نشده است.'};
  const currency=/(?:usd|دلار)/.test(text)?'USD':/(?:eur|یورو)/.test(text)?'EUR':/ریال/.test(text)?'IRR':'IRT';
+ if(isLoan){
+  const person=loanRecipient(text),warnings=[];
+  if(!person)warnings.push('نام شخص روشن نیست و باید قبل از ثبت وارد شود.');
+  if(!account)warnings.push('حساب مبدأ مشخص نیست؛ بدون حساب، فقط طلب ثبت می‌شود و موجودی تغییر نمی‌کند.');
+  return {entryType:'loan_given',person,amount,currency,account,date:temporal.date,memo:original,warnings};
+ }
+ if(/(?:قرض|وام|طلب)/.test(text))return {error:'نوع قرض یا طلب مشخص نیست؛ جمله را کامل‌تر بیان کنید.'};
  const income=/(?:درآمد|حقوق|دستمزد|حق\s*الزحمه|دریافت\s+کرد|واریز\s+شد|به\s+حسابم\s+آمد|پول\s+گرفتم|فروش\s+کردم|سود\s+گرفتم)/.test(text);
  const expense=/(?:هزینه|پرداخت|خرید|دادم|خرج|برداشتم|کارت\s+کشیدم|بنزین\s+زدم|کرایه\s+دادم)/.test(text);
- const kind=income&&!expense?'income':'expense';
- const warnings=[];
- if(!income&&!expense)warnings.push('نوع تراکنش از متن کاملاً مشخص نیست؛ «هزینه» انتخاب شده است. لطفاً بررسی کنید.');
- const account=detectAccount(text,accounts);
- if(/(?:حساب|بانک|کارت|کیف\s+پول)/.test(text)&&!account)warnings.push('حساب یا کارت گفته‌شده به‌طور قطعی شناسایی نشد؛ حساب را انتخاب کنید.');
- return {amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/(?:شرکت|کاری|پروژه|بیزنس)/.test(text)?'business':'personal',warnings};
+ const kind=income&&!expense?'income':'expense',warnings=[];
+ if(!income&&!expense)warnings.push('نوع تراکنش از گفتار قطعی نیست؛ لطفاً «هزینه» بودن آن را بررسی کنید.');
+ if(/(?:حساب|بانک|کارت|کیف\s+پول)/.test(text)&&!account)warnings.push('حساب موردنظر شناسایی نشد؛ آن را انتخاب کنید.');
+ return {entryType:'transaction',amount,currency,kind,category:categoryOf(text,kind),account,date:temporal.date,memo:original,scope:/(?:شرکت|کاری|پروژه|بیزنس)/.test(text)?'business':'personal',warnings};
 }
 let recognition=null,listening=false,hasSaved=false,voiceTimer=null,restartTimer=null,voiceToken=0,transcript='',voiceError='',hadAudio=false,voiceSession=null;
 function setMic(active){
@@ -133,7 +150,7 @@ function keyboardDictation(){
 function recognitionFallback(reason){
  return reason+' از دکمه «دیکته با کیبورد» زیر کادر استفاده کنید؛ سپس «بررسی» را بزنید.';
 }
-function clearPreview(){hasSaved=false;$('voice-review').hidden=true}
+function clearPreview(){hasSaved=false;$('voice-review').hidden=true;$('voice-loan-review').hidden=true}
 function accountOptions(selected){
  const a=bridge.getData().accounts||[];
  const list=$('voice-account');list.replaceChildren();
@@ -172,6 +189,8 @@ function preview(raw){
  const current=bridge.getData();
  const parsed=parse(raw,current.accounts);
  if(parsed.error){clearPreview();status(parsed.error,true);return parsed}
+ if(parsed.entryType==='loan_given')return previewLoan(parsed);
+ $('voice-loan-review').hidden=true;
  hasSaved=false;
  $('voice-review').hidden=false;
  $('voice-amount').value=parsed.amount;
