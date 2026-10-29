@@ -1,0 +1,24 @@
+'use strict';
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
+(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const ctx=await browser.newContext({locale:'fa-IR',timezoneId:'Asia/Tehran',viewport:{width:1440,height:1000}});await ctx.addInitScript(()=>{window.__kishAuthTestBypass=true});const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));const root='http://127.0.0.1:8765/okr-system/?qa=functional';
+const row=id=>page.locator('[data-kx-record="'+id+'"]');
+try{
+ await page.goto(root+'#start/tasks');await page.locator('.kc-home-tasks [data-p-action="task"]').click();
+ await page.locator('#pf-title').fill('QA personal task');await page.locator('#pf-owner').fill('QA');
+ assert.equal(await page.locator('#pf-objectiveId').getAttribute('required'),null);assert.equal(await page.locator('#pf-due').getAttribute('required'),null);
+ await page.locator('#platformDialog [type=submit]').click();await page.waitForURL('**#tasks/*');await page.reload();await page.getByRole('heading',{name:'QA personal task',exact:true}).waitFor();
+ await page.goto(root+'#start/tasks');await page.getByRole('link',{name:'QA personal task',exact:true}).waitFor();await page.locator('.kc-home-tasks [data-p-action="task-toggle"]').click();assert.match(await page.locator('.kc-home-tasks').innerText(),/✓/);
+ await page.goto(root+'#explore');await page.locator('.kx-app').waitFor();
+ const signature=()=>page.evaluate(()=>JSON.stringify(window.KishExploreBridge.snapshot().goals));const before=await signature();
+ await page.locator('[data-kx-sort]').selectOption('manual');const ids=await page.locator('[data-kx-record]').evaluateAll(els=>els.map(e=>e.dataset.kxRecord));const first=ids[0];await row(first).locator('.kx-more summary').click();await row(first).getByRole('button',{name:'پایین در همین سطح',exact:true}).click();const reordered=await page.locator('[data-kx-record]').evaluateAll(els=>els.map(e=>e.dataset.kxRecord));assert.notEqual(reordered[0],first);assert.equal(await signature(),before,'manual order must not rewrite business records');
+ // Save the manual layout and restore it after reload.
+ await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-action="save-view"]').click();await page.locator('[data-kx-save] [name=name]').fill('QA manual view');await page.locator('[data-kx-save] [type=submit]').click();const saved=await page.locator('[data-kx-saved]').inputValue();await page.reload();await page.locator('.kx-filters > summary').click();await page.locator('[data-kx-saved]').selectOption(saved);assert.equal(await page.locator('[data-kx-sort]').inputValue(),'manual');assert.deepEqual(await page.locator('[data-kx-record]').evaluateAll(els=>els.map(e=>e.dataset.kxRecord)),reordered);
+ // Selected columns drive Cascade CSV; Board exports the chosen historical periods.
+ await page.locator('[data-kx-action="col-toggle"]').click();await page.locator('[data-kx-column="status"]').check();
+ const download=async()=>{const pending=page.waitForEvent('download');await page.locator('[data-kx-action="csv"]').click();const d=await pending;return fs.readFileSync(await d.path(),'utf8')};
+ assert.match((await download()).split('\n')[0],/وضعیت پیشرفت/);
+ await page.locator('[data-kx-view="board"]').click();await page.locator('[data-kx-board-option="scope"]').selectOption('kpi');await page.locator('[data-kx-board-option="count"]').selectOption('12');await page.locator('[data-kx-board-option="asOf"]').fill('2026-09-30');await page.locator('[data-kx-board-option="asOf"]').blur();await page.reload();assert.equal(await page.locator('[data-kx-board-option="asOf"]').inputValue(),'2026-09-30');assert.equal((await download()).split('\n')[0].split(',').length,16);
+ // KPI cloning retains configuration while clearing measurements and history.
+ await page.locator('[data-kx-view="cascade"]').click();const kpiId=await page.evaluate(()=>window.KishExploreBridge.snapshot().kpis[0].id);await row(kpiId).locator('.kx-more summary').click();await row(kpiId).getByRole('button',{name:'رونوشت شاخص',exact:true}).click();await page.locator('[data-kx-lifecycle] [name=title]').fill('QA copied KPI');await page.locator('[data-kx-lifecycle] [type=submit]').click();const copy=await page.evaluate(()=>window.KishExploreBridge.snapshot().kpis.find(k=>k.name==='QA copied KPI'));assert.ok(copy);assert.equal(copy.current,'');assert.equal(copy.status,'draft');
+ await page.reload();await page.getByRole('link',{name:'QA copied KPI',exact:true}).waitFor();assert.deepEqual(errors,[]);console.log('PASS personal task, manual ordering/saved view, chosen-column and historical Board CSV, date reload, KPI clone');
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

@@ -64,7 +64,7 @@ function filter(rows,f={},context={}){
  matchesAny(r.tags,f.tags)&&matchesAny(r.contributors,f.contributors)&&match(r.progressStatus,f.statuses)&&match(String(r.updateEveryDays),f.updateCadences)&&aligns(r)&&
  after(r.createdAt,f.createdAfter)&&after(r.startDate,f.startAfter)&&before(r.endDate,f.dueBefore)&&
  numberBound(r.progress,f.progressMin,f.progressMax)&&
- (!f.behind||r.behind)&&(!f.outdated||r.outdated)&&
+ (!f.behind||r.behind&&numberBound(r.expected-r.progress,f.behindMin,f.behindMax))&&(!f.outdated||r.outdated)&&
  (!f.q||[r.title,r.owner].join(' ').toLocaleLowerCase().includes(String(f.q).toLocaleLowerCase())));
 }
 function tree(rows){const ids=new Set(rows.map(r=>r.id)),seen=new Set(),out=[];function walk(r,depth){if(seen.has(r.id))return;seen.add(r.id);out.push({...r,depth});rows.filter(x=>x.parentId===r.id).forEach(x=>walk(x,Math.min(depth+1,20)));}rows.filter(r=>!ids.has(r.parentId)).forEach(r=>walk(r,0));rows.forEach(r=>walk(r,0));return out;}
@@ -106,6 +106,18 @@ function boardPeriods(mode='weekly',count=6,asOf=new Date()){
  }
  return results.reverse();
 }
-function cloneGoal(g,makeId){const c=JSON.parse(JSON.stringify(g));c.id=makeId();c.objective=g.objective+' — رونوشت';c.status='draft';c.archived=false;c.dependencies=[];c.krs=(c.krs||[]).map(k=>{const n={...k,id:makeId(),current:'',lastUpdate:'',confidence:''};delete n.lastNote;return n;});for(const key of ['sourceId','sourcePage','closedAt','closingNotes','closureHistory','clonedFrom','comments','createdAt','updatedAt'])delete c[key];c.clonedFrom=g.id;return c;}
-return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,boardPeriods,CADENCE_DAYS,updateCadence,goalStatus,cloneGoal};
+function cloneGoal(g,makeId,options={}){
+ const c=JSON.parse(JSON.stringify(g));c.id=makeId();c.objective=options.title||g.objective+' — رونوشت';c.status='draft';c.archived=false;c.dependencies=[];
+ c.krs=options.includeKrs===false?[]:(c.krs||[]).map(k=>{const n={...k,id:makeId(),current:'',lastUpdate:'',confidence:'',progressStatus:'no-status',healthStatus:'',goalStatus:''};for(const key of ['lastNote','comments','closedAt','closingNotes'])delete n[key];if(options.keepOwners===false)n.owner='';return n;});
+ if(options.keepOwners===false)c.owner='';if(options.keepContributors===false)c.contributors=[];
+ c.progressStatus='no-status';c.healthStatus='';c.confidence='';c.goalStatus='';
+ for(const key of ['sourceId','sourcePage','closedAt','closingNotes','closureHistory','clonedFrom','comments','createdAt','updatedAt'])delete c[key];
+ c.clonedFrom=g.id;return c;
+}
+function cloneKpi(k,makeId,options={}){
+ const c=JSON.parse(JSON.stringify(k));c.id=makeId();c.name=options.title||k.name+' — رونوشت';c.status='draft';c.archived=false;c.current='';c.lastUpdate='';c.progressStatus='no-status';c.confidence='';c.healthStatus='';c.goalStatus='';
+ if(options.keepOwners===false)c.owner='';if(options.keepContributors===false)c.contributors=[];
+ for(const key of ['record','sourceId','sourcePage','lastNote','comments','createdAt','updatedAt','closedAt','closingNotes'])delete c[key];c.clonedFrom=k.id;return c;
+}
+return {number,percent,progress,assertParent,normalize,filter,tree,historicalValue,day,expected,weekStart,boardPeriods,CADENCE_DAYS,updateCadence,goalStatus,cloneGoal,cloneKpi};
 });

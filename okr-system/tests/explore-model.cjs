@@ -84,3 +84,15 @@ assert.equal(M.filter(statusRows,{updateCadences:['30']}).filter(r=>r.type==='kp
 const due=M.normalize(statusData,new Date('2026-11-10T00:00:00Z'));
 assert.equal(due.find(r=>r.type==='kpi').outdated,true,'monthly KPI overdue after 31 days');
 console.log('PASS Perdoo 3.0: independent Status/Stage, KPI monthly default, progress status/frequency filters');
+// Thresholds are percentage-point gaps, independent of declared health status.
+{
+ const M=require('../assets/kish-explore-model.js');
+ const rows=[{id:'a',progress:50,expected:80,behind:true},{id:'b',progress:60,expected:80,behind:true},{id:'c',progress:null,expected:80,behind:false}];
+ assert.deepEqual(M.filter(rows,{behind:true,behindMin:25,behindMax:35}).map(x=>x.id),['a']);
+ assert.deepEqual(M.filter(rows,{behind:true,behindMin:35,behindMax:25}),[]);
+ let n=0;const source={id:'g',objective:'Source',owner:'A',contributors:['B'],progressStatus:'off-track',krs:[{id:'k',text:'Metric',baseline:0,target:10,current:8,owner:'A',progressStatus:'on-track'}]};
+ const copy=M.cloneGoal(source,()=>String(++n),{keepOwners:false,keepContributors:false});assert.equal(copy.owner,'');assert.deepEqual(copy.contributors,[]);assert.equal(copy.krs[0].progressStatus,'no-status');assert.equal(source.krs[0].current,8);
+ assert.equal(M.cloneGoal(source,()=>String(++n),{includeKrs:false}).krs.length,0);
+ const kpi=M.cloneKpi({id:'kpi',name:'Revenue',target:100,current:90,progressStatus:'on-track'},()=>String(++n));assert.equal(kpi.current,'');assert.equal(kpi.target,100);assert.equal(kpi.progressStatus,'no-status');
+ console.log('PASS behind-range bounds and advanced clone measurement isolation');
+}

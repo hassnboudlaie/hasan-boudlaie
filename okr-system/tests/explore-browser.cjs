@@ -50,7 +50,8 @@ try{
  for(const view of ['cascade','map','board']){await page.locator('[data-kx-view="'+view+'"]').click();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);}
  await page.reload();await page.locator('[data-kx-record="'+goalId+'"]').waitFor();assert.match(await page.locator('[data-kx-record="'+goalId+'"]').innerText(),/۲۵٪/);
  // Perdoo 3.0 parity: eight sort fields, reversible order, demo-mode disclosure, all read-only.
- assert.equal(await page.locator('[data-kx-sort] option').count(),12);
+ assert.equal(await page.locator('[data-kx-sort] option').count(),13);
+ assert.equal(await page.locator('[data-kx-sort] option[value=manual]').count(),1);
  assert.ok(await page.locator('.kx-local-note').isVisible());
  // Perdoo 3.0 Cascade columns: enable, reorder, resize, retain across reload and reset.
  await page.locator('[data-kx-view="cascade"]').click();

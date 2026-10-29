@@ -186,3 +186,10 @@ body.kish-perdoo #platformBody .p-page>h1+p{color:#d4e4ef!important}
 .kx-app form[data-kx-inline] .kx-inline-actions button{min-height:44px;padding:6px 12px}
 .kx-app form[data-kx-inline] [data-kx-error]:not(:empty){color:#9c2e2e;font-weight:700}
 @media(max-width:640px){.kx-app .kx-inline-triggers button{min-height:40px}.kx-app form[data-kx-inline]{min-width:220px}}
+/* Custom dashboards share Explore's light, accessible surfaces. */
+.kd-app{color:#17394f}.kd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.kd-full{grid-column:1/-1}
+body.kish-perdoo .kd-app .p-card{background:#fff;color:#17394f;border:1px solid #cbdce7;min-width:0}.kd-widget header{display:flex;justify-content:space-between;gap:12px;align-items:start}.kd-widget h3{color:#17394f!important;margin:0 0 18px}.kd-app .p-muted,.kd-app small,.kd-app p{color:#4c6576!important}.kd-value{font-size:36px;font-weight:800;color:#17394f;line-height:1.7}.kd-value small{font-size:14px}.kd-trend{width:100%;height:120px;color:#087bac;fill:#087bac;display:block}.kd-goal-link{font-size:18px;font-weight:700;color:#185c84!important}.kd-list{max-height:460px;overflow:auto}.kd-text{white-space:pre-wrap;overflow-wrap:anywhere}.kd-widget .p-row{color:#17394f;border-color:#d5e1e9}.kd-widget details summary{cursor:pointer;white-space:nowrap}.kd-widget details .p-actions{flex-wrap:wrap}.kd-app .p-empty{background:#fff!important;color:#4c6576!important}
+@media(max-width:700px){.kd-grid{grid-template-columns:1fr}.kd-full{grid-column:auto}.kd-widget header{flex-wrap:wrap}}
+@media print{.kd-app button,.kd-app details,.kd-app nav,.kc-tabs{display:none!important}.kd-list{max-height:none;overflow:visible}.kd-grid{display:block}.kd-widget{break-inside:avoid;margin-block:16px}.kd-app{color:#000}}
+
+body.kish-perdoo .kd-app>.p-card-head{background:#fff;color:#17394f;border:1px solid #cbdce7;border-radius:14px;padding:18px;margin-block:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}body.kish-perdoo .kd-app>.p-card-head h2{color:#17394f!important;margin:0}.kd-app>.p-card-head .p-actions{display:flex;flex-wrap:wrap;gap:8px}
