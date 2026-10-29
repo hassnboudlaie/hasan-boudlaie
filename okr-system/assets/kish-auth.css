@@ -37,3 +37,7 @@ html.kish-auth-pending body{overflow:hidden!important}
 .kish-remember-label input[type=checkbox]{display:inline-block;width:20px;height:20px;min-height:20px;accent-color:#1e5280;flex:0 0 20px;cursor:pointer}
 .kish-account-remember{padding:14px 12px;border:1px solid #cedfe8;border-radius:12px;background:#f5f9fc;margin-top:16px}
 .kish-autofill-hint{font-size:12px;margin:12px 0 0;line-height:1.8}
+
+/* Explicit confirmation on every launch: native device password-manager suggestions. */
+#kishAuthForm input[list="kishSavedEmails"]{direction:ltr;text-align:left}
+#kishAuthForm input:-webkit-autofill{box-shadow:0 0 0 1000px #f2f8fd inset;-webkit-text-fill-color:#163e56}

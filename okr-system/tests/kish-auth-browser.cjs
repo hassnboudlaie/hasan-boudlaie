@@ -50,23 +50,24 @@ const assert=require('node:assert/strict');
   await page.getByRole('button',{name:'بررسی مجدد'}).click();
   await page.locator('#kishMembersButton').waitFor();
   assert.equal(await page.locator('#executionApp').isVisible(),true,'verified approved user sees app');
-  // After a successful login, reopening the installed app must not ask for credentials.
+  // Users explicitly confirm login on every launch, even if an old session had been persisted.
   await page.reload();
+  await page.locator('#kishEmail').waitFor({timeout:15000});
+  assert.equal(await page.locator('#kishMembersButton').count(),0,'relaunch must show login form');
+  assert.equal(await page.locator('#kishEmail').inputValue(),'','email is selected/typed by the user');
+  assert.ok(await page.locator('#kishSaveCredentials').count(),'device password-saving preference is present');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),null,'no persisted auth session');
+  // A prior login can still be chosen from saved usernames without storing the password in app data.
+  assert.ok((await page.locator('#kishSavedEmails option').count())>=1,'device login offers remembered email');
+  assert.equal(await page.locator('#kishPassword').inputValue(),'','app must not retain password');
+  await page.locator('#kishEmail').fill('owner@example.test');
+  await page.locator('#kishPassword').fill('safe-e2e-test-password');
+  await page.locator('#kishSaveCredentials').check();
+  await page.getByRole('button',{name:'ورود به سامانه'}).click();
   await page.locator('#kishMembersButton').waitFor({timeout:15000});
-  assert.equal(await page.locator('#kishEmail').count(),0,'automatic login must bypass email/password form');
-  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('kish-okr-auth-session-v1')));
-  assert.ok(saved?.access_token&&saved?.refresh_token&&saved.expires_at,'session and computed expiry persisted across reloads');
-  const stored=await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1'));
-  assert.equal(stored.includes('safe-e2e-test-password'),false,'plaintext password must never be stored');
-  // An expired access token should be silently replaced using the one-time refresh token.
-  await page.evaluate(()=>{
-   const s=JSON.parse(localStorage.getItem('kish-okr-auth-session-v1'));s.expires_at=1;
-   localStorage.setItem('kish-okr-auth-session-v1',JSON.stringify(s));
-  });
-  await page.reload();
-  await page.locator('#kishMembersButton').waitFor({timeout:15000});
-  assert.ok(refreshCount>=1,'expired session must silently refresh');
-  assert.equal(await page.locator('#kishEmail').count(),0,'refresh must not prompt for password');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),null,'password login does not persist auth tokens');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-credential-pref-v1')),'1','user consent persists');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-last-email-v1')),'owner@example.test','username suggestion persists');
   await page.locator('#kishMembersButton').click();
   await page.getByRole('heading',{name:'مدیریت کاربران و تأیید دسترسی'}).waitFor();
   const guestRow=page.locator('.kish-member-row').filter({hasText:'foujan@example.test'});
@@ -78,14 +79,13 @@ const assert=require('node:assert/strict');
   assert.equal(updated.role,'assistant');
   
   await page.locator('#kishAdminAccount').click();
-  const toggle=page.locator('#kishStaySigned');
-  assert.equal(await toggle.isChecked(),true);
+  const toggle=page.locator('#kishCredentialPreference');
+  assert.equal(await toggle.isChecked(),true,'account shows device-save preference');
   await toggle.uncheck();
-  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),null,'opt-out clears persistent tokens');
-  assert.ok(await page.evaluate(()=>sessionStorage.getItem('kish-okr-auth-session-v1')),'opt-out preserves only this tab session');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-credential-pref-v1')),'0');
   await toggle.check();
-  assert.ok(await page.evaluate(()=>localStorage.getItem('kish-okr-auth-session-v1')),'opt-in restores persistent tokens');
-  
+  assert.equal(await page.evaluate(()=>localStorage.getItem('kish-okr-credential-pref-v1')),'1');
+
   // Recovery links must never fall back to the GitHub Pages root domain.
   await page.goto('http://127.0.0.1:8765/okr-system/?qa=recovery-ci#access_token=test-token&refresh_token=test-refresh&expires_in=3600&type=recovery');
   await page.getByRole('heading',{name:'تعیین رمز عبور جدید'}).waitFor();
