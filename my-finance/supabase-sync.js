@@ -257,12 +257,8 @@ byId('auth-form').addEventListener('submit',async event=>{
  await refreshIdentity();
 });
 byId('auth-register').addEventListener('click',async()=>{
- if(signupDetails.hidden){
-  signupDetails.hidden=false;byId('auth-register').textContent='تأیید و ساخت حساب';
-  authStatus('اطلاعات شخصی اختیاری هستند. بعد از تکمیل، «تأیید و ساخت حساب» را بزنید.');
-  byId('auth-full-name').focus();
-  return;
- }
+ // Keep the beta sign-up to two fields: email as username + chosen password.
+ // Optional profile details can be added after the account opens.
  const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authStatus('ایمیل معتبر وارد کنید.',true);
  if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
