@@ -45,6 +45,18 @@ body.finance-unlocked #auth-gate{display:none!important}
 <label for="auth-password">رمز عبور</label>
 <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="10" placeholder="حداقل ۱۰ کاراکتر" required>
 <div class="auth-remember"><input id="auth-remember" type="checkbox" checked><label for="auth-remember">ایمیل من را برای ورودهای بعدی به خاطر بسپار</label></div>
+<div id="auth-registration-details" class="auth-registration-details" hidden>
+ <p class="auth-registration-title">اطلاعات پروفایل · برای ساخت حساب جدید</p>
+ <label for="auth-full-name">نام و نام خانوادگی (اختیاری)</label>
+ <input id="auth-full-name" type="text" autocomplete="name" maxlength="120" placeholder="نام شما">
+ <label for="auth-phone">شماره تماس (اختیاری)</label>
+ <input id="auth-phone" type="tel" autocomplete="tel" maxlength="30" dir="ltr" placeholder="مثلاً ۰۹۱۲...">
+ <label for="auth-city">شهر (اختیاری)</label>
+ <input id="auth-city" type="text" maxlength="100" autocomplete="address-level2" placeholder="مثلاً تهران">
+ <label for="auth-birth-date">تاریخ تولد (اختیاری)</label>
+ <input id="auth-birth-date" type="date" autocomplete="bday">
+ <p class="auth-profile-note">ثبت این اطلاعات اجباری نیست. عکس پروفایل را بعد از اولین ورود از «پروفایل من» اضافه کنید.</p>
+ </div>
 <div class="auth-actions"><button type="submit" id="auth-login">ورود</button><button type="button" id="auth-register" class="alt">ساخت حساب جدید</button></div>
 </form>
 <div id="auth-status" role="status" aria-live="polite">برای ادامه، وارد حساب اختصاصی خودتان شوید.</div>
@@ -134,7 +146,24 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div class="card"><h2>ورود رکورد خصوصی / Private import</h2><input type="file" id="rcvimport" accept=".json,application/json" onchange="importReceivableFile(this)"><p class="muted">این فایل فقط در مرورگر شما خوانده می‌شود. فایل خصوصی را در GitHub منتشر نکنید؛ داده محلی رمزگذاری نشده است.</p></div>
 </section>
 <section id="reports" hidden><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
-<section id="settings" hidden><div class="card" id="personal-ai-panel">
+<section id="settings" hidden>
+ <div class="card" id="finance-profile-card">
+  <div class="profile-intro"><div class="profile-avatar-shell"><span id="profile-avatar-placeholder" aria-hidden="true">👤</span><img id="profile-avatar" alt="عکس پروفایل شما" hidden></div>
+   <div><h2>پروفایل من</h2><p id="profile-summary" class="muted">اطلاعات اختصاصی حساب شما</p></div></div>
+  <div class="profile-fields">
+   <label for="profile-full-name">نام و نام خانوادگی<input id="profile-full-name" type="text" maxlength="120" autocomplete="name" placeholder="نام و نام خانوادگی"></label>
+   <label for="profile-phone">شماره تماس (اختیاری)<input id="profile-phone" type="tel" maxlength="30" autocomplete="tel" dir="ltr" placeholder="شماره تماس"></label>
+   <label for="profile-city">شهر (اختیاری)<input id="profile-city" type="text" maxlength="100" placeholder="شهر"></label>
+   <label for="profile-birth-date">تاریخ تولد (اختیاری)<input id="profile-birth-date" type="date" autocomplete="bday"></label>
+  </div>
+  <div class="profile-actions"><button type="button" id="profile-save">ذخیره اطلاعات شخصی</button></div>
+  <div class="profile-photo-section"><label for="profile-photo">عکس پروفایل (اختیاری)</label>
+   <input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp">
+   <p class="muted">تصویر روی گوشی کوچک و به WebP تبدیل می‌شود. فایل در فضای خصوصی حساب شما ذخیره می‌شود؛ حداکثر ۶ مگابایت برای انتخاب.</p>
+   <div class="profile-actions"><button id="profile-photo-save" type="button" class="alt" disabled>ذخیره عکس انتخاب‌شده</button><button id="profile-photo-remove" type="button" class="alt">حذف عکس</button></div>
+  </div>
+  <p id="profile-status" role="status" aria-live="polite" class="muted">اطلاعات این بخش برای کاربران دیگر قابل مشاهده نیست.</p>
+ </div><div class="card" id="personal-ai-panel">
  <h2>دستیار هوش مصنوعی شخصی · اختیاری</h2>
  <p class="muted">بدون اتصال پولی اجباری. استفاده عادی از My Finance مستقل از این بخش است.</p>
  <label class="personal-ai-label" for="personal-ai-mode">روش استفاده از دستیار شخصی</label>
