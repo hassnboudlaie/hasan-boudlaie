@@ -198,3 +198,8 @@ body.dark .tx-ledger-amount.tx-expense{color:#ffa0a5}
 .personal-ai-direct-box>strong{display:block;font-size:13px;color:var(--fg);margin-bottom:7px}
 .personal-ai-direct-box .muted{margin:6px 0 10px;font-size:12px}
 .personal-ai-direct-box button{width:100%;min-height:47px;font-size:13px;line-height:1.75}
+
+.personal-ai-direct-box button+button{margin-top:8px;background:var(--card);color:var(--fg);border:1px solid var(--line)}
+.personal-ai-manual{margin-top:15px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;color:var(--fg)}
+.personal-ai-manual summary{cursor:pointer;font-size:13px;line-height:1.75;font-weight:700}
+.personal-ai-manual[open] summary{margin-bottom:12px}
