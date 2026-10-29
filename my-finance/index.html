@@ -45,7 +45,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <input id="auth-email" name="username" type="email" autocomplete="username" inputmode="email" dir="ltr" placeholder="your@email.com" required>
 <label for="auth-password">رمز عبور</label>
 <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="10" placeholder="حداقل ۱۰ کاراکتر" required>
-<div class="auth-remember"><input id="auth-remember" type="checkbox" checked><label for="auth-remember">ایمیل من را برای ورودهای بعدی به خاطر بسپار</label></div>
+<div class="auth-remember"><input id="auth-remember" type="checkbox" checked><label for="auth-remember">در این دستگاه وارد بمانم (پس از رفرش دوباره رمز نخواهد)</label></div><p class="auth-hint auth-trusted-device">فقط روی گوشی یا رایانه شخصی فعال بگذارید. در دستگاه مشترک، تیک را بردارید و پس از کار از حساب خارج شوید.</p>
 <div id="auth-registration-details" class="auth-registration-details" hidden>
  <p class="auth-registration-title">اطلاعات پروفایل · برای ساخت حساب جدید</p>
  <label for="auth-full-name">نام و نام خانوادگی (اختیاری)</label>
@@ -65,7 +65,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div id="auth-pending" hidden><p id="auth-pending-email" dir="ltr"></p><button type="button" id="auth-logout" class="alt">خروج از حساب</button><button type="button" id="auth-recheck">بررسی مجدد وضعیت دسترسی</button></div>
 <div class="auth-bottom"><button type="button" id="auth-forgot">فراموشی رمز عبور</button></div>
 <div id="auth-reset-panel" hidden><label for="auth-new-password">رمز جدید</label><input id="auth-new-password" type="password" autocomplete="new-password" minlength="10" placeholder="حداقل ۱۰ کاراکتر"><button type="button" id="auth-set-password">تغییر رمز عبور</button></div>
-<p class="auth-hint">رمز عبور داخل اپ ذخیره نمی‌شود. در صورت انتخاب، فقط ایمیل شما به خاطر سپرده می‌شود؛ ورود تازه به اپ به رمز عبور نیاز دارد.</p>
+<p class="auth-hint">رمز عبور ذخیره نمی‌شود. اگر «در این دستگاه وارد بمانم» را انتخاب کنید، نشست امن شما برای رفرش و بازکردن دوباره اپ حفظ می‌شود؛ خروج از حساب آن را پاک می‌کند.</p>
 </div></div><main><aside class="finance-sidebar" aria-label="منوی اصلی My Finance">
  <div class="finance-side-brand"><img src="./icon-192-r4.png" alt="" width="38" height="38"><span><strong>My Finance</strong><small>مدیریت مالی شخصی</small></span></div>
  <nav class="finance-side-links" aria-label="بخش‌های اصلی"><span class="finance-side-section">مدیریت مالی</span>
@@ -109,6 +109,13 @@ body.finance-unlocked #auth-gate{display:none!important}
   <span class="finance-strip-end"><b id="rcvcount">—</b><span aria-hidden="true">‹</span></span>
  </button>
 </div>
+<div class="card finance-cashflow-card" id="finance-cashflow-card">
+ <div class="finance-flow-head"><div><span class="finance-eyebrow" data-fa="CASH FLOW / جریان پول" data-en="CASH FLOW">CASH FLOW / جریان پول</span><h3 data-fa="روند درآمد و هزینه" data-en="Income and spending">روند درآمد و هزینه</h3><p class="muted" data-fa="شش ماه اخیر · فقط تومان و ریال" data-en="Last 6 Persian months · IRR and toman only">شش ماه اخیر · فقط تومان و ریال</p></div>
+ <button type="button" class="finance-section-link" onclick="financeOpenDetail('transactions')" data-fa="جزئیات ‹" data-en="Details ›">جزئیات ‹</button></div>
+ <div class="finance-flow-summary"><span class="finance-flow-net-label" data-fa="خالص این ماه" data-en="Net this month">خالص این ماه</span><strong id="finance-flow-net" dir="auto">—</strong><small id="finance-flow-note" class="muted" role="status"></small></div>
+ <div class="finance-flow-chart" id="finance-flow-chart" role="img" aria-label="مقایسه درآمد و هزینه شش ماه اخیر"></div>
+ <div class="finance-flow-legend"><span><i class="flow-swatch income"></i><span data-fa="درآمد" data-en="Income">درآمد</span></span><span><i class="flow-swatch expense"></i><span data-fa="هزینه" data-en="Spending">هزینه</span></span></div>
+ </div>
 <div class="card"><h2 data-fa="ثبت سریع تراکنش" data-en="Quick entry">ثبت سریع تراکنش</h2><div class="entry"><input id="quick" type="text" inputmode="text" lang="fa" autocapitalize="off" autocomplete="off" placeholder="مثلاً: امروز ۵۰۰ هزار تومان هزینه کردم"><button type="button" id="voice-mic" title="شروع و پایان گفتار فارسی" aria-label="شروع یا توقف ضبط تراکنش صوتی" aria-pressed="false">🎙</button><button type="button" id="voice-parse" title="بررسی و پیش‌نمایش" aria-label="بررسی و پیش‌نمایش تراکنش">➜</button></div><p class="voice-free-hint">بدون هزینه API: دیکته با میکروفون گوشی یا مرورگر، سپس بررسی و تأیید تراکنش. در جمله‌های مبهم مبلغ و سرفصل را خودتان بررسی کنید.</p>
 <div class="personal-ai-shortcut-line"><button type="button" class="alt personal-ai-shortcut" data-fa="🤖 دستیار هوش مصنوعی شخصی (اختیاری)" data-en="🤖 Personal AI assistant (optional)" onclick="tab('settings');requestAnimationFrame(()=>document.getElementById('personal-ai-panel')?.scrollIntoView({behavior:'smooth',block:'start'}))">🤖 دستیار هوش مصنوعی شخصی (اختیاری)</button></div>
 <div class="voice-helper"><span>اگر گفتار به متن تبدیل نشد:</span><button type="button" id="voice-keyboard" class="alt">⌨ دیکته با کیبورد گوشی</button></div><p id="voice-status" class="muted" role="status" aria-live="polite">برای شروع 🎙 را بزنید، صحبت کنید و برای پایان دوباره 🎙 را بزنید. اگر گفتار کامل دریافت نشد، از دیکته با کیبورد استفاده کنید.</p><p class="voice-privacy-note">تشخیص گفتار ممکن است از سرویس صوتی مرورگر استفاده کند؛ برای اطلاعات حساس از ورود متنی استفاده کنید.</p></div>
@@ -415,7 +422,58 @@ function financeMonthEntries(kind=null){
  return (db.tx||[]).filter(t=>!['pending','cancelled'].includes(t.status)&&['IRT','IRR'].includes(t.currency)&&
   (!kind||t.kind===kind)&&financeMonthKey(new Date(t.date||t.occurredAt))===month);
 }
+function renderFinanceCashflow(){
+ const now=new Date(),dateParts=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit'}).formatToParts(now);
+ const year=Number(dateParts.find(p=>p.type==='year')?.value),month=Number(dateParts.find(p=>p.type==='month')?.value);
+ if(!Number.isFinite(year)||!Number.isFinite(month))return;
+ const monthsFa=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+ const monthsEn=['Far','Ord','Kho','Tir','Mor','Sha','Meh','Aba','Aza','Dey','Bah','Esf'];
+ const periods=Array.from({length:6},(_,i)=>{
+  let n=year*12+(month-1)-(5-i);
+  let y=Math.floor(n/12),m=n%12+1;
+  return {key:String(y)+'-'+String(m).padStart(2,'0'),label:(lang==='en'?monthsEn:monthsFa)[m-1],income:0,expense:0};
+ });
+ const map=new Map(periods.map(x=>[x.key,x]));
+ for(const t of db.tx||[]){
+  if(!['income','expense'].includes(t.kind)||['pending','cancelled'].includes(t.status)||!['IRT','IRR'].includes(t.currency))continue;
+  const date=new Date(t.date||t.occurredAt);
+  const p=map.get(financeMonthKey(date));if(!p)continue;
+  const amount=financeInToman(t);
+  if(Number.isFinite(amount)&&amount>0)p[t.kind]+=amount;
+ }
+ const current=periods[5],net=current.income-current.expense;
+ const display=$('finance-flow-net'),note=$('finance-flow-note'),chart=$('finance-flow-chart');
+ if(display){
+  display.textContent=(net>0?'+':net<0?'−':'')+fmt(Math.abs(net))+(lang==='en'?' toman':' تومان');
+  display.dataset.sign=net>0?'positive':net<0?'negative':'neutral';
+ }
+ if(note)note.textContent=(lang==='en'?'Income '+fmt(current.income)+' · Spending '+fmt(current.expense):'درآمد '+fmt(current.income)+' · هزینه '+fmt(current.expense));
+ if(!chart)return;
+ chart.replaceChildren();
+ const max=Math.max(1,...periods.flatMap(p=>[p.income,p.expense]));
+ const hasAny=periods.some(p=>p.income>0||p.expense>0);
+ for(const p of periods){
+  const col=document.createElement('div');col.className='finance-flow-month';
+  const bars=document.createElement('div');bars.className='finance-flow-bars';
+  for(const kind of ['income','expense']){
+   const bar=document.createElement('span');bar.className='finance-flow-bar '+kind;
+   bar.style.height=(p[kind]>0?Math.max(5,p[kind]/max*100):0)+'%';
+   bar.title=(kind==='income'?'درآمد: ':'هزینه: ')+fmt(p[kind])+' تومان';
+   bars.append(bar);
+  }
+  const label=document.createElement('span');label.className='finance-flow-month-label';label.textContent=p.label;
+  col.append(bars,label);chart.append(col);
+ }
+ const old=chart.querySelector('.finance-flow-empty');
+ if(!hasAny){
+  const empty=document.createElement('p');empty.className='finance-flow-empty';empty.textContent=lang==='en'?'Your income and expense trends will appear here.':'با ثبت درآمد و هزینه، روند ماهانه اینجا نمایش داده می‌شود.';
+  chart.append(empty);
+ }
+ chart.setAttribute('aria-label',(lang==='en'?'Income and spending in the last six Persian months. ':'روند درآمد و هزینه شش ماه اخیر. ')+
+  periods.map(p=>p.label+': '+fmt(p.income)+' / '+fmt(p.expense)).join('؛ '));
+}
 function renderHomeDashboard(){
+ renderFinanceCashflow();
  const isEn=lang==='en',now=new Date();
  const accounts=(db.accounts||[]).filter(a=>['IRT','IRR'].includes(a.currency));
  const accountCount=$('finance-account-count');
