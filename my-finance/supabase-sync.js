@@ -88,6 +88,88 @@ function renderAuth(){
  if(!user){notice('حالت محلی · ورود امن برای اتصال');byId('supabase-pair-status').textContent='پس از ورود، برای اتصال مستقیم به ChatGPT کد یک‌بارمصرف بسازید.'}
  else {notice('حساب متصل: '+user.email,true);refreshPairStatus().catch(()=>{});}
 }
+
+/* Account-gated beta. Browser remembers email only; Supabase handles passwords and sessions. */
+const rememberKey='myfinance-saved-email-v1';
+const authEmail=byId('auth-email'),authPassword=byId('auth-password'),authRemember=byId('auth-remember');
+const remembered=localStorage.getItem(rememberKey);
+if(remembered){authEmail.value=remembered;authRemember.checked=true}else authRemember.checked=false;
+let recovery=false;
+function authStatus(text,error=false){const e=byId('auth-status');e.textContent=text;e.classList.toggle('error',error)}
+function saveRemembered(){if(authRemember.checked)localStorage.setItem(rememberKey,authEmail.value.trim().toLowerCase());else localStorage.removeItem(rememberKey)}
+function gate(text,identity=null,error=false){
+ document.body.classList.remove('finance-unlocked');
+ byId('auth-form').hidden=!!identity;byId('auth-pending').hidden=!identity;
+ byId('auth-pending-email').textContent=identity?.email||'';
+ authStatus(text,error);
+}
+function lock(text,identity=null,error=false){
+ const before=!!user;user=null;dirty=new Set();seen=new Map();
+ if(before)bridge.bindUser(null);
+ renderAuth();gate(text,identity,error);
+}
+function validAccess(a){return a?.status==='active'&&(!a.expires_at||Date.parse(a.expires_at)>Date.now())}
+function pendingText(a){
+ if(a.status==='suspended')return 'دسترسی این حساب توسط مدیر تعلیق شده است. داده‌ها حذف نشده‌اند.';
+ if(a.status==='active')return 'اعتبار دسترسی آزمایشی به پایان رسیده است. مدیر می‌تواند آن را تمدید کند.';
+ return 'ثبت‌نام انجام شده است. برای شروع استفاده، منتظر تأیید مدیر باشید.';
+}
+async function getAccess(identity){
+ let{data,error}=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
+ if(error)throw error;if(data)return data;
+ const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'pending'}).select('status,expires_at').single();
+ if(created.error){
+  const retry=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
+  if(retry.error||!retry.data)throw created.error;
+  return retry.data;
+ }
+ return created.data;
+}
+async function showAdmin(){
+ const link=byId('finance-admin-link');if(!link||!user)return;
+ const{data,error}=await client.from('finance_admins').select('user_id').eq('user_id',user.id).maybeSingle();
+ link.hidden=!!error||!data;
+}
+byId('auth-form').addEventListener('submit',async event=>{
+ event.preventDefault();const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
+ if(!email||!password)return authStatus('ایمیل و رمز عبور لازم است.',true);
+ saveRemembered();authStatus('در حال ورود…');
+ const{error}=await client.auth.signInWithPassword({email,password});authPassword.value='';
+ if(error)return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);
+ await refreshIdentity();
+});
+byId('auth-register').addEventListener('click',async()=>{
+ const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authStatus('ایمیل معتبر وارد کنید.',true);
+ if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
+ saveRemembered();authStatus('در حال ساخت حساب…');
+ const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+ authPassword.value='';
+ if(error)return authStatus('ساخت حساب انجام نشد: '+error.message,true);
+ if(data.session)await refreshIdentity();
+ else authStatus('برای تأیید حساب، لینک ارسال‌شده به ایمیل خود را باز کنید. پس از تأیید با رمز عبور وارد شوید.');
+});
+byId('auth-logout').addEventListener('click',async()=>{
+ const{error}=await client.auth.signOut();
+ if(error)return authStatus('خروج ناموفق: '+error.message,true);
+ lock('از حساب خارج شدید؛ برای ورود مجدد از ایمیل و رمز عبور استفاده کنید.');
+});
+byId('auth-recheck').addEventListener('click',()=>refreshIdentity());
+byId('auth-forgot').addEventListener('click',async()=>{
+ const email=authEmail.value.trim().toLowerCase();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authStatus('ابتدا ایمیل خود را وارد کنید.',true);
+ const{error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+ authStatus(error?'درخواست بازیابی ناموفق: '+error.message:'اگر حسابی با این ایمیل وجود داشته باشد، لینک بازیابی ارسال می‌شود.',!!error);
+});
+byId('auth-set-password').addEventListener('click',async()=>{
+ const password=byId('auth-new-password').value;
+ if(password.length<10)return authStatus('رمز جدید باید حداقل ۱۰ کاراکتر باشد.',true);
+ const{error}=await client.auth.updateUser({password});
+ if(error)return authStatus('تغییر رمز ناموفق: '+error.message,true);
+ byId('auth-new-password').value='';recovery=false;byId('auth-reset-panel').hidden=true;
+ authStatus('رمز عبور جدید ذخیره شد.');await refreshIdentity();
+});
+
 function allRecords(data){
  const records=new Map();
  for(const [kind,collection] of Object.entries(collections)){
@@ -209,21 +291,24 @@ async function sync(){
 }
 async function refreshIdentity(){
  if(authPending)return;
- authPending=true;
+ authPending=true;let next=null;
  try{
-  const {data,error}=await client.auth.getUser();
-  const next=error?null:data?.user||null;
-  if((next?.id||null)===(user?.id||null))return;
-  user=next;
-  dirty=new Set();
-  seen=new Map();
-  if(user){
-   bridge.bindUser(user.id);
+  const{data,error}=await client.auth.getUser();if(error)throw error;
+  next=data?.user||null;
+  if(!next){lock('برای ادامه وارد حساب خود شوید.');return}
+  const access=await getAccess(next);
+  if(!validAccess(access)){lock(pendingText(access),next);return}
+  if(recovery){lock('رمز عبور جدید را تعیین کنید.',next);byId('auth-reset-panel').hidden=false;return}
+  const same=user?.id===next.id;
+  if(!same){
+   user=next;dirty=new Set();seen=new Map();bridge.bindUser(user.id);
    try{dirty=new Set(JSON.parse(localStorage.getItem(dirtyKey())||'[]'))}catch(e){}
-  }else bridge.bindUser(null);
-  renderAuth();
-  if(user)await sync();
- }catch(e){notice('اتصال حساب ناموفق: '+e.message)}
+  }
+  if(!same||!document.body.classList.contains('finance-unlocked'))await sync();
+  renderAuth();document.body.classList.add('finance-unlocked');
+  byId('account-access-summary').textContent='حساب فعال: '+next.email+(access.expires_at?' · تا '+new Date(access.expires_at).toLocaleDateString('fa-IR'):' · بدون سررسید');
+  showAdmin().catch(()=>{});
+ }catch(e){lock('دسترسی امن تأیید نشد. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید. '+String(e.message||''),next,true)}
  finally{authPending=false}
 }
 byId('supabase-send').addEventListener('click',async()=>{
@@ -253,9 +338,9 @@ byId('supabase-logout').addEventListener('click',async()=>{
 byId('supabase-pull').addEventListener('click',()=>sync().catch(()=>{}));
 byId('supabase-push').addEventListener('click',()=>sync().catch(()=>{}));
 document.addEventListener('myfinance:changed',setDirty);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&user)sync().catch(()=>{})});
-window.addEventListener('online',()=>{if(user)sync().catch(()=>{})});
-setInterval(()=>{if(user&&!document.hidden&&navigator.onLine)sync().catch(()=>{})},15000);
-client.auth.onAuthStateChange(()=>setTimeout(refreshIdentity,0));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIdentity()});
+window.addEventListener('online',()=>refreshIdentity());
+setInterval(()=>{if(!document.hidden&&navigator.onLine)refreshIdentity().then(()=>{if(user)sync().catch(()=>{})})},15000);
+client.auth.onAuthStateChange(event=>{if(event==='PASSWORD_RECOVERY'){recovery=true;byId('auth-reset-panel').hidden=false}setTimeout(refreshIdentity,0)});
 window.MyFinanceCloud={sync,authenticated:()=>!!user};
 renderAuth();refreshIdentity();
