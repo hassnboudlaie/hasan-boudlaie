@@ -62,6 +62,8 @@ const assert=require('node:assert/strict');
   
   // Recovery links must never fall back to the GitHub Pages root domain.
   await page.goto('http://127.0.0.1:8765/okr-system/#access_token=test-token&refresh_token=test-refresh&expires_in=3600&type=recovery');
+  await page.waitForTimeout(1500);
+  console.log('RECOVERY DEBUG',await page.evaluate(()=>({hash:location.hash,earlyCallback:!!window.__kishAuthReturnFragment,authHeading:document.querySelector('#kishAuthLayer h1')?.innerText,authDetails:document.querySelector('#kishAuthLayer')?.innerText?.slice(0,500),gateVisible:!document.querySelector('#kishAuthLayer')?.hidden,scriptPresent:!!document.querySelector('script[src*="kish-auth.js"]')})));
   await page.getByRole('heading',{name:'تعیین رمز عبور جدید'}).waitFor();
   assert.equal(page.url().includes('access_token'),false,'tokens must be stripped from browser URL');
   await page.locator('#kishNewPassword').fill('some-secure-test-password');
