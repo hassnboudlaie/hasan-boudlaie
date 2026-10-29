@@ -418,6 +418,120 @@ function start(){
  status('در حال اتصال به میکروفون… فارسی صحبت کنید و برای پایان دوباره میکروفون را لمس کنید.');
  beginCycle();
 }
+/* Optional AI mode: record the whole voice message before analysis. Audio is never stored in localStorage. */
+let aiRecorder=null,aiStream=null,aiChunks=[],aiBusy=false,aiTimer=null,aiCancel=false;
+function aiStopStream(){
+ if(aiTimer!==null){clearTimeout(aiTimer);aiTimer=null}
+ if(aiStream){for(const track of aiStream.getTracks())track.stop();aiStream=null}
+}
+function aiClearRecorder(){
+ aiStopStream();
+ if(aiRecorder&&aiRecorder.state!=='inactive'){
+  aiCancel=true;try{aiRecorder.stop()}catch(e){}
+ }
+ aiRecorder=null;aiChunks=[];
+ setMic(false);
+}
+function aiAccounts(){return (bridge.getData().accounts||[]).map(a=>({name:a.name,currency:a.currency}))}
+function applyAI(packet){
+ const r=packet?.result,spoken=String(packet?.transcript||'').trim();
+ if(!r||!spoken)throw Error('پاسخ قابل فهمی از هوش مصنوعی دریافت نشد.');
+ $('quick').value=spoken;
+ if(r.needs_clarification||!(Number(r.amount)>0)||!Number.isFinite(Number(r.amount))||r.confidence<0.60){
+  clearPreview();
+  status('نیاز به توضیح بیشتر: '+(r.question||'لطفاً مبلغ نهایی، نوع عملیات و نام طرف حساب را واضح بگویید.'),true);
+  return r;
+ }
+ const currency=['IRT','IRR','USD','EUR'].includes(r.currency)?r.currency:null;
+ if(!currency){clearPreview();status('واحد پول مشخص نیست؛ لطفاً آن را روشن کنید.',true);return r}
+ const date=/^\d{4}-\d{2}-\d{2}$/.test(r.occurred_on)&&r.occurred_on<=todayDay()?r.occurred_on:todayDay();
+ const accounts=bridge.getData().accounts||[];
+ const match=accounts.filter(a=>norm(a.name)===norm(r.account_name));
+ const account=match.length===1?match[0].id:null;
+ if(r.action==='loan_given'){
+  return previewLoan({
+   entryType:'loan_given',person:String(r.person||'').slice(0,150),amount:Number(r.amount),currency,account,date,
+   memo:spoken,warnings:account?[]:['حساب پرداخت‌کننده از گفتار مشخص نشده است؛ در صورت پرداخت از حساب، آن را انتخاب کنید.']
+  });
+ }
+ if(r.action==='expense'||r.action==='income'){
+  $('voice-loan-review').hidden=true;$('voice-review').hidden=false;hasSaved=false;
+  $('voice-kind').value=r.action;
+  $('voice-amount').value=Number(r.amount);
+  $('voice-currency').value=currency;
+  $('voice-category').value=String(r.category||'سایر').slice(0,150);
+  $('voice-scope').value='personal';
+  $('voice-memo').value=spoken;
+  $('voice-date').value=date;
+  accountOptions(account);
+  $('voice-warnings').textContent=account?'':'در صورت پرداخت یا دریافت از حساب، حساب مربوط را انتخاب کنید.';
+  status('✓ تحلیل هوشمند انجام شد. '+(r.action==='expense'?'هزینه':'درآمد')+' تشخیص داده شد؛ پیش‌نمایش را بررسی و تأیید کنید.');
+  updateDetails();$('voice-review').scrollIntoView?.({behavior:'smooth',block:'nearest'});
+  return r;
+ }
+ clearPreview();
+ const destinations={internal_transfer:'انتقال و ارز',loan_received:'وام‌ها',asset_purchase:'دارایی‌ها',unknown:'نامشخص'};
+ status('عملیات «'+(destinations[r.action]||r.action)+'» تشخیص داده شد و به‌عنوان هزینه ثبت نمی‌شود. '+(r.question||'برای ثبت، اطلاعات بخش مخصوص را کامل کنید.'),true);
+ return r;
+}
+async function analyzeAIText(){
+ const text=$('quick').value.trim();
+ if(!text)return status('ابتدا متن تراکنش را وارد کنید.',true);
+ if(aiBusy)return;
+ if(!window.MyFinanceAI)return status('اتصال AI هنوز آماده نیست. می‌توانید ثبت متنی معمولی را استفاده کنید.',true);
+ aiBusy=true;status('در حال تحلیل معنایی با هوش مصنوعی…');
+ try{
+  const packet=await window.MyFinanceAI.analyzeText(text,aiAccounts());
+  applyAI(packet);
+ }catch(e){status('تحلیل هوشمند انجام نشد: '+String(e.message||e)+' اطلاعاتی ثبت نشده است.',true)}
+ finally{aiBusy=false}
+}
+function parseSelected(){
+ if($('voice-ai-consent')?.checked)return analyzeAIText();
+ return previewFromInput();
+}
+async function startAIRecording(){
+ if(aiBusy){status('تحلیل فایل صوتی قبلی هنوز در حال انجام است.',true);return}
+ if(aiRecorder&&aiRecorder.state==='recording'){
+  status('ضبط تمام شد؛ در حال ارسال امن فایل صوتی برای تحلیل…');
+  try{aiRecorder.stop()}catch(e){aiClearRecorder();status('ضبط پایان نیافت؛ دوباره تلاش کنید.',true)}
+  setMic(false);return;
+ }
+ if(!window.MyFinanceAI)return status('سرویس هوش مصنوعی هنوز متصل نیست. از ورود متنی یا دیکته با کیبورد استفاده کنید.',true);
+ if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined')
+  return status('ضبط صوت کامل در این مرورگر در دسترس نیست؛ از دیکته با کیبورد استفاده کنید.',true);
+ if(!document.body.classList.contains('finance-unlocked'))return status('ابتدا وارد حساب خود شوید.',true);
+ try{
+  aiStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+  const mime=MediaRecorder.isTypeSupported?.('audio/webm;codecs=opus')?'audio/webm;codecs=opus':undefined;
+  const recorder=new MediaRecorder(aiStream,mime?{mimeType:mime}:undefined);
+  aiRecorder=recorder;aiChunks=[];aiCancel=false;
+  recorder.ondataavailable=e=>{if(e.data&&e.data.size)aiChunks.push(e.data)};
+  recorder.onerror=()=>{aiClearRecorder();status('ضبط صدا ناموفق بود؛ میکروفون و مجوز آن را بررسی کنید.',true)};
+  recorder.onstop=async()=>{
+   const cancelled=aiCancel,parts=aiChunks.slice(),type=recorder.mimeType||'audio/webm';
+   aiStopStream();aiRecorder=null;aiChunks=[];setMic(false);
+   if(cancelled)return;
+   const blob=new Blob(parts,{type});
+   if(blob.size<500)return status('فایل صوتی خالی است؛ دوباره امتحان کنید.',true);
+   if(blob.size>10_000_000)return status('فایل صوتی بزرگ است؛ گفتار کوتاه‌تری ضبط کنید.',true);
+   aiBusy=true;status('در حال تبدیل صدای کامل به متن و تحلیل مالی با AI…');
+   try{
+    const packet=await window.MyFinanceAI.analyzeAudio(blob,aiAccounts());
+    applyAI(packet);
+   }catch(e){status('پردازش هوشمند انجام نشد: '+String(e.message||e)+' هیچ تراکنشی ثبت نشد.',true)}
+   finally{aiBusy=false}
+  };
+  recorder.start(400);setMic(true);
+  status('🎙 ضبط کامل صدا شروع شد؛ طبیعی صحبت کنید و خودتان را اصلاح کنید. برای پایان دوباره روی میکروفون بزنید.');
+  aiTimer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop()},75000);
+ }catch(e){aiClearRecorder();status('اجازه ضبط صدا داده نشد یا میکروفون در دسترس نیست. از ورود متنی استفاده کنید.',true)}
+}
+function startSelected(){
+ if($('voice-ai-consent')?.checked){if(listening)stopListening();return startAIRecording()}
+ if(aiRecorder){aiClearRecorder();return}
+ return start();
+}
 function save(){
  if(hasSaved)return;
  const v=details();if(v.problem){status(v.problem,true);updateDetails();return}
@@ -434,10 +548,10 @@ function save(){
   status('✓ تراکنش با تأیید شما ثبت شد و برای همگام‌سازی امن آماده است.');}
  catch(e){hasSaved=false;updateDetails();status('ثبت انجام نشد: '+String(e.message||e),true)}
 }
-$('voice-mic').addEventListener('click',start);
+$('voice-mic').addEventListener('click',startSelected);
 $('voice-keyboard').addEventListener('click',keyboardDictation);
-$('voice-parse').addEventListener('click',previewFromInput);
-$('quick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();previewFromInput()}});
+$('voice-parse').addEventListener('click',parseSelected);
+$('quick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();parseSelected()}});
 $('voice-confirm').addEventListener('click',save);
 $('voice-loan-confirm').addEventListener('click',saveLoan);
 $('voice-loan-cancel').addEventListener('click',()=>{clearPreview();status('ثبت قرض لغو شد؛ هیچ داده‌ای ذخیره نشده است.')});
@@ -446,8 +560,8 @@ for(const id of ['voice-loan-person','voice-loan-amount','voice-loan-currency','
 $('voice-cancel').addEventListener('click',()=>{clearPreview();status('پیش‌نمایش لغو شد؛ چیزی ثبت نشده است.')});
 for(const id of ['voice-amount','voice-currency','voice-kind','voice-category','voice-account','voice-date','voice-scope','voice-memo'])
  $(id).addEventListener('input',updateDetails);
-document.addEventListener('myfinance:rebound',()=>{stopListening();clearPreview();accountOptions(null)});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&listening)stopListening('تشخیص گفتار به دلیل خروج از اپ متوقف شد؛ چیزی ثبت نشده است.')});
-window.MyFinanceVoiceEntry={parse,previewFromInput,start,keyboardDictation};
+document.addEventListener('myfinance:rebound',()=>{stopListening();aiClearRecorder();clearPreview();accountOptions(null)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&listening)stopListening('تشخیص گفتار به دلیل خروج از اپ متوقف شد؛ چیزی ثبت نشده است.');if(document.hidden&&aiRecorder)aiClearRecorder()});
+window.MyFinanceVoiceEntry={parse,previewFromInput,start,startSelected,parseSelected,applyAI,keyboardDictation};
 setMic(false);
 })();
