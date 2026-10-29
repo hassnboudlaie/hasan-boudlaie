@@ -4,7 +4,8 @@ const client=createClient('https://hxcjkewlaniahvuqwwbb.supabase.co','sb_publish
 const bridge=window.MyFinanceBridge;
 const byId=id=>document.getElementById(id);
 const login=byId('supabase-login'),actions=byId('supabase-actions'),email=byId('supabase-email');
-let user=null,busy=false,queued=false,authPending=false,seen=new Map();
+let user=null,busy=false,queued=false,authPending=false,seen=new Map(),identityEpoch=0;
+const assertIdentity=(uid,epoch)=>{if(!user||user.id!==uid||identityEpoch!==epoch)throw Error('SYNC_SESSION_CHANGED');};
 const collections={account:'accounts',receivable:'receivables',transfer:'transfers',commitment:'commitments',loan:'loans'};
 let dirty=new Set();
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -91,6 +92,8 @@ function renderAuth(){
 
 /* Account-gated beta. Browser remembers email only; Supabase handles passwords and sessions. */
 const rememberKey='myfinance-saved-email-v1';
+const confirmationHelp=byId('auth-confirm-help');
+const emailProblem=e=>{const msg=String(e?.code||'')+' '+String(e?.message||'');if(/email.address.not.authorized|email_address_not_authorized/i.test(msg))return 'ارسال تأییدیه برای این ایمیل در تنظیمات فعلی سرور مجاز نیست. مدیر باید سرویس ارسال ایمیل (Custom SMTP) را فعال کند.';if(/rate.limit|over_email_send_rate_limit|too.many.requests/i.test(msg))return 'محدودیت تعداد ایمیل‌های سرور فعال شده است. بعداً دوباره تلاش کنید؛ مدیر باید سرویس ایمیل مستقل را تنظیم کند.';return 'درخواست ایمیل ناموفق بود. لطفاً آدرس و اتصال اینترنت را بررسی کنید. جزئیات: '+String(e?.message||'خطای نامشخص');};
 const authEmail=byId('auth-email'),authPassword=byId('auth-password'),authRemember=byId('auth-remember');
 const remembered=localStorage.getItem(rememberKey);
 if(remembered){authEmail.value=remembered;authRemember.checked=true}else authRemember.checked=false;
@@ -104,7 +107,7 @@ function gate(text,identity=null,error=false){
  authStatus(text,error);
 }
 function lock(text,identity=null,error=false){
- const before=!!user;user=null;dirty=new Set();seen=new Map();
+ const before=!!user;identityEpoch++;user=null;dirty=new Set();seen=new Map();
  if(before)bridge.bindUser(null);
  renderAuth();gate(text,identity,error);
 }
@@ -133,21 +136,28 @@ async function showAdmin(){
 byId('auth-form').addEventListener('submit',async event=>{
  event.preventDefault();const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
  if(!email||!password)return authStatus('ایمیل و رمز عبور لازم است.',true);
- saveRemembered();authStatus('در حال ورود…');
+ saveRemembered();confirmationHelp.hidden=true;authStatus('در حال ورود…');
  const{error}=await client.auth.signInWithPassword({email,password});authPassword.value='';
- if(error)return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);
+ if(error){if(/email.not.confirmed|email_not_confirmed/i.test(String(error.code||'')+' '+String(error.message||''))){confirmationHelp.hidden=false;return authStatus('ابتدا ایمیل خود را تأیید کنید؛ در صورت نرسیدن ایمیل از گزینه ارسال مجدد استفاده کنید.',true);}return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);}
  await refreshIdentity();
 });
 byId('auth-register').addEventListener('click',async()=>{
  const email=authEmail.value.trim().toLowerCase(),password=authPassword.value;
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return authStatus('ایمیل معتبر وارد کنید.',true);
  if(password.length<10)return authStatus('رمز عبور باید حداقل ۱۰ کاراکتر باشد.',true);
- saveRemembered();authStatus('در حال ساخت حساب…');
+ saveRemembered();confirmationHelp.hidden=true;authStatus('در حال ساخت حساب…');
  const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
  authPassword.value='';
- if(error)return authStatus('ساخت حساب انجام نشد: '+error.message,true);
+ if(error)return authStatus('ثبت‌نام انجام نشد. '+emailProblem(error),true);
  if(data.session)await refreshIdentity();
- else authStatus('برای تأیید حساب، لینک ارسال‌شده به ایمیل خود را باز کنید. پس از تأیید با رمز عبور وارد شوید.');
+ else {confirmationHelp.hidden=false;authStatus('درخواست ثبت‌نام دریافت شد. ایمیل تأیید را بررسی کنید (از جمله Spam). سپس با رمز عبور وارد شوید. اگر ایمیل نرسید، ارسال مجدد را امتحان کنید.');}
+});
+byId('auth-resend-confirm').addEventListener('click',async()=>{
+ const value=authEmail.value.trim().toLowerCase();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return authStatus('برای ارسال مجدد، ایمیل ثبت‌نام را وارد کنید.',true);
+ authStatus('در حال درخواست ارسال مجدد ایمیل تأیید…');
+ const {error}=await client.auth.resend({type:'signup',email:value,options:{emailRedirectTo:location.origin+location.pathname}});
+ authStatus(error?emailProblem(error):'اگر حساب نیاز به تأیید داشته باشد، ایمیل ارسال می‌شود. Inbox و Spam را بررسی کنید.',!!error);
 });
 byId('auth-logout').addEventListener('click',async()=>{
  const{error}=await client.auth.signOut();
@@ -189,10 +199,10 @@ function queueSync(){
  queued=true;
  if(!busy)setTimeout(()=>sync().catch(e=>notice('خطای همگام‌سازی: '+e.message)),850);
 }
-async function readAll(table,fields){
+async function readAll(table,fields,ownerId){
  const rows=[];
  for(let i=0;i<10000;i+=500){
-  const {data,error}=await client.from(table).select(fields).order('created_at',{ascending:true}).range(i,i+499);
+  const {data,error}=await client.from(table).select(fields).eq('user_id',ownerId).order('created_at',{ascending:true}).range(i,i+499);
   if(error)throw error;
   rows.push(...data);
   if(data.length<500)return rows;
@@ -225,15 +235,18 @@ async function writeBatch(table,rows){
  }
 }
 async function sync(){
- if(!user||busy)return;
+ if(!user)return false;
+ if(busy){queued=true;return false;}
+ const ownerId=user.id,epoch=identityEpoch;
  busy=true;queued=false;
  notice('در حال همگام‌سازی…',true);
  try{
-  const repaired=await repairLegacyIds();
+  const repaired=await repairLegacyIds();assertIdentity(ownerId,epoch);
   const [cloudObjects,cloudEntries]=await Promise.all([
-   readAll('finance_objects','id,kind,payload,updated_at,created_at'),
-   readAll('finance_entries','id,entry_type,amount,currency,category,description,occurred_at,status,source,metadata,updated_at,created_at')
+   readAll('finance_objects','id,kind,payload,updated_at,created_at',ownerId),
+   readAll('finance_entries','id,entry_type,amount,currency,category,description,occurred_at,status,source,metadata,updated_at,created_at',ownerId)
   ]);
+  assertIdentity(ownerId,epoch);
   const latest=bridge.getData(),next={...latest};
   const remoteObjects=new Set(),remoteTx=new Set();
   for(const [kind,collection] of Object.entries(collections)){
@@ -253,6 +266,7 @@ async function sync(){
    if(!dirty.has('tx:'+row.id))transactions.set(row.id,fromEntry(row));
   }
   next.tx=[...transactions.values()];
+  assertIdentity(ownerId,epoch);
   bridge.replaceData(next); // Deliberately does not emit local-change event.
   const outgoingEntries=[],outgoingObjects=[];
   const errors=[];
@@ -272,17 +286,20 @@ async function sync(){
     outgoingObjects.push({id:item.id,user_id:user.id,kind,payload:item});
    }
   }
-  if(outgoingObjects.length)await writeBatch('finance_objects',outgoingObjects);
-  if(outgoingEntries.length)await writeBatch('finance_entries',outgoingEntries);
+  if(outgoingObjects.length){assertIdentity(ownerId,epoch);await writeBatch('finance_objects',outgoingObjects);assertIdentity(ownerId,epoch);}
+  if(outgoingEntries.length){assertIdentity(ownerId,epoch);await writeBatch('finance_entries',outgoingEntries);assertIdentity(ownerId,epoch);}
   for(const row of outgoingObjects)dirty.delete(row.kind+':'+row.id);
   for(const row of outgoingEntries)dirty.delete('tx:'+row.id);
+  assertIdentity(ownerId,epoch);
   localStorage.setItem(dirtyKey(),JSON.stringify([...dirty]));
   seen=allRecords(bridge.getData());
   refreshPairStatus().catch(()=>{});
   const count=cloudEntries.length+cloudObjects.length+outgoingEntries.length+outgoingObjects.length;
   notice('همگام‌سازی امن فعال · '+count.toLocaleString('fa-IR')+' رکورد'+(repaired?' · '+repaired+' شناسه قدیمی اصلاح شد':'')+(errors.length?' · '+errors.length+' رکورد نیازمند بررسی':'') ,true);
+  return true;
  }catch(e){
-  notice('همگام‌سازی ناموفق: '+String(e.message||e).slice(0,180),false);
+  if(String(e.message||e)==='SYNC_SESSION_CHANGED')return false;
+  if(user?.id===ownerId&&identityEpoch===epoch)notice('همگام‌سازی ناموفق: '+String(e.message||e).slice(0,180),false);
   throw e;
  }finally{
   busy=false;
@@ -301,10 +318,16 @@ async function refreshIdentity(){
   if(recovery){lock('رمز عبور جدید را تعیین کنید.',next);byId('auth-reset-panel').hidden=false;return}
   const same=user?.id===next.id;
   if(!same){
+   identityEpoch++;
    user=next;dirty=new Set();seen=new Map();bridge.bindUser(user.id);
    try{dirty=new Set(JSON.parse(localStorage.getItem(dirtyKey())||'[]'))}catch(e){}
   }
-  if(!same||!document.body.classList.contains('finance-unlocked'))await sync();
+  const loginEpoch=identityEpoch;
+  if(!same||!document.body.classList.contains('finance-unlocked')){
+   const result=await sync();
+   if(result===false){gate('در حال دریافت اطلاعات اختصاصی حساب؛ دوباره بررسی کنید.',next);return;}
+  }
+  if(user?.id!==next.id||identityEpoch!==loginEpoch)return;
   renderAuth();document.body.classList.add('finance-unlocked');document.dispatchEvent(new Event('myfinance:unlocked'));
   byId('account-access-summary').textContent='حساب فعال: '+next.email+(access.expires_at?' · تا '+new Date(access.expires_at).toLocaleDateString('fa-IR'):' · بدون سررسید');
   showAdmin().catch(()=>{});
