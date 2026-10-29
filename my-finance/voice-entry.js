@@ -185,6 +185,78 @@ function updateDetails(){
  const note=$('voice-account-note');
  note.textContent=v.acct&&v.unit!==$('voice-currency').value?'تبدیل مبلغ برای ثبت روی حساب '+v.acct.currency+': '+fmt.format(v.stored)+' '+v.unit:!v.acct?'بدون انتخاب حساب، موجودی هیچ حسابی تغییر نمی‌کند.':'';
 }
+function loanAccountOptions(selected){
+ const list=$('voice-loan-account'),accounts=bridge.getData().accounts||[];
+ list.replaceChildren();
+ for(const [id,label] of [['','حساب نامشخص (فقط ثبت طلب؛ بدون تغییر موجودی)'],...accounts.map(a=>[a.id,a.name+' ('+a.currency+')'])]){
+  const option=document.createElement('option');option.value=id;option.textContent=label;list.append(option);
+ }
+ list.value=selected&&accounts.some(a=>a.id===selected)?selected:'';
+}
+function previewLoan(parsed){
+ hasSaved=false;
+ $('voice-review').hidden=true;
+ $('voice-loan-review').hidden=false;
+ $('voice-loan-person').value=parsed.person||'';
+ $('voice-loan-amount').value=parsed.amount;
+ $('voice-loan-currency').value=parsed.currency;
+ $('voice-loan-date').value=parsed.date;
+ $('voice-loan-due').value='';
+ $('voice-loan-notes').value=parsed.memo;
+ loanAccountOptions(parsed.account);
+ $('voice-loan-warnings').textContent=parsed.warnings.join(' ');
+ status('مفهوم مالی: قرض پرداختی. پیش‌نمایش مطالبات آماده است؛ برای ثبت باید تأیید کنید.');
+ updateLoanReview();
+ $('voice-loan-review').scrollIntoView?.({behavior:'smooth',block:'nearest'});
+ return parsed;
+}
+function validateLoan(){
+ const person=$('voice-loan-person').value.trim(),amount=Number($('voice-loan-amount').value),
+ currency=$('voice-loan-currency').value,accountId=$('voice-loan-account').value,date=$('voice-loan-date').value,
+ due=digits($('voice-loan-due').value).trim();
+ const account=bridge.getData().accounts.find(a=>a.id===accountId);
+ let debit=amount,unit=currency,problem='';
+ if(!person||person.length>150)problem='نام دریافت‌کننده قرض لازم است.';
+ if(!(amount>0)||!Number.isFinite(amount))problem='مبلغ قرض نامعتبر است.';
+ if(!['IRT','IRR','USD','EUR'].includes(currency))problem='ارز نامعتبر است.';
+ if(account&&account.currency!==currency){
+  if(currency==='IRT'&&account.currency==='IRR'){debit=amount*10;unit='IRR'}
+  else if(currency==='IRR'&&account.currency==='IRT'){debit=amount/10;unit='IRT'}
+  else problem='واحد پول حساب پرداخت‌کننده با مبلغ قرض سازگار نیست.';
+ }
+ if(due&&!/^(1[34]\d{2})\/(0[1-9]|1[0-2])$/.test(due))problem='سررسید را مانند ۱۴۰۵/۱۲ وارد کنید.';
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(new Date(date+'T12:00:00+03:30').getTime())||date>todayDay())problem='تاریخ پرداخت نامعتبر است.';
+ if(!document.body.classList.contains('finance-unlocked')||!window.MyFinanceCloud?.authenticated())problem='برای ثبت، ابتدا وارد حساب شخصی شوید.';
+ return {person,amount,currency,accountId,account,debit,unit,date,due,problem};
+}
+function updateLoanReview(){
+ if($('voice-loan-review').hidden)return;
+ const v=validateLoan(),e=$('voice-loan-validation');
+ e.textContent=v.problem||('طلب از '+v.person+' · '+fmt.format(v.amount)+' '+v.currency+' · '+jalaliLabel(v.date)+
+  (v.account?' · کسر '+fmt.format(v.debit)+' '+v.unit+' از '+v.account.name:' · بدون برداشت از حساب')+
+  (v.due?' · سررسید: '+v.due:' · سررسید نامشخص'));
+ e.classList.toggle('voice-alert',!!v.problem);$('voice-loan-confirm').disabled=!!v.problem||hasSaved;
+}
+function saveLoan(){
+ if(hasSaved)return;
+ const v=validateLoan();if(v.problem){status(v.problem,true);updateLoanReview();return}
+ const note=$('voice-loan-notes').value.trim().slice(0,600);
+ const caption='ثبت طلب از '+v.person+' به مبلغ '+fmt.format(v.amount)+' '+v.currency+
+  (v.account?' و کسر '+fmt.format(v.debit)+' '+v.unit+' از '+v.account.name:' بدون کسر از حساب')+
+  '؛ نه به‌عنوان هزینه.';
+ if(!window.confirm(caption+'\nآیا تأیید می‌کنید؟'))return;
+ const data=bridge.getData(),id=crypto.randomUUID(),paidAt=v.date===todayDay()?new Date().toISOString():new Date(v.date+'T12:00:00+03:30').toISOString();
+ const claim={id,counterparty:v.person,principal:v.amount,expected:v.amount,currency:v.currency,termMonths:null,dueMonth:v.due,location:'',sector:'قرض پرداختی',notes:note,status:'pending',createdAt:paidAt,disbursementAccountId:v.accountId||null,disbursedAt:paidAt};
+ const tx=v.account?{id:crypto.randomUUID(),account:v.account.id,kind:'investment',category:'پرداخت اصل قرض به '+v.person,currency:v.unit,
+  amount:v.debit,status:'completed',scope:'personal',memo:'پرداخت قرض به '+v.person+' · '+note,date:paidAt,source:'voice',receivableId:id}:null;
+ const entries=tx?[...(data.tx||[]),tx]:(data.tx||[]);
+ hasSaved=true;$('voice-loan-confirm').disabled=true;
+ try{
+  bridge.commitData({...data,receivables:[...(data.receivables||[]),claim],tx:entries});
+  $('quick').value='';clearPreview();
+  status('✓ قرض در مطالبات ثبت شد.'+(tx?' خروج وجه نیز در حساب مبدأ ثبت شد؛ در گزارش هزینه حساب نمی‌شود.':' به‌دلیل نامشخص‌بودن حساب، موجودی تغییر نکرد.'));
+ }catch(e){hasSaved=false;updateLoanReview();status('ثبت قرض ناموفق: '+String(e.message||e),true)}
+}
 function preview(raw){
  const current=bridge.getData();
  const parsed=parse(raw,current.accounts);
@@ -367,6 +439,10 @@ $('voice-keyboard').addEventListener('click',keyboardDictation);
 $('voice-parse').addEventListener('click',previewFromInput);
 $('quick').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();previewFromInput()}});
 $('voice-confirm').addEventListener('click',save);
+$('voice-loan-confirm').addEventListener('click',saveLoan);
+$('voice-loan-cancel').addEventListener('click',()=>{clearPreview();status('ثبت قرض لغو شد؛ هیچ داده‌ای ذخیره نشده است.')});
+for(const id of ['voice-loan-person','voice-loan-amount','voice-loan-currency','voice-loan-date','voice-loan-account','voice-loan-due','voice-loan-notes'])
+ $(id).addEventListener('input',updateLoanReview);
 $('voice-cancel').addEventListener('click',()=>{clearPreview();status('پیش‌نمایش لغو شد؛ چیزی ثبت نشده است.')});
 for(const id of ['voice-amount','voice-currency','voice-kind','voice-category','voice-account','voice-date','voice-scope','voice-memo'])
  $(id).addEventListener('input',updateDetails);
