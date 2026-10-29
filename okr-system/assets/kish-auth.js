@@ -92,7 +92,9 @@ async function onSignup(e){
 const APP_CALLBACK=location.origin+location.pathname;
 /* Supabase implicit recovery callback, never put tokens in requests or logs to GitHub Pages. */
 async function handleEmailCallback(){
- const p=new URLSearchParams(location.hash.startsWith('#')?location.hash.slice(1):'');
+ const callbackHash=window.__kishAuthReturnFragment||location.hash;
+ delete window.__kishAuthReturnFragment;
+ const p=new URLSearchParams(callbackHash.startsWith('#')?callbackHash.slice(1):'');
  if(p.get('error_code')){
   const note=p.get('error_description')||'لینک تأیید منقضی یا نامعتبر شده است؛ دوباره درخواست بدهید.';
   history.replaceState(null,'',location.pathname+location.search+'#start');
