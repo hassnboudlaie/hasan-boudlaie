@@ -135,6 +135,7 @@ const remembered=localStorage.getItem(rememberKey);
 if(remembered)authEmail.value=remembered;
 authRemember.checked=keepSignedIn();
 let recovery=false;
+let identityRefreshQueued=false;
 function authStatus(text,error=false){const e=byId('auth-status');e.textContent=text;e.classList.toggle('error',error)}
 function saveRemembered(){
  const stay=!!authRemember.checked;
@@ -659,7 +660,7 @@ function financeAuthFailureKind(error,sessionStored=false){
  return sessionStored?'verification-error':'first-login';
 }
 async function refreshIdentity(){
- if(!bootstrapped||authPending)return;
+ if(!bootstrapped||authPending){if(authPending)identityRefreshQueued=true;return;}
  authPending=true;let next=null;
  try{
   const{data,error}=await client.auth.getUser();if(error)throw error;
@@ -677,8 +678,9 @@ async function refreshIdentity(){
   }
   const loginEpoch=identityEpoch;
   if(!same||!document.body.classList.contains('finance-unlocked')){
-   const result=await sync();
-   if(result===false){gate('در حال دریافت اطلاعات اختصاصی حساب؛ دوباره بررسی کنید.',next);return;}
+   // Authentication must not be blocked by a temporary cloud-sync failure.
+   // The app remains scoped to this verified user's private local namespace.
+   try{await sync()}catch(syncError){notice('ورود تأیید شد؛ همگام‌سازی موقتاً در دسترس نیست. دوباره تلاش کنید.');}
   }
   if(user?.id!==next.id||identityEpoch!==loginEpoch)return;
   renderAuth();document.body.classList.add('finance-unlocked');document.dispatchEvent(new Event('myfinance:unlocked'));
@@ -711,7 +713,7 @@ async function refreshIdentity(){
    lock('ارتباط امن برقرار نشد. اتصال اینترنت را بررسی کرده و دوباره تلاش کنید.',null,true);
   }
  }
- finally{authPending=false}
+ finally{authPending=false;if(identityRefreshQueued){identityRefreshQueued=false;setTimeout(refreshIdentity,0)}}
 }
 byId('supabase-send').addEventListener('click',async()=>{
  const value=email.value.trim();
@@ -758,7 +760,7 @@ byId('supabase-push').addEventListener('click',()=>sync().catch(()=>{}));
 document.addEventListener('myfinance:changed',setDirty);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIdentity()});
 window.addEventListener('online',()=>refreshIdentity());
-setInterval(()=>{if(!document.hidden&&navigator.onLine)refreshIdentity().then(()=>{if(user)sync().catch(()=>{})})},15000);
+setInterval(()=>{if(!document.hidden&&navigator.onLine&&!authPending)refreshIdentity().catch(()=>{})},60000);
 client.auth.onAuthStateChange(event=>{if(event==='PASSWORD_RECOVERY'){recovery=true;byId('auth-reset-panel').hidden=false}setTimeout(refreshIdentity,0)});
 async function runFinanceAI(body){
  if(!user)throw Error('ابتدا به حساب شخصی خود وارد شوید.');
