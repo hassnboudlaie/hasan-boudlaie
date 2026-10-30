@@ -26,3 +26,37 @@ jobs:
           node-version: '22'
       - name: Validate app interface and cache
         run: node my-finance/qa/check-ui.mjs
+
+  mobile-chromium-smoke:
+    name: Real mobile browser / Back navigation
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node for Playwright
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install lightweight browser automation
+        run: npm install --no-save --no-package-lock --no-audit --no-fund --prefix my-finance/qa playwright-core@1.58.2
+      - name: Ensure Chromium available
+        shell: bash
+        run: |
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            cd my-finance/qa
+            npx playwright-core install chromium
+          fi
+      - name: Serve the built PWA
+        run: |
+          nohup python3 -m http.server 8765 --bind 127.0.0.1 --directory my-finance >/tmp/myfinance-http.log 2>&1 &
+          curl --retry 10 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:8765/index.html -o /dev/null
+      - name: Simulate account and transaction navigation at 390px
+        run: node my-finance/qa/browser-smoke.mjs
+      - name: Save synthetic test screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-finance-mobile-smoke
+          path: /tmp/myfinance-ui-smoke/*.png
+          if-no-files-found: ignore
