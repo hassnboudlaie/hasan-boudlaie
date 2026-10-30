@@ -286,24 +286,32 @@ byId('auth-form').addEventListener('submit',async event=>{
  authStatus(requestedMode==='signup'?'در حال ساخت حساب…':'در حال ورود…');
  try{
   if(requestedMode==='signup'){
+   // My Finance registrations are confirmed by a scoped pilot database trigger.
+   // This shared Supabase project still uses email confirmation in other apps,
+   // so GoTrue may return a null session despite the account being confirmed.
    const {data,error}=await client.auth.signUp({
     email:accountEmail,password,
     options:{emailRedirectTo:location.origin+location.pathname,data:signupMetadata()}
    });
    if(error)return authStatus('ثبت‌نام انجام نشد. '+emailProblem(error),true);
+   if(!data?.session){
+    authStatus('حساب ساخته شد؛ در حال ورود مستقیم بدون تأیید ایمیل…');
+    const {error:signInError}=await client.auth.signInWithPassword({email:accountEmail,password});
+    if(signInError){
+     const notReady=/email.not.confirmed|email_not_confirmed/i.test(String(signInError.code||'')+' '+String(signInError.message||''));
+     return authStatus(notReady
+      ?'حساب ساخته شد، اما سرویس ورود هنوز آماده نیست؛ با همین ایمیل و رمز دوباره وارد شوید. حساب دیگری نسازید.'
+      :'حساب ساخته شد؛ با همین ایمیل و رمز وارد شوید. '+(signInError.code||''),true);
+    }
+   }
    authPassword.value='';authPasswordConfirm.value='';
    clearSignupMode();
-   if(data?.session)await refreshIdentity();
-   else{
-    confirmationHelp.hidden=false;
-    authStatus('حساب ایجاد شد. سرور هنوز تأیید ایمیل را الزامی می‌داند؛ مدیر می‌تواند حساب کاربران آزمایشی را مستقیم فعال کند.');
-   }
+   await refreshIdentity();
   }else{
    const {error}=await client.auth.signInWithPassword({email:accountEmail,password});
    if(error){
     if(/email.not.confirmed|email_not_confirmed/i.test(String(error.code||'')+' '+String(error.message||''))){
-     confirmationHelp.hidden=false;
-     return authStatus('این حساب هنوز تأیید نشده است. برای فعال‌سازی آزمایشی به مدیر اطلاع دهید؛ حساب جدید نسازید.',true);
+     return authStatus('این حساب هنوز در سرویس ورود آماده نشده است. لطفاً دوباره با همین ایمیل و رمز تلاش کنید.',true);
     }
     return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);
    }
