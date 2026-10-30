@@ -60,7 +60,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r63"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r64"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -139,6 +139,13 @@ check('screenshot-reviewed minimal mobile and non-obstructive install UI',()=>{
  assert.ok(install.includes("anchor.insertAdjacentElement('afterend',panel)"),'Install prompt must follow header');
  assert.ok(!install.includes('position:fixed'),'Install prompt must not float over header');
  assert.ok(install.includes('myfinance-install-hidden-until-v2'),'Install dismissal should persist');
+});
+check('retained sessions and accurate initial auth diagnostics',()=>{
+ const script=read('supabase-sync.js');
+ assert.ok(html.includes('supabase-sync.js?v=20261030r64'),'New auth module must not be cached under old version');
+ assert.ok(script.includes('financeAuthFailureKind('),'Auth status classifier absent');
+ const result=spawnSync(process.execPath,[resolve(root,'qa/check-auth.mjs')],{encoding:'utf8'});
+ assert.equal(result.status,0,'Authentication regression failed: '+result.stderr);
 });
 check('classic application JavaScript parses',()=>{
  const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);
