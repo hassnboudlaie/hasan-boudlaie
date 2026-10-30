@@ -982,6 +982,8 @@ window.MyFinanceBridge={
  }
 };
 financeLoadUiPreferences();render();tab('home');
+// Share the app's existing per-currency balance calculation with read-only drilldown views.
+window.MyFinanceAccountBalance=balance;
 function showAssistantFromLink(){
  if(location.hash!=='#assistant')return;
  tab('settings');
