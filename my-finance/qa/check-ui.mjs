@@ -60,7 +60,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r62"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r63"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -130,6 +130,16 @@ check('private nested account and transaction detail screens',()=>{
  const result=spawnSync(process.execPath,[resolve(root,'qa/check-drilldown.mjs')],{encoding:'utf8'});
  assert.equal(result.status,0,'Nested detail regression failed: '+result.stderr);
 });
+check('screenshot-reviewed minimal mobile and non-obstructive install UI',()=>{
+ const nav=read('navigation-v60.css'),install=read('install-prompt.js');
+ const home=html.slice(html.indexOf('<section id="home"'),html.indexOf('</section>',html.indexOf('<section id="home"'))+10);
+ assert.equal((home.match(/class="finance-home-hub"/g)||[]).length,2,'Two concise detail tiles');
+ assert.ok(nav.includes('#finance-quick-fab{display:none!important}'),'Floating CTA should not cover nested views');
+ assert.ok(nav.includes('main>footer{display:none!important}'),'Mobile technical footer should not clutter');
+ assert.ok(install.includes("anchor.insertAdjacentElement('afterend',panel)"),'Install prompt must follow header');
+ assert.ok(!install.includes('position:fixed'),'Install prompt must not float over header');
+ assert.ok(install.includes('myfinance-install-hidden-until-v2'),'Install dismissal should persist');
+});
 check('classic application JavaScript parses',()=>{
  const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);
  assert.ok(inline.length>=2);
@@ -147,7 +157,7 @@ check('every PWA precache file exists and new CSS is included',()=>{
  for(const asset of paths){const p=asset.slice(2).split('?')[0];if(p)assert.ok(existsSync(resolve(root,p)),'missing '+asset)}
  const cssHref=html.match(/<link rel="stylesheet" href="(\.\/my-finance-ui-v54\.css\?v=[^"]+)"/)?.[1];
  assert.ok(paths.includes(cssHref));assert.ok(paths.includes('./index.html'));
- for(const asset of ['./navigation-v60.css?v=20261030r62','./embed-v60.css?v=20261030r60','./embed-nav-v60.js?v=20261030r60','./drilldown-v61.css?v=20261030r62','./drilldown-v61.js?v=20261030r62'])assert.ok(paths.includes(asset),'offline missing '+asset);
+ for(const asset of ['./navigation-v60.css?v=20261030r63','./embed-v60.css?v=20261030r60','./embed-nav-v60.js?v=20261030r60','./drilldown-v61.css?v=20261030r63','./drilldown-v61.js?v=20261030r63'])assert.ok(paths.includes(asset),'offline missing '+asset);
 });
 check('release id, PWA cache and stylesheet version align',()=>{
  const rev=html.match(/data-myfinance-release="design-r(\d+)"/)?.[1];
