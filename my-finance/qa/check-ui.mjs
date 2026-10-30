@@ -60,7 +60,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r61"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r62"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -117,6 +117,9 @@ check('private nested account and transaction detail screens',()=>{
   assert.ok(html.includes('id="'+id+'"'),'missing nested screen '+id);
  assert.ok(html.includes("financeNavGo('account-detail',{context:"));
  assert.ok(html.includes("financeNavGo('transaction-detail',{context:"));
+ assert.ok(html.includes('const samePage=stored?.mfFinance===true&&stored.route===route'),'Refresh must preserve the current browser history entry');
+ assert.ok(html.includes('tab(route,context)'),'Reload should restore private object selection after auth');
+ assert.ok(html.includes('history.state?.context||null'),'Language changes should retain private object selection');
  assert.ok(html.includes('window.MyFinanceAccountBalance=balance'));
  assert.ok(drilldown.includes('MyFinanceBridge')&&drilldown.includes('MyFinanceDrilldown'));
  assert.ok(drilldown.includes("if(!authorized()){clear();return}"),'Drilldown must never render if logged out');
@@ -144,7 +147,7 @@ check('every PWA precache file exists and new CSS is included',()=>{
  for(const asset of paths){const p=asset.slice(2).split('?')[0];if(p)assert.ok(existsSync(resolve(root,p)),'missing '+asset)}
  const cssHref=html.match(/<link rel="stylesheet" href="(\.\/my-finance-ui-v54\.css\?v=[^"]+)"/)?.[1];
  assert.ok(paths.includes(cssHref));assert.ok(paths.includes('./index.html'));
- for(const asset of ['./navigation-v60.css?v=20261030r61','./embed-v60.css?v=20261030r60','./embed-nav-v60.js?v=20261030r60','./drilldown-v61.css?v=20261030r61','./drilldown-v61.js?v=20261030r61'])assert.ok(paths.includes(asset),'offline missing '+asset);
+ for(const asset of ['./navigation-v60.css?v=20261030r62','./embed-v60.css?v=20261030r60','./embed-nav-v60.js?v=20261030r60','./drilldown-v61.css?v=20261030r62','./drilldown-v61.js?v=20261030r62'])assert.ok(paths.includes(asset),'offline missing '+asset);
 });
 check('release id, PWA cache and stylesheet version align',()=>{
  const rev=html.match(/data-myfinance-release="design-r(\d+)"/)?.[1];
