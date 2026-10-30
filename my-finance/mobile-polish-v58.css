@@ -23,7 +23,7 @@ body.finance-unlocked .finance-more-footnote{font-size:10px;line-height:1.8;text
 body.finance-unlocked #finance-more-dialog :is(button,a):focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media(max-width:1023px){
  html{scroll-padding-bottom:calc(110px + env(safe-area-inset-bottom))}
- body.finance-unlocked main{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
+ body.finance-unlocked main{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
  body.finance-unlocked .finance-mobile-nav{transition:transform .2s ease,opacity .2s ease!important;bottom:calc(10px + env(safe-area-inset-bottom))!important}
  body.finance-unlocked.finance-dock-auto-hidden .finance-mobile-nav:not(:focus-within){transform:translate3d(0,calc(100% + 27px + env(safe-area-inset-bottom)),0)!important;opacity:0!important;pointer-events:none!important}
  body.finance-unlocked .finance-quick-fab{transition:transform .2s ease,opacity .2s ease}
