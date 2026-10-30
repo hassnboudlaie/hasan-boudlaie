@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Strategic Management | Dr. Hasan Boudlaie</title>
-<meta name="description" content="Strategic Management: structured product, resources, partners and company information.">
+<title>مدیریت استراتژیک | دکتر حسن بودلایی</title>
+<meta name="description" content="ساختار بخش مدیریت استراتژیک شامل محصول، منابع، خبرنامه، شرکا و اطلاعات شرکت.">
 <link rel="canonical" href="https://hassnboudlaie.github.io/hasan-boudlaie/strategic-management/">
 <style>
 :root{color-scheme:light;--ink:#112443;--secondary:#58677c;--line:#dfe5ed;--blue:#235cce;--pale:#f5f8fc;--white:#fff;--shadow:0 12px 35px rgba(10,35,80,.06)}
@@ -30,7 +30,7 @@ header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid 
 .dropdown a{font-size:13px;display:block;padding:10px;border-radius:7px}
 .dropdown a:hover,.sitemap a:hover{color:var(--blue);background:var(--pale)}
 .actions{display:flex;align-items:center;gap:7px}
-.lang-btn,.menu-btn{border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);padding:8px 11px}
+.menu-btn{border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);padding:8px 11px}
 .app-link{background:var(--blue);color:#fff;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:700;white-space:nowrap}
 .menu-btn{display:none}
 .mobile{display:none;background:white;border-top:1px solid var(--line);padding:10px 18px;max-height:70vh;overflow:auto}
@@ -73,18 +73,17 @@ footer a:hover{color:white;text-decoration:underline}
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip" href="#main">پرش به محتوای اصلی</a>
 <header>
  <div class="container top">
-  <a class="logo" href="./" aria-label="Strategic Management home"><b>HB</b><span id="brand">Strategic Management</span></a>
-  <nav class="desktop" id="desktopNav" aria-label="Site navigation"></nav>
+  <a class="logo" href="./" aria-label="خانه مدیریت استراتژیک"><b>ح‌ب</b><span id="brand">مدیریت استراتژیک</span></a>
+  <nav class="desktop" id="desktopNav" aria-label="ناوبری اصلی"></nav>
   <div class="actions">
-   <a class="app-link" href="../okr-system/" id="appLink">OKR Platform</a>
-   <button class="lang-btn" id="langBtn" type="button" aria-label="Change language">EN</button>
+   <a class="app-link" href="../okr-system/" id="appLink">ورود به سامانه مدیریت اهداف</a>
    <button class="menu-btn" id="menuBtn" type="button" aria-controls="mobileNav" aria-expanded="false">☰</button>
   </div>
  </div>
- <nav class="mobile" id="mobileNav" aria-label="Mobile navigation"></nav>
+ <nav class="mobile" id="mobileNav" aria-label="ناوبری تلفن همراه"></nav>
 </header>
 <main id="main">
  <div id="page"></div>
@@ -92,7 +91,7 @@ footer a:hover{color:white;text-decoration:underline}
 <footer>
  <div class="container">
   <div class="footer-cols" id="footerNav"></div>
-  <div class="footer-bottom"><span id="footBrand">Strategic Management · Dr. Hasan Boudlaie</span><a href="../" id="mainSite">Main website</a></div>
+  <div class="footer-bottom"><span id="footBrand">مدیریت استراتژیک · دکتر حسن بودلایی</span><a href="../" id="mainSite">وب‌سایت اصلی</a></div>
  </div>
 </footer>
 <script src="site-map.js"></script>
@@ -102,9 +101,7 @@ footer a:hover{color:white;text-decoration:underline}
 'use strict';
 const groups=window.STRATEGY_IA||[];
 const entries=new Map(groups.flatMap(g=>g.pages.map(p=>[p[0],{group:g,page:p}])));
-const langKey='hb-lang';
-let lang='fa';
-try{lang=localStorage.getItem(langKey)==='en'?'en':'fa'}catch(e){}
+const lang='fa';
 const t=(en,fa)=>lang==='fa'?fa:en;
 const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
 const link=(item,cls)=>{
@@ -114,8 +111,7 @@ function draw(){
  document.documentElement.lang=lang;
  document.documentElement.dir=lang==='fa'?'rtl':'ltr';
  document.getElementById('brand').textContent=t('Strategic Management','مدیریت استراتژیک');
- document.getElementById('appLink').textContent=t('Open OKR platform','ورود به سامانه OKR');
- document.getElementById('langBtn').textContent=lang==='fa'?'EN':'FA';
+ document.getElementById('appLink').textContent='ورود به سامانه مدیریت اهداف';
  document.getElementById('mainSite').textContent=t('Main website','وب‌سایت اصلی');
  document.getElementById('footBrand').textContent=t('Strategic Management · Dr. Hasan Boudlaie','مدیریت استراتژیک · دکتر حسن بودلایی');
  document.getElementById('menuBtn').textContent=t('Menu','منو');
@@ -171,12 +167,12 @@ function render(){
  crumbSAdd(crumbs,' / '+(item?t(item.group.title,item.group.fa):t('Page not found','صفحه پیدا نشد')));
  section.appendChild(crumbs);root.appendChild(section);
  if(!item){
-  document.title='404 | Strategic Management';
+  document.title='صفحه پیدا نشد | مدیریت استراتژیک';
   root.appendChild(hero('404',t('The requested section does not exist.','این بخش در ساختار مرجع موجود نیست.')));
   return;
  }
  const [key,en,fa]=item.page, title=t(en,fa);
- document.title=title+' | Strategic Management';
+ document.title=title+' | مدیریت استراتژیک';
  root.appendChild(hero(title,t('Content preparation is pending.','محتوای این صفحه هنوز تدوین نشده است.')));
  const body=el('section','container detail');
  const blocks=(window.STRATEGY_CONTENT||{})[key];
@@ -185,7 +181,7 @@ function render(){
  }else{
   const empty=el('div','empty');
   empty.appendChild(el('p','',t('Page structure is in place. Approved content has not yet been added.','ساختار صفحه ایجاد شده است؛ محتوای تأییدشده هنوز به آن اضافه نشده است.')));
-  empty.appendChild(el('p','small',t('No text, graphics, testimonials, or proprietary assets have been copied from Perdoo.','هیچ متن، تصویر، گواهی مشتری یا دارایی اختصاصی از Perdoo کپی نشده است.')));
+  empty.appendChild(el('p','small',t('No text, graphics, testimonials, or proprietary assets have been copied from Perdoo.','هیچ متن، تصویر، گواهی مشتری یا دارایی اختصاصی از پردو کپی نشده است.')));
   body.appendChild(empty);
  }
  root.appendChild(body);
@@ -195,7 +191,6 @@ document.getElementById('menuBtn').addEventListener('click',()=>{
  const nav=document.getElementById('mobileNav'),opened=nav.classList.toggle('visible');
  document.getElementById('menuBtn').setAttribute('aria-expanded',String(opened));
 });
-document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='fa'?'en':'fa';try{localStorage.setItem(langKey,lang)}catch(e){}draw()});
 document.addEventListener('click',e=>{if(!e.target.closest('.nav-entry'))document.querySelectorAll('.nav-entry.open').forEach(n=>{n.classList.remove('open');n.querySelector('button').setAttribute('aria-expanded','false')})});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.nav-entry.open').forEach(n=>{n.classList.remove('open');n.querySelector('button').setAttribute('aria-expanded','false')})});
 draw();
