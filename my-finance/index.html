@@ -229,7 +229,7 @@ body.finance-unlocked #auth-gate{display:none!important}
   <div id="finance-recent-tx" class="finance-recent-list" aria-live="polite"></div>
  </div>
 </div>
-<nav class="finance-shortcuts" aria-label="مدیریت دارایی و قرارداد"><a class="finance-shortcut" href="./assets.html"><span class="finance-shortcut-icon">◈</span><span><strong>دارایی‌ها</strong><small>طلا، ارز و خودرو</small></span></a><a class="finance-shortcut" href="./contracts.html"><span class="finance-shortcut-icon">▦</span><span><strong>قراردادها</strong><small>مطالبات و جلسات</small></span></a></nav>
+<nav class="finance-shortcuts" aria-label="مدیریت دارایی و قرارداد"><button type="button" class="finance-shortcut" onclick="financeNavGo('assets')"><span class="finance-shortcut-icon">◈</span><span><strong>دارایی‌ها</strong><small>طلا، ارز و خودرو</small></span></button><button type="button" class="finance-shortcut" onclick="financeNavGo('contracts')"><span class="finance-shortcut-icon">▦</span><span><strong>قراردادها</strong><small>مطالبات و جلسات</small></span></button></nav>
 </div></details>
 </section>
 <section id="transactions" hidden><div class="mf-section-hero"><div><span class="mf-section-kicker">TRANSACTIONS</span><h2 data-fa="تراکنش‌ها" data-en="Transactions">تراکنش‌ها</h2><p>ثبت و مرور درآمدها، هزینه‌ها و ریزگردش مالی</p></div></div><div class="card"><h2 data-fa="ثبت درآمد یا هزینه" data-en="Add transaction">ثبت درآمد یا هزینه</h2><div class="fields"><label class="mf-field"><span class="mf-field-name" data-fa="نوع تراکنش" data-en="Transaction type">نوع تراکنش</span><select id="kind"><option value="expense">هزینه / Expense</option><option value="income">درآمد / Income</option></select></label><label class="mf-field"><span class="mf-field-name" data-fa="مبلغ" data-en="Amount">مبلغ</span><input id="amount" type="number" min="0" placeholder="مبلغ (تومان)"></label><label class="mf-field"><span class="mf-field-name" data-fa="حساب" data-en="Account">حساب</span><select id="account"></select></label><label class="mf-field"><span class="mf-field-name" data-fa="کاربری" data-en="Usage">کاربری</span><select id="scope"><option value="personal">شخصی / Personal</option><option value="business">کاری / Business</option></select></label><label class="mf-field"><span class="mf-field-name" data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</span><input id="category" placeholder="دسته‌بندی"></label><label class="mf-field"><span class="mf-field-name" data-fa="توضیحات" data-en="Details">توضیحات</span><input id="memo" placeholder="توضیح"></label></div><button onclick="saveTx()">بررسی و تأیید ثبت</button><p class="muted" id="tx-entry-date" aria-live="polite"></p></div>
@@ -276,6 +276,11 @@ body.finance-unlocked #auth-gate{display:none!important}
 </section>
 <section id="commitments" hidden><div class="card"><h2>تعهدات و هزینه‌های ثابت</h2><p class="muted">در حال بارگذاری برنامه تعهدات…</p></div></section>
 <section id="loans" hidden><div class="card"><h2>وام‌ها و اقساط</h2><p class="muted">در حال بارگذاری اطلاعات خصوصی اقساط…</p></div></section>
+<section id="finance-embedded" class="finance-embedded" hidden aria-label="صفحه مالی انتخاب‌شده">
+ <div class="finance-embedded-surface">
+  <iframe id="finance-embedded-frame" title="صفحه جزئیات دارایی و قرارداد" src="about:blank" loading="lazy"></iframe>
+ </div>
+</section>
 <section id="reports" hidden><div class="mf-section-hero"><div><span class="mf-section-kicker">REPORTS</span><h2 data-fa="گزارش‌های مالی" data-en="Financial reports">گزارش‌های مالی</h2><p>خلاصه مالی در ارزهای مجزا، بدون جمع‌زدن ارزهای متفاوت</p></div></div><div class="card"><h2>گزارش مالی / Reports</h2><p id="report"></p><button onclick="exportCSV()">خروجی CSV</button></div></section>
 <section id="settings" hidden>
  <div class="card" id="finance-profile-card">
@@ -356,8 +361,8 @@ body.finance-unlocked #auth-gate{display:none!important}
   <div class="finance-more-group">
    <div class="finance-more-section-title" data-fa="دارایی و امکانات" data-en="ASSETS & TOOLS">دارایی و امکانات</div>
    <div class="finance-more-links">
-    <a href="./assets.html"><span class="finance-more-icon" aria-hidden="true">◇</span><span data-fa="دارایی‌ها" data-en="Assets">دارایی‌ها</span></a>
-    <a href="./contracts.html"><span class="finance-more-icon" aria-hidden="true">▤</span><span data-fa="قراردادها" data-en="Contracts">قراردادها</span></a>
+    <button type="button" onclick="financeNavGo('assets')"><span class="finance-more-icon" aria-hidden="true">◇</span><span data-fa="دارایی‌ها" data-en="Assets">دارایی‌ها</span></button>
+    <button type="button" onclick="financeNavGo('contracts')"><span class="finance-more-icon" aria-hidden="true">▤</span><span data-fa="قراردادها" data-en="Contracts">قراردادها</span></button>
     <button type="button" onclick="financeNavGo('assistant')"><span class="finance-more-icon" aria-hidden="true">✳</span><span data-fa="دستیار هوشمند" data-en="AI assistant">دستیار هوشمند</span></button>
     <button type="button" onclick="financeNavGo('settings')"><span class="finance-more-icon" aria-hidden="true">⚙</span><span data-fa="تنظیمات" data-en="Settings">تنظیمات</span></button>
    </div>
@@ -367,12 +372,13 @@ body.finance-unlocked #auth-gate{display:none!important}
 </dialog><footer class="muted">My Finance · Private Finances · Secure cloud sync · <span id="mf-build-label" data-fa="نسخه ۵۹" data-en="Version 59">نسخه ۵۹</span></footer></main>
 <script>
 let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];if(!Array.isArray(db.loans))db.loans=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const financeVirtualRoutes=new Set(['cashflow','analysis','quick-entry']);
-const financeRoutes=new Set(['home','cashflow','analysis','quick-entry','transactions','accounts','transfers','receivables','commitments','loans','reports','settings','profile','assistant']);
+const financeRoutes=new Set(['home','cashflow','analysis','quick-entry','transactions','accounts','transfers','receivables','commitments','loans','reports','settings','profile','assistant','assets','contracts']);
 const financeRouteLabels={
  home:['نمای مالی من','My finances'],cashflow:['روند جریان پول','Cash flow'],analysis:['تحلیل‌های مالی','Financial insights'],
  'quick-entry':['ثبت سریع تراکنش','Quick entry'],transactions:['تراکنش‌ها','Transactions'],accounts:['حساب‌ها','Accounts'],
  transfers:['انتقال و ارز','Transfers'],receivables:['مطالبات','Receivables'],commitments:['تعهدات ثابت','Recurring bills'],
  loans:['وام و اقساط','Loans & installments'],reports:['گزارش‌های مالی','Reports'],
+ assets:['دارایی‌ها','Assets'],contracts:['قراردادها','Contracts'],
  settings:['تنظیمات','Settings'],profile:['پروفایل من','My profile'],assistant:['دستیار هوشمند','AI assistant']
 };
 let financeRouterReady=false;
@@ -391,7 +397,7 @@ function financeShowMore(){
 }
 function tab(id){
  if(!financeRoutes.has(id))return;
- const host=financeVirtualRoutes.has(id)?'home':(['profile','assistant'].includes(id)?'settings':id);
+ const host=financeVirtualRoutes.has(id)?'home':(['profile','assistant'].includes(id)?'settings':(['assets','contracts'].includes(id)?'finance-embedded':id));
  document.querySelectorAll('main > section').forEach(p=>{p.hidden=p.id!==host});
  document.querySelectorAll('[data-finance-route]').forEach(button=>{
   const active=button.dataset.financeRoute===(financeVirtualRoutes.has(id)?'home':host);
@@ -412,6 +418,19 @@ function tab(id){
  if(id==='analysis'){
   const insights=$('mf-home-more');
   if(insights)insights.open=true;
+ }
+ const embedded=$('finance-embedded-frame');
+ if(embedded){
+  const file=id==='assets'?'./assets.html?embedded=1':id==='contracts'?'./contracts.html?embedded=1':'';
+  if(file&&document.body.classList.contains('finance-unlocked')){
+   if(embedded.dataset.route!==id){
+    embedded.dataset.route=id;
+    embedded.src=file;
+   }
+  }else if(embedded.dataset.route){
+   delete embedded.dataset.route;
+   embedded.src='about:blank';
+  }
  }
  document.title=(lang==='en'?(financeRouteLabels[id]||financeRouteLabels.home)[1]:(financeRouteLabels[id]||financeRouteLabels.home)[0])+' | My Finance';
  financeCloseMore();
@@ -492,8 +511,8 @@ function financeRouterInitialize(){
   if(document.body.dataset.financeView!==route)tab(route);
  });
  document.addEventListener('myfinance:unlocked',()=>{
-  const route=financeReadRouteFromHash(location.hash);
-  if(route&&route!==document.body.dataset.financeView)tab(route);
+  const route=financeReadRouteFromHash(location.hash)||document.body.dataset.financeView||'home';
+  tab(route);
  });
 }
 function financeOpenDetail(target){
@@ -953,6 +972,30 @@ window.addEventListener('hashchange',showAssistantFromLink);
 showAssistantFromLink();
 importChatGPTDraft();
 financeRouterInitialize();
+(function financeEmbeddedSetup(){
+ const frame=$('finance-embedded-frame');
+ if(!frame)return;
+ let sizeObserver=null;
+ frame.addEventListener('load',()=>{
+  sizeObserver?.disconnect();
+  const doc=frame.contentDocument;
+  if(!doc||frame.src==='about:blank')return;
+  const resize=()=>{
+   try{frame.style.height=Math.max(380,Math.ceil(doc.documentElement.scrollHeight)+18)+'px'}catch(_){}
+  };
+  resize();
+  if('ResizeObserver' in window&&doc.body){
+   sizeObserver=new ResizeObserver(resize);
+   sizeObserver.observe(doc.body);
+  }
+ });
+ new MutationObserver(()=>{
+  if(!document.body.classList.contains('finance-unlocked')&&frame.dataset.route){
+   delete frame.dataset.route;
+   frame.src='about:blank';
+  }
+ }).observe(document.body,{attributes:true,attributeFilter:['class']});
+})();
 /* Authentication and synchronization are handled exclusively by Supabase. */
 </script><script defer src="./voice-entry.js?v=20261029r42"></script><script>
 /* My Finance: optional one-tap ChatGPT-to-preview link; no API costs. */
