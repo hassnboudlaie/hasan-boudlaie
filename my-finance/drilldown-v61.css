@@ -55,3 +55,13 @@ body.finance-unlocked :is(.mf-drill-item,.mf-drill-all,.mf-drill-return):focus-v
  body.finance-unlocked .mf-drill-item b{font-size:11px}
 }
 @media(max-width:350px){body.finance-unlocked .mf-drill-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Ledger details are now an explicit in-app third-level destination. */
+body.finance-unlocked .tx-ledger-open-page{
+ display:inline-flex;align-items:center;justify-content:center;min-height:41px;
+ padding:8px 13px!important;margin:9px 0 2px;
+ border-radius:12px!important;border:1px solid var(--accent)!important;
+ background:var(--mf-soft)!important;color:var(--accent)!important;
+ font-size:12px!important;font-weight:850;box-shadow:none!important
+}
+body.finance-unlocked .tx-ledger-open-page:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
