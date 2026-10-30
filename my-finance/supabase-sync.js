@@ -220,9 +220,12 @@ async function showAdmin(){
  if(!document.getElementById('finance-admin-bell')){
   const bell=document.createElement('a');
   bell.id='finance-admin-bell';bell.href='./admin.html';bell.textContent='🔔';
-  bell.style.cssText='position:fixed;bottom:96px;left:18px;z-index:1000;min-width:50px;height:50px;padding:0 12px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#124e73;color:white;font-weight:800;font-size:18px;box-shadow:0 5px 18px #102b4450;text-decoration:none;border:1px solid #ffffff66';
+  bell.className='finance-admin-header-bell';
   bell.setAttribute('aria-label','اعلان‌های مدیریت My Finance');
-  document.body.append(bell);
+  // Keep admin-only notifications next to the existing header tools, never
+  // floating over account balances or behind the mobile navigation dock.
+  const headerTools=document.querySelector('.finance-app-header .row');
+  (headerTools||document.querySelector('.finance-app-header')||document.body).append(bell);
  }
  await refreshAdminEvents();
 }
