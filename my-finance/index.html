@@ -99,6 +99,14 @@ body.finance-unlocked #auth-gate{display:none!important}
  <span><strong data-fa="به‌روزرسانی اپ آماده است" data-en="An update is ready">به‌روزرسانی اپ آماده است</strong><small data-fa="برای دیدن تغییرات، نسخه جدید را بارگذاری کنید." data-en="Reload to see the latest improvements.">برای دیدن تغییرات، نسخه جدید را بارگذاری کنید.</small></span>
  <button type="button" id="mf-update-apply" data-fa="بارگذاری نسخه جدید" data-en="Reload latest version">بارگذاری نسخه جدید</button>
 </div>
+<div id="finance-page-header" class="finance-page-header" hidden>
+ <button type="button" class="finance-back-button" onclick="financeBack()" aria-label="بازگشت به صفحه قبل">
+  <span aria-hidden="true">›</span><span data-fa="بازگشت" data-en="Back">بازگشت</span>
+ </button>
+ <div class="finance-page-identity"><small id="finance-page-eyebrow">MY FINANCE</small>
+  <strong id="finance-page-title" role="heading" aria-level="2">جزئیات مالی</strong>
+ </div>
+</div>
 <section id="home" class="finance-home">
 <div class="finance-home-heading">
  <div class="mf-heading-copy"><small>PERSONAL FINANCE / OVERVIEW</small><h2 data-fa="نمای مالی من" data-en="My financial overview">نمای مالی من</h2><p class="muted" data-fa="حساب‌ها، هزینه‌ها و تعهدات؛ در یک نگاه" data-en="Accounts, spending and payments at a glance">حساب‌ها، هزینه‌ها و تعهدات؛ در یک نگاه</p><div class="finance-overview-meta"><span id="finance-period-pill" class="finance-period-pill" aria-live="polite">ماه جاری</span><span class="finance-overview-caption" data-fa="نمای اختصاصی · بر اساس اطلاعات ثبت‌شده" data-en="Private overview · from recorded transactions">نمای اختصاصی · بر اساس اطلاعات ثبت‌شده</span></div></div>
@@ -130,7 +138,7 @@ body.finance-unlocked #auth-gate{display:none!important}
    <span class="finance-kpi-top"><span class="finance-kpi-title" data-fa="هزینه این ماه" data-en="This month's spending">هزینه این ماه</span><span class="finance-kpi-icon" aria-hidden="true">↙</span></span>
    <b id="expense" dir="auto">—</b><span class="finance-kpi-action" data-fa="تراکنش‌های هزینه ‹" data-en="Expense details ›">تراکنش‌های هزینه ‹</span>
   </button>
-  <button type="button" id="finance-net-card" class="finance-kpi finance-kpi-net" onclick="financeOpenDetail('transactions')" aria-label="جزئیات خالص جریان نقدی ماه">
+  <button type="button" id="finance-net-card" class="finance-kpi finance-kpi-net" onclick="financeNavGo('cashflow')" aria-label="جزئیات خالص جریان نقدی ماه">
    <span class="finance-kpi-top"><span class="finance-kpi-title" data-fa="خالص جریان نقدی این ماه" data-en="Net cash flow this month">خالص جریان نقدی این ماه</span><span class="finance-kpi-icon" aria-hidden="true">≈</span></span>
    <b id="finance-kpi-net" dir="auto">—</b><span class="finance-kpi-action" data-fa="جزئیات جریان پول ‹" data-en="Explore cash flow ›">جزئیات جریان پول ‹</span>
   </button>
@@ -147,8 +155,25 @@ body.finance-unlocked #auth-gate{display:none!important}
 </div>
 <div id="upcoming-notice" class="upcoming-notice" aria-live="polite"></div>
 
+<nav class="finance-home-hubs" aria-label="صفحه‌های جزئیات داشبورد">
+ <button type="button" class="finance-home-hub" onclick="financeNavGo('cashflow')">
+  <span class="finance-home-hub-icon" aria-hidden="true">▥</span>
+  <span class="finance-home-hub-copy"><strong data-fa="روند جریان پول" data-en="Cash flow">روند جریان پول</strong><small data-fa="نمودار شش‌ماهه درآمد و هزینه" data-en="Six-month income and spending chart">نمودار شش‌ماهه درآمد و هزینه</small></span>
+  <span class="finance-home-hub-chevron" aria-hidden="true">‹</span>
+ </button>
+ <button type="button" class="finance-home-hub" onclick="financeNavGo('analysis')">
+  <span class="finance-home-hub-icon" aria-hidden="true">◫</span>
+  <span class="finance-home-hub-copy"><strong data-fa="تحلیل هزینه و تراکنش‌ها" data-en="Spending insights">تحلیل هزینه و تراکنش‌ها</strong><small data-fa="دسته‌بندی‌ها و آخرین گردش‌های مالی" data-en="Categories and latest transactions">دسته‌بندی‌ها و آخرین گردش‌های مالی</small></span>
+  <span class="finance-home-hub-chevron" aria-hidden="true">‹</span>
+ </button>
+ <button type="button" class="finance-home-hub" onclick="financeNavGo('quick-entry')">
+  <span class="finance-home-hub-icon" aria-hidden="true">✎</span>
+  <span class="finance-home-hub-copy"><strong data-fa="ثبت با متن یا صدا" data-en="Voice or text entry">ثبت با متن یا صدا</strong><small data-fa="ورود اطلاعات، پیش‌نمایش و تأیید" data-en="Enter, review and confirm">ورود اطلاعات، پیش‌نمایش و تأیید</small></span>
+  <span class="finance-home-hub-chevron" aria-hidden="true">‹</span>
+ </button>
+</nav>
 <div class="card finance-quick-card"><div class="finance-quick-head"><h2 data-fa="ثبت سریع تراکنش" data-en="Quick entry">ثبت سریع تراکنش</h2><small>QUICK ENTRY</small></div><div class="entry"><input id="quick" type="text" inputmode="text" lang="fa" autocapitalize="off" autocomplete="off" placeholder="مثلاً: امروز ۵۰۰ هزار تومان هزینه کردم"><button type="button" id="voice-mic" title="شروع و پایان گفتار فارسی" aria-label="شروع یا توقف ضبط تراکنش صوتی" aria-pressed="false">🎙</button><button type="button" id="voice-parse" title="بررسی و پیش‌نمایش" aria-label="بررسی و پیش‌نمایش تراکنش">بررسی</button></div><p id="voice-status" class="muted" role="status" aria-live="polite">متن تراکنش را بنویسید یا روی 🎙 بزنید. قبل از ثبت، اطلاعات را بررسی کنید.</p><div class="voice-helper finance-quick-fallback"><span>اگر میکروفون کار نکرد:</span><button type="button" id="voice-keyboard" class="alt">⌨ دیکته با کیبورد</button></div><details class="finance-quick-help"><summary>راهنمای ثبت صوتی و حریم خصوصی</summary><p class="voice-free-hint">بدون هزینه API: دیکته با میکروفون گوشی یا مرورگر، سپس بررسی و تأیید تراکنش. در جمله‌های مبهم مبلغ و سرفصل را خودتان بررسی کنید.</p>
-<div class="personal-ai-shortcut-line"><button type="button" class="alt personal-ai-shortcut" data-fa="🤖 دستیار هوش مصنوعی شخصی (اختیاری)" data-en="🤖 Personal AI assistant (optional)" onclick="tab('settings');requestAnimationFrame(()=>document.getElementById('personal-ai-panel')?.scrollIntoView({behavior:'smooth',block:'start'}))">🤖 دستیار هوش مصنوعی شخصی (اختیاری)</button></div>
+<div class="personal-ai-shortcut-line"><button type="button" class="alt personal-ai-shortcut" data-fa="🤖 دستیار هوش مصنوعی شخصی (اختیاری)" data-en="🤖 Personal AI assistant (optional)" onclick="financeNavGo('assistant')">🤖 دستیار هوش مصنوعی شخصی (اختیاری)</button></div>
 <p class="voice-privacy-note">تشخیص گفتار ممکن است از سرویس صوتی مرورگر استفاده کند؛ برای اطلاعات حساس از ورود متنی استفاده کنید.</p></details></div>
 <div id="voice-review" class="card voice-preview" hidden>
 <div class="voice-preview-head"><h2>بررسی تراکنش</h2><span class="voice-review-tag">قبل از ثبت</span></div>
@@ -341,7 +366,16 @@ body.finance-unlocked #auth-gate{display:none!important}
  </div>
 </dialog><footer class="muted">My Finance · Private Finances · Secure cloud sync · <span id="mf-build-label" data-fa="نسخه ۵۹" data-en="Version 59">نسخه ۵۹</span></footer></main>
 <script>
-let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];if(!Array.isArray(db.loans))db.loans=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const financeRoutes=new Set(['home','transactions','accounts','transfers','receivables','commitments','loans','reports','settings']);
+let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];if(!Array.isArray(db.loans))db.loans=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const financeVirtualRoutes=new Set(['cashflow','analysis','quick-entry']);
+const financeRoutes=new Set(['home','cashflow','analysis','quick-entry','transactions','accounts','transfers','receivables','commitments','loans','reports','settings','profile','assistant']);
+const financeRouteLabels={
+ home:['نمای مالی من','My finances'],cashflow:['روند جریان پول','Cash flow'],analysis:['تحلیل‌های مالی','Financial insights'],
+ 'quick-entry':['ثبت سریع تراکنش','Quick entry'],transactions:['تراکنش‌ها','Transactions'],accounts:['حساب‌ها','Accounts'],
+ transfers:['انتقال و ارز','Transfers'],receivables:['مطالبات','Receivables'],commitments:['تعهدات ثابت','Recurring bills'],
+ loans:['وام و اقساط','Loans & installments'],reports:['گزارش‌های مالی','Reports'],
+ settings:['تنظیمات','Settings'],profile:['پروفایل من','My profile'],assistant:['دستیار هوشمند','AI assistant']
+};
+let financeRouterReady=false;
 function financeCloseMore(){
  const modal=document.getElementById('finance-more-dialog');
  if(modal&&modal.open){if(typeof modal.close==='function')modal.close();else modal.removeAttribute('open')}
@@ -357,25 +391,34 @@ function financeShowMore(){
 }
 function tab(id){
  if(!financeRoutes.has(id))return;
- document.querySelectorAll('main > section').forEach(p=>{p.hidden=p.id!==id});
+ const host=financeVirtualRoutes.has(id)?'home':(['profile','assistant'].includes(id)?'settings':id);
+ document.querySelectorAll('main > section').forEach(p=>{p.hidden=p.id!==host});
  document.querySelectorAll('[data-finance-route]').forEach(button=>{
-  const active=button.dataset.financeRoute===id;
+  const active=button.dataset.financeRoute===(financeVirtualRoutes.has(id)?'home':host);
   button.setAttribute('aria-current',active?'page':'false');
   button.classList.toggle('finance-active',active);
  });
  const more=document.getElementById('finance-open-more');
  if(more){
-  const active=!['home','transactions','accounts','loans'].includes(id);
+  const active=!['home','cashflow','analysis','quick-entry','transactions','accounts','loans'].includes(id);
   more.setAttribute('aria-current',active?'page':'false');
   more.classList.toggle('finance-active',active);
  }
  document.body.dataset.financeView=id;
  document.body.classList.remove('finance-dock-auto-hidden');
+ const header=$('finance-page-header'),title=$('finance-page-title');
+ if(header)header.hidden=id==='home';
+ if(title)title.textContent=(financeRouteLabels[id]||financeRouteLabels.home)[lang==='en'?1:0];
+ if(id==='analysis'){
+  const insights=$('mf-home-more');
+  if(insights)insights.open=true;
+ }
+ document.title=(lang==='en'?(financeRouteLabels[id]||financeRouteLabels.home)[1]:(financeRouteLabels[id]||financeRouteLabels.home)[0])+' | My Finance';
  financeCloseMore();
 }
 function financeStartRecord(kind){
  if(!document.body.classList.contains('finance-unlocked'))return;
- tab('transactions');
+ financeNavGo('transactions');
  const field=$('kind');
  if(field&&['expense','income'].includes(kind))field.value=kind;
  const amount=$('amount');
@@ -386,24 +429,72 @@ function financeStartRecord(kind){
 }
 function financeOpenQuickEntry(){
  if(!document.body.classList.contains('finance-unlocked'))return;
- tab('home');
+ financeNavGo('quick-entry');
  const field=$('quick');if(!field)return;
  try{field.focus({preventScroll:true})}catch(_){field.focus()}
  requestAnimationFrame(()=>field.scrollIntoView({block:'center',behavior:'smooth'}));
 }
-function financeNavGo(id){
- if(id==='profile'||id==='assistant'){
-  tab('settings');
-  if(id==='assistant'){
-   const nav=document.querySelector('[data-finance-route="assistant"]');
-   if(nav){nav.classList.add('finance-active');nav.setAttribute('aria-current','page')}
-  }
-  const target=id==='profile'?'finance-profile-card':'personal-ai-panel';
-  requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({behavior:'smooth',block:'start'}));
-  return;
+/* Client-side view navigation: no page reload, no renewed authentication. */
+function financeReadRouteFromHash(hash){
+ if(hash==='#assistant')return 'assistant';
+ const match=String(hash||'').match(/^#\/([a-z][a-z-]*)$/);
+ return match&&financeRoutes.has(match[1])?match[1]:null;
+}
+function financeRouteUrl(id){return location.pathname+location.search+'#/'+id}
+function financeNavGo(id,options={}){
+ if(!financeRoutes.has(id))return;
+ const previous=document.body.dataset.financeView||'home';
+ if(financeRouterReady&&!options.fromHistory){
+  try{
+   const state=history.state;
+   const depth=state?.mfFinance===true?Number(state.depth)||0:0;
+   if(previous!==id){
+    history.replaceState({mfFinance:true,route:previous,depth,scrollY:window.scrollY||0},'',location.href);
+    const entry={mfFinance:true,route:id,depth:depth+1,scrollY:0};
+    if(options.replace)history.replaceState({...entry,depth},'',financeRouteUrl(id));
+    else history.pushState(entry,'',financeRouteUrl(id));
+   }else if(location.hash!=='#/'+id){
+    history.replaceState({mfFinance:true,route:id,depth,scrollY:window.scrollY||0},'',financeRouteUrl(id));
+   }
+  }catch(_){/* Continue in-app even if browser history is restricted. */}
  }
  tab(id);
- if(typeof window.scrollTo==='function')window.scrollTo({top:0,behavior:'auto'});
+ if(typeof window.scrollTo==='function')window.scrollTo({top:0,behavior:'instant'});
+ if(id==='profile'||id==='assistant'){
+  const target=id==='profile'?'finance-profile-card':'personal-ai-panel';
+  requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({block:'start',behavior:'instant'}));
+ }
+}
+function financeBack(){
+ if(!document.body.classList.contains('finance-unlocked'))return;
+ const state=history.state;
+ if(state?.mfFinance===true&&state.depth>0){history.back();return}
+ financeNavGo('home',{replace:true});
+}
+function financeRouterInitialize(){
+ if(financeRouterReady)return;
+ const route=financeReadRouteFromHash(location.hash)||document.body.dataset.financeView||'home';
+ financeRouterReady=true;
+ try{
+  history.replaceState({mfFinance:true,route,depth:0,scrollY:0},'',financeRouteUrl(route));
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+ }catch(_){}
+ tab(route);
+ window.addEventListener('popstate',event=>{
+  const state=event.state;
+  const route=state?.mfFinance===true&&financeRoutes.has(state.route)?state.route:(financeReadRouteFromHash(location.hash)||'home');
+  tab(route);
+  if(typeof window.scrollTo==='function')window.scrollTo({top:Math.max(0,state?.scrollY||0),behavior:'instant'});
+ });
+ window.addEventListener('hashchange',()=>{
+  const route=financeReadRouteFromHash(location.hash);
+  if(!route)return;
+  if(document.body.dataset.financeView!==route)tab(route);
+ });
+ document.addEventListener('myfinance:unlocked',()=>{
+  const route=financeReadRouteFromHash(location.hash);
+  if(route&&route!==document.body.dataset.financeView)tab(route);
+ });
 }
 function financeOpenDetail(target){
  if(!document.body.classList.contains('finance-unlocked'))return;
@@ -861,6 +952,7 @@ function showAssistantFromLink(){
 window.addEventListener('hashchange',showAssistantFromLink);
 showAssistantFromLink();
 importChatGPTDraft();
+financeRouterInitialize();
 /* Authentication and synchronization are handled exclusively by Supabase. */
 </script><script defer src="./voice-entry.js?v=20261029r42"></script><script>
 /* My Finance: optional one-tap ChatGPT-to-preview link; no API costs. */
