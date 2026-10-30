@@ -143,7 +143,7 @@ check('screenshot-reviewed minimal mobile and non-obstructive install UI',()=>{
 });
 check('retained sessions and accurate initial auth diagnostics',()=>{
  const script=read('supabase-sync.js');
- assert.ok(html.includes('supabase-sync.js?v=20261030r64'),'New auth module must not be cached under old version');
+ assert.ok(html.includes('supabase-sync.js?v=20261030r66'),'New auth module must not be cached under old version');
  assert.ok(script.includes('financeAuthFailureKind('),'Auth status classifier absent');
  const result=spawnSync(process.execPath,[resolve(root,'qa/check-auth.mjs')],{encoding:'utf8'});
  assert.equal(result.status,0,'Authentication regression failed: '+result.stderr);
