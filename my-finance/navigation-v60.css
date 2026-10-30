@@ -111,3 +111,28 @@ body.finance-unlocked #finance-embedded-frame:focus-visible{outline:3px solid va
  }
  body.finance-unlocked #finance-embedded-frame{min-height:320px}
 }
+
+
+/* R63 screenshot-led final density and overlay repair. */
+body.finance-unlocked #finance-quick-fab{display:none!important}
+body.finance-unlocked #home>.finance-home-hubs{
+ grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+}
+body.finance-unlocked #home .finance-home-hub{min-height:73px}
+@media(max-width:1023px){
+ body.finance-unlocked main>footer{display:none!important}
+ body.finance-unlocked main{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+}
+@media(max-width:640px){
+ body.finance-unlocked #home>.finance-home-hubs{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px;margin:10px 0 0}
+ body.finance-unlocked #home .finance-home-hub{min-height:69px!important;padding:10px 9px!important;gap:8px;align-items:center}
+ body.finance-unlocked #home .finance-home-hub-icon{flex:0 0 31px;width:31px;height:31px;font-size:19px;border-radius:9px}
+ body.finance-unlocked #home .finance-home-hub-copy strong{font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+ body.finance-unlocked #home .finance-home-hub-copy small,
+ body.finance-unlocked #home .finance-home-hub-chevron{display:none!important}
+}
+@media(max-width:340px){
+ body.finance-unlocked #home .finance-home-hub{gap:6px;padding:7px 6px!important}
+ body.finance-unlocked #home .finance-home-hub-icon{flex-basis:26px;width:26px;height:26px;font-size:16px}
+ body.finance-unlocked #home .finance-home-hub-copy strong{font-size:10px}
+}
