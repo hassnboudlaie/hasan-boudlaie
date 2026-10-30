@@ -1143,7 +1143,7 @@ body:not(.finance-unlocked){background:radial-gradient(circle at 10% 3%,rgba(13,
 }
 #auth-gate>.auth-card{
  position:relative;z-index:1;width:100%;min-width:0;padding:clamp(24px,3.3vw,43px) clamp(21px,3vw,38px)!important;
- border:1px solid #d8e5e0!important;border-radius:0 27px 27px 0!important;
+ border:1px solid #d8e5e0!important;border-radius:27px 0 0 27px!important;
  box-shadow:0 24px 62px rgba(16,53,58,.075)!important;background:#fff!important;color:#182f39
 }
 #auth-gate .auth-card .mf-auth-identity{display:flex;align-items:center;gap:10px;margin-bottom:27px}
@@ -1165,7 +1165,7 @@ body:not(.finance-unlocked){background:radial-gradient(circle at 10% 3%,rgba(13,
 #auth-gate .mf-auth-showcase{
  position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
  background:radial-gradient(circle at 10% 28%,rgba(34,166,146,.40),transparent 40%),linear-gradient(150deg,#123949,#0b2936 58%,#0b3b39);
- min-height:615px;padding:35px 35px 40px;color:#fff;border-radius:27px 0 0 27px;
+ min-height:615px;padding:35px 35px 40px;color:#fff;border-radius:0 27px 27px 0;
  box-shadow:0 24px 62px rgba(16,53,58,.075)
 }
 #auth-gate .mf-auth-showcase:before{content:'';position:absolute;width:410px;height:410px;border-radius:50%;
@@ -1291,7 +1291,7 @@ body.finance-unlocked.dark #home .mf-action-expense .mf-action-icon{background:#
 body.finance-unlocked.dark #home .mf-action-transfer .mf-action-icon{background:#2e3f55;color:#9ebdeb}
 body.finance-unlocked.dark #home .mf-action-loans .mf-action-icon{background:#3c344e;color:#c9b5ef}
 /* Alerts appear as contextual next steps *under* the financial picture; urgent states remain vivid. */
-body.finance-unlocked #home .loan-reminder-banner:not(.loan-alert-orange):not(.loan-alert-red){
+body.finance-unlocked #home .loan-reminder-banner:not(.loan-alert-orange):not(.loan-alert-red):not([hidden]){
  display:flex!important;background:var(--card)!important;border:1px solid var(--line)!important;border-inline-start:4px solid #16a082!important;
  padding:13px 16px;margin:0 0 11px;border-radius:15px;box-shadow:none!important
 }
@@ -1377,3 +1377,6 @@ body.finance-unlocked #home .mf-home-more{border-radius:21px}
 @media(prefers-reduced-motion:reduce){
  body.finance-unlocked #home .finance-balance-hero,body.finance-unlocked #home .mf-action{transition:none!important;transform:none!important}
 }
+
+/* Native hidden attributes always win over visual presentation. */
+body.finance-unlocked #home #loan-due-notice[hidden],body.finance-unlocked #home #upcoming-notice[hidden]{display:none!important}
