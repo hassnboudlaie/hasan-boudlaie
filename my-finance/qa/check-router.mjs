@@ -15,7 +15,7 @@ const ids=['home','transactions','accounts','transfers','receivables','commitmen
 const sections=Object.fromEntries(ids.map(id=>[id,{id,hidden:id!=='home'}]));
 const elements={
  'finance-page-header':{hidden:true},
- 'finance-page-title':{textContent:''},
+ 'finance-page-title':{textContent:'',setAttribute(){},focus(){}},
  'finance-more-dialog':{open:false,close(){this.open=false},querySelector(){return {focus(){}}}},
  'finance-open-more':{setAttribute(){},classList:{toggle(){}}},
  'mf-home-more':{open:false},
