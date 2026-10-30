@@ -1,0 +1,15 @@
+/* My Finance internal assets and contracts shell: only active when embedded=1. */
+html.mf-embedded body.mf-subpage{background:transparent!important;min-height:0!important}
+html.mf-embedded body.mf-subpage main{max-width:100%!important;min-height:0;padding:6px 4px 38px!important;margin:0 auto!important}
+html.mf-embedded body.mf-subpage .mf-shell-header,html.mf-embedded body.mf-subpage .mf-subnav{display:none!important}
+html.mf-embedded body.mf-subpage .mf-page-intro{margin:0 0 12px!important;padding:8px 3px!important}
+html.mf-embedded body.mf-subpage .mf-page-intro h1{font-size:19px!important}
+html.mf-embedded body.mf-subpage .mf-page-intro p{font-size:11px!important}
+html.mf-embedded body.mf-subpage .card{border-radius:16px!important;margin:9px 0!important;padding:14px!important}
+html.mf-embedded body.mf-subpage .mf-footnote{display:none!important}
+@media(max-width:550px){
+ html.mf-embedded body.mf-subpage main{padding:0 2px 24px!important}
+ html.mf-embedded body.mf-subpage .mf-page-intro{padding:2px 3px 9px!important}
+ html.mf-embedded body.mf-subpage h2{font-size:15px!important}
+ html.mf-embedded body.mf-subpage .mf-asset-grid{gap:8px!important}
+}
