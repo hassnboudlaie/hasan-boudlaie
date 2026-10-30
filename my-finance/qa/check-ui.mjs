@@ -60,7 +60,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r64"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r66"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -171,6 +171,18 @@ check('release id, PWA cache and stylesheet version align',()=>{
  const rev=html.match(/data-myfinance-release="design-r(\d+)"/)?.[1];
  assert.ok(rev);assert.equal(rev,sw.match(/my-finance-release-\d+r(\d+)/)?.[1]);
  assert.equal(rev,html.match(/my-finance-ui-v54\.css\?v=\d+r(\d+)/)?.[1]);
+});
+check('free pilot: no email or manual approval step in signup interface',()=>{
+ const app=read('supabase-sync.js');
+ assert.ok(html.includes('id="auth-confirm-help" hidden aria-hidden="true"'),'Legacy confirmation help must be hidden');
+ assert.ok(!html.includes('auth-resend-confirm'),'No resend confirmation button in free pilot');
+ assert.ok(!app.includes('auth.resend({type:\'signup\''),'Signup confirmation email resend must be unused');
+ assert.ok(app.includes("options:{emailRedirectTo:location.origin+location.pathname,data:signupMetadata()}"),'My Finance marker needed for scoped pilot autoconfirm');
+ assert.ok(app.includes("const {error:signInError}=await client.auth.signInWithPassword({email:accountEmail,password});"),'Signup should immediately sign in using original password');
+ assert.ok(app.includes("if(data?.session)")||app.includes("if(!data?.session)"),'Signup must handle Supabase session creation');
+ assert.ok(!app.includes("مدیر می‌تواند حساب کاربران آزمایشی را مستقیم فعال کند"),'Manual approval prompt must be absent');
+ assert.ok(app.includes('persistSession:true'),'Secure session persistence must remain enabled');
+ assert.ok(app.includes("const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'active'})"),'First sign-in must create automatically active access');
 });
 check('no private service credentials committed',()=>{
  for(const p of ['index.html','supabase-sync.js','assets.html','contracts.html']){
