@@ -1,0 +1,86 @@
+/* My Finance Admin v58 · screenshot-led compact visual system
+ * Data is still loaded exclusively via the existing authenticated admin queries.
+ */
+:root{--bg:#f0f5f3;--ink:#17343e;--line:#dfebe7;--accent:#087c6f;--muted:#698086;color-scheme:light}
+body.mf-admin{font-family:Vazirmatn,"Segoe UI",Tahoma,Arial,sans-serif;background:radial-gradient(circle at 8% 2%,rgba(53,165,133,.10),transparent 38%),var(--bg);min-height:100vh}
+body.mf-admin main{max-width:1020px;margin:0 auto;padding:17px clamp(14px,3vw,32px) 70px}
+body.mf-admin .mf-admin-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+ padding:19px 22px;margin:0 0 14px;background:linear-gradient(135deg,#16414c,#0d2938 68%,#126253);
+ color:#fff;border-radius:21px;box-shadow:0 14px 38px #0b38431c}
+body.mf-admin .mf-admin-brand{display:flex;align-items:center;gap:13px;min-width:0}
+body.mf-admin .mf-admin-brand img{width:46px;height:46px;flex:0 0 46px;border-radius:13px}
+body.mf-admin .mf-admin-brand>div{min-width:0}
+body.mf-admin .mf-admin-eyebrow{font-size:10px;letter-spacing:.11em;color:#a7f0d3;font-weight:850;display:block}
+body.mf-admin .mf-admin-header h1{font-size:clamp(19px,2.5vw,25px);color:#f6fffa;margin:1px 0 0;line-height:1.6}
+body.mf-admin .mf-admin-header p{color:#d0e7e3;font-size:11px;margin:0;line-height:1.8}
+body.mf-admin .mf-admin-back{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;min-height:43px;
+ background:#ffffff1b;color:#fff;border:1px solid #ffffff50;border-radius:11px;font-size:12px;white-space:nowrap}
+body.mf-admin .mf-admin-back:hover{background:#ffffff2d}
+body.mf-admin #admin-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:13px}
+body.mf-admin #admin-overview[hidden]{display:none!important}
+body.mf-admin .mf-admin-stat{display:flex;flex-direction:column;gap:3px;min-width:0;padding:17px 19px;
+ background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 5px 22px #16394a08}
+body.mf-admin .mf-admin-stat span{font-size:12px;color:var(--muted);font-weight:750}
+body.mf-admin .mf-admin-stat strong{font-size:clamp(23px,2.8vw,30px);font-weight:850;color:var(--ink);line-height:1.5;font-variant-numeric:tabular-nums}
+body.mf-admin .mf-admin-stat small{font-size:10px;color:var(--muted)}
+body.mf-admin .card{background:#fff;border:1px solid var(--line);border-radius:18px;
+ box-shadow:0 6px 26px rgba(15,57,56,.045);padding:18px 20px;margin:12px 0}
+body.mf-admin #notice{font-size:12px;margin:0 0 4px;line-height:1.8;color:var(--ink)}
+body.mf-admin #notice:not(.error):before{content:"●";margin-inline-end:8px;color:var(--accent);font-size:10px}
+body.mf-admin .card>.muted{font-size:12px;line-height:1.85;margin:6px 0}
+body.mf-admin .card h2{font-size:17px;font-weight:850;line-height:1.7}
+body.mf-admin #events-panel{padding:17px 19px}
+body.mf-admin .events-top{align-items:center;gap:9px;flex-wrap:wrap}
+body.mf-admin #events-count{font-size:11px;color:var(--accent);background:#e9f6ee;border-radius:99px;padding:5px 11px;font-weight:800}
+body.mf-admin #events-list{max-height:260px;overflow:auto;scrollbar-width:thin}
+body.mf-admin .event{padding:10px 0}
+body.mf-admin .event-type{font-size:12px}
+body.mf-admin .event-meta{font-size:11px}
+body.mf-admin .mf-admin-notification-tools{margin:10px 0 0;border-top:1px solid var(--line);padding-top:9px}
+body.mf-admin .mf-admin-notification-tools>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:36px;
+ padding:7px 2px;color:var(--accent);font-size:12px;font-weight:800;list-style:none}
+body.mf-admin .mf-admin-notification-tools>summary::-webkit-details-marker{display:none}
+body.mf-admin .mf-admin-notification-tools[open]>summary span{transform:rotate(180deg)}
+body.mf-admin .event-actions{display:flex;gap:7px;flex-wrap:wrap;padding:8px 0;margin:0}
+body.mf-admin #panel{padding:18px 20px}
+body.mf-admin #list{gap:9px}
+body.mf-admin .user-card{padding:15px 16px;border-radius:15px;border-color:var(--line);background:#fbfdfc}
+body.mf-admin .user-top{align-items:center}
+body.mf-admin .email{font-size:13px;line-height:1.8}
+body.mf-admin .status{border-radius:99px;font-size:11px;padding:4px 10px}
+body.mf-admin .actions{margin-top:10px}
+body.mf-admin .actions button{min-height:41px;padding:8px 13px}
+body.mf-admin button{min-height:42px;border-radius:11px}
+body.mf-admin button:focus-visible,body.mf-admin a:focus-visible,body.mf-admin summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media(max-width:620px){
+ body.mf-admin main{padding:11px 13px 60px}
+ body.mf-admin .mf-admin-header{padding:14px 15px;border-radius:17px;gap:11px}
+ body.mf-admin .mf-admin-brand{gap:9px}
+ body.mf-admin .mf-admin-brand img{width:39px;height:39px;flex-basis:39px}
+ body.mf-admin .mf-admin-header h1{font-size:20px}
+ body.mf-admin .mf-admin-back{font-size:11px;min-height:37px;padding:7px 9px}
+ body.mf-admin #admin-overview{gap:7px}
+ body.mf-admin .mf-admin-stat{padding:11px 9px;border-radius:13px}
+ body.mf-admin .mf-admin-stat span{font-size:10px}
+ body.mf-admin .mf-admin-stat strong{font-size:21px}
+ body.mf-admin .mf-admin-stat small{font-size:9px}
+ body.mf-admin .card{padding:14px 14px;margin:10px 0;border-radius:15px}
+ body.mf-admin #panel,body.mf-admin #events-panel{padding:15px 13px}
+ body.mf-admin .user-card{padding:12px 11px}
+ body.mf-admin .actions button{flex:1 1 42%;padding:8px 10px;font-size:11px}
+}
+@media(max-width:355px){
+ body.mf-admin .mf-admin-header{gap:7px}
+ body.mf-admin .mf-admin-header h1{font-size:18px}
+ body.mf-admin .mf-admin-eyebrow{font-size:9px}
+ body.mf-admin .mf-admin-back{width:100%;justify-content:center}
+}
+@media(prefers-color-scheme:dark){
+ :root{--bg:#12232b;--ink:#f0f7f5;--line:#334d54;--muted:#b2c8ca}
+ body.mf-admin{color:var(--ink)}
+ body.mf-admin .card,body.mf-admin .mf-admin-stat{background:#1a3039;color:var(--ink)}
+ body.mf-admin .mf-admin-stat strong{color:var(--ink)}
+ body.mf-admin .user-card{background:#203842;border-color:var(--line)}
+ body.mf-admin #events-count{background:#214c41;color:#adedd3}
+ body.mf-admin button:not(.primary):not(.danger){background:#1e3540;color:#eef6f5;border-color:#35525d}
+}
