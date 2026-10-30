@@ -77,6 +77,16 @@ check('real 360px screenshot issues are covered by mobile layout',()=>{
  assert.ok(assets.includes("./brand-mark-v57.svg?v=20261030r57"),'new brand not cached for PWA');
  assert.ok(assets.includes("./supabase-sync.js?v=20261030r57"),'admin bell fix not precached');
 });
+check('r58 grouped menu and admin dashboard',()=>{
+ const mobile=read('mobile-polish-v58.css'),admin=read('admin.html');
+ assert.ok(html.includes('class="finance-more-scroll"'));
+ assert.equal((html.match(/class="finance-more-group"/g)||[]).length,2);
+ assert.ok(mobile.includes('grid-template-columns:repeat(2,minmax(0,1fr))'));
+ assert.ok(mobile.includes('finance-dock-auto-hidden'));
+ assert.ok(admin.includes('id="admin-overview"'));
+ assert.ok(admin.includes('id="admin-unread-events"'));
+ assert.ok(admin.includes('mf-admin-notification-tools'));
+});
 check('classic application JavaScript parses',()=>{
  const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);
  assert.ok(inline.length>=2);
