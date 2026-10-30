@@ -55,6 +55,28 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('mf-action-grid')<home.indexOf('loan-due-notice'),'quick actions should follow balance');
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
+check('real 360px screenshot issues are covered by mobile layout',()=>{
+ assert.ok(html.includes('data-myfinance-release="design-r57"'),'updated version marker missing');
+ assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
+ assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
+ const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
+ assert.ok(header.includes('class="brand-wrap"'),'brand absent from header');
+ const home=html.slice(html.indexOf('<section id="home"'),html.indexOf('</section>',html.indexOf('<section id="home"'))+10);
+ const metricStart=home.indexOf('class="finance-dashboard-metrics"');
+ const actionStart=home.indexOf('class="mf-command-bar"');
+ const kpiStart=home.indexOf('class="finance-kpi-pair"');
+ const hero=home.indexOf('class="finance-balance-hero"');
+ assert.ok(metricStart>=0&&metricStart<hero&&hero<actionStart&&actionStart<kpiStart,'mobile financial actions should follow balance and precede KPI cards');
+ assert.ok(home.indexOf('class="finance-overview-meta"')<metricStart,'month pill should live in compact heading');
+ assert.ok(css.includes('v57 · Screenshot-directed mobile layout repair'),'screenshot-driven CSS missing');
+ assert.ok(css.includes('.finance-admin-header-bell'),'in-header admin bell styling missing');
+ const sync=read('supabase-sync.js');
+ assert.ok(sync.includes("bell.className='finance-admin-header-bell'"),'admin bell must move out of viewport overlay');
+ assert.ok(!sync.includes('position:fixed;bottom:96px;left:18px;z-index:1000'),'floating admin bell regression');
+ const assets=sw.match(/const ASSETS=(\[[^;]+\]);/)?.[1]||'';
+ assert.ok(assets.includes("./brand-mark-v57.svg?v=20261030r57"),'new brand not cached for PWA');
+ assert.ok(assets.includes("./supabase-sync.js?v=20261030r57"),'admin bell fix not precached');
+});
 check('classic application JavaScript parses',()=>{
  const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);
  assert.ok(inline.length>=2);
