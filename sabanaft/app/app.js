@@ -5,7 +5,7 @@ var E=function(id){return document.getElementById(id)},courseFrame=E("courseFram
 if(!parts||parts.length!==9){document.querySelector("main").textContent="محتوای اصلی دوره بارگذاری نشد. اتصال اینترنت را بررسی و صفحه را به‌روزرسانی کنید.";return}
 var pics=["sabanaft-niayesh.webp","sabanaft-meeting.jpg","sabanaft-site.webp","sabanaft-farmanieh.webp"];
 var storeKey="sabanaft_reflective_app_shell_v1",progressKey="sabanaft_reflective_v2",memory={last:{s:1,p:parts[0].sections[0].id},bookmarks:[]};
-try{var old=JSON.parse(localStorage.getItem(storeKey)||"null");if(old&&typeof old==="object"){if(old.last&&Number.isInteger(old.last.s)&&old.last.s>=1&&old.last.s<=9&&typeof old.last.p==="string")memory.last=old.last;if(Array.isArray(old.bookmarks))memory.bookmarks=old.bookmarks.filter(function(x){return typeof x==="string"}).slice(0,100)}}}catch(e){}
+try{var old=JSON.parse(localStorage.getItem(storeKey)||"null");if(old&&typeof old==="object"){if(old.last&&Number.isInteger(old.last.s)&&old.last.s>=1&&old.last.s<=9&&typeof old.last.p==="string")memory.last=old.last;if(Array.isArray(old.bookmarks))memory.bookmarks=old.bookmarks.filter(function(x){return typeof x==="string"}).slice(0,100)}}catch(e){}
 function save(){try{localStorage.setItem(storeKey,JSON.stringify(memory))}catch(e){notice("ذخیره مرورگر در دسترس نیست.")}}
 function fa(s){return String(s).replace(/[0-9]/g,function(n){return "۰۱۲۳۴۵۶۷۸۹"[Number(n)]})}
 function escapeText(v){return String(v==null?"":v).replace(/[&<>"']/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]})}
@@ -60,7 +60,7 @@ E("bookmark").addEventListener("click",function(){var r=route();if(r.page!=="rea
 ["previousLesson","nextLesson"].forEach(function(id){E(id).addEventListener("click",function(){var r=route(),s=session(r.s);if(!s||r.page!=="reader")return;var i=s.sections.findIndex(function(x){return x.id===r.p})+(id==="nextLesson"?1:-1);if(i>=0&&i<s.sections.length)openLesson(r.s,s.sections[i].id)})});
 E("studioBack").addEventListener("click",function(){go("home")});
 E("bookmarkList").addEventListener("click",function(e){var b=e.target.closest("[data-s]");if(b)openLesson(Number(b.dataset.s),b.dataset.p)});
-E("openPortfolio").addEventListener("click",function(){go("studio/home");notice("برای بسته دوره، از لینک تمام‌صفحه منابع آموزشی نیز می‌توانید استفاده کنید.")});
+E("openPortfolio").addEventListener("click",function(){window.open(new URL("index.html#portfolio",base).href,"_blank","noopener,noreferrer")});
 E("changeContext").addEventListener("click",function(){go("course");window.open(new URL("index.html#home",base).href,"_blank","noopener,noreferrer")});
 window.addEventListener("hashchange",render);window.addEventListener("popstate",render);
 var deferred=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;E("install").hidden=false});
