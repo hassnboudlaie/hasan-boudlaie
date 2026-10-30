@@ -40,7 +40,7 @@ const document={title:'',body:{dataset:{financeView:'home'},classList:{
  querySelectorAll(q){return q==='main > section'?Object.values(sections):q==='[data-finance-route]'?['home','transactions','accounts','loans'].map(id=>({dataset:{financeRoute:id},setAttribute(){},classList:{toggle(){}}})):[]},
  getElementById:id=>elements[id]||null,querySelector:()=>null,addEventListener(n,f){handlers['doc:'+n]=f}};
 const $=id=>elements[id]||null;
-const api=new Function('document','window','history','location','lang','$','requestAnimationFrame',source+';return {financeRouterInitialize,financeNavGo,financeBack};')(document,window,history,location,'fa',$,f=>f());
+const api=new Function('document','window','history','location','lang','$','requestAnimationFrame',source+';return {financeRouterInitialize,financeNavGo,financeBack,tab};')(document,window,history,location,'fa',$,f=>f());
 api.financeRouterInitialize();
 assert.equal(history.state.route,'home');
 api.financeNavGo('cashflow');
@@ -80,5 +80,22 @@ assert.equal(history.state.context.accountId,'account-a');
 assert.deepEqual(rendered.at(-1).context,{accountId:'account-a'});
 api.financeBack();assert.equal(document.body.dataset.financeView,'accounts');
 api.financeBack();assert.equal(document.body.dataset.financeView,'home');
+// Refresh preserves the active private detail, Back depth and language redraw.
+api.financeNavGo('accounts');
+api.financeNavGo('account-detail',{context:{accountId:'account-a'}});
+const depthBeforeRefresh=history.state.depth;
+const countBeforeRefresh=stack.length;
+const revived=new Function('document','window','history','location','lang',''PASS page drilldown, two-level Android Back, embedded assets/contracts, quick entry and Home');
+,'requestAnimationFrame',source+';return {financeRouterInitialize,financeNavGo,financeBack,tab};')(document,window,history,location,'fa',$,f=>f());
+revived.financeRouterInitialize();
+assert.equal(history.state.route,'account-detail');
+assert.equal(history.state.context.accountId,'account-a');
+assert.equal(history.state.depth,depthBeforeRefresh);
+assert.equal(stack.length,countBeforeRefresh);
+revived.tab('account-detail');
+assert.deepEqual(rendered.at(-1).context,{accountId:'account-a'});
+revived.financeBack();assert.equal(document.body.dataset.financeView,'accounts');
+revived.financeBack();assert.equal(document.body.dataset.financeView,'home');
+assert.equal(location.hash,'#/home');
 assert.equal(location.hash,'#/home');
 console.log('PASS page drilldown, two-level Android Back, embedded assets/contracts, quick entry and Home');
