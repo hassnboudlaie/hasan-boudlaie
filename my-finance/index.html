@@ -1,4 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=10"><link rel="icon" href="./icon-192-r4.png?v=1" type="image/png"><link rel="apple-touch-icon" href="./icon-192-r4.png?v=1"><link rel="stylesheet" href="./my-finance-ui-v54.css?v=20261030r61"><link rel="stylesheet" href="./mobile-polish-v58.css?v=20261030r61"><link rel="stylesheet" href="./navigation-v60.css?v=20261030r61"><link rel="stylesheet" href="./drilldown-v61.css?v=20261030r61"><title>داشبورد مالی من</title><style>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09264E"><link rel="manifest" href="./manifest.webmanifest?v=10"><link rel="icon" href="./icon-192-r4.png?v=1" type="image/png"><link rel="apple-touch-icon" href="./icon-192-r4.png?v=1"><link rel="stylesheet" href="./my-finance-ui-v54.css?v=20261030r62"><link rel="stylesheet" href="./mobile-polish-v58.css?v=20261030r62"><link rel="stylesheet" href="./navigation-v60.css?v=20261030r62"><link rel="stylesheet" href="./drilldown-v61.css?v=20261030r62"><title>داشبورد مالی من</title><style>
 :root{font-family:Tahoma,Arial,sans-serif;--bg:#f4f7f8;--card:white;--fg:#193139;--muted:#60757a;--line:#dce6e8;--accent:#087e75}body.dark{--bg:#0c1920;--card:#192a32;--fg:#e9f5f5;--muted:#afc1c4;--line:#35464c;--accent:#0a8f83}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg)}main{max-width:980px;margin:auto;padding:20px}header,.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:22px}h2{font-size:17px}button,input,select{font:inherit}button{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 15px;cursor:pointer}button.alt{background:var(--card);color:var(--fg);border:1px solid var(--line)}input,select{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:11px;min-width:0;width:100%}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric b{display:block;font-size:23px;margin-top:12px}.muted{color:var(--muted);font-size:13px}.entry{display:flex;gap:8px}.entry input{flex:1}.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:10px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap}section[hidden]{display:none}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:start;border-bottom:1px solid var(--line)}.scroll{overflow:auto}label{font-size:12px;color:var(--muted)}.notice{background:var(--bg);border-radius:10px;padding:12px}.danger{color:#d45d5d}@media(max-width:550px){.grid{grid-template-columns:repeat(2,1fr)}.metric b{font-size:17px}.fields{grid-template-columns:1fr}main{padding:12px}h1{font-size:19px}}
 
 /* Mobile-first refinement: visual only; financial storage schema unchanged */
@@ -94,7 +94,7 @@ body.finance-unlocked #auth-gate{display:none!important}
  <button type="button" onclick="financeNavGo('assets')"><span aria-hidden="true">◇</span>دارایی‌ها</button>
  <button type="button" onclick="financeNavGo('contracts')"><span aria-hidden="true">▤</span>قراردادها</button></nav>
  <button type="button" class="finance-side-profile" onclick="financeNavGo('profile')" aria-label="باز کردن پروفایل شخصی"><span class="finance-user-avatar"><span class="finance-avatar-placeholder">👤</span><img class="finance-user-avatar-image" alt="" hidden></span><span class="finance-side-profile-text"><strong class="finance-identity-name">پروفایل من</strong><small class="finance-identity-email">حساب اختصاصی</small></span><span aria-hidden="true">‹</span></button>
-</aside><header class="finance-app-header"><button type="button" id="finance-header-profile" class="finance-header-profile" onclick="financeNavGo('profile')" aria-label="باز کردن پروفایل من"><span class="finance-user-avatar"><span class="finance-avatar-placeholder">👤</span><img class="finance-user-avatar-image" alt="" hidden></span><span class="finance-header-profile-name">پروفایل من</span></button><div class="brand-wrap"><div class="brand-mark" aria-hidden="true"><img src="./brand-mark-v57.svg?v=20261030r57" alt=""></div><div><div class="brand-tag">MY FINANCE <span id="mf-header-release" class="mf-header-release" data-fa="طراحی ۶۱" data-en="Design 61">طراحی ۶۱</span></div><h1 id="title">داشبورد مالی من</h1><span class="mf-mobile-release" data-fa="v۶۱" data-en="v61">v۶۱</span><div id="cloud-indicator" class="cloud-status" role="status">حالت محلی · اتصال امن لازم است</div></div></div><div class="row"><button type="button" class="alt" id="finance-theme-toggle" onclick="toggleTheme()" aria-label="فعال‌سازی حالت تاریک" aria-pressed="false" title="حالت تاریک">☾</button><button type="button" class="alt" onclick="toggleLang()" id="lang" aria-label="تغییر زبان فارسی و انگلیسی">EN</button></div></header>
+</aside><header class="finance-app-header"><button type="button" id="finance-header-profile" class="finance-header-profile" onclick="financeNavGo('profile')" aria-label="باز کردن پروفایل من"><span class="finance-user-avatar"><span class="finance-avatar-placeholder">👤</span><img class="finance-user-avatar-image" alt="" hidden></span><span class="finance-header-profile-name">پروفایل من</span></button><div class="brand-wrap"><div class="brand-mark" aria-hidden="true"><img src="./brand-mark-v57.svg?v=20261030r57" alt=""></div><div><div class="brand-tag">MY FINANCE <span id="mf-header-release" class="mf-header-release" data-fa="طراحی ۶۲" data-en="Design 62">طراحی ۶۲</span></div><h1 id="title">داشبورد مالی من</h1><span class="mf-mobile-release" data-fa="v۶۲" data-en="v62">v۶۲</span><div id="cloud-indicator" class="cloud-status" role="status">حالت محلی · اتصال امن لازم است</div></div></div><div class="row"><button type="button" class="alt" id="finance-theme-toggle" onclick="toggleTheme()" aria-label="فعال‌سازی حالت تاریک" aria-pressed="false" title="حالت تاریک">☾</button><button type="button" class="alt" onclick="toggleLang()" id="lang" aria-label="تغییر زبان فارسی و انگلیسی">EN</button></div></header>
 <div id="mf-update-notice" class="mf-update-notice" role="status" aria-live="polite" hidden>
  <span><strong data-fa="به‌روزرسانی اپ آماده است" data-en="An update is ready">به‌روزرسانی اپ آماده است</strong><small data-fa="برای دیدن تغییرات، نسخه جدید را بارگذاری کنید." data-en="Reload to see the latest improvements.">برای دیدن تغییرات، نسخه جدید را بارگذاری کنید.</small></span>
  <button type="button" id="mf-update-apply" data-fa="بارگذاری نسخه جدید" data-en="Reload latest version">بارگذاری نسخه جدید</button>
@@ -110,7 +110,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <section id="home" class="finance-home">
 <div class="finance-home-heading">
  <div class="mf-heading-copy"><small>PERSONAL FINANCE / OVERVIEW</small><h2 data-fa="نمای مالی من" data-en="My financial overview">نمای مالی من</h2><p class="muted" data-fa="حساب‌ها، هزینه‌ها و تعهدات؛ در یک نگاه" data-en="Accounts, spending and payments at a glance">حساب‌ها، هزینه‌ها و تعهدات؛ در یک نگاه</p><div class="finance-overview-meta"><span id="finance-period-pill" class="finance-period-pill" aria-live="polite">ماه جاری</span><span class="finance-overview-caption" data-fa="نمای اختصاصی · بر اساس اطلاعات ثبت‌شده" data-en="Private overview · from recorded transactions">نمای اختصاصی · بر اساس اطلاعات ثبت‌شده</span></div></div>
- <div class="finance-head-actions" data-myfinance-release="design-r61"><button type="button" class="finance-new-entry" onclick="financeOpenQuickEntry()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button></div>
+ <div class="finance-head-actions" data-myfinance-release="design-r62"><button type="button" class="finance-new-entry" onclick="financeOpenQuickEntry()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button></div>
 </div>
 
 <div class="finance-dashboard-metrics" aria-label="نمای کلی مالی و مسیر جزئیات">
@@ -375,7 +375,7 @@ body.finance-unlocked #auth-gate{display:none!important}
   </div>
   <p class="finance-more-footnote" data-fa="وام و اقساط، حساب‌ها و تراکنش‌ها در نوار پایین در دسترس‌اند." data-en="Loans, accounts and transactions are available in the bottom navigation.">وام و اقساط، حساب‌ها و تراکنش‌ها در نوار پایین در دسترس‌اند.</p>
  </div>
-</dialog><footer class="muted">My Finance · Private Finances · Secure cloud sync · <span id="mf-build-label" data-fa="نسخه ۶۱" data-en="Version 61">نسخه ۶۱</span></footer></main>
+</dialog><footer class="muted">My Finance · Private Finances · Secure cloud sync · <span id="mf-build-label" data-fa="نسخه ۶۲" data-en="Version 62">نسخه ۶۲</span></footer></main>
 <script>
 let KEY='my-finance-preview-v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))||{accounts:[],tx:[],transfers:[]}}catch(e){db={accounts:[],tx:[],transfers:[]}};if(!db||!Array.isArray(db.accounts)||!Array.isArray(db.tx)||!Array.isArray(db.transfers))db={accounts:[],tx:[],transfers:[]};if(!Array.isArray(db.receivables))db.receivables=[];if(!Array.isArray(db.commitments))db.commitments=[];if(!Array.isArray(db.loans))db.loans=[];let lang='fa';const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en-US',{maximumFractionDigits:2}).format(n||0);const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render();document.dispatchEvent(new Event('myfinance:changed'))};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const financeVirtualRoutes=new Set(['cashflow','analysis','quick-entry']);
 const financeRoutes=new Set(['home','cashflow','analysis','quick-entry','transactions','accounts','transfers','receivables','commitments','loans','reports','settings','profile','assistant','assets','contracts','account-detail','transaction-detail']);
@@ -405,6 +405,9 @@ function financeShowMore(){
 }
 function tab(id,context=null){
  if(!financeRoutes.has(id))return;
+ // Preserve the selected private object when theme/language refresh the current view.
+ if(context==null&&history.state?.mfFinance===true&&history.state.route===id)
+  context=history.state.context||null;
  const host=financeVirtualRoutes.has(id)?'home':(['profile','assistant'].includes(id)?'settings':(['assets','contracts'].includes(id)?'finance-embedded':(['account-detail','transaction-detail'].includes(id)?'finance-'+id:id)));
  document.querySelectorAll('main > section').forEach(p=>{p.hidden=p.id!==host});
  document.querySelectorAll('[data-finance-route]').forEach(button=>{
@@ -511,12 +514,23 @@ function financeBack(){
 function financeRouterInitialize(){
  if(financeRouterReady)return;
  const route=financeReadRouteFromHash(location.hash)||document.body.dataset.financeView||'home';
+ // Browser session-history state survives an ordinary PWA refresh.
+ // Retain the route context and depth so Back still works after a reload.
+ const stored=history.state;
+ const samePage=stored?.mfFinance===true&&stored.route===route;
+ const oldDepth=Number(stored?.depth);
+ const depth=samePage&&Number.isFinite(oldDepth)?Math.max(0,Math.min(100,oldDepth)):0;
+ const raw=samePage?stored.context:null;
+ const context=raw&&typeof raw==='object'?{
+  ...(typeof raw.accountId==='string'&&raw.accountId.length<=180?{accountId:raw.accountId}:{}),
+  ...(typeof raw.transactionId==='string'&&raw.transactionId.length<=180?{transactionId:raw.transactionId}:{})
+ }:null;
  financeRouterReady=true;
  try{
-  history.replaceState({mfFinance:true,route,depth:0,scrollY:0,context:null},'',financeRouteUrl(route));
+  history.replaceState({mfFinance:true,route,depth,scrollY:samePage?Math.max(0,Number(stored?.scrollY)||0):0,context},'',financeRouteUrl(route));
   if('scrollRestoration' in history)history.scrollRestoration='manual';
  }catch(_){}
- tab(route);
+ tab(route,context);
  window.addEventListener('popstate',event=>{
   const state=event.state;
   const route=state?.mfFinance===true&&financeRoutes.has(state.route)?state.route:(financeReadRouteFromHash(location.hash)||'home');
@@ -596,7 +610,7 @@ function financeLoadUiPreferences(){
  }
 }
 function toggleTheme(){financeSetTheme(document.body.classList.contains('dark')?'light':'dark',true)}
-function toggleLang(){financeSetLanguage(lang==='fa'?'en':'fa',true);render();tab(document.body.dataset.financeView||'home')}
+function toggleLang(){financeSetLanguage(lang==='fa'?'en':'fa',true);render();tab(document.body.dataset.financeView||'home',history.state?.context||null)}
 function parsePersianNumber(raw){
  const text=digits(raw).replace(/[،,](?=\d{3}(?:\D|$))/g,'').replace(/\u200c/g,' ').replace(/ي/g,'ی').replace(/ك/g,'ک');
  const unit={هزار:1e3,میلیون:1e6,میلیارد:1e9};
@@ -1191,4 +1205,4 @@ document.addEventListener('myfinance:rebound',reload);
 reload();
 window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
-</script><script defer src="./transaction-history.js?v=20261030r61"></script><script src="./commitments.js?v=20261029r53" defer></script><script src="./loans.js?v=20261029r51" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script defer src="./app-update-v53.js?v=20261029r53"></script><script defer src="./mobile-dock-v58.js?v=20261030r60"></script><script defer src="./drilldown-v61.js?v=20261030r61"></script><script type="module" src="./supabase-sync.js?v=20261030r57"></script><script defer src="./install-prompt.js?v=20261029r2"></script></body></html>
+</script><script defer src="./transaction-history.js?v=20261030r62"></script><script src="./commitments.js?v=20261029r53" defer></script><script src="./loans.js?v=20261029r51" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script defer src="./app-update-v53.js?v=20261029r53"></script><script defer src="./mobile-dock-v58.js?v=20261030r60"></script><script defer src="./drilldown-v61.js?v=20261030r62"></script><script type="module" src="./supabase-sync.js?v=20261030r57"></script><script defer src="./install-prompt.js?v=20261029r2"></script></body></html>
