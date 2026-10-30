@@ -15,7 +15,7 @@ function check(label,fn){
 }
 check('one consolidated stylesheet, original cascade preserved',()=>{
  const links=[...html.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"/g)].map(m=>m[1]);
- assert.equal(links.length,1);assert.match(links[0],/^\.\/my-finance-ui-v54\.css\?v=/);
+ assert.equal(links.length,2);assert.match(links[0],/^\.\/my-finance-ui-v54\.css\?v=/);assert.match(links[1],/^\.\/mobile-polish-v58\.css\?v=/);
  let pos=-1;
  for(const name of ['premium.css','dashboard-r33.css','design-v49.css','interior-v51.css','mobile-ux-v52.css']){
   const next=css.indexOf(read(name));assert.ok(next>pos,'CSS source missing/reordered: '+name);pos=next;
@@ -56,7 +56,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r57"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r58"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -82,7 +82,7 @@ check('classic application JavaScript parses',()=>{
  assert.ok(inline.length>=2);
  for(const text of inline)new Function(text);
  for(const name of ['loans.js','commitments.js','reports.js','receivables-actions.js',
- 'voice-entry.js','transaction-history.js','install-prompt.js','app-update-v53.js']){
+ 'voice-entry.js','transaction-history.js','install-prompt.js','app-update-v53.js','mobile-dock-v58.js']){
   const check=spawnSync(process.execPath,['--check',resolve(root,name)],{encoding:'utf8'});
   assert.equal(check.status,0,name+': '+check.stderr);
  }
