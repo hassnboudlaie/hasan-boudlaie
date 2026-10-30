@@ -123,8 +123,7 @@
       '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+
       '<section><div class="section-heading"><div><div class="section-kicker">'+t("moduleKicker")+'</div><h2>'+t("modulesHeading")+'</h2><p>'+t("modulesDesc")+'</p></div><button class="inline-link" data-route="modules">'+t("viewAll")+' ↗</button></div>'+
       '<div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div></section>'+
-+
-      '<section class="life-coach-teaser"><div><span class="section-kicker">MY AI LIFE COACH</span><h2>'+(state.lang==="fa"?"مربی هوش مصنوعی زندگی من":"My AI Life Coach")+'</h2><p>'+(state.lang==="fa"?"فضایی برای Reflection، انتخاب آگاهانه و طراحی زندگی؛ به‌زودی.":"A place to reflect, clarify choices and move forward — coming soon.")+'</p></div><button type="button" class="btn btn-primary" data-route="coach">'+(state.lang==="fa"?"مشاهده · به‌زودی":"Explore · Coming soon")+' ↗</button></section>'
+      '<section class="life-coach-teaser"><div><span class="section-kicker">MY AI LIFE COACH</span><h2>'+(state.lang==="fa"?"مربی هوش مصنوعی زندگی من":"My AI Life Coach")+'</h2><p>'+(state.lang==="fa"?"فضایی برای Reflection، انتخاب آگاهانه و طراحی زندگی؛ به‌زودی.":"A place to reflect, clarify choices and move forward — coming soon.")+'</p></div><button type="button" class="btn btn-primary" data-route="coach">'+(state.lang==="fa"?"مشاهده · به‌زودی":"Explore · Coming soon")+' ↗</button></section>'+
       '<div class="bottom-note"><span class="note-icon">'+icons("workbook")+'</span><div><h3>'+t("workbookTeaser")+'</h3><p>'+t("workbookTeaserDesc")+'</p></div><button class="inline-link" data-route="workbook">'+t("openWorkbook")+' ↗</button></div>';
   }
   function modulesPage(){
