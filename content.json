@@ -230,8 +230,8 @@
     },
     {
       "title": {
-        "en": "Leadership Lab",
-        "fa": "آزمایشگاه رهبری"
+        "en": "Leadership Learning & Development",
+        "fa": "یادگیری و توسعه رهبری"
       },
       "org": {
         "fa": "بهپرور",
@@ -241,20 +241,44 @@
         "en": "Leadership Lab",
         "fa": "آزمایشگاه رهبری"
       },
-      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/",
+      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/app/",
       "description": {
-        "fa": "کارگاه شش‌جلسه‌ای رهبری؛ با خودارزیابی، گفت‌وگو، کیس و تمرین محیط کار.",
-        "en": "A six-session leadership workshop with self-assessment, dialogue, cases and workplace practice."
+        "en": "Leadership Skills App and original six-session workshop, with assessments, case studies and practice.",
+        "fa": "اپ مهارت‌های رهبری من و کارگاه شش‌جلسه‌ای اصلی؛ همراه با خودارزیابی، کیس و تمرین."
       },
       "stage": {
-        "en": "Interactive workshop",
-        "fa": "کارگاه تعاملی"
+        "en": "Mobile-first PWA · No sign-in",
+        "fa": "اپ موبایلی · بدون رمز ورود"
       },
       "id": "behparvar",
       "logo": "assets/company-logos/behparvar.svg",
       "brandColor": "#132c68",
       "brandAccent": "#b91c36",
-      "brandSoft": "#edf2fb"
+      "brandSoft": "#edf2fb",
+      "tools": [
+        {
+          "title": {
+            "en": "My Leadership Skills · Behparvar App",
+            "fa": "مهارت‌های رهبری من · اپ به‌پرور"
+          },
+          "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/app/",
+          "stage": {
+            "en": "Mobile-first PWA · No sign-in",
+            "fa": "اپ موبایلی · بدون رمز ورود"
+          }
+        },
+        {
+          "title": {
+            "en": "Leadership Lab · Original Workshop",
+            "fa": "آزمایشگاه رهبری · وب‌سایت اصلی کارگاه"
+          },
+          "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/",
+          "stage": {
+            "en": "Six-session interactive workshop",
+            "fa": "کارگاه تعاملی شش‌جلسه‌ای"
+          }
+        }
+      ]
     },
     {
       "id": "sabanaft",
