@@ -44,10 +44,23 @@ try{
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/account-390.png',fullPage:true});
  await page.locator('.mf-drill-item').first().click();await check('transaction-detail');
  assert.equal(await page.locator('.finance-mobile-nav .finance-active').count(),1,'Multiple bottom navigation tabs are active');
+ assert.equal(await page.locator('.finance-mobile-nav .finance-active').first().getAttribute('data-finance-route'),'transactions','Transaction detail must highlight Transactions, not Accounts');
  const details=await page.locator('#finance-transaction-detail-body').innerText();
  assert.ok(details.includes('۱٬۰۰۰٬۰۰۰')&&details.includes('تومان'),'Exact amount/unit not visible');
  assert.ok(!page.url().includes('tx-example'),'Transaction ID leaked in URL');
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/transaction-390.png',fullPage:true});
+ const link=page.locator('#finance-transaction-detail-body .mf-drill-all');
+ await link.scrollIntoViewIfNeeded();
+ await page.waitForTimeout(280);
+ const overlap=await page.evaluate(()=>{
+  const link=document.querySelector('#finance-transaction-detail-body .mf-drill-all');
+  const dock=document.querySelector('.finance-mobile-nav');
+  if(!link||!dock)return true;
+  const a=link.getBoundingClientRect(),b=dock.getBoundingClientRect();
+  const cs=getComputedStyle(dock);
+  return cs.display!=='none'&&Number(cs.opacity)>0.1&&a.bottom>b.top&&a.top<b.bottom;
+ });
+ assert.equal(overlap,false,'Bottom dock overlaps clickable financial detail action');
  await page.goBack();await check('account-detail');
  await page.goBack();await check('accounts');
  await page.goBack();await check('home');
