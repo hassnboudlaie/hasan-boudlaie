@@ -49,7 +49,7 @@ html[dir=rtl] .company-card .company-topic{font-family:Tahoma,"Segoe UI",Arial,s
 .featured-apps-heading{margin-block-end:24px}
 .featured-apps-heading h2{font-size:clamp(1.8rem,3vw,2.4rem);margin-block:8px 10px}
 .featured-apps-heading p:not(.eyebrow){color:var(--muted);max-width:720px}
-.featured-apps-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.featured-apps-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .featured-app{display:flex;flex-direction:column;min-width:0;padding:23px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 5px 22px rgb(23 40 38 / 4%);border-top:4px solid var(--app-accent);transition:transform .2s,box-shadow .2s}
 .featured-app:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgb(23 40 38 / 9%)}
 .featured-app-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;min-height:80px}

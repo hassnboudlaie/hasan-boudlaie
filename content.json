@@ -287,26 +287,61 @@
         "en": "Saba Naft"
       },
       "title": {
-        "fa": "مهارت‌های رهبری مدیران",
-        "en": "Leadership Skills for Managers"
+        "fa": "رهبری بازتابی · اپلیکیشن و استودیو",
+        "en": "Reflective Leadership · App & Studio"
       },
       "type": {
         "fa": "آزمایشگاه رهبری",
         "en": "Leadership Lab"
       },
       "description": {
-        "fa": "دوره ۹جلسه‌ای بر اساس کتاب رهبر بازتابی آرمین تروست؛ با ۴۷ بخش، شناخت بافت، چهار نقش رهبری و تمرین‌های کاربردی ستاد و پروژه.",
-        "en": "A nine-session course based on Armin Trost’s The Reflective Leader, with 47 sections on context, four leadership roles and practical office/project reflection."
+        "fa": "۹ جلسه و ۴۷ درس تعاملی، به‌همراه استودیوی شخصی بازاندیشی و تمرین رهبری.",
+        "en": "Nine sessions and 47 interactive lessons, plus the existing personal reflection and practice studio."
       },
       "stage": {
-        "fa": "کارگاه تعاملی · ذخیره در مرورگر",
-        "en": "Interactive workshop · browser-local storage"
+        "fa": "قابل نصب · ۹ جلسه · بدون رمز ورود",
+        "en": "PWA · Nine sessions · No sign-in"
       },
-      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/",
       "logo": "https://hassnboudlaie.github.io/hasan-boudlaie/assets/company-logos/sabanaft.svg",
       "brandColor": "#042ca5",
       "brandAccent": "#b93600",
-      "brandSoft": "#edf2ff"
+      "brandSoft": "#edf2ff",
+      "tools": [
+        {
+          "title": {
+            "fa": "رهبری بازتابی من · اپلیکیشن موبایل",
+            "en": "My Reflective Leadership · Mobile App"
+          },
+          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/",
+          "stage": {
+            "fa": "قابل نصب · ۹ جلسه · بدون رمز ورود",
+            "en": "PWA · Nine sessions · No sign-in"
+          }
+        },
+        {
+          "title": {
+            "fa": "استودیوی شخصی رهبری",
+            "en": "Personal Leadership Studio"
+          },
+          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/leadership-studio.html",
+          "stage": {
+            "fa": "بازاندیشی، کیس و تمرین نقش‌ها",
+            "en": "Reflection, cases and role rehearsal"
+          }
+        },
+        {
+          "title": {
+            "fa": "وب‌سایت اصلی کارگاه ۹جلسه‌ای",
+            "en": "Original Nine-Session Workshop"
+          },
+          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/index.html#home",
+          "stage": {
+            "fa": "دوره اصلی با ۴۷ بخش یادگیری",
+            "en": "Original course with 47 learning sections"
+          }
+        }
+      ]
     },
     {
       "title": {
