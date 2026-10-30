@@ -2,7 +2,7 @@
 import { chromium } from 'playwright-core';
 import {existsSync,mkdirSync} from 'node:fs';
 import assert from 'node:assert/strict';
-const bin=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(existsSync);
+const bin=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser',chromium.executablePath()].find(existsSync);
 if(!bin)throw Error('No Chromium browser on CI runner');
 mkdirSync('/tmp/myfinance-ui-smoke',{recursive:true});
 const browser=await chromium.launch({executablePath:bin,headless:true,args:['--no-sandbox']});
