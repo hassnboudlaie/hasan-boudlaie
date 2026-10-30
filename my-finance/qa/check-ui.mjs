@@ -37,6 +37,24 @@ check('minimal home available and saved',()=>{
  assert.ok(html.includes('myfinance-ui-home-more-v1'));
  assert.ok(html.indexOf('id="mf-home-more"')>html.indexOf('id="finance-cashflow-card"'));
 });
+check('redesign is visible and all four quick actions have live destinations',()=>{
+ assert.ok(html.includes('class="mf-auth-showcase"'),'new login showcase missing');
+ assert.ok(html.includes('class="mf-auth-identity"'),'login brand missing');
+ assert.ok(html.includes('id="mf-header-release"'),'visible design version missing');
+ assert.ok(html.includes('class="mf-action-grid"'),'new action deck missing');
+ for(const kind of ['expense','income'])
+  assert.ok(html.includes("financeStartRecord('"+kind+"')"),kind+' action missing');
+ assert.ok(html.includes("financeNavGo('transfers')"),'transfer shortcut missing');
+ assert.ok(html.includes("financeNavGo('loans')"),'loan shortcut missing');
+ assert.ok(html.includes('function financeStartRecord(kind)'),'new transaction route function missing');
+ assert.ok(css.includes('MY FINANCE · VISUAL 2.0 / RELEASE R56'),'new visual design layer missing');
+ const homeStart=html.indexOf('<section id="home"');
+ const homeEnd=html.indexOf('</section>',homeStart);
+ const home=html.slice(homeStart,homeEnd);
+ assert.ok(home.indexOf('finance-dashboard-metrics')<home.indexOf('mf-action-grid'),'financial hero should lead');
+ assert.ok(home.indexOf('mf-action-grid')<home.indexOf('loan-due-notice'),'quick actions should follow balance');
+ assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
+});
 check('classic application JavaScript parses',()=>{
  const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);
  assert.ok(inline.length>=2);
