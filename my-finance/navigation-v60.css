@@ -93,3 +93,21 @@ body.finance-unlocked main>section[hidden]{display:none!important}
  body.finance-unlocked[data-finance-view="cashflow"] #home .finance-flow-bars{height:114px!important}
  body.finance-unlocked[data-finance-view="quick-entry"] #home>.finance-quick-card{padding:14px!important}
 }
+
+/* Safe in-shell legacy views; reauth uses existing private child-page session. */
+body.finance-unlocked #finance-embedded{max-width:100%;min-width:0}
+body.finance-unlocked #finance-embedded .finance-embedded-surface{
+ background:var(--card);border:1px solid var(--line);border-radius:18px;
+ padding:12px;box-shadow:var(--mf-shadow);min-height:380px;overflow:hidden
+}
+body.finance-unlocked #finance-embedded-frame{
+ display:block;width:100%;max-width:100%;min-height:380px;
+ border:0;background:transparent;color:var(--fg);overflow:hidden
+}
+body.finance-unlocked #finance-embedded-frame:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media(max-width:640px){
+ body.finance-unlocked #finance-embedded .finance-embedded-surface{
+  padding:7px;border-radius:14px
+ }
+ body.finance-unlocked #finance-embedded-frame{min-height:320px}
+}
