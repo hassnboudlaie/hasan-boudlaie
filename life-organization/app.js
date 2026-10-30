@@ -15,7 +15,7 @@
   const I = {
     fa: {
       workspace:"فضای کاری من",asideTitle:"زندگی متناسب با من",asideDesc:"یک فضای آرام برای فکر کردن، انتخاب کردن و پیش رفتن.",localOnly:"ذخیره روی این دستگاه",mobileBrand:"سازمان زندگی من",
-      home:"خانه",modules:"ماژول‌ها",workbook:"دفتر کار من",progress:"مسیر من",profile:"پروفایل",
+      home:"خانه",modules:"ماژول‌ها",workbook:"دفتر کار من",coach:"لایف کوچ من",progress:"مسیر من",profile:"پروفایل",
       homeCrumb:"نمای کلی",homeEyebrow:"DESIGN A LIFE THAT FITS",homeTitle:"زندگی من، سازمان من.",homeDesc:"یک فضای شخصی برای شناخت، طراحی و مدیریت زندگی؛ قدم‌به‌قدم، بر اساس آنچه واقعاً برای شما مناسب است.",startJourney:"شروع مسیر من",exploreModules:"کاوش ماژول‌ها",
       moduleKicker:"YOUR LIFE SYSTEM",modulesHeading:"شش بُعد سازمان زندگی",modulesDesc:"هر ماژول یک فضای مستقل است؛ همه در کنار هم یک سیستم یکپارچه می‌سازند.",viewAll:"مشاهده همه",ready:"آماده شروع",started:"در حال کاوش",
       workbookTeaser:"دفتر کار شخصی شما",workbookTeaserDesc:"یادداشت‌ها و Reflectionهای هر ماژول، در یک فضای منظم.",openWorkbook:"ورود به دفتر کار",
@@ -29,7 +29,7 @@
     },
     en: {
       workspace:"My workspace",asideTitle:"A life that fits",asideDesc:"A calm space to reflect, choose and move forward.",localOnly:"Saved on this device",mobileBrand:"My Life Organization",
-      home:"Home",modules:"Modules",workbook:"My Workbook",progress:"My Journey",profile:"Profile",
+      home:"Home",modules:"Modules",workbook:"My Workbook",coach:"My Life Coach",progress:"My Journey",profile:"Profile",
       homeCrumb:"Overview",homeEyebrow:"DESIGN A LIFE THAT FITS",homeTitle:"My life. My organization.",homeDesc:"A personal space to understand, design and manage your life, step by step, on your own terms.",startJourney:"Begin my journey",exploreModules:"Explore modules",
       moduleKicker:"YOUR LIFE SYSTEM",modulesHeading:"Six dimensions of life",modulesDesc:"Each module is independent. Together, they form an integrated system.",viewAll:"View all",ready:"Ready to begin",started:"Exploring",
       workbookTeaser:"Your personal workbook",workbookTeaserDesc:"Notes and reflections from every module, organized in one place.",openWorkbook:"Open workbook",
@@ -70,6 +70,7 @@
       workbook:'<path d="M4 19V5a2 2 0 0 1 2-2h14v17H6a2 2 0 0 1 0-4h14"/><path d="M8 7h8M8 11h6"/>',
       progress:'<path d="M4 19V5M4 19h17M8 15l4-4 3 2 5-7"/><path d="M17 6h3v3"/>',
       profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/>',
+      coach:'<path d="M12 2.5 14.4 9.6 21.5 12l-7.1 2.4L12 21.5l-2.4-7.1L2.5 12l7.1-2.4z"/>',
       moon:'<path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/>',
       sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
       identity:'<circle cx="12" cy="9" r="4"/><path d="M5 20c.2-4 2.7-6 7-6s6.8 2 7 6"/><path d="M18 5l3 3"/>',
@@ -91,17 +92,17 @@
   const hasNote=id=>Boolean(typeof state.notes[id]==="string"&&state.notes[id].trim());
   const moduleIcon=m=>'<span class="module-icon">'+icons(m.icon)+'</span>';
   const status=id=>'<span class="status '+(started(id)?"active":"")+'">'+(started(id)?t("started"):t("ready"))+'</span>';
-  const navItems=[["home","home"],["modules","modules"],["workbook","workbook"],["progress","progress"],["profile","profile"]];
+  const navItems=[["home","home"],["modules","modules"],["workbook","workbook"],["coach","coach"],["progress","progress"],["profile","profile"]];
   function route(){
     const h=decodeURIComponent(location.hash.replace(/^#/,""))||"home";
     const parts=h.split("/");
     if(parts[0]==="module"&&/^[1-6]$/.test(parts[1]||""))return {page:"module",id:Number(parts[1])};
-    if(["home","modules","workbook","progress","profile"].includes(h))return {page:h};
+    if(["home","modules","workbook","coach","progress","profile"].includes(h))return {page:h};
     return {page:"home"};
   }
   function navigate(next){location.hash=next;if(location.hash.slice(1)===next)render()}
   function navHtml(active,mobile=false){
-    const list=mobile?navItems.filter(x=>["home","modules","workbook","profile"].includes(x[0])):navItems;
+    const list=mobile?navItems.filter(x=>["home","modules","workbook","coach","profile"].includes(x[0])):navItems;
     return list.map(([key,ic])=>'<button class="'+(mobile?"bottom-link":"nav-link")+(active===key?" active":"")+'" type="button" data-route="'+key+'" '+(active===key?'aria-current="page"':"")+'>'+icons(ic)+'<span>'+esc(t(key))+'</span></button>').join("");
   }
   function moduleCard(m){
@@ -122,6 +123,8 @@
       '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+
       '<section><div class="section-heading"><div><div class="section-kicker">'+t("moduleKicker")+'</div><h2>'+t("modulesHeading")+'</h2><p>'+t("modulesDesc")+'</p></div><button class="inline-link" data-route="modules">'+t("viewAll")+' ↗</button></div>'+
       '<div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div></section>'+
++
+      '<section class="life-coach-teaser"><div><span class="section-kicker">MY AI LIFE COACH</span><h2>'+(state.lang==="fa"?"مربی هوش مصنوعی زندگی من":"My AI Life Coach")+'</h2><p>'+(state.lang==="fa"?"فضایی برای Reflection، انتخاب آگاهانه و طراحی زندگی؛ به‌زودی.":"A place to reflect, clarify choices and move forward — coming soon.")+'</p></div><button type="button" class="btn btn-primary" data-route="coach">'+(state.lang==="fa"?"مشاهده · به‌زودی":"Explore · Coming soon")+' ↗</button></section>'
       '<div class="bottom-note"><span class="note-icon">'+icons("workbook")+'</span><div><h3>'+t("workbookTeaser")+'</h3><p>'+t("workbookTeaserDesc")+'</p></div><button class="inline-link" data-route="workbook">'+t("openWorkbook")+' ↗</button></div>';
   }
   function modulesPage(){
@@ -169,7 +172,17 @@
       '<div class="setting-row"><label>'+t("install")+'</label><button class="btn btn-outline" data-action="install">'+t("installNow")+'</button></div></section></div>'+
       '<div class="panel" style="margin-top:17px"><h2>'+t("privacy")+'</h2><p>'+t("privacyDesc")+'</p><button class="btn btn-danger" data-action="reset">'+t("reset")+'</button></div>';
   }
-  const pageFn={home:homePage,modules:modulesPage,workbook:workbookPage,progress:progressPage,profile:profilePage};
+
+  function coachPage(){
+    const fa=state.lang==="fa";
+    const title=fa?"مربی هوش مصنوعی زندگی من":"My AI Life Coach";
+    const subtitle=fa?"یک فضای شخصی برای بازاندیشی، روشن‌سازی اولویت‌ها و طراحی زندگی متناسب با من؛ در نسخه‌های آینده.":"A personal space for reflection, clarifying priorities and designing a life that fits — in a future update.";
+    const items=fa?[["شناخت و بازاندیشی","فهم نقش‌ها، ارزش‌ها و آنچه واقعاً مهم است."],["تصمیم‌ها و اولویت‌ها","Explore alternatives و انتخاب آگاهانه، بدون نسخه واحد."],["اقدام و پیگیری","تبدیل بینش به Next Best Step و مرور پیشرفت."]]:[["Reflection & insight","Explore roles, values and what matters most."],["Choices & priorities","Broaden perspective without prescribed answers."],["Action & follow-through","Turn insights into next steps and review progress."]];
+    return '<section class="life-coach-page"><div class="page-lead"><p class="section-kicker">MY AI LIFE COACH · COMING SOON</p><h1>'+title+'</h1><p>'+subtitle+'</p></div>'+
+      '<div class="life-coach-banner"><div><span class="life-coach-mark">'+icons("coach")+'</span><h2>'+(fa?"زندگی متناسب با من، با تأمل و انتخاب":"A life that fits, through reflection and choice")+'</h2><p>'+(fa?"این بخش فعلاً فقط پیش‌نمایش است؛ هیچ مکالمه هوش مصنوعی یا اتصال به داده‌های شخصی فعال نیست.":"This is a preview only. No AI chat or personal-data connection is active.")+'</p><span class="life-coach-status">'+(fa?"به‌زودی":"Coming soon")+'</span></div><div class="life-coach-orbit">✦</div></div>'+
+      '<div class="life-coach-features">'+items.map(x=>'<article><span class="life-coach-dot">✧</span><h3>'+x[0]+'</h3><p>'+x[1]+'</p><small>'+(fa?"به‌زودی":"Coming soon")+'</small></article>').join("")+'</div></section>';
+  }
+  const pageFn={home:homePage,modules:modulesPage,workbook:workbookPage,coach:coachPage,progress:progressPage,profile:profilePage};
   function applyTheme(){
     const dark=state.theme==="dark"||(state.theme==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.dataset.theme=dark?"dark":"light";

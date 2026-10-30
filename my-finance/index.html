@@ -46,6 +46,11 @@ body.finance-unlocked #auth-gate{display:none!important}
 .loan-reminder-banner p{font-size:13px;color:inherit;margin:5px 0 0;line-height:1.9}
 .loan-reminder-banner button{min-height:42px;white-space:nowrap}
 @media(max-width:480px){.loan-reminder-banner button{width:100%}}
+
+
+.mf-future-coach{padding:22px;border:1px solid #c7dedb;border-radius:21px;background:linear-gradient(115deg,#eefaf7,#fff);margin-bottom:19px;box-shadow:0 6px 24px #0a66540b;color:var(--fg)}
+.mf-future-coach-head{display:flex;align-items:center;gap:12px}.mf-future-coach-icon{width:45px;height:45px;border-radius:14px;background:#087e75;color:#fff;display:grid;place-items:center;font-size:24px;flex:none}.mf-future-coach-head>div{flex:1;min-width:0}.mf-future-coach-head>div>small{color:#17887e;font-size:10px;letter-spacing:.06em}.mf-future-coach h2{margin:0;font-size:18px}.mf-future-coach-badge{background:#fff0de;color:#935c20;border-radius:40px;padding:5px 11px;font-size:11px;font-weight:900;white-space:nowrap}.mf-future-coach>p{margin:13px 0;color:var(--muted);font-size:13px;line-height:1.95}.mf-future-coach-features{display:flex;flex-wrap:wrap;gap:8px}.mf-future-coach-features span{padding:6px 10px;border-radius:11px;border:1px solid #c8e3dc;background:#fff;font-size:12px;color:#14645c}.mf-future-coach-foot{display:block;margin-top:15px;color:var(--muted);font-size:11px}.dark .mf-future-coach{background:var(--card);border-color:var(--line)}.dark .mf-future-coach-features span{background:var(--bg);color:var(--fg);border-color:var(--line)}
+@media(max-width:520px){.mf-future-coach{padding:16px}.mf-future-coach h2{font-size:16px}.mf-future-coach-head{gap:8px}.mf-future-coach-icon{width:40px;height:40px}.mf-future-coach-badge{font-size:10px;padding:4px 8px}}
 </style></head><body><div id="auth-gate" aria-label="ورود امن به My Finance">
 <div class="mf-auth-showcase" aria-hidden="true">
  <div class="mf-auth-showcase-brand"><span class="mf-auth-symbol">✳</span><span>MY FINANCE</span><span class="mf-auth-brand-line"></span></div>
@@ -301,6 +306,12 @@ body.finance-unlocked #auth-gate{display:none!important}
   </div>
   <p id="profile-status" role="status" aria-live="polite" class="muted">اطلاعات این بخش برای کاربران دیگر قابل مشاهده نیست.</p>
  </div><div class="card" id="personal-ai-panel">
+<div class="mf-future-coach" id="my-ai-finance-coach" aria-label="مربی هوش مصنوعی مالی من؛ به‌زودی">
+  <div class="mf-future-coach-head"><span class="mf-future-coach-icon" aria-hidden="true">✦</span><div><small>MY AI FINANCE COACH</small><h2 data-fa="مربی هوش مصنوعی مالی من" data-en="My AI Finance Coach">مربی هوش مصنوعی مالی من</h2></div><span class="mf-future-coach-badge" data-fa="به‌زودی" data-en="Coming soon">به‌زودی</span></div>
+  <p data-fa="در آپدیت‌های بعدی: کمک به درک الگوی هزینه‌ها، برنامه‌ریزی جریان نقد و تصمیم‌های مالی آگاهانه؛ بدون تصمیم‌گیری خودکار به‌جای شما." data-en="Planned: understand spending patterns, explore cash flow and support informed personal financial decisions, without making decisions for you.">در آپدیت‌های بعدی: کمک به درک الگوی هزینه‌ها، برنامه‌ریزی جریان نقد و تصمیم‌های مالی آگاهانه؛ بدون تصمیم‌گیری خودکار به‌جای شما.</p>
+  <div class="mf-future-coach-features"><span data-fa="💬 گفت‌وگوی مالی" data-en="💬 Money conversations">💬 گفت‌وگوی مالی</span><span data-fa="◷ پیش‌بینی نقدینگی" data-en="◷ Cash-flow outlook">◷ پیش‌بینی نقدینگی</span><span data-fa="◎ پیگیری هدف‌ها" data-en="◎ Goal follow-through">◎ پیگیری هدف‌ها</span></div>
+  <small class="mf-future-coach-foot" data-fa="این قابلیت فعلاً فقط معرفی است؛ هیچ سرویس AI، دسترسی به تراکنش‌ها یا هزینه API برای این مربی فعال نیست." data-en="Preview only. This coach does not access transactions, send data or call any AI service.">این قابلیت فعلاً فقط معرفی است؛ هیچ سرویس AI، دسترسی به تراکنش‌ها یا هزینه API برای این مربی فعال نیست.</small>
+</div>
  <h2>دستیار هوش مصنوعی شخصی · اختیاری</h2>
  <p class="muted">بدون اتصال پولی اجباری. استفاده عادی از My Finance مستقل از این بخش است.</p>
  <label class="personal-ai-label" for="personal-ai-mode">روش استفاده از دستیار شخصی</label>
