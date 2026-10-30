@@ -31,7 +31,6 @@ header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid 
 .dropdown a:hover,.sitemap a:hover{color:var(--blue);background:var(--pale)}
 .actions{display:flex;align-items:center;gap:7px}
 .menu-btn{border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);padding:8px 11px}
-.app-link{background:var(--blue);color:#fff;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:700;white-space:nowrap}
 .menu-btn{display:none}
 .mobile{display:none;background:white;border-top:1px solid var(--line);padding:10px 18px;max-height:70vh;overflow:auto}
 .mobile details{border-bottom:1px solid var(--line)}
@@ -69,7 +68,7 @@ footer a:hover{color:white;text-decoration:underline}
 .footer-bottom{margin-top:35px;border-top:1px solid #3b4b64;padding-top:17px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#cbd5e6;font-size:12px}
 @media(max-width:1020px){.desktop{gap:0}.nav-entry>button{padding:9px 6px;font-size:12px}.logo{font-size:14px}}
 @media(max-width:800px){.desktop{display:none}.top{min-height:64px}.actions{margin-inline-start:auto}.menu-btn{display:inline-block}.mobile.visible{display:block}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:50px 0}}
-@media(max-width:560px){.container{width:min(100% - 30px,1170px)}.cards,.footer-cols{grid-template-columns:1fr}.item{min-height:62px}.logo{font-size:13px}.app-link{font-size:11px;padding:9px 10px}.hero p.lead{font-size:14px}.hero{padding:42px 0}}
+@media(max-width:560px){.container{width:min(100% - 30px,1170px)}.cards,.footer-cols{grid-template-columns:1fr}.item{min-height:62px}.logo{font-size:13px}.hero p.lead{font-size:14px}.hero{padding:42px 0}}
 </style>
 </head>
 <body>
@@ -79,7 +78,6 @@ footer a:hover{color:white;text-decoration:underline}
   <a class="logo" href="./" aria-label="خانه مدیریت استراتژیک"><b>ح‌ب</b><span id="brand">مدیریت استراتژیک</span></a>
   <nav class="desktop" id="desktopNav" aria-label="ناوبری اصلی"></nav>
   <div class="actions">
-   <a class="app-link" href="../okr-system/" id="appLink">ورود به سامانه مدیریت اهداف</a>
    <button class="menu-btn" id="menuBtn" type="button" aria-controls="mobileNav" aria-expanded="false">☰</button>
   </div>
  </div>
@@ -111,7 +109,6 @@ function draw(){
  document.documentElement.lang=lang;
  document.documentElement.dir=lang==='fa'?'rtl':'ltr';
  document.getElementById('brand').textContent=t('Strategic Management','مدیریت استراتژیک');
- document.getElementById('appLink').textContent='ورود به سامانه مدیریت اهداف';
  document.getElementById('mainSite').textContent=t('Main website','وب‌سایت اصلی');
  document.getElementById('footBrand').textContent=t('Strategic Management · Dr. Hasan Boudlaie','مدیریت استراتژیک · دکتر حسن بودلایی');
  document.getElementById('menuBtn').textContent=t('Menu','منو');
