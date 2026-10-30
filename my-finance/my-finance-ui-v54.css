@@ -1092,3 +1092,31 @@ body.finance-unlocked #mf-update-apply{border:1px solid var(--accent)!important;
 @media(max-width:470px){body.finance-unlocked #mf-update-apply{width:100%}}
 
 /* ===== END 5: Responsive polish and update notices ===== */
+
+
+/* ===== Phase four v55: minimal-first, user-controlled dashboard details ===== */
+#home .mf-home-more{margin:15px 0 20px;border:1px solid var(--line);background:var(--card);border-radius:19px;overflow:hidden;box-shadow:var(--mf-shadow)}
+#home .mf-home-more-summary{display:flex;align-items:center;gap:12px;padding:18px 19px;min-height:67px;cursor:pointer;list-style:none;user-select:none;color:var(--fg)}
+#home .mf-home-more-summary::-webkit-details-marker{display:none}
+#home .mf-home-more-summary::marker{content:''}
+#home .mf-home-more-summary:focus-visible{outline:3px solid var(--accent);outline-offset:-3px;border-radius:18px}
+#home .mf-home-more-summary:hover{background:var(--mf-soft)}
+#home .mf-home-more-icon{flex:0 0 40px;display:grid;place-items:center;width:40px;height:40px;background:var(--mf-soft);color:var(--accent);font-size:23px;border-radius:12px}
+#home .mf-home-more-copy{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+#home .mf-home-more-copy strong{font-size:14px;line-height:1.6;font-weight:850}
+#home .mf-home-more-copy small{font-size:11px;line-height:1.8;color:var(--muted)}
+#home .mf-home-more-chevron{display:grid;place-items:center;color:var(--accent);font-size:25px;transition:transform .2s ease}
+#home .mf-home-more[open] .mf-home-more-chevron{transform:rotate(180deg)}
+#home .mf-home-more-content{border-top:1px solid var(--line);padding:16px 16px 7px}
+#home .mf-home-more-content>.finance-home-insights{margin:0 0 13px;gap:12px}
+#home .mf-home-more-content>.finance-shortcuts{margin:0 0 6px;gap:10px}
+#home .mf-home-more-content>.finance-shortcuts a{min-height:65px}
+@media(max-width:600px){
+ #home .mf-home-more{margin-top:13px}
+ #home .mf-home-more-summary{padding:13px 14px;gap:9px;min-height:65px}
+ #home .mf-home-more-icon{width:35px;height:35px;flex-basis:35px;font-size:20px}
+ #home .mf-home-more-copy strong{font-size:13px}
+ #home .mf-home-more-copy small{font-size:10px}
+ #home .mf-home-more-content{padding:12px 11px 3px}
+}
+@media(prefers-reduced-motion:reduce){#home .mf-home-more-chevron{transition:none}}
