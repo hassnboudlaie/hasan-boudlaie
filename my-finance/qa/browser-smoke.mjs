@@ -25,7 +25,14 @@ try{
  await page.waitForSelector('body.finance-unlocked');await check('home');
  assert.equal(await page.locator('#finance-cashflow-card').isVisible(),false,'Home should not render long chart');
  assert.equal(await page.locator('#mf-home-more').isVisible(),false,'Home should not render long insights');
- assert.equal(await page.locator('.finance-home-hub').count(),3,'Three short detail links expected');
+ assert.equal(await page.locator('.finance-home-hub').count(),2,'Only two short detail links expected');
+ assert.equal(await page.locator('#finance-quick-fab').isVisible(),false,'Floating button obscures content');
+ const installOverlap=await page.evaluate(()=>{
+  const panel=document.getElementById('mf-install'),header=document.querySelector('.finance-app-header');
+  if(!panel||panel.hidden||!header)return false;
+  return panel.getBoundingClientRect().top < header.getBoundingClientRect().bottom-2;
+ });
+ assert.equal(installOverlap,false,'Install prompt overlaps app header');
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
  assert.ok(overflow<=2,'Mobile horizontal overflow: '+overflow);
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-390.png',fullPage:true});
@@ -36,6 +43,7 @@ try{
  assert.ok(!page.url().includes('account-example'),'Account ID leaked in URL');
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/account-390.png',fullPage:true});
  await page.locator('.mf-drill-item').first().click();await check('transaction-detail');
+ assert.equal(await page.locator('.finance-mobile-nav .finance-active').count(),1,'Multiple bottom navigation tabs are active');
  const details=await page.locator('#finance-transaction-detail-body').innerText();
  assert.ok(details.includes('۱٬۰۰۰٬۰۰۰')&&details.includes('تومان'),'Exact amount/unit not visible');
  assert.ok(!page.url().includes('tx-example'),'Transaction ID leaked in URL');
@@ -50,7 +58,7 @@ try{
  assert.ok((await page.locator('#finance-account-detail-body').innerText()).includes('حساب آزمایشی'));
  await page.goBack();await check('accounts');
  await page.goBack();await check('home');
- console.log('PASS Chromium 390px: clickable Home, account and transaction details, Back and reload');
+ console.log('PASS Chromium 390px: compact Home, inline install banner, non-overlapping action, nested Back and reload');
 }finally{
  await context.close();await browser.close();
 }
