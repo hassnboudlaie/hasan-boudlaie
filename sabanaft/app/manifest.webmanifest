@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "رهبری بازتابی من | صبا نفت",
+  "short_name": "رهبری صبا نفت",
+  "description": "اپلیکیشن توسعه مهارت‌های رهبری بازتابی مدیران صبا نفت، ۹ جلسه و ۴۷ بخش، با استودیوی شخصی",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#082d75",
+  "icons": [
+    {
+      "src": "../assets/sabanaft-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

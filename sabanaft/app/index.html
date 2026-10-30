@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#082d75"><meta name="description" content="رهبری بازتابی من | اپلیکیشن ۹ جلسه‌ای توسعه رهبری مدیران صبا نفت، بر اساس رویکرد Armin Trost">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="رهبری صبا نفت">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="../assets/sabanaft-logo.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./app.css?v=1">
+<title>رهبری بازتابی من | صبا نفت</title>
+</head>
+<body><div class="app-shell">
+<header class="topbar">
+<a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="../assets/sabanaft-logo.svg" alt="لوگوی رسمی شرکت صبا نفت"><span><strong>رهبری بازتابی من</strong><small>SABA NAFT · LEADERSHIP</small></span></a>
+<button type="button" id="install" class="install" hidden>نصب اپ <span aria-hidden="true">＋</span></button>
+</header>
+<main id="main">
+<section id="homeView" class="view" aria-label="خانه اپ">
+ <div class="hero"><div class="hero-copy"><span class="eyebrow light">THE REFLECTIVE LEADER</span><h1>رهبری را آگاهانه‌تر تجربه کن.</h1><p>بافت را ببین، نقش خود را روشن کن و تجربه امروز را به اقدام فردا پیوند بده.</p><button type="button" id="heroStart" class="hero-action">شروع مسیر یادگیری <span aria-hidden="true">←</span></button></div><div class="hero-image"><img src="../assets/sabanaft-site.webp" alt="بازدید از پروژه نیایش صبا نفت"></div></div>
+ <div class="stats"><div><b>۹</b><small>جلسه آموزشی</small></div><div><b>۴۷</b><small>بخش مستقل</small></div><div><b id="homeCompleted">۰</b><small>بخش تکمیل‌شده</small></div></div>
+ <div class="section-title"><div><span class="eyebrow">CONTINUE YOUR JOURNEY</span><h2>از همان‌جا ادامه بده</h2></div></div>
+ <button type="button" id="resume" class="resume"><span><small>آخرین مسیر شما</small><strong id="resumeTitle">جلسه اول · یک درخواست ساده، چهار امکان</strong></span><span class="arrow">←</span></button>
+ <div class="section-title"><div><span class="eyebrow">YOUR LEADERSHIP SPACE</span><h2>دو مسیر، یک تجربه</h2></div></div>
+ <div class="feature-grid">
+  <button type="button" class="feature-card" data-go="course"><img src="../assets/sabanaft-niayesh.webp" alt="پروژه نیایش صبا نفت"><span class="feature-content"><small>LEARNING PATH</small><strong>مسیر ۹جلسه‌ای</strong><span>بافت، نقش‌ها، رابطه و تمرین‌های مبتنی بر کتاب</span><b>مشاهده جلسات ←</b></span></button>
+  <button type="button" class="feature-card" data-go="studio/daily"><img src="../assets/sabanaft-meeting.jpg" alt="جلسه واقعی پیمانکاران پروژه نیایش صبا نفت"><span class="feature-content"><small>REFLECTION STUDIO</small><strong>استودیوی رهبری من</strong><span>بازاندیشی یک موقعیت واقعی و تعیین اقدام بعدی</span><b>ورود به استودیو ←</b></span></button>
+ </div>
+ <div class="section-title"><div><span class="eyebrow">FOUR LEADERSHIP ROLES</span><h2>چهار نقش در یک نگاه</h2></div><button class="text-action" type="button" id="openRoles">مرور درس ←</button></div>
+ <div class="roles">
+   <div><span class="role-icon boss">B</span><strong>Boss</strong><small>تصمیم و جهت‌دهی</small></div>
+   <div><span class="role-icon coach">C</span><strong>Coach</strong><small>برانگیختن فکر</small></div>
+   <div><span class="role-icon partner">P</span><strong>Partner</strong><small>تصمیم مشترک</small></div>
+   <div><span class="role-icon enabler">E</span><strong>Enabler</strong><small>ساخت قابلیت</small></div>
+ </div>
+ <div class="reflection-tip"><span class="lightbulb" aria-hidden="true">✦</span><div><strong>یک پرسش برای گفت‌وگوی بعدی</strong><p>«در این موقعیت، کدام نقش به روشن‌شدن مسئولیت و پیشرفت کار کمک می‌کند؟»</p></div></div>
+</section>
+<section id="courseView" class="view" aria-label="جلسات دوره">
+ <div class="page-heading"><span class="eyebrow">YOUR NINE-SESSION JOURNEY</span><h1>مسیر رهبری بازتابی</h1><p>۹ جلسه و ۴۷ بخش واقعی؛ ترتیب مشاهده آزاد است. هر جلسه را انتخاب کنید.</p></div>
+ <div class="course-grid" id="courseGrid"></div><p class="fineprint">محتوای آموزشی، برداشت کاربردی مستقل از کتاب <i lang="en" dir="ltr">The Reflective Leader</i> اثر Armin Trost است، نه ترجمه یا بازنشر کتاب.</p>
+</section>
+<section id="sessionView" class="view" aria-label="بخش‌های جلسه">
+  <div class="page-heading"><button type="button" id="sessionBack" class="backlink">→ همه جلسات</button><span class="eyebrow" id="sessionKicker">SESSION 01</span><h1 id="sessionTitle">جلسه اول</h1><p id="sessionSubtitle"></p></div>
+  <div class="session-output"><small>خروجی یادگیری این جلسه</small><strong id="sessionOutput"></strong></div>
+  <div class="section-title"><div><h2>بخش‌های این جلسه</h2><p class="muted">هر بخش مستقل و Clickable است.</p></div></div>
+  <div class="lesson-list" id="lessonList"></div>
+</section>
+<section id="readerView" class="view" aria-label="مطالعه و تمرین">
+  <div class="reader-top"><button type="button" id="readerBack" class="round-button" aria-label="بازگشت به بخش‌های جلسه">→</button><div class="reader-info"><strong id="readerTitle">درس</strong><small id="readerSession"></small></div><button type="button" id="bookmark" class="round-button" aria-label="نشان کردن درس">☆</button></div>
+  <nav id="lessonChips" class="chips" aria-label="جابجایی آزاد بین بخش‌های این جلسه"></nav>
+  <div class="frame-container"><div class="loader" id="courseLoader">در حال بارگذاری محتوای اصلی دوره…</div><iframe id="courseFrame" class="reader-frame" title="محتوای کامل دوره رهبری بازتابی صبا نفت" loading="eager"></iframe></div>
+  <div class="reader-actions"><button type="button" id="previousLesson" class="outline">→ قبلی</button><a id="externalLesson" class="outline" target="_blank" rel="noopener noreferrer">بازکردن تمام‌صفحه ↗</a><button type="button" id="nextLesson" class="outline filled">بعدی ←</button></div>
+  <p class="fineprint">یادداشت‌ها، تمرین‌ها و تکمیل‌کردن بخش‌ها در همان محتوای اصلی دوره ثبت می‌شوند. صرفِ باز کردن درس به معنی تکمیل آن نیست.</p>
+</section>
+<section id="studioView" class="view" aria-label="استودیوی رهبری">
+  <div class="reader-top"><button type="button" id="studioBack" class="round-button" aria-label="بازگشت به خانه">→</button><div class="reader-info"><strong>استودیوی رهبری من</strong><small>کیس · بازاندیشی · تمرین نقش · اقدام</small></div><a class="studio-full" id="externalStudio" target="_blank" rel="noopener noreferrer">تمام‌صفحه ↗</a></div>
+  <div class="frame-container studio-frame-container"><div class="loader" id="studioLoader">در حال آماده‌سازی استودیوی رهبری…</div><iframe id="studioFrame" class="studio-frame" title="استودیوی اصلی رهبری بازتابی صبا نفت"></iframe></div>
+  <p class="fineprint">اطلاعات فضای شخصی روی همین مرورگر ذخیره می‌شوند؛ این نسخه حساب کاربری، همگام‌سازی یا فضای امن سازمانی ندارد. از واردکردن داده محرمانه خودداری کنید.</p>
+</section>
+<section id="passportView" class="view" aria-label="پیشرفت و نشان شده‌ها">
+ <div class="page-heading"><span class="eyebrow">MY REFLECTIVE LEADERSHIP PASSPORT</span><h1>مسیر یادگیری من</h1><p>پیشرفت واقعی ثبت‌شده در وب‌سایت دوره؛ برای حوزه کاری انتخاب‌شده در همان مرورگر.</p></div>
+ <div class="passport-banner"><div><small>حوزه کاری فعال</small><strong id="contextName">حوزه انتخاب‌شده</strong><p id="passportSummary">۰ بخش تکمیل‌شده از ۴۷ بخش</p></div><div class="ring" id="progressRing"><b id="progressPct">۰٪</b></div></div>
+ <div class="section-title"><div><h2>نشان‌شده‌های من</h2><p class="muted">بخش‌هایی که برای مرور بعدی ذخیره کرده‌اید.</p></div></div>
+ <div id="bookmarkList" class="saved-list"></div>
+ <div class="passport-actions"><button type="button" id="openPortfolio" class="outline">مرور بسته شخصی دوره ←</button><button type="button" id="changeContext" class="outline">انتخاب حوزه کاری در دوره ←</button></div>
+ <p class="fineprint">پیشرفت از داده اصلی دوره خوانده می‌شود و مستقل از ارزیابی مهارت یا رتبه‌بندی مدیران است. روی دستگاه دیگر منتقل نمی‌شود؛ برای تهیه نسخه پشتیبان از قابلیت Export دوره استفاده کنید.</p>
+</section>
+</main>
+</div>
+<nav class="bottom-nav" aria-label="ناوبری اصلی">
+ <button type="button" data-nav="home"><span aria-hidden="true">⌂</span><small>خانه</small></button>
+ <button type="button" data-nav="course"><span aria-hidden="true">▦</span><small>جلسات</small></button>
+ <button type="button" data-nav="studio/daily"><span aria-hidden="true">◉</span><small>استودیو</small></button>
+ <button type="button" data-nav="passport"><span aria-hidden="true">✧</span><small>یادگیری من</small></button>
+</nav>
+<div class="toast" role="status" aria-live="polite" id="toast"></div>
+<script src="../reflective-content.js"></script>
+<script src="./app.js?v=1"></script>
+</body></html>
