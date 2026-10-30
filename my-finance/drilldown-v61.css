@@ -1,0 +1,57 @@
+/* My Finance v61 · read-only account & transaction detail navigation
+   Mobile-first, grounded data only, no financial calculations here.
+*/
+body.finance-unlocked .mf-drill-content{display:flex;flex-direction:column;gap:14px;max-width:920px;margin:0 auto}
+body.finance-unlocked .mf-drill-overview{
+ display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+ min-height:140px;padding:23px 25px;
+ background:linear-gradient(135deg,#153b47,#0b303d 64%,#117364);
+ border:1px solid #2a6b62;border-radius:21px;box-shadow:0 16px 35px rgba(10,54,57,.14);color:#fff
+}
+body.finance-unlocked .mf-drill-overview-name{width:100%;display:flex;flex-direction:column;gap:6px}
+body.finance-unlocked .mf-drill-overview small{color:#b5e8d8;font-size:11px;letter-spacing:.03em;font-weight:800}
+body.finance-unlocked .mf-drill-overview h3{font-size:18px;font-weight:850;line-height:1.65;color:#fff;margin:0}
+body.finance-unlocked .mf-drill-balance{font-size:clamp(24px,3.7vw,35px);font-weight:900;line-height:1.5;letter-spacing:-.025em;
+ direction:rtl;unicode-bidi:plaintext;overflow-wrap:anywhere}
+body.finance-unlocked .mf-drill-transaction{background:linear-gradient(130deg,#17414b,#0c383f 60%,#168774)}
+body.finance-unlocked .mf-drill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+body.finance-unlocked .mf-drill-field{display:flex;flex-direction:column;gap:6px;min-width:0;
+ background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 17px;line-height:1.8}
+body.finance-unlocked .mf-drill-field-name{font-size:11px;font-weight:750;color:var(--muted)}
+body.finance-unlocked .mf-drill-field-value{font-size:14px;line-height:1.7;font-weight:850;color:var(--fg);overflow-wrap:anywhere;white-space:pre-wrap}
+body.finance-unlocked .mf-drill-related{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:18px 20px}
+body.finance-unlocked .mf-drill-related-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+body.finance-unlocked .mf-drill-related-head h3{font-size:16px;color:var(--fg);font-weight:850;margin:0}
+body.finance-unlocked .mf-drill-related-head small{font-size:12px;color:var(--muted)}
+body.finance-unlocked .mf-drill-item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:60px;
+ padding:10px 8px!important;background:transparent!important;border:0!important;border-bottom:1px solid var(--line)!important;
+ border-radius:0!important;color:var(--fg)!important;box-shadow:none!important;text-align:start}
+body.finance-unlocked .mf-drill-item:hover{background:var(--mf-soft)!important}
+body.finance-unlocked .mf-drill-item-copy{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:5px}
+body.finance-unlocked .mf-drill-item-copy strong{font-size:13px;font-weight:800;overflow-wrap:anywhere}
+body.finance-unlocked .mf-drill-item-copy small{font-size:10px;color:var(--muted)}
+body.finance-unlocked .mf-drill-item b{flex:0 1 auto;font-size:12px;font-weight:850;white-space:normal;overflow-wrap:anywhere}
+body.finance-unlocked .mf-drill-chevron{color:var(--accent);font-size:22px}
+body.finance-unlocked .mf-drill-all,body.finance-unlocked .mf-drill-return{
+ display:inline-flex;justify-content:center;align-items:center;min-height:44px;
+ border:1px solid var(--accent)!important;background:var(--mf-soft)!important;color:var(--accent)!important;
+ border-radius:12px!important;font-size:12px;font-weight:850;padding:11px 15px!important;
+ box-shadow:none!important;margin-top:12px
+}
+body.finance-unlocked .mf-drill-empty{min-height:190px;background:var(--card);border:1px solid var(--line);border-radius:18px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:10px;text-align:center}
+body.finance-unlocked .mf-drill-empty p,body.finance-unlocked .mf-drill-empty-line{color:var(--muted);font-size:13px;line-height:1.9}
+body.finance-unlocked .mf-drill-empty-line{margin:5px 0 10px}
+body.finance-unlocked :is(.mf-drill-item,.mf-drill-all,.mf-drill-return):focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media(max-width:600px){
+ body.finance-unlocked .mf-drill-overview{min-height:122px;padding:18px 17px;border-radius:18px}
+ body.finance-unlocked .mf-drill-overview h3{font-size:17px}
+ body.finance-unlocked .mf-drill-grid{gap:8px}
+ body.finance-unlocked .mf-drill-field{padding:12px;border-radius:13px}
+ body.finance-unlocked .mf-drill-field-value{font-size:13px}
+ body.finance-unlocked .mf-drill-related{padding:14px 12px;border-radius:16px}
+ body.finance-unlocked .mf-drill-related-head h3{font-size:15px}
+ body.finance-unlocked .mf-drill-item{gap:7px}
+ body.finance-unlocked .mf-drill-item b{font-size:11px}
+}
+@media(max-width:350px){body.finance-unlocked .mf-drill-grid{grid-template-columns:minmax(0,1fr)}}
