@@ -1,7 +1,7 @@
 /* Kish Ports & Airports OKR - strictly scoped static PWA cache (no API or user data). */
 'use strict';
 const PREFIX='kish-okr-pwa-';
-const CACHE=PREFIX+'20261029-functional-autofill-v3';
+const CACHE=PREFIX+'20261030-strategy-coach-preview-v4';
 const SCOPE=new URL('./',self.registration.scope);
 const SHELL=new URL('index.html',SCOPE).href;
 const CORE=['index.html','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png','pwa-maskable.svg',
@@ -10,7 +10,7 @@ const CORE=['index.html','manifest.webmanifest','favicon.svg','icon-192.png','ic
   'assets/kish-operational-20261025.js','assets/kish-operational-20261025.css',
   'assets/kish-strategy-map-20261025.js','assets/kish-strategy-map-20261025.css',
   'assets/kish-team-dashboard-20261025.js','assets/kish-team-dashboard-20261025.css',
-  'assets/okr-visual-upgrade-20261023.css'];
+  'assets/okr-visual-upgrade-20261023.css','assets/kish-ai-strategy-coach-preview.js','assets/kish-ai-strategy-coach-preview.css'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE)
    .then(cache=>Promise.allSettled(CORE.map(path=>cache.add(new Request(new URL(path,SCOPE).href,{cache:'reload'})))))
