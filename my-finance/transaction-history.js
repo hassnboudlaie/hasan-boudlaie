@@ -101,7 +101,8 @@ function row(t,accounts,date,expanded=false){
   +'<div><span>'+(en()?'Type':'نوع تراکنش')+'</span><strong>'+esc(type)+'</strong></div>'
   +'<div><span>'+(en()?'Category':'دسته‌بندی')+'</span><strong>'+esc(title)+'</strong></div>'
   +'<div><span>'+(en()?'Status':'وضعیت')+'</span><strong>'+esc(status|| (en()?'Completed':'ثبت‌شده'))+'</strong></div>'
-  +(t.memo?'<p>'+esc(t.memo)+'</p>':'')+'</div></details>';
+  +(t.memo?'<p>'+esc(t.memo)+'</p>':'')
+  +'<button type="button" class="tx-ledger-open-page" data-tx-open-id="'+esc(t.id)+'">'+(en()?'Open transaction page':'نمایش صفحه جزئیات')+' ‹</button></div></details>';
 }
 function renderHistory(){
  const data=bridge.getData();
@@ -148,6 +149,12 @@ function openFiltered(opts={}){
  renderHistory();
  requestAnimationFrame(()=>document.querySelector('.tx-history-card')?.scrollIntoView({block:'start',behavior:'smooth'}));
 }
+holder.addEventListener('click',event=>{
+ const button=event.target.closest?.('[data-tx-open-id]');
+ if(!button||!holder.contains(button))return;
+ const id=button.dataset.txOpenId;
+ if(typeof window.financeOpenTransaction==='function')window.financeOpenTransaction(id);
+});
 byId('tx-filter-reset')?.addEventListener('click',()=>openFiltered());
 window.MyFinanceHistory={openFiltered,renderHistory};
 window.renderTransactionHistory=renderHistory;
