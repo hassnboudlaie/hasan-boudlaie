@@ -370,6 +370,7 @@ function tab(id){
   more.classList.toggle('finance-active',active);
  }
  document.body.dataset.financeView=id;
+ document.body.classList.remove('finance-dock-auto-hidden');
  financeCloseMore();
 }
 function financeStartRecord(kind){
@@ -1034,4 +1035,4 @@ document.addEventListener('myfinance:rebound',reload);
 reload();
 window.MyFinancePersonalAI={parseResponse,buildPrompt,linkInstruction};
 })();
-</script><script defer src="./transaction-history.js?v=20261029r43"></script><script src="./commitments.js?v=20261029r53" defer></script><script src="./loans.js?v=20261029r51" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script defer src="./app-update-v53.js?v=20261029r53"></script><script type="module" src="./supabase-sync.js?v=20261030r57"></script><script defer src="./install-prompt.js?v=20261029r2"></script></body></html>
+</script><script defer src="./transaction-history.js?v=20261029r43"></script><script src="./commitments.js?v=20261029r53" defer></script><script src="./loans.js?v=20261029r51" defer></script><script src="./reports.js?v=20261028r6" defer></script><script src="./receivables-actions.js?v=20261028r5" defer></script><script defer src="./app-update-v53.js?v=20261029r53"></script><script defer src="./mobile-dock-v58.js?v=20261030r58"></script><script type="module" src="./supabase-sync.js?v=20261030r57"></script><script defer src="./install-prompt.js?v=20261029r2"></script></body></html>
