@@ -79,7 +79,8 @@ check('real 360px screenshot issues are covered by mobile layout',()=>{
  assert.ok(!sync.includes('position:fixed;bottom:96px;left:18px;z-index:1000'),'floating admin bell regression');
  const assets=sw.match(/const ASSETS=(\[[^;]+\]);/)?.[1]||'';
  assert.ok(assets.includes("./brand-mark-v57.svg?v=20261030r57"),'new brand not cached for PWA');
- assert.ok(assets.includes("./supabase-sync.js?v=20261030r57"),'admin bell fix not precached');
+ const authSrc=html.match(/src="(\.\/supabase-sync\.js\?v=[^"]+)"/)?.[1];
+ assert.ok(authSrc&&assets.includes(authSrc),'Current authenticated sync module missing from PWA precache');
 });
 check('r58 grouped menu and admin dashboard',()=>{
  const mobile=read('mobile-polish-v58.css'),admin=read('admin.html');
