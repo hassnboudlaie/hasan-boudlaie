@@ -13,7 +13,8 @@
   const isMobile=window.matchMedia('(max-width: 1023px)').matches;
   const isSignedIn=document.body.classList.contains('finance-unlocked');
   const dialogOpen=document.getElementById('finance-more-dialog')?.open;
-  if(!isMobile||!isSignedIn||dialogOpen||isEditing()||current<180)show();
+  const remaining=document.documentElement.scrollHeight-(current+window.innerHeight);
+  if(!isMobile||!isSignedIn||dialogOpen||isEditing()||current<180||remaining<=85)show();
   else if(delta>12)document.body.classList.add('finance-dock-auto-hidden');
   else if(delta< -9)show();
   prior=current;
