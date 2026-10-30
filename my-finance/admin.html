@@ -33,14 +33,19 @@ button:disabled{opacity:.45;cursor:not-allowed}
 #events-list{max-height:400px;overflow:auto}#events-count{font-size:13px;font-weight:700}
 .event-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 @media(max-width:540px){header h1{font-size:18px}.actions button{flex:1 1 45%}}
-</style></head><body><main>
-<header><div><h1>مدیریت کاربران و رویدادها</h1><p class="muted">My Finance · Private Admin</p></div><a href="./">بازگشت به My Finance</a></header>
+</style><link rel="stylesheet" href="./admin-ui-v58.css?v=20261030r58"></head><body class="mf-admin"><main>
+<header class="mf-admin-header"><div class="mf-admin-brand"><img src="./brand-mark-v57.svg?v=20261030r57" alt="" width="46" height="46"><div><span class="mf-admin-eyebrow">MY FINANCE / ADMIN</span><h1>مدیریت کاربران</h1><p>دسترسی‌ها و اعلان‌های سامانه</p></div></div><a class="mf-admin-back" href="./">بازگشت به داشبورد <span aria-hidden="true">←</span></a></header>
+<section id="admin-overview" class="mf-admin-overview" aria-label="خلاصه وضعیت کاربران" hidden>
+ <div class="mf-admin-stat"><span>کل کاربران</span><strong id="admin-total-users">—</strong><small>حساب‌های ثبت‌شده</small></div>
+ <div class="mf-admin-stat"><span>کاربران فعال</span><strong id="admin-active-users">—</strong><small>با دسترسی معتبر</small></div>
+ <div class="mf-admin-stat"><span>اعلان خوانده‌نشده</span><strong id="admin-unread-events">—</strong><small>رویداد مدیریتی</small></div>
+</section>
 <section class="card"><p id="notice" role="status">در حال بررسی هویت مدیر…</p>
 <p class="muted">فقط وضعیت دسترسی و ایمیل کاربران قابل مشاهده است؛ اطلاعات مالی آن‌ها در این پنل نمایش داده نمی‌شود.</p>
 <button type="button" id="reload" hidden>به‌روزرسانی فهرست</button></section>
 <section class="card" id="events-panel" hidden><div class="events-top"><h2>🔔 اعلان‌های مدیریت</h2><span id="events-count"></span></div>
 <p class="muted">ثبت‌نام جدید، فعال‌سازی مجدد و تعلیق دسترسی. این قسمت هیچ تراکنش یا اطلاعات مالی کاربران را نمایش نمی‌دهد.</p>
-<div class="event-actions"><button type="button" id="enable-alerts">فعال‌سازی اعلان روی این دستگاه</button><button type="button" id="read-all-events">خوانده‌شدن همه</button><button type="button" id="reload-events">تازه‌سازی رویدادها</button></div>
+<details class="mf-admin-notification-tools"><summary>تنظیمات اعلان‌ها <span aria-hidden="true">⌄</span></summary><div class="event-actions"><button type="button" id="enable-alerts">فعال‌سازی اعلان روی این دستگاه</button><button type="button" id="read-all-events">خوانده‌شدن همه</button><button type="button" id="reload-events">تازه‌سازی رویدادها</button></div></details>
 <div id="events-list" role="list"></div></section>
 <section class="card" id="panel" hidden><h2>کاربران و وضعیت دسترسی</h2>
 <p class="muted">ثبت‌نام کاربران جدید به‌صورت خودکار فعال می‌شود؛ نیازی به تأیید دستی نیست. از این قسمت فقط برای تعلیق یا فعال‌سازی مجدد استفاده کنید.</p>
@@ -90,7 +95,9 @@ async function loadEvents(){
   for(const event of events.filter(e=>e.id>lastEventId).reverse().slice(-3))await showDeviceAlert(event);
  }
  eventsLoaded=true;lastEventId=Math.max(lastEventId,latest);
- $('events-count').textContent=events.filter(e=>!e.read_at).length+' خوانده‌نشده از '+events.length+' رویداد اخیر';
+ const unread=events.filter(e=>!e.read_at).length;
+ $('events-count').textContent=unread+' خوانده‌نشده از '+events.length+' رویداد اخیر';
+ $('admin-unread-events').textContent=new Intl.NumberFormat('fa-IR').format(unread);
  $('events-list').replaceChildren();
  if(!events.length)$('events-list').append(newEl('p','muted','هنوز رویدادی ثبت نشده است.'));
  for(const event of events){
@@ -152,8 +159,12 @@ function renderUser(row){
 async function load(){
  const{data,error}=await client.from('finance_access').select('user_id,email,status,expires_at,created_at').order('created_at',{ascending:false});
  if(error){notice('فهرست کاربران دریافت نشد: '+error.message,true);return}
- const list=$('list');list.replaceChildren();
- for(const row of data||[])list.append(renderUser(row));
+ const rows=data||[],list=$('list');list.replaceChildren();
+ for(const row of rows)list.append(renderUser(row));
+ const active=rows.filter(row=>row.status==='active'&&(!row.expires_at||new Date(row.expires_at)>new Date())).length;
+ $('admin-total-users').textContent=new Intl.NumberFormat('fa-IR').format(rows.length);
+ $('admin-active-users').textContent=new Intl.NumberFormat('fa-IR').format(active);
+ $('admin-overview').hidden=false;
  if(!data?.length)list.append(newEl('p','muted','هنوز کاربر آزمایشی ثبت‌نام نکرده است.'));
  $('panel').hidden=false;$('reload').hidden=false;
 }
