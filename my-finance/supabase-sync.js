@@ -167,7 +167,7 @@ function validAccess(a){return a?.status==='active'&&(!a.expires_at||Date.parse(
 function pendingText(a){
  if(a.status==='suspended')return 'دسترسی این حساب توسط مدیر تعلیق شده است. داده‌ها حذف نشده‌اند.';
  if(a.status==='active')return 'اعتبار دسترسی آزمایشی به پایان رسیده است. مدیر می‌تواند آن را تمدید کند.';
- return 'در حال بررسی فعال‌سازی حساب شما؛ اگر مشکل ادامه داشت، دوباره تلاش کنید.';
+ return 'وضعیت دسترسی حساب مشخص نیست. لطفاً دوباره وارد شوید یا اتصال اینترنت را بررسی کنید.';
 }
 async function getAccess(identity){
  let{data,error}=await client.from('finance_access').select('status,expires_at').eq('user_id',identity.id).maybeSingle();
@@ -251,7 +251,7 @@ function setAuthMode(nextMode){
  authSwitchButton.textContent=signup?'بازگشت به ورود':'ساخت حساب جدید';
  byId('auth-heading').textContent=signup?'ساخت حساب جدید':'ورود به حساب مالی شخصی';
  byId('auth-description').textContent=signup
-  ?'برای ثبت‌نام فقط ایمیل و رمز عبور دلخواه خود را وارد کنید.'
+  ?'ثبت‌نام رایگان و مستقیم است؛ ایمیل و رمز دلخواه را وارد کنید. نیازی به تأیید ایمیل یا مدیر نیست.'
   :'با ایمیل و رمز عبور خود وارد شوید. اطلاعات هر کاربر مستقل است.';
  const remember=byId('auth-remember')?.closest('.auth-remember');
  if(remember)remember.hidden=signup;
@@ -323,13 +323,6 @@ byId('auth-form').addEventListener('submit',async event=>{
  }finally{
   authActionInFlight=false;authSubmitButton.disabled=false;authSwitchButton.disabled=false;
  }
-});
-byId('auth-resend-confirm').addEventListener('click',async()=>{
- const value=authEmail.value.trim().toLowerCase();
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return authStatus('برای ارسال مجدد، ایمیل ثبت‌نام را وارد کنید.',true);
- authStatus('در حال درخواست ارسال مجدد ایمیل تأیید…');
- const {error}=await client.auth.resend({type:'signup',email:value,options:{emailRedirectTo:location.origin+location.pathname}});
- authStatus(error?emailProblem(error):'اگر حساب نیاز به تأیید داشته باشد، ایمیل ارسال می‌شود. Inbox و Spam را بررسی کنید.',!!error);
 });
 byId('auth-logout').addEventListener('click',async()=>{
  const{error}=await client.auth.signOut({scope:'local'});
