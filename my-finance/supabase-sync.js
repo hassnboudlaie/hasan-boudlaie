@@ -295,14 +295,14 @@ byId('auth-form').addEventListener('submit',async event=>{
    if(data?.session)await refreshIdentity();
    else{
     confirmationHelp.hidden=false;
-    authStatus('حساب ثبت شد، اما سرویس احراز هویت هنوز تأیید ایمیل را الزامی می‌داند. پس از تأیید ایمیل با همین حساب وارد شوید.');
+    authStatus('حساب ایجاد شد. سرور هنوز تأیید ایمیل را الزامی می‌داند؛ مدیر می‌تواند حساب کاربران آزمایشی را مستقیم فعال کند.');
    }
   }else{
    const {error}=await client.auth.signInWithPassword({email:accountEmail,password});
    if(error){
     if(/email.not.confirmed|email_not_confirmed/i.test(String(error.code||'')+' '+String(error.message||''))){
      confirmationHelp.hidden=false;
-     return authStatus('ایمیل حساب هنوز تأیید نشده است. ایمیل ارسالی را بررسی کنید.',true);
+     return authStatus('این حساب هنوز تأیید نشده است. برای فعال‌سازی آزمایشی به مدیر اطلاع دهید؛ حساب جدید نسازید.',true);
     }
     return authStatus('ورود ناموفق: ایمیل یا رمز عبور را بررسی کنید.',true);
    }
@@ -650,6 +650,14 @@ byId('profile-photo-remove').addEventListener('click',async()=>{
  finally{button.disabled=false}
 });
 
+function financeAuthFailureKind(error,sessionStored=false){
+ const msg=[error?.code,error?.name,error?.message].map(String).join(' ');
+ if(/email.?not.?confirmed|email_not_confirmed/i.test(msg))return 'unconfirmed';
+ if(/invalid.?refresh|refresh.?token.?not.?found|invalid.?jwt|jwt.?expired|session.?expired|invalid.?grant|user.?not.?found|token.?revoked/i.test(msg))return 'expired';
+ if(!sessionStored&&/auth.?session.?missing|session.?not.?found|AuthSessionMissingError|missing.session/i.test(msg))return 'first-login';
+ if(navigator.onLine===false||/failed.to.fetch|fetch.failed|network|connection|abort|timeout|temporarily.unavailable/i.test(msg))return 'network';
+ return sessionStored?'verification-error':'first-login';
+}
 async function refreshIdentity(){
  if(!bootstrapped||authPending)return;
  authPending=true;let next=null;
@@ -678,16 +686,29 @@ async function refreshIdentity(){
   showAdmin().catch(()=>{});
   if(loadedProfileFor!==next.id)loadProfile().catch(e=>profileStatus('بارگیری پروفایل موفق نبود: '+String(e.message||e),true));
  }catch(e){
-  // Network failures must not be interpreted as explicit logout.
-  // Only a server-verified identity may unlock financial data.
+  // A new device has no session. Display the sign-in form, not a network-error alarm.
   let storedSession=null,hasRememberedToken=false;
   try{const {data}=await client.auth.getSession();storedSession=data?.session||null}catch(_ignored){}
-  // Presence of a saved token is only a signal to display "retry"; never authorization.
   try{hasRememberedToken=!!(keepSignedIn()?localStorage.getItem(AUTH_SESSION_KEY):sessionStorage.getItem(AUTH_SESSION_KEY))}catch(_ignored){}
-  if(storedSession||hasRememberedToken){
-   lock('اتصال برای بررسی حساب برقرار نیست؛ نشست این دستگاه محفوظ است. پس از برقراری اینترنت «بررسی مجدد وضعیت دسترسی» را بزنید.',storedSession?.user||next||{email:authEmail.value},true);
+  const hasToken=!!(storedSession||hasRememberedToken),reason=financeAuthFailureKind(e,hasToken);
+  const verifiedHere=!!(user&&document.body.classList.contains('finance-unlocked')
+   &&storedSession?.user?.id===user.id&&Number(storedSession.expires_at||0)>Date.now()/1000);
+  if(reason==='network'&&verifiedHere){
+   // Keep already-authorized content while temporarily offline; Supabase RLS still protects remote writes.
+   notice('اتصال اینترنت موقتاً قطع شده است؛ نشست معتبر حفظ شد و همگام‌سازی پس از اتصال ادامه پیدا می‌کند.');
+   return;
+  }
+  if(reason==='unconfirmed'){
+   confirmationHelp.hidden=false;
+   lock('این حساب هنوز برای اولین ورود فعال نشده است. مدیر می‌تواند حساب آزمایشی را مستقیم فعال کند.',null,true);
+  }else if(reason==='first-login'&&!hasToken){
+   lock(navigator.onLine===false?'برای ورود اولیه اینترنت لازم است.':'برای اولین ورود، ایمیل و رمز عبور را وارد کنید؛ سپس «مرا به خاطر بسپار» نشست را حفظ می‌کند.',null,navigator.onLine===false);
+  }else if(reason==='expired'){
+   lock('نشست قبلی منقضی شده است؛ با همان حساب و رمز عبور دوباره وارد شوید.',null,true);
+  }else if(hasToken){
+   lock('نشست ذخیره‌شده وجود دارد، اما فعلاً تأیید امنیتی ممکن نیست. اطلاعات شما پاک نشده است؛ اتصال را بررسی و دوباره تلاش کنید.',storedSession?.user||next||{email:authEmail.value},true);
   }else{
-   lock('ورود امن تأیید نشد. اتصال اینترنت را بررسی کنید و اگر نشست پایان یافته، دوباره وارد شوید.',null,true);
+   lock('ارتباط امن برقرار نشد. اتصال اینترنت را بررسی کرده و دوباره تلاش کنید.',null,true);
   }
  }
  finally{authPending=false}
