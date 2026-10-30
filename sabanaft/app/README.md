@@ -12,3 +12,6 @@ This is a new standalone installable mobile-first experience. Existing course (/
 - No passwords, accounts, server sync or confidential manager records. This site is public. Never enter confidential case data.
 - App shell is partially cached offline. Real original course/studio interactions need a network connection.
 - Source book: Armin Trost (2025), The Reflective Leader; content is original educational adaptation, not reproduction.
+
+## Future AI Leadership Coach placeholder (2026-10-30)
+A clear coming-soon card on Home routes to `#/coach`, which is a product-preview page only. It lists future context analysis, AI role-play, and action/reflection. No LLM connection, input, chat, API token, user cases, or data transmission. The preexisting Leadership Studio is unaffected. All interactive coaching functionality remains future scope.

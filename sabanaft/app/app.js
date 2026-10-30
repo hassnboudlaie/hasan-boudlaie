@@ -12,7 +12,7 @@ function escapeText(v){return String(v==null?"":v).replace(/[&<>"']/g,function(x
 function notice(s){var e=E("toast");e.textContent=s;e.classList.add("visible");clearTimeout(notice.t);notice.t=setTimeout(function(){e.classList.remove("visible")},2400)}
 function session(n){return parts.find(function(s){return s.id===Number(n)})}
 function section(n,p){var s=session(n);return s&&s.sections.find(function(x){return x.id===p})}
-function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport"].includes(a[0])?a[0]:"home"}}
+function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport","coach"].includes(a[0])?a[0]:"home"}}
 function go(x){if(location.hash==="#/"+x){render();return}location.hash="/"+x}
 function openLesson(n,p){go("lesson/"+n+"/"+p)}
 function latest(){var r=memory.last;return section(r.s,r.p)?r:{s:1,p:parts[0].sections[0].id}}
@@ -49,6 +49,8 @@ studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=s
 document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.nav)})});
 document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.go)})});
 E("heroStart").addEventListener("click",function(){go("course")});
+E("futureCoachEntry").addEventListener("click",function(){go("coach")});
+E("futureCoachBack").addEventListener("click",function(){go("home")});
 E("resume").addEventListener("click",function(){var l=latest();openLesson(l.s,l.p)});
 E("openRoles").addEventListener("click",function(){openLesson(4,"roles")});
 E("courseGrid").addEventListener("click",function(e){var a=e.target.closest("[data-session]");if(a)go("session/"+a.dataset.session)});

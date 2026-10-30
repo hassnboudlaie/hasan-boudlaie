@@ -7,7 +7,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="../assets/sabanaft-logo.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="./app.css?v=1">
+<link rel="stylesheet" href="./app.css?v=2">
 <title>رهبری بازتابی من | صبا نفت</title>
 </head>
 <body><div class="app-shell">
@@ -26,6 +26,13 @@
   <button type="button" class="feature-card" data-go="course"><img src="../assets/sabanaft-niayesh.webp" alt="پروژه نیایش صبا نفت"><span class="feature-content"><small>LEARNING PATH</small><strong>مسیر ۹جلسه‌ای</strong><span>بافت، نقش‌ها، رابطه و تمرین‌های مبتنی بر کتاب</span><b>مشاهده جلسات ←</b></span></button>
   <button type="button" class="feature-card" data-go="studio/daily"><img src="../assets/sabanaft-meeting.jpg" alt="جلسه واقعی پیمانکاران پروژه نیایش صبا نفت"><span class="feature-content"><small>REFLECTION STUDIO</small><strong>استودیوی رهبری من</strong><span>بازاندیشی یک موقعیت واقعی و تعیین اقدام بعدی</span><b>ورود به استودیو ←</b></span></button>
  </div>
+
+ <div class="section-title"><div><span class="eyebrow">COMING NEXT · PERSONALIZED COACHING</span><h2>مربی هوش مصنوعی رهبری من</h2></div></div>
+ <button type="button" class="future-coach-entry" id="futureCoachEntry" aria-label="معرفی قابلیت مربی هوش مصنوعی رهبری من؛ به‌زودی">
+  <span class="future-coach-symbol" aria-hidden="true">✦</span>
+  <span class="future-coach-entry-text"><strong>My AI Leadership Coach</strong><small>فضایی برای تحلیل موقعیت، تمرین گفت‌وگو و بازاندیشی؛ در نسخه‌های آینده</small></span>
+  <span class="future-coach-pill">به‌زودی</span><span class="future-coach-arrow" aria-hidden="true">←</span>
+ </button>
  <div class="section-title"><div><span class="eyebrow">FOUR LEADERSHIP ROLES</span><h2>چهار نقش در یک نگاه</h2></div><button class="text-action" type="button" id="openRoles">مرور درس ←</button></div>
  <div class="roles">
    <div><span class="role-icon boss">B</span><strong>Boss</strong><small>تصمیم و جهت‌دهی</small></div>
@@ -57,6 +64,21 @@
   <div class="frame-container studio-frame-container"><div class="loader" id="studioLoader">در حال آماده‌سازی استودیوی رهبری…</div><iframe id="studioFrame" class="studio-frame" title="استودیوی اصلی رهبری بازتابی صبا نفت"></iframe></div>
   <p class="fineprint">اطلاعات فضای شخصی روی همین مرورگر ذخیره می‌شوند؛ این نسخه حساب کاربری، همگام‌سازی یا فضای امن سازمانی ندارد. از واردکردن داده محرمانه خودداری کنید.</p>
 </section>
+
+<section id="coachView" class="view" aria-label="مربی هوش مصنوعی رهبری من؛ به‌زودی">
+ <div class="page-heading"><button type="button" id="futureCoachBack" class="backlink">→ بازگشت به خانه</button><span class="eyebrow">MY AI LEADERSHIP COACH · COMING SOON</span><h1>مربی هوش مصنوعی رهبری من</h1><p>در به‌روزرسانی‌های آینده، یک همراه هوشمند برای موقعیت‌های واقعی مدیریتی در اینجا فعال می‌شود.</p></div>
+ <div class="future-coach-hero">
+  <div class="future-coach-hero-text"><span class="future-coach-hero-icon" aria-hidden="true">✦</span><h2>یک فضای جدید برای Reflection & Growth</h2><p>از فهم بهتر Context تا تمرین گفت‌وگو و Follow-through، بر پایه چهار نقش Boss، Coach، Partner و Enabler.</p><span class="future-coach-main-status">به‌زودی فعال می‌شود</span></div>
+  <img src="../assets/sabanaft-meeting.jpg" alt="جلسه پیمانکاران صبا نفت؛ تصویر رسمی شرکت" loading="lazy">
+ </div>
+ <div class="section-title"><div><span class="eyebrow">PLANNED EXPERIENCE</span><h2>قابلیت‌های پیش‌بینی‌شده</h2></div></div>
+ <div class="future-coach-grid">
+  <article class="future-coach-feature"><span aria-hidden="true">◎</span><strong>تحلیل موقعیت مدیریتی</strong><p>Clarify the context و بررسی گزینه‌های رفتاری بدون تجویز مکانیکی نقش.</p><small>به‌زودی</small></article>
+  <article class="future-coach-feature"><span aria-hidden="true">♧</span><strong>تمرین گفت‌وگو</strong><p>AI Role-play برای گفت‌وگوهای دشوار و دریافت بازخورد ساختاریافته.</p><small>به‌زودی</small></article>
+  <article class="future-coach-feature"><span aria-hidden="true">↗</span><strong>اقدام و بازاندیشی</strong><p>Action Plan، مشاهده نتیجه و یادگیری از تجربه واقعی.</p><small>به‌زودی</small></article>
+ </div>
+ <p class="future-coach-notice">این صفحه فقط معرفی قابلیت‌های آینده است. در نسخه فعلی هیچ گفت‌وگوی AI، تحلیل خودکار، ثبت پرونده یا تبادل داده‌ای از این بخش انجام نمی‌شود.</p>
+</section>
 <section id="passportView" class="view" aria-label="پیشرفت و نشان شده‌ها">
  <div class="page-heading"><span class="eyebrow">MY REFLECTIVE LEADERSHIP PASSPORT</span><h1>مسیر یادگیری من</h1><p>پیشرفت واقعی ثبت‌شده در وب‌سایت دوره؛ برای حوزه کاری انتخاب‌شده در همان مرورگر.</p></div>
  <div class="passport-banner"><div><small>حوزه کاری فعال</small><strong id="contextName">حوزه انتخاب‌شده</strong><p id="passportSummary">۰ بخش تکمیل‌شده از ۴۷ بخش</p></div><div class="ring" id="progressRing"><b id="progressPct">۰٪</b></div></div>
@@ -75,5 +97,5 @@
 </nav>
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 <script src="../reflective-content.js"></script>
-<script src="./app.js?v=1"></script>
+<script src="./app.js?v=2"></script>
 </body></html>
