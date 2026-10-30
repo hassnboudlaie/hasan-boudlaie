@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Strategic Management | Dr. Hasan Boudlaie</title>
+<meta name="description" content="Strategic Management: structured product, resources, partners and company information.">
+<link rel="canonical" href="https://hassnboudlaie.github.io/hasan-boudlaie/strategic-management/">
+<style>
+:root{color-scheme:light;--ink:#112443;--secondary:#58677c;--line:#dfe5ed;--blue:#235cce;--pale:#f5f8fc;--white:#fff;--shadow:0 12px 35px rgba(10,35,80,.06)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font-family:Tahoma,"Segoe UI",system-ui,sans-serif;line-height:1.65}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #75a7fa;outline-offset:3px}
+.container{width:min(1170px,calc(100% - 36px));margin-inline:auto}
+.skip{position:absolute;top:-80px;inset-inline-start:20px;padding:8px;background:white;z-index:40}
+.skip:focus{top:10px}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+.top{min-height:76px;display:flex;align-items:center;gap:22px}
+.logo{font-size:17px;font-weight:800;display:flex;align-items:center;gap:9px;white-space:nowrap}
+.logo b{width:35px;height:35px;border-radius:9px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:13px}
+.desktop{display:flex;align-items:center;gap:4px;flex:1;justify-content:center}
+.nav-entry{position:relative}
+.nav-entry>button{border:0;background:transparent;font-size:13px;font-weight:600;color:var(--ink);padding:13px 11px;border-radius:8px;white-space:nowrap}
+.nav-entry>button:hover,.nav-entry>button[aria-expanded="true"]{background:var(--pale)}
+.dropdown{display:none;position:absolute;top:100%;inset-inline-start:0;min-width:250px;max-width:315px;padding:8px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:12px}
+.nav-entry:hover .dropdown,.nav-entry:focus-within .dropdown,.nav-entry.open .dropdown{display:grid}
+.dropdown a{font-size:13px;display:block;padding:10px;border-radius:7px}
+.dropdown a:hover,.sitemap a:hover{color:var(--blue);background:var(--pale)}
+.actions{display:flex;align-items:center;gap:7px}
+.lang-btn,.menu-btn{border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);padding:8px 11px}
+.app-link{background:var(--blue);color:#fff;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:700;white-space:nowrap}
+.menu-btn{display:none}
+.mobile{display:none;background:white;border-top:1px solid var(--line);padding:10px 18px;max-height:70vh;overflow:auto}
+.mobile details{border-bottom:1px solid var(--line)}
+.mobile summary{cursor:pointer;padding:11px 0;font-weight:700}
+.mobile a{display:block;padding:9px 15px;font-size:14px}
+main{min-height:62vh}
+.hero{background:linear-gradient(135deg,#f6faff,#eef4ff);border-bottom:1px solid var(--line);padding:70px 0}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;color:var(--blue);font-weight:750;margin:0 0 12px}
+h1{font-size:clamp(28px,4vw,51px);line-height:1.2;letter-spacing:-.8px;margin:0 0 14px}
+.hero p.lead{color:var(--secondary);font-size:17px;margin:0;max-width:780px}
+.breadcrumbs{font-size:13px;color:var(--secondary);padding:25px 0 0}
+.breadcrumbs a{text-decoration:underline;text-underline-offset:3px}
+.sections{padding:50px 0 65px}
+.section{padding:27px 0;border-bottom:1px solid var(--line)}
+.section:last-child{border-bottom:0}
+.section h2{font-size:22px;margin:0 0 17px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.item{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:74px;padding:16px;border:1px solid var(--line);border-radius:13px;background:#fff;transition:border-color .15s,background .15s}
+.item:hover{border-color:#a2bcf3;background:#f8fbff}
+.item span{font-size:14px;font-weight:600}
+.item small{color:var(--secondary);font-size:12px}
+.item i{font-style:normal;color:var(--blue)}
+.detail{padding:45px 0 90px;max-width:810px}
+.detail h2{font-size:20px}
+.empty{padding:25px;border:1px dashed #c6d3e6;background:#f9fbfd;border-radius:15px}
+.empty p{margin:0;color:var(--secondary)}
+.empty .small{font-size:13px;margin-top:10px}
+.content-section{margin:25px 0;border-bottom:1px solid var(--line);padding-bottom:20px}
+.content-section p{color:var(--secondary);white-space:pre-wrap}
+footer{background:#142440;color:#f4f8ff;padding:48px 0 25px}
+.footer-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px}
+footer h3{font-size:15px;margin:0 0 11px}
+footer a{display:block;font-size:13px;color:#cbd5e6;padding:4px 0}
+footer a:hover{color:white;text-decoration:underline}
+.footer-bottom{margin-top:35px;border-top:1px solid #3b4b64;padding-top:17px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#cbd5e6;font-size:12px}
+@media(max-width:1020px){.desktop{gap:0}.nav-entry>button{padding:9px 6px;font-size:12px}.logo{font-size:14px}}
+@media(max-width:800px){.desktop{display:none}.top{min-height:64px}.actions{margin-inline-start:auto}.menu-btn{display:inline-block}.mobile.visible{display:block}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:50px 0}}
+@media(max-width:560px){.container{width:min(100% - 30px,1170px)}.cards,.footer-cols{grid-template-columns:1fr}.item{min-height:62px}.logo{font-size:13px}.app-link{font-size:11px;padding:9px 10px}.hero p.lead{font-size:14px}.hero{padding:42px 0}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header>
+ <div class="container top">
+  <a class="logo" href="./" aria-label="Strategic Management home"><b>HB</b><span id="brand">Strategic Management</span></a>
+  <nav class="desktop" id="desktopNav" aria-label="Site navigation"></nav>
+  <div class="actions">
+   <a class="app-link" href="../okr-system/" id="appLink">OKR Platform</a>
+   <button class="lang-btn" id="langBtn" type="button" aria-label="Change language">EN</button>
+   <button class="menu-btn" id="menuBtn" type="button" aria-controls="mobileNav" aria-expanded="false">☰</button>
+  </div>
+ </div>
+ <nav class="mobile" id="mobileNav" aria-label="Mobile navigation"></nav>
+</header>
+<main id="main">
+ <div id="page"></div>
+</main>
+<footer>
+ <div class="container">
+  <div class="footer-cols" id="footerNav"></div>
+  <div class="footer-bottom"><span id="footBrand">Strategic Management · Dr. Hasan Boudlaie</span><a href="../" id="mainSite">Main website</a></div>
+ </div>
+</footer>
+<script src="site-map.js"></script>
+<script src="content.js"></script>
+<script>
+(function(){
+'use strict';
+const groups=window.STRATEGY_IA||[];
+const entries=new Map(groups.flatMap(g=>g.pages.map(p=>[p[0],{group:g,page:p}])));
+const langKey='hb-lang';
+let lang='fa';
+try{lang=localStorage.getItem(langKey)==='en'?'en':'fa'}catch(e){}
+const t=(en,fa)=>lang==='fa'?fa:en;
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
+const link=(item,cls)=>{
+ const a=el('a',cls,item[lang==='fa'?2:1]);a.href='?page='+encodeURIComponent(item[0]);return a
+};
+function draw(){
+ document.documentElement.lang=lang;
+ document.documentElement.dir=lang==='fa'?'rtl':'ltr';
+ document.getElementById('brand').textContent=t('Strategic Management','مدیریت استراتژیک');
+ document.getElementById('appLink').textContent=t('Open OKR platform','ورود به سامانه OKR');
+ document.getElementById('langBtn').textContent=lang==='fa'?'EN':'FA';
+ document.getElementById('mainSite').textContent=t('Main website','وب‌سایت اصلی');
+ document.getElementById('footBrand').textContent=t('Strategic Management · Dr. Hasan Boudlaie','مدیریت استراتژیک · دکتر حسن بودلایی');
+ document.getElementById('menuBtn').textContent=t('Menu','منو');
+ const desktop=document.getElementById('desktopNav'),mobile=document.getElementById('mobileNav'),footer=document.getElementById('footerNav');
+ desktop.replaceChildren();mobile.replaceChildren();footer.replaceChildren();
+ groups.forEach(g=>{
+  const parent=el('div','nav-entry'),btn=el('button','',lang==='fa'?g.fa:g.title);
+  btn.type='button';btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-haspopup','true');
+  btn.addEventListener('click',()=>{
+   const opening=!parent.classList.contains('open');
+   desktop.querySelectorAll('.nav-entry').forEach(n=>{n.classList.remove('open');n.querySelector('button').setAttribute('aria-expanded','false')});
+   parent.classList.toggle('open',opening);btn.setAttribute('aria-expanded',String(opening));
+  });
+  const dropdown=el('div','dropdown');g.pages.forEach(p=>dropdown.appendChild(link(p)));
+  parent.append(btn,dropdown);desktop.appendChild(parent);
+  const details=el('details'),summary=el('summary','',lang==='fa'?g.fa:g.title);
+  details.appendChild(summary);g.pages.forEach(p=>details.appendChild(link(p)));
+  mobile.appendChild(details);
+  const column=el('section'),heading=el('h3','',lang==='fa'?g.fa:g.title);
+  column.appendChild(heading);g.pages.forEach(p=>column.appendChild(link(p)));
+  footer.appendChild(column);
+ });
+ render();
+}
+function hero(title,subtitle){
+ const section=el('section','hero'),wrap=el('div','container');
+ wrap.appendChild(el('p','eyebrow',t('Strategic management','مدیریت استراتژیک')));
+ wrap.appendChild(el('h1','',title));
+ wrap.appendChild(el('p','lead',subtitle));
+ section.appendChild(wrap);return section;
+}
+function render(){
+ const root=document.getElementById('page');root.replaceChildren();
+ const name=new URLSearchParams(location.search).get('page');
+ const item=name?entries.get(name):null;
+ if(!name){
+  document.title=t('Strategic Management | Dr. Hasan Boudlaie','مدیریت استراتژیک | دکتر حسن بودلایی');
+  root.appendChild(hero(t('Strategic Management','مدیریت استراتژیک'),t('Website structure ready. Content will be added and reviewed page by page.','ساختار صفحات آماده است و محتوای هر بخش پس از بررسی، به‌تدریج اضافه خواهد شد.')));
+  const all=el('div','container sections');
+  groups.forEach(g=>{
+   const section=el('section','section'),h=el('h2','',lang==='fa'?g.fa:g.title),cards=el('div','cards');
+   g.pages.forEach(p=>{
+    const a=link(p,'item'),txt=a.textContent;a.replaceChildren();
+    const text=el('span','',txt),arrow=el('i','',lang==='fa'?'←':'→');a.append(text,arrow);cards.appendChild(a);
+   });
+   section.append(h,cards);all.appendChild(section);
+  });
+  root.appendChild(all);
+  return;
+ }
+ const section=el('div','container'),crumbs=el('div','breadcrumbs');
+ const home=el('a','',t('Home','خانه'));home.href='./';crumbs.appendChild(home);
+ crumbSAdd(crumbs,' / '+(item?t(item.group.title,item.group.fa):t('Page not found','صفحه پیدا نشد')));
+ section.appendChild(crumbs);root.appendChild(section);
+ if(!item){
+  document.title='404 | Strategic Management';
+  root.appendChild(hero('404',t('The requested section does not exist.','این بخش در ساختار مرجع موجود نیست.')));
+  return;
+ }
+ const [key,en,fa]=item.page, title=t(en,fa);
+ document.title=title+' | Strategic Management';
+ root.appendChild(hero(title,t('Content preparation is pending.','محتوای این صفحه هنوز تدوین نشده است.')));
+ const body=el('section','container detail');
+ const blocks=(window.STRATEGY_CONTENT||{})[key];
+ if(Array.isArray(blocks)&&blocks.length){
+  blocks.forEach(b=>{const sec=el('article','content-section');if(b.titleEn||b.titleFa)sec.appendChild(el('h2','',t(b.titleEn||'',b.titleFa||'')));sec.appendChild(el('p','',t(b.bodyEn||'',b.bodyFa||'')));body.appendChild(sec)});
+ }else{
+  const empty=el('div','empty');
+  empty.appendChild(el('p','',t('Page structure is in place. Approved content has not yet been added.','ساختار صفحه ایجاد شده است؛ محتوای تأییدشده هنوز به آن اضافه نشده است.')));
+  empty.appendChild(el('p','small',t('No text, graphics, testimonials, or proprietary assets have been copied from Perdoo.','هیچ متن، تصویر، گواهی مشتری یا دارایی اختصاصی از Perdoo کپی نشده است.')));
+  body.appendChild(empty);
+ }
+ root.appendChild(body);
+}
+function crumbSAdd(parent,text){parent.appendChild(document.createTextNode(text))}
+document.getElementById('menuBtn').addEventListener('click',()=>{
+ const nav=document.getElementById('mobileNav'),opened=nav.classList.toggle('visible');
+ document.getElementById('menuBtn').setAttribute('aria-expanded',String(opened));
+});
+document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='fa'?'en':'fa';try{localStorage.setItem(langKey,lang)}catch(e){}draw()});
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-entry'))document.querySelectorAll('.nav-entry.open').forEach(n=>{n.classList.remove('open');n.querySelector('button').setAttribute('aria-expanded','false')})});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.nav-entry.open').forEach(n=>{n.classList.remove('open');n.querySelector('button').setAttribute('aria-expanded','false')})});
+draw();
+})();
+</script>
+</body></html>
