@@ -1,0 +1,79 @@
+/* Alborz Assessment Sprint 1–2: real feedback for every option, readable on phone.
+   Loaded last; supersedes the legacy "any selection is green" styles. */
+.lab-quiz-question-wrap{padding:20px 0 25px}
+.lab-quiz-question-wrap:last-child{border-bottom:0}
+.lab-quiz-question h3{font-size:clamp(25px,2.3vw,34px);font-weight:900;margin:0 0 9px}
+.lab-quiz-question .lead{font-size:clamp(22px,2vw,29px);line-height:1.65;margin:0 0 14px;font-weight:800}
+button.answer.lab-choice{
+ display:flex;align-items:flex-start;gap:13px;position:relative;
+ padding:18px 17px;min-height:74px;border-radius:15px;border:1.5px solid #d8e1db;
+ background:#fff;color:#174537;line-height:1.68;text-align:right;
+ font-size:clamp(21px,1.85vw,27px);font-weight:680;cursor:pointer;
+ transition:background .12s ease,border-color .12s ease;
+}
+button.answer.lab-choice::before{content:none!important;display:none!important}
+button.answer.lab-choice:hover{background:#f4f8f5;border-color:#8fbda3}
+button.answer.lab-choice:focus-visible{outline:3px solid #bd9b56;outline-offset:3px}
+button.answer.lab-choice.selected.selected-correct{
+ background:#e5f5eb!important;border-color:#23825b!important;
+ box-shadow:inset 4px 0 #23825b;color:#114735;
+}
+button.answer.lab-choice.selected.selected-incorrect{
+ background:#fff3f0!important;border-color:#c06b59!important;
+ box-shadow:inset 4px 0 #b84d3f;color:#743b31;
+}
+.lab-answer-index{
+ display:flex;justify-content:center;align-items:center;flex:0 0 37px;
+ height:37px;border-radius:50%;font-size:21px;font-weight:850;
+ color:#305b46;background:#eaf0eb;
+}
+.lab-choice.selected-correct .lab-answer-index{color:#fff;background:#18714f}
+.lab-choice.selected-incorrect .lab-answer-index{color:#fff;background:#b75845}
+.lab-answer-label{flex:1;min-width:0}
+.lab-answer-mark{flex:none;font-weight:950;font-size:27px;line-height:1.4}
+.lab-feedback-result{
+ margin:16px 0 2px;padding:18px 18px 14px;background:#f8faf8;
+ border-radius:15px;border:1px solid #d9e5dd;font-size:clamp(20px,1.8vw,26px);
+ line-height:1.7;
+}
+.lab-feedback-selected{padding:17px 18px;border-radius:13px;background:#eff8f1;border-right:5px solid #287e56}
+.lab-feedback-selected.incorrect{background:#fff3f0;border-right-color:#b95746}
+.lab-feedback-selected strong{font-size:1.08em;font-weight:900;display:block}
+.lab-feedback-selected p{margin:7px 0 0;font-size:inherit!important;line-height:1.73!important}
+.lab-feedback-subtitle{font-weight:900;font-size:.94em;color:#275541;margin:18px 2px 9px}
+.lab-feedback-others{display:grid;gap:11px}
+.lab-feedback-another{
+ padding:10px 12px;border-right:3px solid #cbd9d0;background:#fff;
+ border-radius:9px;display:block;
+}
+.lab-feedback-another.right{border-right-color:#23825b}
+.lab-feedback-another.wrong{border-right-color:#ae7b68}
+.lab-feedback-another b{display:block;font-size:.97em;line-height:1.45;font-weight:850}
+.lab-feedback-another p{
+ font-size:.97em!important;line-height:1.66!important;margin:5px 0 0!important;
+ color:#2b4b40;
+}
+.lab-feedback-practice{margin-top:15px!important;background:#fff}
+.lab-feedback-practice summary{font-weight:850;font-size:.95em}
+.lab-feedback-practice>div{font-size:.95em;line-height:1.7}
+/* Maintain the approved large-text design without letting answers overwhelm a phone. */
+@media(max-width:680px){
+ .lab-quiz-question-wrap{padding:15px 0 23px}
+ .lab-quiz-question h3{font-size:29px}
+ .lab-quiz-question .lead{font-size:25px;line-height:1.6}
+ button.answer.lab-choice{font-size:22px;line-height:1.66;min-height:76px;padding:14px 13px}
+ .lab-answer-index{flex-basis:34px;height:34px;font-size:20px}
+ .lab-feedback-result{font-size:22px;padding:14px 12px}
+ .lab-feedback-selected{padding:14px 13px}
+ .lab-feedback-another{padding:10px}
+}
+html.touch-desktop-mode .lab-quiz-question h3{font-size:52px}
+html.touch-desktop-mode .lab-quiz-question .lead{font-size:47px}
+html.touch-desktop-mode button.answer.lab-choice{
+ min-height:115px;font-size:43px;line-height:1.55;padding:23px 25px;gap:21px;
+}
+html.touch-desktop-mode .lab-answer-index{flex-basis:62px;height:62px;font-size:37px}
+html.touch-desktop-mode .lab-answer-mark{font-size:48px}
+html.touch-desktop-mode .lab-feedback-result{font-size:42px;padding:24px}
+html.touch-desktop-mode .lab-feedback-another p{font-size:41px!important}
+@media(prefers-reduced-motion:reduce){button.answer.lab-choice{transition:none}}
