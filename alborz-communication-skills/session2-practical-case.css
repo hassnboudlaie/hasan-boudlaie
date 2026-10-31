@@ -1,0 +1,23 @@
+/* Small, readable practice cases — no change to eight-stage navigation */
+.stage-opening.lab-simple-case,.lab-stage-intro.lab-simple-case{display:block!important;min-height:0!important;justify-content:initial!important}
+.lab-simple-case .casebox{padding:24px;margin:16px 0 23px;background:#f4f8f4;border:1px solid #d7e8db;border-right:6px solid #11714f;border-radius:17px}
+.lab-simple-case .casebox p{font-size:clamp(23px,2.2vw,31px);line-height:1.9;font-weight:600;margin:0}
+.lab-simple-goal{padding:15px 20px;background:#e8f5eb;border-radius:15px;color:#144f38;font-size:clamp(22px,2vw,29px);font-weight:650}
+.lab-simple-goal b{font-weight:900}
+.lab-simple-start{background:#0b6449;color:white;border-radius:19px;padding:25px;margin:22px 0}
+.lab-simple-start b{display:block;font-size:clamp(27px,2.3vw,35px);font-weight:900}
+.lab-simple-start p{color:white!important;font-size:clamp(27px,2.4vw,35px)!important;line-height:1.75!important;font-weight:800;margin:12px 0}
+.lab-simple-start span{font-size:clamp(21px,1.8vw,27px);font-weight:600;line-height:1.7}
+.lab-simple-follow{margin:14px 0!important;background:white}
+.lab-simple-follow p{font-size:clamp(23px,2vw,29px);line-height:1.8}
+.lab-simple-watch{padding:9px 0;font-size:clamp(21px,1.8vw,27px);line-height:1.7;color:#35584a}
+.lab-simple-watch strong{font-weight:850;color:#114a36}
+@media(max-width:680px){.lab-simple-case{padding:22px 15px!important}.lab-simple-case .casebox{padding:22px 17px}.lab-simple-case .casebox p{font-size:27px}.lab-simple-goal{font-size:24px}.lab-simple-start p{font-size:29px!important}.lab-simple-start span{font-size:22px}.lab-simple-follow p{font-size:26px}.lab-simple-watch{font-size:23px}}
+html.touch-desktop-mode .lab-simple-case{min-height:0!important}
+html.touch-desktop-mode .lab-simple-case .casebox p{font-size:47px}
+html.touch-desktop-mode .lab-simple-goal{font-size:44px}
+html.touch-desktop-mode .lab-simple-start b{font-size:52px}
+html.touch-desktop-mode .lab-simple-start p{font-size:54px!important}
+html.touch-desktop-mode .lab-simple-start span{font-size:42px}
+html.touch-desktop-mode .lab-simple-follow p{font-size:43px}
+html.touch-desktop-mode .lab-simple-watch{font-size:41px}
