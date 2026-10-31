@@ -7,7 +7,7 @@ const techStages=[
  ['🎯','موقعیت تمرینی','یک اتفاق واقعی‌نما در شعبه؛ بگویید چه می‌کنید'],
  ['🧩','اصول و تکنیک‌های کاربردی','پنج اصل، بایدها و نبایدها، مثال مناسب و نامناسب'],
  ['❓','تست و پرسش کلاسی','سه سؤال ساده درباره رفتار خودتان'],
- ['🎭','تمرین دونفره بدون متن','دو نفر، دو نقش، تمرین جلوی دوربین'],
+ ['🎭','تمرین دونفره','اجرای همین موقعیت با دو نقش مشخص'],
  ['🗣️','اسکریپت کامل گفت‌وگو','متن چندمرحله‌ای همراه با راهنمای اجرا و توقف تحلیل'],
  ['🔎','نقد و بازخورد رفتاری','چه چیزی خوب بود و چه چیزی بهتر می‌شود؟'],
  ['🔁','اجرای اصلاح‌شده','چالش تازه، اجرای بدون متن و مقایسه با اجرای قبلی'],
@@ -25,7 +25,7 @@ const escapeText=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const e=escapeText;
 const attr=escapeText;
 const fileFor=d=>'assets/session2-'+(d.photo||'welcome')+'-hq.webp';
-const pageTitle=(main,desc,mark)=>'<div class="section-header enhanced-header"><span class="lab-kicker">'+e(mark||'آزمایشگاه ارتباطات حرفه‌ای')+'</span><h1>'+e(main)+'</h1><p>'+e(desc)+'</p></div>';
+const pageTitle=(main,desc,mark)=>'<div class="section-header enhanced-header"><h1>'+e(main)+'</h1></div>';
 const buttons=(index)=>'<div class="floatingnav lab-actions"><button class="navbtn" onclick="go(\'tech\')">→ فهرست ۸ مرحله</button>'+(index<7?'<button class="navbtn next" onclick="go(\'stage\','+(index+1)+')">مرحله بعد ←</button>':'<button class="navbtn next" onclick="go(\'catalog\')">فهرست تکنیک‌ها ←</button>')+'</div>';
 const faq=(q,answer,heading='سؤال مدرس')=>'<details class="accordion lab-faq"><summary>❔ '+e(heading)+'</summary><div><p>'+e(q)+'</p>'+(answer?'<p class="lab-note">'+e(answer)+'</p>':'')+'</div></details>';
 const photo=(d,label)=>'<figure class="lab-photo"><a href="'+fileFor(d)+'" target="_blank" rel="noopener" aria-label="بزرگ‌نمایی تصویر آموزشی"><img src="'+fileFor(d)+'" loading="lazy" alt="'+e(label||d.title)+'"></a><figcaption>📷 '+e(label||d.title)+' · برای دیدن تصویر در اندازه بزرگ روی آن بزنید</figcaption></figure>';
@@ -45,19 +45,25 @@ function showPrinciples(d){
 const items=d.principles.map((p,i)=>'<details id="lab-principle-'+i+'" class="accordion lab-principle" '+(i===0?'open':'')+'><summary><span class="lab-principle-count">'+(i+1)+'</span><span>'+e(p[0])+'</span></summary><div><p class="lab-lead">'+e(p[1])+'</p><div class="compare"><div class="panel good"><b>✅ نمونه مناسب</b><p>'+e(p[2])+'</p></div><div class="panel bad"><b>❌ نمونه نامناسب</b><p>'+e(p[3])+'</p></div></div><div class="tip"><b>🔍 تحلیل فنی</b><p>'+e(p[4])+'</p></div><div class="tip"><b>👀 نشانه قابل مشاهده</b><p>'+e(p[5])+'</p></div></div></details>').join('');
 return card('<h2>🧩 پنج اصل قابل اجرا</h2><details class="accordion book-application"><summary>📚 نکته کاربردی از Whetten & Cameron</summary><div><p><strong>'+e(d.learningAnchor?.concept||'Supportive Communication')+':</strong> '+e(d.learningAnchor?.use||'')+'</p><p>Developing Management Skills، '+e(d.learningAnchor?.reference||'فصل چهارم')+'. این منبع، مکمل اصول رفتاری است و جایگزین ضوابط بیمه‌ای نیست.</p></div></details><p class="lab-lead">روی هر اصل بزنید؛ نمونه‌های مناسب و نامناسب، منطق انتخاب و نشانه رفتاری جداگانه باز می‌شوند.</p><div class="lab-concept-flow">'+d.principles.map((p,i)=>'<button class="lab-flow-item" onclick="openAdvancedPrinciple('+i+')"><span>'+(i+1)+'</span><b>'+e(p[0])+'</b><small>مشاهده نمونه‌ها ←</small></button>').join('')+'</div>'+items,'lab-principles')+card('<h2>🖼️ لنز مشاهده این تکنیک</h2>'+photo(d,d.title)+'<p>در اجرای دونفره، به <strong>کلام، لحن، حالت چهره و رفتار قابل مشاهده</strong> توجه کنید؛ از قضاوت شخصیت یا استنتاج نیت از یک ژست بپرهیزید.</p>');
 }
+function behaviorCues(p){
+if(!p)return '';
+return '<div class="lab-acting-cues"><div><b>🎙️ لحن:</b> '+e(p.voice)+'</div><div><b>🧍 زبان بدن:</b> '+e(p.body)+'</div><div><b>🙂 حالت چهره:</b> '+e(p.face)+'</div></div>';
+}
 function showQuiz(d){
 selectedPolls[chosenTech] ||= {};
 const answers=selectedPolls[chosenTech];
 const items=d.quiz.map((q,i)=>{
-let score=answers[i], answered=score!==undefined;
-return '<div class="poll lab-poll"><h3>❓ پرسش '+(i+1)+'</h3><p class="lead">'+e(q.q)+'</p>'+q.options.map((o,k)=>'<button class="answer '+(score===k?'selected':'')+'" onclick="chooseAdvancedPoll('+chosenTech+','+i+','+k+')">'+e(o)+'</button>').join('')+
-(answered?'<div class="response"><b>'+(score===q.correct?'✅ تصمیم قابل دفاع':'🔄 این انتخاب را بازنگری کنید')+'</b><p>'+e(q.why)+'</p><strong>🎤 پرسش مدرس:</strong> '+e(q.ask)+'</div>':'')+'</div>';
+ const score=answers[i],answered=score!==undefined;
+ const options=q.options.map((o,k)=>'<button class="answer '+(score===k?'selected':'')+'" aria-pressed="'+(score===k)+'" onclick="chooseAdvancedPoll('+chosenTech+','+i+','+k+')">'+e(o)+'</button>').join('');
+ const reasons=answered?'<div class="response lab-answer-review"><strong>'+(score===q.correct?'✅ پاسخ شما درست است.':'🔄 این پاسخ بهترین انتخاب نیست.')+'</strong><div class="lab-answer-explanations">'+q.options.map((o,k)=>'<div class="lab-option-reason '+(k===q.correct?'right':'wrong')+'"><b>'+(k===q.correct?'✅ چرا گزینه '+(k+1)+' درست است؟':'❌ چرا گزینه '+(k+1)+' درست نیست؟')+'</b><p>'+e(q.optionReasons?.[k]||(k===q.correct?q.why:'این پاسخ برای این موقعیت مناسب نیست.'))+'</p></div>').join('')+'</div><details class="accordion lab-question-extra"><summary>🎤 یک تمرین کوتاه</summary><div>'+e(q.ask)+'</div></details></div>':'';
+ return '<div class="poll lab-poll"><h3>پرسش '+(i+1)+'</h3><p class="lead">'+e(q.q)+'</p>'+options+reasons+'</div>';
 }).join('');
-return card('<h2>🧠 پیش از اجرا، تصمیم بگیرید</h2><p>روی پاسخ بزنید؛ بعد ببینید چرا مناسب است یا نیست. یک سؤال هم برای تمرین بیشتر دارید.</p>'+items);
+return card('<h2>❓ تست و پرسش کلاسی</h2>'+items);
 }
 function showRoles(d){
-const roles='<div class="rolecards"><div class="role"><h3>🧑‍💼 نقش A — رئیس شعبه</h3><p>'+e(d.roles.a)+'</p></div><div class="role"><h3>👤 نقش B — '+e(partnerNames[chosenTech+1])+'</h3><p>'+e(d.roles.b)+'</p></div></div>';
-return card('<h2>🎭 Role Play دونفره با وب‌کم</h2><p class="lab-lead">این بار متن اسکریپت را نخوانید. موقعیت را براساس اطلاعات نقش‌ها اجرا کنید؛ سپس نقش‌ها را جابه‌جا کنید.</p>'+roles+'<div class="lab-instructions"><p><b>⏱️ اجرای اول:</b> ۲ دقیقه گفت‌وگو، ۱ دقیقه بازخورد</p><p><b>🔄 اجرای دوم:</b> جابه‌جایی نقش و تکرار</p><p><b>👀 مشاهده‌گر:</b> دو رفتار مؤثر و یک رفتار قابل اصلاح را با مثال دقیق بیان کند.</p></div>'+faq('اگر طرف مقابل پاسخ غیرمنتظره‌ای داد چه می‌کنید؟','بر اساس اصل مهارتی همان تکنیک، سؤال روشن‌کننده بپرسید و به متن حفظ‌شده تکیه نکنید.'));
+const p=d.performance||{skill:d.title,setting:d.situation,opening:'',prompt:d.opening,voice:'روشن و محترمانه',body:'باز و متناسب',face:'طبیعی'};
+const roleCards='<div class="rolecards"><div class="role"><h3>رئیس شعبه</h3><p>'+e(d.roles.a)+'</p></div><div class="role"><h3>'+e(partnerNames[chosenTech+1])+'</h3><p>'+e(d.roles.b)+'</p></div></div>';
+return card('<h2>🎭 تمرین دونفره</h2><div class="lab-role-scene"><b>صورت مسئله</b><p>'+e(p.setting)+'</p><p><b>طرف مقابل گفت‌وگو را این‌طور شروع می‌کند:</b> «'+e(p.opening.replace(/[«»]/g,''))+'»</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+e(p.skill)+'</div><div class="lab-role-action"><strong>حالا شما چه می‌کنید؟</strong><p>'+e(p.prompt)+'</p></div>'+roleCards+behaviorCues(p)+'<details class="accordion lab-question-extra"><summary>🔄 تمرین دوباره</summary><div>همان پاسخ را یک بار با لحن تند و حالت دفاعی، و بار دوم با لحن مناسب و بدن باز اجرا کنید. کدام بهتر بود؟</div></details>');
 }
 function scriptRows(d){
 return d.dialogue.map((turn,i)=>{
