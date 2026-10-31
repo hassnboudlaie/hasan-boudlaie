@@ -14,13 +14,13 @@ iframe{border:0;display:block;width:100%;height:720px}
 #machine-json{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;color:#547366}
 </style></head><body><main>
 <h1>🔎 کنترل کیفیت زنده آکادمی بیمه البرز</h1>
-<p>آزمون مستقیم نسخه منتشرشده جلسه دوم، بدون تغییر محتوای دوره یا ثبت اطلاعات کاربر. نسخه هدف: <strong>s12-r4-20261031</strong></p>
+<p>آزمون مستقیم نسخه منتشرشده جلسه دوم، بدون تغییر محتوای دوره یا ثبت اطلاعات کاربر. نسخه هدف: <strong>s12-r5-20261031</strong></p>
 <section class="card"><div id="status">در حال بارگذاری و اجرای آزمون‌ها…</div><div id="summary"><div class="metric"><strong id="passed">—</strong><small>موفق</small></div><div class="metric"><strong id="failed">—</strong><small>ناموفق</small></div><div class="metric"><strong id="attempts">—</strong><small>کنترل</small></div></div>
 <p id="key-findings"></p><ol id="results" aria-live="polite"></ol>
 <pre id="machine-json">QA_PENDING</pre>
 <button onclick="location.reload()">اجرای مجدد بررسی</button></section>
-<section class="card"><h2>نمای واقعی اپلیکیشن در مرورگر</h2><div class="preview"><iframe id="app" title="جلسه دوم آکادمی ارتباطات" src="session2-demo.html?release=s12-r4-20261031&liveQA=20261031-02"></iframe></div></section>
-<p><a href="session2-demo.html?release=s12-r4-20261031">بازگشت به جلسه دوم</a></p>
+<section class="card"><h2>نمای واقعی اپلیکیشن در مرورگر</h2><div class="preview"><iframe id="app" title="جلسه دوم آکادمی ارتباطات" src="session2-demo.html?release=s12-r5-20261031&liveQA=20261031-02"></iframe></div></section>
+<p><a href="session2-demo.html?release=s12-r5-20261031">بازگشت به جلسه دوم</a></p>
 </main>
 <script>
 (function(){
@@ -37,14 +37,14 @@ const update=()=>{
  document.getElementById('status').textContent=fail?'نیاز به اصلاح: '+fail+' مورد':'تمام آزمون‌های قابل اجرا موفق بودند';
  log.innerHTML=records.map(r=>'<li class="'+(r.pass?'ok':'bad')+'">'+(r.pass?'✓ ':'✕ ')+r.name+(r.reason?' — '+r.reason:'')+'</li>').join('');
  document.getElementById('key-findings').textContent='۱۰ تکنیک، ۸۰ مرحله، ۳۰ سؤال، ۹۰ انتخاب، ۲۴۸ نوبت دیالوگ؛ بررسی‌ها در همین مرورگر اجرا شدند.';
- const payload={release:"s12-r4-20261031",status:fail?'FAIL':'PASS',passed:pass,failed:fail,checks:records.length,metrics,failures:records.filter(r=>!r.pass)};
+ const payload={release:"s12-r5-20261031",status:fail?'FAIL':'PASS',passed:pass,failed:fail,checks:records.length,metrics,failures:records.filter(r=>!r.pass)};
  document.getElementById('machine-json').textContent='ALBORZ_QA_RESULT='+JSON.stringify(payload);
 };
 async function run(){
  const w=frame.contentWindow,d=w?.document,r=d?.getElementById('root');
  if(!r){records.push({name:'بارگذاری اپلیکیشن',pass:false,reason:'محتوای برنامه در دسترس نیست'});update();return;}
  add('شناسه نسخه و بسته‌های فازهای ۱ تا ۴',()=>{
-  if(w.ALBORZ_RELEASE?.id!=='s12-r4-20261031'||!w.ALBORZ_RELEASE.assessment||!w.ALBORZ_RELEASE.scenarioAlignment||!w.ALBORZ_RELEASE.mobileNav)throw Error('نسخه‌های اجرا یکسان نیستند');
+  if(w.ALBORZ_RELEASE?.id!=='s12-r5-20261031'||!w.ALBORZ_RELEASE.assessment||!w.ALBORZ_RELEASE.scenarioAlignment||!w.ALBORZ_RELEASE.mobileNav)throw Error('نسخه‌های اجرا یکسان نیستند');
  });
  add('۱۰ تکنیک و سه گزینه اصلی ناوبری',()=>{
   w.go('catalog');
