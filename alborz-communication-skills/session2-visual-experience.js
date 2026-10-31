@@ -205,15 +205,37 @@ function openGuide(force=false){
  }
  present();
 }
+let enhancing=false;
+let queued=false;
 function enhance(){
- getActiveTechFromDOM();
- decorateCatalog();
- decorateStages();
- injectPracticeControls();
- if(root.querySelector('.rolecards')&&!tourOpenedThisVisit&&!document.getElementById('alborz-practice-sheet')){
-  openGuide(false);
- }
+ if(enhancing)return;
+ enhancing=true;
+ try{
+  getActiveTechFromDOM();
+  decorateCatalog();
+  decorateStages();
+  injectPracticeControls();
+  if(root.querySelector('.rolecards')&&!tourOpenedThisVisit&&!document.getElementById('alborz-practice-sheet')){
+   openGuide(false);
+  }
+ }finally{enhancing=false;}
 }
+function scheduleEnhancement(){
+ if(queued)return;
+ queued=true;
+ queueMicrotask(()=>{
+  queued=false;
+  if(document.contains(root))enhance();
+ });
+}
+// The original SPA and its advanced technique engine both call their own
+// lexical render() functions. Overriding window.render alone cannot intercept
+// those calls. Observe the live lesson root instead, so each navigation,
+// answer update and script filter receives the visual layer exactly once.
+const lessonObserver=new MutationObserver(changes=>{
+ if(changes.some(change=>change.type==='childList'))scheduleEnhancement();
+});
+lessonObserver.observe(root,{childList:true,subtree:true});
 window.render=function(){
  priorRender.apply(this,arguments);
  enhance();
@@ -230,5 +252,5 @@ document.addEventListener('keydown',event=>{
 },true);
 // Render once to decorate the initial page; subsequent go()/back() calls use the wrapper.
 window.render();
-window.__alborzVisualQA={images:images.length,stageEmojis:stageEmojis.length,openPracticeSheet,openGuide};
+window.__alborzVisualQA={images:images.length,stageEmojis:stageEmojis.length,openPracticeSheet,openGuide,enhance,scheduleEnhancement,observerConnected:true,getCurrentIndex:()=>activeTechIndex};
 })();
