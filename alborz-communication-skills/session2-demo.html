@@ -1,4 +1,23 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0a5b44"><title>جلسه دوم | آکادمی ارتباطات بیمه البرز</title>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script id="alborz-touch-desktop-mode">
+(function(){
+  "use strict";
+  function classify(){
+    var width=window.innerWidth||document.documentElement.clientWidth||0;
+    var sw=Math.min(window.screen.width||9999,window.screen.height||9999);
+    var portrait=(window.screen.height||0)>=(window.screen.width||0);
+    var touch=!!(navigator.maxTouchPoints>0||("ontouchstart" in window)||
+      (window.matchMedia&&window.matchMedia("(pointer: coarse)").matches));
+    var handheldLike=(sw<=1150 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent));
+    var desktopViewport=width>=700;
+    var active=touch&&portrait&&handheldLike&&desktopViewport;
+    document.documentElement.classList.toggle("touch-desktop-mode",!!active);
+    document.documentElement.dataset.alborzView=active?"touch-desktop":"responsive";
+  }
+  classify();
+  window.addEventListener("resize",classify,{passive:true});
+  window.addEventListener("orientationchange",classify,{passive:true});
+})();
+</script><meta name="theme-color" content="#0a5b44"><title>جلسه دوم | آکادمی ارتباطات بیمه البرز</title>
 <style>
 @font-face{font-family:Vazirmatn;src:url('./assets/fonts/Vazirmatn.woff2') format('woff2');font-display:swap;font-weight:100 900}
 :root{--brand:#0a6a4d;--ink:#153d32;--dark:#073c2e;--gold:#c6a560;--muted:#526c62;--subtle:#e6efe9;--canvas:#f3f7f4;--white:#fff;--success:#dff3e8;--danger:#fff0ef;--border:#d9e6dc;--shadow:0 12px 36px rgba(10,61,44,.08)}
@@ -356,7 +375,7 @@ if(kind==='face')return `<svg viewBox="0 0 540 320" role="img" aria-label="تص�
 return `<svg viewBox="0 0 540 320" role="img" aria-label="تصویر آموزشی رفتار ارتباطی در ملاقات"><rect width="540" height="320" fill="#eaf5ee"/><rect x="65" y="55" width="410" height="230" rx="24" fill="#d4e9de"/><circle cx="165" cy="121" r="36" fill="#d9aa88"/><circle cx="371" cy="121" r="36" fill="#d9aa88"/><path d="M103 266q-7-109 62-109t63 109m79 0q-7-109 64-109t63 109" fill="#173f47"/><path d="M239 206q36-19 64 0" fill="none" stroke="#bd8b69" stroke-width="23" stroke-linecap="round"/><path d="M237 209h68" stroke="#e4b894" stroke-width="17" stroke-linecap="round"/><path d="M154 80q16-18 29 0M360 80q16-18 29 0" stroke="#253c34" stroke-width="12" fill="none"/></svg>`;}
 function render(){let m='';
 if(current.page==='home')m=`<section class="hero"><div class="hero-copy"><span class="pill">🎓 آکادمی مهارت‌های ارتباطات اثربخش · جلسه دوم</span><h1>آداب معاشرت و تشریفات حرفه‌ای</h1><p>تجربه‌ای عملی برای رؤسای شعب؛ از تصمیم‌گیری تا اجرای واقعی گفت‌وگو، مشاهده رفتار و اصلاح آن.</p><div class="actrow"><button class="cta" onclick="go('goals')">🎯 اهداف جلسه</button><button class="cta outline" onclick="go('catalog')">🚀 شروع جلسه ←</button></div></div><img class="hero-photo" src="assets/session2-hero-hq.webp" alt="ملاقات حرفه‌ای مدیران و گفت‌وگوی کاری در یک دفتر مدرن" fetchpriority="high"><div class="hero-vis" aria-hidden="true"></div></section>`;
-else if(current.page==='goals')m=header("اهداف جلسه دوم","در پایان این جلسه، رئیس شعبه باید بتواند رفتار حرفه‌ای را در ملاقات‌های واقعی اجرا کند.")+`<div class="overview"><h2>از دانستن به اجرا کردن</h2><p class="lead">تقویت آداب و تشریفات حرفه‌ای در استقبال، معرفی افراد، مدیریت گفت‌وگو، حفظ آرامش و پیگیری تعهدات؛ همراه با تمرین دونفره و بازخورد قابل مشاهده.</p><div class="checks"><div class="checkitem">✓ مدیریت نخستین لحظات ملاقات</div><div class="checkitem">✓ تشخیص و احترام به تفاوت موقعیت‌ها</div><div class="checkitem">✓ هماهنگی کلام، لحن، بدن و پوشش</div><div class="checkitem">✓ گفت‌وگو و اصلاح رفتار با تمرین دوباره</div></div><div style="margin-top:20px"><button class="cta green" onclick="go('catalog')">ورود به فهرست تکنیک‌ها ←</button></div></div>`;
+else if(current.page==='goals')m='<section class="goals-page">'+header("اهداف جلسه دوم","در پایان این جلسه، رئیس شعبه باید بتواند رفتار حرفه‌ای را در ملاقات‌های واقعی اجرا کند.")+`<div class="overview"><h2>از دانستن به اجرا کردن</h2><p class="lead">تقویت آداب و تشریفات حرفه‌ای در استقبال، معرفی افراد، مدیریت گفت‌وگو، حفظ آرامش و پیگیری تعهدات؛ همراه با تمرین دونفره و بازخورد قابل مشاهده.</p><div class="checks"><div class="checkitem">✓ مدیریت نخستین لحظات ملاقات</div><div class="checkitem">✓ تشخیص و احترام به تفاوت موقعیت‌ها</div><div class="checkitem">✓ هماهنگی کلام، لحن، بدن و پوشش</div><div class="checkitem">✓ گفت‌وگو و اصلاح رفتار با تمرین دوباره</div></div><div style="margin-top:20px"><button class="cta green" onclick="go('catalog')">ورود به فهرست تکنیک‌ها ←</button></div></div></section>`;
 else if(current.page==='catalog')m=header("فهرست تکنیک‌های جلسه دوم","ده مهارت عملی برای ملاقات‌ها و موقعیت‌های رسمی رؤسای شعب؛ فعلاً تکنیک اول برای بررسی فعال است.")+`<div class="catalog">${T.map((t,i)=>'<button class="tech-card" '+(i?'disabled aria-disabled="true"':'onclick="go(\'tech\')"')+'><span class="iconbox"><span class="icon-num">'+String(i+1).padStart(2,'0')+'</span><span class="icon-emoji" aria-hidden="true">'+TECH_EMOJI[i]+'</span></span><span class="tech-copy"><b>'+h(t[0])+'</b><small>'+h(t[1])+'</small></span><span class="arrow">'+(i?'به‌زودی':'←')+'</span></button>').join('')}</div>`;
 else if(current.page==='tech')m=`<div class="subhero"><div><span class="eyebrow">جلسه دوم · تکنیک اول</span><h1>آغاز حرفه‌ای ملاقات</h1><p>مدیریت ۶۰ ثانیه نخست؛ ایجاد احترام، فهم نگرانی مخاطب و هدایت گفت‌وگو بدون وعده خارج از اختیار.</p></div><div class="subhero-symbol" aria-hidden="true">◈</div></div><div class="stage-grid">${S.map((s,i)=>'<button class="stage-card" onclick="go(\'stage\','+i+')"><span class="stage-no"><span class="badge-digit">'+(i+1)+'</span><span class="badge-emoji" aria-hidden="true">'+STAGE_EMOJI[i]+'</span></span><span class="body"><b>'+h(s[0])+'</b><small>'+h(s[1])+'</small></span><span class="arrow">←</span></button>').join('')}</div>`;
 else if(current.page==='stage')m=renderStage(current.index);
