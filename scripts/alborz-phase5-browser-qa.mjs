@@ -53,6 +53,17 @@ try{
  test('Mobile: RTL and Persian',general.lang==='fa'&&general.dir==='rtl');
  test('Mobile: 10 techniques',general.techniques===10);
  test('Mobile: 3 navigation actions',general.navigation===3);
+ const covers=await page.evaluate(async()=>{
+  const imgs=[...document.querySelectorAll('.alborz-tech-cover img')];
+  imgs.forEach(img=>img.loading='eager');
+  await Promise.race([Promise.all(imgs.map(img=>new Promise(resolve=>{
+   if(img.complete)return resolve();
+   img.addEventListener('load',resolve,{once:true});
+   img.addEventListener('error',resolve,{once:true});
+  }))),new Promise(resolve=>setTimeout(resolve,10000))]);
+  return {count:imgs.length,loaded:imgs.filter(img=>img.complete&&img.naturalWidth>0).length};
+ });
+ test('Mobile: ten catalogue photos decode',covers.count===10&&covers.loaded===10,JSON.stringify(covers));
  await page.screenshot({path:path.join(outputs,'02-mobile-catalog-390.png'),fullPage:true});
  screenshots.push('02-mobile-catalog-390.png');
  for(let t=1;t<=10;t++){
