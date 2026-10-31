@@ -12,12 +12,10 @@ renderStage=function(i){
   return frame(i,'🎯 ۱. موقعیت تمرینی',html);
  }
  if(i===2){
-  const body='<div class="contentcard"><h2>❓ تست و پرسش کلاسی</h2>'+Q.map((q,j)=>{
-   const k=answers[j],answered=k!==undefined;
-   const options=q.opts.map((o,n)=>'<button class="answer '+(k===n?'selected':'')+'" aria-pressed="'+(k===n)+'" onclick="pick('+j+','+n+')">'+h(o)+'</button>').join('');
-   const explanation=answered?'<div class="response lab-answer-review"><b>'+(k===q.right?'✅ پاسخ شما درست است.':'🔄 این پاسخ بهترین انتخاب نیست.')+'</b><div class="lab-answer-explanations">'+q.opts.map((o,n)=>'<div class="lab-option-reason '+(n===q.right?'right':'wrong')+'"><b>'+(n===q.right?'✅ چرا گزینه '+(n+1)+' درست است؟':'❌ چرا گزینه '+(n+1)+' درست نیست؟')+'</b><p>'+h(q.optionReasons?.[n]||(n===q.right?q.ex:'این گزینه برای این موقعیت مناسب نیست.'))+'</p></div>').join('')+'</div><details class="accordion lab-question-extra"><summary>🎤 یک تمرین کوتاه</summary><div>'+h(q.follow)+'</div></details></div>':'';
-   return '<div class="poll lab-poll"><h3>پرسش '+(j+1)+'</h3><p class="lead">'+h(q.q)+'</p>'+options+explanation+'</div>';
-  }).join('')+'</div>';
+  const ui=window.ALBORZ_QUIZ_UI;
+  if(!ui)throw Error('Assessment UI not loaded for technique 1');
+  const body='<div class="contentcard"><h2>❓ تست و پرسش کلاسی</h2>'+
+    ui.render(Q,answers,(j,k)=>'pick('+j+','+k+')',h,true)+'</div>';
   return frame(i,'❓ ۳. تست و پرسش کلاسی',body);
  }
  if(i===3){
