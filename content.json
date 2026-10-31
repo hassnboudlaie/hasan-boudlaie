@@ -230,25 +230,25 @@
     },
     {
       "title": {
-        "en": "Leadership Learning & Development",
-        "fa": "یادگیری و توسعه رهبری"
+        "en": "Management Competency Development",
+        "fa": "توسعه شایستگی‌های مدیریتی"
       },
       "org": {
         "fa": "بهپرور",
         "en": "Behparvar"
       },
       "type": {
-        "en": "Leadership Lab",
-        "fa": "آزمایشگاه رهبری"
+        "en": "My Management Lab",
+        "fa": "آزمایشگاه مدیریت من"
       },
-      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/app/",
+      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/",
       "description": {
-        "en": "Leadership Skills App and original six-session workshop, with assessments, case studies and practice.",
-        "fa": "اپ مهارت‌های رهبری من و کارگاه شش‌جلسه‌ای اصلی؛ همراه با خودارزیابی، کیس و تمرین."
+        "en": "One installable web application for Behparvar managers and supervisors: six sessions, behavioral competency assessment, cases, roleplay and workplace development plans.",
+        "fa": "یک وب‌اپ قابل نصب برای مدیران و سرپرستان به‌پرور؛ شش جلسه شایستگی‌محور، خودارزیابی رفتاری، سناریو، ایفای نقش و برنامه توسعه در محیط کار."
       },
       "stage": {
-        "en": "Mobile-first PWA · No sign-in",
-        "fa": "اپ موبایلی · بدون رمز ورود"
+        "en": "Unified Web/PWA · No sign-in",
+        "fa": "وب‌اپ یکپارچه و قابل نصب · بدون رمز ورود"
       },
       "id": "behparvar",
       "logo": "assets/company-logos/behparvar.svg",
@@ -258,24 +258,13 @@
       "tools": [
         {
           "title": {
-            "en": "My Leadership Skills · Behparvar App",
-            "fa": "مهارت‌های رهبری من · اپ به‌پرور"
-          },
-          "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/app/",
-          "stage": {
-            "en": "Mobile-first PWA · No sign-in",
-            "fa": "اپ موبایلی · بدون رمز ورود"
-          }
-        },
-        {
-          "title": {
-            "en": "Leadership Lab · Original Workshop",
-            "fa": "آزمایشگاه رهبری · وب‌سایت اصلی کارگاه"
+            "en": "My Management Lab · Behparvar",
+            "fa": "My Management Lab · به‌پرور"
           },
           "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/",
           "stage": {
-            "en": "Six-session interactive workshop",
-            "fa": "کارگاه تعاملی شش‌جلسه‌ای"
+            "en": "Six-session competency lab · Installable PWA",
+            "fa": "آزمایشگاه شش‌جلسه‌ای شایستگی · قابل نصب"
           }
         }
       ]
