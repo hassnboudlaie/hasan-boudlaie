@@ -37,13 +37,13 @@ const cards=T.map((t,i)=>'<button class="tech-card lab-tech" onclick="openAdvanc
 return intro+'<div class="catalog">'+cards+'</div>';
 }
 function showTechnique(d){
-const title='<div class="subhero lab-tech-hero"><div><span class="eyebrow">جلسه دوم · تکنیک '+(chosenTech+1)+'</span><h1>'+e(d.icon)+' '+e(d.title)+'</h1><p>'+e(d.subtitle)+'</p><span class="lab-hero-tags">🎭 دو نقش · 🧠 تست · 🗣️ '+d.dialogue.length+' نوبت گفت‌وگو · 🔁 اجرای مجدد</span></div></div>';
+const title='<div class="subhero lab-tech-hero" style="background-image:linear-gradient(100deg,rgba(3,46,33,.98),rgba(4,77,53,.82) 62%,rgba(5,71,48,.42)),url('+fileFor(d)+')"><div><span class="eyebrow">جلسه دوم · تکنیک '+(chosenTech+1)+'</span><h1>'+e(d.icon)+' '+e(d.title)+'</h1><p>'+e(d.subtitle)+'</p><span class="lab-hero-tags">🎭 دو نقش · 🧠 تست · 🗣️ '+d.dialogue.length+' نوبت گفت‌وگو · 🔁 اجرای مجدد</span></div></div>';
 const cards=techStages.map((x,i)=>'<button class="stage-card lab-stage" onclick="go(\'stage\','+i+')" aria-label="ورود به مرحله '+(i+1)+'"><span class="stage-no"><span class="badge-digit">'+(i+1)+'</span><span class="badge-emoji" aria-hidden="true">'+x[0]+'</span></span><span class="body"><b>'+e(x[1])+'</b><small>'+e(x[2])+'</small></span><span class="arrow">←</span></button>').join('');
 return title+'<div class="stage-grid">'+cards+'</div>';
 }
 function showPrinciples(d){
-const items=d.principles.map((p,i)=>'<details class="accordion lab-principle" '+(i===0?'open':'')+'><summary><span class="lab-principle-count">'+(i+1)+'</span><span>'+e(p[0])+'</span></summary><div><p class="lab-lead">'+e(p[1])+'</p><div class="compare"><div class="panel good"><b>✅ نمونه مناسب</b><p>'+e(p[2])+'</p></div><div class="panel bad"><b>❌ نمونه نامناسب</b><p>'+e(p[3])+'</p></div></div><div class="tip"><b>🔍 تحلیل فنی</b><p>'+e(p[4])+'</p></div><div class="tip"><b>👀 نشانه قابل مشاهده</b><p>'+e(p[5])+'</p></div></div></details>').join('');
-return card('<h2>🧩 پنج اصل قابل اجرا</h2><p class="lab-lead">روی هر اصل بزنید؛ نمونه‌های مناسب و نامناسب، منطق انتخاب و نشانه رفتاری جداگانه باز می‌شوند.</p>'+items,'lab-principles')+card('<h2>🖼️ لنز مشاهده این تکنیک</h2>'+photo(d,d.title)+'<p>در اجرای دونفره، به <strong>کلام، لحن، حالت چهره و رفتار قابل مشاهده</strong> توجه کنید؛ از قضاوت شخصیت یا استنتاج نیت از یک ژست بپرهیزید.</p>');
+const items=d.principles.map((p,i)=>'<details id="lab-principle-'+i+'" class="accordion lab-principle" '+(i===0?'open':'')+'><summary><span class="lab-principle-count">'+(i+1)+'</span><span>'+e(p[0])+'</span></summary><div><p class="lab-lead">'+e(p[1])+'</p><div class="compare"><div class="panel good"><b>✅ نمونه مناسب</b><p>'+e(p[2])+'</p></div><div class="panel bad"><b>❌ نمونه نامناسب</b><p>'+e(p[3])+'</p></div></div><div class="tip"><b>🔍 تحلیل فنی</b><p>'+e(p[4])+'</p></div><div class="tip"><b>👀 نشانه قابل مشاهده</b><p>'+e(p[5])+'</p></div></div></details>').join('');
+return card('<h2>🧩 پنج اصل قابل اجرا</h2><p class="lab-lead">روی هر اصل بزنید؛ نمونه‌های مناسب و نامناسب، منطق انتخاب و نشانه رفتاری جداگانه باز می‌شوند.</p><div class="lab-concept-flow">'+d.principles.map((p,i)=>'<button class="lab-flow-item" onclick="openAdvancedPrinciple('+i+')"><span>'+(i+1)+'</span><b>'+e(p[0])+'</b><small>مشاهده نمونه‌ها ←</small></button>').join('')+'</div>'+items,'lab-principles')+card('<h2>🖼️ لنز مشاهده این تکنیک</h2>'+photo(d,d.title)+'<p>در اجرای دونفره، به <strong>کلام، لحن، حالت چهره و رفتار قابل مشاهده</strong> توجه کنید؛ از قضاوت شخصیت یا استنتاج نیت از یک ژست بپرهیزید.</p>');
 }
 function showQuiz(d){
 selectedPolls[chosenTech] ||= {};
@@ -115,6 +115,7 @@ window.render=enhancedRender;
 window.openAdvancedTech=function(i){chosenTech=i;scriptView='both';stageDirections=true;go('tech');};
 window.chooseAdvancedPoll=function(t,i,k){selectedPolls[t] ||= {};selectedPolls[t][i]=k; const y=window.scrollY;render();window.scrollTo(0,Math.max(0,y-15));};
 window.rateAdvanced=function(t,i,n){selectedRubrics[t] ||= {};selectedRubrics[t][i]=n;const y=window.scrollY;render();window.scrollTo(0,y);};
+window.openAdvancedPrinciple=function(i){const item=document.getElementById('lab-principle-'+i);if(item){item.open=true;item.scrollIntoView({behavior:'smooth',block:'start'});}};
 window.showAdvancedRole=function(v){scriptView=v;const y=window.scrollY;render();window.scrollTo(0,y);};
 window.toggleAdvancedDirection=function(){stageDirections=!stageDirections;const y=window.scrollY;render();window.scrollTo(0,y);};
 window.copyAdvancedScript=async function(){const d=getTech();const text=d.dialogue.map((a,i)=>(i+1)+'. '+(a[0]==='الف'?'رئیس شعبه':partnerNames[chosenTech+1])+'\n'+a[1]).join('\n\n');await copyText(text);};
