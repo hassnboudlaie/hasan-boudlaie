@@ -446,4 +446,19 @@ render();
   });
   panel.append(message,btn);document.body.append(panel);
 })();
+</script><script id="alborz-readonly-qa">
+(function(){
+  var args=new URLSearchParams(location.search);
+  if(!args.has("qaTech"))return;
+  var t=Number(args.get("qaTech")),s=Number(args.get("qaStage")||2);
+  var q=Number(args.get("qaQuestion")||0),answer=Number(args.get("qaAnswer"));
+  if(!Number.isInteger(t)||t<1||t>10||!Number.isInteger(s)||s<0||s>7||!window.ALBORZ_ASSESSMENT_READY)return;
+  if(typeof window.openAdvancedTech!=="function"||typeof window.go!=="function")return;
+  window.openAdvancedTech(t-1);window.go("stage",s);
+  if(s===2&&Number.isInteger(q)&&q>=0&&q<3&&Number.isInteger(answer)&&answer>=0&&answer<3&&args.has("qaAnswer")){
+    if(t===1&&typeof window.pick==="function")window.pick(q,answer);
+    else if(typeof window.chooseAdvancedPoll==="function")window.chooseAdvancedPoll(t-1,q,answer);
+  }
+  document.documentElement.dataset.alborzQa="tech"+t+"-stage"+s+"-question"+q;
+})();
 </script></body></html>
