@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>کنترل نهایی فاز پنجم | بیمه البرز</title>
+<style>
+:root{--green:#0d6b4e;--navy:#173e37;--bg:#f4f7f5;--line:#dce8e0;--ink:#243e34}
+*{box-sizing:border-box}
+body{font-family:Vazirmatn,Tahoma,Arial,sans-serif;margin:0;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.85}
+main{max-width:1100px;margin:auto;padding:25px 16px 45px}
+h1{font-size:clamp(24px,4vw,33px);line-height:1.5;margin:5px 0 10px;color:var(--navy)}
+h2{font-size:22px;color:var(--navy);margin:0 0 12px}
+h3{font-size:18px;margin:14px 0 7px}
+small,.muted{color:#566e63}
+.card{background:white;border:1px solid var(--line);border-radius:19px;padding:20px;margin-top:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:15px 0}
+.metric{padding:14px;text-align:center;border-radius:12px;background:#eef6f1}
+.metric b{display:block;font-size:26px;line-height:1.4}
+.metric span{font-size:14px}
+button,select{padding:11px 15px;font:inherit;border:1px solid #b7cec0;background:white;border-radius:11px;color:#184d39;cursor:pointer}
+button.primary{background:var(--green);color:white;border-color:var(--green);font-weight:700}
+a{color:var(--green)}
+#checks{padding:0 22px}#checks li{padding:5px 2px}
+.pass{color:#0d7248}.fail{color:#ad3e39}.pending{color:#8a6532}
+label.device{display:block;border-bottom:1px solid #edf2ee;padding:10px 0;cursor:pointer}
+label.device input{width:20px;height:20px;accent-color:var(--green);vertical-align:middle;margin-left:10px}
+.note{background:#f9fbf8;border:1px solid #dce9df;border-radius:12px;padding:12px;margin-top:12px}
+#preview-wrap{width:100%;overflow:auto;background:#eef3f0;border:1px solid var(--line);border-radius:14px;padding:10px}
+#preview{display:block;margin:auto;max-width:none;border:1px solid #c6d8ce;border-radius:10px;background:#fff;height:740px;width:390px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;direction:ltr;text-align:left;background:#f4f7f5;border:1px solid var(--line);padding:12px;border-radius:10px;max-height:260px;overflow:auto}
+@media(max-width:600px){.card{padding:15px}.metrics{gap:6px}.metric{padding:9px}.metric b{font-size:22px}}
+</style>
+</head>
+<body>
+<main>
+<header><small>آکادمی مهارت‌های ارتباطات اثربخش | فقط ابزار کنترل کیفیت، نه محتوای آموزشی</small>
+<h1>ممیزی نهایی فاز ۵ — جلسه دوم بیمه البرز</h1>
+<p class="muted">Release مورد ارزیابی: <b dir="ltr">s12-r5-20261031</b> · آزمون‌های خودکار مستقل از تأیید بصری روی گوشی واقعی هستند.</p></header>
+<section class="card" aria-live="polite">
+<h2>۱. اجرای آزمون فنی نسخه منتشرشده</h2>
+<div class="metrics">
+<div class="metric"><b id="passCount">—</b><span>Pass</span></div>
+<div class="metric"><b id="failCount">—</b><span>Fail</span></div>
+<div class="metric"><b id="totalCount">—</b><span>Checks</span></div>
+</div>
+<p id="status" class="pending">در حال بارگذاری و اجرای کنترل‌های مرورگر…</p>
+<ol id="checks"></ol>
+<div class="row"><button class="primary" id="rerun" type="button">اجرای مجدد آزمون</button><button id="download" type="button" disabled>دریافت گزارش JSON</button></div>
+</section>
+<section class="card">
+<h2>۲. بررسی نمایش Responsive</h2>
+<p>نمای زیر، نسخه اصلی جلسه دوم را نشان می‌دهد. عرض شبیه‌سازی را عوض کنید و خوانایی، کنترل‌ها و جهت متن را بررسی کنید.</p>
+<div class="row"><label for="view">عرض نمایش:</label><select id="view"><option value="390">موبایل — ۳۹۰px</option><option value="430">موبایل — ۴۳۰px</option><option value="980">Desktop Site — فقط شبیه‌سازی عرض ۹۸۰px</option><option value="1280">دسکتاپ — ۱۲۸۰px</option></select></div>
+<p class="note">این پیش‌نمایش معادل تست فیزیکی Android، لمس، یا گزینه واقعی «Desktop Site» روی گوشی نیست؛ آن تأیید جداگانه لازم دارد.</p>
+<div id="preview-wrap"><iframe id="preview" title="پیش‌نمایش واقعی جلسه دوم" src="session2-demo.html?release=s12-r5-20261031&amp;phase5Preview=1"></iframe></div>
+</section>
+<section class="card">
+<h2>۳. گیت تأیید روی گوشی واقعی</h2>
+<p class="muted">پس از بررسی دستی هر مورد روی دستگاه، تیک بزنید. این تیک‌ها صرفاً روی همین صفحه هستند و به سرور ارسال نمی‌شوند.</p>
+<label class="device"><input type="checkbox" class="manual">متن و دکمه‌ها در Chrome موبایل بدون کوچک‌نمایی خوانا هستند.</label>
+<label class="device"><input type="checkbox" class="manual">در حالت واقعی Desktop Site گوشی، صفحه ریز یا بریده نمی‌شود.</label>
+<label class="device"><input type="checkbox" class="manual">در هر ۱۰ تکنیک، رفت‌وبرگشت، نقش‌آفرینی و پاسخ صحیح/غلط قابل استفاده‌اند.</label>
+<label class="device"><input type="checkbox" class="manual">تغییرات جلسه دوم بر جلسه اول و سایر اپلیکیشن‌ها اثر نگذاشته‌اند.</label>
+<p id="decision" class="pending"><b>Release Gate:</b> تأیید نهایی در انتظار آزمون‌های مرورگر و دستگاه واقعی است.</p>
+</section>
+<section class="card"><h2>۴. خروجی قابل بررسی</h2><pre id="json">QA_PENDING</pre>
+<p><a href="session2-demo.html?release=s12-r5-20261031">بازگشت به جلسه دوم</a> · <a href="SPRINT_1_TO_4_UNIFIED_QA.md">گزارش فازهای ۱ تا ۴</a></p></section>
+<iframe id="audit" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" title="QA engine" src="session2-demo.html?release=s12-r5-20261031&amp;qaAudit=all&amp;phase5=1"></iframe>
+</main>
+<script>
+(function(){
+'use strict';
+const expected='s12-r5-20261031';
+const audit=document.getElementById('audit'),preview=document.getElementById('preview');
+const checks=document.getElementById('checks'),status=document.getElementById('status'),decision=document.getElementById('decision');
+let reports=[],complete=false,source=null;
+const add=(name,pass,detail)=>reports.push({name,pass:!!pass,detail:detail||''});
+function recalc(){
+ const passed=reports.filter(x=>x.pass).length,failed=reports.length-passed;
+ document.getElementById('passCount').textContent=passed;
+ document.getElementById('failCount').textContent=failed;
+ document.getElementById('totalCount').textContent=reports.length;
+ checks.replaceChildren(...reports.map(x=>{const li=document.createElement('li');li.className=x.pass?'pass':'fail';li.textContent=(x.pass?'✓ ':'✕ ')+x.name+(x.detail?' — '+x.detail:'');return li;}));
+ status.textContent=complete?(failed?'نتیجه فنی: FAIL — رفع خطا الزامی است':'کنترل‌های مرورگری ثبت‌شده: PASS'):'در حال اجرای آزمون…';
+ status.className=complete?(failed?'fail':'pass'):'pending';
+ const allManual=[...document.querySelectorAll('.manual')].every(x=>x.checked);
+ decision.textContent=complete&&failed===0&&allManual?'Release Gate: GO — تأیید دستی دستگاه نیز ثبت شد.':'Release Gate: PENDING — تأیید نهایی دستگاه و/یا رفع موارد ناموفق باقی است.';
+ decision.className=complete&&failed===0&&allManual?'pass':'pending';
+ const result={release:expected,sourceAudit:source,checks:reports,manualChecks:[...document.querySelectorAll('.manual')].map(x=>x.checked),automaticStatus:complete?(failed?'FAIL':'PASS'):'PENDING',finalGate:complete&&failed===0&&allManual?'GO':'PENDING',deviceTestCertified:false,generatedAt:new Date().toISOString()};
+ document.getElementById('json').textContent=JSON.stringify(result,null,2);
+ document.getElementById('download').disabled=!complete;
+ return result;
+}
+function finalize(){complete=true;recalc();}
+audit.addEventListener('load',()=>{
+ try {
+  const w=audit.contentWindow;
+  const a=w.ALBORZ_AUDIT_RESULT;
+  source=a||null;
+  add('Release ID و ۱۶۵ آزمون عملکردی نسخه زنده',!!a&&a.release===expected&&a.checks===165&&a.passed===165&&a.failed===0,a?'نتیجه '+a.passed+'/'+a.checks:'خروجی آزمون یافت نشد');
+  for(const [key,count] of Object.entries({stages:80,dialogueTurns:248,questions:30,answers:90,roleplays:10,repractices:10})){
+    add('پوشش محتوایی: '+key,!!a&&a.metrics?.[key]===count,a?.metrics?.[key]+' / '+count);
+  }
+  if(a?.failures?.length)for(const f of a.failures)add('خطای آزمون: '+f.name,false,f.error);
+ } catch(e){add('دسترسی به نتیجه آزمون در همان دامنه',false,String(e.message||e));}
+ finalize();
+},{once:true});
+preview.addEventListener('load',()=>{
+ try{
+  const w=preview.contentWindow,d=w.document;
+  add('نسخه پیش‌نمایش همسان با Release',w.ALBORZ_RELEASE?.id===expected,w.ALBORZ_RELEASE?.id||'ندارد');
+  add('زبان و جهت صفحه',d.documentElement.lang==='fa'&&d.documentElement.dir==='rtl');
+  add('بدون پنل خطای بارگذاری',!d.getElementById('alborz-load-error'));
+  w.go('catalog');
+  add('۱۰ کارت تکنیک قابل مشاهده',d.querySelectorAll('.tech-card.lab-tech').length===10);
+  add('سه مسیر ناوبری',d.querySelectorAll('.quicknav .back').length===3);
+  w.go('home');
+ }catch(e){add('کنترل UI پیش‌نمایش',false,String(e.message||e));}
+ recalc();
+},{once:true});
+setTimeout(()=>{if(!complete){add('مهلت بارگذاری QA',false,'بیش از ۴۵ ثانیه');finalize();}},45000);
+document.getElementById('view').addEventListener('change',e=>{preview.style.width=e.target.value+'px';});
+document.querySelectorAll('.manual').forEach(x=>x.addEventListener('change',recalc));
+document.getElementById('rerun').addEventListener('click',()=>location.reload());
+document.getElementById('download').addEventListener('click',()=>{
+ const result=recalc(),url=URL.createObjectURL(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download='alborz-phase5-acceptance.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+recalc();
+})();
+</script>
+</body></html>
