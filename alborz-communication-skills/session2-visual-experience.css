@@ -1,0 +1,213 @@
+/* Alborz Communication Academy | visual experience upgrade, isolated from lesson content.
+   Editorial thumbnails, legible stages, accessible bottom sheet, 3-step coach tour.
+   Preserves the original 10 x 8 structure, WELCOME, scripts and large RTL type. */
+
+/* 1. Existing home image: stronger editorial treatment, not extra panels. */
+.hero-photo{object-position:center 38%}
+.hero-copy{max-width:800px}
+.hero .actrow>.cta{border-radius:18px;transition:transform .15s ease,box-shadow .15s ease}
+.hero .actrow>.cta:focus-visible{outline:4px solid #e9c777;outline-offset:4px}
+
+/* 2. Editorial technique gallery: images are real executive-oriented existing assets. */
+.catalog{align-items:stretch}
+.tech-card.lab-tech.alborz-editorial{
+  position:relative;overflow:hidden;isolation:isolate;align-items:center;
+  gap:clamp(14px,1.5vw,25px);padding:14px 18px 14px 14px;
+  border-radius:22px;min-height:178px;
+  border:1px solid #dbe8df;background:#fff;
+  box-shadow:0 6px 23px rgba(8,73,51,.08);
+}
+.alborz-editorial .iconbox{display:none!important}
+.alborz-tech-cover{
+  position:relative;display:block;flex:none;
+  width:clamp(112px,13vw,170px);height:clamp(138px,14vw,183px);
+  border-radius:15px;overflow:hidden;background:#e0ede4;
+}
+.alborz-tech-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(2,42,30,.50),transparent 56%);pointer-events:none}
+.alborz-tech-cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:var(--visual-position,center);filter:saturate(.86)}
+.alborz-cover-number{
+  position:absolute;bottom:10px;right:12px;z-index:1;
+  font:900 clamp(18px,2.1vw,28px)/1.1 Vazirmatn,sans-serif;
+  color:white;letter-spacing:.01em;
+}
+.alborz-editorial .tech-copy{display:flex;flex-direction:column;justify-content:center;gap:5px}
+.alborz-editorial .tech-copy b{font-weight:900;line-height:1.43;font-size:clamp(25px,2.4vw,36px)}
+.alborz-editorial .tech-copy small{color:#496358;line-height:1.6;font-size:clamp(19px,1.7vw,26px);font-weight:600}
+.alborz-editorial .lab-enter{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+  font-size:clamp(18px,1.5vw,24px);
+  margin-inline-start:0;flex:none;font-weight:850;color:#0b7654;
+  padding:8px 12px;border:1px solid #cde4d4;border-radius:14px;
+  background:#eff8f1;
+}
+.alborz-editorial:hover{border-color:#61a68a;box-shadow:0 12px 33px rgba(8,73,51,.14)}
+.alborz-editorial:focus-visible{outline:4px solid #b99956;outline-offset:3px}
+
+/* 3. Eight-stage editorial list. A thumbnail lives INSIDE the existing number block.
+   The existing number + emoji remain readable; no additional narrow columns. */
+.stage-grid .stage-card.alborz-stage-editorial{position:relative;overflow:hidden;border-radius:22px}
+.stage-no.alborz-stage-art{
+  position:relative;isolation:isolate;overflow:hidden;background:#0a6a50;
+  border:1px solid #d0e6da;flex:none;
+}
+.alborz-stage-art img{
+  position:absolute;inset:0;z-index:-2;width:100%;height:100%;
+  object-fit:cover;object-position:center;filter:saturate(.68);
+}
+.alborz-stage-art::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(0deg,#043c2de6,#064c3880 60%,#125f422e);
+}
+.stage-no.alborz-stage-art .badge-digit{
+  font-size:clamp(25px,2.3vw,34px);font-weight:900;color:#fff;
+  text-shadow:0 1px 6px #03291d91;
+}
+.stage-no.alborz-stage-art .badge-emoji{
+  font-size:clamp(22px,1.9vw,31px);filter:drop-shadow(0 1px 3px #062e21aa)
+}
+.stage-card.alborz-stage-editorial .body b{font-weight:900}
+.stage-card.alborz-stage-editorial .body small{color:#455e51;font-weight:650}
+.stage-card.alborz-stage-editorial .arrow{font-weight:900}
+.stage-card.alborz-stage-editorial:focus-visible{outline:4px solid #b99956;outline-offset:4px}
+
+/* Stage action: the NEXT action is dominant, BACK remains secondary. */
+.single-stage>.floatingnav,
+.lab-page>.floatingnav{
+  position:sticky;bottom:0;z-index:15;
+  margin-top:auto;padding:16px 4px max(14px,env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,#f5f8f6 72%,#f5f8f6ed 88%,transparent);
+  border-radius:19px;
+}
+.single-stage>.floatingnav .navbtn.next{
+  flex:1;text-align:center;background:#08714f;border:2px solid #08714f;
+  color:white;font-weight:900;box-shadow:0 7px 18px #0a6b4a24
+}
+.single-stage>.floatingnav .navbtn:not(.next){flex:0 1 auto;min-width:0}
+
+/* 4. One deliberate entry point to role-play tools, with original controls preserved. */
+.alborz-practice-shortcut{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;min-height:84px;padding:17px 23px;margin:22px 0 18px;
+  border:2px solid #0b7353;border-radius:20px;
+  background:linear-gradient(110deg,#07583f,#087f58);
+  color:white;font:850 clamp(22px,2vw,30px)/1.5 Vazirmatn,sans-serif;
+  text-align:right;cursor:pointer;
+}
+.alborz-practice-shortcut .shortcut-arrow{font-size:1.2em;opacity:.95}
+.alborz-practice-shortcut:focus-visible{outline:4px solid #c9ab64;outline-offset:4px}
+.alborz-script-tools{
+  background:#f8faf9;border:1px solid #d6e6dd;
+  border-radius:17px;padding:17px 18px;margin:17px 0;
+}
+.alborz-script-tools>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:15px;
+  cursor:pointer;color:#0b5c43;font-size:clamp(21px,2vw,29px);
+  font-weight:850;line-height:1.55;list-style:none;
+}
+.alborz-script-tools>summary::-webkit-details-marker{display:none}
+.alborz-script-tools>summary::after{content:"⌄";font-size:1.4em}
+.alborz-script-tools[open]>summary::after{content:"⌃"}
+.alborz-script-tools>.scriptbar{margin-top:21px}
+
+/* Bottom-sheet: large accessible touch actions, restrained business palette. */
+.alborz-sheet-portal{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-end;justify-content:center}
+.alborz-sheet-backdrop{position:absolute;inset:0;border:0;border-radius:0;background:rgba(6,28,22,.57);cursor:pointer}
+.alborz-action-sheet{
+  position:relative;z-index:1;width:min(100%,740px);max-height:min(91svh,970px);
+  overflow-y:auto;overscroll-behavior:contain;padding:24px 22px max(26px,env(safe-area-inset-bottom));
+  border-radius:29px 29px 0 0;background:#fff;color:#173b30;
+  box-shadow:0 -12px 45px #071e1970;direction:rtl;
+}
+.alborz-sheet-grip{width:61px;height:6px;background:#bccdc3;border-radius:20px;margin:0 auto 18px}
+.alborz-sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+.alborz-sheet-head h2{font-size:clamp(27px,2.7vw,40px);line-height:1.45;margin:0;font-weight:900;color:#0c503a}
+.alborz-sheet-head p{font-size:clamp(19px,1.7vw,26px);line-height:1.65;margin:7px 0 0;color:#466258}
+.alborz-sheet-close{border:1px solid #d5e3da;background:#f5f8f6;border-radius:50%;
+   width:56px;height:56px;flex:none;color:#154a39;font-size:26px;cursor:pointer}
+.alborz-sheet-options{display:grid;gap:12px}
+.alborz-sheet-action{
+  width:100%;display:flex;align-items:center;gap:17px;min-height:82px;
+  padding:17px 19px;border:1px solid #d9e7de;border-radius:17px;
+  background:#f8fbf8;text-align:right;color:#174b39;font:750 clamp(20px,1.8vw,27px)/1.6 Vazirmatn,sans-serif;
+  cursor:pointer;
+}
+.alborz-sheet-action .alborz-sheet-icon{font-size:34px;min-width:42px;flex:none}
+.alborz-sheet-action .alborz-sheet-text{flex:1}
+.alborz-sheet-action .alborz-sheet-label{display:block;font-weight:900}
+.alborz-sheet-action .alborz-sheet-desc{display:block;font-size:.79em;color:#526b5d;font-weight:550}
+.alborz-sheet-action:hover,.alborz-sheet-action:focus-visible{background:#eaf5ee;border-color:#6dab89;outline:none}
+.alborz-sheet-action-primary{background:#e7f4eb;border-color:#8ac3a1}
+.alborz-sheet-help{border:0;background:none;color:#0d6146;font-size:21px;font-weight:850;cursor:pointer;margin-top:14px;padding:15px}
+
+/* Short first-use 3-step guide. Separate from the training content. */
+.alborz-guide-portal{position:fixed;inset:0;z-index:9100;display:flex;align-items:center;justify-content:center;padding:16px;direction:rtl}
+.alborz-guide-backdrop{position:absolute;inset:0;background:rgba(4,29,22,.78)}
+.alborz-guide-card{
+  position:relative;z-index:1;width:min(100%,620px);
+  background:#fff;border-radius:25px;padding:clamp(25px,4vw,43px);
+  box-shadow:0 22px 75px #00180f88;color:#164433;
+}
+.alborz-guide-step{font-size:19px;font-weight:850;color:#0d7854}
+.alborz-guide-symbol{font-size:54px;display:block;margin:14px 0}
+.alborz-guide-card h2{font-size:clamp(30px,3vw,42px);line-height:1.45;font-weight:900;margin:0 0 15px}
+.alborz-guide-card p{font-size:clamp(23px,2vw,30px);line-height:1.75;font-weight:550;margin:0 0 22px}
+.alborz-guide-actions{display:flex;align-items:center;gap:13px;justify-content:space-between}
+.alborz-guide-actions button{min-height:59px;padding:12px 18px;border-radius:15px;font:850 22px/1.45 Vazirmatn,sans-serif;cursor:pointer}
+.alborz-guide-next{background:#086c4c;color:white;border:0;flex:1}
+.alborz-guide-skip{background:#f2f7f3;color:#355b4a;border:1px solid #d1e2d6}
+.alborz-guide-dots{display:flex;justify-content:center;gap:9px;margin-top:20px}
+.alborz-guide-dots span{width:9px;height:9px;background:#d5e5da;border-radius:50%}
+.alborz-guide-dots span.active{width:27px;border-radius:11px;background:#087953}
+.alborz-guide-focus{position:relative;outline:5px solid #cdab61;outline-offset:7px;border-radius:17px}
+
+/* Mobile: one clean column, larger thumbnails; no crammed three-column layout. */
+@media(max-width:900px){
+  .catalog{grid-template-columns:1fr}
+  .tech-card.lab-tech.alborz-editorial{min-height:177px;padding:13px;gap:13px}
+  .alborz-tech-cover{width:clamp(100px,26vw,140px);height:clamp(133px,30vw,173px)}
+  .alborz-editorial .tech-copy b{font-size:clamp(24px,5.5vw,32px)}
+  .alborz-editorial .tech-copy small{font-size:clamp(19px,4.2vw,25px)}
+  .alborz-editorial .lab-enter{font-size:19px;min-height:44px;padding:7px 9px}
+}
+@media(max-width:480px){
+  .tech-card.lab-tech.alborz-editorial{min-height:174px;gap:12px;padding:11px}
+  .alborz-tech-cover{width:96px;height:141px;border-radius:14px}
+  .alborz-editorial .tech-copy b{font-size:clamp(23px,5.8vw,29px)}
+  .alborz-editorial .tech-copy small{font-size:clamp(17px,4.4vw,22px)}
+  .alborz-editorial .lab-enter{display:none}
+  .stage-no.alborz-stage-art .badge-digit{font-size:25px}
+  .stage-no.alborz-stage-art .badge-emoji{font-size:24px}
+  .alborz-practice-shortcut{font-size:25px;min-height:87px;padding:16px 20px}
+  .single-stage>.floatingnav,.lab-page>.floatingnav{gap:9px}
+  .single-stage>.floatingnav .navbtn.next{font-size:24px;padding:14px 12px}
+  .alborz-action-sheet{padding-inline:17px}
+  .alborz-sheet-action{font-size:23px;padding:17px 13px}
+}
+
+/* Android "Desktop Site" uses a virtual 980px layout: enlarge editorial components
+   proportional to virtual viewport scaling, respecting the existing mode patch. */
+html.touch-desktop-mode .catalog{grid-template-columns:1fr;gap:26px}
+html.touch-desktop-mode .tech-card.lab-tech.alborz-editorial{min-height:315px;gap:24px;padding:19px 23px}
+html.touch-desktop-mode .alborz-tech-cover{width:206px;height:271px;border-radius:23px}
+html.touch-desktop-mode .alborz-cover-number{font-size:48px;right:20px;bottom:16px}
+html.touch-desktop-mode .alborz-editorial .tech-copy b{font-size:58px}
+html.touch-desktop-mode .alborz-editorial .tech-copy small{font-size:43px}
+html.touch-desktop-mode .alborz-editorial .lab-enter{font-size:38px;min-height:88px;padding:16px}
+html.touch-desktop-mode .stage-no.alborz-stage-art{min-width:130px;width:130px;height:146px}
+html.touch-desktop-mode .stage-no.alborz-stage-art .badge-digit{font-size:48px}
+html.touch-desktop-mode .stage-no.alborz-stage-art .badge-emoji{font-size:48px}
+html.touch-desktop-mode .single-stage>.floatingnav{padding-block:26px}
+html.touch-desktop-mode .alborz-practice-shortcut{min-height:133px;font-size:47px;padding:24px 30px}
+html.touch-desktop-mode .alborz-script-tools>summary{font-size:45px}
+html.touch-desktop-mode .alborz-sheet-head h2{font-size:55px}
+html.touch-desktop-mode .alborz-sheet-head p{font-size:39px}
+html.touch-desktop-mode .alborz-sheet-action{font-size:43px;min-height:133px;padding:25px}
+html.touch-desktop-mode .alborz-sheet-action .alborz-sheet-icon{font-size:55px;min-width:70px}
+html.touch-desktop-mode .alborz-sheet-close{width:82px;height:82px;font-size:40px}
+html.touch-desktop-mode .alborz-sheet-help{font-size:38px}
+html.touch-desktop-mode .alborz-guide-card h2{font-size:61px}
+html.touch-desktop-mode .alborz-guide-card p{font-size:45px}
+html.touch-desktop-mode .alborz-guide-actions button{font-size:39px;min-height:85px}
+@media(prefers-reduced-motion:reduce){
+ .hero .actrow>.cta,.alborz-editorial{transition:none!important}
+}
