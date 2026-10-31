@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>کنترل کیفیت رابط کاربری | آکادمی بیمه البرز</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef5f0;color:#123c2d;font-family:Vazirmatn,Tahoma,Arial,sans-serif;line-height:1.7}
+main{max-width:930px;margin:auto;padding:24px 17px 50px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.45;margin:0 0 10px}h2{font-size:24px;margin:0 0 15px}
+p{font-size:18px;margin:0 0 18px}.hero{background:linear-gradient(100deg,#064b36,#0b7855);color:white;border-radius:25px;padding:26px 24px;margin-bottom:17px}
+.panel{background:#fff;border:1px solid #d7e6db;border-radius:22px;padding:20px;margin:18px 0;box-shadow:0 5px 22px #10462b0c}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:20px;font-weight:800;margin-bottom:17px}
+.dot{display:inline-flex;min-width:48px;justify-content:center;background:#e8f4e9;border-radius:50px;padding:4px 12px}
+ul{list-style:none;margin:0;padding:0}li{border-block-end:1px solid #e3ece5;padding:13px 0;font-size:18px}
+li:last-child{border-bottom:0}.ok{color:#087044;font-weight:900}.fail{color:#a02a20;font-weight:900}
+.note{font-size:16px;color:#51685d;line-height:1.7}
+button{padding:14px 22px;border:0;border-radius:13px;background:#0a6b4b;color:#fff;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer}
+a{color:#0c6649;font-weight:800}
+.preview-shell{width:100%;max-width:430px;margin:0 auto;overflow:hidden;border:2px solid #d3e3d7;border-radius:19px;background:white}
+#sample{width:100%;height:630px;border:0;display:block}
+#sample.desktop{width:980px;height:1575px;transform:scale(var(--scale,.4));transform-origin:top right;margin-bottom:calc(1575px * (var(--scale,.4) - 1))}
+.toolbox{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.toolbox button{font-size:16px;padding:10px 13px}.toolbox button.subtle{background:#e1efe5;color:#155841}
+</style>
+</head>
+<body><main>
+<section class="hero"><h1>🔎 کنترل کیفیت جلسه دوم</h1><p>تست مستقل و خودکار روی نسخه واقعی وب‌اپ؛ شامل ۱۰ تکنیک، تصاویر، پنل انتخاب نقش و مسیرهای تمرین. این صفحه به محتوای دوره تغییری نمی‌دهد.</p></section>
+<section class="panel">
+ <div class="status"><span id="status">در حال بررسی رابط کاربری…</span><span class="dot" id="count">…</span></div>
+ <ul id="results" aria-live="polite"></ul>
+ <button id="rerun" type="button">🔁 اجرای مجدد تست‌ها</button>
+ <p class="note" style="margin-top:14px">این تست در مرورگر شما و روی همان فایل‌های منتشرشده انجام می‌شود؛ ابزار مستقل Firecrawl برای آن لازم نیست. تأیید بصری نهایی همچنان نیازمند نگاه انسانی است.</p>
+</section>
+<section class="panel"><h2>📱 پیش‌نمایش واقعی</h2>
+<div class="toolbox">
+ <button type="button" id="mobile" class="subtle">نمای موبایل</button>
+ <button type="button" id="desktop" class="subtle">شبیه‌سازی Desktop Site گوشی</button>
+ <button type="button" id="catalog" class="subtle">فهرست ۱۰ تکنیک</button>
+ <button type="button" id="roleplay" class="subtle">تکنیک ۷ / Role Play</button>
+</div>
+<div class="preview-shell" id="preview"><iframe id="sample" title="نسخه واقعی آکادمی ارتباطات بیمه البرز" loading="eager" src="session2-demo.html?qa=visual-live-3"></iframe></div>
+<p class="note" style="margin-top:12px">در گوشی، گزینه «شبیه‌سازی Desktop Site» عرض مجازی ۹۸۰ پیکسل را اعمال می‌کند. تصویر برای جا شدن در صفحه کوچک می‌شود، اما محاسبات CSS داخل فریم با عرض واقعی ۹۸۰ انجام می‌شوند.</p>
+</section>
+<p><a href="session2-demo.html?visual=20261031-live3">بازگشت به جلسه دوم ←</a></p>
+</main>
+<script>
+(function(){
+'use strict';
+const f=document.getElementById('sample');
+const results=document.getElementById('results');
+const status=document.getElementById('status');
+const count=document.getElementById('count');
+let tests=[],busy=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function settle(){await sleep(90);await sleep(50)}
+function add(name,ok,details=''){
+ tests.push({name,ok,details});
+ let li=document.createElement('li');
+ li.innerHTML='<span class="'+(ok?'ok':'fail')+'">'+(ok?'✓ ':'✕ ')+'</span>';
+ li.append(document.createTextNode(name+(details?' — '+details:'')));
+ results.append(li);
+ count.textContent=tests.filter(x=>x.ok).length+' / '+tests.length;
+}
+function requireCheck(ok,message){if(!ok)throw Error(message);}
+function inspect(name,work){try{work();add(name,true)}catch(e){add(name,false,String(e.message||e))}}
+function updateStatus(){const failures=tests.filter(x=>!x.ok).length;status.textContent=failures?'نیاز به اصلاح: '+failures+' مورد':'تمام بررسی‌های خودکار موفق بودند';}
+async function run(){
+ if(busy)return;busy=true;tests=[];results.innerHTML='';status.textContent='در حال تست…';count.textContent='…';
+ const w=f.contentWindow;
+ try{
+  requireCheck(w&&w.document&&w.document.getElementById('root'),'وب‌اپ بارگذاری نشده است');
+  const d=w.document,root=d.getElementById('root');
+  inspect('صفحه اصلی و تصویر شاخص',()=>requireCheck(!!root.querySelector('.hero-photo'),'Hero image missing'));
+  inspect('دکمه‌های اصلی صفحه',()=>requireCheck(root.querySelectorAll('.hero .cta').length===2,'Primary actions missing'));
+  w.go('catalog');await settle();
+  inspect('ده تکنیک در فهرست',()=>requireCheck(root.querySelectorAll('.tech-card.lab-tech').length===10,'Expected ten techniques'));
+  inspect('تصویر مستقل در کارت‌های تکنیک',()=>requireCheck(root.querySelectorAll('.tech-card.lab-tech .alborz-tech-cover img').length===10,'Editorial image injection failed'));
+  inspect('تیترهای تکنیک خوانا و برجسته',()=>{const t=root.querySelector('.tech-card .tech-copy b');requireCheck(t&&parseFloat(w.getComputedStyle(t).fontSize)>=23,'Heading too small')});
+  if(root.querySelector('.tech-card .alborz-tech-cover img')){
+    const im=root.querySelector('.tech-card .alborz-tech-cover img');
+    try{await im.decode();add('تصویر اول فهرست بارگذاری می‌شود',true)}catch(e){add('تصویر اول فهرست بارگذاری می‌شود',false,'فایل تصویر بارگذاری نشد')}
+  }
+  w.openAdvancedTech(6);await settle();
+  inspect('هشت مرحله تکنیک هفتم',()=>requireCheck(root.querySelectorAll('.stage-card').length===8,'Expected eight stages'));
+  inspect('تصویر و شماره در کارت‌های مرحله',()=>requireCheck(root.querySelectorAll('.stage-no.alborz-stage-art').length===8,'Stage decoration missing'));
+  inspect('ورود به ابزارهای تمرین',()=>requireCheck(!!root.querySelector('.alborz-practice-shortcut'),'Practice action missing'));
+  const shortcut=root.querySelector('.alborz-practice-shortcut');
+  shortcut&&shortcut.click();await settle();
+  inspect('پنل انتخاب تمرین باز می‌شود',()=>requireCheck(!!d.getElementById('alborz-practice-sheet'),'Bottom sheet failed'));
+  inspect('شش گزینه در Bottom Sheet',()=>requireCheck(d.querySelectorAll('.alborz-sheet-action').length===6,'Expected six tools'));
+  d.querySelector('.alborz-sheet-close')?.click();await settle();
+  w.go('stage',3);await settle();
+  if(d.getElementById('alborz-visual-guide')){
+    inspect('راهنمای سه‌مرحله‌ای اولین ورود',()=>requireCheck(d.querySelectorAll('.alborz-guide-dots span').length===3,'Tour steps missing'));
+    d.querySelector('.alborz-guide-skip')?.click();await settle();
+  }else add('راهنمای اولین ورود',true,'در این مرورگر قبلاً نمایش داده شده یا رد شده است');
+  w.go('stage',4);await settle();
+  inspect('اسکریپت تکنیک هفتم',()=>requireCheck(root.querySelectorAll('.speech').length>=20,'Dialogue missing'));
+  inspect('راهنمای لحن، بدن و حالت چهره',()=>requireCheck(root.querySelectorAll('.performance-guide').length>=20,'Performance cues missing'));
+  inspect('ابزارهای نمایش اسکریپت',()=>requireCheck(!!root.querySelector('.alborz-script-tools'),'Script tools missing'));
+  w.go('catalog');await settle();
+  w.openAdvancedTech(0);await settle();w.go('stage',4);await settle();
+  inspect('تکنیک اول بدون اختلال',()=>requireCheck(root.querySelectorAll('.speech').length>=20,'Original technique missing'));
+  w.goSession();await settle();
+  inspect('ناوبری بازگشت به جلسه دوم',()=>requireCheck(!!root.querySelector('.hero'),'Session home unavailable'));
+  inspect('بدون Overflow افقی غیرضروری',()=>requireCheck(d.documentElement.scrollWidth<=d.documentElement.clientWidth+5,'Horizontal overflow '+d.documentElement.scrollWidth+'/'+d.documentElement.clientWidth));
+ }catch(e){add('اتصال و اجرای تست',false,String(e.message||e))}
+ updateStatus();busy=false;
+}
+f.addEventListener('load',()=>{run()},{once:true});
+document.getElementById('rerun').addEventListener('click',run);
+document.getElementById('catalog').addEventListener('click',()=>{f.contentWindow.go('catalog')});
+document.getElementById('roleplay').addEventListener('click',()=>{f.contentWindow.openAdvancedTech(6);f.contentWindow.go('stage',3)});
+document.getElementById('mobile').addEventListener('click',()=>{f.classList.remove('desktop');f.style.removeProperty('--scale')});
+document.getElementById('desktop').addEventListener('click',()=>{
+ const preview=document.getElementById('preview');
+ const scale=preview.clientWidth/980;
+ f.classList.add('desktop');f.style.setProperty('--scale',String(scale));
+ f.contentWindow.dispatchEvent(new Event('resize'));
+});
+})();
+</script></body></html>
