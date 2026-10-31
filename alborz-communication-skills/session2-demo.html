@@ -170,6 +170,23 @@ body{font-size:19px;line-height:1.85}
  .stage-card small,.tech-copy small{font-size:16px}
 }
 
+
+/* Final legibility polish: professional photographic subhero, no microscopic mobile labels */
+.subhero{
+ background:
+ linear-gradient(270deg,rgba(3,46,34,.95) 0%,rgba(3,55,39,.85) 43%,rgba(3,55,39,.22) 100%),
+ url('assets/session2-hero-hq.webp') center 43%/cover no-repeat;
+}
+.brand small{font-size:16px}
+.hero .pill{font-size:16px;line-height:1.65}
+.letter small{font-size:16px}
+@media(max-width:680px){
+ .brand small{font-size:16px}
+ .letter small{font-size:16px}
+ .hero .pill{font-size:16px}
+ .subhero{background-position:center 43%;min-height:255px}
+}
+@media(max-width:360px){.brand small{font-size:16px}}
 </style></head><body>
 <header class="topbar"><div class="topinside"><div class="brand"><img src="../assets/company-logos/alborz.svg" alt="نشان بیمه البرز"><div><strong>آکادمی ارتباطات اثربخش</strong><small>بیمه البرز · رؤسای شعب · جلسه دوم</small></div></div><nav class="quicknav" aria-label="ناوبری اصلی"><a class="back navhome" href="index.html" title="صفحه اصلی آکادمی">⌂ خانه</a><button class="back navsession" type="button" onclick="goSession()">▦ جلسه دوم</button><button class="back navback" type="button" id="goBack" onclick="back()">→ بازگشت</button></nav></div></header>
 <main class="shell" id="root" aria-live="polite"></main><script>
