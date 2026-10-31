@@ -112,7 +112,9 @@ function closePracticeSheet(restoreFocus=true){
  if(restoreFocus&&rememberedFocus&&document.contains(rememberedFocus))rememberedFocus.focus();
 }
 function closeGuide(markSeen=true){
- document.getElementById('alborz-visual-guide')?.remove();
+ const portal=document.getElementById('alborz-visual-guide');
+ if(!portal)return;
+ portal.remove();
  root.querySelectorAll('.alborz-guide-focus').forEach(x=>x.classList.remove('alborz-guide-focus'));
  if(markSeen)try{localStorage.setItem(storedGuideKey,'1')}catch(e){}
  tourOpenedThisVisit=true;
