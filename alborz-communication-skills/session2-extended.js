@@ -42,25 +42,21 @@ const cards=techStages.map((x,i)=>'<button class="stage-card lab-stage" onclick=
 return title+'<div class="stage-grid">'+cards+'</div>';
 }
 function showPrinciples(d){
-const items=d.principles.map((p,i)=>'<details id="lab-principle-'+i+'" class="accordion lab-principle" '+(i===0?'open':'')+'><summary><span class="lab-principle-count">'+(i+1)+'</span><span>'+e(p[0])+'</span></summary><div><p class="lab-lead">'+e(p[1])+'</p><div class="compare"><div class="panel good"><b>✅ نمونه مناسب</b><p>'+e(p[2])+'</p></div><div class="panel bad"><b>❌ نمونه نامناسب</b><p>'+e(p[3])+'</p></div></div><div class="tip"><b>🔍 تحلیل فنی</b><p>'+e(p[4])+'</p></div><div class="tip"><b>👀 نشانه قابل مشاهده</b><p>'+e(p[5])+'</p></div></div></details>').join('');
-return card('<h2>🧩 پنج اصل قابل اجرا</h2><details class="accordion book-application"><summary>📚 نکته کاربردی از Whetten & Cameron</summary><div><p><strong>'+e(d.learningAnchor?.concept||'Supportive Communication')+':</strong> '+e(d.learningAnchor?.use||'')+'</p><p>Developing Management Skills، '+e(d.learningAnchor?.reference||'فصل چهارم')+'. این منبع، مکمل اصول رفتاری است و جایگزین ضوابط بیمه‌ای نیست.</p></div></details><p class="lab-lead">روی هر اصل بزنید؛ نمونه‌های مناسب و نامناسب، منطق انتخاب و نشانه رفتاری جداگانه باز می‌شوند.</p><div class="lab-concept-flow">'+d.principles.map((p,i)=>'<button class="lab-flow-item" onclick="openAdvancedPrinciple('+i+')"><span>'+(i+1)+'</span><b>'+e(p[0])+'</b><small>مشاهده نمونه‌ها ←</small></button>').join('')+'</div>'+items,'lab-principles')+card('<h2>🖼️ لنز مشاهده این تکنیک</h2>'+photo(d,d.title)+'<p>در اجرای دونفره، به <strong>کلام، لحن، حالت چهره و رفتار قابل مشاهده</strong> توجه کنید؛ از قضاوت شخصیت یا استنتاج نیت از یک ژست بپرهیزید.</p>');
-}
-function behaviorCues(p){
-if(!p)return '';
-return '<div class="lab-acting-cues"><div><b>🎙️ لحن:</b> '+e(p.voice)+'</div><div><b>🧍 زبان بدن:</b> '+e(p.body)+'</div><div><b>🙂 حالت چهره:</b> '+e(p.face)+'</div></div>';
+ const items=d.principles.map((p,i)=>'<details id="lab-principle-'+i+'" class="accordion lab-principle" '+(i===0?'open':'')+'><summary><span class="lab-principle-count">'+(i+1)+'</span><span>'+e(p[0])+'</span></summary><div><p class="lab-lead">'+e(p[1])+'</p><div class="compare"><div class="panel good"><b>✓ رفتار مناسب</b><p>'+e(p[2])+'</p></div><div class="panel bad"><b>✕ رفتار نامناسب</b><p>'+e(p[3])+'</p></div></div><details class="accordion lab-optional-science"><summary>چرا این روش مؤثرتر است؟</summary><div><p>'+e(p[4])+'</p><p><b>نشانه قابل مشاهده:</b> '+e(p[5])+'</p></div></details></div></details>').join('');
+ return card(items+'<details class="accordion lab-optional-science"><summary>مبنای علمی و تصویر نمونه</summary><div><p>'+e(d.learningAnchor?.use||'')+'</p>'+photo(d,d.title)+'</div></details>','lab-principles');
 }
 function showQuiz(d){
   selectedPolls[chosenTech] ||= {};
   const ui=window.ALBORZ_QUIZ_UI;
   if(!ui)throw Error('Assessment UI not loaded for '+chosenTech);
-  return card('<h2>❓ تست و پرسش کلاسی</h2>'+ui.render(
+  return card(ui.render(
     d.quiz,selectedPolls[chosenTech],(i,k)=>'chooseAdvancedPoll('+chosenTech+','+i+','+k+')',e,false
   ));
 }
 function showRoles(d){
 const p=d.performance||{skill:d.title,setting:d.situation,opening:'',prompt:d.opening,voice:'روشن و محترمانه',body:'باز و متناسب',face:'طبیعی'};
 const roleCards='<div class="rolecards"><div class="role"><h3>رئیس شعبه</h3><p>'+e(d.roles.a)+'</p></div><div class="role"><h3>'+e(partnerNames[chosenTech+1])+'</h3><p>'+e(d.roles.b)+'</p></div></div>';
-return card('<h2>🎭 تمرین دونفره</h2><div class="lab-role-scene"><b>صورت مسئله</b><p>'+e(p.setting)+'</p><p><b>طرف مقابل گفت‌وگو را این‌طور شروع می‌کند:</b> «'+e(p.opening.replace(/[«»]/g,''))+'»</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+e(p.skill)+'</div><div class="lab-role-action"><strong>حالا شما چه می‌کنید؟</strong><p>'+e(p.prompt)+'</p></div>'+roleCards+behaviorCues(p));
+return card('<div class="lab-role-scene"><b>صورت مسئله</b><p>'+e(d.situation)+'</p><p><b>طرف مقابل گفت‌وگو را این‌طور شروع می‌کند:</b> «'+e(p.opening.replace(/[«»]/g,''))+'»</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+e(p.skill)+'</div><div class="lab-role-action"><strong>حالا شما چه می‌کنید؟</strong><p>'+e(p.prompt)+'</p></div>'+roleCards+behaviorCues(p));
 }
 function scriptRows(d){
 return d.dialogue.map((turn,i)=>{
@@ -75,29 +71,29 @@ return '<div class="speech '+(turn[0]==='الف'?'manager':'')+(visible?'':' hid
 }
 function showDialogue(d){
 const p=d.performance;
-return card('<h2>🗣️ گفت‌وگوی نمونه</h2><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><p class="lab-short-context">'+e(p?.setting||d.situation)+'</p><div class="scriptbar"><button class="tab '+(scriptView==='both'?'active':'')+'" onclick="showAdvancedRole(\'both\')">هر دو نقش</button><button class="tab '+(scriptView==='A'?'active':'')+'" onclick="showAdvancedRole(\'A\')">رئیس شعبه</button><button class="tab '+(scriptView==='B'?'active':'')+'" onclick="showAdvancedRole(\'B\')">مخاطب</button><button class="tab" onclick="toggleAdvancedDirection()">راهنمای اجرا '+(stageDirections?'روشن':'خاموش')+'</button><button class="tab" onclick="copyAdvancedScript()">کپی متن</button></div>'+scriptRows(d)+
+return card('<div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><p class="lab-short-context">'+e(p?.setting||d.situation)+'</p><div class="scriptbar"><button class="tab '+(scriptView==='both'?'active':'')+'" onclick="showAdvancedRole(\'both\')">هر دو نقش</button><button class="tab '+(scriptView==='A'?'active':'')+'" onclick="showAdvancedRole(\'A\')">رئیس شعبه</button><button class="tab '+(scriptView==='B'?'active':'')+'" onclick="showAdvancedRole(\'B\')">مخاطب</button><button class="tab" onclick="toggleAdvancedDirection()">راهنمای اجرا '+(stageDirections?'روشن':'خاموش')+'</button><button class="tab" onclick="copyAdvancedScript()">کپی متن</button></div>'+scriptRows(d)+
 '<details class="accordion lab-question-extra"><summary>❓ پرسش‌های بررسی گفت‌وگو</summary><div>'+d.pause.map(x=>'<p><b>پس از نوبت '+x.at+':</b> '+e(x.q)+'</p>').join('')+'</div></details>');
 }
 function showFeedback(d){
-selectedRubrics[chosenTech] ||= {};
-const scores=selectedRubrics[chosenTech];
-const widgets=d.observe.map((label,i)=>'<div class="rubric"><b>'+e(label)+'</b><div class="scale">'+[1,2,3,4,5].map(n=>'<button aria-pressed="'+(scores[i]===n)+'" class="'+(scores[i]===n?'active':'')+'" onclick="rateAdvanced('+chosenTech+','+i+','+n+')">'+n+'</button>').join('')+'</div></div>').join('');
-const total=Object.values(scores).reduce((a,b)=>a+b,0);
-return card('<h2>🔎 مشاهده رفتار، نه قضاوت شخصیت</h2><p>به هر رفتار از ۱ تا ۵ امتیاز بدهید و یک مثال از چیزی که دیدید بگویید. این نمره فقط برای تمرین و یادگیری است.</p><div class="observer">'+widgets+'</div><div class="summary"><b>'+total+' / ۳۰</b><p>'+Object.keys(scores).length+' شاخص از ۶ شاخص امتیازدهی شده است.</p></div><label class="actionfield">🟢 دو رفتار مؤثر چه بودند؟<textarea class="lab-positives" placeholder="دو رفتار دقیق و قابل مشاهده بنویسید…"></textarea></label><label class="actionfield">🟠 یک رفتار برای اصلاح چیست؟<textarea class="lab-change" placeholder="یک تغییر قابل اجرا برای نوبت دوم بنویسید…"></textarea></label><button class="navbtn" onclick="copyAdvancedFeedback()">📋 کپی بازخورد</button>');
+ selectedRubrics[chosenTech] ||= {};
+ const scores=selectedRubrics[chosenTech],done=Object.keys(scores).length;
+ const items=d.observe.map((label,i)=>'<div class="rubric lab-rubric-row"><b>'+e(label)+'</b><div class="scale" role="group" aria-label="'+e(label)+'">'+[1,2,3,4,5].map(n=>'<button type="button" aria-pressed="'+(scores[i]===n)+'" class="'+(scores[i]===n?'active':'')+'" onclick="rateAdvanced('+chosenTech+','+i+','+n+')">'+n+'</button>').join('')+'</div></div>').join('');
+ const total=Object.values(scores).reduce((a,v)=>a+v,0);
+ return card('<div class="lab-skill-focus"><b>🎯 رفتار مورد مشاهده:</b> '+e(d.performance?.skill||d.title)+'</div><p class="lab-feedback-hint">برای هر رفتار، از ۱ تا ۵ امتیاز بدهید و یک مثال واقعی از اجرای طرف مقابل بگویید.</p><div class="observer">'+items+'</div><div class="summary lab-rubric-summary"><b>'+(done===6?total+' / ۳۰':'ارزیابی '+done+' از ۶ رفتار')+'</b>'+(done===6?'<p>حالا یک رفتار برای بهترشدن انتخاب کنید.</p>':'')+'</div><label class="actionfield">چه چیزی خوب بود؟<textarea class="lab-positives" placeholder="مثلاً: با لحن آرام سؤال را روشن کرد."></textarea></label><label class="actionfield">دفعه بعد چه چیزی بهتر شود؟<textarea class="lab-change" placeholder="مثلاً: قبل از پاسخ، یک مکث کوتاه داشته باشد."></textarea></label><button class="navbtn" onclick="copyAdvancedFeedback()">کپی بازخورد</button>');
 }
 function showRepractice(d){
-const p=d.performance;
-return card('<h2>🔁 اجرای دوباره</h2><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><div class="casebox"><p>'+e(d.repractice.trigger)+'</p></div><div class="lab-role-action"><b>این بار چه می‌گویید؟</b><p>'+e(p?.prompt||d.opening)+'</p></div>'+behaviorCues(p)+'<details class="accordion lab-question-extra"><summary>چهار نکته برای اجرای بهتر</summary><div>'+d.repractice.constraints.map((v,i)=>'<p>'+(i+1)+'. '+e(v)+'</p>').join('')+'</div></details><p class="lab-observer-prompt">چه چیزی در لحن، حرف‌ها و رفتار شما نسبت به اجرای اول بهتر شد؟</p>');
+ const p=d.performance||{},r=d.repractice||{},cues={...p,voice:r.tone||p.voice};
+ return card('<div class="lab-skill-focus"><b>🎯 همان مهارت:</b> '+e(p.skill||d.title)+'</div><div class="lab-role-scene"><b>همان ملاقات، یک اتفاق تازه</b><p>'+e(r.trigger||'')+'</p></div><div class="lab-role-action"><b>این بار چه می‌گویید؟</b><p>'+e(r.mission||p.prompt||'')+'</p></div>'+behaviorCues(cues)+'<div class="lab-retry-watch"><b>👀 هنگام اجرا توجه کنید:</b> '+e(r.watch||'لحن و رفتار متناسب')+'</div><details class="accordion lab-question-extra"><summary>نکته‌های کمکی</summary><div>'+r.constraints.map((v,i)=>'<p>'+(i+1)+'. '+e(v)+'</p>').join('')+'</div></details>');
 }
 function showTakeaways(d){
-return card('<h2>💡 نکات یادگیری و انتقال به شعبه</h2><div class="checks">'+d.takeaways.map((s,i)=>'<div class="checkitem"><b>'+(i+1)+'. </b>'+e(s)+'</div>').join('')+'</div><label class="actionfield">🎯 در ملاقات بعدی چه رفتار مشخصی را تغییر می‌دهید؟<textarea class="lab-commit" placeholder="موقعیت اجرا + رفتار + شاهد پیشرفت…"></textarea></label><button class="navbtn next" onclick="copyAdvancedCommit()">📋 کپی برنامه اقدام</button><details class="accordion"><summary>📚 مبنای محتوایی و یادداشت علمی</summary><div><p>توسعه بومی و بازنویسی مستقل براساس نقشه منابع آموزشی آکادمی و راهنماهای حرفه‌ای. سناریوها ساختگی‌اند و جایگزین دستورالعمل‌های مصوب بیمه البرز نیستند.</p>'+d.sources.map(x=>'<p>• '+e(x)+'</p>').join('')+'<p>قواعد تشریفاتی وابسته به موقعیت، پروتکل سازمانی و فرهنگ هستند؛ درباره نیت یا صداقت افراد از یک نشانه غیرکلامی نتیجه قطعی نگیرید.</p></div></details>');
+ return card('<div class="checks">'+d.takeaways.map((x,i)=>'<div class="checkitem"><b>'+(i+1)+'. </b>'+e(x)+'</div>').join('')+'</div><label class="actionfield">در ملاقات بعدی کدام رفتار را تمرین می‌کنید؟<textarea class="lab-commit" placeholder="مثلاً: در تماس با مشتری ناراضی، اول نگرانی او را می‌پرسم."></textarea></label><button class="navbtn next" onclick="copyAdvancedCommit()">کپی برنامه اقدام</button><details class="accordion lab-optional-science"><summary>منابع و نکات تخصصی</summary><div><p>این سناریوها تمرینی‌اند و جایگزین مقررات مصوب بیمه البرز نیستند.</p>'+d.sources.map(x=>'<p>• '+e(x)+'</p>').join('')+'</div></details>');
 }
 function showStage(d,i){
 let content='';
 if(i===0){
 const p=d.practice||{questions:[]},g=d.performance||{skill:p.skill||d.title,prompt:d.opening,voice:'آرام و محترمانه',body:'باز و رو به مخاطب',face:'طبیعی'};
 const extras=(p.questions||[]).map((q,n)=>'<p>'+(n+1)+'. '+e(q)+'</p>').join('');
-content=card('<h2>'+e(d.title)+'</h2><div class="casebox"><p>'+e(d.situation)+'</p></div><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(g.skill)+'</div><div class="prompt lab-simple-start"><b>نوبت شماست</b><p>'+e(g.prompt)+'</p></div>'+behaviorCues(g)+'<details class="accordion lab-simple-follow"><summary>دو سؤال برای گفت‌وگو</summary><div>'+extras+'</div></details>','lab-stage-intro lab-simple-case');
+content=card('<div class="casebox"><p>'+e(d.situation)+'</p></div><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(g.skill)+'</div><div class="prompt lab-simple-start"><b>نوبت شماست</b><p>'+e(g.prompt)+'</p></div>'+behaviorCues(g)+'<details class="accordion lab-simple-follow"><summary>دو سؤال برای گفت‌وگو</summary><div>'+extras+'</div></details>','lab-stage-intro lab-simple-case');
 }
 if(i===1)content=showPrinciples(d);
 if(i===2)content=showQuiz(d);
@@ -106,7 +102,7 @@ if(i===4)content=showDialogue(d);
 if(i===5)content=showFeedback(d);
 if(i===6)content=showRepractice(d);
 if(i===7)content=showTakeaways(d);
-return '<section class="single-stage lab-page">'+pageTitle(techStages[i][0]+' '+(i+1)+'. '+techStages[i][1],techStages[i][2],'تکنیک '+(chosenTech+1)+' · '+d.title)+content+buttons(i)+'</section>';
+return '<section class="single-stage lab-page">'+pageTitle(techStages[i][0]+' '+(i+1)+'. '+techStages[i][1]+' — '+d.title,'','')+content+buttons(i)+'</section>';
 }
 function enhancedRender(){
 if(current.page==='catalog'){
