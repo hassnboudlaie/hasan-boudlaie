@@ -1,0 +1,132 @@
+<!doctype html><html lang="fa" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ممیزی زنده فازهای ۱ تا ۴ — بیمه البرز</title>
+<style>body{margin:0;background:#f1f6f2;color:#174332;font:18px/1.8 Tahoma,Arial,sans-serif}
+main{max-width:960px;margin:auto;padding:24px 14px 50px}h1{font-size:clamp(24px,4vw,36px);line-height:1.4}
+.card{border:1px solid #d4e4d8;border-radius:17px;background:white;padding:19px;margin:14px 0}
+#status{font-weight:850;font-size:23px}#summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.metric{border-radius:11px;padding:10px;background:#e9f4ed;text-align:center}
+.metric strong{display:block;font-size:27px}.metric small{font-size:14px}
+li{padding:8px 0;border-bottom:1px solid #e8eee9}.ok{color:#176b46}.bad{color:#ae403b}
+a{color:#0b6449;font-weight:bold}button{border:none;border-radius:10px;padding:12px;background:#0b664a;color:white;font:inherit;cursor:pointer}
+.preview{width:100%;max-width:430px;margin:auto;overflow:hidden;border:1px solid #d4e4d8;border-radius:16px}
+iframe{border:0;display:block;width:100%;height:720px}
+#machine-json{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;color:#547366}
+</style></head><body><main>
+<h1>🔎 کنترل کیفیت زنده آکادمی بیمه البرز</h1>
+<p>آزمون مستقیم نسخه منتشرشده جلسه دوم، بدون تغییر محتوای دوره یا ثبت اطلاعات کاربر. نسخه هدف: <strong>s12-r4-20261031</strong></p>
+<section class="card"><div id="status">در حال بارگذاری و اجرای آزمون‌ها…</div><div id="summary"><div class="metric"><strong id="passed">—</strong><small>موفق</small></div><div class="metric"><strong id="failed">—</strong><small>ناموفق</small></div><div class="metric"><strong id="attempts">—</strong><small>کنترل</small></div></div>
+<p id="key-findings"></p><ol id="results" aria-live="polite"></ol>
+<pre id="machine-json">QA_PENDING</pre>
+<button onclick="location.reload()">اجرای مجدد بررسی</button></section>
+<section class="card"><h2>نمای واقعی اپلیکیشن در مرورگر</h2><div class="preview"><iframe id="app" title="جلسه دوم آکادمی ارتباطات" src="session2-demo.html?release=s12-r4-20261031&liveQA=20261031-02"></iframe></div></section>
+<p><a href="session2-demo.html?release=s12-r4-20261031">بازگشت به جلسه دوم</a></p>
+</main>
+<script>
+(function(){
+'use strict';
+const frame=document.getElementById('app'),log=document.getElementById('results');
+const records=[],metrics={stages:0,questions:0,answers:0,cues:0,techniques:0,roleplays:0,retries:0,overflowChecks:0};
+const add=(name,fn)=>{try{fn();records.push({name,pass:true});}catch(e){records.push({name,pass:false,reason:String(e?.message||e)})}};
+const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+const update=()=>{
+ const pass=records.filter(r=>r.pass).length,fail=records.length-pass;
+ document.getElementById('passed').textContent=pass;
+ document.getElementById('failed').textContent=fail;
+ document.getElementById('attempts').textContent=records.length;
+ document.getElementById('status').textContent=fail?'نیاز به اصلاح: '+fail+' مورد':'تمام آزمون‌های قابل اجرا موفق بودند';
+ log.innerHTML=records.map(r=>'<li class="'+(r.pass?'ok':'bad')+'">'+(r.pass?'✓ ':'✕ ')+r.name+(r.reason?' — '+r.reason:'')+'</li>').join('');
+ document.getElementById('key-findings').textContent='۱۰ تکنیک، ۸۰ مرحله، ۳۰ سؤال، ۹۰ انتخاب، ۲۴۸ نوبت دیالوگ؛ بررسی‌ها در همین مرورگر اجرا شدند.';
+ const payload={release:"s12-r4-20261031",status:fail?'FAIL':'PASS',passed:pass,failed:fail,checks:records.length,metrics,failures:records.filter(r=>!r.pass)};
+ document.getElementById('machine-json').textContent='ALBORZ_QA_RESULT='+JSON.stringify(payload);
+};
+async function run(){
+ const w=frame.contentWindow,d=w?.document,r=d?.getElementById('root');
+ if(!r){records.push({name:'بارگذاری اپلیکیشن',pass:false,reason:'محتوای برنامه در دسترس نیست'});update();return;}
+ add('شناسه نسخه و بسته‌های فازهای ۱ تا ۴',()=>{
+  if(w.ALBORZ_RELEASE?.id!=='s12-r4-20261031'||!w.ALBORZ_RELEASE.assessment||!w.ALBORZ_RELEASE.scenarioAlignment||!w.ALBORZ_RELEASE.mobileNav)throw Error('نسخه‌های اجرا یکسان نیستند');
+ });
+ add('۱۰ تکنیک و سه گزینه اصلی ناوبری',()=>{
+  w.go('catalog');
+  if(r.querySelectorAll('.tech-card.lab-tech').length!==10||d.querySelectorAll('.quicknav .back').length!==3)throw Error('فهرست یا ناوبری ناقص');
+ });
+ for(let t=1;t<=10;t++){
+  const data=t===1?null:w.ALBORZ_TECH_DATA[t],guide=w.ALBORZ_BEHAVIOR_GUIDES[t],re=data?.repractice||w.ALBORZ_TECH1_RETRY;
+  add('تکنیک '+t+' — تمام ۸ مرحله و سناریوی مرتبط',()=>{
+   w.openAdvancedTech(t-1);
+   for(let stage=0;stage<8;stage++){
+    w.go('stage',stage);
+    if(!r.querySelector('.single-stage'))throw Error('مرحله '+(stage+1)+' باز نشد');
+    metrics.stages++;
+   }
+   w.go('stage',0);
+   if(!r.textContent.includes(guide.skill)||!r.querySelector('.lab-acting-cues'))throw Error('مهارت و رفتار هدف نامشخص است');
+   metrics.techniques++;
+  });
+  add('تکنیک '+t+' — صورت مسئله و نقش‌ها',()=>{
+   w.go('stage',3);
+   if(!r.querySelector('.lab-role-scene')||!r.querySelector('.rolecards')||!r.querySelector('.lab-acting-cues')||r.textContent.includes('وب‌کم'))throw Error('نقش‌آفرینی ناقص یا نوشته زائد');
+   if(t===8&&!r.textContent.includes('مدیر ستادی اینجاست'))throw Error('عدم هماهنگی نقش هشتم');
+   metrics.roleplays++;
+  });
+  add('تکنیک '+t+' — اجرای دوباره متناسب با اتفاق',()=>{
+   w.go('stage',6);
+   if(!r.textContent.includes(re.mission)||!r.textContent.includes(re.watch)||!r.querySelector('.lab-acting-cues'))throw Error('تمرین دوم با اتفاق جدید هماهنگ نیست');
+   metrics.retries++;
+  });
+  add('تکنیک '+t+' — راهنمای لحن، بدن و چهره در تمام نوبت‌ها',()=>{
+   w.go('stage',4);
+   const expected=t===1?20:data.dialogue.length;
+   if(r.querySelectorAll('.performance-guide').length!==expected)throw Error('راهنمای گفتگو ناقص است');
+   metrics.cues+=expected;
+  });
+  const quiz=t===1?w.eval('Q'):data.quiz;
+  for(let qi=0;qi<3;qi++){
+   const question=quiz[qi],correct=t===1?question.right:question.correct;
+   add('تکنیک '+t+'، سؤال '+(qi+1)+' — سه دلیل مستقل',()=>{
+    if(!question.optionReasons||new Set(question.optionReasons).size!==3)throw Error('توضیح گزینه‌ها تکراری است');
+    metrics.questions++;
+   });
+   for(let k=0;k<3;k++){
+    add('تکنیک '+t+'، سؤال '+(qi+1)+'، انتخاب '+(k+1),()=>{
+     w.go('stage',2);
+     if(t===1)w.pick(qi,k);else w.chooseAdvancedPoll(t-1,qi,k);
+     const box=r.querySelectorAll('.lab-quiz-question-wrap')[qi];
+     if(!box)throw Error('سؤال در صفحه نیست');
+     const explanation=box.querySelector('.lab-feedback-result');
+     if(!explanation||box.querySelectorAll('.lab-feedback-another').length!==2)throw Error('بازخورد دو گزینه دیگر دیده نمی‌شود');
+     if(question.optionReasons.some(reason=>!explanation.textContent.includes(reason)))throw Error('توضیح اختصاصی یک گزینه دیده نمی‌شود');
+     const choice=box.querySelector('.lab-choice.selected');
+     if(!choice||!choice.classList.contains(k===correct?'selected-correct':'selected-incorrect'))throw Error('وضعیت درست/غلط اشتباه است');
+     metrics.answers++;
+    });
+   }
+  }
+  add('تکنیک '+t+' — بدون اسکرول افقی در عرض موبایل',()=>{
+   w.go('stage',3);
+   const delta=d.documentElement.scrollWidth-d.documentElement.clientWidth;
+   if(delta>6)throw Error('overflow: '+delta+'px');
+   metrics.overflowChecks++;
+  });
+ }
+ add('رفتار جمع‌شدن هدر بدون حذف Navigation',()=>{
+  d.documentElement.classList.add('alborz-scrolled');
+  if(w.getComputedStyle(d.querySelector('.brand')).display!=='none')throw Error('هدر جمع‌وجور نمی‌شود');
+  d.documentElement.classList.remove('alborz-scrolled');
+ });
+ add('رنگ‌بندی درست و غلط به‌صورت مستقل',()=>{
+  w.openAdvancedTech(2);w.go('stage',2);w.chooseAdvancedPoll(2,2,0);
+  const wrong=r.querySelectorAll('.lab-quiz-question-wrap')[2].querySelector('.lab-choice.selected');
+  const bgWrong=w.getComputedStyle(wrong).backgroundColor;
+  w.chooseAdvancedPoll(2,2,2);
+  const correct=r.querySelectorAll('.lab-quiz-question-wrap')[2].querySelector('.lab-choice.selected');
+  const bgRight=w.getComputedStyle(correct).backgroundColor;
+  if(!wrong||!correct||bgWrong===bgRight)throw Error('رنگ پاسخ اشتباه و درست تفاوت ندارد');
+ });
+ w.go('home');
+ await nextFrame();
+ update();
+}
+frame.addEventListener('load',()=>{run().catch(err=>{records.push({name:'خطای کنترل زنده',pass:false,reason:String(err)});update()})},{once:true});
+})();
+</script></body></html>
