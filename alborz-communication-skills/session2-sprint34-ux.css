@@ -1,0 +1,103 @@
+/* Sprint 4 — leaner mobile-first learner experience; keep large readable Persian.
+   Loaded after the full r2 theme. No structural changes to the eight stages. */
+html{scroll-padding-top:78px;overflow-x:hidden}
+body{overflow-x:hidden}
+.topbar{transition:box-shadow .16s ease}
+html.alborz-scrolled .topinside{padding-top:6px!important;padding-bottom:6px!important;gap:5px!important}
+html.alborz-scrolled .brand{display:none!important}
+html.alborz-scrolled .quicknav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:7px}
+html.alborz-scrolled .quicknav .back{min-width:0!important;min-height:44px!important;padding:8px 7px!important;border-radius:10px!important}
+.single-stage>.section-header,.lab-page>.section-header{scroll-margin-top:85px!important;overflow:visible}
+.single-stage>.section-header h1,.lab-page>.section-header h1{line-height:1.47!important;overflow-wrap:normal!important;word-break:normal!important}
+.lab-page .lab-card{box-shadow:0 3px 14px #153d2910!important;border-radius:19px}
+.lab-card .lab-role-scene,.lab-card .casebox{background:#f6faf7}
+.lab-card .lab-skill-focus{background:#eaf5ed}
+.lab-card .lab-acting-cues{border:1px solid #dbe8df;background:#f8faf8}
+.lab-card .lab-feedback-hint{font-weight:580;color:#466052;line-height:1.7}
+.lab-retry-watch{padding:12px 16px;margin:15px 0;border-radius:13px;background:#f5f8f3;line-height:1.7}
+.lab-rubric-summary{background:#f4f8f5;border-radius:14px;padding:13px 17px}
+.lab-principles{max-width:100%}
+.lab-principle{margin:0 0 11px}
+.lab-principle summary{min-height:0!important;line-height:1.55!important;padding:14px!important}
+.lab-principle .compare{margin:12px 0}
+.lab-optional-science{margin-top:12px!important;border-color:#e0e8e1!important;background:#fbfcfa!important}
+.lab-optional-science summary{color:#355b46}
+.lab-optional-science>div{font-weight:500;line-height:1.65}
+.lab-feedback-practice{margin-top:10px!important}
+.lab-principles .lab-photo img{max-height:410px;object-fit:cover}
+.lab-page .rolecards{margin:15px 0}
+.lab-page .role{min-width:0}
+.lab-page .role h3{line-height:1.4}
+.lab-page .role p{line-height:1.7}
+.lab-page .scriptbar{display:flex;gap:6px;flex-wrap:wrap}
+.lab-page .tab{min-width:0;white-space:normal}
+.lab-page .speech{max-width:100%!important}
+.lab-page .speech p{overflow-wrap:break-word}
+.lab-page .performance-guide{border-radius:13px;border-right:3px solid #b5d5be;background:#f6f9f6}
+.lab-page .performance-guide-heading{font-weight:850}
+.lab-page .lab-rubric-row{padding:10px 0}
+.lab-page .actionfield textarea{width:100%;min-height:100px}
+.single-stage>.floatingnav,.lab-page>.floatingnav{position:static!important;bottom:auto!important;z-index:auto!important;box-shadow:none!important;background:transparent!important}
+@media(max-width:680px){
+ html{scroll-padding-top:62px}
+ .shell{padding:12px 13px 46px!important}
+ .topinside{gap:7px!important;padding:8px 10px!important}
+ .brand img{width:37px!important;height:37px!important}
+ .brand strong{font-size:18px!important;line-height:1.35}
+ .brand small{font-size:13px!important}
+ .quicknav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;width:100%}
+ .quicknav .back{min-width:0!important;min-height:44px!important;padding:7px 6px!important;font-size:15px!important;border-radius:10px!important}
+ .single-stage>.section-header,.lab-page>.section-header{margin:10px 0 13px!important;padding:5px 0!important;scroll-margin-top:64px}
+ .single-stage>.section-header h1,.lab-page>.section-header h1{font-size:29px!important;line-height:1.45!important;margin:0!important}
+ .lab-page .lab-card,.stage-opening.lab-simple-case{padding:17px 16px!important;margin-top:9px!important}
+ .lab-simple-case .casebox{margin:11px 0 15px!important;padding:17px 16px!important}
+ .lab-simple-case .casebox p{font-size:22px!important;line-height:1.77!important;font-weight:600!important}
+ .lab-page .lab-skill-focus,.lab-simple-goal{font-size:21px!important;padding:12px 14px!important;line-height:1.65}
+ .lab-page .lab-simple-start{padding:15px 16px!important;margin:15px 0 10px!important}
+ .lab-page .lab-simple-start b,.lab-page .lab-simple-start strong{font-size:23px!important}
+ .lab-page .lab-simple-start p{font-size:23px!important;line-height:1.68!important}
+ .lab-page .lab-acting-cues{padding:12px 15px!important;gap:5px}
+ .lab-page .lab-acting-cues>div{font-size:20px!important;line-height:1.65!important}
+ .lab-page .lab-role-scene{padding:16px!important}
+ .lab-page .lab-role-scene>b{font-size:23px!important}
+ .lab-page .lab-role-scene p{font-size:21px!important;line-height:1.74!important}
+ .lab-page .lab-role-action{padding:15px!important}
+ .lab-page .lab-role-action b,.lab-page .lab-role-action strong{font-size:22px!important}
+ .lab-page .lab-role-action p{font-size:22px!important;line-height:1.68!important}
+ .lab-page .rolecards{grid-template-columns:1fr!important;gap:10px!important}
+ .lab-page .role{padding:15px!important}
+ .lab-page .role h3{font-size:23px!important}
+ .lab-page .role p{font-size:21px!important}
+ .lab-page .lab-quiz-question h3{font-size:25px!important}
+ .lab-page .lab-quiz-question .lead{font-size:22px!important;line-height:1.65!important}
+ .lab-page button.answer.lab-choice{min-height:67px!important;font-size:21px!important;line-height:1.57!important;padding:13px!important}
+ .lab-page .lab-feedback-result{font-size:21px!important;padding:12px!important}
+ .lab-page .lab-feedback-another{padding:9px!important}
+ .lab-page .lab-feedback-another p{font-size:19px!important;line-height:1.68!important}
+ .lab-page .lab-principle summary{font-size:23px!important;min-height:0!important}
+ .lab-page .lab-principle .lab-lead{font-size:21px!important;line-height:1.67!important}
+ .lab-page .lab-principle .compare p{font-size:20px!important;line-height:1.72!important}
+ .lab-page .lab-short-context{font-size:19px!important}
+ .lab-page .speech{padding:16px 15px!important;width:100%!important}
+ .lab-page .speech p{font-size:22px!important;line-height:1.72!important}
+ .lab-page .speech small{font-size:17px!important}
+ .lab-page .performance-guide{padding:12px 13px!important;font-size:19px!important;line-height:1.68!important}
+ .lab-page .performance-guide-heading{font-size:19px!important}
+ .lab-page .scriptbar .tab{font-size:18px!important;padding:9px 10px!important;min-height:43px}
+ .lab-page .lab-rubric-row>b{font-size:21px!important}
+ .lab-page .scale button{font-size:20px!important}
+ .lab-page .actionfield{font-size:20px!important}
+ .single-stage>.floatingnav .navbtn,.lab-page>.floatingnav .navbtn{font-size:19px!important;min-height:53px!important;padding:9px 12px!important}
+ .lab-page .lab-retry-watch{font-size:21px!important}
+ .lab-page .checkitem{font-size:20px!important}
+ .lab-page .accordion summary{overflow-wrap:normal}
+}
+html.touch-desktop-mode.alborz-scrolled .topinside{padding:8px 20px!important}
+html.touch-desktop-mode.alborz-scrolled .brand{display:none!important}
+html.touch-desktop-mode.alborz-scrolled .quicknav{gap:11px!important}
+html.touch-desktop-mode.alborz-scrolled .quicknav .back{min-height:67px!important;font-size:32px!important;padding:10px!important}
+html.touch-desktop-mode .lab-page .section-header h1{font-size:57px!important}
+html.touch-desktop-mode .lab-page .lab-card{padding:30px!important}
+html.touch-desktop-mode .lab-page .lab-acting-cues>div{font-size:38px!important}
+html.touch-desktop-mode .lab-page .rolecards{grid-template-columns:1fr 1fr}
+html.touch-desktop-mode .lab-page .lab-feedback-another p{font-size:37px!important}
