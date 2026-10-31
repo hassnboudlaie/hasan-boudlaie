@@ -58,8 +58,120 @@
 .scene .photo-lesson a,.visualcard .photo-lesson a{display:block;width:100%;height:100%}
 .scene .photo-lesson a img,.visualcard .photo-lesson a img{width:100%;height:100%;object-fit:contain}
 .visualcard .photo-lesson figcaption{font-size:13px}
+
+/* Accessibility and responsive readability audit — surgical UX patch 2026-10-31 */
+:root{--muted:#3f5c50;--ink:#12392e}
+body{font-size:19px;line-height:1.85}
+.topinside{max-width:1410px}
+.quicknav{display:flex;gap:9px;align-items:center;justify-content:flex-end}
+.quicknav .back{display:inline-flex;justify-content:center;align-items:center;min-height:48px;white-space:nowrap;padding:9px 16px;font-size:16px;font-weight:800;text-decoration:none;color:#0b563f;line-height:1.5}
+.quicknav .navsession{color:#fff;background:#0b684d;border-color:#0b684d}
+.brand strong{font-size:clamp(19px,2vw,23px);font-weight:850}
+.brand small{font-size:clamp(15px,1.4vw,17px);color:#40584e}
+.section-header h1{font-size:clamp(32px,3.5vw,43px);font-weight:850;line-height:1.4}
+.section-header p{font-size:19px;color:#3d5b4e;line-height:1.8}
+.tech-card,.stage-card{min-height:137px;padding:22px 24px}
+.tech-copy b,.stage-card b{font-size:clamp(22px,2.2vw,26px);font-weight:800;line-height:1.5}
+.tech-copy small,.stage-card small{font-size:clamp(17px,1.5vw,19px);font-weight:550;line-height:1.75;color:#3d5b50}
+.tech-card[disabled]{opacity:.84}
+.tech-card[disabled] .arrow{font-size:16px;font-weight:750;color:#3f6d5c}
+.stage-no{width:66px;height:66px;font-size:28px}
+.iconbox{width:61px;height:61px;font-size:27px}
+.subhero{background:linear-gradient(100deg,rgba(4,49,34,.96),rgba(6,91,60,.85)),url('assets/session2-hero.webp') center/cover no-repeat;min-height:230px;align-items:center}
+.subhero h1{font-size:clamp(34px,3.5vw,46px);font-weight:900}
+.subhero p{font-size:clamp(19px,1.9vw,23px);line-height:1.8;color:#fff}
+.subhero-symbol{display:none}
+.contentcard{font-size:19px;line-height:1.95}
+.contentcard h2{font-size:clamp(28px,3vw,38px)}
+.contentcard h3{font-size:clamp(22px,2.5vw,27px)}
+.contentcard p{font-size:19px;line-height:1.9}
+.lead{font-size:clamp(21px,2.5vw,27px);font-weight:700}
+.tag,.pill,.small{font-size:16px}
+.eyebrow{font-size:17px}
+.casebox{font-size:21px}
+.casebox p{font-size:20px}
+.prompt{font-size:21px;line-height:1.8}
+.letter{min-height:140px}
+.letter strong{font-size:clamp(42px,4.5vw,55px)}
+.letter span{font-size:19px}
+.letter small{font-size:16px;line-height:1.6}
+.panel b{font-size:23px}
+.panel p{font-size:20px}
+.tip,.accordion,.accordion summary{font-size:19px;line-height:1.9}
+.answer{font-size:19px;min-height:60px;font-weight:550}
+.response{font-size:19px}
+.role p,.checkitem,.rubric b,.vtext p{font-size:19px}
+.speech small{font-size:17px}
+.speech p{font-size:20px}
+.tab{font-size:17px;min-height:47px}
+.navbtn{font-size:17px;min-height:53px}
+.actionfield textarea{font-size:19px}
+.single-stage{display:flex;flex-direction:column;min-height:calc(100svh - 180px)}
+.single-stage .floatingnav{margin-top:auto;padding-top:23px}
+.stage-opening{display:flex;flex-direction:column;justify-content:space-evenly;min-height:clamp(430px,58svh,720px)}
+.scene{min-height:0}
+.photo-lesson{height:auto;min-height:0;background:#f2f8f3}
+.photo-lesson a{display:block;width:100%;height:auto}
+.photo-lesson img,.scene .photo-lesson img,.visualcard .photo-lesson img{display:block;width:100%;height:auto;min-height:0;max-height:none;object-fit:contain}
+.photo-lesson figcaption{position:static;background:#e5f3e9;color:#184937;text-shadow:none;font-size:17px;padding:9px 12px}
+.visualcard .photo-lesson,.visualcard .photo-lesson img{height:auto;min-height:0}
+.visualcard .vtext b{font-size:21px}
+@media(max-width:1100px){
+ .catalog,.stage-grid{grid-template-columns:1fr}
+ .detailgrid,.compare,.rolecards,.visuals{grid-template-columns:1fr}
+ .shell{width:100%;max-width:100%;padding:17px 12px 35px}
+ .topinside{display:grid;grid-template-columns:1fr;gap:10px;padding:10px 13px}
+ .quicknav{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .quicknav .back{width:100%;min-height:49px;padding:8px 5px;font-size:17px}
+ .brand{gap:10px}
+ .brand img{width:49px;height:49px}
+ .brand strong{font-size:21px}
+ .brand small{font-size:15px}
+ .stage-card,.tech-card{width:100%;min-height:128px}
+ .single-stage{min-height:calc(100svh - 180px)}
+}
+@media(max-width:680px){
+ body{font-size:18px}
+ .shell{padding:12px 10px 30px}
+ .brand strong{font-size:19px}
+ .brand small{font-size:14px}
+ .quicknav .back{font-size:16px;min-height:47px}
+ .section-header h1{font-size:32px}
+ .section-header p{font-size:18px}
+ .stage-card,.tech-card{padding:19px 15px;min-height:120px;gap:12px}
+ .stage-card b,.tech-copy b{font-size:22px}
+ .stage-card small,.tech-copy small{font-size:17px}
+ .stage-no,.iconbox{width:54px;height:54px;font-size:24px}
+ .subhero{min-height:240px;padding:24px 20px}
+ .subhero h1{font-size:34px}
+ .subhero p{font-size:19px}
+ .contentcard{padding:23px 18px}
+ .contentcard h2{font-size:28px}
+ .contentcard p{font-size:19px}
+ .lead{font-size:21px}
+ .casebox,.prompt{padding:22px 18px;font-size:20px}
+ .casebox p{font-size:19px}
+ .letter{min-height:120px}
+ .letter strong{font-size:43px}
+ .letter span{font-size:17px}
+ .letter small{font-size:15px}
+ .role p,.checkitem,.rubric b,.answer,.response{font-size:18px}
+ .speech p{font-size:19px}
+ .speech small{font-size:16px}
+ .tab{font-size:16px}
+ .stage-opening{min-height:max(475px,calc(100svh - 335px))}
+ .single-stage{min-height:calc(100svh - 165px)}
+ .photo-lesson figcaption{font-size:16px}
+}
+@media(max-width:360px){
+ .quicknav .back{font-size:15px}
+ .brand strong{font-size:17px}
+ .brand small{font-size:13px}
+ .stage-card small,.tech-copy small{font-size:16px}
+}
+
 </style></head><body>
-<header class="topbar"><div class="topinside"><div class="brand"><img src="../assets/company-logos/alborz.svg" alt="نشان بیمه البرز"><div><strong>آکادمی ارتباطات اثربخش</strong><small>بیمه البرز · رؤسای شعب · جلسه دوم</small></div></div><button class="back" id="goBack" onclick="back()">← بازگشت</button></div></header>
+<header class="topbar"><div class="topinside"><div class="brand"><img src="../assets/company-logos/alborz.svg" alt="نشان بیمه البرز"><div><strong>آکادمی ارتباطات اثربخش</strong><small>بیمه البرز · رؤسای شعب · جلسه دوم</small></div></div><nav class="quicknav" aria-label="ناوبری اصلی"><a class="back navhome" href="index.html" title="صفحه اصلی آکادمی">⌂ خانه</a><button class="back navsession" type="button" onclick="goSession()">▦ جلسه دوم</button><button class="back navback" type="button" id="goBack" onclick="back()">→ بازگشت</button></nav></div></header>
 <main class="shell" id="root" aria-live="polite"></main><script>
 const T=[["آغاز حرفه‌ای ملاقات","۶۰ ثانیه نخست، برداشت اولیه و تنظیم فضای گفت‌وگو","handshake"],["حضور حرفه‌ای رئیس شعبه","آرامش، اقتدار متعادل و آمادگی در ملاقات رسمی","user-round-check"],["معرفی و تقدم افراد","معرفی درست، شأن حرفه‌ای و جایگاه سازمانی","users"],["استقبال و میزبانی رسمی","آمادگی، هدایت مهمان و مدیریت تجربه ملاقات","concierge-bell"],["آداب مدیریت نشست","چیدمان، زمان‌بندی، نوبت گفت‌وگو و مشارکت","presentation"],["لحن، صدا و زبان بدن","هماهنگی رفتار غیرکلامی و کیفیت بیان","audio-lines"],["کلام حرفه‌ای و قاطعانه","واژگان دقیق، احترام و مدیریت انتظار","message-circle"],["مدیریت اختلالات رسمی","پاسخ مسئولانه به تأخیر و موقعیت‌های حساس","shield-check"],["شناخت تفاوت ذی‌نفعان","تطبیق تعامل با مشتری، مدیر، نماینده و همکار","contact"],["جمع‌بندی، بدرقه و پیگیری","توافق روشن، مسئول اقدام و تعهد قابل پیگیری","check-check"]],S=[["موقعیت تمرینی","سناریوی واقعی‌نما و چالش ۶۰ ثانیه نخست","briefcase"],["مدل WELCOME","هفت اصل، نمونه درست و نادرست و تحلیل تصویری","sparkles"],["تست و پرسش کلاسی","سه پرسش تعاملی برای گفت‌وگوی مدرس","message"],["تمرین دونفره بدون متن","دو نقش، دوربین روشن و بازخورد اولیه","camera"],["اسکریپت کامل گفت‌وگو","۲۰ نوبت گفت‌وگو با راهنمای اجرا و نقاط توقف","script"],["نقد و ارزیابی رفتاری","مشاهده کلام، صدا، چهره، بدن و پوشش","clipboard"],["اجرای دوباره","اصلاح رفتار با موقعیت جدید، بدون حفظ متن","repeat"],["نکات کلیدی یادگیری","جمع‌بندی، انتقال یادگیری و تعهد رفتاری","bulb"]],W=[{"l":"W","name":"استقبال","tag":"به‌رسمیت‌شناختن","lead":"حضور، زمان و وضعیت مخاطب را از همان لحظه نخست به رسمیت بشناسید.","good":"«خیلی خوش آمدید. می‌دانم فرصتتان محدود است و بابت پیگیری اخیر هم نگرانی دارید.»","bad":"«فعلاً بفرمایید بنشینید و پذیرایی شوید؛ بعداً به موضوعتان می‌رسیم.»","why":"نمونه مناسب با شنیدن محدودیت زمانی و نگرانی مخاطب شروع می‌شود. نمونه نامناسب نیاز اصلی را پشت تشریفات قرار می‌دهد.","observe":"لحن گرم اما کنترل‌شده، لبخند طبیعی متناسب با موقعیت و حفظ فاصله محترمانه.","ask":"اگر مهمان چهره‌ای جدی دارد، چه تغییری در شدت لبخند و سرعت استقبال می‌دهید؟","visual":"welcome"},{"l":"E","name":"آرامش","tag":"حضور حرفه‌ای","lead":"آرامش رفتاری خود را حتی در شرایط نارضایتی یا فشار زمانی حفظ کنید.","good":"«اجازه بدهید نخست وضعیت پرونده را دقیق بررسی کنیم و مسیر پاسخ‌گویی را روشن کنیم.»","bad":"«نگران نباشید، همه‌چیز حتماً تا فردا حل می‌شود!»","why":"قاطعیت با وعده قطعی برابر نیست. آرامش یعنی توانایی پاسخ‌گویی روشن و مسئولانه بدون شتاب‌زدگی.","observe":"نفس طبیعی، سرعت گفتار متعادل، مکث پس از اعتراض و حرکات دست غیرشتاب‌زده.","ask":"همین پاسخ را یک بار شتاب‌زده و بار دیگر با مکث و لحن متعادل اجرا کنید؛ چه تفاوتی شنیده شد؟","visual":"voice"},{"l":"L","name":"شنیدن","tag":"درک پیش از پاسخ","lead":"قبل از دفاع یا ارائه راه‌حل، اجازه دهید نگرانی دقیق مخاطب روشن شود.","good":"«اگر درست متوجه شده باشم، مسئله اصلی شما نبود اطلاع‌رسانی در طول رسیدگی است؛ درست است؟»","bad":"«شعبه کار خودش را انجام داده؛ شما احتمالاً در جریان نبوده‌اید.»","why":"بازگویی دقیق، فرصت اصلاح برداشت را به مخاطب می‌دهد؛ پاسخ دفاعی ممکن است مسئله را پیچیده‌تر کند.","observe":"قطع نکردن کلام، نگاه متناسب، یادداشت‌برداری مختصر بدون خیره شدن به صفحه.","ask":"چگونه می‌توان شنیدن فعال را از تکان دادن مکرر سر و تأیید مصنوعی متمایز کرد؟","visual":"body"},{"l":"C","name":"روشن‌سازی","tag":"شناخت انتظار","lead":"اولویت، فوریت، محدودیت و تعریف مخاطب از یک نتیجه مفید را مشخص کنید.","good":"«در این بیست دقیقه، کدام موضوع برای شما مهم‌تر است که حتماً به آن برسیم؟»","bad":"«به ترتیب پرونده‌هایی که روی میز دارم جلو می‌رویم.»","why":"روشن‌سازی، گفت‌وگو را از حدس به فهم مشترک تبدیل می‌کند؛ اما سؤال نباید القایی باشد.","observe":"پرسش کوتاه، سکوت کافی برای پاسخ و لحن کنجکاو اما محترمانه.","ask":"یک سؤال باز بپرسید که مشتری را به توضیح نیاز واقعی خود دعوت کند.","visual":"face"},{"l":"O","name":"تنظیم مسیر","tag":"توافق بر دستور جلسه","lead":"یک مسیر کوتاه، قابل اجرا و متناسب با زمان جلسه پیشنهاد کنید.","good":"«پیشنهاد می‌کنم ابتدا نگرانی را مرور کنیم، بعد وضعیت پرونده را ببینیم و در پایان اقدامات بعدی را مشخص کنیم.»","bad":"«ابتدا باید تمام گزارش عملکرد شعبه را بشنوید.»","why":"ساختار پیشنهادی وقتی مؤثر است که مخاطب درباره آن حق اظهار نظر داشته باشد.","observe":"نمایش دستور جلسه با بیان واضح و اشاره کوتاه به سه بخش، نه سخنرانی طولانی.","ask":"اگر مشتری فقط پنج دقیقه وقت داشته باشد، این مسیر را چگونه کوتاه می‌کنید؟","visual":"meeting"},{"l":"M","name":"مرزبندی","tag":"تعهد مسئولانه","lead":"در حدود اختیار و شواهد موجود قول دهید؛ از تضمین نتیجه نامعلوم بپرهیزید.","good":"«تا پایان روز، وضعیت بررسی و زمان پاسخ بعدی را به‌صورت شفاف اعلام می‌کنیم.»","bad":"«صدور الحاقیه شما را قطعاً تا فردا انجام می‌دهیم.»","why":"تعهد به پیگیری مشخص اعتمادپذیرتر از وعده نتیجه‌ای است که هنوز به بررسی نیاز دارد.","observe":"بیان قاطع بدون بالا بردن صدا، حفظ آرامش و پرهیز از عذرخواهی افراطی.","ask":"مرز میان پذیرش مسئولیت پیگیری و پذیرش خطای اثبات‌نشده کجاست؟","visual":"dress"},{"l":"E","name":"ورود هدفمند","tag":"شروع گفت‌وگوی اصلی","lead":"از تشریفات آغازین به گفت‌وگوی مسئله‌محور منتقل شوید.","good":"«آخرین پیگیری شما در چه مرحله‌ای متوقف شد و چه اطلاعاتی دریافت نکردید؟»","bad":"«به نظرم موضوع را اشتباه متوجه شده‌اید؛ اجازه بدهید اول توضیح بدهم.»","why":"پرسش هدفمند به جای دفاع از تصویر سازمان، بر نیاز واقعی مخاطب تمرکز می‌کند.","observe":"نگاه و بدن رو به مخاطب، تغییر طبیعی از خوشامدگویی به گفت‌وگوی کاری.","ask":"از چه نشانه‌ای می‌فهمید زمان پایان تعارف و شروع موضوع اصلی فرا رسیده است؟","visual":"welcome"}],D=[["مشتری","[ورود با چهره جدی؛ مکث کوتاه] سلام. فقط بیست دقیقه وقت دارم و از آخرین پیگیری‌های شعبه واقعاً راضی نیستم."],["رئیس شعبه","[از جا بلند می‌شود؛ لحن آرام] خوش آمدید. می‌دانم فرصتتان محدود است و بابت پیگیری اخیر هم نگرانی دارید. بهتر است از مهم‌ترین موضوع شما شروع کنیم."],["مشتری","ما چند سال است با بیمه البرز کار می‌کنیم، ولی برای صدور یک الحاقیه چند بار تماس گرفته‌ایم."],["رئیس شعبه","[مکث کوتاه] برای اینکه موضوع را دقیق پیگیری کنیم، بفرمایید مسئله اصلی تأخیر در رسیدگی است یا اینکه در طول بررسی از وضعیت پرونده اطلاع نداشتید؟"],["مشتری","هر دو؛ ولی مهم‌تر این است که هیچ‌کس نمی‌گفت پرونده الان در چه وضعیتی قرار دارد."],["رئیس شعبه","پس اگر درست متوجه شده باشم، علاوه بر زمان رسیدگی، نبود اطلاع‌رسانی قابل اتکا هم باعث نارضایتی شما شده است. درست است؟"],["مشتری","بله. برنامه تولید شرکت به وضعیت پوشش بیمه‌ای وابسته است."],["رئیس شعبه","این موضوع را جدی می‌گیرم. پیش از هر وعده‌ای باید وضعیت فنی پرونده و مرجع تأیید را بررسی کنیم تا بتوانیم پاسخ مسئولانه بدهیم."],["مشتری","پس چه زمانی تکلیف ما مشخص می‌شود؟"],["رئیس شعبه","تا پایان روز، وضعیت بررسی، مسئول پیگیری و موعد پاسخ بعدی را به شما اعلام می‌کنیم. نتیجه صدور البته به بررسی و تأیید تخصصی وابسته است."],["مشتری","این حرف را قبلاً هم شنیده‌ام. قرار بود تماس بگیرند و نگرفتند."],["رئیس شعبه","[با لحن جدی اما بدون دفاع] این تجربه برای شما رضایت‌بخش نبوده و لازم است شیوه پاسخ‌گویی را اصلاح کنیم. برای اطلاع‌رسانی، گزارش مکتوب را ترجیح می‌دهید یا تماس مستقیم؟"],["مشتری","گزارش مکتوب بهتر است تا مدیر مالی هم در جریان باشد."],["رئیس شعبه","حتماً. گیرندگان مجاز را با شما هماهنگ می‌کنیم تا اطلاعات پرونده فقط در اختیار اشخاص مجاز قرار بگیرد."],["مشتری","راستش داریم انتقال بخشی از قراردادها به یک شرکت بیمه دیگر را هم بررسی می‌کنیم."],["رئیس شعبه","ممنونم که این نگرانی را صریح مطرح کردید. ترجیح می‌دهم پیش از درخواست ادامه همکاری، روشن کنیم چه تغییری در کیفیت خدمت باید اتفاق بیفتد."],["مشتری","برای ما پاسخ‌گویی واقعی و قابل پیش‌بینی مهم است."],["رئیس شعبه","پس علاوه بر وضعیت پرونده، مسئول پاسخ‌گویی و شیوه پیگیری بعدی را هم مکتوب می‌کنیم؛ تا با اطلاعات روشن تصمیم بگیرید."],["مشتری","خوب است. الان می‌توانیم گزارش فنی را ببینیم؟"],["رئیس شعبه","[اشاره محترمانه به اسناد] بله. همکار متخصص ما گزارش کوتاه را ارائه می‌کند و من جمع‌بندی و پیگیری تعهدات را بر عهده می‌گیرم."]],O=["استقبال و به‌رسمیت‌شناختن نگرانی","وضوح پیام و انتخاب واژگان","لحن، سرعت گفتار و مکث","وضعیت بدن و تماس چشمی متناسب","پوشش، آراستگی و تصویر وب‌کم","پرسشگری، مرزبندی و تعهد واقعی"],Q=[{"q":"مدیرعامل ناراضی می‌گوید فقط ۲۰ دقیقه وقت دارد. مناسب‌ترین آغاز کدام است؟","opts":["ابتدا گزارش کامل شعبه را ارائه می‌کنم.","زمان و نگرانی او را به رسمیت می‌شناسم و اولویتش را می‌پرسم.","پیشنهاد پذیرایی می‌دهم تا فضای جلسه عوض شود."],"right":1,"ex":"آغاز مناسب، هم احترام به زمان را نشان می‌دهد و هم بدون دفاع‌گرایی به سمت نیاز واقعی مخاطب می‌رود.","follow":"همین پاسخ را با دو لحن متفاوت اجرا کنید؛ کدام طبیعی‌تر بود؟"},{"q":"کدام عبارت همدلی را از پذیرش خطای اثبات‌نشده جدا می‌کند؟","opts":["کاملاً حق با شماست و حتماً مقصر ما هستیم.","احساس شما را درک می‌کنم، ولی مسئولیت با ما نیست.","متوجه نگرانی شما هستم؛ اجازه دهید روند رسیدگی را دقیق بررسی کنیم."],"right":2,"ex":"پذیرش نگرانی، لزوماً به معنای پذیرش مسئولیت حقوقی یا اعلام نتیجه بررسی نیست.","follow":"اگر مشتری بگوید «پس قبول دارید اشتباه کردید؟» چگونه پاسخ می‌دهید؟"},{"q":"در یک ملاقات رسمی، بهترین استفاده از زبان بدن چیست؟","opts":["تشخیص قطعی نیت مشتری از حرکات دست او.","هماهنگ کردن رفتار قابل مشاهده با کلام و موقعیت.","حفظ تماس چشمی بدون وقفه برای نشان دادن اقتدار."],"right":1,"ex":"رفتارهای غیرکلامی باید در بافت فردی و فرهنگی تفسیر شوند؛ از یک ژست نمی‌توان نیت یا صداقت را قطعاً تعیین کرد.","follow":"یک رفتار غیرکلامی را که ممکن است در دو موقعیت معنای متفاوتی داشته باشد اجرا کنید."}];
 let current={page:"home"},historyStack=[],answers={},ratings={},scriptFilter="all",showStageDirections=true;
@@ -84,13 +196,13 @@ else if(current.page==='catalog')m=header("فهرست تکنیک‌های جلس
 else if(current.page==='tech')m=`<div class="subhero"><div><span class="eyebrow">جلسه دوم · تکنیک اول</span><h1>آغاز حرفه‌ای ملاقات</h1><p>مدیریت ۶۰ ثانیه نخست؛ ایجاد احترام، فهم نگرانی مخاطب و هدایت گفت‌وگو بدون وعده خارج از اختیار.</p></div><div class="subhero-symbol" aria-hidden="true">◈</div></div><div class="stage-grid">${S.map((s,i)=>'<button class="stage-card" onclick="go(\'stage\','+i+')"><span class="stage-no">'+(i+1)+'</span><span class="body"><b>'+h(s[0])+'</b><small>'+h(s[1])+'</small></span><span class="arrow">←</span></button>').join('')}</div>`;
 else if(current.page==='stage')m=renderStage(current.index);
 else if(current.page==='welcome')m=renderWelcome(current.index);
-$('root').innerHTML=m+'<div class="pagefoot">نمونه آموزشی تعاملی ویژه بیمه البرز · سناریوها فرضی و برای تمرین هستند.</div>';
-$('goBack').style.visibility=current.page==='home'?'hidden':'visible';
+$('root').innerHTML=m;
+
 document.title=(current.page==='home'?'جلسه دوم':current.page==='catalog'?'فهرست تکنیک‌ها':current.page==='tech'?'تکنیک اول':current.page==='welcome'?'مدل WELCOME':'تمرین ارتباط حرفه‌ای')+' | بیمه البرز';
 }
 function renderWelcome(i){let w=W[i];return header('اصل '+w.l+' — '+w.name,'مدل WELCOME · '+w.tag)+`<section class="detailgrid"><div class="contentcard"><span class="tag">اصل ${i+1} از ۷</span><p class="lead" style="margin-top:18px">${h(w.lead)}</p><div class="compare"><div class="panel good"><b>✓ نمونه مناسب</b><p>${h(w.good)}</p></div><div class="panel bad"><b>✕ نمونه نامناسب</b><p>${h(w.bad)}</p></div></div><div class="tip"><b>چرا این تفاوت مهم است؟</b><p>${h(w.why)}</p></div></div><div class="contentcard"><div class="scene">${scene(w.visual)}</div><div class="tip"><b>چه رفتاری را مشاهده کنیم؟</b><p>${h(w.observe)}</p></div><details class="accordion"><summary>پرسش مدرس برای تمرین کلاسی</summary><div>${h(w.ask)}<p class="small">از دو نفر بخواهید پاسخ را جلوی وب‌کم اجرا کنند.</p></div></details></div></section>${footerNav("go('stage',1)","go('welcome',"+((i+1)%7)+")","بازگشت به حروف","اصل بعد")}`;}
 function renderStage(i){let head=header((i+1)+'. '+S[i][0],S[i][1]);let body='';
-if(i===0)body=`<div class="contentcard"><span class="tag">سناریوی عملی · ۶۰ ثانیه نخست</span><div class="casebox"><b>«من فقط بیست دقیقه وقت دارم.»</b><p>مدیرعامل یک شرکت تولیدی که از تأخیر صدور الحاقیه ناراضی است وارد شعبه می‌شود. با چهره جدی می‌گوید: «از آخرین پیگیری‌هامون راضی نیستم. امیدوارم جلسه طولانی نشه.»</p></div><div class="prompt">پرسش مدرس: نخستین جمله شما چیست؟ آن را با صدای بلند، دقیقاً همان‌طور که در شعبه می‌گویید، اجرا کنید.</div><details class="accordion"><summary>راهنمای تحلیل موقعیت</summary><div>محدودیت زمان، احتمال نارضایتی، تعهد قبلی و سطح اختیار رئیس شعبه را هم‌زمان در نظر بگیرید.</div></details></div>`;
+if(i===0)body=`<div class="contentcard stage-opening"><span class="tag">سناریوی عملی · ۶۰ ثانیه نخست</span><div class="casebox"><b>«من فقط بیست دقیقه وقت دارم.»</b><p>مدیرعامل یک شرکت تولیدی که از تأخیر صدور الحاقیه ناراضی است وارد شعبه می‌شود. با چهره جدی می‌گوید: «از آخرین پیگیری‌هامون راضی نیستم. امیدوارم جلسه طولانی نشه.»</p></div><div class="prompt">پرسش مدرس: نخستین جمله شما چیست؟ آن را با صدای بلند، دقیقاً همان‌طور که در شعبه می‌گویید، اجرا کنید.</div><details class="accordion"><summary>راهنمای تحلیل موقعیت</summary><div>محدودیت زمان، احتمال نارضایتی، تعهد قبلی و سطح اختیار رئیس شعبه را هم‌زمان در نظر بگیرید.</div></details></div>`;
 if(i===1)body=`<div class="contentcard"><span class="tag">هفت اصل قابل‌کلیک</span><h2>مدل WELCOME</h2><p class="lead">هر حرف یک رفتار قابل مشاهده است؛ روی آن بزنید تا تصویر، نمونه مناسب و نامناسب و سؤال مدرس را ببینید.</p><div class="letters">${W.map((w,j)=>'<button class="letter" onclick="go(\'welcome\','+j+')"><strong>'+w.l+'</strong><span>'+w.name+'</span><small>'+w.tag+'</small></button>').join('')}</div></div><div class="contentcard"><h2>چهار لنز مشاهده در تمام تمرین‌ها</h2><div class="visuals"><div class="visualcard">${scene('body')}<div class="vtext"><b>زبان بدن</b><p>توجه، وضعیت بدنی، حرکات و فاصله متناسب.</p></div></div><div class="visualcard">${scene('voice')}<div class="vtext"><b>لحن و صدا</b><p>وضوح، مکث و سرعت؛ پرهیز از پاسخ دفاعی.</p></div></div><div class="visualcard">${scene('dress')}<div class="vtext"><b>پوشش و آراستگی</b><p>تناسب با موقعیت و استاندارد سازمان.</p></div></div><div class="visualcard">${scene('face')}<div class="vtext"><b>حالت چهره</b><p>تناسب چهره با محتوای گفت‌وگو، بدون ذهن‌خوانی.</p></div></div></div></div>`;
 if(i===2)body=`<div class="contentcard"><h2>پیش از تمرین، نظر شما چیست؟</h2><p>پس از انتخاب هر پاسخ، تحلیل نمایش داده می‌شود. مدرس می‌تواند از شرکت‌کنندگان بخواهد دلیل انتخاب را توضیح دهند.</p>${Q.map((q,j)=>'<div class="poll"><h3>پرسش '+(j+1)+'</h3><p class="lead">'+h(q.q)+'</p>'+q.opts.map((o,k)=>'<button class="answer '+(answers[j]===k?'selected':'')+'" onclick="pick('+j+','+k+')">'+h(o)+'</button>').join('')+(answers[j]===undefined?'':'<div class="response"><b>'+(answers[j]===q.right?'پاسخ قابل‌دفاع':'نیازمند بازنگری')+'</b><p>'+h(q.ex)+'</p><b>پرسش مدرس:</b> '+h(q.follow)+'</div>')+'</div>').join('')}</div>`;
 if(i===3)body=`<div class="contentcard"><h2>اجرای اولیه دونفره</h2><p class="lead">گفت‌وگو را بدون خواندن متن اجرا کنید. هر دو نفر در صورت امکان وب‌کم را روشن کنند و پس از اجرا نقش‌ها را عوض کنند.</p><div class="rolecards"><div class="role"><h3>نقش A — رئیس شعبه</h3><p>تازه مدیریت شعبه را بر عهده گرفته‌اید. از تأخیر مطلع هستید اما هنوز جزئیات فنی را ندارید. باید گفتگو را با احترام آغاز کنید و از وعده قطعی بپرهیزید.</p></div><div class="role"><h3>نقش B — مدیرعامل مشتری</h3><p>زمان محدودی دارید و از نبود اطلاع‌رسانی ناراضی هستید. احتمال انتقال بخشی از قراردادها را بررسی می‌کنید؛ این موضوع را فقط در صورت پرسشگری مناسب مطرح کنید.</p></div></div><div class="prompt">وظیفه مشاهده‌گر: یک رفتار مؤثر و یک رفتار قابل اصلاح را دقیق و بدون قضاوت شخصیتی توصیف کنید.</div><details class="accordion"><summary>پرسش‌های مدرس</summary><div>آیا رئیس شعبه شنید یا سریع دفاع کرد؟ آیا لحن او متناسب بود؟ آیا به زمان مشتری توجه کرد؟</div></details></div>`;
@@ -98,9 +210,10 @@ if(i===4)body=`<div class="contentcard"><h2>متن کامل نقش‌آفرین�
 if(i===5)body=`<div class="contentcard"><h2>فرم مشاهده و بازخورد</h2><p>امتیازها برای یادگیری و بازخورد هستند، نه ارزیابی رسمی عملکرد. هر نمره باید با مثال رفتاری توضیح داده شود.</p><div class="observer">${O.map((o,j)=>'<div class="rubric"><b>'+h(o)+'</b><div class="scale">'+[1,2,3,4,5].map(n=>'<button class="'+(ratings[j]===n?'active':'')+'" onclick="rate('+j+','+n+')">'+n+'</button>').join('')+'</div></div>').join('')}</div><div class="summary"><b id="score">'+Object.values(ratings).reduce((a,b)=>a+b,0)+' / ۳۰</b><p>یک رفتار مثبت و یک رفتار قابل بهبود را با ذکر مثال بیان کنید.</p></div></div>`;
 if(i===6)body=`<div class="contentcard"><h2>اجرای اصلاح‌شده بدون متن</h2><p class="lead">این بار مخاطب با جمله متفاوتی آغاز می‌کند:</p><div class="casebox">«چند بار قول دادید؛ از کجا بدانم این بار واقعاً پیگیری می‌کنید؟»</div><div class="checks"><div class="checkitem">۱. نگرانی را به رسمیت بشناسید.</div><div class="checkitem">۲. مشکل واقعی را با سؤال روشن کنید.</div><div class="checkitem">۳. تعهد قابل پیگیری بدهید.</div><div class="checkitem">۴. نتیجه را بدون مجوز تضمین نکنید.</div></div><div class="prompt">پرسش پایانی مدرس: بین اجرای اول و دوم، کدام رفتار مشخص تغییر کرد؟</div></div>`;
 if(i===7)body=`<div class="contentcard"><h2>نکات کلیدی یادگیری</h2><div class="checks">${["استقبال متناسب با وضعیت مخاطب","احترام به محدودیت زمانی","شنیدن پیش از دفاع","مرزبندی میان نگرانی و پذیرش تقصیر","خوانش زمینه‌مند زبان بدن","تعهد مسئولانه به پیگیری","هماهنگی کلام و لحن و چهره","تکرار رفتار پس از بازخورد"].map((x,j)=>'<div class="checkitem"><b>'+(j+1)+'. </b>'+x+'</div>').join('')}</div><label class="actionfield">در ملاقات بعدی کدام رفتار خود را تغییر می‌دهید؟<textarea id="action" placeholder="یک رفتار مشخص، قابل مشاهده و قابل تمرین بنویسید..."></textarea></label><button class="cta green" onclick="copyAction()">کپی برنامه اقدام</button></div>`;
-return head+body+footerNav("go('tech')",i<7?"go('stage',"+(i+1)+")":null,"فهرست ۸ مرحله",i<7?"مرحله بعد":"");}
+return '<section class="single-stage">'+head+body+footerNav("go('tech')",i<7?"go('stage',"+(i+1)+")":null,"فهرست ۸ مرحله",i<7?"مرحله بعد":"")+'</section>';}
 function go(page,index){historyStack.push({...current});current={page,index};render();window.scrollTo({top:0,behavior:'instant'});}
-function back(){if(historyStack.length){current=historyStack.pop();render();window.scrollTo({top:0,behavior:'instant'});}else{current={page:'home'};render();}}
+function goSession(){historyStack=[];current={page:'home'};render();window.scrollTo({top:0,behavior:'instant'});}
+function back(){if(historyStack.length){current=historyStack.pop();render();window.scrollTo({top:0,behavior:'instant'});}else if(current.page!=='home'){current={page:'home'};render();window.scrollTo({top:0,behavior:'instant'});}else{window.location.href='index.html';}}
 function pick(i,k){answers[i]=k;render();const target=document.querySelectorAll('.poll')[i];if(target)target.scrollIntoView({block:'center'});}
 function filterScript(f){scriptFilter=f;render();}
 function toggleDirections(){showStageDirections=!showStageDirections;render();}
