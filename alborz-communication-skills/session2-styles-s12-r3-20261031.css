@@ -1,0 +1,859 @@
+/* Phase 1–4 verified visual release s12-r3-20261031 */
+/* Immutable Alborz release s12-r1-20261031 — integrated visual theme */
+
+/* session2-extended.css */
+/* Practice labs 2–10: extend existing large-font design without altering technique one */
+.lab-tech-hero{background:linear-gradient(100deg,rgba(4,51,36,.97),rgba(5,73,49,.79)),url('assets/session2-hero-hq.webp') center/cover no-repeat;min-height:340px}
+.lab-tech-hero .lab-hero-tags{display:block;color:#e9f7ee;font-size:clamp(20px,2vw,28px);font-weight:750;line-height:1.8;margin-top:18px}
+.lab-stage .badge-emoji{font-size:36px}.lab-enter{font-size:clamp(21px,1.7vw,28px);font-weight:850;color:#0a7351;white-space:nowrap}
+.lab-tech:hover .lab-enter{text-decoration:underline}
+.lab-kicker{display:inline-block;background:#e3f4e9;border:1px solid #cbe4d4;padding:5px 17px;border-radius:99px;font-size:clamp(19px,1.6vw,25px);font-weight:800;color:#0c6348;margin-bottom:15px}
+.enhanced-header h1{line-height:1.45}
+.lab-note{font-size:clamp(23px,1.8vw,29px);font-weight:650;color:#476658}
+.lab-faq{margin-block:23px}
+.lab-principle{margin:17px 0;background:white;box-shadow:0 4px 15px rgba(5,68,38,.05)}
+.lab-principle summary{display:flex;align-items:center;gap:15px;font-size:clamp(27px,2.2vw,36px);min-height:94px}
+.lab-principle-count{display:grid;place-items:center;width:53px;height:55px;border-radius:14px;background:#dbf0e3;color:#076545;font-weight:900;flex:none}
+.lab-principle .lab-lead{margin:17px 0;font-size:clamp(26px,2.1vw,33px)}
+.lab-principle .tip{margin-top:13px}
+.lab-photo{margin:18px 0 9px;border-radius:20px;overflow:hidden;background:#f2f8f3;border:1px solid #d2e6d8}
+.lab-photo a{display:block;line-height:0}
+.lab-photo img{display:block;width:100%;height:auto;max-height:650px;object-fit:contain}
+.lab-photo figcaption{font-size:clamp(21px,1.8vw,27px);font-weight:800;padding:14px 20px;color:#174b38;background:#e2f1e7;line-height:1.6}
+.lab-poll{padding-block:28px}
+.lab-poll h3{margin-bottom:20px}
+.lab-instructions{padding:25px;background:#eef8f0;border:1px solid #cfe6d6;border-radius:16px;margin-top:24px}
+.lab-instructions p{margin-bottom:12px}
+.lab-dialogue-count{display:inline-flex;background:#e9f6ee;border-radius:12px;padding:12px 19px;color:#0a6044;font-weight:850;margin:10px 0 18px;font-size:clamp(22px,1.7vw,27px)}
+.lab-direction{font-size:clamp(22px,1.8vw,27px);color:#4c675b;font-weight:650;line-height:1.7;margin-top:11px}
+.lab-pause{padding:24px;border-radius:18px;background:#f9f5ea;border-right:6px solid #c9a96b;margin-top:24px}
+.lab-pause h3{margin-bottom:18px}
+.lab-pause p{margin-bottom:13px}
+.lab-stage-intro{min-height:max(500px,calc(100svh - 360px));display:flex;flex-direction:column;justify-content:space-evenly}
+.lab-actions{margin-top:30px}
+@media(max-width:1100px){
+.lab-tech-hero{min-height:360px}
+.lab-principle summary{min-height:92px}
+.lab-tech{min-height:210px}
+}
+@media(max-width:680px){
+.lab-tech-hero{min-height:350px}
+.lab-tech-hero .lab-hero-tags{font-size:24px}
+.lab-enter{font-size:23px}
+.lab-kicker{font-size:22px;padding:6px 15px}
+.lab-principle summary{font-size:31px;min-height:103px}
+.lab-principle-count{width:55px;height:61px}
+.lab-principle .lab-lead{font-size:28px}
+.lab-photo figcaption{font-size:24px}
+.lab-dialogue-count{font-size:24px}
+.lab-direction{font-size:25px}
+.lab-pause{padding:22px}
+.lab-stage-intro{min-height:max(580px,calc(100svh - 320px))}
+}
+
+
+/* Distinctive skill maps: accessible tappable guidance before each principle detail */
+.lab-concept-flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:28px 0 23px}
+.lab-flow-item{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:158px;gap:10px;border:1px solid #cce5d4;background:linear-gradient(145deg,#f2f9f4,#fff);border-radius:20px;padding:15px 10px;text-align:center;color:#0b5c43;cursor:pointer;transition:transform .18s,border-color .18s}
+.lab-flow-item:hover,.lab-flow-item:focus-visible{transform:translateY(-3px);border-color:#0e8059}
+.lab-flow-item span{display:grid;place-items:center;width:45px;height:45px;border-radius:50%;background:#0c6d4f;color:#fff;font-size:25px;font-weight:900}
+.lab-flow-item b{font-size:clamp(22px,1.9vw,28px);line-height:1.5;font-weight:850}
+.lab-flow-item small{font-size:clamp(19px,1.5vw,23px);font-weight:750;color:#496d5a}
+@media(max-width:900px){.lab-concept-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lab-flow-item{min-height:154px}}
+@media(max-width:420px){.lab-concept-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-flow-item{padding:14px 9px}.lab-flow-item b{font-size:25px}.lab-flow-item small{font-size:20px}}
+
+/* Dialogue execution cues: separate voice, body and facial-expression guidance */
+.performance-guide{margin-top:15px;padding:18px 22px;background:#f6f9ed;border:1px solid #d8e7c4;border-right:5px solid #a08b50;border-radius:15px;color:#1d4937;font-size:clamp(19px,1.7vw,26px);line-height:1.75;font-weight:600}
+.performance-guide-heading{font-weight:900;font-size:1.08em;margin-bottom:9px;color:#145b40}
+.performance-guide>div:not(.performance-guide-heading){margin-top:7px}
+.performance-guide b{font-weight:850;color:#134d38}
+.speech .performance-guide{max-width:100%;overflow-wrap:anywhere}
+.book-application{border-color:#cadfcf;background:#f4faf5;margin:14px 0 22px}
+.book-application summary{font-weight:850}
+.book-application p{font-size:clamp(20px,1.6vw,26px);line-height:1.8}
+@media(max-width:680px){
+.performance-guide{font-size:24px;line-height:1.7;padding:16px 13px;margin-top:13px}
+.performance-guide-heading{font-size:26px}
+.book-application p{font-size:23px}
+}
+
+/* TOUCH-DESKTOP-ADAPTIVE PATCH — 2026-10-31
+   Preserve approved UI, techniques and training content.
+   Compensates for Android Chrome "Desktop site" virtual viewport shrink.
+   Class is set by a touch + portrait + large virtual-width check, not by CSS width alone. */
+
+/* Both responsive mobile and desktop modes: fill a short goals page naturally. */
+.goals-page{
+  display:flex;
+  flex-direction:column;
+  min-height:calc(100svh - 170px);
+}
+.goals-page>.overview{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  justify-content:space-evenly;
+  gap:clamp(22px,3vh,44px);
+}
+.goals-page .checks{align-content:center}
+.goals-page .checkitem{font-weight:725}
+.goals-page .overview>div:last-child{margin-top:auto!important;padding-top:12px}
+.goals-page .cta.green{font-weight:850}
+@media(max-width:680px){
+  .goals-page{min-height:calc(100svh - 175px)}
+  .goals-page .overview{padding:26px 20px;gap:24px}
+  .goals-page .checks{grid-template-columns:1fr;gap:15px}
+  .goals-page .checkitem{font-size:27px;line-height:1.65;padding:21px 16px}
+  .goals-page .cta.green{width:100%;min-height:69px;font-size:24px}
+  .goals-page>.section-header{margin-bottom:22px}
+}
+
+/* User sees desktop-mode browser on a physically touch/portrait handheld. */
+html.touch-desktop-mode body{
+  font-size:48px;
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+html.touch-desktop-mode .shell{
+  width:100%;
+  max-width:100%;
+  padding:26px 25px 68px;
+}
+html.touch-desktop-mode .topinside{
+  width:100%;
+  max-width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:13px;
+  padding:16px 25px;
+}
+html.touch-desktop-mode .brand{gap:17px}
+html.touch-desktop-mode .brand img{width:88px;height:88px}
+html.touch-desktop-mode .brand strong{font-size:46px;line-height:1.35;font-weight:900}
+html.touch-desktop-mode .brand small{font-size:34px;line-height:1.45;font-weight:700}
+html.touch-desktop-mode .quicknav{
+  display:grid;
+  width:100%;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+}
+html.touch-desktop-mode .quicknav .back{
+  min-width:0;
+  min-height:96px;
+  padding:17px 9px;
+  font-size:39px;
+  font-weight:850;
+  white-space:normal;
+  line-height:1.25;
+  gap:8px;
+  border-radius:17px;
+}
+html.touch-desktop-mode .navemoji{font-size:1.05em}
+html.touch-desktop-mode .hero{
+  min-height:calc(100svh - 225px);
+  border-radius:32px;
+}
+html.touch-desktop-mode .hero-copy{padding:55px 47px 65px;max-width:100%}
+html.touch-desktop-mode .hero-copy h1{font-size:76px;line-height:1.33;font-weight:900}
+html.touch-desktop-mode .hero-copy p{font-size:48px;line-height:1.62;font-weight:700}
+html.touch-desktop-mode .hero .pill{font-size:37px;line-height:1.55}
+html.touch-desktop-mode .hero .cta{
+  min-height:109px;
+  font-size:44px;
+  padding:20px 19px;
+}
+html.touch-desktop-mode .actrow{width:100%;gap:15px}
+html.touch-desktop-mode .section-header{margin:23px 0 34px}
+html.touch-desktop-mode .section-header h1{
+  font-size:70px;line-height:1.36;font-weight:900;
+}
+html.touch-desktop-mode .section-header p{
+  font-size:46px;line-height:1.64;font-weight:650;
+}
+html.touch-desktop-mode .lab-kicker{
+  font-size:39px;line-height:1.5;padding:12px 23px;
+}
+html.touch-desktop-mode .goals-page{min-height:calc(100svh - 245px)}
+html.touch-desktop-mode .goals-page .overview{
+  padding:43px 36px;
+  gap:36px;
+  border-radius:28px;
+}
+html.touch-desktop-mode .overview h2{font-size:61px;line-height:1.45;font-weight:900}
+html.touch-desktop-mode .overview .lead{
+  font-size:48px;line-height:1.75;font-weight:750;
+}
+html.touch-desktop-mode .goals-page .checks{
+  display:grid;grid-template-columns:1fr;gap:17px;
+}
+html.touch-desktop-mode .goals-page .checkitem{
+  font-size:44px;line-height:1.55;
+  padding:24px 27px;
+  border-radius:18px;
+}
+html.touch-desktop-mode .goals-page .cta.green{
+  width:100%;
+  min-height:108px;
+  font-size:43px;
+  padding:21px;
+}
+html.touch-desktop-mode .catalog,
+html.touch-desktop-mode .stage-grid,
+html.touch-desktop-mode .detailgrid,
+html.touch-desktop-mode .compare,
+html.touch-desktop-mode .visuals,
+html.touch-desktop-mode .rolecards,
+html.touch-desktop-mode .checks,
+html.touch-desktop-mode .observer{
+  grid-template-columns:1fr;
+  gap:23px;
+}
+html.touch-desktop-mode .tech-card,
+html.touch-desktop-mode .stage-card{
+  width:100%;min-height:263px;
+  padding:35px 30px;gap:21px;border-radius:27px;
+}
+html.touch-desktop-mode .tech-copy b,
+html.touch-desktop-mode .stage-card b{
+  font-size:55px;line-height:1.48;font-weight:900;
+}
+html.touch-desktop-mode .tech-copy small,
+html.touch-desktop-mode .stage-card small{
+  display:block;font-size:45px;line-height:1.55;
+  color:#355448;font-weight:650;
+}
+html.touch-desktop-mode .iconbox,
+html.touch-desktop-mode .stage-no{
+  min-width:127px;width:127px;height:142px;
+  border-radius:25px;
+}
+html.touch-desktop-mode .icon-num,
+html.touch-desktop-mode .badge-digit{font-size:47px}
+html.touch-desktop-mode .icon-emoji,
+html.touch-desktop-mode .badge-emoji{font-size:53px}
+html.touch-desktop-mode .arrow{font-size:46px}
+html.touch-desktop-mode .lab-enter{font-size:38px;font-weight:850}
+html.touch-desktop-mode .subhero{
+  min-height:460px;
+  padding:54px 42px;
+  border-radius:30px;
+}
+html.touch-desktop-mode .subhero h1{
+  font-size:73px;line-height:1.35;font-weight:900;
+}
+html.touch-desktop-mode .subhero p,
+html.touch-desktop-mode .lab-tech-hero .lab-hero-tags{
+  font-size:43px;line-height:1.55;font-weight:650;
+}
+html.touch-desktop-mode .eyebrow,
+html.touch-desktop-mode .tag{font-size:36px;padding:8px 15px}
+html.touch-desktop-mode .contentcard{
+  padding:46px 35px;
+  font-size:46px;line-height:1.77;
+  border-radius:27px;
+}
+html.touch-desktop-mode .contentcard h2{font-size:64px;line-height:1.4;font-weight:900}
+html.touch-desktop-mode .contentcard h3{font-size:53px;line-height:1.45;font-weight:850}
+html.touch-desktop-mode .contentcard p,
+html.touch-desktop-mode .contentcard label,
+html.touch-desktop-mode .contentcard .role p{
+  font-size:46px;line-height:1.77;
+}
+html.touch-desktop-mode .lead,
+html.touch-desktop-mode .lab-lead{font-size:49px;line-height:1.72}
+html.touch-desktop-mode .casebox,
+html.touch-desktop-mode .casebox p,
+html.touch-desktop-mode .prompt{font-size:49px;line-height:1.75}
+html.touch-desktop-mode .casebox,
+html.touch-desktop-mode .prompt{padding:39px 32px}
+html.touch-desktop-mode .letter{min-height:234px}
+html.touch-desktop-mode .letters{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+html.touch-desktop-mode .letter strong{font-size:99px}
+html.touch-desktop-mode .letter-symbol{font-size:56px}
+html.touch-desktop-mode .letter span:not(.letter-symbol){font-size:49px}
+html.touch-desktop-mode .letter small{font-size:38px}
+html.touch-desktop-mode .lab-concept-flow{
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;
+}
+html.touch-desktop-mode .lab-flow-item{min-height:247px;padding:28px 19px}
+html.touch-desktop-mode .lab-flow-item b{font-size:48px}
+html.touch-desktop-mode .lab-flow-item small{font-size:37px}
+html.touch-desktop-mode .lab-flow-item span{
+  width:77px;height:77px;font-size:42px;
+}
+html.touch-desktop-mode .panel b{font-size:53px}
+html.touch-desktop-mode .panel p{font-size:46px}
+html.touch-desktop-mode .panel{padding:34px;min-height:0}
+html.touch-desktop-mode .tip,
+html.touch-desktop-mode .accordion,
+html.touch-desktop-mode .accordion summary,
+html.touch-desktop-mode .book-application p{font-size:45px;line-height:1.7}
+html.touch-desktop-mode .accordion summary{padding:36px}
+html.touch-desktop-mode .accordion>div{padding:16px 35px 33px}
+html.touch-desktop-mode .answer{
+  font-size:46px;
+  min-height:117px;
+  line-height:1.6;
+  padding:27px;
+}
+html.touch-desktop-mode .response{font-size:45px;line-height:1.7;padding:30px}
+html.touch-desktop-mode .role h3{font-size:55px}
+html.touch-desktop-mode .role{padding:34px}
+html.touch-desktop-mode .tab{
+  font-size:41px;min-height:99px;padding:24px 29px;
+}
+html.touch-desktop-mode .speech{width:99%;max-width:99%;padding:32px 29px}
+html.touch-desktop-mode .speech p{font-size:47px;line-height:1.83}
+html.touch-desktop-mode .speech small{font-size:37px}
+html.touch-desktop-mode .performance-guide{
+  padding:28px 23px;
+  font-size:40px;
+  line-height:1.65;
+}
+html.touch-desktop-mode .performance-guide-heading{font-size:45px}
+html.touch-desktop-mode .rubric b,
+html.touch-desktop-mode .vtext b{font-size:48px}
+html.touch-desktop-mode .scale button{font-size:43px;min-height:90px}
+html.touch-desktop-mode .checkitem{font-size:44px;line-height:1.7;padding:30px}
+html.touch-desktop-mode .photo-lesson figcaption,
+html.touch-desktop-mode .lab-photo figcaption{font-size:39px}
+html.touch-desktop-mode .navbtn{
+  font-size:43px;min-height:104px;padding:22px 28px;
+}
+html.touch-desktop-mode .actionfield textarea{font-size:45px;min-height:245px}
+html.touch-desktop-mode .single-stage{
+  min-height:calc(100svh - 265px);
+}
+html.touch-desktop-mode .stage-opening,
+html.touch-desktop-mode .lab-stage-intro{
+  min-height:calc(100svh - 350px);
+}
+html.touch-desktop-mode :is(button,a,summary):focus-visible{
+  outline:5px solid #bd9b56;
+  outline-offset:4px;
+}
+@media(prefers-reduced-motion:reduce){
+  html.touch-desktop-mode *{scroll-behavior:auto!important}
+}
+
+
+
+/* session2-visual-experience.css */
+/* Alborz Communication Academy | visual experience upgrade, isolated from lesson content.
+   Editorial thumbnails, legible stages, accessible bottom sheet, 3-step coach tour.
+   Preserves the original 10 x 8 structure, WELCOME, scripts and large RTL type. */
+
+/* 1. Existing home image: stronger editorial treatment, not extra panels. */
+.hero-photo{object-position:center 38%}
+.hero-copy{max-width:800px}
+.hero .actrow>.cta{border-radius:18px;transition:transform .15s ease,box-shadow .15s ease}
+.hero .actrow>.cta:focus-visible{outline:4px solid #e9c777;outline-offset:4px}
+
+/* 2. Editorial technique gallery: images are real executive-oriented existing assets. */
+.catalog{align-items:stretch}
+.tech-card.lab-tech.alborz-editorial{
+  position:relative;overflow:hidden;isolation:isolate;align-items:center;
+  gap:clamp(14px,1.5vw,25px);padding:14px 18px 14px 14px;
+  border-radius:22px;min-height:178px;
+  border:1px solid #dbe8df;background:#fff;
+  box-shadow:0 6px 23px rgba(8,73,51,.08);
+}
+.alborz-editorial .iconbox{display:none!important}
+.alborz-tech-cover{
+  position:relative;display:block;flex:none;
+  width:clamp(112px,13vw,170px);height:clamp(138px,14vw,183px);
+  border-radius:15px;overflow:hidden;background:#e0ede4;
+}
+.alborz-tech-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(2,42,30,.50),transparent 56%);pointer-events:none}
+.alborz-tech-cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:var(--visual-position,center);filter:saturate(.86)}
+.alborz-cover-number{
+  position:absolute;bottom:10px;right:12px;z-index:1;
+  font:900 clamp(18px,2.1vw,28px)/1.1 Vazirmatn,sans-serif;
+  color:white;letter-spacing:.01em;
+}
+.alborz-editorial .tech-copy{display:flex;flex-direction:column;justify-content:center;gap:5px}
+.alborz-editorial .tech-copy b{font-weight:900;line-height:1.43;font-size:clamp(25px,2.4vw,36px)}
+.alborz-editorial .tech-copy small{color:#496358;line-height:1.6;font-size:clamp(19px,1.7vw,26px);font-weight:600}
+.alborz-editorial .lab-enter{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+  font-size:clamp(18px,1.5vw,24px);
+  margin-inline-start:0;flex:none;font-weight:850;color:#0b7654;
+  padding:8px 12px;border:1px solid #cde4d4;border-radius:14px;
+  background:#eff8f1;
+}
+.alborz-editorial:hover{border-color:#61a68a;box-shadow:0 12px 33px rgba(8,73,51,.14)}
+.alborz-editorial:focus-visible{outline:4px solid #b99956;outline-offset:3px}
+
+/* 3. Eight-stage editorial list. A thumbnail lives INSIDE the existing number block.
+   The existing number + emoji remain readable; no additional narrow columns. */
+.stage-grid .stage-card.alborz-stage-editorial{position:relative;overflow:hidden;border-radius:22px}
+.stage-no.alborz-stage-art{
+  position:relative;isolation:isolate;overflow:hidden;background:#0a6a50;
+  border:1px solid #d0e6da;flex:none;
+}
+.alborz-stage-art img{
+  position:absolute;inset:0;z-index:-2;width:100%;height:100%;
+  object-fit:cover;object-position:center;filter:saturate(.68);
+}
+.alborz-stage-art::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(0deg,#043c2de6,#064c3880 60%,#125f422e);
+}
+.stage-no.alborz-stage-art .badge-digit{
+  font-size:clamp(25px,2.3vw,34px);font-weight:900;color:#fff;
+  text-shadow:0 1px 6px #03291d91;
+}
+.stage-no.alborz-stage-art .badge-emoji{
+  font-size:clamp(22px,1.9vw,31px);filter:drop-shadow(0 1px 3px #062e21aa)
+}
+.stage-card.alborz-stage-editorial .body b{font-weight:900}
+.stage-card.alborz-stage-editorial .body small{color:#455e51;font-weight:650}
+.stage-card.alborz-stage-editorial .arrow{font-weight:900}
+.stage-card.alborz-stage-editorial:focus-visible{outline:4px solid #b99956;outline-offset:4px}
+
+/* Stage action: the NEXT action is dominant, BACK remains secondary. */
+.single-stage>.floatingnav,
+.lab-page>.floatingnav{
+  position:sticky;bottom:0;z-index:15;
+  margin-top:auto;padding:16px 4px max(14px,env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,#f5f8f6 72%,#f5f8f6ed 88%,transparent);
+  border-radius:19px;
+}
+.single-stage>.floatingnav .navbtn.next{
+  flex:1;text-align:center;background:#08714f;border:2px solid #08714f;
+  color:white;font-weight:900;box-shadow:0 7px 18px #0a6b4a24
+}
+.single-stage>.floatingnav .navbtn:not(.next){flex:0 1 auto;min-width:0}
+
+/* 4. One deliberate entry point to role-play tools, with original controls preserved. */
+.alborz-practice-shortcut{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;min-height:84px;padding:17px 23px;margin:22px 0 18px;
+  border:2px solid #0b7353;border-radius:20px;
+  background:linear-gradient(110deg,#07583f,#087f58);
+  color:white;font:850 clamp(22px,2vw,30px)/1.5 Vazirmatn,sans-serif;
+  text-align:right;cursor:pointer;
+}
+.alborz-practice-shortcut .shortcut-arrow{font-size:1.2em;opacity:.95}
+.alborz-practice-shortcut:focus-visible{outline:4px solid #c9ab64;outline-offset:4px}
+.alborz-script-tools{
+  background:#f8faf9;border:1px solid #d6e6dd;
+  border-radius:17px;padding:17px 18px;margin:17px 0;
+}
+.alborz-script-tools>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:15px;
+  cursor:pointer;color:#0b5c43;font-size:clamp(21px,2vw,29px);
+  font-weight:850;line-height:1.55;list-style:none;
+}
+.alborz-script-tools>summary::-webkit-details-marker{display:none}
+.alborz-script-tools>summary::after{content:"⌄";font-size:1.4em}
+.alborz-script-tools[open]>summary::after{content:"⌃"}
+.alborz-script-tools>.scriptbar{margin-top:21px}
+
+/* Bottom-sheet: large accessible touch actions, restrained business palette. */
+.alborz-sheet-portal{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-end;justify-content:center}
+.alborz-sheet-backdrop{position:absolute;inset:0;border:0;border-radius:0;background:rgba(6,28,22,.57);cursor:pointer}
+.alborz-action-sheet{
+  position:relative;z-index:1;width:min(100%,740px);max-height:min(91svh,970px);
+  overflow-y:auto;overscroll-behavior:contain;padding:24px 22px max(26px,env(safe-area-inset-bottom));
+  border-radius:29px 29px 0 0;background:#fff;color:#173b30;
+  box-shadow:0 -12px 45px #071e1970;direction:rtl;
+}
+.alborz-sheet-grip{width:61px;height:6px;background:#bccdc3;border-radius:20px;margin:0 auto 18px}
+.alborz-sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+.alborz-sheet-head h2{font-size:clamp(27px,2.7vw,40px);line-height:1.45;margin:0;font-weight:900;color:#0c503a}
+.alborz-sheet-head p{font-size:clamp(19px,1.7vw,26px);line-height:1.65;margin:7px 0 0;color:#466258}
+.alborz-sheet-close{border:1px solid #d5e3da;background:#f5f8f6;border-radius:50%;
+   width:56px;height:56px;flex:none;color:#154a39;font-size:26px;cursor:pointer}
+.alborz-sheet-options{display:grid;gap:12px}
+.alborz-sheet-action{
+  width:100%;display:flex;align-items:center;gap:17px;min-height:82px;
+  padding:17px 19px;border:1px solid #d9e7de;border-radius:17px;
+  background:#f8fbf8;text-align:right;color:#174b39;font:750 clamp(20px,1.8vw,27px)/1.6 Vazirmatn,sans-serif;
+  cursor:pointer;
+}
+.alborz-sheet-action .alborz-sheet-icon{font-size:34px;min-width:42px;flex:none}
+.alborz-sheet-action .alborz-sheet-text{flex:1}
+.alborz-sheet-action .alborz-sheet-label{display:block;font-weight:900}
+.alborz-sheet-action .alborz-sheet-desc{display:block;font-size:.79em;color:#526b5d;font-weight:550}
+.alborz-sheet-action:hover,.alborz-sheet-action:focus-visible{background:#eaf5ee;border-color:#6dab89;outline:none}
+.alborz-sheet-action-primary{background:#e7f4eb;border-color:#8ac3a1}
+.alborz-sheet-help{border:0;background:none;color:#0d6146;font-size:21px;font-weight:850;cursor:pointer;margin-top:14px;padding:15px}
+
+/* Short first-use 3-step guide. Separate from the training content. */
+.alborz-guide-portal{position:fixed;inset:0;z-index:9100;display:flex;align-items:center;justify-content:center;padding:16px;direction:rtl}
+.alborz-guide-backdrop{position:absolute;inset:0;background:rgba(4,29,22,.78)}
+.alborz-guide-card{
+  position:relative;z-index:1;width:min(100%,620px);
+  background:#fff;border-radius:25px;padding:clamp(25px,4vw,43px);
+  box-shadow:0 22px 75px #00180f88;color:#164433;
+}
+.alborz-guide-step{font-size:19px;font-weight:850;color:#0d7854}
+.alborz-guide-symbol{font-size:54px;display:block;margin:14px 0}
+.alborz-guide-card h2{font-size:clamp(30px,3vw,42px);line-height:1.45;font-weight:900;margin:0 0 15px}
+.alborz-guide-card p{font-size:clamp(23px,2vw,30px);line-height:1.75;font-weight:550;margin:0 0 22px}
+.alborz-guide-actions{display:flex;align-items:center;gap:13px;justify-content:space-between}
+.alborz-guide-actions button{min-height:59px;padding:12px 18px;border-radius:15px;font:850 22px/1.45 Vazirmatn,sans-serif;cursor:pointer}
+.alborz-guide-next{background:#086c4c;color:white;border:0;flex:1}
+.alborz-guide-skip{background:#f2f7f3;color:#355b4a;border:1px solid #d1e2d6}
+.alborz-guide-dots{display:flex;justify-content:center;gap:9px;margin-top:20px}
+.alborz-guide-dots span{width:9px;height:9px;background:#d5e5da;border-radius:50%}
+.alborz-guide-dots span.active{width:27px;border-radius:11px;background:#087953}
+.alborz-guide-focus{position:relative;outline:5px solid #cdab61;outline-offset:7px;border-radius:17px}
+
+/* Mobile: one clean column, larger thumbnails; no crammed three-column layout. */
+@media(max-width:900px){
+  .catalog{grid-template-columns:1fr}
+  .tech-card.lab-tech.alborz-editorial{min-height:177px;padding:13px;gap:13px}
+  .alborz-tech-cover{width:clamp(100px,26vw,140px);height:clamp(133px,30vw,173px)}
+  .alborz-editorial .tech-copy b{font-size:clamp(24px,5.5vw,32px)}
+  .alborz-editorial .tech-copy small{font-size:clamp(19px,4.2vw,25px)}
+  .alborz-editorial .lab-enter{font-size:19px;min-height:44px;padding:7px 9px}
+}
+@media(max-width:480px){
+  .tech-card.lab-tech.alborz-editorial{min-height:174px;gap:12px;padding:11px}
+  .alborz-tech-cover{width:96px;height:141px;border-radius:14px}
+  .alborz-editorial .tech-copy b{font-size:clamp(23px,5.8vw,29px)}
+  .alborz-editorial .tech-copy small{font-size:clamp(17px,4.4vw,22px)}
+  .alborz-editorial .lab-enter{display:none}
+  .stage-no.alborz-stage-art .badge-digit{font-size:25px}
+  .stage-no.alborz-stage-art .badge-emoji{font-size:24px}
+  .alborz-practice-shortcut{font-size:25px;min-height:87px;padding:16px 20px}
+  .single-stage>.floatingnav,.lab-page>.floatingnav{gap:9px}
+  .single-stage>.floatingnav .navbtn.next{font-size:24px;padding:14px 12px}
+  .alborz-action-sheet{padding-inline:17px}
+  .alborz-sheet-action{font-size:23px;padding:17px 13px}
+}
+
+/* Android "Desktop Site" uses a virtual 980px layout: enlarge editorial components
+   proportional to virtual viewport scaling, respecting the existing mode patch. */
+html.touch-desktop-mode .catalog{grid-template-columns:1fr;gap:26px}
+html.touch-desktop-mode .tech-card.lab-tech.alborz-editorial{min-height:315px;gap:24px;padding:19px 23px}
+html.touch-desktop-mode .alborz-tech-cover{width:206px;height:271px;border-radius:23px}
+html.touch-desktop-mode .alborz-cover-number{font-size:48px;right:20px;bottom:16px}
+html.touch-desktop-mode .alborz-editorial .tech-copy b{font-size:58px}
+html.touch-desktop-mode .alborz-editorial .tech-copy small{font-size:43px}
+html.touch-desktop-mode .alborz-editorial .lab-enter{font-size:38px;min-height:88px;padding:16px}
+html.touch-desktop-mode .stage-no.alborz-stage-art{min-width:130px;width:130px;height:146px}
+html.touch-desktop-mode .stage-no.alborz-stage-art .badge-digit{font-size:48px}
+html.touch-desktop-mode .stage-no.alborz-stage-art .badge-emoji{font-size:48px}
+html.touch-desktop-mode .single-stage>.floatingnav{padding-block:26px}
+html.touch-desktop-mode .alborz-practice-shortcut{min-height:133px;font-size:47px;padding:24px 30px}
+html.touch-desktop-mode .alborz-script-tools>summary{font-size:45px}
+html.touch-desktop-mode .alborz-sheet-head h2{font-size:55px}
+html.touch-desktop-mode .alborz-sheet-head p{font-size:39px}
+html.touch-desktop-mode .alborz-sheet-action{font-size:43px;min-height:133px;padding:25px}
+html.touch-desktop-mode .alborz-sheet-action .alborz-sheet-icon{font-size:55px;min-width:70px}
+html.touch-desktop-mode .alborz-sheet-close{width:82px;height:82px;font-size:40px}
+html.touch-desktop-mode .alborz-sheet-help{font-size:38px}
+html.touch-desktop-mode .alborz-guide-card h2{font-size:61px}
+html.touch-desktop-mode .alborz-guide-card p{font-size:45px}
+html.touch-desktop-mode .alborz-guide-actions button{font-size:39px;min-height:85px}
+@media(prefers-reduced-motion:reduce){
+ .hero .actrow>.cta,.alborz-editorial{transition:none!important}
+}
+
+
+
+/* session2-practical-case.css */
+/* Small, readable practice cases — no change to eight-stage navigation */
+.stage-opening.lab-simple-case,.lab-stage-intro.lab-simple-case{display:block!important;min-height:0!important;justify-content:initial!important}
+.lab-simple-case .casebox{padding:24px;margin:16px 0 23px;background:#f4f8f4;border:1px solid #d7e8db;border-right:6px solid #11714f;border-radius:17px}
+.lab-simple-case .casebox p{font-size:clamp(23px,2.2vw,31px);line-height:1.9;font-weight:600;margin:0}
+.lab-simple-goal{padding:15px 20px;background:#e8f5eb;border-radius:15px;color:#144f38;font-size:clamp(22px,2vw,29px);font-weight:650}
+.lab-simple-goal b{font-weight:900}
+.lab-simple-start{background:#0b6449;color:white;border-radius:19px;padding:25px;margin:22px 0}
+.lab-simple-start b{display:block;font-size:clamp(27px,2.3vw,35px);font-weight:900}
+.lab-simple-start p{color:white!important;font-size:clamp(27px,2.4vw,35px)!important;line-height:1.75!important;font-weight:800;margin:12px 0}
+.lab-simple-start span{font-size:clamp(21px,1.8vw,27px);font-weight:600;line-height:1.7}
+.lab-simple-follow{margin:14px 0!important;background:white}
+.lab-simple-follow p{font-size:clamp(23px,2vw,29px);line-height:1.8}
+.lab-simple-watch{padding:9px 0;font-size:clamp(21px,1.8vw,27px);line-height:1.7;color:#35584a}
+.lab-simple-watch strong{font-weight:850;color:#114a36}
+@media(max-width:680px){.lab-simple-case{padding:22px 15px!important}.lab-simple-case .casebox{padding:22px 17px}.lab-simple-case .casebox p{font-size:27px}.lab-simple-goal{font-size:24px}.lab-simple-start p{font-size:29px!important}.lab-simple-start span{font-size:22px}.lab-simple-follow p{font-size:26px}.lab-simple-watch{font-size:23px}}
+html.touch-desktop-mode .lab-simple-case{min-height:0!important}
+html.touch-desktop-mode .lab-simple-case .casebox p{font-size:47px}
+html.touch-desktop-mode .lab-simple-goal{font-size:44px}
+html.touch-desktop-mode .lab-simple-start b{font-size:52px}
+html.touch-desktop-mode .lab-simple-start p{font-size:54px!important}
+html.touch-desktop-mode .lab-simple-start span{font-size:42px}
+html.touch-desktop-mode .lab-simple-follow p{font-size:43px}
+html.touch-desktop-mode .lab-simple-watch{font-size:41px}
+
+
+
+/* session2-case-ux-fix.css */
+/* Case-specific practice UX. Protect readability and avoid overlays. */
+/* The former sticky stage footer covered the last exercise card on mobile. */
+.single-stage>.floatingnav,.lab-page>.floatingnav{
+  position:static!important;bottom:auto!important;z-index:auto!important;
+  width:100%;margin-top:23px!important;padding:13px 0 18px!important;
+  background:transparent!important;box-shadow:none!important
+}
+.single-stage,.lab-page{scroll-margin-top:12px;min-width:0}
+.single-stage>.section-header,.lab-page>.section-header{
+  position:relative;z-index:1;margin-top:0!important;margin-bottom:14px!important;
+  padding-top:12px!important
+}
+.single-stage>.section-header h1,.lab-page>.section-header h1{
+  font-size:clamp(27px,3.1vw,38px)!important;
+  line-height:1.45!important;letter-spacing:0;overflow-wrap:anywhere
+}
+.single-stage>.section-header p,.lab-page>.section-header p{display:none}
+.lab-stage-intro,.stage-opening.lab-simple-case{min-height:0!important}
+.lab-simple-case h2{font-weight:900;line-height:1.45}
+.lab-simple-case .casebox{margin:14px 0 18px;border-radius:16px}
+.lab-simple-case .casebox p{font-size:clamp(21px,2.1vw,28px)!important;line-height:1.83!important;font-weight:580}
+.lab-skill-focus{
+  font-size:clamp(20px,1.9vw,28px);line-height:1.65;
+  padding:16px 19px;margin:17px 0;
+  border-radius:15px;background:#e7f4ec;color:#155840
+}
+.lab-skill-focus b{font-weight:900}
+.lab-simple-start{padding:19px 20px!important;border-radius:18px}
+.lab-simple-start b{display:block;font-size:clamp(24px,2.1vw,32px)!important}
+.lab-simple-start p{margin:10px 0 0!important;font-size:clamp(23px,2.2vw,31px)!important;line-height:1.65!important}
+.lab-acting-cues{
+  margin:16px 0;display:grid;gap:10px;padding:17px 20px;
+  border:1px solid #d2e5d8;border-radius:17px;background:#f7faf7;
+  color:#27533e
+}
+.lab-acting-cues>div{font-size:clamp(19px,1.75vw,26px);line-height:1.65}
+.lab-acting-cues b{font-weight:900;color:#12533b}
+.lab-role-scene{padding:19px 21px;background:#f2f8f3;border-right:5px solid #128055;border-radius:17px}
+.lab-role-scene>b{font-size:clamp(23px,2.1vw,31px);font-weight:900}
+.lab-role-scene p{margin:9px 0 0;font-size:clamp(21px,1.85vw,27px);line-height:1.76}
+.lab-role-action{padding:16px 19px;border-radius:16px;background:#0b6348;color:white;margin:16px 0}
+.lab-role-action>b,.lab-role-action>strong{font-size:clamp(22px,2.1vw,30px);font-weight:900}
+.lab-role-action p{font-size:clamp(22px,2vw,30px);line-height:1.68;margin:8px 0 0;color:white}
+.lab-short-context{font-size:clamp(20px,1.75vw,26px)!important;line-height:1.7;color:#456254}
+.lab-answer-review{padding:16px!important;border-radius:15px}
+.lab-answer-review>strong,.lab-answer-review>b{font-size:clamp(22px,1.9vw,27px)}
+.lab-answer-explanations{display:grid;gap:10px;margin:14px 0}
+.lab-option-reason{background:#fff;border:1px solid #e1e8e2;border-radius:12px;padding:13px 16px}
+.lab-option-reason.right{background:#eff8f0;border-color:#c8e4d0}
+.lab-option-reason.wrong{background:#faf7f5;border-color:#e9ddd5}
+.lab-option-reason b{font-size:clamp(20px,1.75vw,26px);line-height:1.55}
+.lab-option-reason p{font-size:clamp(19px,1.7vw,25px)!important;line-height:1.7!important;margin:5px 0 0}
+.lab-question-extra{margin:12px 0 0!important;background:white!important}
+.lab-question-extra summary{font-size:clamp(20px,1.8vw,27px);font-weight:850}
+.lab-question-extra>div{font-size:clamp(19px,1.7vw,26px);line-height:1.75}
+.lab-observer-prompt{padding:18px;border-radius:15px;background:#f5f8f3;font-size:clamp(21px,1.8vw,27px)}
+@media(max-width:680px){
+ .shell{padding-top:16px!important}
+ .single-stage>.section-header,.lab-page>.section-header{padding-top:18px!important;margin-bottom:9px!important}
+ .single-stage>.section-header h1,.lab-page>.section-header h1{font-size:31px!important}
+ .lab-simple-case .casebox p{font-size:24px!important;line-height:1.86!important}
+ .lab-simple-case{padding:21px 17px!important}
+ .lab-acting-cues{padding:13px 15px;gap:6px}
+ .lab-acting-cues>div{font-size:21px}
+ .lab-skill-focus{font-size:23px;padding:14px}
+ .lab-simple-start p{font-size:25px!important}
+ .lab-role-scene p{font-size:23px}
+ .lab-role-action p{font-size:24px}
+ .lab-option-reason b{font-size:22px}
+ .lab-option-reason p{font-size:21px!important}
+ .single-stage>.floatingnav .navbtn,.lab-page>.floatingnav .navbtn{font-size:21px;min-height:58px}
+}
+html.touch-desktop-mode .single-stage>.section-header h1,
+html.touch-desktop-mode .lab-page>.section-header h1{font-size:59px!important}
+html.touch-desktop-mode .lab-simple-case .casebox p{font-size:43px!important}
+html.touch-desktop-mode .lab-skill-focus{font-size:43px}
+html.touch-desktop-mode .lab-acting-cues>div{font-size:40px}
+html.touch-desktop-mode .lab-simple-start p{font-size:48px!important}
+html.touch-desktop-mode .lab-role-scene p,
+html.touch-desktop-mode .lab-role-action p{font-size:42px}
+html.touch-desktop-mode .lab-option-reason b{font-size:41px}
+html.touch-desktop-mode .lab-option-reason p{font-size:39px!important}
+
+
+
+/* session2-sprint12-feedback.css */
+/* Alborz Assessment Sprint 1–2: real feedback for every option, readable on phone.
+   Loaded last; supersedes the legacy "any selection is green" styles. */
+.lab-quiz-question-wrap{padding:20px 0 25px}
+.lab-quiz-question-wrap:last-child{border-bottom:0}
+.lab-quiz-question h3{font-size:clamp(25px,2.3vw,34px);font-weight:900;margin:0 0 9px}
+.lab-quiz-question .lead{font-size:clamp(22px,2vw,29px);line-height:1.65;margin:0 0 14px;font-weight:800}
+button.answer.lab-choice{
+ display:flex;align-items:flex-start;gap:13px;position:relative;
+ padding:18px 17px;min-height:74px;border-radius:15px;border:1.5px solid #d8e1db;
+ background:#fff;color:#174537;line-height:1.68;text-align:right;
+ font-size:clamp(21px,1.85vw,27px);font-weight:680;cursor:pointer;
+ transition:background .12s ease,border-color .12s ease;
+}
+button.answer.lab-choice::before{content:none!important;display:none!important}
+button.answer.lab-choice:hover{background:#f4f8f5;border-color:#8fbda3}
+button.answer.lab-choice:focus-visible{outline:3px solid #bd9b56;outline-offset:3px}
+button.answer.lab-choice.selected.selected-correct{
+ background:#e5f5eb!important;border-color:#23825b!important;
+ box-shadow:inset 4px 0 #23825b;color:#114735;
+}
+button.answer.lab-choice.selected.selected-incorrect{
+ background:#fff3f0!important;border-color:#c06b59!important;
+ box-shadow:inset 4px 0 #b84d3f;color:#743b31;
+}
+.lab-answer-index{
+ display:flex;justify-content:center;align-items:center;flex:0 0 37px;
+ height:37px;border-radius:50%;font-size:21px;font-weight:850;
+ color:#305b46;background:#eaf0eb;
+}
+.lab-choice.selected-correct .lab-answer-index{color:#fff;background:#18714f}
+.lab-choice.selected-incorrect .lab-answer-index{color:#fff;background:#b75845}
+.lab-answer-label{flex:1;min-width:0}
+.lab-answer-mark{flex:none;font-weight:950;font-size:27px;line-height:1.4}
+.lab-feedback-result{
+ margin:16px 0 2px;padding:18px 18px 14px;background:#f8faf8;
+ border-radius:15px;border:1px solid #d9e5dd;font-size:clamp(20px,1.8vw,26px);
+ line-height:1.7;
+}
+.lab-feedback-selected{padding:17px 18px;border-radius:13px;background:#eff8f1;border-right:5px solid #287e56}
+.lab-feedback-selected.incorrect{background:#fff3f0;border-right-color:#b95746}
+.lab-feedback-selected strong{font-size:1.08em;font-weight:900;display:block}
+.lab-feedback-selected p{margin:7px 0 0;font-size:inherit!important;line-height:1.73!important}
+.lab-feedback-subtitle{font-weight:900;font-size:.94em;color:#275541;margin:18px 2px 9px}
+.lab-feedback-others{display:grid;gap:11px}
+.lab-feedback-another{
+ padding:10px 12px;border-right:3px solid #cbd9d0;background:#fff;
+ border-radius:9px;display:block;
+}
+.lab-feedback-another.right{border-right-color:#23825b}
+.lab-feedback-another.wrong{border-right-color:#ae7b68}
+.lab-feedback-another b{display:block;font-size:.97em;line-height:1.45;font-weight:850}
+.lab-feedback-another p{
+ font-size:.97em!important;line-height:1.66!important;margin:5px 0 0!important;
+ color:#2b4b40;
+}
+.lab-feedback-practice{margin-top:15px!important;background:#fff}
+.lab-feedback-practice summary{font-weight:850;font-size:.95em}
+.lab-feedback-practice>div{font-size:.95em;line-height:1.7}
+/* Maintain the approved large-text design without letting answers overwhelm a phone. */
+@media(max-width:680px){
+ .lab-quiz-question-wrap{padding:15px 0 23px}
+ .lab-quiz-question h3{font-size:29px}
+ .lab-quiz-question .lead{font-size:25px;line-height:1.6}
+ button.answer.lab-choice{font-size:22px;line-height:1.66;min-height:76px;padding:14px 13px}
+ .lab-answer-index{flex-basis:34px;height:34px;font-size:20px}
+ .lab-feedback-result{font-size:22px;padding:14px 12px}
+ .lab-feedback-selected{padding:14px 13px}
+ .lab-feedback-another{padding:10px}
+}
+html.touch-desktop-mode .lab-quiz-question h3{font-size:52px}
+html.touch-desktop-mode .lab-quiz-question .lead{font-size:47px}
+html.touch-desktop-mode button.answer.lab-choice{
+ min-height:115px;font-size:43px;line-height:1.55;padding:23px 25px;gap:21px;
+}
+html.touch-desktop-mode .lab-answer-index{flex-basis:62px;height:62px;font-size:37px}
+html.touch-desktop-mode .lab-answer-mark{font-size:48px}
+html.touch-desktop-mode .lab-feedback-result{font-size:42px;padding:24px}
+html.touch-desktop-mode .lab-feedback-another p{font-size:41px!important}
+@media(prefers-reduced-motion:reduce){button.answer.lab-choice{transition:none}}
+
+
+/* Sprint 4 refinements — strongest cascade */
+/* Sprint 4 — leaner mobile-first learner experience; keep large readable Persian.
+   Loaded after the full r2 theme. No structural changes to the eight stages. */
+html{scroll-padding-top:78px;overflow-x:hidden}
+body{overflow-x:hidden}
+.topbar{transition:box-shadow .16s ease}
+html.alborz-scrolled .topinside{padding-top:6px!important;padding-bottom:6px!important;gap:5px!important}
+html.alborz-scrolled .brand{display:none!important}
+html.alborz-scrolled .quicknav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:7px}
+html.alborz-scrolled .quicknav .back{min-width:0!important;min-height:44px!important;padding:8px 7px!important;border-radius:10px!important}
+.single-stage>.section-header,.lab-page>.section-header{scroll-margin-top:85px!important;overflow:visible}
+.single-stage>.section-header h1,.lab-page>.section-header h1{line-height:1.47!important;overflow-wrap:normal!important;word-break:normal!important}
+.lab-page .lab-card{box-shadow:0 3px 14px #153d2910!important;border-radius:19px}
+.lab-card .lab-role-scene,.lab-card .casebox{background:#f6faf7}
+.lab-card .lab-skill-focus{background:#eaf5ed}
+.lab-card .lab-acting-cues{border:1px solid #dbe8df;background:#f8faf8}
+.lab-card .lab-feedback-hint{font-weight:580;color:#466052;line-height:1.7}
+.lab-retry-watch{padding:12px 16px;margin:15px 0;border-radius:13px;background:#f5f8f3;line-height:1.7}
+.lab-rubric-summary{background:#f4f8f5;border-radius:14px;padding:13px 17px}
+.lab-principles{max-width:100%}
+.lab-principle{margin:0 0 11px}
+.lab-principle summary{min-height:0!important;line-height:1.55!important;padding:14px!important}
+.lab-principle .compare{margin:12px 0}
+.lab-optional-science{margin-top:12px!important;border-color:#e0e8e1!important;background:#fbfcfa!important}
+.lab-optional-science summary{color:#355b46}
+.lab-optional-science>div{font-weight:500;line-height:1.65}
+.lab-feedback-practice{margin-top:10px!important}
+.lab-principles .lab-photo img{max-height:410px;object-fit:cover}
+.lab-page .rolecards{margin:15px 0}
+.lab-page .role{min-width:0}
+.lab-page .role h3{line-height:1.4}
+.lab-page .role p{line-height:1.7}
+.lab-page .scriptbar{display:flex;gap:6px;flex-wrap:wrap}
+.lab-page .tab{min-width:0;white-space:normal}
+.lab-page .speech{max-width:100%!important}
+.lab-page .speech p{overflow-wrap:break-word}
+.lab-page .performance-guide{border-radius:13px;border-right:3px solid #b5d5be;background:#f6f9f6}
+.lab-page .performance-guide-heading{font-weight:850}
+.lab-page .lab-rubric-row{padding:10px 0}
+.lab-page .actionfield textarea{width:100%;min-height:100px}
+.single-stage>.floatingnav,.lab-page>.floatingnav{position:static!important;bottom:auto!important;z-index:auto!important;box-shadow:none!important;background:transparent!important}
+@media(max-width:680px){
+ html{scroll-padding-top:62px}
+ .shell{padding:12px 13px 46px!important}
+ .topinside{gap:7px!important;padding:8px 10px!important}
+ .brand img{width:37px!important;height:37px!important}
+ .brand strong{font-size:18px!important;line-height:1.35}
+ .brand small{font-size:13px!important}
+ .quicknav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;width:100%}
+ .quicknav .back{min-width:0!important;min-height:44px!important;padding:7px 6px!important;font-size:15px!important;border-radius:10px!important}
+ .single-stage>.section-header,.lab-page>.section-header{margin:10px 0 13px!important;padding:5px 0!important;scroll-margin-top:64px}
+ .single-stage>.section-header h1,.lab-page>.section-header h1{font-size:29px!important;line-height:1.45!important;margin:0!important}
+ .lab-page .lab-card,.stage-opening.lab-simple-case{padding:17px 16px!important;margin-top:9px!important}
+ .lab-simple-case .casebox{margin:11px 0 15px!important;padding:17px 16px!important}
+ .lab-simple-case .casebox p{font-size:22px!important;line-height:1.77!important;font-weight:600!important}
+ .lab-page .lab-skill-focus,.lab-simple-goal{font-size:21px!important;padding:12px 14px!important;line-height:1.65}
+ .lab-page .lab-simple-start{padding:15px 16px!important;margin:15px 0 10px!important}
+ .lab-page .lab-simple-start b,.lab-page .lab-simple-start strong{font-size:23px!important}
+ .lab-page .lab-simple-start p{font-size:23px!important;line-height:1.68!important}
+ .lab-page .lab-acting-cues{padding:12px 15px!important;gap:5px}
+ .lab-page .lab-acting-cues>div{font-size:20px!important;line-height:1.65!important}
+ .lab-page .lab-role-scene{padding:16px!important}
+ .lab-page .lab-role-scene>b{font-size:23px!important}
+ .lab-page .lab-role-scene p{font-size:21px!important;line-height:1.74!important}
+ .lab-page .lab-role-action{padding:15px!important}
+ .lab-page .lab-role-action b,.lab-page .lab-role-action strong{font-size:22px!important}
+ .lab-page .lab-role-action p{font-size:22px!important;line-height:1.68!important}
+ .lab-page .rolecards{grid-template-columns:1fr!important;gap:10px!important}
+ .lab-page .role{padding:15px!important}
+ .lab-page .role h3{font-size:23px!important}
+ .lab-page .role p{font-size:21px!important}
+ .lab-page .lab-quiz-question h3{font-size:25px!important}
+ .lab-page .lab-quiz-question .lead{font-size:22px!important;line-height:1.65!important}
+ .lab-page button.answer.lab-choice{min-height:67px!important;font-size:21px!important;line-height:1.57!important;padding:13px!important}
+ .lab-page .lab-feedback-result{font-size:21px!important;padding:12px!important}
+ .lab-page .lab-feedback-another{padding:9px!important}
+ .lab-page .lab-feedback-another p{font-size:19px!important;line-height:1.68!important}
+ .lab-page .lab-principle summary{font-size:23px!important;min-height:0!important}
+ .lab-page .lab-principle .lab-lead{font-size:21px!important;line-height:1.67!important}
+ .lab-page .lab-principle .compare p{font-size:20px!important;line-height:1.72!important}
+ .lab-page .lab-short-context{font-size:19px!important}
+ .lab-page .speech{padding:16px 15px!important;width:100%!important}
+ .lab-page .speech p{font-size:22px!important;line-height:1.72!important}
+ .lab-page .speech small{font-size:17px!important}
+ .lab-page .performance-guide{padding:12px 13px!important;font-size:19px!important;line-height:1.68!important}
+ .lab-page .performance-guide-heading{font-size:19px!important}
+ .lab-page .scriptbar .tab{font-size:18px!important;padding:9px 10px!important;min-height:43px}
+ .lab-page .lab-rubric-row>b{font-size:21px!important}
+ .lab-page .scale button{font-size:20px!important}
+ .lab-page .actionfield{font-size:20px!important}
+ .single-stage>.floatingnav .navbtn,.lab-page>.floatingnav .navbtn{font-size:19px!important;min-height:53px!important;padding:9px 12px!important}
+ .lab-page .lab-retry-watch{font-size:21px!important}
+ .lab-page .checkitem{font-size:20px!important}
+ .lab-page .accordion summary{overflow-wrap:normal}
+}
+html.touch-desktop-mode.alborz-scrolled .topinside{padding:8px 20px!important}
+html.touch-desktop-mode.alborz-scrolled .brand{display:none!important}
+html.touch-desktop-mode.alborz-scrolled .quicknav{gap:11px!important}
+html.touch-desktop-mode.alborz-scrolled .quicknav .back{min-height:67px!important;font-size:32px!important;padding:10px!important}
+html.touch-desktop-mode .lab-page .section-header h1{font-size:57px!important}
+html.touch-desktop-mode .lab-page .lab-card{padding:30px!important}
+html.touch-desktop-mode .lab-page .lab-acting-cues>div{font-size:38px!important}
+html.touch-desktop-mode .lab-page .rolecards{grid-template-columns:1fr 1fr}
+html.touch-desktop-mode .lab-page .lab-feedback-another p{font-size:37px!important}
