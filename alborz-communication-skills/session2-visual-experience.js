@@ -80,18 +80,11 @@ function decorateStages(){
  }
 }
 function injectPracticeControls(){
- const rolecards=root.querySelector('.rolecards');
- const bar=root.querySelector('.scriptbar');
- // The role-play page already contains the scenario and roles; no extra launcher.
- if(bar&&!root.querySelector('.alborz-script-tools')){
-  const details=document.createElement('details');
-  details.className='alborz-script-tools';
-  const summary=document.createElement('summary');
-  summary.textContent='⚙️ تنظیمات نمایش اسکریپت و نقش‌ها';
-  details.append(summary,bar);
-  const button=createShortcut('🗣️ انتخاب نقش و ابزارهای گفت‌وگو');
-  details.parentElement.insertBefore(button,details);
- }
+ // Script controls already exist inside the stage card. Preserve them in place.
+ // A previous wrapper moved .scriptbar into a detached <details> element and
+ // then called details.parentElement.insertBefore, which crashed all 10 scripts.
+ // No duplicate practice launcher is needed inside this screen.
+ return;
 }
 function createShortcut(label){
  const b=document.createElement('button');
