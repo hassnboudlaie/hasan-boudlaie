@@ -555,4 +555,20 @@ const fail=tests.filter(x=>!x.pass),summary={release:'s12-r5-20261031',status:fa
 root.innerHTML='<section class="contentcard"><h1>🔎 کنترل زنده فازهای ۱ تا ۴</h1><h2>'+(fail.length?'نیاز به اصلاح':'همه کنترل‌ها موفق بودند')+'</h2><p>نسخه: s12-r5-20261031</p><p>موفق: '+summary.passed+' از '+summary.checks+'</p><p>۸۰ مرحله، ۳۰ سؤال، ۹۰ انتخاب و ۲۴۸ نوبت گفت‌وگو</p><pre id="alborz-qa-json" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5" dir="ltr">ALBORZ_QA_RESULT='+JSON.stringify(summary)+'</pre><button class="navbtn next" onclick="location.href='+"'session2-demo.html?release=s12-r5-20261031'"+'">بازگشت به دوره</button></section>';
 window.ALBORZ_AUDIT_RESULT=summary;
 })();
+</script><script id="alborz-style-diagnostic">
+(function(){
+if(new URLSearchParams(location.search).get('qaStyle')!=='1')return;
+const el=document.documentElement,root=document.getElementById('root'),brand=document.querySelector('.brand');
+const styles=[...document.styleSheets].map(x=>({href:x.href||'inline',ruleCount:(()=>{try{return x.cssRules.length}catch(e){return -1}})()}));
+const color=()=>{
+ const b=document.createElement('button');b.className='answer lab-choice selected selected-correct';b.textContent='نمونه درست';
+ root.appendChild(b);const good=getComputedStyle(b).backgroundColor;b.classList.remove('selected-correct');b.classList.add('selected-incorrect');
+ const bad=getComputedStyle(b).backgroundColor;b.remove();return {good,bad};
+};
+const normal=brand?getComputedStyle(brand).display:'missing';
+el.classList.add('alborz-scrolled');const compact=brand?getComputedStyle(brand).display:'missing';
+const active=el.classList.contains('alborz-scrolled');
+const result={release:window.ALBORZ_RELEASE?.id,styles,links:[...document.querySelectorAll('link[rel=stylesheet]')].map(x=>({href:x.href,sheetReady:!!x.sheet})),normal,compact,active,colors:color(),width:innerWidth};
+root.innerHTML='<section class="contentcard"><h2>CSS Debug</h2><pre style="white-space:pre-wrap;font-size:15px">ALBORZ_STYLE_DEBUG='+JSON.stringify(result)+'</pre></section>';
+})();
 </script></body></html>
