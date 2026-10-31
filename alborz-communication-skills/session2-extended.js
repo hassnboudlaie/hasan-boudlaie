@@ -4,13 +4,13 @@
 'use strict';
 const bank=window.ALBORZ_TECH_DATA||{};
 const techStages=[
- ['🎯','موقعیت تمرینی','یک اتفاق واقعی‌نما در شعبه؛ بگویید چه می‌کنید'],
+ ['🎯','موقعیت تمرینی','یک اتفاق آشنا، یک پاسخ کاربردی'],
  ['🧩','اصول و تکنیک‌های کاربردی','پنج اصل، بایدها و نبایدها، مثال مناسب و نامناسب'],
  ['❓','تست و پرسش کلاسی','سه سؤال ساده درباره رفتار خودتان'],
  ['🎭','تمرین دونفره','اجرای همین موقعیت با دو نقش مشخص'],
- ['🗣️','اسکریپت کامل گفت‌وگو','متن چندمرحله‌ای همراه با راهنمای اجرا و توقف تحلیل'],
+ ['🗣️','گفت‌وگوی نمونه','کلام، صدا، بدن و چهره'],
  ['🔎','نقد و بازخورد رفتاری','چه چیزی خوب بود و چه چیزی بهتر می‌شود؟'],
- ['🔁','اجرای اصلاح‌شده','چالش تازه، اجرای بدون متن و مقایسه با اجرای قبلی'],
+ ['🔁','اجرای دوباره','همان مهارت، این بار بهتر'],
  ['💡','نکات کلیدی یادگیری','جمع‌بندی کاربردی، تعهد رفتاری و منابع']
 ];
 const partnerNames={2:'مدیر منطقه',3:'مدیرعامل شرکت',4:'مهمان سازمانی',5:'مدیر منابع انسانی',6:'بیمه‌گذار',7:'مدیر خرید شرکت',8:'همراه مدیر ستادی',9:'نماینده فروش',10:'مدیرعامل مشتری'};
@@ -32,12 +32,12 @@ const photo=(d,label)=>'<figure class="lab-photo"><a href="'+fileFor(d)+'" targe
 const card=(x,cl='')=>'<section class="contentcard lab-card '+cl+'">'+x+'</section>';
 function getTech(){return bank[chosenTech+1];}
 function showCatalog(){
-const intro=pageTitle('فهرست تکنیک‌های جلسه دوم','۱۰ تکنیک آماده تمرین؛ هر تکنیک ۸ مرحله تعاملی دارد. برای کلاس ۱۲۰ دقیقه‌ای، اجرای زنده ۴ تا ۵ آزمایشگاه منتخب پیشنهاد می‌شود.','📚 آداب معاشرت و تشریفات حرفه‌ای');
+const intro=pageTitle('تکنیک‌های جلسه دوم','','');
 const cards=T.map((t,i)=>'<button class="tech-card lab-tech" onclick="openAdvancedTech('+i+')" aria-label="ورود به تکنیک '+(i+1)+' '+e(t[0])+'"><span class="iconbox"><span class="icon-num">'+String(i+1).padStart(2,'0')+'</span><span class="icon-emoji" aria-hidden="true">'+(TECH_EMOJI[i]||'✦')+'</span></span><span class="tech-copy"><b>'+e(t[0])+'</b><small>'+e(t[1])+'</small></span><span class="lab-enter">ورود ←</span></button>').join('');
 return intro+'<div class="catalog">'+cards+'</div>';
 }
 function showTechnique(d){
-const title='<div class="subhero lab-tech-hero" style="background-image:linear-gradient(100deg,rgba(3,46,33,.98),rgba(4,77,53,.82) 62%,rgba(5,71,48,.42)),url('+fileFor(d)+')"><div><span class="eyebrow">جلسه دوم · تکنیک '+(chosenTech+1)+'</span><h1>'+e(d.icon)+' '+e(d.title)+'</h1><p>'+e(d.subtitle)+'</p><span class="lab-hero-tags">🎭 دو نقش · 🧠 تست · 🗣️ '+d.dialogue.length+' نوبت گفت‌وگو · 🔁 اجرای مجدد</span></div></div>';
+const title='<div class="subhero lab-tech-hero" style="background-image:linear-gradient(100deg,rgba(3,46,33,.98),rgba(4,77,53,.82) 62%,rgba(5,71,48,.42)),url('+fileFor(d)+')"><div><span class="eyebrow">جلسه دوم · تکنیک '+(chosenTech+1)+'</span><h1>'+e(d.icon)+' '+e(d.title)+'</h1><p>'+e(d.subtitle)+'</p></div></div>';
 const cards=techStages.map((x,i)=>'<button class="stage-card lab-stage" onclick="go(\'stage\','+i+')" aria-label="ورود به مرحله '+(i+1)+'"><span class="stage-no"><span class="badge-digit">'+(i+1)+'</span><span class="badge-emoji" aria-hidden="true">'+x[0]+'</span></span><span class="body"><b>'+e(x[1])+'</b><small>'+e(x[2])+'</small></span><span class="arrow">←</span></button>').join('');
 return title+'<div class="stage-grid">'+cards+'</div>';
 }
@@ -77,9 +77,9 @@ return '<div class="speech '+(turn[0]==='الف'?'manager':'')+(visible?'':' hid
 }).join('');
 }
 function showDialogue(d){
-return card('<h2>🗣️ متن حرفه‌ای نقش‌آفرینی</h2><p>گفت‌وگو را مثل یک ملاقات واقعی اجرا کنید. زیر هر نوبت، راهنمای لحن، بدن و چهره آمده است؛ بعد از خواندن، موقعیت را بدون متن اجرا کنید.</p><div class="scriptbar"><button class="tab '+(scriptView==='both'?'active':'')+'" onclick="showAdvancedRole(\'both\')">هر دو نقش</button><button class="tab '+(scriptView==='A'?'active':'')+'" onclick="showAdvancedRole(\'A\')">رئیس شعبه</button><button class="tab '+(scriptView==='B'?'active':'')+'" onclick="showAdvancedRole(\'B\')">مخاطب</button><button class="tab" onclick="toggleAdvancedDirection()">راهنمای اجرا '+(stageDirections?'روشن':'خاموش')+'</button><button class="tab" onclick="copyAdvancedScript()">📋 کپی گفت‌وگو</button></div>'+
-'<div class="lab-dialogue-count">'+d.dialogue.length+' نوبت گفت‌وگو؛ همراه با نقاط توقف مدرس</div>'+scriptRows(d)+
-'<div class="lab-pause"><h3>⏸️ توقف‌های تحلیل در کلاس</h3>'+d.pause.map(p=>'<p><strong>بعد از نوبت '+p.at+': </strong>'+e(p.q)+'</p>').join('')+'</div>');
+const p=d.performance;
+return card('<h2>🗣️ گفت‌وگوی نمونه</h2><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><p class="lab-short-context">'+e(p?.setting||d.situation)+'</p><div class="scriptbar"><button class="tab '+(scriptView==='both'?'active':'')+'" onclick="showAdvancedRole(\'both\')">هر دو نقش</button><button class="tab '+(scriptView==='A'?'active':'')+'" onclick="showAdvancedRole(\'A\')">رئیس شعبه</button><button class="tab '+(scriptView==='B'?'active':'')+'" onclick="showAdvancedRole(\'B\')">مخاطب</button><button class="tab" onclick="toggleAdvancedDirection()">راهنمای اجرا '+(stageDirections?'روشن':'خاموش')+'</button><button class="tab" onclick="copyAdvancedScript()">کپی متن</button></div>'+scriptRows(d)+
+'<details class="accordion lab-question-extra"><summary>❓ پرسش‌های بررسی گفت‌وگو</summary><div>'+d.pause.map(x=>'<p><b>پس از نوبت '+x.at+':</b> '+e(x.q)+'</p>').join('')+'</div></details>');
 }
 function showFeedback(d){
 selectedRubrics[chosenTech] ||= {};
@@ -89,7 +89,8 @@ const total=Object.values(scores).reduce((a,b)=>a+b,0);
 return card('<h2>🔎 مشاهده رفتار، نه قضاوت شخصیت</h2><p>به هر رفتار از ۱ تا ۵ امتیاز بدهید و یک مثال از چیزی که دیدید بگویید. این نمره فقط برای تمرین و یادگیری است.</p><div class="observer">'+widgets+'</div><div class="summary"><b>'+total+' / ۳۰</b><p>'+Object.keys(scores).length+' شاخص از ۶ شاخص امتیازدهی شده است.</p></div><label class="actionfield">🟢 دو رفتار مؤثر چه بودند؟<textarea class="lab-positives" placeholder="دو رفتار دقیق و قابل مشاهده بنویسید…"></textarea></label><label class="actionfield">🟠 یک رفتار برای اصلاح چیست؟<textarea class="lab-change" placeholder="یک تغییر قابل اجرا برای نوبت دوم بنویسید…"></textarea></label><button class="navbtn" onclick="copyAdvancedFeedback()">📋 کپی بازخورد</button>');
 }
 function showRepractice(d){
-return card('<h2>🔁 اجرای اصلاح‌شده — چالش جدید</h2><div class="casebox"><b>موقعیت دوم</b><p>'+e(d.repractice.trigger)+'</p></div><h3>چهار شرط اجرای دوم</h3><div class="checks">'+d.repractice.constraints.map((v,i)=>'<div class="checkitem"><b>'+(i+1)+'. </b>'+e(v)+'</div>').join('')+'</div><div class="prompt">🎤 پرسش مدرس: نسبت به دور اول، <strong>چه رفتار مشخصی</strong> تغییر کرد و مخاطب چگونه پاسخ داد؟</div>');
+const p=d.performance;
+return card('<h2>🔁 اجرای دوباره</h2><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><div class="casebox"><p>'+e(d.repractice.trigger)+'</p></div><div class="lab-role-action"><b>این بار چه می‌گویید؟</b><p>'+e(p?.prompt||d.opening)+'</p></div>'+behaviorCues(p)+'<details class="accordion lab-question-extra"><summary>چهار نکته برای اجرای بهتر</summary><div>'+d.repractice.constraints.map((v,i)=>'<p>'+(i+1)+'. '+e(v)+'</p>').join('')+'</div></details><p class="lab-observer-prompt">چه چیزی در لحن، حرف‌ها و رفتار شما نسبت به اجرای اول بهتر شد؟</p>');
 }
 function showTakeaways(d){
 return card('<h2>💡 نکات یادگیری و انتقال به شعبه</h2><div class="checks">'+d.takeaways.map((s,i)=>'<div class="checkitem"><b>'+(i+1)+'. </b>'+e(s)+'</div>').join('')+'</div><label class="actionfield">🎯 در ملاقات بعدی چه رفتار مشخصی را تغییر می‌دهید؟<textarea class="lab-commit" placeholder="موقعیت اجرا + رفتار + شاهد پیشرفت…"></textarea></label><button class="navbtn next" onclick="copyAdvancedCommit()">📋 کپی برنامه اقدام</button><details class="accordion"><summary>📚 مبنای محتوایی و یادداشت علمی</summary><div><p>توسعه بومی و بازنویسی مستقل براساس نقشه منابع آموزشی آکادمی و راهنماهای حرفه‌ای. سناریوها ساختگی‌اند و جایگزین دستورالعمل‌های مصوب بیمه البرز نیستند.</p>'+d.sources.map(x=>'<p>• '+e(x)+'</p>').join('')+'<p>قواعد تشریفاتی وابسته به موقعیت، پروتکل سازمانی و فرهنگ هستند؛ درباره نیت یا صداقت افراد از یک نشانه غیرکلامی نتیجه قطعی نگیرید.</p></div></details>');
@@ -97,9 +98,9 @@ return card('<h2>💡 نکات یادگیری و انتقال به شعبه</h2>
 function showStage(d,i){
 let content='';
 if(i===0){
-const p=d.practice||{skill:d.title,questions:[],watch:"لحن، کلام و رفتار"};
-const extras=(p.questions||[]).map((q,n)=>'<p><strong>'+(n+1)+'.</strong> '+e(q)+'</p>').join('');
-content=card('<span class="tag">🎯 یک اتفاق آشنا در شعبه</span><h2>'+e(d.title)+'</h2><div class="casebox"><p>'+e(d.situation)+'</p></div><div class="lab-simple-goal"><b>✨ مهارت امروز:</b> '+e(p.skill)+'</div><div class="prompt lab-simple-start"><strong>🎤 نوبت شماست!</strong><p>'+e(d.opening)+'</p><span>همین حالا جلوی وب‌کم، مثل یک روز واقعی در شعبه جواب بدهید. حدود یک دقیقه.</span></div><details class="accordion lab-simple-follow"><summary>❓ دو سؤال دیگر برای گفت‌وگوی کلاس</summary><div>'+extras+'</div></details><div class="lab-simple-watch">👀 موقع اجرا به این‌ها توجه کنید: <strong>'+e(p.watch)+'</strong></div>','lab-stage-intro lab-simple-case');
+const p=d.practice||{questions:[]},g=d.performance||{skill:p.skill||d.title,prompt:d.opening,voice:'آرام و محترمانه',body:'باز و رو به مخاطب',face:'طبیعی'};
+const extras=(p.questions||[]).map((q,n)=>'<p>'+(n+1)+'. '+e(q)+'</p>').join('');
+content=card('<h2>'+e(d.title)+'</h2><div class="casebox"><p>'+e(d.situation)+'</p></div><div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(g.skill)+'</div><div class="prompt lab-simple-start"><b>نوبت شماست</b><p>'+e(g.prompt)+'</p></div>'+behaviorCues(g)+'<details class="accordion lab-simple-follow"><summary>دو سؤال برای گفت‌وگو</summary><div>'+extras+'</div></details>','lab-stage-intro lab-simple-case');
 }
 if(i===1)content=showPrinciples(d);
 if(i===2)content=showQuiz(d);
