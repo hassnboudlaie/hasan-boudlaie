@@ -21,7 +21,7 @@ renderStage=function(i){
   return frame(i,'❓ ۳. تست و پرسش کلاسی',body);
  }
  if(i===3){
-  const body='<div class="contentcard"><h2>🎭 تمرین دونفره</h2><div class="lab-role-scene"><b>صورت مسئله</b><p>'+h(g.setting)+'</p><p><b>مهمان شروع می‌کند:</b> '+h(g.opening)+'</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+h(g.skill)+'</div><div class="lab-role-action"><b>حالا شما چه می‌کنید؟</b><p>'+h(g.prompt)+'</p></div><div class="rolecards"><div class="role"><h3>رئیس شعبه</h3><p>علت تأخیر را هنوز دقیق نمی‌دانید. هم به وقت مهمان احترام بگذارید، هم سؤال مناسب بپرسید؛ قول نتیجه ندهید.</p></div><div class="role"><h3>مدیرعامل شرکت</h3><p>برای الحاقیه ناراضی هستید و فقط بیست دقیقه وقت دارید. از رئیس شعبه انتظار پاسخ روشن دارید.</p></div></div>'+delivery(g)+'<details class="accordion lab-question-extra"><summary>🔄 تمرین دوباره</summary><div>همین شروع را یک بار با لحن دفاعی و یک بار با لحن آرام و بدن باز اجرا کنید. تفاوت را بررسی کنید.</div></details></div>';
+  const body='<div class="contentcard"><h2>🎭 تمرین دونفره</h2><div class="lab-role-scene"><b>صورت مسئله</b><p>'+h(g.setting)+'</p><p><b>مهمان شروع می‌کند:</b> '+h(g.opening)+'</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+h(g.skill)+'</div><div class="lab-role-action"><b>حالا شما چه می‌کنید؟</b><p>'+h(g.prompt)+'</p></div><div class="rolecards"><div class="role"><h3>رئیس شعبه</h3><p>علت تأخیر را هنوز دقیق نمی‌دانید. هم به وقت مهمان احترام بگذارید، هم سؤال مناسب بپرسید؛ قول نتیجه ندهید.</p></div><div class="role"><h3>مدیرعامل شرکت</h3><p>برای الحاقیه ناراضی هستید و فقط بیست دقیقه وقت دارید. از رئیس شعبه انتظار پاسخ روشن دارید.</p></div></div>'+delivery(g)+'</div>';
   return frame(i,'🎭 ۴. تمرین دونفره',body);
  }
  if(i===4){
