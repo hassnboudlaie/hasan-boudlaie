@@ -29,7 +29,7 @@ function delivery(id,role,i,words){
  'بازگشت به حالت نشسته و گوش‌دادن به پاسخ',
  'شانه‌ها رها و توجه به جمع‌بندی'][phase];
  const face=isManager?[
- 'چهره پذیرا و لبخند کوتاهِ متناسب',
+ ([2,6,7,8,9].includes(id)?'چهره جدی، با توجه به نگرانی طرف مقابل؛ بدون لبخند نامتناسب':'چهره پذیرا؛ لبخند کوتاه فقط در خوشامدگویی مناسب'),
  'چهره جدی اما بدون اخم دفاعی',
  'ابروهای طبیعی و تمرکز بر مسئله',
  'چهره آرام و اطمینان‌بخش'][phase]:
@@ -44,8 +44,8 @@ function delivery(id,role,i,words){
  const oldDirection=String(words).match(/^\[([^\]]+)\]/)?.[1]||"";
  return {
  tone:(isManager?v[0]:v[0])+'؛ '+tone+(emphasis||pressure),
- body:v[1]+'؛ '+body,
- face:v[2]+'؛ '+face,
+ body:(i%2===0?v[1]:body)+(i%7===0?'؛ مراقب فاصله شخصی و حرکات اضافی باشید.':''),
+ face:(i%2===0?v[2]:face),
  cue:(oldDirection?oldDirection+'؛ ':'')+(i%5===2?'مکث کوتاه بعد از جمله؛ ':'')+(i%4===1?active:''),
  skill:books[id][0]
  };
