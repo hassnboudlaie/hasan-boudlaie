@@ -57,3 +57,18 @@
 .lab-flow-item small{font-size:clamp(19px,1.5vw,23px);font-weight:750;color:#496d5a}
 @media(max-width:900px){.lab-concept-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lab-flow-item{min-height:154px}}
 @media(max-width:420px){.lab-concept-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-flow-item{padding:14px 9px}.lab-flow-item b{font-size:25px}.lab-flow-item small{font-size:20px}}
+
+/* Dialogue execution cues: separate voice, body and facial-expression guidance */
+.performance-guide{margin-top:15px;padding:18px 22px;background:#f6f9ed;border:1px solid #d8e7c4;border-right:5px solid #a08b50;border-radius:15px;color:#1d4937;font-size:clamp(19px,1.7vw,26px);line-height:1.75;font-weight:600}
+.performance-guide-heading{font-weight:900;font-size:1.08em;margin-bottom:9px;color:#145b40}
+.performance-guide>div:not(.performance-guide-heading){margin-top:7px}
+.performance-guide b{font-weight:850;color:#134d38}
+.speech .performance-guide{max-width:100%;overflow-wrap:anywhere}
+.book-application{border-color:#cadfcf;background:#f4faf5;margin:14px 0 22px}
+.book-application summary{font-weight:850}
+.book-application p{font-size:clamp(20px,1.6vw,26px);line-height:1.8}
+@media(max-width:680px){
+.performance-guide{font-size:24px;line-height:1.7;padding:16px 13px;margin-top:13px}
+.performance-guide-heading{font-size:26px}
+.book-application p{font-size:23px}
+}
