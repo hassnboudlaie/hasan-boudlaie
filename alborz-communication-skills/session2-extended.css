@@ -72,3 +72,265 @@
 .performance-guide-heading{font-size:26px}
 .book-application p{font-size:23px}
 }
+
+/* TOUCH-DESKTOP-ADAPTIVE PATCH — 2026-10-31
+   Preserve approved UI, techniques and training content.
+   Compensates for Android Chrome "Desktop site" virtual viewport shrink.
+   Class is set by a touch + portrait + large virtual-width check, not by CSS width alone. */
+
+/* Both responsive mobile and desktop modes: fill a short goals page naturally. */
+.goals-page{
+  display:flex;
+  flex-direction:column;
+  min-height:calc(100svh - 170px);
+}
+.goals-page>.overview{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  justify-content:space-evenly;
+  gap:clamp(22px,3vh,44px);
+}
+.goals-page .checks{align-content:center}
+.goals-page .checkitem{font-weight:725}
+.goals-page .overview>div:last-child{margin-top:auto!important;padding-top:12px}
+.goals-page .cta.green{font-weight:850}
+@media(max-width:680px){
+  .goals-page{min-height:calc(100svh - 175px)}
+  .goals-page .overview{padding:26px 20px;gap:24px}
+  .goals-page .checks{grid-template-columns:1fr;gap:15px}
+  .goals-page .checkitem{font-size:27px;line-height:1.65;padding:21px 16px}
+  .goals-page .cta.green{width:100%;min-height:69px;font-size:24px}
+  .goals-page>.section-header{margin-bottom:22px}
+}
+
+/* User sees desktop-mode browser on a physically touch/portrait handheld. */
+html.touch-desktop-mode body{
+  font-size:48px;
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+html.touch-desktop-mode .shell{
+  width:100%;
+  max-width:100%;
+  padding:26px 25px 68px;
+}
+html.touch-desktop-mode .topinside{
+  width:100%;
+  max-width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:13px;
+  padding:16px 25px;
+}
+html.touch-desktop-mode .brand{gap:17px}
+html.touch-desktop-mode .brand img{width:88px;height:88px}
+html.touch-desktop-mode .brand strong{font-size:46px;line-height:1.35;font-weight:900}
+html.touch-desktop-mode .brand small{font-size:34px;line-height:1.45;font-weight:700}
+html.touch-desktop-mode .quicknav{
+  display:grid;
+  width:100%;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+}
+html.touch-desktop-mode .quicknav .back{
+  min-width:0;
+  min-height:96px;
+  padding:17px 9px;
+  font-size:39px;
+  font-weight:850;
+  white-space:normal;
+  line-height:1.25;
+  gap:8px;
+  border-radius:17px;
+}
+html.touch-desktop-mode .navemoji{font-size:1.05em}
+html.touch-desktop-mode .hero{
+  min-height:calc(100svh - 225px);
+  border-radius:32px;
+}
+html.touch-desktop-mode .hero-copy{padding:55px 47px 65px;max-width:100%}
+html.touch-desktop-mode .hero-copy h1{font-size:76px;line-height:1.33;font-weight:900}
+html.touch-desktop-mode .hero-copy p{font-size:48px;line-height:1.62;font-weight:700}
+html.touch-desktop-mode .hero .pill{font-size:37px;line-height:1.55}
+html.touch-desktop-mode .hero .cta{
+  min-height:109px;
+  font-size:44px;
+  padding:20px 19px;
+}
+html.touch-desktop-mode .actrow{width:100%;gap:15px}
+html.touch-desktop-mode .section-header{margin:23px 0 34px}
+html.touch-desktop-mode .section-header h1{
+  font-size:70px;line-height:1.36;font-weight:900;
+}
+html.touch-desktop-mode .section-header p{
+  font-size:46px;line-height:1.64;font-weight:650;
+}
+html.touch-desktop-mode .lab-kicker{
+  font-size:39px;line-height:1.5;padding:12px 23px;
+}
+html.touch-desktop-mode .goals-page{min-height:calc(100svh - 245px)}
+html.touch-desktop-mode .goals-page .overview{
+  padding:43px 36px;
+  gap:36px;
+  border-radius:28px;
+}
+html.touch-desktop-mode .overview h2{font-size:61px;line-height:1.45;font-weight:900}
+html.touch-desktop-mode .overview .lead{
+  font-size:48px;line-height:1.75;font-weight:750;
+}
+html.touch-desktop-mode .goals-page .checks{
+  display:grid;grid-template-columns:1fr;gap:17px;
+}
+html.touch-desktop-mode .goals-page .checkitem{
+  font-size:44px;line-height:1.55;
+  padding:24px 27px;
+  border-radius:18px;
+}
+html.touch-desktop-mode .goals-page .cta.green{
+  width:100%;
+  min-height:108px;
+  font-size:43px;
+  padding:21px;
+}
+html.touch-desktop-mode .catalog,
+html.touch-desktop-mode .stage-grid,
+html.touch-desktop-mode .detailgrid,
+html.touch-desktop-mode .compare,
+html.touch-desktop-mode .visuals,
+html.touch-desktop-mode .rolecards,
+html.touch-desktop-mode .checks,
+html.touch-desktop-mode .observer{
+  grid-template-columns:1fr;
+  gap:23px;
+}
+html.touch-desktop-mode .tech-card,
+html.touch-desktop-mode .stage-card{
+  width:100%;min-height:263px;
+  padding:35px 30px;gap:21px;border-radius:27px;
+}
+html.touch-desktop-mode .tech-copy b,
+html.touch-desktop-mode .stage-card b{
+  font-size:55px;line-height:1.48;font-weight:900;
+}
+html.touch-desktop-mode .tech-copy small,
+html.touch-desktop-mode .stage-card small{
+  display:block;font-size:45px;line-height:1.55;
+  color:#355448;font-weight:650;
+}
+html.touch-desktop-mode .iconbox,
+html.touch-desktop-mode .stage-no{
+  min-width:127px;width:127px;height:142px;
+  border-radius:25px;
+}
+html.touch-desktop-mode .icon-num,
+html.touch-desktop-mode .badge-digit{font-size:47px}
+html.touch-desktop-mode .icon-emoji,
+html.touch-desktop-mode .badge-emoji{font-size:53px}
+html.touch-desktop-mode .arrow{font-size:46px}
+html.touch-desktop-mode .lab-enter{font-size:38px;font-weight:850}
+html.touch-desktop-mode .subhero{
+  min-height:460px;
+  padding:54px 42px;
+  border-radius:30px;
+}
+html.touch-desktop-mode .subhero h1{
+  font-size:73px;line-height:1.35;font-weight:900;
+}
+html.touch-desktop-mode .subhero p,
+html.touch-desktop-mode .lab-tech-hero .lab-hero-tags{
+  font-size:43px;line-height:1.55;font-weight:650;
+}
+html.touch-desktop-mode .eyebrow,
+html.touch-desktop-mode .tag{font-size:36px;padding:8px 15px}
+html.touch-desktop-mode .contentcard{
+  padding:46px 35px;
+  font-size:46px;line-height:1.77;
+  border-radius:27px;
+}
+html.touch-desktop-mode .contentcard h2{font-size:64px;line-height:1.4;font-weight:900}
+html.touch-desktop-mode .contentcard h3{font-size:53px;line-height:1.45;font-weight:850}
+html.touch-desktop-mode .contentcard p,
+html.touch-desktop-mode .contentcard label,
+html.touch-desktop-mode .contentcard .role p{
+  font-size:46px;line-height:1.77;
+}
+html.touch-desktop-mode .lead,
+html.touch-desktop-mode .lab-lead{font-size:49px;line-height:1.72}
+html.touch-desktop-mode .casebox,
+html.touch-desktop-mode .casebox p,
+html.touch-desktop-mode .prompt{font-size:49px;line-height:1.75}
+html.touch-desktop-mode .casebox,
+html.touch-desktop-mode .prompt{padding:39px 32px}
+html.touch-desktop-mode .letter{min-height:234px}
+html.touch-desktop-mode .letters{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+html.touch-desktop-mode .letter strong{font-size:99px}
+html.touch-desktop-mode .letter-symbol{font-size:56px}
+html.touch-desktop-mode .letter span:not(.letter-symbol){font-size:49px}
+html.touch-desktop-mode .letter small{font-size:38px}
+html.touch-desktop-mode .lab-concept-flow{
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;
+}
+html.touch-desktop-mode .lab-flow-item{min-height:247px;padding:28px 19px}
+html.touch-desktop-mode .lab-flow-item b{font-size:48px}
+html.touch-desktop-mode .lab-flow-item small{font-size:37px}
+html.touch-desktop-mode .lab-flow-item span{
+  width:77px;height:77px;font-size:42px;
+}
+html.touch-desktop-mode .panel b{font-size:53px}
+html.touch-desktop-mode .panel p{font-size:46px}
+html.touch-desktop-mode .panel{padding:34px;min-height:0}
+html.touch-desktop-mode .tip,
+html.touch-desktop-mode .accordion,
+html.touch-desktop-mode .accordion summary,
+html.touch-desktop-mode .book-application p{font-size:45px;line-height:1.7}
+html.touch-desktop-mode .accordion summary{padding:36px}
+html.touch-desktop-mode .accordion>div{padding:16px 35px 33px}
+html.touch-desktop-mode .answer{
+  font-size:46px;
+  min-height:117px;
+  line-height:1.6;
+  padding:27px;
+}
+html.touch-desktop-mode .response{font-size:45px;line-height:1.7;padding:30px}
+html.touch-desktop-mode .role h3{font-size:55px}
+html.touch-desktop-mode .role{padding:34px}
+html.touch-desktop-mode .tab{
+  font-size:41px;min-height:99px;padding:24px 29px;
+}
+html.touch-desktop-mode .speech{width:99%;max-width:99%;padding:32px 29px}
+html.touch-desktop-mode .speech p{font-size:47px;line-height:1.83}
+html.touch-desktop-mode .speech small{font-size:37px}
+html.touch-desktop-mode .performance-guide{
+  padding:28px 23px;
+  font-size:40px;
+  line-height:1.65;
+}
+html.touch-desktop-mode .performance-guide-heading{font-size:45px}
+html.touch-desktop-mode .rubric b,
+html.touch-desktop-mode .vtext b{font-size:48px}
+html.touch-desktop-mode .scale button{font-size:43px;min-height:90px}
+html.touch-desktop-mode .checkitem{font-size:44px;line-height:1.7;padding:30px}
+html.touch-desktop-mode .photo-lesson figcaption,
+html.touch-desktop-mode .lab-photo figcaption{font-size:39px}
+html.touch-desktop-mode .navbtn{
+  font-size:43px;min-height:104px;padding:22px 28px;
+}
+html.touch-desktop-mode .actionfield textarea{font-size:45px;min-height:245px}
+html.touch-desktop-mode .single-stage{
+  min-height:calc(100svh - 265px);
+}
+html.touch-desktop-mode .stage-opening,
+html.touch-desktop-mode .lab-stage-intro{
+  min-height:calc(100svh - 350px);
+}
+html.touch-desktop-mode :is(button,a,summary):focus-visible{
+  outline:5px solid #bd9b56;
+  outline-offset:4px;
+}
+@media(prefers-reduced-motion:reduce){
+  html.touch-desktop-mode *{scroll-behavior:auto!important}
+}
