@@ -4,12 +4,12 @@
 'use strict';
 const bank=window.ALBORZ_TECH_DATA||{};
 const techStages=[
- ['🎯','موقعیت تمرینی','چالش واقعی‌نمای شغلی و اجرای نخستین پاسخ'],
+ ['🎯','موقعیت تمرینی','یک اتفاق واقعی‌نما در شعبه؛ بگویید چه می‌کنید'],
  ['🧩','اصول و تکنیک‌های کاربردی','پنج اصل، بایدها و نبایدها، مثال مناسب و نامناسب'],
- ['❓','تست و پرسش کلاسی','سه تصمیم تعاملی و پرسش پیگیری مدرس'],
- ['🎭','تمرین دونفره بدون متن','دو نقش محرمانه، اجرا جلوی وب‌کم و جابه‌جایی نقش'],
+ ['❓','تست و پرسش کلاسی','سه سؤال ساده درباره رفتار خودتان'],
+ ['🎭','تمرین دونفره بدون متن','دو نفر، دو نقش، تمرین جلوی دوربین'],
  ['🗣️','اسکریپت کامل گفت‌وگو','متن چندمرحله‌ای همراه با راهنمای اجرا و توقف تحلیل'],
- ['🔎','نقد و بازخورد رفتاری','شاهد رفتاری، امتیاز مشاهده‌گر و بازخورد مشخص'],
+ ['🔎','نقد و بازخورد رفتاری','چه چیزی خوب بود و چه چیزی بهتر می‌شود؟'],
  ['🔁','اجرای اصلاح‌شده','چالش تازه، اجرای بدون متن و مقایسه با اجرای قبلی'],
  ['💡','نکات کلیدی یادگیری','جمع‌بندی کاربردی، تعهد رفتاری و منابع']
 ];
@@ -53,7 +53,7 @@ let score=answers[i], answered=score!==undefined;
 return '<div class="poll lab-poll"><h3>❓ پرسش '+(i+1)+'</h3><p class="lead">'+e(q.q)+'</p>'+q.options.map((o,k)=>'<button class="answer '+(score===k?'selected':'')+'" onclick="chooseAdvancedPoll('+chosenTech+','+i+','+k+')">'+e(o)+'</button>').join('')+
 (answered?'<div class="response"><b>'+(score===q.correct?'✅ تصمیم قابل دفاع':'🔄 این انتخاب را بازنگری کنید')+'</b><p>'+e(q.why)+'</p><strong>🎤 پرسش مدرس:</strong> '+e(q.ask)+'</div>':'')+'</div>';
 }).join('');
-return card('<h2>🧠 پیش از اجرا، تصمیم بگیرید</h2><p>هر پاسخ قابل‌کلیک است. پس از انتخاب، تحلیل و یک پرسش برای گفت‌وگوی کلاسی نمایش داده می‌شود.</p>'+items);
+return card('<h2>🧠 پیش از اجرا، تصمیم بگیرید</h2><p>روی پاسخ بزنید؛ بعد ببینید چرا مناسب است یا نیست. یک سؤال هم برای تمرین بیشتر دارید.</p>'+items);
 }
 function showRoles(d){
 const roles='<div class="rolecards"><div class="role"><h3>🧑‍💼 نقش A — رئیس شعبه</h3><p>'+e(d.roles.a)+'</p></div><div class="role"><h3>👤 نقش B — '+e(partnerNames[chosenTech+1])+'</h3><p>'+e(d.roles.b)+'</p></div></div>';
@@ -80,7 +80,7 @@ selectedRubrics[chosenTech] ||= {};
 const scores=selectedRubrics[chosenTech];
 const widgets=d.observe.map((label,i)=>'<div class="rubric"><b>'+e(label)+'</b><div class="scale">'+[1,2,3,4,5].map(n=>'<button aria-pressed="'+(scores[i]===n)+'" class="'+(scores[i]===n?'active':'')+'" onclick="rateAdvanced('+chosenTech+','+i+','+n+')">'+n+'</button>').join('')+'</div></div>').join('');
 const total=Object.values(scores).reduce((a,b)=>a+b,0);
-return card('<h2>🔎 مشاهده رفتار، نه قضاوت شخصیت</h2><p>در هر شاخص از ۱ تا ۵ امتیاز دهید و برای آن <strong>شاهد قابل مشاهده</strong> بیان کنید. این Rubric صرفاً برای Feedback آموزشی است.</p><div class="observer">'+widgets+'</div><div class="summary"><b>'+total+' / ۳۰</b><p>'+Object.keys(scores).length+' شاخص از ۶ شاخص امتیازدهی شده است.</p></div><label class="actionfield">🟢 دو رفتار مؤثر چه بودند؟<textarea class="lab-positives" placeholder="دو رفتار دقیق و قابل مشاهده بنویسید…"></textarea></label><label class="actionfield">🟠 یک رفتار برای اصلاح چیست؟<textarea class="lab-change" placeholder="یک تغییر قابل اجرا برای نوبت دوم بنویسید…"></textarea></label><button class="navbtn" onclick="copyAdvancedFeedback()">📋 کپی بازخورد</button>');
+return card('<h2>🔎 مشاهده رفتار، نه قضاوت شخصیت</h2><p>به هر رفتار از ۱ تا ۵ امتیاز بدهید و یک مثال از چیزی که دیدید بگویید. این نمره فقط برای تمرین و یادگیری است.</p><div class="observer">'+widgets+'</div><div class="summary"><b>'+total+' / ۳۰</b><p>'+Object.keys(scores).length+' شاخص از ۶ شاخص امتیازدهی شده است.</p></div><label class="actionfield">🟢 دو رفتار مؤثر چه بودند؟<textarea class="lab-positives" placeholder="دو رفتار دقیق و قابل مشاهده بنویسید…"></textarea></label><label class="actionfield">🟠 یک رفتار برای اصلاح چیست؟<textarea class="lab-change" placeholder="یک تغییر قابل اجرا برای نوبت دوم بنویسید…"></textarea></label><button class="navbtn" onclick="copyAdvancedFeedback()">📋 کپی بازخورد</button>');
 }
 function showRepractice(d){
 return card('<h2>🔁 اجرای اصلاح‌شده — چالش جدید</h2><div class="casebox"><b>موقعیت دوم</b><p>'+e(d.repractice.trigger)+'</p></div><h3>چهار شرط اجرای دوم</h3><div class="checks">'+d.repractice.constraints.map((v,i)=>'<div class="checkitem"><b>'+(i+1)+'. </b>'+e(v)+'</div>').join('')+'</div><div class="prompt">🎤 پرسش مدرس: نسبت به دور اول، <strong>چه رفتار مشخصی</strong> تغییر کرد و مخاطب چگونه پاسخ داد؟</div>');
@@ -90,7 +90,11 @@ return card('<h2>💡 نکات یادگیری و انتقال به شعبه</h2>
 }
 function showStage(d,i){
 let content='';
-if(i===0)content=card('<span class="tag">🎯 موقعیت واقعی‌نما</span><h2>'+e(d.title)+'</h2><div class="casebox"><p>'+e(d.situation)+'</p></div><div class="prompt">🎤 '+e(d.opening)+'</div><div class="tip"><b>⚖️ آنچه در خطر است:</b><p>'+e(d.stakes)+'</p></div>'+faq('به جای توضیح نظری، اولین جمله خود را دقیقاً چگونه می‌گویید؟','دو نفر داوطلب شوند و پاسخ را جلوی دوربین اجرا کنند.'),'lab-stage-intro');
+if(i===0){
+const p=d.practice||{skill:d.title,questions:[],watch:"لحن، کلام و رفتار"};
+const extras=(p.questions||[]).map((q,n)=>'<p><strong>'+(n+1)+'.</strong> '+e(q)+'</p>').join('');
+content=card('<span class="tag">🎯 یک اتفاق آشنا در شعبه</span><h2>'+e(d.title)+'</h2><div class="casebox"><p>'+e(d.situation)+'</p></div><div class="lab-simple-goal"><b>✨ مهارت امروز:</b> '+e(p.skill)+'</div><div class="prompt lab-simple-start"><strong>🎤 نوبت شماست!</strong><p>'+e(d.opening)+'</p><span>همین حالا جلوی وب‌کم، مثل یک روز واقعی در شعبه جواب بدهید. حدود یک دقیقه.</span></div><details class="accordion lab-simple-follow"><summary>❓ دو سؤال دیگر برای گفت‌وگوی کلاس</summary><div>'+extras+'</div></details><div class="lab-simple-watch">👀 موقع اجرا به این‌ها توجه کنید: <strong>'+e(p.watch)+'</strong></div>','lab-stage-intro lab-simple-case');
+}
 if(i===1)content=showPrinciples(d);
 if(i===2)content=showQuiz(d);
 if(i===3)content=showRoles(d);
