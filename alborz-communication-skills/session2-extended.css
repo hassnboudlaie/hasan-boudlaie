@@ -1,0 +1,48 @@
+/* Practice labs 2–10: extend existing large-font design without altering technique one */
+.lab-tech-hero{background:linear-gradient(100deg,rgba(4,51,36,.97),rgba(5,73,49,.79)),url('assets/session2-hero-hq.webp') center/cover no-repeat;min-height:340px}
+.lab-tech-hero .lab-hero-tags{display:block;color:#e9f7ee;font-size:clamp(20px,2vw,28px);font-weight:750;line-height:1.8;margin-top:18px}
+.lab-stage .badge-emoji{font-size:36px}.lab-enter{font-size:clamp(21px,1.7vw,28px);font-weight:850;color:#0a7351;white-space:nowrap}
+.lab-tech:hover .lab-enter{text-decoration:underline}
+.lab-kicker{display:inline-block;background:#e3f4e9;border:1px solid #cbe4d4;padding:5px 17px;border-radius:99px;font-size:clamp(19px,1.6vw,25px);font-weight:800;color:#0c6348;margin-bottom:15px}
+.enhanced-header h1{line-height:1.45}
+.lab-note{font-size:clamp(23px,1.8vw,29px);font-weight:650;color:#476658}
+.lab-faq{margin-block:23px}
+.lab-principle{margin:17px 0;background:white;box-shadow:0 4px 15px rgba(5,68,38,.05)}
+.lab-principle summary{display:flex;align-items:center;gap:15px;font-size:clamp(27px,2.2vw,36px);min-height:94px}
+.lab-principle-count{display:grid;place-items:center;width:53px;height:55px;border-radius:14px;background:#dbf0e3;color:#076545;font-weight:900;flex:none}
+.lab-principle .lab-lead{margin:17px 0;font-size:clamp(26px,2.1vw,33px)}
+.lab-principle .tip{margin-top:13px}
+.lab-photo{margin:18px 0 9px;border-radius:20px;overflow:hidden;background:#f2f8f3;border:1px solid #d2e6d8}
+.lab-photo a{display:block;line-height:0}
+.lab-photo img{display:block;width:100%;height:auto;max-height:650px;object-fit:contain}
+.lab-photo figcaption{font-size:clamp(21px,1.8vw,27px);font-weight:800;padding:14px 20px;color:#174b38;background:#e2f1e7;line-height:1.6}
+.lab-poll{padding-block:28px}
+.lab-poll h3{margin-bottom:20px}
+.lab-instructions{padding:25px;background:#eef8f0;border:1px solid #cfe6d6;border-radius:16px;margin-top:24px}
+.lab-instructions p{margin-bottom:12px}
+.lab-dialogue-count{display:inline-flex;background:#e9f6ee;border-radius:12px;padding:12px 19px;color:#0a6044;font-weight:850;margin:10px 0 18px;font-size:clamp(22px,1.7vw,27px)}
+.lab-direction{font-size:clamp(22px,1.8vw,27px);color:#4c675b;font-weight:650;line-height:1.7;margin-top:11px}
+.lab-pause{padding:24px;border-radius:18px;background:#f9f5ea;border-right:6px solid #c9a96b;margin-top:24px}
+.lab-pause h3{margin-bottom:18px}
+.lab-pause p{margin-bottom:13px}
+.lab-stage-intro{min-height:max(500px,calc(100svh - 360px));display:flex;flex-direction:column;justify-content:space-evenly}
+.lab-actions{margin-top:30px}
+@media(max-width:1100px){
+.lab-tech-hero{min-height:360px}
+.lab-principle summary{min-height:92px}
+.lab-tech{min-height:210px}
+}
+@media(max-width:680px){
+.lab-tech-hero{min-height:350px}
+.lab-tech-hero .lab-hero-tags{font-size:24px}
+.lab-enter{font-size:23px}
+.lab-kicker{font-size:22px;padding:6px 15px}
+.lab-principle summary{font-size:31px;min-height:103px}
+.lab-principle-count{width:55px;height:61px}
+.lab-principle .lab-lead{font-size:28px}
+.lab-photo figcaption{font-size:24px}
+.lab-dialogue-count{font-size:24px}
+.lab-direction{font-size:25px}
+.lab-pause{padding:22px}
+.lab-stage-intro{min-height:max(580px,calc(100svh - 320px))}
+}
