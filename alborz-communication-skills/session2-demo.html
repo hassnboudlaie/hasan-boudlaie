@@ -461,4 +461,98 @@ render();
   }
   document.documentElement.dataset.alborzQa="tech"+t+"-stage"+s+"-question"+q;
 })();
+</script><script id="alborz-inline-live-audit">
+(function(){
+'use strict';
+if(new URLSearchParams(location.search).get('qaAudit')!=='all')return;
+const root=document.getElementById('root'),tests=[];
+let steps=0,turns=0,answers=0,roles=0,retries=0,questions=0;
+function test(name,fn){
+ try{fn();tests.push({name,pass:true});}
+ catch(err){tests.push({name,pass:false,error:String(err&&err.message||err)});}
+}
+function verify(ok,reason){if(!ok)throw Error(reason);}
+test('نسخه منتشرشده و اتصال فازهای ۱ تا ۴',()=>{
+ verify(window.ALBORZ_RELEASE?.id==='s12-r4-20261031','Release wrong');
+ verify(window.ALBORZ_RELEASE.assessment&&window.ALBORZ_RELEASE.scenarioAlignment&&window.ALBORZ_RELEASE.mobileNav,'Missing module');
+});
+test('۱۰ تکنیک و سه دکمه ناوبری',()=>{
+ go('catalog');
+ verify(root.querySelectorAll('.tech-card.lab-tech').length===10,'Catalog');
+ verify(document.querySelectorAll('.quicknav .back').length===3,'Navigation');
+});
+for(let t=1;t<=10;t++){
+ const d=window.ALBORZ_TECH_DATA[t],g=window.ALBORZ_BEHAVIOR_GUIDES[t];
+ const retry=t===1?window.ALBORZ_TECH1_RETRY:d.repractice;
+ test('تکنیک '+t+' — هشت مرحله',()=>{
+  window.openAdvancedTech(t-1);
+  for(let k=0;k<8;k++){go('stage',k);verify(!!root.querySelector('.single-stage'),'Missing step '+(k+1));steps++;}
+ });
+ test('تکنیک '+t+' — تناسب موقعیت و Role Play',()=>{
+  go('stage',3);
+  verify(!!root.querySelector('.lab-role-scene')&&!!root.querySelector('.rolecards')&&!!root.querySelector('.lab-acting-cues'),'Roles or cues');
+  verify(root.textContent.includes(g.skill),'Skill');
+  verify(!root.textContent.includes('وب‌کم'),'Extraneous instruction');
+  if(t===8)verify(root.textContent.includes('مدیر ستادی اینجاست'),'Opponent opener');
+  roles++;
+ });
+ test('تکنیک '+t+' — اجرای دوباره مرتبط',()=>{
+  go('stage',6);
+  verify(root.textContent.includes(retry.mission)&&root.textContent.includes(retry.watch),'Repractice mission');
+  verify(!!root.querySelector('.lab-acting-cues'),'Body and tone');
+  retries++;
+ });
+ test('تکنیک '+t+' — گفت‌وگوی نمونه و راهنمای اجرا',()=>{
+  go('stage',4);
+  const expected=t===1?20:d.dialogue.length;
+  verify(root.querySelectorAll('.performance-guide').length===expected,'Performance cues '+expected);
+  turns+=expected;
+ });
+ const qs=t===1?Q:d.quiz;
+ for(let qi=0;qi<3;qi++){
+  const item=qs[qi],right=t===1?item.right:item.correct;
+  test('تکنیک '+t+'، پرسش '+(qi+1)+' — سه دلیل مستقل',()=>{
+   verify(item.optionReasons?.length===3&&new Set(item.optionReasons).size===3,'Reasons not unique');
+   questions++;
+  });
+  for(let choice=0;choice<3;choice++){
+   test('تکنیک '+t+'، پرسش '+(qi+1)+'، گزینه '+(choice+1),()=>{
+    go('stage',2);
+    if(t===1)pick(qi,choice);else window.chooseAdvancedPoll(t-1,qi,choice);
+    const itemRoot=root.querySelectorAll('.lab-quiz-question-wrap')[qi];
+    verify(!!itemRoot,'Question not rendered');
+    const feedback=itemRoot.querySelector('.lab-feedback-result');
+    verify(!!feedback&&itemRoot.querySelectorAll('.lab-feedback-another').length===2,'Missing two other explanations');
+    verify(item.optionReasons.every(x=>feedback.textContent.includes(x)),'Option-specific reason absent');
+    const selected=itemRoot.querySelector('.lab-choice.selected');
+    verify(selected&&selected.classList.contains(choice===right?'selected-correct':'selected-incorrect'),'Selection state incorrect');
+    answers++;
+   });
+  }
+ }
+}
+test('فاز ۴ — Header جمع‌وجور و Navigation',()=>{
+ document.documentElement.classList.add('alborz-scrolled');
+ const brand=document.querySelector('.brand');
+ verify(brand&&getComputedStyle(brand).display==='none','Header not collapsed');
+ document.documentElement.classList.remove('alborz-scrolled');
+});
+test('فاز ۴ — نمایش متفاوت پاسخ درست و غلط',()=>{
+ window.openAdvancedTech(2);go('stage',2);
+ window.chooseAdvancedPoll(2,2,0);
+ const wrong=root.querySelectorAll('.lab-quiz-question-wrap')[2].querySelector('.lab-choice.selected');
+ const red=getComputedStyle(wrong).backgroundColor;
+ window.chooseAdvancedPoll(2,2,2);
+ const good=root.querySelectorAll('.lab-quiz-question-wrap')[2].querySelector('.lab-choice.selected');
+ verify(red!==getComputedStyle(good).backgroundColor,'Same feedback style');
+});
+test('فاز ۴ — عدم برش افقی در عرض مرورگر',()=>{
+ go('stage',3);
+ const w=document.documentElement.scrollWidth-document.documentElement.clientWidth;
+ verify(w<=6,'Horizontal overflow '+w+'px');
+});
+const fail=tests.filter(x=>!x.pass),summary={release:'s12-r4-20261031',status:fail.length?'FAIL':'PASS',checks:tests.length,passed:tests.length-fail.length,failed:fail.length,metrics:{stages:steps,dialogueTurns:turns,questions,answers,roleplays:roles,repractices:retries,viewport:innerWidth},failures:fail};
+root.innerHTML='<section class="contentcard"><h1>🔎 کنترل زنده فازهای ۱ تا ۴</h1><h2>'+(fail.length?'نیاز به اصلاح':'همه کنترل‌ها موفق بودند')+'</h2><p>نسخه: s12-r4-20261031</p><p>موفق: '+summary.passed+' از '+summary.checks+'</p><p>۸۰ مرحله، ۳۰ سؤال، ۹۰ انتخاب و ۲۴۸ نوبت گفت‌وگو</p><pre id="alborz-qa-json" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5" dir="ltr">ALBORZ_QA_RESULT='+JSON.stringify(summary)+'</pre><button class="navbtn next" onclick="location.href='+"'session2-demo.html?release=s12-r4-20261031'"+'">بازگشت به دوره</button></section>';
+window.ALBORZ_AUDIT_RESULT=summary;
+})();
 </script></body></html>
