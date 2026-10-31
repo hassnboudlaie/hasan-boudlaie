@@ -6,6 +6,7 @@ on:
     paths:
       - 'alborz-communication-skills/**'
       - 'scripts/alborz-phase5-static-audit.mjs'
+      - 'scripts/alborz-phase5-browser-qa.mjs'
       - '.github/workflows/alborz-session2-regression.yml'
   workflow_dispatch:
 
@@ -31,3 +32,16 @@ jobs:
           node --check scripts/alborz-phase5-static-audit.mjs
       - name: Validate 10 techniques, 30 questions, 90 explanations and release integrity
         run: node scripts/alborz-phase5-static-audit.mjs
+      - name: Install headless Chromium
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test all techniques in desktop and simulated mobile Chromium
+        run: node scripts/alborz-phase5-browser-qa.mjs
+      - name: Upload QA screenshots and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alborz-phase5-browser-evidence
+          path: artifacts/alborz-phase5/
+          if-no-files-found: warn
