@@ -52,7 +52,15 @@ assert('حالت Android Desktop Site',source.page.includes('touch-desktop-mode'
 assert('ابزار مستقل Final Acceptance',source.acceptance.includes('qaAudit=all')&&source.acceptance.includes('deviceTestSelfAttested'));
 assert('مسیردهی جلسه ۲ از صفحه اصلی',load('index.html').includes('session2-demo.html'));
 const originalQ=jsonFollowing(source.page,',Q=');
-const bank=jsonFollowing(source.core,'Object.assign(window.ALBORZ_TECH_DATA,');
+const bank={};
+const marker='Object.assign(window.ALBORZ_TECH_DATA,';
+let offset=0;
+while(true){
+ const idx=source.core.indexOf(marker,offset);
+ if(idx<0)break;
+ Object.assign(bank,jsonFollowing(source.core.slice(idx),marker));
+ offset=idx+marker.length;
+}
 assert('بانک اولیه پرسش تکنیک اول',originalQ.length===3);
 assert('۹ تکنیک تکمیلی',Object.keys(bank).length===9&&Array.from({length:9},(_,i)=>String(i+2)).every(k=>bank[k]));
 const window={ALBORZ_TECH_DATA:bank};
