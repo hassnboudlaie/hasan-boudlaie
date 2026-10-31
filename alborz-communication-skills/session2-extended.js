@@ -50,15 +50,12 @@ if(!p)return '';
 return '<div class="lab-acting-cues"><div><b>🎙️ لحن:</b> '+e(p.voice)+'</div><div><b>🧍 زبان بدن:</b> '+e(p.body)+'</div><div><b>🙂 حالت چهره:</b> '+e(p.face)+'</div></div>';
 }
 function showQuiz(d){
-selectedPolls[chosenTech] ||= {};
-const answers=selectedPolls[chosenTech];
-const items=d.quiz.map((q,i)=>{
- const score=answers[i],answered=score!==undefined;
- const options=q.options.map((o,k)=>'<button class="answer '+(score===k?'selected':'')+'" aria-pressed="'+(score===k)+'" onclick="chooseAdvancedPoll('+chosenTech+','+i+','+k+')">'+e(o)+'</button>').join('');
- const reasons=answered?'<div class="response lab-answer-review"><strong>'+(score===q.correct?'✅ پاسخ شما درست است.':'🔄 این پاسخ بهترین انتخاب نیست.')+'</strong><div class="lab-answer-explanations">'+q.options.map((o,k)=>'<div class="lab-option-reason '+(k===q.correct?'right':'wrong')+'"><b>'+(k===q.correct?'✅ چرا گزینه '+(k+1)+' درست است؟':'❌ چرا گزینه '+(k+1)+' درست نیست؟')+'</b><p>'+e(q.optionReasons?.[k]||(k===q.correct?q.why:'این پاسخ برای این موقعیت مناسب نیست.'))+'</p></div>').join('')+'</div><details class="accordion lab-question-extra"><summary>🎤 یک تمرین کوتاه</summary><div>'+e(q.ask)+'</div></details></div>':'';
- return '<div class="poll lab-poll"><h3>پرسش '+(i+1)+'</h3><p class="lead">'+e(q.q)+'</p>'+options+reasons+'</div>';
-}).join('');
-return card('<h2>❓ تست و پرسش کلاسی</h2>'+items);
+  selectedPolls[chosenTech] ||= {};
+  const ui=window.ALBORZ_QUIZ_UI;
+  if(!ui)throw Error('Assessment UI not loaded for '+chosenTech);
+  return card('<h2>❓ تست و پرسش کلاسی</h2>'+ui.render(
+    d.quiz,selectedPolls[chosenTech],(i,k)=>'chooseAdvancedPoll('+chosenTech+','+i+','+k+')',e,false
+  ));
 }
 function showRoles(d){
 const p=d.performance||{skill:d.title,setting:d.situation,opening:'',prompt:d.opening,voice:'روشن و محترمانه',body:'باز و متناسب',face:'طبیعی'};
