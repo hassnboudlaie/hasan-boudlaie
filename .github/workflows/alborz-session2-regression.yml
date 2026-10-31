@@ -1,0 +1,33 @@
+name: Alborz Session 2 - Phase 5 Regression
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'alborz-communication-skills/**'
+      - 'scripts/alborz-phase5-static-audit.mjs'
+      - '.github/workflows/alborz-session2-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-release-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check script syntax
+        run: |
+          node --check alborz-communication-skills/session2-core-s12-r1-20261031.js
+          node --check alborz-communication-skills/session2-assessment-s12-r2-20261031.js
+          node --check alborz-communication-skills/session2-ui-s12-r5-20261031.js
+          node --check scripts/alborz-phase5-static-audit.mjs
+      - name: Validate 10 techniques, 30 questions, 90 explanations and release integrity
+        run: node scripts/alborz-phase5-static-audit.mjs
