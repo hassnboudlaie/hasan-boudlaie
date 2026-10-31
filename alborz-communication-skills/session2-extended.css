@@ -46,3 +46,14 @@
 .lab-pause{padding:22px}
 .lab-stage-intro{min-height:max(580px,calc(100svh - 320px))}
 }
+
+
+/* Distinctive skill maps: accessible tappable guidance before each principle detail */
+.lab-concept-flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:28px 0 23px}
+.lab-flow-item{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:158px;gap:10px;border:1px solid #cce5d4;background:linear-gradient(145deg,#f2f9f4,#fff);border-radius:20px;padding:15px 10px;text-align:center;color:#0b5c43;cursor:pointer;transition:transform .18s,border-color .18s}
+.lab-flow-item:hover,.lab-flow-item:focus-visible{transform:translateY(-3px);border-color:#0e8059}
+.lab-flow-item span{display:grid;place-items:center;width:45px;height:45px;border-radius:50%;background:#0c6d4f;color:#fff;font-size:25px;font-weight:900}
+.lab-flow-item b{font-size:clamp(22px,1.9vw,28px);line-height:1.5;font-weight:850}
+.lab-flow-item small{font-size:clamp(19px,1.5vw,23px);font-weight:750;color:#496d5a}
+@media(max-width:900px){.lab-concept-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lab-flow-item{min-height:154px}}
+@media(max-width:420px){.lab-concept-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-flow-item{padding:14px 9px}.lab-flow-item b{font-size:25px}.lab-flow-item small{font-size:20px}}
