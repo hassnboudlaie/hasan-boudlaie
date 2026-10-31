@@ -67,7 +67,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;direction:ltr;tex
 </section>
 <section class="card"><h2>۴. خروجی قابل بررسی</h2><pre id="json">QA_PENDING</pre>
 <p><a href="session2-demo.html?release=s12-r5-20261031">بازگشت به جلسه دوم</a> · <a href="SPRINT_1_TO_4_UNIFIED_QA.md">گزارش فازهای ۱ تا ۴</a></p></section>
-<iframe id="audit" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" title="QA engine" src="session2-demo.html?release=s12-r5-20261031&amp;qaAudit=all&amp;phase5=1"></iframe>
+<iframe id="audit" style="position:absolute;left:-20000px;top:0;width:1280px;height:800px;opacity:0;pointer-events:none" title="QA engine" src="session2-demo.html?release=s12-r5-20261031&amp;qaAudit=all&amp;phase5=1"></iframe>
 </main>
 <script>
 (function(){
@@ -88,7 +88,7 @@ function recalc(){
  const allManual=[...document.querySelectorAll('.manual')].every(x=>x.checked);
  decision.textContent=complete&&failed===0&&allManual?'Release Gate: GO — تأیید دستی دستگاه نیز ثبت شد.':'Release Gate: PENDING — تأیید نهایی دستگاه و/یا رفع موارد ناموفق باقی است.';
  decision.className=complete&&failed===0&&allManual?'pass':'pending';
- const result={release:expected,sourceAudit:source,checks:reports,manualChecks:[...document.querySelectorAll('.manual')].map(x=>x.checked),automaticStatus:complete?(failed?'FAIL':'PASS'):'PENDING',finalGate:complete&&failed===0&&allManual?'GO':'PENDING',deviceTestCertified:false,generatedAt:new Date().toISOString()};
+ const result={release:expected,sourceAudit:source,checks:reports,manualChecks:[...document.querySelectorAll('.manual')].map(x=>x.checked),automaticStatus:complete?(failed?'FAIL':'PASS'):'PENDING',finalGate:complete&&failed===0&&allManual?'GO':'PENDING',deviceTestCertified:false,deviceTestSelfAttested:allManual,generatedAt:new Date().toISOString()};
  document.getElementById('json').textContent=JSON.stringify(result,null,2);
  document.getElementById('download').disabled=!complete;
  return result;
