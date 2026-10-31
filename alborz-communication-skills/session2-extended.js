@@ -45,6 +45,10 @@ function showPrinciples(d){
  const items=d.principles.map((p,i)=>'<details id="lab-principle-'+i+'" class="accordion lab-principle" '+(i===0?'open':'')+'><summary><span class="lab-principle-count">'+(i+1)+'</span><span>'+e(p[0])+'</span></summary><div><p class="lab-lead">'+e(p[1])+'</p><div class="compare"><div class="panel good"><b>✓ رفتار مناسب</b><p>'+e(p[2])+'</p></div><div class="panel bad"><b>✕ رفتار نامناسب</b><p>'+e(p[3])+'</p></div></div><details class="accordion lab-optional-science"><summary>چرا این روش مؤثرتر است؟</summary><div><p>'+e(p[4])+'</p><p><b>نشانه قابل مشاهده:</b> '+e(p[5])+'</p></div></details></div></details>').join('');
  return card(items+'<details class="accordion lab-optional-science"><summary>مبنای علمی و تصویر نمونه</summary><div><p>'+e(d.learningAnchor?.use||'')+'</p>'+photo(d,d.title)+'</div></details>','lab-principles');
 }
+function behaviorCues(p){
+ if(!p)return '';
+ return '<div class="lab-acting-cues"><div><b>🎙️ لحن:</b> '+e(p.voice||'آرام و روشن')+'</div><div><b>🧍 زبان بدن:</b> '+e(p.body||'باز و رو به مخاطب')+'</div><div><b>🙂 حالت چهره:</b> '+e(p.face||'متناسب با موقعیت')+'</div></div>';
+}
 function showQuiz(d){
   selectedPolls[chosenTech] ||= {};
   const ui=window.ALBORZ_QUIZ_UI;
