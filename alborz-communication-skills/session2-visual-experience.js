@@ -82,10 +82,7 @@ function decorateStages(){
 function injectPracticeControls(){
  const rolecards=root.querySelector('.rolecards');
  const bar=root.querySelector('.scriptbar');
- if(rolecards&&!root.querySelector('.alborz-practice-shortcut')){
-  const button=createShortcut('🎭 انتخاب نقش و اجرای تمرین');
-  rolecards.parentElement.insertBefore(button,rolecards);
- }
+ // The role-play page already contains the scenario and roles; no extra launcher.
  if(bar&&!root.querySelector('.alborz-script-tools')){
   const details=document.createElement('details');
   details.className='alborz-script-tools';
@@ -150,7 +147,7 @@ function openPracticeSheet(){
  panel.setAttribute('aria-labelledby','alborz-sheet-heading');
  panel.innerHTML='<div class="alborz-sheet-grip" aria-hidden="true"></div><div class="alborz-sheet-head"><div><h2 id="alborz-sheet-heading">🎭 ابزارهای تمرین</h2><p>یک فعالیت را انتخاب کنید؛ ساختار هشت‌مرحله‌ای حفظ می‌شود.</p></div><button class="alborz-sheet-close" type="button" aria-label="بستن">×</button></div><div class="alborz-sheet-options"></div><button class="alborz-sheet-help" type="button">💡 راهنمای کوتاه استفاده</button>';
  const choices=[
-  ['🎭','اجرای دونفره بدون متن','شروع Role Play و جابه‌جایی نقش‌ها',()=>route(3)],
+  ['🎭','اجرای دونفره بدون متن','اجرای گفت‌وگو و جابه‌جایی نقش‌ها',()=>route(3)],
   ['🗣️','اسکریپت کامل گفت‌وگو','مشاهده هر دو نقش و راهنمای لحن',()=>route(4,'both')],
   ['🧑‍💼','فقط متن رئیس شعبه','تمرکز بر نقش مدیر در اسکریپت',()=>route(4,'A')],
   ['👤','فقط متن مخاطب','تمرکز بر نقش مقابل در اسکریپت',()=>route(4,'B')],
@@ -172,7 +169,7 @@ function openPracticeSheet(){
 }
 const slides=[
  {symbol:'👥',title:'نقش‌ها را بخوانید',text:'هر نفر یک نقش را انتخاب کند. پیش از شروع، فقط موقعیت و هدف خودش را مرور کند؛ اجرای اول بدون حفظ‌کردن متن است.',focus:'.rolecards'},
- {symbol:'🎭',title:'وب‌کم روشن، تمرین زنده',text:'از «ابزارهای تمرین»، اجرای دونفره یا اسکریپت را انتخاب کنید. لحن، زبان بدن و حالت چهره بخشی از عملکرد قابل مشاهده هستند.',focus:'.alborz-practice-shortcut'},
+ {symbol:'🎭',title:'اجرای زنده و طبیعی',text:'از «ابزارهای تمرین»، اجرای دونفره یا اسکریپت را انتخاب کنید. لحن، زبان بدن و حالت چهره بخشی از عملکرد قابل مشاهده هستند.',focus:'.alborz-practice-shortcut'},
  {symbol:'🔎',title:'بازخورد بگیرید و دوباره اجرا کنید',text:'پس از گفت‌وگو، دو رفتار مؤثر و یک رفتار قابل اصلاح ثبت کنید؛ سپس در مرحله «اجرای اصلاح‌شده» دوباره تمرین کنید.',focus:'.floatingnav'}
 ];
 function openGuide(force=false){
@@ -215,9 +212,7 @@ function enhance(){
   decorateCatalog();
   decorateStages();
   injectPracticeControls();
-  if(root.querySelector('.rolecards')&&!tourOpenedThisVisit&&!document.getElementById('alborz-practice-sheet')){
-   openGuide(false);
-  }
+  // Keep guided help optional from the tools sheet; do not interrupt role play.
  }finally{enhancing=false;}
 }
 function scheduleEnhancement(){
