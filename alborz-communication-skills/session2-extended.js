@@ -63,7 +63,7 @@ return card('<h2>❓ تست و پرسش کلاسی</h2>'+items);
 function showRoles(d){
 const p=d.performance||{skill:d.title,setting:d.situation,opening:'',prompt:d.opening,voice:'روشن و محترمانه',body:'باز و متناسب',face:'طبیعی'};
 const roleCards='<div class="rolecards"><div class="role"><h3>رئیس شعبه</h3><p>'+e(d.roles.a)+'</p></div><div class="role"><h3>'+e(partnerNames[chosenTech+1])+'</h3><p>'+e(d.roles.b)+'</p></div></div>';
-return card('<h2>🎭 تمرین دونفره</h2><div class="lab-role-scene"><b>صورت مسئله</b><p>'+e(p.setting)+'</p><p><b>طرف مقابل گفت‌وگو را این‌طور شروع می‌کند:</b> «'+e(p.opening.replace(/[«»]/g,''))+'»</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+e(p.skill)+'</div><div class="lab-role-action"><strong>حالا شما چه می‌کنید؟</strong><p>'+e(p.prompt)+'</p></div>'+roleCards+behaviorCues(p)+'<details class="accordion lab-question-extra"><summary>🔄 تمرین دوباره</summary><div>همان پاسخ را یک بار با لحن تند و حالت دفاعی، و بار دوم با لحن مناسب و بدن باز اجرا کنید. کدام بهتر بود؟</div></details>');
+return card('<h2>🎭 تمرین دونفره</h2><div class="lab-role-scene"><b>صورت مسئله</b><p>'+e(p.setting)+'</p><p><b>طرف مقابل گفت‌وگو را این‌طور شروع می‌کند:</b> «'+e(p.opening.replace(/[«»]/g,''))+'»</p></div><div class="lab-skill-focus"><b>🎯 مهارتی که باید نشان دهید:</b> '+e(p.skill)+'</div><div class="lab-role-action"><strong>حالا شما چه می‌کنید؟</strong><p>'+e(p.prompt)+'</p></div>'+roleCards+behaviorCues(p));
 }
 function scriptRows(d){
 return d.dialogue.map((turn,i)=>{
