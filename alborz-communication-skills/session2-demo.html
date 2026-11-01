@@ -1226,6 +1226,45 @@ html.touch-desktop-mode .lab-page .lab-feedback-another p{font-size:37px!importa
 .lab-key-example strong,.lab-key-decision b{font-size:clamp(23px,2.2vw,31px);color:#10533b!important}
 .lab-key-example p,.lab-key-decision{font-size:clamp(22px,2vw,31px)!important;line-height:1.9!important;color:#183c33!important}
 @media(max-width:760px){.lab-key-headline{font-size:27px!important}.lab-key-example p,.lab-key-decision{font-size:23px!important}}
+
+/* r7 — six-step experience; readable on mobile, RTL, high contrast */
+.alborz-r7-subhead{font-size:clamp(21px,1.95vw,29px)!important;line-height:1.8!important;color:#33574b!important;margin:6px 0 20px!important}
+.alborz-key-list{display:grid;gap:18px;direction:rtl}
+.alborz-key-tile{border:2px solid #c5dad1;background:#ffffff;border-radius:19px;overflow:hidden;box-shadow:0 3px 12px rgba(8,48,34,.06)}
+.alborz-key-trigger{width:100%;display:flex;align-items:center;text-align:right;direction:rtl;gap:20px;padding:24px 26px;background:#f4faf6;color:#153f32;border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:clamp(22px,2.3vw,36px);line-height:1.7}
+.alborz-key-trigger:focus-visible,.alborz-quiz-choice:focus-visible{outline:4px solid #dd9e3b;outline-offset:-4px}
+.alborz-key-trigger[aria-expanded="true"]{background:#145c47;color:#fff}
+.alborz-key-num{color:inherit;font-variant-numeric:tabular-nums;border:2px solid currentColor;border-radius:12px;padding:2px 9px;opacity:.9}
+.alborz-key-name{flex:1}.alborz-key-arrow{font-size:1.15em;line-height:1}
+.alborz-key-detail{display:grid;gap:18px;padding:22px 28px 26px;background:#fff;color:#263e35}
+.alborz-key-detail[hidden]{display:none!important}
+.alborz-key-explain{font-size:clamp(21px,2vw,29px)!important;line-height:1.9!important;margin:0!important}
+.alborz-key-example{border-right:7px solid #0b7554;border-radius:12px;background:#eef8f3;padding:14px 20px}
+.alborz-key-example b,.alborz-key-transfer b{font-size:clamp(21px,1.9vw,28px);color:#0e5139}
+.alborz-key-example p,.alborz-key-transfer{font-size:clamp(21px,1.9vw,28px)!important;line-height:1.9!important;color:#22443a!important;margin:6px 0!important}
+.alborz-capstone{direction:rtl;text-align:right}
+.alborz-reflection-lead{padding:19px 22px;background:#eaf5ef;border-right:7px solid #117e58;border-radius:12px;font-size:clamp(21px,1.9vw,29px)!important;line-height:1.9!important;color:#204438!important}
+.alborz-capstone-progress{font-size:clamp(20px,1.9vw,28px)!important;font-weight:750;color:#174c39;background:#e3f0e9;padding:12px 22px;border-radius:12px}
+.alborz-capstone-question{margin:30px 0;padding:22px;border:2px solid #b9d0c6;border-radius:20px;background:#fff}
+.alborz-capstone-question h2{font-size:clamp(25px,2.15vw,36px)!important;margin:0 0 14px!important;color:#143e31!important}
+.alborz-quiz-scenario{font-size:clamp(22px,2.1vw,31px)!important;font-weight:700;line-height:1.9!important;color:#1c3a31!important}
+.alborz-quiz-choices{display:grid;gap:12px}
+.alborz-quiz-choice{font:inherit;cursor:pointer;border:2px solid #b7cfc3;border-radius:14px;padding:19px 22px;background:#fff;color:#193b31;text-align:right;direction:rtl;display:flex;gap:16px;align-items:flex-start;font-size:clamp(21px,1.95vw,29px)!important;line-height:1.85!important}
+.alborz-quiz-choice:hover{background:#edf7f1;border-color:#1c7658}
+.alborz-quiz-choice.is-correct{background:#d4f0df;border:3px solid #15784a;color:#0b4230;font-weight:800}
+.alborz-quiz-choice.is-incorrect{background:#fff0ea;border:3px solid #ba4a33;color:#742c20;font-weight:800}
+.alborz-quiz-index{flex-shrink:0;border:1px solid currentColor;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:23px;font-weight:750}
+.alborz-quiz-mark{margin-inline-start:auto;font-weight:900;font-size:32px}
+.alborz-quiz-feedback{background:#f5f8f6;border:1px solid #afcbbc;border-radius:15px;margin-top:20px;padding:20px;display:grid;gap:14px}
+.alborz-quiz-verdict,.alborz-quiz-rationale-head{font-size:clamp(21px,2vw,30px)!important;line-height:1.8!important;font-weight:800!important;color:#134e35!important;margin:0!important}
+.alborz-quiz-reason{border-right:6px solid #a4b0aa;padding:14px 20px;border-radius:10px;background:#fff}
+.alborz-quiz-reason.right{border-color:#168157;background:#e7f5eb}
+.alborz-quiz-reason.wrong{border-color:#b47950;background:#fff6ee}
+.alborz-quiz-reason strong{display:block;font-size:clamp(20px,1.85vw,27px)!important;line-height:1.8;color:#193f32}
+.alborz-quiz-reason p,.alborz-habit-note p{font-size:clamp(20px,1.85vw,27px)!important;line-height:1.85!important;margin:4px 0!important;color:#2e4239!important}
+.alborz-habit-note{border:2px solid #b77936;background:#fff4e7;border-radius:13px;padding:16px 20px}
+.alborz-habit-note b{font-size:clamp(21px,1.9vw,28px);color:#794612}
+@media(max-width:760px){.alborz-key-trigger,.alborz-quiz-choice{font-size:22px!important;padding:16px}.alborz-key-detail,.alborz-capstone-question{padding:16px}.alborz-quiz-scenario{font-size:23px!important}.alborz-quiz-reason p,.alborz-habit-note p{font-size:21px!important}.alborz-key-num{font-size:21px}}
 </style></head><body>
 <header class="topbar"><div class="topinside"><div class="brand"><img src="../assets/company-logos/alborz.svg" alt="نشان بیمه البرز"><div><strong>آکادمی ارتباطات اثربخش</strong><small>بیمه البرز · رؤسای شعب · جلسه دوم</small></div></div><nav class="quicknav" aria-label="ناوبری اصلی"><a class="back navhome" href="index.html" title="صفحه اصلی آکادمی"><span class="navemoji" aria-hidden="true">🏠</span> خانه</a><button class="back navsession" type="button" onclick="goSession()"><span class="navemoji" aria-hidden="true">📚</span> جلسه دوم</button><button class="back navback" type="button" id="goBack" onclick="back()"><span class="navemoji" aria-hidden="true">↩️</span> بازگشت</button></nav></div></header>
 <main class="shell" id="root" aria-live="polite"></main><script>
@@ -1302,9 +1341,13 @@ render();
 <script src="session2-learning-flow-20261101.js?v=s12-r6-20261101"></script>
 <script src="session2-ui-s12-r5-20261031.js"></script>
 <script src="session2-five-stage-r6-20261101.js?v=s12-r6-20261101"></script>
+<script src="session2-key-collection-r7-20261101.js?v=s12-r7-20261101"></script>
+<script src="session2-capstone-questions-a-r7-20261101.js?v=s12-r7-20261101"></script>
+<script src="session2-capstone-questions-b-r7-20261101.js?v=s12-r7-20261101"></script>
+<script src="session2-six-stage-r7-20261101.js?v=s12-r7-20261101"></script>
 <script id="alborz-release-check">
 (function(){
-  var expected="s12-r6-20261101";
+  var expected="s12-r7-20261101";
   var release=window.ALBORZ_RELEASE;
   if(release&&release.id===expected&&release.assessment&&window.ALBORZ_QUIZ_UI&&window.ALBORZ_FIRST_PRACTICE_READY)return;
   var panel=document.createElement("aside");
@@ -1341,54 +1384,75 @@ render();
 (function(){
 'use strict';
 if(new URLSearchParams(location.search).get('qaAudit')!=='all')return;
-const root=document.getElementById('root'),tests=[];let stages=0,questions=0,answers=0,dialogues=0;
-function test(name,fn){try{fn();tests.push({name,pass:true});}catch(err){tests.push({name,pass:false,error:String(err&&err.message||err)});}}
-function verify(ok,why){if(!ok)throw Error(why);}
-test('بارگذاری نسخه شش و ده تکنیک',()=>{
- verify(window.ALBORZ_RELEASE?.id==='s12-r6-20261101'&&window.ALBORZ_FIVE_STAGE&&window.ALBORZ_REFLECTIVE_QUESTIONS_READY,'Release');
- go('catalog');verify(root.querySelectorAll('.tech-card.lab-tech').length===10,'Catalog');
-});
+const root=document.getElementById('root'),tests=[];
+let stages=0,insights=0,capstones=0,capstoneOptions=0,thinkingQuestions=0,thinkingOptions=0,dialogues=0;
+function test(name,fn){try{fn();tests.push({name,pass:true});}catch(err){tests.push({name,pass:false,error:String(err?.message||err)});}}
+function verify(condition,message){if(!condition)throw Error(message);}
+test('نسخه r7 و بانک هر ده تکنیک',()=>{verify(window.ALBORZ_RELEASE?.id==='s12-r7-20261101','Release mismatch');verify(window.ALBORZ_SIX_STAGE?.stages===60&&Object.keys(window.ALBORZ_CAPSTONE_BANK).length===10,'Six-stage bank');});
+test('فهرست هر ده تکنیک',()=>{go('catalog');verify(root.querySelectorAll('.tech-card.lab-tech').length===10,'10 technique cards');});
 for(let t=1;t<=10;t++){
- test('تکنیک '+t+' — پنج مرحله',()=>{
+ const quiz=window.ALBORZ_CAPSTONE_BANK[t],messages=window.ALBORZ_KEY_COLLECTION[t],existing=t===1?Q:window.ALBORZ_TECH_DATA[t].quiz;
+ test('تکنیک '+t+' شش مرحله و ناوبری',()=>{
   window.openAdvancedTech(t-1);
-  verify(root.querySelectorAll('.stage-grid .stage-card').length===5,'Five cards');
-  const labels=[...root.querySelectorAll('.stage-grid .stage-card .body b')].map(x=>x.textContent);
-  verify(JSON.stringify(labels)===JSON.stringify(['موقعیت تمرینی','اصول و تکنیک‌های کاربردی','سؤالات برای تفکر','گفت‌وگوی نمونه','پیام کلیدی']),'Labels');
-  for(const i of [0,1,2,4,7]){
-   go('stage',i);verify(!!root.querySelector('.single-stage'),'Step '+i);stages++;
+  const nodes=[...root.querySelectorAll('.stage-grid .stage-card')];
+  verify(nodes.length===6,'Stage count '+nodes.length);
+  const expected=['موقعیت تمرینی','اصول و تکنیک‌های کاربردی','سؤالات برای تفکر','گفت‌وگوی نمونه','پیام‌های کلیدی','کوییز کاربردی'];
+  verify(nodes.every((c,i)=>c.querySelector('.body b')?.textContent===expected[i]),'Stage labels');
+  for(const index of [0,1,2,4,7,5]){go('stage',index);verify(!!root.querySelector('.single-stage'),'Stage inaccessible '+index);stages++;}
+ });
+ test('تکنیک '+t+' چهار پیام مستقل و کلیک‌پذیر',()=>{
+  go('stage',7);
+  verify(root.querySelectorAll('.alborz-key-trigger').length===4,'Message triggers');
+  verify(root.querySelectorAll('.alborz-key-detail:not([hidden])').length===0,'Pre-open message leak');
+  for(let i=0;i<4;i++){
+   window.toggleAlborzMessage(t,i);
+   const opened=root.querySelectorAll('.alborz-key-detail:not([hidden])');
+   verify(opened.length===1&&opened[0].textContent.includes(messages[i].example),'Message explanation '+i);
+   insights++;
   }
-  verify(root.textContent.includes(window.ALBORZ_KEY_MESSAGES[t].message),'Key message');
-  verify(root.textContent.includes(window.ALBORZ_KEY_MESSAGES[t].example),'New example');
-  verify(!['کپی برنامه اقدام','کپی بازخورد','منابع و نکات تخصصی','اجرای دوباره','نقد و بازخورد رفتاری'].some(x=>root.textContent.includes(x)),'Removed UI still shown');
  });
- test('تکنیک '+t+' — گفت‌وگوی نمونه',()=>{
-  go('stage',4);verify(root.querySelectorAll('.speech').length>=10,'Dialogue not rendered');dialogues++;
+ test('تکنیک '+t+' چهار سؤال نهایی غیرمستقیم',()=>{
+  go('stage',5);
+  verify(root.querySelectorAll('.alborz-capstone-question').length===4,'Capstone item count');
+  verify(root.querySelectorAll('.alborz-quiz-choice').length===12,'Capstone options');
  });
- const qs=t===1?Q:window.ALBORZ_TECH_DATA[t].quiz;
- for(let i=0;i<3;i++){
-  test('تکنیک '+t+' — سؤال '+(i+1)+' دلایل سه‌گانه',()=>{
-   verify(qs[i].optionReasons?.length===3&&new Set(qs[i].optionReasons).size===3,'Non-unique explanations');questions++;
+ for(let j=0;j<4;j++){
+  const z=quiz[j];
+  test('تکنیک '+t+' سؤال نهایی '+(j+1)+'، منطق سه گزینه',()=>{
+   verify(z.reasons.length===3&&new Set(z.reasons).size===3&&z.habit!==z.correct,'Independent reasons and habit');
+   capstones++;
   });
   for(let choice=0;choice<3;choice++){
-   test('تکنیک '+t+' — پاسخ '+(i+1)+' گزینه '+(choice+1),()=>{
+   test('تکنیک '+t+'، انتخاب '+(j+1)+'-'+(choice+1)+'، بازخورد کامل',()=>{
+    go('stage',5);
+    window.answerAlborzCapstone(t,j,choice);
+    const item=root.querySelectorAll('.alborz-capstone-question')[j];
+    const feedback=item?.querySelector('.alborz-quiz-feedback');
+    verify(!!feedback&&item.querySelectorAll('.alborz-quiz-reason').length===3,'Detailed feedback missing');
+    verify(z.reasons.every(r=>feedback.textContent.includes(r)),'Unique reason not visible');
+    verify(feedback.textContent.includes(z.habitWhy),'Organizational habit explanation missing');
+    const selected=item.querySelector('.alborz-quiz-choice[aria-pressed="true"]');
+    verify(!!selected,'Selection state');
+    capstoneOptions++;
+   });
+  }
+ }
+ test('تکنیک '+t+'، نمونه گفت‌وگو',()=>{go('stage',4);verify(root.querySelectorAll('.speech').length>=10,'Dialogue missing');dialogues++;});
+ for(let q=0;q<3;q++){
+  test('تکنیک '+t+' سؤال برای تفکر '+(q+1),()=>{verify(existing[q].optionReasons.length===3&&new Set(existing[q].optionReasons).size===3,'Distinct rationales');thinkingQuestions++;});
+  for(let k=0;k<3;k++){
+   test('تکنیک '+t+' سؤال تفکر '+(q+1)+' گزینه '+(k+1),()=>{
     go('stage',2);
-    if(t===1)pick(i,choice);else window.chooseAdvancedPoll(t-1,i,choice);
-    const item=root.querySelectorAll('.lab-quiz-question-wrap')[i];
-    const feedback=item?.querySelector('.lab-feedback-result');
-    verify(feedback&&item.querySelectorAll('.lab-feedback-another').length===2,'Two other rationales absent');
-    verify(qs[i].optionReasons.every(x=>feedback.textContent.includes(x)),'Missing individual rationale');answers++;
+    if(t===1)pick(q,k);else window.chooseAdvancedPoll(t-1,q,k);
+    const feedback=root.querySelectorAll('.lab-quiz-question-wrap')[q]?.querySelector('.lab-feedback-result');
+    verify(feedback&&existing[q].optionReasons.every(r=>feedback.textContent.includes(r)),'All rationale not rendered');thinkingOptions++;
    });
   }
  }
 }
-test('هیچ کارت حذف‌شده‌ای در فهرست نباشد',()=>{
- go('catalog');window.openAdvancedTech(1);
- verify(root.querySelectorAll('.stage-card').length===5,'Removed steps still in grid');
-});
-const failures=tests.filter(x=>!x.pass);
-const summary={release:'s12-r6-20261101',status:failures.length?'FAIL':'PASS',passed:tests.length-failures.length,checks:tests.length,metrics:{stages,questions,answers,dialogues},failures};
-root.innerHTML='<section class="contentcard"><h1>🔎 کنترل نسخه پنج‌بخشی</h1><h2>'+(failures.length?'نیاز به اصلاح':'همه کنترل‌ها موفق بودند')+'</h2><p>موفق: '+summary.passed+' از '+summary.checks+'</p><pre dir="ltr" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px">ALBORZ_QA_RESULT='+JSON.stringify(summary)+'</pre><a class="navbtn next" href="session2-demo.html?release=s12-r6-20261101">بازگشت به جلسه دوم</a></section>';
-window.ALBORZ_AUDIT_RESULT=summary;
+const failed=tests.filter(z=>!z.pass),result={release:'s12-r7-20261101',status:failed.length?'FAIL':'PASS',checks:tests.length,passed:tests.length-failed.length,failed:failed.length,metrics:{stages,insights,capstones,capstoneOptions,thinkingQuestions,thinkingOptions,dialogues},failures:failed};
+root.innerHTML='<section class="contentcard"><h1>🔍 کنترل جامع آکادمی ـ ۶ بخش</h1><h2>'+(failed.length?'نیازمند اصلاح':'همه کنترل‌های مرورگر موفق بودند')+'</h2><p>موفق: '+result.passed+' از '+result.checks+'</p><pre dir="ltr" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px">ALBORZ_QA_RESULT='+JSON.stringify(result)+'</pre><a class="navbtn next" href="session2-demo.html?release=s12-r7-20261101">بازگشت به جلسه دوم</a></section>';
+window.ALBORZ_AUDIT_RESULT=result;
 })();
 </script><script id="alborz-style-diagnostic">
 (function(){
