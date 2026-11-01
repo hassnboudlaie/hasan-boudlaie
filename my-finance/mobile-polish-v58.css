@@ -61,53 +61,53 @@ body.finance-unlocked #finance-more-dialog :is(button,a):focus-visible{outline:3
 @media(prefers-reduced-motion:reduce){body.finance-unlocked .finance-mobile-nav,body.finance-unlocked .finance-quick-fab{transition:none!important}}
 
 
-/* r73: canonical mobile layout. This stylesheet is My Finance only. */
-@media screen and (max-width: 900px) {
+/* r74: canonical handheld layout with high-specificity selectors. This stylesheet is My Finance only. */
+@media screen and (max-width: 900px), screen and (max-device-width: 900px), screen and (any-pointer: coarse) {
  html {font-size:16px!important;-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
- body main {width:100%!important;max-width:100%!important;margin:0!important;padding:16px 15px calc(112px + env(safe-area-inset-bottom))!important;min-width:0!important}
- body main>section {width:100%!important;min-width:0!important;max-width:100%!important}
- body #home .finance-dashboard-metrics {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:14px!important;width:100%!important;grid-template-columns:none!important}
- body #home .finance-dashboard-metrics>* {width:100%!important;max-width:100%!important;min-width:0!important;grid-area:auto!important;grid-column:auto!important;grid-row:auto!important;margin:0!important}
- body #home .finance-dashboard-metrics>.finance-balance-hero {order:0!important;min-height:190px!important;padding:20px!important}
- body #home .finance-dashboard-metrics>.finance-kpi-pair {order:1!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
- body #home .finance-dashboard-metrics>.finance-receivables-strip {order:2!important;min-height:60px!important}
- body #home .finance-dashboard-metrics>.mf-command-bar {order:3!important}
- body #home .finance-kpi-pair>.finance-kpi-net {grid-column:1/-1!important}
- body #home .finance-kpi {padding:16px!important;min-height:105px!important}
- body #home .finance-kpi :is(small,span) {font-size:13px!important;line-height:1.55!important}
- body #home .finance-kpi b {font-size:clamp(19px,5.4vw,27px)!important;line-height:1.4!important}
- body #home .finance-balance-hero .finance-hero-amount b {font-size:clamp(27px,7.4vw,38px)!important;line-height:1.4!important}
- body #home .finance-hero-label,body #home .finance-hero-link,body #home .finance-hero-foot {font-size:13px!important;line-height:1.55!important}
- body #home .finance-home-heading {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important}
- body #home .finance-home-heading h2 {font-size:25px!important;line-height:1.4!important}
- body #home .finance-home-heading p,body #home .finance-overview-caption {font-size:14px!important;line-height:1.6!important}
- body #home .mf-command-head {font-size:15px!important;line-height:1.5!important}
- body #home .mf-action-grid {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
- body #home .mf-action {min-height:76px!important;padding:12px 8px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;font-size:15px!important}
- body #home .mf-action span:last-child {font-size:15px!important}
- body #home .finance-home-hubs {display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
- body #home .finance-home-hub {min-height:74px!important;font-size:15px!important}
- body #transactions .mf-section-hero h2 {font-size:26px!important}
- body #transactions .mf-section-hero p {font-size:14px!important;line-height:1.6!important}
- body #transactions>.card {padding:19px 15px!important;margin:14px 0!important;border-radius:17px!important}
- body #transactions>.card>h2 {font-size:21px!important;margin:0 0 14px!important}
- body #transactions .fields {display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
- body #transactions .fields>label {display:flex!important;flex-direction:column!important;min-width:0!important;gap:6px!important;font-size:16px!important}
- body #transactions .mf-field-name {font-size:15px!important;line-height:1.5!important}
- body #transactions :is(input,select,textarea) {width:100%!important;min-width:0!important;min-height:52px!important;padding:12px!important;font-size:16px!important;line-height:1.4!important}
- body #transactions button {min-height:45px!important;font-size:15px!important;line-height:1.4!important}
- body #transactions .tx-history-controls {display:flex!important;flex-direction:column!important;gap:14px!important}
- body #transactions .tx-filter-group {width:100%!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}
- body #transactions .tx-filter-group button {font-size:14px!important;min-width:0!important;padding:8px 4px!important}
- body #transactions .tx-search-label {display:block!important;font-size:15px!important}
- body #transactions .tx-ledger-item {margin:10px 0!important}
- body #transactions .tx-ledger-summary {padding:16px 13px!important;min-height:86px!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important}
- body #transactions .tx-ledger-summary :is(strong,b) {font-size:16px!important;line-height:1.5!important}
- body #transactions .tx-ledger-summary :is(small,time,span) {font-size:13px!important;line-height:1.6!important}
- body #transactions .tx-ledger-amount {font-size:18px!important;direction:ltr!important;unicode-bidi:isolate!important}
- body #transactions .tx-ledger-meta,body #transactions .tx-ledger-detail {font-size:14px!important;line-height:1.75!important}
- body #transactions #tx-results-count,body #transactions #tx-period-label {font-size:15px!important}
- body .finance-mobile-nav {width:calc(100% - 24px)!important;max-width:480px!important;bottom:calc(10px + env(safe-area-inset-bottom))!important}
- body .finance-mobile-nav button {min-height:61px!important}
- body .finance-mobile-nav button>span:last-child {font-size:13px!important;line-height:1.35!important}
+ body.finance-unlocked main {width:100%!important;max-width:100%!important;margin:0!important;padding:16px 15px calc(112px + env(safe-area-inset-bottom))!important;min-width:0!important}
+ body.finance-unlocked main>section {width:100%!important;min-width:0!important;max-width:100%!important}
+ body.finance-unlocked #home .finance-dashboard-metrics {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:14px!important;width:100%!important;grid-template-columns:none!important}
+ body.finance-unlocked #home .finance-dashboard-metrics>* {width:100%!important;max-width:100%!important;min-width:0!important;grid-area:auto!important;grid-column:auto!important;grid-row:auto!important;margin:0!important}
+ body.finance-unlocked #home .finance-dashboard-metrics>.finance-balance-hero {order:0!important;min-height:190px!important;padding:20px!important}
+ body.finance-unlocked #home .finance-dashboard-metrics>.finance-kpi-pair {order:1!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+ body.finance-unlocked #home .finance-dashboard-metrics>.finance-receivables-strip {order:2!important;min-height:60px!important}
+ body.finance-unlocked #home .finance-dashboard-metrics>.mf-command-bar {order:3!important}
+ body.finance-unlocked #home .finance-kpi-pair>.finance-kpi-net {grid-column:1/-1!important}
+ body.finance-unlocked #home .finance-kpi {padding:16px!important;min-height:105px!important}
+ body.finance-unlocked #home .finance-kpi :is(small,span) {font-size:13px!important;line-height:1.55!important}
+ body.finance-unlocked #home .finance-kpi b {font-size:clamp(19px,5.4vw,27px)!important;line-height:1.4!important}
+ body.finance-unlocked #home .finance-balance-hero .finance-hero-amount b {font-size:clamp(27px,7.4vw,38px)!important;line-height:1.4!important}
+ body.finance-unlocked #home .finance-hero-label,body.finance-unlocked #home .finance-hero-link,body.finance-unlocked #home .finance-hero-foot {font-size:13px!important;line-height:1.55!important}
+ body.finance-unlocked #home .finance-home-heading {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important}
+ body.finance-unlocked #home .finance-home-heading h2 {font-size:25px!important;line-height:1.4!important}
+ body.finance-unlocked #home .finance-home-heading p,body.finance-unlocked #home .finance-overview-caption {font-size:14px!important;line-height:1.6!important}
+ body.finance-unlocked #home .mf-command-head {font-size:15px!important;line-height:1.5!important}
+ body.finance-unlocked #home .mf-action-grid {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ body.finance-unlocked #home .mf-action {min-height:76px!important;padding:12px 8px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;font-size:15px!important}
+ body.finance-unlocked #home .mf-action span:last-child {font-size:15px!important}
+ body.finance-unlocked #home .finance-home-hubs {display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+ body.finance-unlocked #home .finance-home-hub {min-height:74px!important;font-size:15px!important}
+ body.finance-unlocked #transactions .mf-section-hero h2 {font-size:26px!important}
+ body.finance-unlocked #transactions .mf-section-hero p {font-size:14px!important;line-height:1.6!important}
+ body.finance-unlocked #transactions>.card {padding:19px 15px!important;margin:14px 0!important;border-radius:17px!important}
+ body.finance-unlocked #transactions>.card>h2 {font-size:21px!important;margin:0 0 14px!important}
+ body.finance-unlocked #transactions .fields {display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
+ body.finance-unlocked #transactions .fields>label {display:flex!important;flex-direction:column!important;min-width:0!important;gap:6px!important;font-size:16px!important}
+ body.finance-unlocked #transactions .mf-field-name {font-size:15px!important;line-height:1.5!important}
+ body.finance-unlocked #transactions :is(input,select,textarea) {width:100%!important;min-width:0!important;min-height:52px!important;padding:12px!important;font-size:16px!important;line-height:1.4!important}
+ body.finance-unlocked #transactions button {min-height:45px!important;font-size:15px!important;line-height:1.4!important}
+ body.finance-unlocked #transactions .tx-history-controls {display:flex!important;flex-direction:column!important;gap:14px!important}
+ body.finance-unlocked #transactions .tx-filter-group {width:100%!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}
+ body.finance-unlocked #transactions .tx-filter-group button {font-size:14px!important;min-width:0!important;padding:8px 4px!important}
+ body.finance-unlocked #transactions .tx-search-label {display:block!important;font-size:15px!important}
+ body.finance-unlocked #transactions .tx-ledger-item {margin:10px 0!important}
+ body.finance-unlocked #transactions .tx-ledger-summary {padding:16px 13px!important;min-height:86px!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important}
+ body.finance-unlocked #transactions .tx-ledger-summary :is(strong,b) {font-size:16px!important;line-height:1.5!important}
+ body.finance-unlocked #transactions .tx-ledger-summary :is(small,time,span) {font-size:13px!important;line-height:1.6!important}
+ body.finance-unlocked #transactions .tx-ledger-amount {font-size:18px!important;direction:ltr!important;unicode-bidi:isolate!important}
+ body.finance-unlocked #transactions .tx-ledger-meta,body.finance-unlocked #transactions .tx-ledger-detail {font-size:14px!important;line-height:1.75!important}
+ body.finance-unlocked #transactions #tx-results-count,body.finance-unlocked #transactions #tx-period-label {font-size:15px!important}
+ body.finance-unlocked .finance-mobile-nav {width:calc(100% - 24px)!important;max-width:480px!important;bottom:calc(10px + env(safe-area-inset-bottom))!important}
+ body.finance-unlocked .finance-mobile-nav button {min-height:61px!important}
+ body.finance-unlocked .finance-mobile-nav button>span:last-child {font-size:13px!important;line-height:1.35!important}
 }
