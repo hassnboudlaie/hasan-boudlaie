@@ -159,7 +159,20 @@ byId('tx-filter-reset')?.addEventListener('click',()=>openFiltered());
 window.MyFinanceHistory={openFiltered,renderHistory};
 window.renderTransactionHistory=renderHistory;
 document.addEventListener('myfinance:changed',renderHistory);
-document.addEventListener('myfinance:cloud-synced',renderHistory);
+document.addEventListener('myfinance:cloud-synced',()=>{
+ renderHistory();
+ const target=new URLSearchParams(location.search).get('finance_tx');
+ if(!target||!/^[0-9a-f-]{36}$/i.test(target))return;
+ const found=(bridge.getData().tx||[]).some(t=>t.id===target);
+ if(found){
+  openFiltered({transactionId:target});
+  const item=holder.querySelector('.tx-ledger-item');
+  if(item)item.open=true;
+ }
+ let status=byId('tx-cloud-verification');
+ if(!status){status=document.createElement('p');status.id='tx-cloud-verification';status.setAttribute('role','status');holder.parentElement?.insertBefore(status,holder);}
+ if(status)status.textContent=found?'✓ تراکنش موردنظر از پایگاه داده دریافت شد و در فهرست نمایش داده می‌شود.':'تراکنش هنوز از پایگاه داده دریافت نشده است. اتصال و حساب کاربری را بررسی کنید.';
+});
 document.addEventListener('myfinance:rebound',renderHistory);
 renderHistory();
 })();
