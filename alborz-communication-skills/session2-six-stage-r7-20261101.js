@@ -22,7 +22,7 @@ const root=document.getElementById('root'),answers=Object.create(null);
 let enhancing=false,queued=false;
 const h=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 const techId=()=>Math.min(10,Math.max(1,Number(window.__alborzActiveTech)||1));
-const pageHead=(step,title,sub)=>'<div class="section-header enhanced-header"><h1>'+step+'. '+title+'</h1><p class="alborz-r7-subhead">'+sub+'</p></div>';
+const pageHead=(step,title)=>'<div class="section-header enhanced-header"><h1>'+step+'. '+title+'</h1></div>';
 const nav=(last=false)=>'<div class="floatingnav lab-actions"><button class="navbtn" onclick="go(\'tech\')">→ فهرست ۶ مرحله</button>'+(last?'<button class="navbtn next" onclick="go(\'catalog\')">فهرست تکنیک‌ها ←</button>':'<button class="navbtn next" onclick="go(\'stage\',5)">مرحله بعد: کوییز ←</button>')+'</div>';
 function messagePage(t){
  const items=keys[t].map((item,i)=>{
@@ -34,7 +34,7 @@ function messagePage(t){
   '<div class="alborz-key-example"><b>مثال متفاوت از محیط شعبه</b><p>'+h(item.example)+'</p></div>'+
   '<p class="alborz-key-transfer"><b>آنچه باید به کار ببریم:</b> '+h(item.transfer)+'</p></div></article>';
  }).join('');
- return '<section class="single-stage lab-page alborz-six-stage" data-alborz-r7="7-'+t+'">'+pageHead('💡 ۵','پیام‌های کلیدی','روی هر پیام بزنید تا توضیح و مثال کاربردی آن باز شود.')+
+ return '<section class="single-stage lab-page alborz-six-stage" data-alborz-r7="7-'+t+'">'+pageHead('💡 ۵','پیام‌های کلیدی')+
  '<section class="contentcard lab-card alborz-message-list"><div class="alborz-key-list">'+items+'</div></section>'+nav(false)+'</section>';
 }
 function quizPage(t){
@@ -62,8 +62,8 @@ function quizPage(t){
   return '<section class="alborz-capstone-question" data-alborz-question="'+i+'"><h2>چالش '+(i+1)+' از ۴</h2><p class="alborz-quiz-scenario">'+h(item.scenario)+'</p><div class="alborz-quiz-choices" role="group" aria-label="انتخاب پاسخ چالش '+(i+1)+'">'+options+'</div>'+explanation+'</section>';
  }).join('');
  const progress='<p class="alborz-capstone-progress">پاسخ‌داده‌شده: '+done+' از ۴'+(done===4?' · پاسخ‌های منطبق با تکنیک: '+correct+' از ۴':'')+'</p>';
- return '<section class="single-stage lab-page alborz-six-stage" data-alborz-r7="5-'+t+'">'+pageHead('🧠 ۶','کوییز کاربردی','چهار تصمیم غیرمستقیم؛ هر سه گزینه ممکن است منطقی باشند. مناسب‌ترین را با توجه به شرایط انتخاب کنید.')+
- '<section class="contentcard lab-card alborz-capstone"><p class="alborz-reflection-lead">قرار نیست عبارت‌های جلسه را حفظ کنید. هر سؤال یک موقعیت تازه است؛ ابتدا تصمیم بگیرید و بعد، تحلیل هر سه گزینه و عادت رایج مرتبط را بخوانید.</p>'+progress+items+progress+'</section>'+nav(true)+'</section>';
+ return '<section class="single-stage lab-page alborz-six-stage" data-alborz-r7="5-'+t+'">'+pageHead('🧠 ۶','کوییز کاربردی')+
+ '<section class="contentcard lab-card alborz-capstone">'+progress+items+progress+'</section>'+nav(true)+'</section>';
 }
 function decorate(){
  if(enhancing||!root||typeof current==='undefined')return;
@@ -81,11 +81,11 @@ function decorate(){
     sixth.querySelector('.badge-digit').textContent='6';
     const icon=sixth.querySelector('.badge-emoji');if(icon)icon.textContent='🧠';
     sixth.querySelector('.body b').textContent='کوییز کاربردی';
-    sixth.querySelector('.body small').textContent='چهار سؤال غیرمستقیم و تحلیل مستقل هر سه گزینه';
+    sixth.querySelector('.body small').textContent='۴ سؤال پایانی';
     grid.appendChild(sixth);
     const fifth=cards[4];
     fifth.querySelector('.body b').textContent='پیام‌های کلیدی';
-    fifth.querySelector('.body small').textContent='چهار پیام کلیک‌پذیر با توضیح و مثال';
+    fifth.querySelector('.body small').textContent='۴ پیام کاربردی';
    }
   }
   if(current.page==='stage'){
@@ -135,8 +135,8 @@ window.answerAlborzCapstone=function(t,i,k){
 };
 const observer=new MutationObserver(changes=>{if(changes.some(m=>m.type==='childList'&&[...m.addedNodes].some(n=>n.nodeType===1)))schedule();});
 observer.observe(root,{childList:true,subtree:false});
-window.ALBORZ_SIX_STAGE={release:'s12-r7-20261101',techniques:10,stages:60,insights:40,capstoneQuestions:40,capstoneOptionReasons:120,distinctWrongRationales:80};
-window.ALBORZ_RELEASE={...window.ALBORZ_RELEASE,id:'s12-r7-20261101',stages:60,capstoneQuestions:40,insights:40};
-document.documentElement.dataset.alborzRelease='s12-r7-20261101';
+window.ALBORZ_SIX_STAGE={release:'s12-r8-20261101',techniques:10,stages:60,insights:40,capstoneQuestions:40,capstoneOptionReasons:120,distinctWrongRationales:80};
+window.ALBORZ_RELEASE={...window.ALBORZ_RELEASE,id:'s12-r8-20261101',stages:60,capstoneQuestions:40,insights:40};
+document.documentElement.dataset.alborzRelease='s12-r8-20261101';
 decorate();
 })();

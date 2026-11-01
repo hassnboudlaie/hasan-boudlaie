@@ -208,13 +208,13 @@ const match=String(turn[1]).match(/^\[([^\]]+)\]\s*/);
 const full=String(turn[1]); const speechText=match?full.replace(/^\[[^\]]+\]\s*/,''):full;
 const visible=scriptView==='both'||(scriptView==='A'&&turn[0]==='الف')||(scriptView==='B'&&turn[0]==='ب');
 const cue=d.delivery?.[i];
-const direction=stageDirections&&cue?'<div class="performance-guide"><div class="performance-guide-heading">🎬 راهنمای اجرای این نوبت</div><div><b>🎙️ لحن و صدا:</b> '+e(cue.tone)+'</div><div><b>🧍 زبان بدن:</b> '+e(cue.body)+'</div><div><b>🙂 حالت چهره:</b> '+e(cue.face)+'</div></div>':(match&&stageDirections?'<div class="lab-direction">🎬 '+e(match[1])+'</div>':'');
+const direction=stageDirections&&cue?'<div class="performance-guide"><div class="performance-guide-heading">🎬 راهنمای اجرای این نوبت</div><div><b>🎙️ لحن و صدا:</b> '+e(cue.tone)+'</div><div><b>🧍 زبان بدن:</b> '+e(cue.body)+'</div><div><b>🙂 حالت چهره:</b> '+e(cue.face)+'</div>'+(cue.focus?'<div class="performance-focus"><b>🎯 نکته اجرای این لحظه:</b> '+e(cue.focus)+'</div>':'')+'</div>':(match&&stageDirections?'<div class="lab-direction">🎬 '+e(match[1])+'</div>':'');
 return '<div class="speech '+(turn[0]==='الف'?'manager':'')+(visible?'':' hidden')+'"><small>'+(i+1)+' · '+e(role)+'</small><p>'+e(speechText)+'</p>'+direction+'</div>';
 }).join('');
 }
 function showDialogue(d){
 const p=d.performance;
-return card('<div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><p class="lab-short-context">'+e(p?.setting||d.situation)+'</p><div class="scriptbar"><button class="tab '+(scriptView==='both'?'active':'')+'" onclick="showAdvancedRole(\'both\')">هر دو نقش</button><button class="tab '+(scriptView==='A'?'active':'')+'" onclick="showAdvancedRole(\'A\')">رئیس شعبه</button><button class="tab '+(scriptView==='B'?'active':'')+'" onclick="showAdvancedRole(\'B\')">مخاطب</button><button class="tab" onclick="toggleAdvancedDirection()">راهنمای اجرا '+(stageDirections?'روشن':'خاموش')+'</button><button class="tab" onclick="copyAdvancedScript()">کپی متن</button></div>'+scriptRows(d)+
+return card('<div class="lab-skill-focus"><b>🎯 مهارت هدف:</b> '+e(p?.skill||d.title)+'</div><div class="scriptbar"><button class="tab '+(scriptView==='both'?'active':'')+'" onclick="showAdvancedRole(\'both\')">هر دو نقش</button><button class="tab '+(scriptView==='A'?'active':'')+'" onclick="showAdvancedRole(\'A\')">رئیس شعبه</button><button class="tab '+(scriptView==='B'?'active':'')+'" onclick="showAdvancedRole(\'B\')">مخاطب</button><button class="tab" onclick="toggleAdvancedDirection()">راهنمای اجرا '+(stageDirections?'روشن':'خاموش')+'</button></div>'+scriptRows(d)+
 '<details class="accordion lab-question-extra"><summary>❓ پرسش‌های بررسی گفت‌وگو</summary><div>'+d.pause.map(x=>'<p><b>پس از نوبت '+x.at+':</b> '+e(x.q)+'</p>').join('')+'</div></details>');
 }
 function showFeedback(d){
@@ -267,7 +267,6 @@ window.rateAdvanced=function(t,i,n){selectedRubrics[t] ||= {};selectedRubrics[t]
 window.openAdvancedPrinciple=function(i){const item=document.getElementById('lab-principle-'+i);if(item){item.open=true;item.scrollIntoView({behavior:'smooth',block:'start'});}};
 window.showAdvancedRole=function(v){scriptView=v;const y=window.scrollY;render();window.scrollTo(0,y);};
 window.toggleAdvancedDirection=function(){stageDirections=!stageDirections;const y=window.scrollY;render();window.scrollTo(0,y);};
-window.copyAdvancedScript=async function(){const d=getTech();const text=d.dialogue.map((a,i)=>(i+1)+'. '+(a[0]==='الف'?'رئیس شعبه':partnerNames[chosenTech+1])+'\n'+a[1]).join('\n\n');await copyText(text);};
 window.copyAdvancedFeedback=async function(){const d=getTech(),scores=selectedRubrics[chosenTech]||{};const positive=document.querySelector('.lab-positives')?.value||'',change=document.querySelector('.lab-change')?.value||'';await copyText(d.title+'\n'+d.observe.map((v,i)=>v+': '+(scores[i]||'—')+'/5').join('\n')+'\nدو رفتار مثبت:\n'+positive+'\nرفتار قابل اصلاح:\n'+change);};
 window.copyAdvancedCommit=async function(){await copyText(getTech().title+'\n'+(document.querySelector('.lab-commit')?.value||''));};
 async function copyText(t){if(!t.trim()){alert('ابتدا متن را تکمیل کنید.');return;}try{await navigator.clipboard.writeText(t);alert('متن کپی شد.')}catch(err){alert('کپی خودکار در این مرورگر مجاز نیست.');}}

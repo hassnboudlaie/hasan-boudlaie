@@ -4,7 +4,7 @@
 const oldRender=window.render, oldGo=window.go, allStages=[0,1,2,4,7];
 if(typeof oldRender!=='function'||typeof oldGo!=='function')throw Error('Alborz UI shell unavailable');
 const titles=['موقعیت تمرینی','اصول و تکنیک‌های کاربردی','سؤالات برای تفکر','گفت‌وگوی نمونه','پیام کلیدی'];
-const subtitles=['یک مسئله واقعی برای تصمیم اولیه','مهارت‌ها، اصول و رفتارهای قابل تعمیم','سه دوراهی تازه با تحلیل هر سه گزینه','اجرای مهارت در گفت‌وگوی حرفه‌ای','بینش ماندگار و نمونه‌ای متفاوت'];
+const subtitles=['یک مسئله واقعی برای تصمیم اولیه','مهارت‌ها، اصول و رفتارهای قابل تعمیم','انتخاب بهترین پاسخ','گفت‌وگو در شعبه','نکات کاربردی'];
 const icons=['🎯','🧩','❓','🗣️','💡'];
 const root=document.getElementById('root'),escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 function makeKeyCard(tech){
@@ -43,23 +43,7 @@ function fixCurrentScreen(){
   const tail=head.textContent.includes(' — ')?' — '+head.textContent.split(' — ').slice(1).join(' — '):'';
   head.textContent=icons[position]+' '+(position+1)+'. '+titles[position]+tail;
  }
- if(stage===2){
-  const card=root.querySelector('.single-stage .contentcard');
-  if(card&&!card.querySelector('.lab-reflection-intro')){
-   const p=document.createElement('p');p.className='lab-reflection-intro';
-   p.textContent='این سؤال‌ها ادامه تکراری موقعیت قبل نیستند؛ هر سؤال یک انتخاب حرفه‌ای تازه دارد. پس از پاسخ، دلیل اختصاصی هر سه گزینه را بررسی کنید.';
-   card.prepend(p);
-  }
- }
- if(stage===4){
-  root.querySelectorAll('.lab-short-context').forEach(x=>x.remove());
-  const card=root.querySelector('.single-stage .contentcard');
-  if(card&&!card.querySelector('.lab-bridge')){
-   const p=document.createElement('p');p.className='lab-bridge';
-   p.textContent='از دانستن به انجام دادن: گفت‌وگو را با توجه به مکث، لحن، زبان بدن و تصمیم‌های ارتباطی دنبال کنید؛ هدف حفظ‌کردن جملات نیست.';
-   const skill=card.querySelector('.lab-skill-focus');if(skill)skill.insertAdjacentElement('afterend',p);else card.prepend(p);
-  }
- }
+ if(stage===4)root.querySelectorAll('.lab-short-context').forEach(x=>x.remove());
  const nav=root.querySelector('.single-stage .floatingnav');
  if(nav){
   nav.querySelectorAll('button').forEach(b=>b.textContent=b.textContent.replace(/فهرست ۸ مرحله/g,'فهرست ۵ مرحله'));

@@ -566,7 +566,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 .s1-live-note{font-size:14px;color:#52735e;line-height:1.95;margin-top:13px;border-top:1px dashed #c5dfd0;padding-top:10px}
 @media(max-width:640px){.s1-live-dialogue{padding:12px}.s1-live-speech{max-width:100%;padding:10px 13px}.s1-live-speech p{font-size:16px}.s1-live-replies button{font-size:15px;padding:10px 12px}}
 </style>
-<script>if(new URLSearchParams(location.search).get('m')==='2'){location.replace(new URL('session2-demo.html?release=s12-r7-20261101',location.href).href);}</script>
+<script>if(new URLSearchParams(location.search).get('m')==='2'){location.replace(new URL('session2-demo.html?release=s12-r8-20261101',location.href).href);}</script>
 </head>
 <body>
 <div id="app"></div>
@@ -587,11 +587,11 @@ const sessions=[
 ];
 
 function header(){return '<header class="top"><div class="wrap topin"><a class="brand" href="?"><span class="logo">ا</span><span><b>آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</b><small>بیمه البرز | جلسه صفر + ۱۰ جلسه اصلی</small></span></a><div style="display:flex;align-items:center;gap:10px"><nav class="nav"><a href="?">جلسات</a><a href="?view=guide">راهنما</a></nav><div class="utility-nav"><a class="utility-btn" href="?">⌂ خانه</a><button class="utility-btn" onclick="history.length>1?history.back():location.href=\'?\'">→ برگشت</button></div></div></div></header>'}
-function footer(){return '<footer class="footer"><div class="wrap">جلسه اول شامل آموزش تعاملی، خودارزیابی، تکنیک‌های کاربردی و تمرین دونفره است؛ سایر جلسات به‌تدریج تکمیل می‌شوند.</div></footer>'}
+function footer(){return '<footer class="footer"><div class="wrap">آکادمی مهارت‌های ارتباطات اثربخش · بیمه البرز</div></footer>'}
 function home(){
 document.title="آکادمی مهارت‌های ارتباطات اثربخش | بیمه البرز";
 document.getElementById("app").innerHTML=header()+
-'<main><section class="hero"><div class="wrap"><span class="tag">نسخه پایه و قابل توسعه</span><h1>مهارت‌های ارتباطات اثربخش و رفتار حرفه‌ای رؤسای شعب بیمه البرز</h1><p>جلسه اول با تمرین‌های تعاملی، خودارزیابی، ۱۶ تکنیک کاربردی و یک کارگاه دونفره آماده استفاده است. جلسه صفر راهنمای استفاده کاربردی از هوش مصنوعی را دارد. عنوان و مسیر جلسات دوم تا دهم نیز مشخص شده‌اند و محتوای تفصیلی آن‌ها هنوز تکمیل نشده است.</p><div class="summary"><span class="pill">جلسه صفر + ۱۰ جلسه اصلی</span><span class="pill">هر جلسه ۲ ساعت</span><span class="pill">مسیر غیرخطی</span><span class="pill">لینک مستقل برای هر جلسه</span><span class="pill">قابل توسعه به ۲ یا ۳ جلسه برای هر ماژول</span></div></div></section><section class="section"><div class="wrap"><h2>جلسات دوره</h2><div class="sub">برای دیدن کلیات هر جلسه روی کارت آن کلیک کنید.</div><div class="grid">'+
+'<main><section class="hero"><div class="wrap"><span class="tag">آکادمی مهارت‌های ارتباطی بیمه البرز</span><h1>مهارت‌های ارتباطات اثربخش و رفتار حرفه‌ای رؤسای شعب بیمه البرز</h1><div class="summary"><span class="pill">جلسه صفر + ۱۰ جلسه اصلی</span><span class="pill">هر جلسه ۲ ساعت</span><span class="pill">مسیر غیرخطی</span><span class="pill">لینک مستقل برای هر جلسه</span><span class="pill">قابل توسعه به ۲ یا ۳ جلسه برای هر ماژول</span></div></div></section><section class="section"><div class="wrap"><h2>جلسات دوره</h2><div class="grid">'+
 sessions.map(s=>'<a class="card" href="?m='+s.id+'"><div class="num">جلسه '+s.id+'</div><h3>'+s.title+'</h3><p>'+s.desc+'</p><div class="topics">'+s.topics.map(t=>'<span class="topic">'+t+'</span>').join('')+'</div><div class="go"><span>مشاهده کلیات جلسه</span><span>←</span></div></a>').join('')+
 '</div></div></section></main>'+footer()
 }
