@@ -111,3 +111,6 @@ body.finance-unlocked #finance-more-dialog :is(button,a):focus-visible{outline:3
  body.finance-unlocked .finance-mobile-nav button {min-height:61px!important}
  body.finance-unlocked .finance-mobile-nav button>span:last-child {font-size:13px!important;line-height:1.35!important}
 }
+
+/* r74: viewport warning appears only when a physical phone is using a wide desktop layout viewport. */
+html.mf-wide-mobile body.finance-unlocked #mf-viewport-warning{display:block!important;font-size:17px!important;line-height:1.85!important;font-weight:700!important;color:var(--fg)!important;background:var(--card)!important;padding:18px!important;border:2px solid var(--accent)!important;border-radius:15px!important;margin:8px 0 18px!important;white-space:normal!important}
