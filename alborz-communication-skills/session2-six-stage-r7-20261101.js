@@ -47,7 +47,7 @@ function quizPage(t){
    const selected=has&&picked===k;
    const css=selected?(k===item.correct?' is-correct':' is-incorrect'):'';
    const tag=has&&k===item.correct?'<span class="alborz-quiz-mark">✓</span>':(has&&selected?'<span class="alborz-quiz-mark">×</span>':'');
-   return '<button type="button" class="alborz-quiz-choice'+css+'" aria-pressed="'+selected+'" onclick="answerAlborzCapstone('+t+','+i+','+k+')"><span class="alborz-quiz-index">'+String.fromCharCode(1575+k)+'</span><span>'+h(opt)+'</span>'+tag+'</button>';
+   return '<button type="button" class="alborz-quiz-choice'+css+'" aria-pressed="'+selected+'" onclick="answerAlborzCapstone('+t+','+i+','+k+')"><span class="alborz-quiz-index">'+['الف','ب','ج'][k]+'</span><span>'+h(opt)+'</span>'+tag+'</button>';
   }).join('');
   let explanation='';
   if(has){
