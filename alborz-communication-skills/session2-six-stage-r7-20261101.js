@@ -66,7 +66,7 @@ function quizPage(t){
  '<section class="contentcard lab-card alborz-capstone"><p class="alborz-reflection-lead">قرار نیست عبارت‌های جلسه را حفظ کنید. هر سؤال یک موقعیت تازه است؛ ابتدا تصمیم بگیرید و بعد، تحلیل هر سه گزینه و عادت رایج مرتبط را بخوانید.</p>'+progress+items+progress+'</section>'+nav(true)+'</section>';
 }
 function decorate(){
- if(enhancing||!root||!window.current)return;
+ if(enhancing||!root||typeof current==='undefined')return;
  enhancing=true;
  try{
   if(current.page==='tech'){
