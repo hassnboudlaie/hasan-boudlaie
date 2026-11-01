@@ -17,7 +17,7 @@
   window.addEventListener("resize",classify,{passive:true});
   window.addEventListener("orientationchange",classify,{passive:true});
 })();
-</script><meta name="theme-color" content="#0a5b44"><meta name="alborz-build" content="s12-r5-20261031"><title>جلسه دوم | آکادمی ارتباطات بیمه البرز</title>
+</script><meta name="theme-color" content="#0a5b44"><meta name="alborz-build" content="s12-r6-20261101"><title>جلسه دوم | آکادمی ارتباطات بیمه البرز</title>
 <style>
 @font-face{font-family:Vazirmatn;src:url('./assets/fonts/Vazirmatn.woff2') format('woff2');font-display:swap;font-weight:100 900}
 :root{--brand:#0a6a4d;--ink:#153d32;--dark:#073c2e;--gold:#c6a560;--muted:#526c62;--subtle:#e6efe9;--canvas:#f3f7f4;--white:#fff;--success:#dff3e8;--danger:#fff0ef;--border:#d9e6dc;--shadow:0 12px 36px rgba(10,61,44,.08)}
@@ -352,8 +352,8 @@ h1,h2,h3,strong,b{font-weight:850}
 }
 
 </style>
-<style id="alborz-integrated-sprint14-css" data-release="s12-r5-20261031">
-/* Phase 1–4 verified visual release s12-r5-20261031 */
+<style id="alborz-integrated-sprint14-css" data-release="s12-r6-20261101">
+/* Phase 1–4 verified visual release s12-r6-20261101 */
 /* Immutable Alborz release s12-r1-20261031 — integrated visual theme */
 
 /* session2-extended.css */
@@ -1213,6 +1213,19 @@ html.touch-desktop-mode .lab-page .lab-acting-cues>div{font-size:38px!important}
 html.touch-desktop-mode .lab-page .rolecards{grid-template-columns:1fr 1fr}
 html.touch-desktop-mode .lab-page .lab-feedback-another p{font-size:37px!important}
 
+
+/* r6: large readable reflective learning UI and strong accessible contrast */
+.lab-rubric-summary,.summary{background:#ecf5ef!important;color:#123b31!important;border:2px solid #9dc4b2!important}
+.lab-rubric-summary b,.summary b,.lab-rubric-summary p,.summary p{color:#123b31!important;opacity:1!important}
+.alborz-index-launch,.alborz-practice-shortcut{display:none!important}
+.lab-principles>.lab-optional-science{display:none!important}
+.lab-reflection-intro,.lab-bridge{background:#eff7f2;border:2px solid #c5dfd0;border-radius:16px;padding:20px 24px;color:#164635;font-size:clamp(22px,2vw,30px);line-height:1.85}
+.lab-key-message{direction:rtl;text-align:right;display:grid;gap:clamp(18px,2vw,30px)}
+.lab-key-headline{font-size:clamp(26px,2.5vw,41px)!important;line-height:1.9!important;font-weight:850!important;color:#103e30!important;margin:0!important}
+.lab-key-example{border-right:7px solid #137953;padding:18px 24px;background:#f0f8f3;border-radius:16px}
+.lab-key-example strong,.lab-key-decision b{font-size:clamp(23px,2.2vw,31px);color:#10533b!important}
+.lab-key-example p,.lab-key-decision{font-size:clamp(22px,2vw,31px)!important;line-height:1.9!important;color:#183c33!important}
+@media(max-width:760px){.lab-key-headline{font-size:27px!important}.lab-key-example p,.lab-key-decision{font-size:23px!important}}
 </style></head><body>
 <header class="topbar"><div class="topinside"><div class="brand"><img src="../assets/company-logos/alborz.svg" alt="نشان بیمه البرز"><div><strong>آکادمی ارتباطات اثربخش</strong><small>بیمه البرز · رؤسای شعب · جلسه دوم</small></div></div><nav class="quicknav" aria-label="ناوبری اصلی"><a class="back navhome" href="index.html" title="صفحه اصلی آکادمی"><span class="navemoji" aria-hidden="true">🏠</span> خانه</a><button class="back navsession" type="button" onclick="goSession()"><span class="navemoji" aria-hidden="true">📚</span> جلسه دوم</button><button class="back navback" type="button" id="goBack" onclick="back()"><span class="navemoji" aria-hidden="true">↩️</span> بازگشت</button></nav></div></header>
 <main class="shell" id="root" aria-live="polite"></main><script>
@@ -1286,10 +1299,12 @@ render();
 
 <script src="session2-core-s12-r1-20261031.js"></script>
 <script src="session2-assessment-s12-r2-20261031.js"></script>
-<script src="session2-ui-s12-r5-20261031.js"></script>
+<script src="session2-learning-flow-20261101.js?v=s12-r6-20261101"></script>
+<script src="session2-ui-s12-r6-20261101.js"></script>
+<script src="session2-five-stage-r6-20261101.js?v=s12-r6-20261101"></script>
 <script id="alborz-release-check">
 (function(){
-  var expected="s12-r5-20261031";
+  var expected="s12-r6-20261101";
   var release=window.ALBORZ_RELEASE;
   if(release&&release.id===expected&&release.assessment&&window.ALBORZ_QUIZ_UI&&window.ALBORZ_FIRST_PRACTICE_READY)return;
   var panel=document.createElement("aside");
@@ -1326,94 +1341,53 @@ render();
 (function(){
 'use strict';
 if(new URLSearchParams(location.search).get('qaAudit')!=='all')return;
-const root=document.getElementById('root'),tests=[];
-let steps=0,turns=0,answers=0,roles=0,retries=0,questions=0;
-function test(name,fn){
- try{fn();tests.push({name,pass:true});}
- catch(err){tests.push({name,pass:false,error:String(err&&err.message||err)});}
-}
-function verify(ok,reason){if(!ok)throw Error(reason);}
-test('نسخه منتشرشده و اتصال فازهای ۱ تا ۴',()=>{
- verify(window.ALBORZ_RELEASE?.id==='s12-r5-20261031','Release wrong');
- verify(window.ALBORZ_RELEASE.assessment&&window.ALBORZ_RELEASE.scenarioAlignment&&window.ALBORZ_RELEASE.mobileNav,'Missing module');
-});
-test('۱۰ تکنیک و سه دکمه ناوبری',()=>{
- go('catalog');
- verify(root.querySelectorAll('.tech-card.lab-tech').length===10,'Catalog');
- verify(document.querySelectorAll('.quicknav .back').length===3,'Navigation');
+const root=document.getElementById('root'),tests=[];let stages=0,questions=0,answers=0,dialogues=0;
+function test(name,fn){try{fn();tests.push({name,pass:true});}catch(err){tests.push({name,pass:false,error:String(err&&err.message||err)});}}
+function verify(ok,why){if(!ok)throw Error(why);}
+test('بارگذاری نسخه شش و ده تکنیک',()=>{
+ verify(window.ALBORZ_RELEASE?.id==='s12-r6-20261101'&&window.ALBORZ_FIVE_STAGE&&window.ALBORZ_REFLECTIVE_QUESTIONS_READY,'Release');
+ go('catalog');verify(root.querySelectorAll('.tech-card.lab-tech').length===10,'Catalog');
 });
 for(let t=1;t<=10;t++){
- const d=window.ALBORZ_TECH_DATA[t],g=window.ALBORZ_BEHAVIOR_GUIDES[t];
- const retry=t===1?window.ALBORZ_TECH1_RETRY:d.repractice;
- test('تکنیک '+t+' — هشت مرحله',()=>{
+ test('تکنیک '+t+' — پنج مرحله',()=>{
   window.openAdvancedTech(t-1);
-  for(let k=0;k<8;k++){go('stage',k);verify(!!root.querySelector('.single-stage'),'Missing step '+(k+1));steps++;}
+  verify(root.querySelectorAll('.stage-grid .stage-card').length===5,'Five cards');
+  const labels=[...root.querySelectorAll('.stage-grid .stage-card .body b')].map(x=>x.textContent);
+  verify(JSON.stringify(labels)===JSON.stringify(['موقعیت تمرینی','اصول و تکنیک‌های کاربردی','سؤالات برای تفکر','گفت‌وگوی نمونه','پیام کلیدی']),'Labels');
+  for(const i of [0,1,2,4,7]){
+   go('stage',i);verify(!!root.querySelector('.single-stage'),'Step '+i);stages++;
+  }
+  verify(root.textContent.includes(window.ALBORZ_KEY_MESSAGES[t].message),'Key message');
+  verify(root.textContent.includes(window.ALBORZ_KEY_MESSAGES[t].example),'New example');
+  verify(!['کپی برنامه اقدام','کپی بازخورد','منابع و نکات تخصصی','اجرای دوباره','نقد و بازخورد رفتاری'].some(x=>root.textContent.includes(x)),'Removed UI still shown');
  });
- test('تکنیک '+t+' — تناسب موقعیت و Role Play',()=>{
-  go('stage',3);
-  verify(!!root.querySelector('.lab-role-scene')&&!!root.querySelector('.rolecards')&&!!root.querySelector('.lab-acting-cues'),'Roles or cues');
-  verify(root.textContent.includes(g.skill),'Skill');
-  verify(!root.textContent.includes('وب‌کم'),'Extraneous instruction');
-  if(t===8)verify(root.textContent.includes('مدیر ستادی اینجاست'),'Opponent opener');
-  roles++;
+ test('تکنیک '+t+' — گفت‌وگوی نمونه',()=>{
+  go('stage',4);verify(root.querySelectorAll('.speech').length>=10,'Dialogue not rendered');dialogues++;
  });
- test('تکنیک '+t+' — اجرای دوباره مرتبط',()=>{
-  go('stage',6);
-  verify(root.textContent.includes(retry.mission)&&root.textContent.includes(retry.watch),'Repractice mission');
-  verify(!!root.querySelector('.lab-acting-cues'),'Body and tone');
-  retries++;
- });
- test('تکنیک '+t+' — گفت‌وگوی نمونه و راهنمای اجرا',()=>{
-  go('stage',4);
-  const expected=t===1?20:d.dialogue.length;
-  verify(root.querySelectorAll('.performance-guide').length===expected,'Performance cues '+expected);
-  turns+=expected;
- });
- const qs=t===1?Q:d.quiz;
- for(let qi=0;qi<3;qi++){
-  const item=qs[qi],right=t===1?item.right:item.correct;
-  test('تکنیک '+t+'، پرسش '+(qi+1)+' — سه دلیل مستقل',()=>{
-   verify(item.optionReasons?.length===3&&new Set(item.optionReasons).size===3,'Reasons not unique');
-   questions++;
+ const qs=t===1?Q:window.ALBORZ_TECH_DATA[t].quiz;
+ for(let i=0;i<3;i++){
+  test('تکنیک '+t+' — سؤال '+(i+1)+' دلایل سه‌گانه',()=>{
+   verify(qs[i].optionReasons?.length===3&&new Set(qs[i].optionReasons).size===3,'Non-unique explanations');questions++;
   });
   for(let choice=0;choice<3;choice++){
-   test('تکنیک '+t+'، پرسش '+(qi+1)+'، گزینه '+(choice+1),()=>{
+   test('تکنیک '+t+' — پاسخ '+(i+1)+' گزینه '+(choice+1),()=>{
     go('stage',2);
-    if(t===1)pick(qi,choice);else window.chooseAdvancedPoll(t-1,qi,choice);
-    const itemRoot=root.querySelectorAll('.lab-quiz-question-wrap')[qi];
-    verify(!!itemRoot,'Question not rendered');
-    const feedback=itemRoot.querySelector('.lab-feedback-result');
-    verify(!!feedback&&itemRoot.querySelectorAll('.lab-feedback-another').length===2,'Missing two other explanations');
-    verify(item.optionReasons.every(x=>feedback.textContent.includes(x)),'Option-specific reason absent');
-    const selected=itemRoot.querySelector('.lab-choice.selected');
-    verify(selected&&selected.classList.contains(choice===right?'selected-correct':'selected-incorrect'),'Selection state incorrect');
-    answers++;
+    if(t===1)pick(i,choice);else window.chooseAdvancedPoll(t-1,i,choice);
+    const item=root.querySelectorAll('.lab-quiz-question-wrap')[i];
+    const feedback=item?.querySelector('.lab-feedback-result');
+    verify(feedback&&item.querySelectorAll('.lab-feedback-another').length===2,'Two other rationales absent');
+    verify(qs[i].optionReasons.every(x=>feedback.textContent.includes(x)),'Missing individual rationale');answers++;
    });
   }
  }
 }
-test('فاز ۴ — Header جمع‌وجور و Navigation',()=>{
- document.documentElement.classList.add('alborz-scrolled');
- const brand=document.querySelector('.brand');
- verify(brand&&getComputedStyle(brand).display==='none','Header not collapsed');
- document.documentElement.classList.remove('alborz-scrolled');
+test('هیچ کارت حذف‌شده‌ای در فهرست نباشد',()=>{
+ go('catalog');window.openAdvancedTech(1);
+ verify(root.querySelectorAll('.stage-card').length===5,'Removed steps still in grid');
 });
-test('فاز ۴ — نمایش متفاوت پاسخ درست و غلط',()=>{
- window.openAdvancedTech(2);go('stage',2);
- window.chooseAdvancedPoll(2,2,0);
- const wrong=root.querySelectorAll('.lab-quiz-question-wrap')[2].querySelector('.lab-choice.selected');
- const red=getComputedStyle(wrong).backgroundColor;
- window.chooseAdvancedPoll(2,2,2);
- const good=root.querySelectorAll('.lab-quiz-question-wrap')[2].querySelector('.lab-choice.selected');
- verify(red!==getComputedStyle(good).backgroundColor,'Same feedback style');
-});
-test('فاز ۴ — عدم برش افقی در عرض مرورگر',()=>{
- go('stage',3);
- const w=document.documentElement.scrollWidth-document.documentElement.clientWidth;
- verify(w<=6,'Horizontal overflow '+w+'px');
-});
-const fail=tests.filter(x=>!x.pass),summary={release:'s12-r5-20261031',status:fail.length?'FAIL':'PASS',checks:tests.length,passed:tests.length-fail.length,failed:fail.length,metrics:{stages:steps,dialogueTurns:turns,questions,answers,roleplays:roles,repractices:retries,viewport:innerWidth},failures:fail};
-root.innerHTML='<section class="contentcard"><h1>🔎 کنترل زنده فازهای ۱ تا ۴</h1><h2>'+(fail.length?'نیاز به اصلاح':'همه کنترل‌ها موفق بودند')+'</h2><p>نسخه: s12-r5-20261031</p><p>موفق: '+summary.passed+' از '+summary.checks+'</p><p>۸۰ مرحله، ۳۰ سؤال، ۹۰ انتخاب و ۲۴۸ نوبت گفت‌وگو</p><pre id="alborz-qa-json" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5" dir="ltr">ALBORZ_QA_RESULT='+JSON.stringify(summary)+'</pre><button class="navbtn next" onclick="location.href='+"'session2-demo.html?release=s12-r5-20261031'"+'">بازگشت به دوره</button></section>';
+const failures=tests.filter(x=>!x.pass);
+const summary={release:'s12-r6-20261101',status:failures.length?'FAIL':'PASS',passed:tests.length-failures.length,checks:tests.length,metrics:{stages,questions,answers,dialogues},failures};
+root.innerHTML='<section class="contentcard"><h1>🔎 کنترل نسخه پنج‌بخشی</h1><h2>'+(failures.length?'نیاز به اصلاح':'همه کنترل‌ها موفق بودند')+'</h2><p>موفق: '+summary.passed+' از '+summary.checks+'</p><pre dir="ltr" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px">ALBORZ_QA_RESULT='+JSON.stringify(summary)+'</pre><a class="navbtn next" href="session2-demo.html?release=s12-r6-20261101">بازگشت به جلسه دوم</a></section>';
 window.ALBORZ_AUDIT_RESULT=summary;
 })();
 </script><script id="alborz-style-diagnostic">
