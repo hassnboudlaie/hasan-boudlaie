@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dir=path.join(root,'alborz-communication-skills');
 const load=name=>fs.readFileSync(path.join(dir,name),'utf8');
-const release='s12-r7-20261101';
+const release='s12-r8-20261101';
 const files={
  page:'session2-demo.html',
  core:'session2-core-s12-r1-20261031.js',
@@ -21,6 +21,7 @@ const files={
  capstoneA:'session2-capstone-questions-a-r7-20261101.js',
  capstoneB:'session2-capstone-questions-b-r7-20261101.js',
  six:'session2-six-stage-r7-20261101.js',
+ dialogue:'session2-dialogue-refinement-r8-20261101.js',
  acceptance:'session2-phase5-acceptance.html'
 };
 const source=Object.fromEntries(Object.entries(files).map(([k,v])=>[k,load(v)]));
@@ -51,7 +52,7 @@ function jsonFollowing(text,needle){
 assert('روت فارسی و RTL',/<html[^>]*lang="fa"[^>]*dir="rtl"/.test(source.page));
 assert('متاتگ موبایل',/<meta\s+name="viewport"/.test(source.page));
 assert('محافظ شناسه انتشار',source.page.includes(release)&&source.six.includes(release));
-assert('هماهنگی نسخه‌دار نه بسته',Object.entries(files).filter(([key])=>['core','assessment','ui','flow','overlay','insights','capstoneA','capstoneB','six'].includes(key)).every(([key,v])=>source.page.includes('src="'+v) ));
+assert('هماهنگی نسخه‌دار نه بسته',Object.entries(files).filter(([key])=>['core','assessment','ui','flow','overlay','insights','capstoneA','capstoneB','six','dialogue'].includes(key)).every(([key,v])=>source.page.includes('src="'+v) ));
 assert('پیشگیری از اختلال نسخه',source.page.includes('alborz-load-error'));
 assert('آزمون مرورگر پنج‌بخشی قابل فراخوانی',source.page.includes('qaAudit')&&source.page.includes('ALBORZ_AUDIT_RESULT'));
 assert('حالت Android Desktop Site',source.page.includes('touch-desktop-mode'));
@@ -133,6 +134,13 @@ assert('دلایل خطای پاسخ‌های ظاهراً منطقی = ۸۰',ca
 assert('دام‌های رفتار سازمانی = ۴۰',habitCases===40,String(habitCases));
 assert('توزیع غیرقابل‌حدس کلید صحیح',correctPositions.every(n=>n>=8),JSON.stringify(correctPositions));
 assert('دسترسی به مرحله ۶ از انتشار جدید',source.six.includes('go(\\\'stage\\\',5)')||source.six.includes("index===5||index===6"));
+assert('بارگذاری اصلاحات نقش‌آفرینی',source.page.includes('session2-dialogue-refinement-r8-20261101.js'));
+assert('وجود راهنمای اختصاصی لحظه‌های حساس',source.ui.includes('cue.focus')&&source.page.includes('cue.focus')&&source.dialogue.includes('highlights'));
+assert('حذف کپی متن از هر دو مسیر نمایش',!source.page.includes('کپی متن کامل</button>')&&!source.ui.includes('کپی متن</button>'));
+assert('حذف توضیح سؤالات برای تفکر',!source.overlay.includes('این سؤال‌ها ادامه تکراری'));
+assert('حذف مقدمه‌های توضیحی گفتگو و کوییز',!source.six.includes('قرار نیست عبارت‌های جلسه را حفظ کنید')&&!source.overlay.includes('هدف حفظ‌کردن جملات نیست'));
+assert('حذف اعلان‌های نسخه‌سازی از صفحه اصلی',!load('index.html').includes('نسخه پایه و قابل توسعه')&&!load('index.html').includes('محتوای تفصیلی آن‌ها هنوز تکمیل نشده'));
+assert('تغییر محدود گفتگوها',source.dialogue.includes('rewritten=0')&&source.dialogue.includes('highlights=0'));
 const failed=checks.filter(x=>!x.pass);
 const report={
  audit:'Alborz Phase 5 — static source integrity',

@@ -1390,10 +1390,10 @@ render();
 'use strict';
 if(new URLSearchParams(location.search).get('qaAudit')!=='all')return;
 const root=document.getElementById('root'),tests=[];
-let stages=0,insights=0,capstones=0,capstoneOptions=0,thinkingQuestions=0,thinkingOptions=0,dialogues=0;
+let stages=0,insights=0,capstones=0,capstoneOptions=0,thinkingQuestions=0,thinkingOptions=0,dialogues=0,guideTurns=0,focusedTurns=0;
 function test(name,fn){try{fn();tests.push({name,pass:true});}catch(err){tests.push({name,pass:false,error:String(err?.message||err)});}}
 function verify(condition,message){if(!condition)throw Error(message);}
-test('نسخه r7 و بانک هر ده تکنیک',()=>{verify(window.ALBORZ_RELEASE?.id==='s12-r7-20261101','Release mismatch');verify(window.ALBORZ_SIX_STAGE?.stages===60&&Object.keys(window.ALBORZ_CAPSTONE_BANK).length===10,'Six-stage bank');});
+test('نسخه r8 و بانک هر ده تکنیک',()=>{verify(window.ALBORZ_RELEASE?.id==='s12-r8-20261101','Release mismatch');verify(window.ALBORZ_SIX_STAGE?.stages===60&&Object.keys(window.ALBORZ_CAPSTONE_BANK).length===10,'Six-stage bank');});
 test('فهرست هر ده تکنیک',()=>{go('catalog');verify(root.querySelectorAll('.tech-card.lab-tech').length===10,'10 technique cards');});
 for(let t=1;t<=10;t++){
  const quiz=window.ALBORZ_CAPSTONE_BANK[t],messages=window.ALBORZ_KEY_COLLECTION[t],existing=t===1?Q:window.ALBORZ_TECH_DATA[t].quiz;
@@ -1442,7 +1442,26 @@ for(let t=1;t<=10;t++){
    });
   }
  }
- test('تکنیک '+t+'، نمونه گفت‌وگو',()=>{go('stage',4);verify(root.querySelectorAll('.speech').length>=10,'Dialogue missing');dialogues++;});
+ test('تکنیک '+t+'، گفت‌وگو و راهنمای اجرا',()=>{
+  go('stage',4);
+  const speeches=root.querySelectorAll('.speech'),guides=root.querySelectorAll('.performance-guide'),focus=root.querySelectorAll('.performance-focus');
+  verify(speeches.length>=20&&guides.length===speeches.length,'Missing acting guide');
+  verify(focus.length>=2,'Pivotal performance cue missing');
+  verify(root.querySelectorAll('.scriptbar .tab').length===4,'Unexpected dialogue controls');
+  verify(!root.textContent.includes('کپی متن'),'Copy button visible');
+  verify(root.querySelector('.scriptbar').textContent.includes('راهنمای اجرا'),'Guide control absent');
+  dialogues++;guideTurns+=guides.length;focusedTurns+=focus.length;
+ });
+ test('تکنیک '+t+'، حذف متن‌های زائد',()=>{
+  go('stage',2);
+  verify(!root.querySelector('.lab-reflection-intro'),'Unnecessary intro to thinking questions');
+  go('stage',4);
+  verify(!root.querySelector('.lab-bridge'),'Unnecessary dialogue intro');
+  go('stage',5);
+  verify(!root.querySelector('.alborz-reflection-lead'),'Unnecessary capstone intro');
+  go('stage',7);
+  verify(!root.querySelector('.alborz-r7-subhead'),'Unnecessary key message intro');
+ });
  for(let q=0;q<3;q++){
   test('تکنیک '+t+' سؤال برای تفکر '+(q+1),()=>{verify(existing[q].optionReasons.length===3&&new Set(existing[q].optionReasons).size===3,'Distinct rationales');thinkingQuestions++;});
   for(let k=0;k<3;k++){
@@ -1455,8 +1474,8 @@ for(let t=1;t<=10;t++){
   }
  }
 }
-const failed=tests.filter(z=>!z.pass),result={release:'s12-r7-20261101',status:failed.length?'FAIL':'PASS',checks:tests.length,passed:tests.length-failed.length,failed:failed.length,metrics:{stages,insights,capstones,capstoneOptions,thinkingQuestions,thinkingOptions,dialogues},failures:failed};
-root.innerHTML='<section class="contentcard"><h1>🔍 کنترل جامع آکادمی ـ ۶ بخش</h1><h2>'+(failed.length?'نیازمند اصلاح':'همه کنترل‌های مرورگر موفق بودند')+'</h2><p>موفق: '+result.passed+' از '+result.checks+'</p><pre dir="ltr" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px">ALBORZ_QA_RESULT='+JSON.stringify(result)+'</pre><a class="navbtn next" href="session2-demo.html?release=s12-r7-20261101">بازگشت به جلسه دوم</a></section>';
+const failed=tests.filter(z=>!z.pass),result={release:'s12-r8-20261101',status:failed.length?'FAIL':'PASS',checks:tests.length,passed:tests.length-failed.length,failed:failed.length,metrics:{stages,insights,capstones,capstoneOptions,thinkingQuestions,thinkingOptions,dialogues,guideTurns,focusedTurns},failures:failed};
+root.innerHTML='<section class="contentcard"><h1>🔍 کنترل جامع آکادمی ـ ۶ بخش</h1><h2>'+(failed.length?'نیازمند اصلاح':'همه کنترل‌های مرورگر موفق بودند')+'</h2><p>موفق: '+result.passed+' از '+result.checks+'</p><pre dir="ltr" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px">ALBORZ_QA_RESULT='+JSON.stringify(result)+'</pre><a class="navbtn next" href="session2-demo.html?release=s12-r8-20261101">بازگشت به جلسه دوم</a></section>';
 window.ALBORZ_AUDIT_RESULT=result;
 })();
 </script><script id="alborz-style-diagnostic">

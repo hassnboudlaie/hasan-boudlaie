@@ -25,7 +25,7 @@ const server=createServer((req,res)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const address=server.address();
-const base='http://127.0.0.1:'+address.port+'/alborz-communication-skills/session2-demo.html?release=s12-r7-20261101';
+const base='http://127.0.0.1:'+address.port+'/alborz-communication-skills/session2-demo.html?release=s12-r8-20261101';
 let browser;
 try{
  browser=await chromium.launch({headless:true});
@@ -34,8 +34,8 @@ try{
  await qaPage.goto(base+'&qaAudit=all',{waitUntil:'load',timeout:120000});
  await qaPage.waitForFunction(()=>window.ALBORZ_AUDIT_RESULT!==undefined,{timeout:90000});
  const audit=await qaPage.evaluate(()=>window.ALBORZ_AUDIT_RESULT);
- test('Chromium E2E: 322 full six-stage checks',audit?.status==='PASS'&&audit?.checks===322&&audit?.passed===322,JSON.stringify({checks:audit?.checks,passed:audit?.passed,failed:audit?.failed}));
- for(const [k,v] of Object.entries({stages:60,insights:40,capstones:40,capstoneOptions:120,thinkingQuestions:30,thinkingOptions:90,dialogues:10})){
+ test('Chromium E2E: 332 six-stage and roleplay checks',audit?.status==='PASS'&&audit?.checks===332&&audit?.passed===332,JSON.stringify({checks:audit?.checks,passed:audit?.passed,failed:audit?.failed}));
+ for(const [k,v] of Object.entries({stages:60,insights:40,capstones:40,capstoneOptions:120,thinkingQuestions:30,thinkingOptions:90,dialogues:10,guideTurns:248,focusedTurns:21})){
   test('Live runtime metric '+k,audit?.metrics?.[k]===v,String(audit?.metrics?.[k]));
  }
  await qaPage.screenshot({path:path.join(outputs,'01-browser-audit.png'),fullPage:true});
@@ -45,7 +45,7 @@ try{
  const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base,{waitUntil:'load',timeout:30000});
- await page.waitForFunction(()=>window.ALBORZ_RELEASE?.id==='s12-r7-20261101',{timeout:15000});
+ await page.waitForFunction(()=>window.ALBORZ_RELEASE?.id==='s12-r8-20261101',{timeout:15000});
  const general=await page.evaluate(()=>{
   window.go('catalog');
   return {dir:document.documentElement.dir,lang:document.documentElement.lang,techniques:document.querySelectorAll('.tech-card.lab-tech').length,navigation:document.querySelectorAll('.quicknav .back').length};
@@ -72,6 +72,10 @@ try{
    const count=document.querySelectorAll('.stage-grid .stage-card').length;
    window.go('stage',4);
    const dialogue=document.querySelectorAll('.speech').length;
+   const guidance=document.querySelectorAll('.performance-guide').length;
+   const focused=document.querySelectorAll('.performance-focus').length;
+   const scriptControls=document.querySelectorAll('.scriptbar .tab').length;
+   const copyGone=!document.querySelector('.scriptbar')?.textContent.includes('کپی متن');
    window.go('stage',7);
    const keys=document.querySelectorAll('.alborz-key-trigger').length;
    window.toggleAlborzMessage(t,0);
@@ -79,9 +83,9 @@ try{
    window.go('stage',5);
    const quizCount=document.querySelectorAll('.alborz-capstone-question').length;
    const preFeedback=document.querySelectorAll('.alborz-quiz-feedback').length;
-   return {count,dialogue,keys,expanded,quizCount,preFeedback,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+   return {count,dialogue,guidance,focused,scriptControls,copyGone,keys,expanded,quizCount,preFeedback,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
   },t);
-  test('Mobile: technique '+t+' six stages, 4 clickable messages, and 4 unspoiled quizzes',r.count===6&&r.dialogue>=10&&r.keys===4&&r.expanded===1&&r.quizCount===4&&r.preFeedback===0,JSON.stringify(r));
+  test('Mobile: technique '+t+' six stages, 4 clickable messages, and 4 unspoiled quizzes',r.count===6&&r.dialogue>=20&&r.guidance===r.dialogue&&r.focused>=2&&r.scriptControls===4&&r.copyGone&&r.keys===4&&r.expanded===1&&r.quizCount===4&&r.preFeedback===0,JSON.stringify(r));
   test('Mobile: technique '+t+' no horizontal clipping',r.overflow<=6,'overflow='+r.overflow);
   if(t===1){
    await page.screenshot({path:path.join(outputs,'03-mobile-final-quiz-390.png'),fullPage:true});
