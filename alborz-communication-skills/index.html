@@ -3,15 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="application-name" content="آکادمی مهارت‌های ارتباطی بیمه البرز">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="آکادمی البرز">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="./icon-192.png">
-<meta name="theme-color" content="#0a5b44">
-
 
 <!-- Public classroom access: legacy sign-in gate disabled on owner request. -->
 <title>آکادمی مهارت‌های ارتباطات اثربخش | بیمه البرز</title>
@@ -1594,13 +1585,5 @@ if(!document.documentElement.classList.contains("alborz-class-locked"))renderAca
 document.addEventListener("alborz-classroom-authenticated",renderAcademyAfterLogin);
 </script>
 <!-- publish trigger -->
-
-<script id="alborz-pwa-register">
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js', {scope: './'}).catch(function () {});
-  });
-}
-</script>
 </body>
 </html>
