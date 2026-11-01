@@ -1,12 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="application-name" content="آکادمی مهارت‌های ارتباطی بیمه البرز">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="آکادمی البرز">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="./icon-192.png">
-<script id="alborz-touch-desktop-mode">
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script id="alborz-touch-desktop-mode">
 (function(){
   "use strict";
   function classify(){
@@ -1502,12 +1494,4 @@ const active=el.classList.contains('alborz-scrolled');
 const result={release:window.ALBORZ_RELEASE?.id,styles,links:[...document.querySelectorAll('link[rel=stylesheet]')].map(x=>({href:x.href,sheetReady:!!x.sheet})),normal,compact,active,colors:color(),width:innerWidth};
 root.innerHTML='<section class="contentcard"><h2>CSS Debug</h2><pre style="white-space:pre-wrap;font-size:15px">ALBORZ_STYLE_DEBUG='+JSON.stringify(result)+'</pre></section>';
 })();
-</script>
-<script id="alborz-pwa-register">
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js', {scope: './'}).catch(function () {});
-  });
-}
-</script>
-</body></html>
+</script></body></html>
