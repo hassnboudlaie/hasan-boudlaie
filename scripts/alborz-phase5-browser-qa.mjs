@@ -34,7 +34,7 @@ try{
  await qaPage.goto(base+'&qaAudit=all',{waitUntil:'load',timeout:30000});
  await qaPage.waitForFunction(()=>window.ALBORZ_AUDIT_RESULT!==undefined,{timeout:20000});
  const audit=await qaPage.evaluate(()=>window.ALBORZ_AUDIT_RESULT);
- test('Chromium E2E: 142 checks',audit?.status==='PASS'&&audit?.checks===142&&audit?.failed===0,JSON.stringify({checks:audit?.checks,passed:audit?.passed,failed:audit?.failed}));
+ test('Chromium E2E: 142 checks',audit?.status==='PASS'&&audit?.checks===142&&audit?.passed===142,JSON.stringify({checks:audit?.checks,passed:audit?.passed,failed:audit?.failed}));
  for(const [k,v] of Object.entries({stages:50,questions:30,answers:90,dialogues:10})){
   test('Live runtime metric '+k,audit?.metrics?.[k]===v,String(audit?.metrics?.[k]));
  }
