@@ -25,7 +25,7 @@ const server=createServer((req,res)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const address=server.address();
-const base='http://127.0.0.1:'+address.port+'/alborz-communication-skills/session2-demo.html?release=s12-r5-20261031';
+const base='http://127.0.0.1:'+address.port+'/alborz-communication-skills/session2-demo.html?release=s12-r6-20261101';
 let browser;
 try{
  browser=await chromium.launch({headless:true});
@@ -34,8 +34,8 @@ try{
  await qaPage.goto(base+'&qaAudit=all',{waitUntil:'load',timeout:30000});
  await qaPage.waitForFunction(()=>window.ALBORZ_AUDIT_RESULT!==undefined,{timeout:20000});
  const audit=await qaPage.evaluate(()=>window.ALBORZ_AUDIT_RESULT);
- test('Chromium E2E: 165/165 Pass',audit?.status==='PASS'&&audit?.checks===165&&audit?.failed===0,JSON.stringify({checks:audit?.checks,passed:audit?.passed,failed:audit?.failed}));
- for(const [k,v] of Object.entries({stages:80,dialogueTurns:248,questions:30,answers:90,roleplays:10,repractices:10})){
+ test('Chromium E2E: 142 checks',audit?.status==='PASS'&&audit?.checks===142&&audit?.failed===0,JSON.stringify({checks:audit?.checks,passed:audit?.passed,failed:audit?.failed}));
+ for(const [k,v] of Object.entries({stages:50,questions:30,answers:90,dialogues:10})){
   test('Live runtime metric '+k,audit?.metrics?.[k]===v,String(audit?.metrics?.[k]));
  }
  await qaPage.screenshot({path:path.join(outputs,'01-browser-audit.png'),fullPage:true});
@@ -45,7 +45,7 @@ try{
  const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base,{waitUntil:'load',timeout:30000});
- await page.waitForFunction(()=>window.ALBORZ_RELEASE?.id==='s12-r5-20261031',{timeout:15000});
+ await page.waitForFunction(()=>window.ALBORZ_RELEASE?.id==='s12-r6-20261101',{timeout:15000});
  const general=await page.evaluate(()=>{
   window.go('catalog');
   return {dir:document.documentElement.dir,lang:document.documentElement.lang,techniques:document.querySelectorAll('.tech-card.lab-tech').length,navigation:document.querySelectorAll('.quicknav .back').length};
@@ -69,15 +69,19 @@ try{
  for(let t=1;t<=10;t++){
   const r=await page.evaluate(t=>{
    window.openAdvancedTech(t-1);
-   window.go('stage',3);
-   const root=document.getElementById('root');
-   return {roles:!!root.querySelector('.rolecards'),scene:!!root.querySelector('.lab-role-scene'),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+   const count=document.querySelectorAll('.stage-grid .stage-card').length;
+   window.go('stage',4);
+   const lesson=document.getElementById('root');
+   const dialogue=lesson.querySelectorAll('.speech').length;
+   window.go('stage',7);
+   const key=!!lesson.querySelector('.lab-key-message');
+   return {count,dialogue,key,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
   },t);
-  test('Mobile: technique '+t+' roleplay',r.roles&&r.scene);
+  test('Mobile: technique '+t+' five stages, sample dialogue and key message',r.count===5&&r.dialogue>=10&&r.key,JSON.stringify(r));
   test('Mobile: technique '+t+' no horizontal clipping',r.overflow<=6,'overflow='+r.overflow);
   if(t===1){
-   await page.screenshot({path:path.join(outputs,'03-mobile-roleplay-390.png'),fullPage:true});
-   screenshots.push('03-mobile-roleplay-390.png');
+   await page.screenshot({path:path.join(outputs,'03-mobile-key-message-390.png'),fullPage:true});
+   screenshots.push('03-mobile-key-message-390.png');
   }
  }
  test('Mobile: no script exceptions',errors.length===0,errors.join('; '));
@@ -86,7 +90,7 @@ try{
  const wc=await wideMobile.newPage();
  await wc.goto(base,{waitUntil:'load',timeout:30000});
  const simulated=await wc.evaluate(()=>{
-  window.openAdvancedTech(0);window.go('stage',3);
+  window.openAdvancedTech(0);window.go('stage',4);
   return {viewport:innerWidth,screen:{width:screen.width,height:screen.height},active:document.documentElement.classList.contains('touch-desktop-mode'),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
  });
  test('Desktop Site emulation: no horizontal clipping',simulated.overflow<=6,JSON.stringify(simulated));

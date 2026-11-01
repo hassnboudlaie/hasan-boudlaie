@@ -9,12 +9,14 @@ import { fileURLToPath } from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dir=path.join(root,'alborz-communication-skills');
 const load=name=>fs.readFileSync(path.join(dir,name),'utf8');
-const release='s12-r5-20261031';
+const release='s12-r6-20261101';
 const files={
  page:'session2-demo.html',
  core:'session2-core-s12-r1-20261031.js',
  assessment:'session2-assessment-s12-r2-20261031.js',
  ui:'session2-ui-s12-r5-20261031.js',
+ flow:'session2-learning-flow-20261101.js',
+ overlay:'session2-five-stage-r6-20261101.js',
  acceptance:'session2-phase5-acceptance.html'
 };
 const source=Object.fromEntries(Object.entries(files).map(([k,v])=>[k,load(v)]));
@@ -44,10 +46,10 @@ function jsonFollowing(text,needle){
 
 assert('روت فارسی و RTL',/<html[^>]*lang="fa"[^>]*dir="rtl"/.test(source.page));
 assert('متاتگ موبایل',/<meta\s+name="viewport"/.test(source.page));
-assert('محافظ شناسه انتشار',source.page.includes('s12-r5-20261031')&&source.ui.includes(release));
-assert('هماهنگی سه بسته نسخه‌دار',Object.entries(files).filter(([key])=>['core','assessment','ui'].includes(key)).every(([,v])=>source.page.includes('src="'+v+'"')));
+assert('محافظ شناسه انتشار',source.page.includes(release)&&source.overlay.includes(release));
+assert('هماهنگی نسخه‌دار پنج بسته',Object.entries(files).filter(([key])=>['core','assessment','ui','flow','overlay'].includes(key)).every(([key,v])=>source.page.includes('src="'+v+(key==='flow'||key==='overlay'?'?':'"'))));
 assert('پیشگیری از اختلال نسخه',source.page.includes('alborz-load-error'));
-assert('آزمون مرورگر ۱۶۵تایی قابل فراخوانی',source.page.includes('qaAudit')&&source.page.includes('ALBORZ_AUDIT_RESULT'));
+assert('آزمون مرورگر پنج‌بخشی قابل فراخوانی',source.page.includes('qaAudit')&&source.page.includes('ALBORZ_AUDIT_RESULT'));
 assert('حالت Android Desktop Site',source.page.includes('touch-desktop-mode'));
 assert('ابزار مستقل Final Acceptance',source.acceptance.includes('qaAudit=all')&&source.acceptance.includes('deviceTestSelfAttested'));
 assert('مسیردهی جلسه ۲ از صفحه اصلی',load('index.html').includes('session2-demo.html'));
@@ -66,6 +68,7 @@ assert('۹ تکنیک تکمیلی',Object.keys(bank).length===9&&Array.from({le
 const window={ALBORZ_TECH_DATA:bank};
 try {
  vm.runInNewContext(source.assessment,{window,Q:originalQ},{filename:files.assessment,timeout:5000});
+ vm.runInNewContext(source.flow,{window,Q:originalQ},{filename:files.flow,timeout:5000});
  assert('اجرای بانک نهایی ارزیابی',window.ALBORZ_ASSESSMENT_READY===true);
 } catch(e) {
  assert('اجرای بانک نهایی ارزیابی',false,String(e?.message||e));
@@ -93,6 +96,9 @@ assert('جمع سؤالات = ۳۰',questions===30,String(questions));
 assert('دلایل مستقل = ۹۰',reasons===90,String(reasons));
 assert('دلایل مختص گزینه‌های غلط = ۶۰',wrongReasons===60,String(wrongReasons));
 assert('نوبت گفت‌وگو = ۲۴۸',turns===248,String(turns));
+assert('ده پیام کلیدی متفاوت',Object.keys(window.ALBORZ_KEY_MESSAGES||{}).length===10&&new Set(Object.values(window.ALBORZ_KEY_MESSAGES).map(x=>x.message)).size===10);
+assert('مسیر پنج‌بخشی ۱۰ تکنیک',source.overlay.includes('allStages=[0,1,2,4,7]'));
+assert('حذف مسیرهای اضافی از UI',source.overlay.includes('card.remove()')&&source.overlay.includes('makeKeyCard'));
 assert('پوشش ۱۰ سناریو',Object.keys(window.ALBORZ_BEHAVIOR_GUIDES||{}).length===10);
 assert('عدم تغییر منبع پرسش بدون ارزیابی',source.assessment.includes('ALBORZ_QUIZ_UI'));
 const failed=checks.filter(x=>!x.pass);
@@ -103,7 +109,7 @@ const report={
  checks:checks.length,
  passed:checks.length-failed.length,
  failed:failed.length,
- metrics:{techniques:10,stagesExpected:80,questions,reasons,wrongReasons,dialogueTurns:turns},
+ metrics:{techniques:10,stagesExpected:50,questions,reasons,wrongReasons,dialogueTurns:turns},
  failures:failed,
  caveat:'This is not a live-browser test, physical handset test, or proof of deployment.'
 };
