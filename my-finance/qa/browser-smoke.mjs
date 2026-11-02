@@ -52,15 +52,23 @@ try{
  assert.ok((await page.locator('#mf-market-grid').innerText()).includes('۲۵۰٬۰۰۰'),'Live market widget must render JSON values');
  assert.ok((await page.locator('#mf-market-status').innerText()).includes('۳۰ دقیقه'),'Market feed cadence must be disclosed');
 
- // End-to-end assistant route and read-only report on a mobile viewport.
- await page.locator('.mf-va-home').click();await check('assistant');
- assert.equal(await page.locator('#finance-smart-assistant').isVisible(),true,'Voice report page must open from Home');
+ // The entire assistant must be directly usable on Home (not merely a shortcut).
+ assert.equal(await page.locator('#home #finance-smart-assistant').isVisible(),true,'Voice report form must be on Home');
+ const order=await page.evaluate(()=>{
+  const home=document.getElementById('home'),notices=home.querySelector('.mf-home-notices');
+  const assistant=home.querySelector('#finance-smart-assistant'),metrics=home.querySelector('.finance-dashboard-metrics');
+  return {notices:[...home.children].indexOf(notices),assistant:[...home.children].indexOf(assistant),metrics:[...home.children].indexOf(metrics)};
+ });
+ assert.ok(order.notices<order.assistant&&order.assistant<order.metrics,'Show alerts then assistant before dashboard metrics');
  await page.locator('#mf-va-question').fill('گزارش کل دوره');
  await page.locator('#mf-va-go').click();
  assert.ok((await page.locator('#mf-va-summary').innerText()).includes('۱٬۰۰۰٬۰۰۰'),'Report must use the synthetic expense');
  await page.locator('#mf-va-pdf').click();
  assert.equal(await page.locator('#mf-va-print').isVisible(),true,'Printable report should open');
  await page.locator('#mf-va-print-close').click();
+ // The existing Assistant route must still bring users back to this same Home form.
+ await page.evaluate(()=>financeNavGo('assistant'));await check('assistant');
+ assert.equal(await page.locator('#finance-smart-assistant').isVisible(),true,'Assistant nav should preserve Home form');
  await page.goBack();await check('home');
  assert.equal(await page.locator('#finance-quick-fab').isVisible(),false,'Floating button obscures content');
  const installOverlap=await page.evaluate(()=>{
