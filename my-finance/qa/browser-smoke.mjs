@@ -48,6 +48,14 @@ try{
   };
  });
  assert.equal(visual.cssLoaded,true,'v75 visual stylesheet not loaded');
+ const heroImg=page.locator('#home .mf-home-visual img');
+ assert.equal(await heroImg.count(),1,'Original home image missing');
+ await page.waitForFunction(()=>{const img=document.querySelector('#home .mf-home-visual img');return img?.complete&&img.naturalWidth>0;});
+ assert.ok(await heroImg.isVisible(),'Welcome illustration is not visible');
+ assert.ok(await page.locator('#home .finance-home-heading').evaluate(el=>getComputedStyle(el).backgroundImage.includes('gradient')),'Visual hero gradient missing');
+ const actionInk=await page.locator('#home .mf-action-expense').evaluate(el=>({background:getComputedStyle(el).backgroundColor,color:getComputedStyle(el).color}));
+ assert.notEqual(actionInk.background,actionInk.color,'Expense tile lacks color contrast');
+
  assert.ok(visual.heading>=28,'Home title is too small: '+visual.heading);
  assert.ok(visual.hub>=19,'Clickable tile label is too small: '+visual.hub);
  assert.ok(visual.amount>=27,'Financial KPI amount is too small: '+visual.amount);
@@ -93,7 +101,19 @@ try{
  assert.ok((await page.locator('#finance-account-detail-body').innerText()).includes('حساب آزمایشی'));
  await page.goBack();await check('accounts');
  await page.goBack();await check('home');
- console.log('PASS Chromium 360/390px: large readable UI, tap targets, no overflow, nested Back and reload');
+ await page.setViewportSize({width:980,height:844});
+ await page.waitForTimeout(400);
+ const wide=await page.evaluate(()=>({
+   innerWidth:window.innerWidth,screenWidth:screen.width,
+   detected:document.documentElement.classList.contains('mf-wide-mobile'),
+   zoom:parseFloat(getComputedStyle(document.body).zoom||'1')
+ }));
+ if(wide.screenWidth<900&&wide.innerWidth>900){
+   assert.equal(wide.detected,true,'Android wide desktop mode must be recognized');
+   assert.ok(wide.zoom>=1.45,'Wide viewport downscale must be compensated: '+JSON.stringify(wide));
+   await page.screenshot({path:'/tmp/myfinance-ui-smoke/desktop-mode-fallback.png',fullPage:true});
+ }
+ console.log('PASS Chromium 360/390px + wide desktop-mode fallback: large text, illustration, tap targets, nested Back and reload');
 }finally{
  await context.close();await browser.close();
 }
