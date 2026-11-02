@@ -39,7 +39,7 @@ assert.equal(windowObj.MyFinanceVoiceReports.period('مهر ۱۴۰۵').from,1405
 element('mf-va-question').value='گزارش آبان ۱۴۰۵';
 windowObj.MyFinanceVoiceReports.run();
 const summary=element('mf-va-summary').textContent;
-assert.match(summary,/600/,'IRT+IRR must consolidate after rial conversion');
+assert.match(summary,/۶۰۰/,'IRT+IRR must consolidate after rial conversion');
 assert.match(summary,/USD/,'Foreign currency must remain separate');
 assert.doesNotMatch(summary,/9,000,000|۹٬۰۰۰٬۰۰۰/,'Pending expense excluded');
 assert.ok(!element('mf-va-result').hidden,'Report visible');
