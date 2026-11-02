@@ -20,7 +20,7 @@ check('consolidated base and last-loaded v75 visual layer',()=>{
  assert.match(links[1],/^\.\/navigation-v60\.css\?v=/);
  assert.match(links[2],/^\.\/drilldown-v61\.css\?v=/);
  assert.match(links[3],/^\.\/mobile-polish-v58\.css\?v=/);
- assert.match(links[4],/^\.\/visual-upgrade-v75\.css\?v=20261102r77$/);
+ assert.match(links[4],/^\.\/visual-upgrade-v75\.css\?v=20261102r78$/);
  let pos=-1;
  for(const name of ['premium.css','dashboard-r33.css','design-v49.css','interior-v51.css','mobile-ux-v52.css']){
   const next=css.indexOf(read(name));assert.ok(next>pos,'CSS source missing/reordered: '+name);pos=next;
@@ -29,9 +29,30 @@ check('consolidated base and last-loaded v75 visual layer',()=>{
  assert.equal((visual.match(/\{/g)||[]).length,(visual.match(/\}/g)||[]).length);
  assert.ok(visual.includes('body.finance-unlocked #home .finance-home-hub-copy strong'),'large clickable tiles missing');
  assert.ok(html.includes('class="mf-home-visual"'),'illustrated Home not mounted');
- assert.ok(html.includes('finance-hero-growth-v77.svg?v=20261102r77'),'hero image source missing');
+ assert.ok(html.includes('finance-hero-growth-v77.svg?v=20261102r78'),'hero image source missing');
  assert.ok(visual.includes('html.mf-wide-mobile body'),'desktop site zoom fallback missing');
  assert.ok(visual.includes('.mf-action-expense'),'colored transaction tiles missing');
+});
+check('always-on installment, last recorded transaction and actual market data wiring',()=>{
+ const loans=read('loans.js'),pulse=read('dashboard-pulse-v78.js');
+ for(const id of ['mf-last-tx','mf-last-tx-title','mf-last-tx-amount','mf-market-card','mf-market-grid','mf-market-refresh']){
+  assert.ok(html.includes('id="'+id+'"'),'home is missing '+id);
+ }
+ assert.ok(html.indexOf('id="loan-due-notice"')<html.indexOf('class="finance-dashboard-metrics"'),'nearest due must be at top of Home');
+ assert.ok(html.indexOf('id="mf-last-tx"')<html.indexOf('class="finance-dashboard-metrics"'),'last transaction must be near the top');
+ assert.ok(html.includes('dashboard-pulse-v78.js?v=20261102r78'),'market/transaction script not active');
+ assert.ok(loans.includes('reminder.hidden=false'),'nearest installment cannot disappear away from due day');
+ assert.ok(loans.includes('nextDueJalali'),'actual loan due date not used');
+ assert.ok(pulse.includes('MyFinanceBridge?.getData()'),'last transaction must read authorized finance data');
+ assert.ok(pulse.includes('iran-market.github.io/main/data/popular.json'),'real market source missing');
+ assert.ok(pulse.includes('item?.timestamp'),'rate age must be visible');
+ assert.ok(pulse.includes('item?.stale'),'stale upstream data must be respected');
+ assert.ok(pulse.includes('Number.isFinite(value)'),'avoid fabricated rate values');
+ assert.ok(!pulse.includes('localStorage.setItem'),'market data must not write financial data');
+ assert.ok(sw.includes('./dashboard-pulse-v78.js?v=20261102r78'),'market script not cached');
+ assert.ok(sw.includes('./loans.js?v=20261102r78'),'updated loan code not cached');
+ const syntax=spawnSync(process.execPath,['--check',resolve(root,'dashboard-pulse-v78.js')],{encoding:'utf8'});
+ assert.equal(syntax.status,0,syntax.stderr);
 });
 check('unique ids and essential financial navigation',()=>{
  const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
@@ -67,7 +88,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r77"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r78"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -160,7 +181,7 @@ check('classic application JavaScript parses',()=>{
  const inline=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);
  assert.ok(inline.length>=2);
  for(const text of inline)new Function(text);
- for(const name of ['loans.js','commitments.js','reports.js','receivables-actions.js',
+ for(const name of ['dashboard-pulse-v78.js','loans.js','commitments.js','reports.js','receivables-actions.js',
  'voice-entry.js','transaction-history.js','install-prompt.js','app-update-v53.js','mobile-dock-v58.js','embed-nav-v60.js','drilldown-v61.js']){
   const check=spawnSync(process.execPath,['--check',resolve(root,name)],{encoding:'utf8'});
   assert.equal(check.status,0,name+': '+check.stderr);
@@ -173,7 +194,7 @@ check('every PWA precache file exists and new CSS is included',()=>{
  for(const asset of paths){const p=asset.slice(2).split('?')[0];if(p)assert.ok(existsSync(resolve(root,p)),'missing '+asset)}
  const cssHref=html.match(/<link rel="stylesheet" href="(\.\/my-finance-ui-v54\.css\?v=[^"]+)"/)?.[1];
  assert.ok(paths.includes(cssHref));assert.ok(paths.includes('./index.html'));
- assert.ok(paths.includes('./visual-upgrade-v75.css?v=20261102r77'),'visual layer absent from offline cache');
+ assert.ok(paths.includes('./visual-upgrade-v75.css?v=20261102r78'),'visual layer absent from offline cache');
  assert.ok(paths.includes('./finance-hero-growth-v77.svg?v=20261102r77'),'decorative hero not available offline');
  for(const asset of ['./navigation-v60.css?v=20261030r63','./embed-v60.css?v=20261030r60','./embed-nav-v60.js?v=20261030r60','./drilldown-v61.css?v=20261030r63','./drilldown-v61.js?v=20261030r63'])assert.ok(paths.includes(asset),'offline missing '+asset);
 });
