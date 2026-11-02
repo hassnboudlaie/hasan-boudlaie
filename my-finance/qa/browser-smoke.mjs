@@ -35,6 +35,28 @@ try{
  assert.equal(installOverlap,false,'Install prompt overlaps app header');
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
  assert.ok(overflow<=2,'Mobile horizontal overflow: '+overflow);
+ const visual=await page.evaluate(()=>{
+  const font=selector=>parseFloat(getComputedStyle(document.querySelector(selector)).fontSize);
+  const height=selector=>document.querySelector(selector).getBoundingClientRect().height;
+  return {
+   heading:font('#home .finance-home-heading h2'),
+   hub:font('#home .finance-home-hub-copy strong'),
+   amount:font('#home .finance-kpi b'),
+   buttonHeight:height('#home .mf-action'),
+   hubHeight:height('#home .finance-home-hub'),
+   cssLoaded:[...document.styleSheets].some(x=>x.href?.includes('visual-upgrade-v75.css'))
+  };
+ });
+ assert.equal(visual.cssLoaded,true,'v75 visual stylesheet not loaded');
+ assert.ok(visual.heading>=28,'Home title is too small: '+visual.heading);
+ assert.ok(visual.hub>=19,'Clickable tile label is too small: '+visual.hub);
+ assert.ok(visual.amount>=27,'Financial KPI amount is too small: '+visual.amount);
+ assert.ok(visual.buttonHeight>=85&&visual.hubHeight>=85,'Mobile tap surface too small: '+JSON.stringify(visual));
+ await page.setViewportSize({width:360,height:780});
+ const overflow360=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
+ assert.ok(overflow360<=2,'360px horizontal overflow: '+overflow360);
+ await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-360.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-390.png',fullPage:true});
  await page.locator('.finance-balance-hero').click();await check('accounts');
  await page.locator('button[data-account="account-example"]').click();await check('account-detail');
@@ -71,7 +93,7 @@ try{
  assert.ok((await page.locator('#finance-account-detail-body').innerText()).includes('حساب آزمایشی'));
  await page.goBack();await check('accounts');
  await page.goBack();await check('home');
- console.log('PASS Chromium 390px: compact Home, inline install banner, non-overlapping action, nested Back and reload');
+ console.log('PASS Chromium 360/390px: large readable UI, tap targets, no overflow, nested Back and reload');
 }finally{
  await context.close();await browser.close();
 }
