@@ -29,7 +29,7 @@ async function qa(size,name){
   await page.waitForURL(/\?group=1$/);
   assert.equal(await page.locator('a.stage-link').count(),6,'Six-step two-hour flow required');
   assert.equal(await page.locator('.roles input[data-role]').count(),5);
-  assert.equal(await page.locator('.stage-link small').allTextContents().then(x=>x.map(t=>parseInt(t.replace(/\D/g,''),10)).reduce((a,b)=>a+b,0)),120);
+  assert.equal(await page.locator('.stage-link small').allTextContents().then(x=>x.map(t=>parseInt(t.replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[^0-9]/g,''),10)).reduce((a,b)=>a+b,0)),120);
   await page.locator('input[data-role="0"]').fill('آزمایشی-گروه-یک');
   await page.getByRole('button',{name:/این گام انجام شد/}).click();
   await page.waitForURL(/\?group=1&step=1$/);
