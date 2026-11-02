@@ -82,38 +82,42 @@ function nextJalali(daysAhead){
  return p('year')+'/'+p('month').padStart(2,'0')+'/'+p('day').padStart(2,'0');
 }
 function dueReminders(loans){
- const today=nextJalali(0),upcoming=[],overdue=[],later=[];
- for(const loan of loans){
+ // Keep ONE nearest actionable installment visible on Home at all times;
+ // never hide it outside the previous five-day reminder window.
+ const today=nextJalali(0),validDue=/^\\d{4}\\/\\d{2}\\/\\d{2}$/;
+ const scheduled=loans.map(loan=>{
   const due=String(loan.nextDueJalali||'').replace(/-/g,'/');
-  if(!/^\d{4}[/]\d{2}[/]\d{2}$/.test(due))continue;
-  const amount=(loan.currency==='IRR'?toman(loan.installment):fmt(loan.installment)+' '+(loan.currency==='IRT'?'تومان':loan.currency||''));
-  const title=String(loan.title||'وام');
-  const days=Array.from({length:6},(_,i)=>i).find(i=>nextJalali(i)===due);
-  const item={title,due,amount,days};
-  if(days!==undefined)upcoming.push(item);
-  else if(due<today)overdue.push(item);
-  else later.push(item);
- }
- reminder.hidden=loans.length===0;
- if(reminder.hidden)return;
- const critical=overdue.length>0||upcoming.some(x=>x.days<=1);
- const warning=upcoming.some(x=>x.days>=2&&x.days<=5);
- reminder.classList.toggle('loan-alert-red',critical);
- reminder.classList.toggle('loan-alert-orange',!critical&&warning);
+  const installment=Number(loan.installment);
+  if(!validDue.test(due)||!Number.isFinite(installment)||installment<=0)return null;
+  const amount=loan.currency==='IRR'?toman(installment):fmt(installment)+' '+(loan.currency==='IRT'?'تومان':loan.currency||'');
+  return {due,amount,title:String(loan.title||'وام'),currency:loan.currency,installment};
+ }).filter(Boolean).sort((a,b)=>a.due.localeCompare(b.due));
+ const nearest=scheduled.find(x=>x.due<today)||scheduled.find(x=>x.due>=today)||null;
  const title=document.getElementById('loan-reminder-title');
  const detail=document.getElementById('loan-reminder-detail');
- if(critical||warning){
-  const messages=overdue.map(x=>x.title+' · سررسید گذشته '+x.due+' · '+x.amount).concat(
-   upcoming.map(x=>x.title+' · '+(x.days===0?'امروز':x.days+' روز تا سررسید')+' · '+x.amount));
-  title.textContent=critical?'🔴 هشدار مهم سررسید اقساط':'🟠 یادآوری پرداخت اقساط';
-  detail.textContent=messages.slice(0,3).join(' | ')+(messages.length>3?' · و '+fmt(messages.length-3)+' مورد دیگر':'');
-  reminder.setAttribute('role','alert');
- }else{
-  const nearest=later.sort((x,y)=>x.due.localeCompare(y.due))[0];
-  title.textContent='📅 برنامه اقساط شما فعال است';
-  detail.textContent=nearest?'نزدیک‌ترین سررسید: '+nearest.due+' · '+nearest.title+' · '+nearest.amount+'؛ هشدار رنگی از ۵ روز قبل ظاهر می‌شود.':'فعلاً سررسید معتبری برای وام‌های فعال ثبت نشده است.';
-  reminder.setAttribute('role','status');
+ reminder.hidden=false;
+ reminder.classList.remove('loan-alert-red','loan-alert-orange');
+ const button=document.getElementById('loan-reminder-open');
+ if(!nearest){
+  title.textContent='📅 نزدیک‌ترین موعد قسط';
+  detail.textContent='هنوز قسط فعال با مبلغ و تاریخ معتبر ثبت نشده است.';
+  if(button)button.textContent='افزودن / مشاهده اقساط';
+  reminder.setAttribute('role','status');reminder.setAttribute('aria-live','polite');
+  return;
  }
+ const nextFive=Array.from({length:6},(_,i)=>nextJalali(i));
+ const delta=nextFive.indexOf(nearest.due);
+ const overdue=nearest.due<today;
+ const critical=overdue||delta===0||delta===1;
+ const warning=!critical&&delta>=2&&delta<=5;
+ reminder.classList.toggle('loan-alert-red',critical);
+ reminder.classList.toggle('loan-alert-orange',warning);
+ const when=overdue?'سررسید گذشته':delta===0?'امروز':delta===1?'فردا':delta>1?fmt(delta)+' روز مانده':'در آینده';
+ title.textContent=(critical?'🔴 ':warning?'🟠 ':'📅 ')+(overdue?'قسط معوق':'نزدیک‌ترین موعد قسط');
+ detail.textContent=nearest.title+' · '+nearest.due+' · '+when+' · '+nearest.amount;
+ if(button)button.textContent='مشاهده اقساط';
+ reminder.setAttribute('role',critical?'alert':'status');
+ reminder.setAttribute('aria-live',critical?'assertive':'polite');
 }
 function dueSchedule(loan){
  const due=String(loan.nextDueJalali||'');
