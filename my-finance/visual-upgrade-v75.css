@@ -463,3 +463,17 @@ body.mf-subpage :is(input,select,textarea,label){font-size:18px!important}
     transition:none!important;
   }
 }
+
+/* v76: an admin-only notification remains in the header, never as an overlay. */
+body.finance-unlocked .finance-app-header .finance-admin-header-bell {
+  display:inline-flex!important;align-items:center;justify-content:center;
+  flex:0 0 52px;width:52px;height:52px;min-height:52px;
+  border:1px solid var(--line)!important;border-radius:15px!important;
+  background:var(--card)!important;color:var(--accent)!important;
+  box-shadow:var(--mf-v75-shadow)!important;
+  font-size:25px!important;line-height:1!important;
+  text-decoration:none!important;
+}
+/* Suppress developer version chips on consumer-facing screens. */
+body.finance-unlocked #mf-header-release,
+body.finance-unlocked .mf-mobile-release {display:none!important}
