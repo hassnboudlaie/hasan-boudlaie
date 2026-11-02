@@ -188,6 +188,18 @@ check('classic application JavaScript parses',()=>{
   assert.equal(check.status,0,name+': '+check.stderr);
  }
 });
+check('read-only voice reporting, currency safety and PWA wiring',()=>{
+ const assistant=read('finance-assistant-v79.js');
+ assert.ok(html.includes('finance-assistant-v79.js?v=20261102r79'),'assistant not loaded in app');
+ assert.ok(sw.includes('./finance-assistant-v79.js?v=20261102r79'),'offline assistant asset missing');
+ assert.ok(assistant.includes('bridge.getData()'),'reports must use the active account');
+ assert.ok(assistant.includes('myfinance:rebound'),'assistant must clear when account identity changes');
+ assert.ok(!assistant.includes('service_role'),'privileged key forbidden');
+ const syntax=spawnSync(process.execPath,['--check',resolve(root,'finance-assistant-v79.js')],{encoding:'utf8'});
+ assert.equal(syntax.status,0,syntax.stderr);
+ const run=spawnSync(process.execPath,[resolve(root,'qa/check-voice-reports.mjs')],{encoding:'utf8'});
+ assert.equal(run.status,0,'Assistant regression failed: '+run.stderr);
+});
 check('every PWA precache file exists and new CSS is included',()=>{
  const assets=sw.match(/const ASSETS=(\[[^;]+\]);/)?.[1]||'';
  const paths=[...assets.matchAll(/'(\.\/[^']+)'/g)].map(m=>m[1]);
