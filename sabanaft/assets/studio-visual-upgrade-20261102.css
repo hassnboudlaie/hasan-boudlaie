@@ -1,0 +1,149 @@
+/* Saba Naft reflective studio — 2026-11-02 photo-led refresh.
+   Visual overrides only: never alter cases, decisions, persistence or routing. */
+:root{
+ --saba-brand:#042ca5;
+ --saba-accent:#ff642b;
+ --saba-ink:#17314d;
+ --saba-border:#dce5ee;
+}
+html{scroll-padding-top:14px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-size:17px;line-height:1.9;background:linear-gradient(170deg,#f2f6fc,#fff 58%,#f4f8fc);color:var(--saba-ink)}
+button,input,textarea,select{font-family:Vazirmatn,Tahoma,sans-serif}
+.app{grid-template-columns:242px minmax(0,1fr)}
+.rail{background:linear-gradient(165deg,#09295d,#07367f 70%,#082654);border-left:1px solid #d3e0ed}
+.rail .brand{padding-bottom:24px;border-color:#ffffff29}
+.rail .brand img{width:66px;height:61px;background:#fff;object-fit:contain;border-radius:15px;padding:6px}
+.rail .brand b{font-size:23px;color:#fff}
+.rail .brand small{font-size:12px;color:#d8e7ff;line-height:1.7}
+.rail .section-kicker{color:#c0d4ff;font-size:12px;letter-spacing:.3px}
+.rail .nav button{font-size:16px;min-height:53px;border-radius:14px;color:#edf4ff;font-weight:700}
+.rail .nav button .num{width:31px;height:31px;font-size:18px;background:#ffffff27}
+.rail .nav button[aria-current=page]{color:#fff;background:#ffffff22;border-color:#95c5ff;box-shadow:inset -4px 0 #ff975f}
+.rail .nav button:hover{background:#ffffff1f}
+.rail .ux-nav-group{border-color:#ffffff38}
+.rail .ux-nav-group summary{color:#f0f5ff;font-size:14px;line-height:1.7}
+.rail-bottom{background:#ffffff10;color:#d7e4fa;font-size:13px}
+.main{padding:27px clamp(23px,4vw,56px) 70px}
+.pane{max-width:1130px}
+.top{margin-bottom:20px}
+.eyebrow{font-size:14px;font-weight:900;color:#2c5c91}
+.status{font-size:13px;padding:6px 13px;background:#e6f3f0;color:#145f55}
+#view{min-width:0}
+#view .ed-home{max-width:1100px}
+#view .ed-hero{
+ background:linear-gradient(100deg,rgba(7,32,69,.96) 0%,rgba(6,35,76,.89) 62%,rgba(9,46,87,.75)),url("sabanaft-meeting.jpg") center 43% / cover;
+ border:1px solid #123f7e;min-height:0;
+ border-radius:28px;padding:clamp(27px,3.5vw,48px);
+ box-shadow:0 22px 47px #1037682a;
+}
+#view .ed-hero::after{background:linear-gradient(0deg,#0b276019,transparent 40%),radial-gradient(circle at 8% 10%,#7db6ec33,transparent 37%)}
+#view .ed-hero-head{margin-bottom:25px}
+#view .ed-supra{color:#ffcfaa;font-size:13px;letter-spacing:.5px}
+#view .ed-pretitle{font-size:16px;color:#f3f6ff;font-weight:750}
+#view .ed-hero-content h1{font-size:clamp(36px,4vw,55px);line-height:1.48;letter-spacing:0;font-weight:950}
+#view .ed-hero-content h1 span:not(.ed-greet){color:#ffc29c}
+#view .ed-hero-content p{color:#f0f5fd;font-size:clamp(17px,1.6vw,21px);line-height:1.85;margin-bottom:25px}
+#view .ed-greet{font-size:22px;color:#fff2e7}
+#view .ed-compose{
+ background:#fff;border:1px solid #dce6f1;
+ border-radius:23px;padding:clamp(20px,2.7vw,31px);
+ box-shadow:0 16px 32px #001b3e3d;max-width:100%;
+}
+#view .ed-compose-head h2{font-size:24px;color:#163451}
+#view .ed-compose-head p{font-size:16px;color:#4d6378}
+#view .ed-compose-index{width:55px;height:55px;flex-basis:55px;border-radius:17px;background:#fff0e7;color:#bd491e;font-size:24px}
+#view .ed-label{font-size:17px;color:#233d52}
+#view .ed-compose textarea{font-size:19px;line-height:1.9;min-height:153px;padding:17px 20px;border:2px solid #c5d3df;border-radius:16px}
+#view .ed-compose textarea::placeholder{color:#617388}
+#view .ed-compose textarea:focus{border-color:#235baf;box-shadow:0 0 0 4px #235baf22}
+#view .ed-voice-button,#view .ed-submit-button{font-size:17px;min-height:54px;border-radius:14px;padding:12px 19px}
+#view .ed-submit-button{background:#ff7338;color:#172746;font-weight:950}
+#view .ed-submit-button:hover{background:#ff945d}
+#view .ed-voice-status{font-size:14px;color:#566d7c}
+#view .ed-privacy{font-size:14px;line-height:1.85;color:#4d667c;margin-top:14px}
+#view .ed-section-title{margin-top:30px;margin-bottom:16px}
+#view .ed-section-title h2{font-size:27px;color:#143659}
+#view .ed-section-title>div>span{font-size:12px;color:#976043}
+#view .ed-journey{gap:17px}
+#view .ed-journey-item{min-height:166px;border-radius:22px;border-color:#d9e5ef;padding:23px;background:#fff;box-shadow:0 9px 26px #164d7511}
+#view .ed-journey-number{width:54px;height:54px;flex-basis:54px;font-size:20px;border-radius:17px;background:#e9f2ff;color:#0b57a0}
+#view .ed-kicker{font-size:13px}
+#view .ed-journey-content h3,#view .ed-journey-content strong{font-size:22px}
+#view .ed-journey-content p,#view .ed-journey-content small{font-size:16px;line-height:1.75}
+#view .ed-journey-action{min-height:50px;font-size:15px;padding:10px 15px;border-radius:13px}
+#view .ed-footlinks{font-size:14px;line-height:1.8;gap:12px}
+#view .card{border-color:#dce6f0;border-radius:22px;padding:clamp(19px,2.5vw,30px);box-shadow:0 7px 26px #193c660c}
+#view .page-title,#view .hero h1{font-size:clamp(29px,3vw,39px)}
+#view .intro{font-size:17px;line-height:1.9}
+#view .field label{font-size:16px}
+#view .field input,#view .field select,#view .field textarea{font-size:17px;min-height:49px}
+#view .field textarea{min-height:125px}
+#view .btn{min-height:48px;font-size:16px;border-radius:13px}
+#view .small,#view .muted{font-size:15px;line-height:1.85}
+#view .title-row h2{font-size:23px}
+#view .quick-card b{font-size:20px}
+#view .quick-card p{font-size:16px}
+#view .case-item button{font-size:17px}
+#view .role-result p,#view .insight p{font-size:16px}
+#view .source-foot,.source-foot{font-size:12px;color:#586e80;line-height:1.8}
+.mobile-bottom-nav{border-top:1px solid #d9e3ed;box-shadow:0 -6px 24px #12356017}
+@media(min-width:761px) and (max-width:1020px){
+ .app{grid-template-columns:212px minmax(0,1fr)}
+ .main{padding-inline:20px}
+ #view .ed-journey{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+ body{font-size:17px!important;background:#f5f8fd}
+ .app{display:block!important}
+ .rail{background:#fff!important;border-left:0!important;border-bottom:1px solid #dbe5f0!important;position:relative!important;z-index:86}
+ .rail .brand b{font-size:19px!important;color:#173a62!important}
+ .rail .brand small{font-size:12px!important;color:#49627b!important}
+ .rail .brand img{width:58px!important;height:54px!important;flex-basis:58px!important}
+ .rail .nav{background:#fff!important}
+ .rail .nav button{color:#173a62!important;min-height:49px}
+ .rail .nav button[aria-current=page]{background:#e8f1ff!important;color:#063b89!important}
+ .rail .ux-nav-group summary{color:#224c7a!important}
+ .phone-menu{background:#f0f5fb!important;border:1px solid #cedce8!important;color:#1b4e80!important;width:48px!important;height:48px!important}
+ .main{padding:16px 15px calc(110px + env(safe-area-inset-bottom))!important}
+ .top .status{font-size:13px!important}
+ .ed-home{max-width:100%!important}
+ #view .ed-hero{border-radius:22px;min-height:0;padding:22px 17px;background-position:center 32%}
+ #view .ed-hero-head{margin-bottom:19px;gap:8px}
+ #view .ed-supra{font-size:11px;letter-spacing:0}
+ #view .ed-pretitle{font-size:14px}
+ #view .ed-hero-content h1{font-size:clamp(29px,7.8vw,39px);line-height:1.49}
+ #view .ed-hero-content p{font-size:16px;line-height:1.83;margin-bottom:20px}
+ #view .ed-greet{font-size:18px}
+ #view .ed-compose{padding:17px;border-radius:18px}
+ #view .ed-compose-head{gap:10px;margin-bottom:15px}
+ #view .ed-compose-head h2{font-size:20px}
+ #view .ed-compose-head p{font-size:14px}
+ #view .ed-compose-index{width:45px;height:45px;flex-basis:45px;font-size:20px}
+ #view .ed-label{font-size:16px}
+ #view .ed-compose textarea{min-height:148px;font-size:18px!important;line-height:1.9;padding:13px 15px}
+ #view .ed-compose-actions{gap:12px;flex-wrap:wrap}
+ #view .ed-voice-button,#view .ed-submit-button{min-height:52px;font-size:16px}
+ #view .ed-voice-status{font-size:13px}
+ #view .ed-submit-button{width:100%}
+ #view .ed-section-title{margin-top:23px}
+ #view .ed-section-title h2{font-size:22px}
+ #view .ed-journey{grid-template-columns:1fr;gap:12px}
+ #view .ed-journey-item{min-height:122px;padding:16px;gap:11px;border-radius:19px}
+ #view .ed-journey-number{width:40px;height:40px;flex-basis:40px;font-size:17px}
+ #view .ed-journey-content h3,#view .ed-journey-content strong{font-size:18px}
+ #view .ed-journey-content p,#view .ed-journey-content small{font-size:14px}
+ #view .ed-journey-action{font-size:14px;min-height:44px}
+ #view .ed-footlinks{font-size:13px;gap:9px}
+ #view .page-title{font-size:29px}
+ #view .card{padding:17px;border-radius:19px}
+ #view .title-row h2{font-size:20px}
+ #view .small,#view .muted{font-size:14px}
+ #view .field label{font-size:15px}
+ #view .field input,#view .field select,#view .field textarea{font-size:17px}
+ .mobile-bottom-nav{background:#fff!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;padding:6px 4px calc(8px + env(safe-area-inset-bottom))!important}
+ .mobile-bottom-nav button{min-height:58px!important;font-size:12px!important}
+ .mobile-bottom-nav button .m-icon{font-size:25px!important}
+ .mobile-bottom-nav button[aria-current=page]{background:#082e78!important;color:#fff!important}
+ .source-foot{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){#view .ed-journey-item,#view .ed-hero{animation:none!important;transition:none!important}}
