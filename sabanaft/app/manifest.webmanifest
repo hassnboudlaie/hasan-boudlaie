@@ -8,8 +8,8 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f7fa",
-  "theme_color": "#082d75",
+  "background_color": "#f5f8fc",
+  "theme_color": "#042ca5",
   "icons": [
     {
       "src": "../assets/sabanaft-logo.svg",
