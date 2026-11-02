@@ -218,6 +218,7 @@ function step5(){
  '<div class="field-grid">'+field('peerFeedback','قوی‌ترین نقطه طرح از نگاه همتایان','رفتار یا تصمیم مشخص و قابل مشاهده',true)+
  field('improvement','یک پیشنهاد عملی برای بهترشدن','قدم بعدی، شخص مسئول و موعد بازبینی',true)+'</div>'+
  '<div class="badge-line"><span>🏁 '+fa(state.done.length)+' نشان از ۶ مرحله</span><span>⭐ ارزش یادگیری: استدلال روشن و مسئولیت‌پذیری، نه امتیاز رقابتی</span></div>'+
+ '<details class="callout"><summary style="cursor:pointer;font-size:18px;font-weight:850;color:#085b43">📄 مشاهده متن کامل گزارش گروه (قابل انتخاب و کپی)</summary><p style="font-size:14px;color:#49635a">این مسیر در اپ اندروید هم بدون دانلود فایل قابل استفاده است؛ برای رونوشت، متن را انتخاب کنید.</p><textarea readonly aria-label="گزارش کامل گروه" style="width:100%;min-height:300px;border:1px solid #b9d3c5;border-radius:12px;padding:14px;line-height:1.85;font:inherit;font-size:16px;background:#f9fcfa;resize:vertical;direction:rtl">'+esc(reportText())+'</textarea></details>'+
  '<div class="stage-actions"><button class="primary" type="button" data-action="download">↓ دریافت خروجی گروه</button>'+
  '<button class="secondary" type="button" data-action="copy">رونوشت گزارش گروه</button><button class="secondary" type="button" data-action="print">چاپ / ذخیره به‌صورت PDF</button></div>'+
  mentor('از کار گروهی امروز چه چیزی را با خود به محیط واقعی خسارت می‌برید؟ چه کسی مسئول پیگیری اولین اقدام است؟');
