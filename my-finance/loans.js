@@ -84,7 +84,7 @@ function nextJalali(daysAhead){
 function dueReminders(loans){
  // Keep ONE nearest actionable installment visible on Home at all times;
  // never hide it outside the previous five-day reminder window.
- const today=nextJalali(0),validDue=/^\\d{4}\\/\\d{2}\\/\\d{2}$/;
+ const today=nextJalali(0),validDue=/^\d{4}\/\d{2}\/\d{2}$/;
  const scheduled=loans.map(loan=>{
   const due=String(loan.nextDueJalali||'').replace(/-/g,'/');
   const installment=Number(loan.installment);
