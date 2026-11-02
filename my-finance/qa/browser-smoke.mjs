@@ -10,12 +10,30 @@ const context=await browser.newContext({viewport:{width:390,height:844},screen:{
 const page=await context.newPage();
 page.setDefaultTimeout(20000);
 await page.addInitScript(()=>{
+ const due=n=>{
+  const date=new Date(Date.now()+n*86400000);
+  const parts=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const get=key=>String(parts.find(x=>x.type===key)?.value||'').padStart(key==='year'?4:2,'0');
+  return [get('year'),get('month'),get('day')].join('/');
+ };
  const example={
   accounts:[{id:'account-example',name:'حساب آزمایشی',currency:'IRT',opening:25000000}],
   tx:[{id:'tx-example',account:'account-example',kind:'expense',amount:1000000,currency:'IRT',date:'2026-10-30',category:'هزینه آزمایشی',memo:'صرفاً تست رابط کاربری',status:'completed'}],
-  transfers:[],receivables:[],commitments:[],loans:[]
+  transfers:[],receivables:[],commitments:[],
+  loans:[{id:'far-loan',title:'وام آزمایشی دیرتر',currency:'IRR',installment:120000000,nextDueJalali:due(9),status:'active'},
+         {id:'near-loan',title:'وام آزمایشی نزدیک',currency:'IRR',installment:50000000,nextDueJalali:due(2),status:'active'}]
  };
  localStorage.setItem('my-finance-preview-v1',JSON.stringify(example));
+});
+await page.route('https://raw.githubusercontent.com/iran-market/iran-market.github.io/main/data/popular.json',route=>{
+ const stamp=new Date().toISOString();
+ return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
+ body:JSON.stringify({data:[
+  {symbol:'USD_IRR_FREE',currency:'IRT',price:250000,timestamp:stamp,stale:false,change_pct:1.23},
+  {symbol:'EUR_IRR_FREE',currency:'IRT',price:280000,timestamp:stamp,stale:false,change_pct:-0.4},
+  {symbol:'GOLD_18K_IRR',currency:'IRT',price:24000000,timestamp:stamp,stale:false,change_pct:0.5},
+  {symbol:'COIN_EMAMI_IRR',currency:'IRT',price:250000000,timestamp:stamp,stale:false,change_pct:0.9}
+ ],meta:{unit:'toman',stale:false,updated_at:stamp,update_frequency_minutes:30}})});
 });
 await page.route('**/supabase-sync.js*',route=>route.fulfill({status:200,contentType:'text/javascript',
  body:'document.body.classList.add("finance-unlocked");document.dispatchEvent(new Event("myfinance:unlocked"));'}));
@@ -26,6 +44,14 @@ try{
  assert.equal(await page.locator('#finance-cashflow-card').isVisible(),false,'Home should not render long chart');
  assert.equal(await page.locator('#mf-home-more').isVisible(),false,'Home should not render long insights');
  assert.equal(await page.locator('.finance-home-hub').count(),2,'Only two short detail links expected');
+ await page.waitForFunction(()=>document.getElementById('mf-last-tx-title')?.textContent.includes('هزینه آزمایشی'));
+ await page.waitForFunction(()=>document.getElementById('loan-reminder-detail')?.textContent.includes('وام آزمایشی نزدیک'));
+ assert.ok((await page.locator('#loan-reminder-detail').innerText()).includes('۵٬۰۰۰٬۰۰۰'),'Nearest installment amount must show in toman');
+ assert.equal(await page.locator('#loan-due-notice').isVisible(),true,'Nearest installment must always appear');
+ await page.waitForFunction(()=>document.querySelectorAll('.mf-market-rate').length===4);
+ assert.ok((await page.locator('#mf-market-grid').innerText()).includes('۲۵۰٬۰۰۰'),'Live market widget must render JSON values');
+ assert.ok((await page.locator('#mf-market-status').innerText()).includes('۳۰ دقیقه'),'Market feed cadence must be disclosed');
+
  assert.equal(await page.locator('#finance-quick-fab').isVisible(),false,'Floating button obscures content');
  const installOverlap=await page.evaluate(()=>{
   const panel=document.getElementById('mf-install'),header=document.querySelector('.finance-app-header');
@@ -66,6 +92,9 @@ try{
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-360.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-390.png',fullPage:true});
+ await page.locator('#mf-last-tx').click();await check('transaction-detail');
+ assert.ok((await page.locator('#finance-transaction-detail-body').innerText()).includes('هزینه آزمایشی'));
+ await page.goBack();await check('home');
  await page.locator('.finance-balance-hero').click();await check('accounts');
  await page.locator('button[data-account="account-example"]').click();await check('account-detail');
  await page.waitForSelector('.mf-drill-balance');
