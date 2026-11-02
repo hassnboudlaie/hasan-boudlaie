@@ -1,0 +1,465 @@
+/* My Finance · Visual Upgrade v75 · 2026-11-02
+   Benchmarks: Monarch/Copilot (at-a-glance + drill down), YNAB (action focus),
+   Behparvar (large modular tiles), Alborz Academy (legible Persian typography).
+   Presentation only. No changes to finance math, account data, auth or routes.
+   Loaded LAST so it supersedes prior small mobile type overrides.
+*/
+:root {
+  --mf-v75-ink: #163250;
+  --mf-v75-navy: #12345f;
+  --mf-v75-teal: #0c756e;
+  --mf-v75-surface: #ffffff;
+  --mf-v75-border: #d8e3e9;
+  --mf-v75-shadow: 0 9px 25px rgba(19,50,82,.065);
+}
+html{ -webkit-text-size-adjust:100%;text-size-adjust:100%; }
+body.finance-unlocked{
+  --bg:#f4f7fa;
+  --card:#ffffff;
+  --fg:#17354d;
+  --muted:#516878;
+  --line:#dbe5ec;
+  --accent:#0a746c;
+  background:var(--bg)!important;
+  font-size:19px!important;
+  line-height:1.8!important;
+}
+body.finance-unlocked.dark {
+  --bg:#101c2b;
+  --card:#1a2c3d;
+  --fg:#eff7fa;
+  --muted:#bacbd8;
+  --line:#38516a;
+  --accent:#58dcc4;
+  --mf-v75-surface:#1a2c3d;
+  --mf-v75-border:#38516a;
+  --mf-v75-shadow:0 9px 28px rgba(0,0,0,.18);
+}
+body.finance-unlocked main{max-width:1200px}
+body.finance-unlocked :is(h1,h2,h3,h4){line-height:1.5;letter-spacing:0}
+body.finance-unlocked :is(button,a,[role="button"],summary){-webkit-tap-highlight-color:transparent}
+body.finance-unlocked :is(button,a,summary):focus-visible{
+  outline:3px solid #14a58e!important;outline-offset:3px!important;
+}
+body.finance-unlocked :is(button,input,select,textarea){
+  font-family:Vazirmatn,Tahoma,Arial,sans-serif;
+}
+body.finance-unlocked :is(input,select,textarea){
+  font-size:18px!important;line-height:1.65!important;
+  min-height:55px!important;max-width:100%;
+}
+body.finance-unlocked :is(.card,.finance-insight-card,.mf-drill-field){
+  border-radius:21px;box-shadow:var(--mf-v75-shadow);
+}
+body.finance-unlocked main>section:not(#home)>.card{padding:25px;margin:19px 0}
+body.finance-unlocked main>section:not(#home) :is(h2,.mf-section-hero h2){font-size:clamp(25px,3.5vw,32px)!important}
+body.finance-unlocked main>section:not(#home) :is(h3,.card h2){font-size:clamp(22px,2.8vw,27px)!important}
+body.finance-unlocked main>section:not(#home) :is(label,.mf-field-name){
+  font-size:18px!important;line-height:1.65!important;font-weight:750;
+}
+body.finance-unlocked main>section:not(#home) :is(p,.muted,.notice){
+  font-size:17px!important;line-height:1.85!important;
+}
+body.finance-unlocked main>section:not(#home) :is(button:not(.finance-password-eye),.finance-section-link){
+  min-height:53px;font-size:17px;
+}
+body.finance-unlocked :is(.finance-side-links button,.finance-side-profile){
+  min-height:58px!important;font-size:17px!important;
+}
+body.finance-unlocked :is(.finance-page-identity small,.finance-page-identity strong){
+  letter-spacing:0!important;
+}
+body.finance-unlocked .finance-page-identity small{font-size:14px!important}
+body.finance-unlocked .finance-page-identity strong{font-size:clamp(20px,2.8vw,26px)!important}
+body.finance-unlocked .finance-back-button{
+  min-height:52px!important;min-width:102px!important;
+  font-size:17px!important;border-radius:14px!important;
+}
+/* A calm home: one clear title, immediately followed by information, not descriptions. */
+body.finance-unlocked #home{min-width:0}
+body.finance-unlocked #home .mf-heading-copy>small,
+body.finance-unlocked #home .finance-overview-caption,
+body.finance-unlocked #home .finance-hero-caption,
+body.finance-unlocked #home .mf-command-head>span,
+body.finance-unlocked #home .finance-kpi-action,
+body.finance-unlocked #home .finance-home-hub-copy small,
+body.finance-unlocked #home .finance-home-hub-chevron {
+  display:none!important;
+}
+body.finance-unlocked #home .finance-home-heading{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:18px;padding:12px 0 20px;margin:0 0 8px;
+}
+body.finance-unlocked #home .finance-home-heading h2{
+  font-size:clamp(29px,4vw,38px)!important;font-weight:900;
+  line-height:1.4!important;color:var(--fg);margin:0 0 5px;
+}
+body.finance-unlocked #home .finance-home-heading p{
+  font-size:17px!important;line-height:1.6!important;
+  max-width:48ch;margin:0!important;
+}
+body.finance-unlocked #home .finance-period-pill{
+  font-size:16px!important;line-height:1.5!important;
+  font-weight:850;padding:7px 13px;border-radius:100px;
+}
+body.finance-unlocked #home .finance-new-entry{
+  min-height:59px!important;padding:12px 23px!important;
+  border-radius:17px!important;font-size:20px!important;font-weight:850;
+  box-shadow:0 8px 17px rgba(10,116,108,.17);
+}
+body.finance-unlocked #home .finance-dashboard-metrics{
+  gap:17px;align-items:stretch;
+}
+body.finance-unlocked #home .finance-balance-hero{
+  min-height:207px!important;padding:29px!important;
+  text-align:start!important;border-radius:27px!important;
+  background:linear-gradient(125deg,#12335f 0%,#123e59 57%,#0c716c 100%)!important;
+  box-shadow:0 14px 35px rgba(12,50,81,.17)!important;
+  color:#fff!important;overflow-wrap:anywhere;
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+body.finance-unlocked #home .finance-balance-hero :is(span,b){color:inherit}
+body.finance-unlocked #home .finance-hero-label{
+  font-size:19px!important;font-weight:800;line-height:1.5!important;
+}
+body.finance-unlocked #home .finance-hero-link{
+  font-size:16px!important;line-height:1.5!important;font-weight:750;
+  opacity:.96;
+}
+body.finance-unlocked #home .finance-hero-amount b{
+  display:block;max-width:100%;
+  font-size:clamp(33px,5.1vw,48px)!important;
+  font-weight:900;line-height:1.45!important;
+  direction:rtl;unicode-bidi:plaintext;
+  overflow-wrap:anywhere;word-break:normal;letter-spacing:0;
+  font-variant-numeric:tabular-nums;
+}
+body.finance-unlocked #home .finance-hero-foot{
+  font-size:16px!important;line-height:1.6!important;
+}
+body.finance-unlocked #home .finance-kpi-pair{
+  gap:15px!important;
+}
+body.finance-unlocked #home .finance-kpi{
+  min-height:153px!important;
+  border-radius:23px!important;
+  padding:22px!important;
+  border:1px solid var(--line)!important;
+  background:var(--card)!important;
+  box-shadow:var(--mf-v75-shadow)!important;
+  text-align:start!important;
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+body.finance-unlocked #home .finance-kpi-title{
+  font-size:18px!important;font-weight:800;line-height:1.6!important;
+}
+body.finance-unlocked #home .finance-kpi-icon{
+  font-size:25px!important;
+}
+body.finance-unlocked #home .finance-kpi b{
+  display:block;width:100%;max-width:100%;margin-top:10px;
+  font-size:clamp(27px,3.3vw,37px)!important;
+  line-height:1.45!important;letter-spacing:0!important;
+  direction:rtl;unicode-bidi:plaintext;overflow-wrap:anywhere;
+  font-variant-numeric:tabular-nums;
+}
+body.finance-unlocked #home .finance-receivables-strip{
+  min-height:89px!important;
+  padding:19px 22px!important;
+  border:1px solid var(--line)!important;border-radius:21px!important;
+  background:var(--card)!important;box-shadow:var(--mf-v75-shadow)!important;
+  text-align:start!important;
+}
+body.finance-unlocked #home .finance-strip-label{
+  font-size:19px!important;line-height:1.55!important;font-weight:850;
+}
+body.finance-unlocked #home .finance-strip-end b{
+  font-size:24px!important;line-height:1.5!important;
+}
+body.finance-unlocked #home :is(.finance-balance-hero,.finance-kpi,.finance-receivables-strip,.finance-home-hub,.mf-action):active{
+  transform:scale(.988);
+}
+body.finance-unlocked #home .mf-command-bar{
+  border:1px solid var(--line)!important;
+  background:var(--card)!important;
+  box-shadow:var(--mf-v75-shadow)!important;
+  padding:23px!important;border-radius:23px!important;
+}
+body.finance-unlocked #home .mf-command-head strong{
+  font-size:23px!important;font-weight:850;line-height:1.45!important;
+}
+body.finance-unlocked #home .mf-action-grid{gap:13px!important}
+body.finance-unlocked #home .mf-action{
+  min-height:97px!important;padding:17px 14px!important;
+  border-radius:18px!important;gap:12px!important;
+  font-size:19px!important;font-weight:850!important;
+  text-align:center;line-height:1.45!important;
+}
+body.finance-unlocked #home .mf-action span:last-child{
+  font-size:19px!important;line-height:1.45!important;
+}
+body.finance-unlocked #home .mf-action-icon{
+  display:grid;place-items:center;flex-shrink:0;
+  width:45px!important;height:45px!important;
+  border-radius:14px!important;
+}
+body.finance-unlocked #home .mf-action-icon svg{width:25px!important;height:25px!important}
+body.finance-unlocked #home .finance-home-hubs{
+  gap:14px!important;margin:16px 0 0!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+body.finance-unlocked #home .finance-home-hub{
+  min-height:103px!important;padding:20px!important;
+  background:var(--card)!important;
+  border:1px solid var(--line)!important;
+  border-radius:21px!important;
+  box-shadow:var(--mf-v75-shadow)!important;
+  color:var(--fg)!important;gap:14px!important;
+  text-align:start!important;
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+body.finance-unlocked #home .finance-home-hub-icon{
+  width:52px!important;height:52px!important;flex:0 0 52px!important;
+  border-radius:15px!important;font-size:27px!important;
+}
+body.finance-unlocked #home .finance-home-hub-copy strong{
+  font-size:21px!important;font-weight:850;line-height:1.55!important;
+  overflow-wrap:anywhere;
+}
+body.finance-unlocked #home .loan-reminder-banner{
+  padding:20px!important;border-radius:21px!important;
+  gap:13px!important;
+}
+body.finance-unlocked #home .loan-reminder-copy strong{
+  font-size:19px!important;line-height:1.6!important;
+}
+body.finance-unlocked #home .loan-reminder-copy p{
+  font-size:16px!important;line-height:1.7!important;
+}
+body.finance-unlocked #home #loan-reminder-open{
+  min-height:53px!important;font-size:17px!important;
+}
+body.finance-unlocked #home #upcoming-notice:not(:empty){
+  font-size:16px!important;line-height:1.7!important;
+}
+/* Focused detail pages and transactions: readable lists + visible action sizes. */
+body.finance-unlocked :is(.tx-ledger-summary,.finance-activity-row,.finance-category-row){
+  min-height:70px;
+}
+body.finance-unlocked :is(.tx-ledger-summary,.finance-activity-row) strong{
+  font-size:18px!important;
+}
+body.finance-unlocked .mf-drill-overview small{font-size:16px!important}
+body.finance-unlocked .mf-drill-overview h3{font-size:24px!important}
+body.finance-unlocked .mf-drill-balance{
+  font-size:clamp(29px,4vw,42px)!important;
+  overflow-wrap:anywhere;
+}
+body.finance-unlocked .mf-drill-field :is(small,span,label){
+  font-size:17px!important;line-height:1.7!important;
+}
+body.finance-unlocked .mf-drill-field :is(strong,b){
+  font-size:22px!important;line-height:1.6!important;
+}
+body.finance-unlocked .finance-mobile-nav{
+  border-radius:23px!important;box-shadow:0 12px 35px rgba(16,45,67,.18)!important;
+}
+body.finance-unlocked .finance-mobile-nav button{
+  min-height:72px!important;
+  padding:9px 3px!important;
+}
+body.finance-unlocked .finance-mobile-nav button>span:last-child{
+  font-size:15px!important;line-height:1.35!important;
+  font-weight:800!important;
+}
+body.finance-unlocked .finance-mobile-nav svg{
+  width:26px!important;height:26px!important;
+}
+body.finance-unlocked #finance-more-dialog :is(button,a){
+  min-height:67px!important;font-size:17px!important;
+  line-height:1.55!important;
+}
+body.finance-unlocked #finance-more-dialog .finance-more-icon{
+  width:42px!important;height:42px!important;flex-basis:42px!important;
+  font-size:22px!important;
+}
+body.finance-unlocked #finance-more-dialog .finance-more-footnote{
+  font-size:15px!important;
+}
+/* Login / sign up must also be comfortable before finance-unlocked exists. */
+body #auth-gate :is(input,select){
+  font-size:18px!important;min-height:56px!important;
+}
+body #auth-gate :is(label,.auth-hint,.auth-trusted-device){
+  font-size:16px!important;line-height:1.8!important;
+}
+body #auth-gate .auth-card button:not(.mf-password-eye){
+  font-size:18px!important;min-height:55px!important;
+}
+body #auth-gate :is(.auth-title,h1,h2){line-height:1.5!important}
+/* Asset/loan/contract subpages are deliberately handled without changing their logic. */
+body.mf-subpage{
+  font-family:Vazirmatn,Tahoma,Arial,sans-serif;
+  font-size:19px!important;line-height:1.8!important;
+}
+body.mf-subpage :is(h1,.mf-page-intro h1){
+  font-size:clamp(29px,4vw,39px)!important;line-height:1.5!important;
+}
+body.mf-subpage :is(h2,.card h2){font-size:24px!important}
+body.mf-subpage :is(p,.detail,.muted,small,.mf-footnote){
+  font-size:17px!important;line-height:1.75!important;
+}
+body.mf-subpage :is(button,a,.mf-return,.mf-subnav a){
+  min-height:52px;font-size:17px!important;line-height:1.55!important;
+}
+body.mf-subpage :is(.card,.mf-asset-card,.mf-loan-card){
+  border-radius:21px!important;
+}
+body.mf-subpage .amount{font-size:clamp(29px,4vw,39px)!important}
+body.mf-subpage :is(input,select,textarea,label){font-size:18px!important}
+@media(max-width:1023px){
+  body.finance-unlocked main{
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    padding:17px 16px calc(110px + env(safe-area-inset-bottom))!important;
+  }
+  body.finance-unlocked #home .finance-home-heading{
+    display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;gap:15px!important;padding:7px 0 15px!important;
+  }
+  body.finance-unlocked #home .finance-home-heading h2{
+    font-size:clamp(29px,6.5vw,35px)!important;
+  }
+  body.finance-unlocked #home .finance-home-heading p{font-size:17px!important}
+  body.finance-unlocked #home .finance-head-actions{width:100%}
+  body.finance-unlocked #home .finance-new-entry{
+    min-height:58px!important;width:100%!important;font-size:20px!important;
+  }
+  body.finance-unlocked #home .finance-dashboard-metrics{
+    display:flex!important;flex-direction:column!important;
+    gap:16px!important;
+  }
+  body.finance-unlocked #home .finance-dashboard-metrics>.finance-balance-hero{
+    order:0!important;min-height:210px!important;padding:25px 22px!important;
+  }
+  body.finance-unlocked #home .finance-dashboard-metrics>.finance-kpi-pair{
+    order:1!important;display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px!important;
+  }
+  body.finance-unlocked #home .finance-kpi-pair>.finance-kpi-net{grid-column:1/-1!important}
+  body.finance-unlocked #home .finance-dashboard-metrics>.finance-receivables-strip{order:2!important}
+  body.finance-unlocked #home .finance-dashboard-metrics>.mf-command-bar{order:3!important}
+  body.finance-unlocked #home .finance-kpi{min-height:157px!important;padding:19px!important}
+  body.finance-unlocked #home .finance-kpi-title{font-size:18px!important}
+  body.finance-unlocked #home .finance-kpi b{
+    font-size:clamp(24px,4.8vw,33px)!important;
+  }
+  body.finance-unlocked #home .finance-hero-label{font-size:19px!important}
+  body.finance-unlocked #home .finance-hero-link{font-size:16px!important}
+  body.finance-unlocked #home .finance-hero-foot{font-size:16px!important}
+  body.finance-unlocked #home .finance-hero-amount b{
+    font-size:clamp(32px,7vw,43px)!important;
+  }
+  body.finance-unlocked #home .finance-receivables-strip{
+    min-height:90px!important;padding:18px 20px!important;
+  }
+  body.finance-unlocked #home .finance-strip-label{font-size:19px!important}
+  body.finance-unlocked #home .mf-command-bar{padding:20px!important}
+  body.finance-unlocked #home .mf-command-head strong{font-size:23px!important}
+  body.finance-unlocked #home .mf-action-grid{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px!important;
+  }
+  body.finance-unlocked #home .mf-action{
+    min-height:94px!important;padding:14px 10px!important;
+    font-size:19px!important;gap:9px!important;
+  }
+  body.finance-unlocked #home .mf-action span:last-child{font-size:18px!important}
+  body.finance-unlocked #home>.finance-home-hubs{
+    display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+    gap:13px!important;margin:18px 0 0!important;
+  }
+  body.finance-unlocked #home .finance-home-hub{
+    min-height:96px!important;padding:18px!important;gap:15px!important;
+  }
+  body.finance-unlocked #home .finance-home-hub-copy strong{font-size:21px!important}
+  body.finance-unlocked #home .finance-home-hub-icon{
+    flex:0 0 51px!important;width:51px!important;height:51px!important;
+  }
+  body.finance-unlocked .finance-back-button{
+    min-height:54px!important;min-width:99px!important;font-size:17px!important;
+  }
+  body.finance-unlocked .finance-page-identity strong{font-size:23px!important}
+  body.finance-unlocked main>section:not(#home)>.card{
+    padding:22px 19px!important;margin:17px 0!important;
+  }
+  body.finance-unlocked #transactions .fields{gap:15px!important}
+  body.finance-unlocked #transactions :is(input,select,textarea){
+    font-size:18px!important;min-height:56px!important;
+  }
+  body.finance-unlocked #transactions .fields>label,
+  body.finance-unlocked #transactions .mf-field-name{
+    font-size:18px!important;
+  }
+  body.finance-unlocked #transactions .tx-ledger-summary{
+    min-height:95px!important;padding:18px!important;
+  }
+  body.finance-unlocked #transactions .tx-ledger-summary :is(strong,b){
+    font-size:19px!important;
+  }
+  body.finance-unlocked #transactions .tx-ledger-summary :is(small,time,span){
+    font-size:16px!important;line-height:1.65!important;
+  }
+  body.finance-unlocked #transactions .tx-ledger-amount{
+    font-size:22px!important;
+  }
+  body.finance-unlocked #transactions .tx-ledger-meta,
+  body.finance-unlocked #transactions .tx-ledger-detail{
+    font-size:16px!important;line-height:1.8!important;
+  }
+  body.finance-unlocked #transactions .tx-filter-group button{
+    font-size:15px!important;min-height:50px!important;
+  }
+  body.finance-unlocked .finance-mobile-nav{
+    width:calc(100% - 20px)!important;max-width:490px!important;
+    bottom:calc(8px + env(safe-area-inset-bottom))!important;
+  }
+  body.finance-unlocked .finance-mobile-nav button{
+    min-height:73px!important;
+  }
+  body.finance-unlocked .finance-mobile-nav button>span:last-child{
+    font-size:14px!important;
+  }
+  body.finance-unlocked #finance-more-dialog .finance-more-links :is(a,button){
+    min-height:66px!important;font-size:17px!important;
+  }
+  body.finance-unlocked .mf-drill-field{padding:18px!important}
+  body.finance-unlocked .mf-drill-overview{padding:25px 21px!important}
+}
+@media(max-width:420px){
+  body.finance-unlocked main{
+    padding-inline:14px!important;
+  }
+  /* One metric per row prevents Rial/Toman amounts from becoming tiny or clipped. */
+  body.finance-unlocked #home .finance-dashboard-metrics>.finance-kpi-pair{
+    grid-template-columns:minmax(0,1fr)!important;gap:12px!important;
+  }
+  body.finance-unlocked #home .finance-kpi-pair>.finance-kpi-net{grid-column:auto!important}
+  body.finance-unlocked #home .finance-kpi{min-height:125px!important}
+  body.finance-unlocked #home .finance-kpi b{font-size:clamp(28px,7vw,36px)!important}
+  body.finance-unlocked #home .finance-balance-hero{min-height:193px!important}
+  body.finance-unlocked #home .finance-home-hub-copy strong{font-size:20px!important}
+  body.finance-unlocked #home .mf-action{
+    min-height:92px!important;flex-direction:column!important;
+    gap:8px!important;
+  }
+  body.finance-unlocked #home .mf-action span:last-child{font-size:18px!important}
+  body.finance-unlocked .finance-mobile-nav button>span:last-child{font-size:13px!important}
+  body.finance-unlocked #home .finance-receivables-strip{gap:10px}
+  body.finance-unlocked #home .finance-strip-label{font-size:18px!important}
+}
+/* Reduced-motion respects OS preference while leaving visual affordances intact. */
+@media(prefers-reduced-motion:reduce){
+  body.finance-unlocked #home :is(.finance-balance-hero,.finance-kpi,.finance-home-hub,.mf-action){
+    transition:none!important;
+  }
+}
