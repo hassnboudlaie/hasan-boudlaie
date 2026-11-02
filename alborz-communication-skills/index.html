@@ -567,6 +567,24 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 @media(max-width:640px){.s1-live-dialogue{padding:12px}.s1-live-speech{max-width:100%;padding:10px 13px}.s1-live-speech p{font-size:16px}.s1-live-replies button{font-size:15px;padding:10px 12px}}
 </style>
 <script>if(new URLSearchParams(location.search).get('m')==='2'){location.replace(new URL('session2-demo.html?release=s12-r8-20261101',location.href).href);}</script>
+
+<style id="alborz-course-portal-css">
+.academy-portal-hero{padding:36px 0;background:linear-gradient(125deg,#e4f2e8,#fff);border-bottom:1px solid #d7e8dc}
+.academy-portal-hero h1{font-size:clamp(31px,5vw,47px);line-height:1.5;color:#075a40;margin:8px 0}
+.academy-portal-hero p{font-size:20px;color:#416458;max-width:760px;margin:0}
+.academy-courses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-top:12px}
+.academy-course-card{border:2px solid #d4e4d9;background:#fff;border-radius:23px;box-shadow:0 12px 27px #075b4010;padding:26px;display:flex;flex-direction:column;gap:13px;min-height:345px;transition:transform .2s,border .2s}
+.academy-course-card:hover{transform:translateY(-3px);border-color:#18805c}
+.academy-course-card h3{font-size:30px;line-height:1.5;color:#075a40;margin:0}
+.academy-course-card p{font-size:18px;line-height:1.8;color:#426458;margin:0}
+.academy-course-tag{align-self:flex-start;background:#e8f4ed;border-radius:99px;color:#0a6347;font-size:15px;font-weight:800;padding:6px 12px}
+.academy-course-art{font-size:45px;line-height:1.2;padding:8px 0}
+.academy-course-metas{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.academy-course-metas>span{border:1px solid #d5e6db;background:#f7faf7;border-radius:9px;padding:5px 9px;font-size:15px;color:#355c4b;font-weight:750}
+.academy-course-cta{display:flex;align-items:center;justify-content:space-between;background:#086546;border-radius:13px;padding:11px 17px;color:#fff;font-size:18px;font-weight:800}
+.academy-course-communication .academy-course-cta{background:#173d5d}
+@media(max-width:690px){.academy-portal-hero{padding:24px 0}.academy-portal-hero p{font-size:18px}.academy-courses{grid-template-columns:1fr;gap:12px}.academy-course-card{min-height:0;padding:21px}.academy-course-card h3{font-size:26px}.academy-course-card p{font-size:18px}.academy-course-art{font-size:39px}}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -586,15 +604,35 @@ const sessions=[
 {id:10,title:"مشتری سازمانی، اقناع و مذاکره + ارتباطات دیجیتال",desc:"ارتباط با مشتری سازمانی، کشف نیاز، ارزش‌آفرینی، اعتراض و پیگیری.",topics:["ارتباط بین کسب‌وکارها","اقناع","مذاکره","آداب ارتباطات دیجیتال"],goal:"رئیس شعبه بتواند ارتباط اولیه و جلسه حرفه‌ای با مشتری سازمانی را ساختاریافته مدیریت کند.",outline:["تفاوت ارتباط بین کسب‌وکارها و ارتباط با مصرف‌کننده","آمادگی قبل از جلسه","پرسش‌های کشف نیاز","گفت‌وگوی ارزش‌آفرین","اصول پایه اقناع و مذاکره","آداب تماس تلفنی، واتس‌اپ و رایانامه","پیگیری و ثبت توافقات"]}
 ];
 
-function header(){return '<header class="top"><div class="wrap topin"><a class="brand" href="?"><span class="logo">ا</span><span><b>آکادمی مهارت‌های ارتباطات اثربخش رؤسای شعب</b><small>بیمه البرز | جلسه صفر + ۱۰ جلسه اصلی</small></span></a><div style="display:flex;align-items:center;gap:10px"><nav class="nav"><a href="?">جلسات</a><a href="?view=guide">راهنما</a></nav><div class="utility-nav"><a class="utility-btn" href="?">⌂ خانه</a><button class="utility-btn" onclick="history.length>1?history.back():location.href=\'?\'">→ برگشت</button></div></div></div></header>'}
-function footer(){return '<footer class="footer"><div class="wrap">آکادمی مهارت‌های ارتباطات اثربخش · بیمه البرز</div></footer>'}
-function home(){
+function header(){return '<header class="top"><div class="wrap topin"><a class="brand" href="?"><span class="logo">ا</span><span><b>آکادمی مدیریت و یادگیری بیمه البرز</b><small>مسیرهای آموزشی کارشناسان و مدیران</small></span></a><div style="display:flex;align-items:center;gap:10px"><nav class="nav"><a href="?">جلسات</a><a href="?view=guide">راهنما</a></nav><div class="utility-nav"><a class="utility-btn" href="?">⌂ خانه</a><button class="utility-btn" onclick="history.length>1?history.back():location.href=\'?\'">→ برگشت</button></div></div></div></header>'}
+function footer(){return '<footer class="footer"><div class="wrap">آکادمی مدیریت و یادگیری بیمه البرز</div></footer>'}
+function communicationHome(){
 document.title="آکادمی مهارت‌های ارتباطات اثربخش | بیمه البرز";
 document.getElementById("app").innerHTML=header()+
 '<main><section class="hero"><div class="wrap"><span class="tag">آکادمی مهارت‌های ارتباطی بیمه البرز</span><h1>مهارت‌های ارتباطات اثربخش و رفتار حرفه‌ای رؤسای شعب بیمه البرز</h1><div class="summary"><span class="pill">جلسه صفر + ۱۰ جلسه اصلی</span><span class="pill">هر جلسه ۲ ساعت</span><span class="pill">مسیر غیرخطی</span><span class="pill">لینک مستقل برای هر جلسه</span><span class="pill">قابل توسعه به ۲ یا ۳ جلسه برای هر ماژول</span></div></div></section><section class="section"><div class="wrap"><h2>جلسات دوره</h2><div class="grid">'+
 sessions.map(s=>'<a class="card" href="?m='+s.id+'"><div class="num">جلسه '+s.id+'</div><h3>'+s.title+'</h3><p>'+s.desc+'</p><div class="topics">'+s.topics.map(t=>'<span class="topic">'+t+'</span>').join('')+'</div><div class="go"><span>مشاهده کلیات جلسه</span><span>←</span></div></a>').join('')+
 '</div></div></section></main>'+footer()
 }
+
+
+function home(){
+ document.title="آکادمی مدیریت و یادگیری | بیمه البرز";
+ document.getElementById("app").innerHTML=header()+
+ '<main><section class="academy-portal-hero"><div class="wrap"><span class="tag">آکادمی مدیریت و یادگیری بیمه البرز</span><h1>دوره‌های آموزشی بیمه البرز</h1><p>مسیر آموزشی خود را انتخاب کنید. هر دوره محتوای اختصاصی و فضای یادگیری مستقل دارد.</p></div></section>'+
+ '<section class="section"><div class="wrap"><h2>انتخاب دوره</h2><div class="academy-courses">'+
+ '<a class="academy-course-card academy-course-resilience" href="resilience.html"><span class="academy-course-tag">دوره جدید · ویژه کارشناسان خسارت</span>'+
+ '<span class="academy-course-art" aria-hidden="true">🐪　🐟　🦎　🐙</span><h3>تاب‌آوری کارکنان</h3>'+
+ '<p>استراتژی‌های تاب‌آوری در محیط‌های آشوبناک؛ راهنمای مصور، جزوه علمی و طراحی الگوی اختصاصی هر گروه.</p>'+
+ '<span class="academy-course-metas"><span>۸ ساعت</span><span>۱۰ گروه پنج‌نفره</span><span>۵۰ شرکت‌کننده</span></span>'+
+ '<span class="academy-course-cta">ورود به دوره تاب‌آوری ←</span></a>'+
+ '<a class="academy-course-card academy-course-communication" href="?course=communication"><span class="academy-course-tag">دوره اصلی · رؤسای شعب</span>'+
+ '<span class="academy-course-art" aria-hidden="true">🤝　💬　🎯</span><h3>مهارت‌های ارتباطات اثربخش</h3>'+
+ '<p>دسترسی کامل به جلسه صفر، ده جلسه اصلی، آموزش‌ها، ارزیابی‌ها، سناریوها و تمرین‌های ارتباطی.</p>'+
+ '<span class="academy-course-metas"><span>رؤسای شعب</span><span>جلسات تعاملی</span></span>'+
+ '<span class="academy-course-cta">ورود به دوره مهارت‌های ارتباطی ←</span></a>'+
+ '</div></div></section></main>'+footer();
+}
+
 
 
 const labs={
@@ -1579,7 +1617,7 @@ document.getElementById("app").innerHTML=header()+
 }
 function renderAcademyAfterLogin(){
 const params=new URLSearchParams(location.search); const hasM=params.has("m"); const m=Number(params.get("m")); const view=params.get("view"); const item=params.get("item");
-if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else home();
+if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else if(params.get("course")==="communication")communicationHome(); else home();
 }
 if(!document.documentElement.classList.contains("alborz-class-locked"))renderAcademyAfterLogin();
 document.addEventListener("alborz-classroom-authenticated",renderAcademyAfterLogin);
