@@ -1,0 +1,43 @@
+name: Alborz Claims Resilience - Group Learning QA
+on:
+  push:
+    branches: [main, feat/alborz-resilience-claims-20261102]
+    paths:
+      - 'alborz-communication-skills/index.html'
+      - 'alborz-communication-skills/resilience.html'
+      - 'alborz-communication-skills/resilience.css'
+      - 'alborz-communication-skills/resilience.js'
+      - 'scripts/alborz-resilience-browser-qa.mjs'
+      - '.github/workflows/alborz-resilience-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mobile-desktop:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify JavaScript syntax
+        run: |
+          node --check alborz-communication-skills/resilience.js
+          node --check scripts/alborz-resilience-browser-qa.mjs
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify desktop and simulated mobile workshop
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/alborz-resilience-http.log 2>&1 &
+          sleep 2
+          node scripts/alborz-resilience-browser-qa.mjs
+      - name: Save visual QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alborz-claims-resilience-ui-proof
+          path: artifacts/alborz-resilience/
+          if-no-files-found: warn
