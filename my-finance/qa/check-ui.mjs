@@ -29,7 +29,7 @@ check('consolidated base and last-loaded v75 visual layer',()=>{
  assert.equal((visual.match(/\{/g)||[]).length,(visual.match(/\}/g)||[]).length);
  assert.ok(visual.includes('body.finance-unlocked #home .finance-home-hub-copy strong'),'large clickable tiles missing');
  assert.ok(html.includes('class="mf-home-visual"'),'illustrated Home not mounted');
- assert.ok(html.includes('finance-hero-growth-v77.svg?v=20261102r78'),'hero image source missing');
+ assert.ok(html.includes('finance-hero-growth-v77.svg?v=20261102r77'),'hero image source missing');
  assert.ok(visual.includes('html.mf-wide-mobile body'),'desktop site zoom fallback missing');
  assert.ok(visual.includes('.mf-action-expense'),'colored transaction tiles missing');
 });
@@ -84,7 +84,8 @@ check('redesign is visible and all four quick actions have live destinations',()
  const homeEnd=html.indexOf('</section>',homeStart);
  const home=html.slice(homeStart,homeEnd);
  assert.ok(home.indexOf('finance-dashboard-metrics')<home.indexOf('mf-action-grid'),'financial hero should lead');
- assert.ok(home.indexOf('mf-action-grid')<home.indexOf('loan-due-notice'),'quick actions should follow balance');
+ assert.ok(home.indexOf('finance-balance-hero')<home.indexOf('mf-action-grid'),'quick actions after balance');
+ assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-dashboard-metrics'),'next installment should lead financial cards');
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
