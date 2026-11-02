@@ -104,7 +104,16 @@ try{
  await page.evaluate(()=>document.body.classList.add('dark'));
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-dark-390.png',fullPage:true});
  await page.evaluate(()=>document.body.classList.remove('dark'));
+ /* Simulate Android's physical 390px screen with Chrome Desktop site using a 980px layout viewport.
+    Playwright otherwise changes screen.width alongside setViewportSize, which hides the real-world bug. */
+ await page.evaluate(()=>{
+   Object.defineProperty(window.screen,'width',{configurable:true,get:()=>390});
+   Object.defineProperty(window.screen,'height',{configurable:true,get:()=>844});
+ });
  await page.setViewportSize({width:980,height:844});
+ await page.evaluate(()=>window.dispatchEvent(new Event('resize')));
+ await page.waitForFunction(()=>document.documentElement.classList.contains('mf-wide-mobile'));
+
  await page.waitForTimeout(400);
  const wide=await page.evaluate(()=>({
    innerWidth:window.innerWidth,screenWidth:screen.width,
@@ -113,7 +122,7 @@ try{
  }));
  assert.ok(wide.screenWidth<900&&wide.innerWidth>900,'Desktop-mode simulation needs narrow screen and wide layout: '+JSON.stringify(wide));
  assert.equal(wide.detected,true,'Android wide desktop mode must be recognized');
- assert.ok(wide.zoom>=1.45,'Wide viewport downscale must be compensated: '+JSON.stringify(wide));
+ assert.ok(wide.zoom>=2.2,'Wide viewport downscale must be compensated: '+JSON.stringify(wide));
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/desktop-mode-fallback.png',fullPage:true});
  console.log('PASS Chromium 360/390px + wide desktop-mode fallback: large text, illustration, tap targets, nested Back and reload');
 }finally{
