@@ -55,7 +55,7 @@ function display(title,summary,details,rows){
 }
 const CSV_HEADERS=['تاریخ','نوع','مبلغ','ارز','دسته‌بندی','حساب','توضیح'];
 const row=(t,d,accounts)=>[
- new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).format(d),
+ Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d).filter(p=>['year','month','day'].includes(p.type)).map(p=>[p.type,p.value])).year+'-'+String(Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d).filter(p=>['year','month','day'].includes(p.type)).map(p=>[p.type,p.value])).month).padStart(2,'0')+'-'+String(Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d).filter(p=>['year','month','day'].includes(p.type)).map(p=>[p.type,p.value])).day).padStart(2,'0'),
  t.kind==='expense'?'هزینه':t.kind==='income'?'درآمد':t.kind||'',
  Number(t.amount)||0,accountCurrency(t,accounts),t.category||'',accounts.find(a=>a.id===t.account)?.name||t.accountName||'',t.memo||''
 ];
@@ -76,19 +76,19 @@ function report(q){
   sums.push('درآمد '+fmt(t.income)+'، هزینه '+fmt(t.expense)+'، خالص '+fmt(t.income-t.expense)+' '+name);
   detail.push(['خالص جریان نقد '+name,fmt(t.income-t.expense)]);
  }
- for(const [k,v] of [...cats].sort((a,b)=>b[1]-a[1]).slice(0,5)){const [c,...n]=k.split('|');detail.push([n.join('|'),fmt(v)+' '+(c==='IRT'?'تومان':c)])}
+ for(const [currency] of totals){for(const [k,v] of [...cats].filter(([key])=>key.startsWith(currency+'|')).sort((a,b)=>b[1]-a[1]).slice(0,5)){detail.push([k.slice(currency.length+1)+' · '+(currency==='IRT'?'تومان':currency),fmt(v)+' '+(currency==='IRT'?'تومان':currency)])}}
  display('گزارش مالی · '+p.label,entries.length?'بازه: '+p.label+'\n'+sums.join('\n')+'\nتعداد تراکنش‌های قطعی: '+fmt(entries.length)+'\nقرض‌ها، انتقال‌ها و تراکنش‌های در انتظار در جمع درآمد و هزینه محاسبه نمی‌شوند.':'در این بازه تراکنش قطعی درآمد یا هزینه ثبت نشده است.',detail,entries.map(({t,d})=>row(t,d,accounts)));
  status('گزارش با داده‌های حساب شما ساخته شد؛ ارزهای متفاوت با هم جمع نشده‌اند.');
 }
 function dues(q){
- const data=bridge.getData(),from=parts(new Date()),to=parts(new Date(Date.now()+(/ماه/.test(q)?31:7)*86400000));
+ const data=bridge.getData(),from=parts(new Date()),nearest=/بعدی|نزدیک ترین|نزدیک‌ترین|اولین/.test(q),to=nearest?{year:9999,month:12,day:31}:parts(new Date(Date.now()+(/ماه/.test(q)?31:7)*86400000));
  const num=p=>p.year*10000+p.month*100+p.day;
  const due=(data.loans||[]).filter(l=>!['closed','paid'].includes(l.status)).map(l=>{
   const date=norm(l.nextDueJalali||'').replace(/[-.]/g,'/');
   if(!/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(date))return null;
   const [year,month,day]=date.split('/').map(Number),n=num({year,month,day}),a=Number(l.installment);
   return n>=num(from)&&n<=num(to)&&a>0?{date,n,a,name:l.title||'قسط',currency:l.currency||'IRT'}:null;
- }).filter(Boolean).sort((a,b)=>a.n-b.n);
+ }).filter(Boolean).sort((a,b)=>a.n-b.n).slice(0,nearest?1:100);
  const details=due.map(l=>[l.name+' · '+l.date,fmt(l.a)+' '+(l.currency==='IRT'?'تومان':l.currency==='IRR'?'ریال':l.currency)]);
  const rows=due.map(l=>[l.date,'قسط',l.a,l.currency,l.name,'','سررسید ثبت‌شده']);
  display('اقساط پیش رو',due.length?fmt(due.length)+' قسط با سررسید و مبلغ معتبر پیدا شد.':'قسطی با تاریخ و مبلغ معتبر در بازه آینده ثبت نشده است؛ موعدهای نامشخص تخمین زده نمی‌شوند.',details,rows);
@@ -156,5 +156,6 @@ $('mf-va-speak').addEventListener('click',()=>{
  speechSynthesis.cancel();const speech=new SpeechSynthesisUtterance((last.title+'؛ '+last.summary).slice(0,1300));
  speech.lang='fa-IR';speech.rate=.9;speechSynthesis.speak(speech);status('خواندن فارسی به صدای موجود روی گوشی وابسته است.');
 });
+document.addEventListener('myfinance:rebound',()=>{last=null;$('mf-va-result').hidden=true;$('mf-va-question').value='';if(recognition){try{recognition.abort()}catch(_){}}recognition=null;listening=false;$('mf-va-mic').setAttribute('aria-pressed','false');});
 window.MyFinanceVoiceReports={run,period};
 })();
