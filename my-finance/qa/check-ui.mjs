@@ -190,9 +190,12 @@ check('classic application JavaScript parses',()=>{
 });
 check('read-only voice reporting, currency safety and PWA wiring',()=>{
  const assistant=read('finance-assistant-v79.js');
- assert.ok(html.includes('finance-assistant-v79.js?v=20261102r79'),'assistant not loaded in app');
- assert.ok(sw.includes('./finance-assistant-v79.js?v=20261102r79'),'offline assistant asset missing');
+ assert.ok(html.includes('finance-assistant-v79.js?v=20261103r80'),'assistant not loaded in app');
+ assert.ok(sw.includes('./finance-assistant-v79.js?v=20261103r80'),'offline assistant asset missing');
  assert.ok(assistant.includes('bridge.getData()'),'reports must use the active account');
+ assert.ok(assistant.includes("homeMetrics.insertAdjacentElement('beforebegin',card)"),'complete assistant must be on Home');
+ assert.ok(!assistant.includes("const home=document.createElement('button')"),'Home must not show only an assistant shortcut');
+ assert.ok(html.includes("'quick-entry','assistant'"),'assistant nav must keep the Home view visible');
  assert.ok(assistant.includes('myfinance:rebound'),'assistant must clear when account identity changes');
  assert.ok(!assistant.includes('service_role'),'privileged key forbidden');
  const syntax=spawnSync(process.execPath,['--check',resolve(root,'finance-assistant-v79.js')],{encoding:'utf8'});
