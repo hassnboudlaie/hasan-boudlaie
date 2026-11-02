@@ -156,6 +156,7 @@ $('mf-va-speak').addEventListener('click',()=>{
  speechSynthesis.cancel();const speech=new SpeechSynthesisUtterance((last.title+'؛ '+last.summary).slice(0,1300));
  speech.lang='fa-IR';speech.rate=.9;speechSynthesis.speak(speech);status('خواندن فارسی به صدای موجود روی گوشی وابسته است.');
 });
-document.addEventListener('myfinance:rebound',()=>{last=null;$('mf-va-result').hidden=true;$('mf-va-question').value='';if(recognition){try{recognition.abort()}catch(_){}}recognition=null;listening=false;$('mf-va-mic').setAttribute('aria-pressed','false');});
+let seenUserNamespace=bridge.getPreferenceNamespace?.();
+document.addEventListener('myfinance:rebound',()=>{const current=bridge.getPreferenceNamespace?.();if(current===seenUserNamespace)return;seenUserNamespace=current;last=null;$('mf-va-result').hidden=true;$('mf-va-question').value='';if(recognition){try{recognition.abort()}catch(_){}}recognition=null;listening=false;$('mf-va-mic').setAttribute('aria-pressed','false');});
 window.MyFinanceVoiceReports={run,period};
 })();
