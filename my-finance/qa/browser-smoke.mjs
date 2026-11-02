@@ -52,6 +52,16 @@ try{
  assert.ok((await page.locator('#mf-market-grid').innerText()).includes('۲۵۰٬۰۰۰'),'Live market widget must render JSON values');
  assert.ok((await page.locator('#mf-market-status').innerText()).includes('۳۰ دقیقه'),'Market feed cadence must be disclosed');
 
+ // End-to-end assistant route and read-only report on a mobile viewport.
+ await page.locator('.mf-va-home').click();await check('assistant');
+ assert.equal(await page.locator('#finance-smart-assistant').isVisible(),true,'Voice report page must open from Home');
+ await page.locator('#mf-va-question').fill('گزارش کل دوره');
+ await page.locator('#mf-va-go').click();
+ assert.ok((await page.locator('#mf-va-summary').innerText()).includes('۱٬۰۰۰٬۰۰۰'),'Report must use the synthetic expense');
+ await page.locator('#mf-va-pdf').click();
+ assert.equal(await page.locator('#mf-va-print').isVisible(),true,'Printable report should open');
+ await page.locator('#mf-va-print-close').click();
+ await page.goBack();await check('home');
  assert.equal(await page.locator('#finance-quick-fab').isVisible(),false,'Floating button obscures content');
  const installOverlap=await page.evaluate(()=>{
   const panel=document.getElementById('mf-install'),header=document.querySelector('.finance-app-header');
