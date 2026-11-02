@@ -228,13 +228,13 @@
         },
         {
           "title": {
-            "fa": "اپلیکیشن مستقل آکادمی بیمه البرز",
-            "en": "Alborz Communication Academy · Installable App"
+            "fa": "دانلود اپلیکیشن اختصاصی اندروید البرز",
+            "en": "Alborz Academy · Download Android APK"
           },
-          "url": "https://hassnboudlaie.github.io/alborz-communication-academy/",
+          "url": "https://github.com/hassnboudlaie/alborz-communication-academy/releases/download/alborz-android-v0.1.0-pilot/app-release.apk",
           "stage": {
-            "fa": "قابل نصب مستقل · محتوای یکسان و زنده",
-            "en": "Separate PWA · Live synced course"
+            "fa": "نسخه آزمایشی · نصب مستقل از Chrome",
+            "en": "Pilot APK · Chrome PWA-independent"
           }
         }
       ]
