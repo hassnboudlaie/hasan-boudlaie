@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 440" role="img" aria-label="نماد رشد و مدیریت مالی">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c2548"/><stop offset=".62" stop-color="#104769"/><stop offset="1" stop-color="#08776f"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#e6ffef" stop-opacity=".75"/><stop offset=".42" stop-color="#84d5ce" stop-opacity=".24"/><stop offset="1" stop-color="#80f1c6" stop-opacity=".4"/></linearGradient>
+ <linearGradient id="coin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff3b6"/><stop offset=".45" stop-color="#fbd57f"/><stop offset="1" stop-color="#b77931"/></linearGradient>
+ <linearGradient id="bar" x1="0" y1="1" x2=".3" y2="0"><stop stop-color="#087d89"/><stop offset="1" stop-color="#67e5c6"/></linearGradient>
+ <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#1d9d62"/><stop offset="1" stop-color="#bff17f"/></linearGradient>
+ <filter id="shadow" x="-35%" y="-40%" width="170%" height="185%"><feGaussianBlur stdDeviation="13"/></filter>
+ <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
+ <clipPath id="jarClip"><path d="M244 199 Q237 209 236 231 L222 355 Q219 376 239 389 Q323 407 413 389 Q433 377 429 354 L414 229 Q411 209 404 199Z"/></clipPath>
+</defs>
+<rect x="0" y="0" width="660" height="440" rx="35" fill="url(#bg)"/>
+<circle cx="474" cy="95" r="153" fill="#55f9cd" opacity=".055"/>
+<circle cx="542" cy="298" r="174" fill="#5ac6ff" opacity=".047"/>
+<g opacity=".15" stroke="#d9f5e8" fill="none"><path d="M30 354Q150 309 218 349T440 350T630 340"/><path d="M45 388H606"/><path d="M57 150h31m-15-15v30M569 72h28m-14-14v28"/></g>
+<g filter="url(#shadow)" opacity=".45"><ellipse cx="333" cy="394" rx="158" ry="23" fill="#00132d"/></g>
+<g transform="translate(30 15)">
+ <path d="M80 352V286Q80 272 95 272H125Q138 272 138 287V352" fill="url(#bar)" opacity=".6"/>
+ <path d="M143 352V247Q143 232 157 232H191Q206 232 206 248V352" fill="url(#bar)" opacity=".78"/>
+ <path d="M468 352V195Q468 177 486 177H510Q527 177 527 195V352" fill="url(#bar)" opacity=".82"/>
+ <path d="M530 352V126Q530 111 546 111H572Q589 111 589 126V352" fill="url(#bar)" opacity=".9"/>
+ <path d="M84 244C170 245 217 217 273 168S393 149 475 79" fill="none" stroke="#a0f79d" stroke-width="12" stroke-linecap="round"/>
+ <path d="M459 80L489 70 480 102" fill="none" stroke="#a0f79d" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(-12 5)">
+ <path d="M247 195Q236 212 239 230L222 353Q218 382 247 390Q330 411 407 390Q430 383 425 354L410 228Q411 212 400 195Z" fill="url(#glass)" stroke="#c3fff0" stroke-opacity=".69" stroke-width="6"/>
+ <g clip-path="url(#jarClip)">
+  <ellipse cx="323" cy="380" rx="110" ry="41" fill="#a57947" opacity=".45"/>
+  <g fill="url(#coin)" stroke="#99682f" stroke-width="2">
+   <ellipse cx="264" cy="336" rx="44" ry="25"/><ellipse cx="318" cy="350" rx="44" ry="25"/><ellipse cx="384" cy="340" rx="44" ry="25"/>
+   <ellipse cx="285" cy="313" rx="44" ry="25"/><ellipse cx="367" cy="307" rx="44" ry="25"/>
+   <ellipse cx="316" cy="278" rx="44" ry="25"/><ellipse cx="377" cy="277" rx="37" ry="22"/>
+   <ellipse cx="257" cy="288" rx="37" ry="22"/>
+  </g>
+ </g>
+ <path d="M269 201h111Q408 202 408 219Q408 238 380 239H260Q236 237 237 220Q238 200 269 201Z" fill="#ddfff1" fill-opacity=".7" stroke="#dafff5" stroke-width="5"/>
+ <ellipse cx="322" cy="217" rx="83" ry="13" fill="#fff3bf" opacity=".37"/>
+ <path d="M325 202Q316 158 332 113" stroke="#7bd384" stroke-width="12" fill="none" stroke-linecap="round"/>
+ <path d="M334 146Q290 110 271 93Q276 54 319 68Q355 90 334 146Z" fill="url(#leaf)" stroke="#b5f5a1" stroke-width="3"/>
+ <path d="M330 131Q360 73 420 69Q431 106 394 126Q368 140 330 131Z" fill="url(#leaf)" stroke="#b5f5a1" stroke-width="3"/>
+ <path d="M335 140Q307 99 281 80M337 129Q383 101 412 80" fill="none" stroke="#e4ffc0" stroke-width="3" opacity=".8"/>
+</g>
+<circle cx="171" cy="115" r="7" fill="#fee39b"/><circle cx="510" cy="149" r="5" fill="#a4fad8"/>
+<circle cx="122" cy="193" r="4" fill="#91ddec"/>
+</svg>
