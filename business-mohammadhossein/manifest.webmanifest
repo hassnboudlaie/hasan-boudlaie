@@ -1,0 +1,21 @@
+{
+  "name": "بیزنس محمدحسین | مرکز فرماندهی",
+  "short_name": "بیزنس محمدحسین",
+  "id": "/hasan-boudlaie/business-mohammadhossein/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f7f7",
+  "theme_color": "#173f48",
+  "lang": "fa",
+  "dir": "rtl",
+  "description": "مدیریت برنامه توسعه کسب‌وکار زیبایی: اجرا، شاخص‌ها، ریسک‌ها و تصمیم‌ها",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
