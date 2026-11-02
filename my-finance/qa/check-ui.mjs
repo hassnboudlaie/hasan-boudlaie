@@ -20,7 +20,7 @@ check('consolidated base and last-loaded v75 visual layer',()=>{
  assert.match(links[1],/^\.\/navigation-v60\.css\?v=/);
  assert.match(links[2],/^\.\/drilldown-v61\.css\?v=/);
  assert.match(links[3],/^\.\/mobile-polish-v58\.css\?v=/);
- assert.match(links[4],/^\.\/visual-upgrade-v75\.css\?v=20261102r75$/);
+ assert.match(links[4],/^\.\/visual-upgrade-v75\.css\?v=20261102r76$/);
  let pos=-1;
  for(const name of ['premium.css','dashboard-r33.css','design-v49.css','interior-v51.css','mobile-ux-v52.css']){
   const next=css.indexOf(read(name));assert.ok(next>pos,'CSS source missing/reordered: '+name);pos=next;
@@ -63,7 +63,7 @@ check('redesign is visible and all four quick actions have live destinations',()
  assert.ok(home.indexOf('loan-due-notice')<home.indexOf('finance-quick-card'),'alert should be above entry card');
 });
 check('real 360px screenshot issues are covered by mobile layout',()=>{
- assert.ok(html.includes('data-myfinance-release="design-r75"'),'updated version marker missing');
+ assert.ok(html.includes('data-myfinance-release="design-r76"'),'updated version marker missing');
  assert.ok(html.includes('class="mf-mobile-release"'),'compact mobile version chip missing');
  assert.ok(html.includes('brand-mark-v57.svg?v=20261030r57'),'new brand mark missing');
  const header=html.slice(html.indexOf('<header class="finance-app-header"'),html.indexOf('</header>',html.indexOf('<header class="finance-app-header"'))+9);
@@ -77,7 +77,7 @@ check('real 360px screenshot issues are covered by mobile layout',()=>{
  assert.ok(home.indexOf('class="finance-overview-meta"')<metricStart,'month pill should live in compact heading');
  assert.ok(read('mobile-polish-v58.css').includes('r74: canonical handheld layout'),'prior screenshot-directed layout missing');
  assert.ok(visual.includes('@media(max-width:420px)'),'large-type narrow mobile layout missing');
- assert.ok(css.includes('.finance-admin-header-bell'),'in-header admin bell styling missing');
+ assert.ok(visual.includes('.finance-admin-header-bell'),'in-header admin bell styling missing');
  const sync=read('supabase-sync.js');
  assert.ok(sync.includes("bell.className='finance-admin-header-bell'"),'admin bell must move out of viewport overlay');
  assert.ok(!sync.includes('position:fixed;bottom:96px;left:18px;z-index:1000'),'floating admin bell regression');
@@ -169,7 +169,7 @@ check('every PWA precache file exists and new CSS is included',()=>{
  for(const asset of paths){const p=asset.slice(2).split('?')[0];if(p)assert.ok(existsSync(resolve(root,p)),'missing '+asset)}
  const cssHref=html.match(/<link rel="stylesheet" href="(\.\/my-finance-ui-v54\.css\?v=[^"]+)"/)?.[1];
  assert.ok(paths.includes(cssHref));assert.ok(paths.includes('./index.html'));
- assert.ok(paths.includes('./visual-upgrade-v75.css?v=20261102r75'),'visual layer absent from offline cache');
+ assert.ok(paths.includes('./visual-upgrade-v75.css?v=20261102r76'),'visual layer absent from offline cache');
  for(const asset of ['./navigation-v60.css?v=20261030r63','./embed-v60.css?v=20261030r60','./embed-nav-v60.js?v=20261030r60','./drilldown-v61.css?v=20261030r63','./drilldown-v61.js?v=20261030r63'])assert.ok(paths.includes(asset),'offline missing '+asset);
 });
 check('release id, PWA cache and stylesheet version align',()=>{
