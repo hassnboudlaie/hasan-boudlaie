@@ -6,7 +6,7 @@ const bin=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/ch
 if(!bin)throw Error('No Chromium browser on CI runner');
 mkdirSync('/tmp/myfinance-ui-smoke',{recursive:true});
 const browser=await chromium.launch({executablePath:bin,headless:true,args:['--no-sandbox']});
-const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1.5,isMobile:true,hasTouch:true,serviceWorkers:'block'});
+const context=await browser.newContext({viewport:{width:390,height:844},screen:{width:390,height:844},deviceScaleFactor:1.5,isMobile:true,hasTouch:true,serviceWorkers:'block'});
 const page=await context.newPage();
 page.setDefaultTimeout(20000);
 await page.addInitScript(()=>{
@@ -101,6 +101,9 @@ try{
  assert.ok((await page.locator('#finance-account-detail-body').innerText()).includes('حساب آزمایشی'));
  await page.goBack();await check('accounts');
  await page.goBack();await check('home');
+ await page.evaluate(()=>document.body.classList.add('dark'));
+ await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-dark-390.png',fullPage:true});
+ await page.evaluate(()=>document.body.classList.remove('dark'));
  await page.setViewportSize({width:980,height:844});
  await page.waitForTimeout(400);
  const wide=await page.evaluate(()=>({
@@ -108,11 +111,10 @@ try{
    detected:document.documentElement.classList.contains('mf-wide-mobile'),
    zoom:parseFloat(getComputedStyle(document.body).zoom||'1')
  }));
- if(wide.screenWidth<900&&wide.innerWidth>900){
-   assert.equal(wide.detected,true,'Android wide desktop mode must be recognized');
-   assert.ok(wide.zoom>=1.45,'Wide viewport downscale must be compensated: '+JSON.stringify(wide));
-   await page.screenshot({path:'/tmp/myfinance-ui-smoke/desktop-mode-fallback.png',fullPage:true});
- }
+ assert.ok(wide.screenWidth<900&&wide.innerWidth>900,'Desktop-mode simulation needs narrow screen and wide layout: '+JSON.stringify(wide));
+ assert.equal(wide.detected,true,'Android wide desktop mode must be recognized');
+ assert.ok(wide.zoom>=1.45,'Wide viewport downscale must be compensated: '+JSON.stringify(wide));
+ await page.screenshot({path:'/tmp/myfinance-ui-smoke/desktop-mode-fallback.png',fullPage:true});
  console.log('PASS Chromium 360/390px + wide desktop-mode fallback: large text, illustration, tap targets, nested Back and reload');
 }finally{
  await context.close();await browser.close();
