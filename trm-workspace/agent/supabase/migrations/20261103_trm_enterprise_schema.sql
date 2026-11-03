@@ -89,6 +89,9 @@ create table if not exists public.trm_ai_audit (
  mode text not null check(mode in ('role','evp','vacancy','relationship')),
  status text not null default 'started' check(status in ('started','completed','failed')),
  provider_response_id text,
+ quota_date date not null default (now() at time zone 'UTC')::date,
+ quota_slot smallint not null check(quota_slot between 1 and 12),
+ unique(org_id,quota_date,quota_slot),
  created_at timestamptz not null default now()
 );
 create index if not exists trm_ai_org_day on public.trm_ai_audit(org_id,created_at);
