@@ -1,0 +1,81 @@
+/* Saba Naft coaching workspace: spacious RTL, touch-first. */
+.cj-heading{padding-bottom:9px}
+.cj-heading h1{max-width:900px}
+.cj-heading p{max-width:920px;color:#4c627b;font-size:17px;line-height:1.9;margin-top:9px}
+.cj-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,.92fr);gap:20px;margin-top:21px;align-items:start}
+.cj-main,.cj-side{display:flex;flex-direction:column;gap:17px;min-width:0}
+.cj-card{background:#fff;border:1px solid #dce5f1;border-radius:23px;padding:clamp(19px,2.6vw,30px);box-shadow:0 9px 28px rgba(9,47,92,.075);min-width:0}
+.cj-step{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cj-step>span{display:grid;place-items:center;width:52px;height:52px;flex:0 0 52px;border-radius:18px;background:#e9f1fe;color:#073e8c;font-size:26px;font-weight:900}
+.cj-step h2,.cj-card>h2{margin:0;color:#17385e;font-size:clamp(21px,2.1vw,26px);font-weight:950}
+.cj-step p,.cj-card>p{font-size:15px;line-height:1.85;color:#536b80;margin:3px 0 0}
+.cj-case-form>label{display:block;font-size:17px;font-weight:800;color:#203b57;margin-bottom:9px}
+.cj-case-form textarea{display:block;width:100%;min-height:156px;padding:16px 17px;border:2px solid #cbd8e6;border-radius:15px;outline:none;color:#17324f;background:#fcfdff;resize:vertical;font-size:17px;line-height:2}
+.cj-case-form textarea:focus,.cj-case-form select:focus{border-color:#1965a7;box-shadow:0 0 0 4px #14539d1a}
+.cj-voice{display:inline-flex;align-items:center;gap:6px;margin:10px 0 0;padding:9px 14px;border:1px solid #bfd4e8;border-radius:12px;background:#eff6ff;color:#144c83;font-size:15px;font-weight:850;min-height:45px}
+.cj-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.cj-fields label{display:flex;flex-direction:column;gap:5px;color:#274663;font-size:15px;font-weight:850;min-width:0}
+.cj-fields label:last-child{grid-column:1/-1}
+.cj-fields select{width:100%;height:51px;border:1px solid #cddce9;border-radius:13px;background:#fff;padding:8px 12px;color:#203a58;font-size:16px}
+.cj-controls,.cj-side-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:11px}
+.cj-controls button{flex:1 1 190px}
+.cj-primary,.cj-secondary,.cj-outlink{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:51px;border-radius:13px;padding:10px 17px;text-align:center;font-size:16px;font-weight:900;text-decoration:none;line-height:1.7;cursor:pointer}
+.cj-primary{background:#ff7035;color:#172c48;border:1px solid #f86c31}
+.cj-primary:hover{background:#ff8c54}
+.cj-secondary{background:#eef5fe;color:#0d4987;border:1px solid #c7d9ec}
+.cj-secondary:hover{background:#e4effc}
+.cj-outlink{background:#0a3976;color:#fff;border:1px solid #0a3976}
+.cj-outlink:hover{background:#154f96}
+.cj-note,.cj-card small{display:block;font-size:13px;line-height:1.9;color:#60758c;margin-top:12px}
+.cj-result{background:#f4f9ff;border:1px solid #bfd6ee;padding:clamp(15px,2vw,23px);margin-top:20px;border-radius:19px;scroll-margin-top:22px}
+.cj-result[hidden]{display:none}
+.cj-answer-head>span{font-size:13px;color:#0a736b;font-weight:900}
+.cj-answer-head h2{font-size:25px;color:#143c68;margin:6px 0}
+.cj-answer-head p,.cj-answer-block p{font-size:16px;line-height:1.9;color:#38546a}
+.cj-answer-block{padding:17px 0;border-top:1px solid #d7e7f6}
+.cj-answer-block h3{font-size:19px;color:#173a5e;margin:0 0 10px}
+.cj-answer-block ol{margin:0;padding-right:22px;font-size:16px;line-height:2.1;color:#26445e}
+.cj-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:12px 0}
+.cj-roles article{background:#fff;border:1px solid #d5e1ef;border-radius:15px;padding:16px}
+.cj-roles strong{display:block;color:#0b4c8e;font-size:17px;margin-bottom:5px}
+.cj-roles blockquote{font-size:15px;line-height:1.9;margin:10px 0;padding:11px;background:#eef5fd;border-right:4px solid #ff8c5c;border-radius:8px;color:#26465f}
+.cj-roles small{font-size:13px;line-height:1.85;color:#6f4e35}
+.cj-answer-actions{display:flex;gap:9px;flex-wrap:wrap}
+.cj-answer-actions button{flex:1 1 170px}
+.cj-result-disclaimer{margin-top:15px;border-top:1px dashed #c2d7e8;padding-top:15px;font-size:14px;line-height:1.9;color:#50697e}
+.cj-quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.cj-quick-links button{border:1px solid #d1e0ed;background:#f5f9ff;color:#174a7b;padding:12px 11px;border-radius:14px;min-height:65px;font-size:14px;font-weight:800;text-align:right}
+.cj-quick-links span{float:left}
+.cj-symbol{width:51px;height:51px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(140deg,#e4edff,#fff0e7);font-size:30px;color:#154e91;margin-bottom:15px}
+.cj-side .cj-card>h2{font-size:23px}
+.cj-side .cj-card>p{font-size:15px;color:#3e5b72;margin:11px 0}
+.cj-side-actions>*{flex:1 1 180px}
+.cj-human{border-color:#d1e5df}
+.cj-consent{display:flex;align-items:flex-start;gap:10px;padding:12px 0;color:#355469;font-size:14px;line-height:1.8}
+.cj-consent input{width:20px;height:20px;flex:0 0 20px;accent-color:#0a6b74;margin:3px 0 0}
+.cj-human .cj-outlink{width:100%;background:#126f6d;border-color:#126f6d}
+.cj-human .cj-outlink:hover{background:#118883}
+@media(max-width:900px){.cj-layout{grid-template-columns:1fr}.cj-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}}
+@media(max-width:640px){
+ .cj-heading p{font-size:15px}
+ .cj-layout{gap:13px;margin-top:13px}
+ .cj-side{display:flex}
+ .cj-card{padding:17px;border-radius:20px}
+ .cj-step{gap:11px;margin-bottom:15px}
+ .cj-step>span{width:44px;height:44px;flex-basis:44px;font-size:22px;border-radius:13px}
+ .cj-step h2{font-size:21px}
+ .cj-step p{font-size:13px}
+ .cj-case-form>label{font-size:16px}
+ .cj-case-form textarea{font-size:17px;min-height:150px}
+ .cj-fields{grid-template-columns:1fr;gap:9px;margin:14px 0}
+ .cj-fields label:last-child{grid-column:auto}
+ .cj-fields label{font-size:14px}
+ .cj-controls{flex-direction:column}
+ .cj-controls button{width:100%;flex:0 0 auto}
+ .cj-roles{grid-template-columns:1fr}
+ .cj-quick-links{grid-template-columns:1fr}
+ .cj-quick-links button{min-height:51px;font-size:15px}
+ .cj-answer-block h3{font-size:18px}
+ .cj-answer-head h2{font-size:23px}
+}
+@media(prefers-reduced-motion:reduce){.cj-result{scroll-behavior:auto}}
