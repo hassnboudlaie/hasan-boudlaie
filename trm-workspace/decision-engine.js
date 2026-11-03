@@ -22,7 +22,7 @@ function roleAssessment(db,role){
   const strategic=Number(role.strategic)||0,availability=Number(role.availability)||0,demand=Number(role.demand)||0;
   const isKey=strategic>=4,isBottleneck=availability>0&&availability<=2&&demand>0;
   const kind=isKey&&isBottleneck?"هم Key و هم Bottleneck":isKey?"Key Function":isBottleneck?"Bottleneck Function":"نیازمند بررسی موقعیت در پرتفوی";
-  const missing=[["strategyEvidence","شاهد پیوند نقش با استراتژی"],["marketEvidence","شواهد دسترسی به نیروی کار"],["challenges","موقعیت‌های بحرانی نقش"],["targetGroup","گروه هدف"],["gap","شکاف مهارتی قابل جبران"]].filter(([k])=>!isText(role[k])).map(([,title])=>title);
+  const missing=[["strategyEvidence","شاهد پیوند نقش با استراتژی"],["marketEvidence","شواهد دسترسی به نیروی کار"],["challenges","موقعیت‌های بحرانی نقش"],["targetGroup","گروه هدف"],["competenceGap","شکاف مهارتی قابل جبران"]].filter(([k])=>!isText(role[k])).map(([,title])=>title);
   return {title:"تشخیص نقش: "+val(role.name),summary:"طبقه‌بندی مقدماتی: "+kind+"؛ بر مبنای امتیازهای ثبت‌شده، نه داده زنده بازار. حدود امتیاز در این اپ یک قاعده طراحی است، نه فرمول رسمی Trost.",readiness:missing.length?"نیازمند تکمیل":"برای تصمیم مدیریتی آماده",
     missing,steps:["با مدیر ارشد نقش را در پرتفوی سه‌معیاره تأیید کنید.","از دو یا سه Critical Incident برای تعریف توانایی‌های لازم استفاده کنید.","نیاز روز اول را از قابلیت‌های قابل‌یادگیری تفکیک کنید.","گروه مستقیم، جایگزین و کانال‌های دسترسی را مشخص کنید."],source:book.strategy};
 }
