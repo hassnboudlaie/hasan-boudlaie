@@ -15,3 +15,10 @@ This is a new standalone installable mobile-first experience. Existing course (/
 
 ## Future AI Leadership Coach placeholder (2026-10-30)
 A clear coming-soon card on Home routes to `#/coach`, which is a product-preview page only. It lists future context analysis, AI role-play, and action/reflection. No LLM connection, input, chat, API token, user cases, or data transmission. The preexisting Leadership Studio is unaffected. All interactive coaching functionality remains future scope.
+
+## Case-first learning and coaching desk (2026-11-03)
+- `#/coach` is now an interactive case-first workspace with optional browser speech-to-text, situation/urgency/context selection, and two defensible book-grounded role approaches with trade-offs, questions and next steps. This in-app guidance is a **rule-based educational aid, NOT generative AI**.
+- Case handoff writes a one-time payload (`sabanaft_case_handoff_v1`) on the same origin. The existing Leadership Studio consumes it and creates a new case, retaining existing cases and drafts. Use test/fictitious company situations only.
+- Human coaching is currently a `mailto:` request to the owner. The case description is omitted by default, and attached only if the user explicitly ticks the disclosure box; no booking confirmation or payment integration exists.
+- The ChatGPT option **copies a prompt on request** and opens ChatGPT separately. There is no embedded OpenAI model, automatic transmission, account linkage or API key. True AI and user authentication require a private, funded backend and security review.
+- The nine-session main course now includes detailed signature role-plays and four scenario-aware checks per session with reasons for every option. These use the original course storage and do not change its schema.
