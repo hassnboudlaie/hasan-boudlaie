@@ -1,0 +1,28 @@
+name: Build HB Hub independent PWA icons
+on:
+  push:
+    paths:
+      - 'hub/render_icons.py'
+      - 'hub/icon.svg'
+      - '.github/workflows/hb-hub-icons.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate unique app hub icons
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python hub/render_icons.py
+      - name: Publish PNG files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add hub/icon-192.png hub/icon-512.png
+          git diff --cached --quiet || (git commit -m 'Publish standalone HB Hub PWA icons [skip ci]' && git push)
