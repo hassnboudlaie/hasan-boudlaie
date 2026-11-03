@@ -1,0 +1,35 @@
+name: Saba Naft leadership practice regression
+on:
+  pull_request:
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-regression.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check scripts
+        run: |
+          node --check sabanaft/reflective-app.js
+          node --check sabanaft/assessment-upgrade.js
+          node --check sabanaft/practice-kits.js
+          node --check sabanaft/app/coaching-journey.js
+          node --check sabanaft/app/ai-connector.js
+      - name: Install isolated test-only jsdom
+        run: npm install --prefix /tmp/saba-ci --no-save --no-audit --no-fund jsdom@26.1.0
+      - name: Book alignment, persistence, practice and knowledge checks
+        env:
+          NODE_PATH: /tmp/saba-ci/node_modules
+        run: node sabanaft/verify-reflective.cjs
