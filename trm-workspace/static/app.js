@@ -16,7 +16,7 @@ async function api(path,method='GET',payload){
  if(payload!==undefined){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(payload)}
  let r;try{r=await fetch('/api'+path,opts)}catch{throw new Error('ارتباط با سرور برقرار نشد. اینترنت را بررسی کنید.')}
  let data;try{data=await r.json()}catch{data={}}
- if(!r.ok){if(r.status===401&&st.me){st.me=null;renderPublic('login')}throw new Error(typeof data.detail==='string'?data.detail:'در ثبت اطلاعات مشکلی پیش آمد.')}
+ if(!r.ok){if(r.status===401&&st.me){st.me=null;renderPublic('login')}const e=new Error(typeof data.detail==='string'?data.detail:'در ثبت اطلاعات مشکلی پیش آمد.');e.status=r.status;throw e;}
  return data;
 }
 const node=$('#app');const modalRoot=$('#modal-root');
@@ -131,4 +131,4 @@ let searchTimer;document.addEventListener('input',event=>{if(event.target.id==='
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeModal();if(event.key==='Enter'&&event.target.matches('[role="button"][data-nav]'))goto(event.target.dataset.nav)});
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();st.installPrompt=event});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-(async()=>{try{st.me=await api('/me');let wanted=location.hash.slice(1);st.page=NAV.find(x=>x[0]===wanted)?wanted:'dashboard';await loadData();renderApp()}catch{st.me=null;renderPublic()}})();
+(async()=>{try{st.me=await api('/me');let wanted=location.hash.slice(1);st.page=NAV.find(x=>x[0]===wanted)?wanted:'dashboard';await loadData();renderApp()}catch(e){st.me=null;if(e.status===401){renderPublic();return}node.innerHTML='<main style="max-width:590px;margin:12vh auto;padding:30px;line-height:2"><h1>اتصال به سرور برقرار نشد</h1><p>برای استفاده از TRM Workspace باید نسخه آنلاین و پایگاه داده آن فعال باشد. فایل‌های سورس به‌تنهایی قابل استفاده سازمانی نیستند.</p><p class="muted">'+safe(e.message||'خطای ناشناخته')+'</p><button class="btn" onclick="location.reload()">تلاش دوباره</button></main>'}})();
