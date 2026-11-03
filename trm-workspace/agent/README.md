@@ -1,3 +1,6 @@
+
+> **Current decision: FREE ONLY (2026-11-03).** The Supabase architecture below is retained as an optional future paid-enterprise architecture, but it is NOT the selected deployment route. Go instead to [Firebase Spark free setup](../firebase/README.md). Nothing in this Supabase directory is deployed.
+
 # TRM Enterprise AI Agent — Deployment & Acceptance
 **Status (2026-11-03): code complete for the guarded AI drafting pathway; NOT deployed or production-verified.**
 
