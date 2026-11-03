@@ -1,0 +1,39 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "my-finance",
+  "version": "0.1.0",
+  "description": "Private My Finance voice-based expense, income and loan entry directly through ChatGPT with explicit confirmation and secure financial summary.",
+  "repository": "https://github.com/hassnboudlaie/hasan-boudlaie",
+  "homepage": "https://hassnboudlaie.github.io/hasan-boudlaie/my-finance/",
+  "keywords": [
+    "personal-finance",
+    "voice",
+    "expense",
+    "income",
+    "reporting",
+    "persian"
+  ],
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/voice-finance/SKILL.md",
+      "interface": {
+        "displayName": "My Finance",
+        "shortDescription": "ثبت مالی با ویس در ChatGPT",
+        "longDescription": "Connect your personal My Finance account and record expense, income and loans through chat or voice, with account isolation and explicit approval. Financial summaries are available only with separate consent.",
+        "developerName": "Hasan Boudlaie",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://hassnboudlaie.github.io/hasan-boudlaie/my-finance/",
+        "brandColor": "#087e65",
+        "defaultPrompt": [
+          "امروز ۵۰۰ هزار تومان از بلوبانک خرید کردم؛ در My Finance ثبت کن.",
+          "۵ میلیون تومان از امیر دریافت کردم؛ در مای فاینانس به‌عنوان درآمد ثبت کن.",
+          "خلاصه هزینه‌های ۳۰ روز اخیر من در My Finance را گزارش بده."
+        ]
+      }
+    }
+  }
+}
