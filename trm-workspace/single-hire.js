@@ -16,7 +16,7 @@
  ];
  const STRATEGY={growth:'رشد و توسعه بازار',cost:'رهبری هزینه و بهره‌وری',quality:'کیفیت و تجربه مشتری',innovation:'نوآوری و تمایز'};
  const EVP={tasks:'چالش و استقلال حرفه‌ای',colleagues:'همکاران و یادگیری',benefits:'جبران خدمات و توسعه',values:'فرهنگ و ارزش‌ها',purpose:'معنا و اثر کار',company:'اعتبار و آینده سازمان'};
- const SOURCES={referral:'Employee Referral · معرفی کارکنان',community:'Social Community Recruiting · انجمن حرفه‌ای',social:'Social Media Recruiting · رسانه اجتماعی',campus:'Campus Recruiting · دانشگاه',scouting:'Talent Scouting · استعدادیابی فعال',competitive:'Competitive Intelligence · نقشه بازار',guerilla:'Guerilla Recruiting · اقدام خلاقانه',pr:'Employer PR · روابط عمومی کارفرما',alumni:'Alumni · همکاران پیشین',event:'Talent Community Events · رویداد',direct:'Direct Search · جست‌وجوی مستقیم'};
+ const SOURCES={referral:'Employee Referral · معرفی کارکنان',community:'Social Community Recruiting · انجمن حرفه‌ای',socialmedia:'Social Media Recruiting · رسانه اجتماعی',social:'Social Media (old saved records)',campus:'Campus Recruiting · دانشگاه',scouting:'Talent Scouting · استعدادیابی فعال',competitive:'Competitive Intelligence · نقشه بازار',guerilla:'Guerilla Recruiting · اقدام خلاقانه',pr:'Employer PR · روابط عمومی کارفرما',alumni:'Alumni · همکاران پیشین',event:'Talent Community Events · رویداد',direct:'Direct Search · جست‌وجوی مستقیم'};
  const DECISIONS={offer:'پیشنهاد همکاری',hired:'استخدام تأیید شد',nurture:'حفظ رابطه برای آینده',hold:'نیاز به بررسی بیشتر',closed:'عدم ادامه فرایند'};
  const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const today=()=>new Date().toISOString().slice(0,10);
