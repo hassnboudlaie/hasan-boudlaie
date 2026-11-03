@@ -26,56 +26,85 @@
     </header>
 
     <main id="app" tabindex="-1">
-      <section class="page active" data-page="home">
-        <div class="hero">
+      <section class="page active visual-home" data-page="home">
+        <div class="hero visual-hero">
           <div class="hero-overlay"></div>
-          <div class="hero-content">
-            <span class="pill">زیبایی با انتخاب آگاهانه</span>
-            <h1>کیفیت بالا، قیمت رقابتی، بدون خدمات غیرضروری</h1>
-            <p>مشاوره بر اساس نیاز واقعی شما؛ نه فروش بیشتر.</p>
-            <div class="hero-actions">
-              <button class="primary" data-go="booking">درخواست نوبت</button>
-              <button class="glass" data-go="services">مشاهده خدمات</button>
+          <div class="hero-content compact-copy">
+            <span class="pill">زیبایی، دقیق و آگاهانه</span>
+            <h1>زیباییِ شما، با انتخاب درست</h1>
+            <div class="hero-actions icon-actions">
+              <button class="primary" data-go="booking"><span>📅</span> نوبت</button>
+              <button class="glass" data-go="services"><span>✨</span> خدمات</button>
             </div>
           </div>
         </div>
 
-        <section class="install-card" id="installCard">
+        <section class="visual-shortcuts" aria-label="دسترسی سریع">
+          <button data-go="booking"><span class="shortcut-icon">📅</span><strong>نوبت</strong></button>
+          <button data-go="services"><span class="shortcut-icon">✨</span><strong>خدمات</strong></button>
+          <button data-go="products"><span class="shortcut-icon">🧴</span><strong>محصولات</strong></button>
+          <button data-go="care"><span class="shortcut-icon">💗</span><strong>مراقبت</strong></button>
+          <button data-go="contact"><span class="shortcut-icon">💬</span><strong>ارتباط</strong></button>
+        </section>
+
+        <section class="photo-strip">
+          <button class="photo-story" data-service="فیلر">
+            <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=700&q=84" alt="فیلر" loading="lazy">
+            <span>فیلر</span>
+          </button>
+          <button class="photo-story" data-service="بوتاکس">
+            <img src="https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=700&q=84" alt="بوتاکس" loading="lazy">
+            <span>بوتاکس</span>
+          </button>
+          <button class="photo-story" data-service="جوان‌سازی">
+            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=700&q=84" alt="جوان‌سازی" loading="lazy">
+            <span>جوان‌سازی</span>
+          </button>
+          <button class="photo-story" data-service="لیزر موهای زائد">
+            <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=700&q=84" alt="لیزر" loading="lazy">
+            <span>لیزر</span>
+          </button>
+          <button class="photo-story" data-service="فیشیال">
+            <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=84" alt="فیشیال" loading="lazy">
+            <span>فیشیال</span>
+          </button>
+        </section>
+
+        <section class="visual-feature-card">
+          <img src="https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=84" alt="مراقبت پوست" loading="lazy">
+          <div class="visual-feature-overlay">
+            <span>💗</span>
+            <strong>برنامه مراقبتی من</strong>
+            <button data-go="care">مشاهده</button>
+          </div>
+        </section>
+
+        <section class="mosaic-grid">
+          <button class="mosaic-card large" data-go="services">
+            <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=84" alt="خدمات زیبایی" loading="lazy">
+            <span>✨ خدمات</span>
+          </button>
+          <button class="mosaic-card" data-go="products">
+            <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=700&q=84" alt="محصولات مراقبتی" loading="lazy">
+            <span>🧴 محصولات</span>
+          </button>
+          <button class="mosaic-card" data-go="booking">
+            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=700&q=84" alt="نوبت کلینیک" loading="lazy">
+            <span>📅 نوبت</span>
+          </button>
+        </section>
+
+        <section class="trust-chip">
+          <span>🩺</span>
+          <strong>فقط آنچه واقعاً لازم است.</strong>
+        </section>
+
+        <section class="install-card visual-install" id="installCard">
           <div>
-            <strong>این اپ را روی گوشی نصب کنید</strong>
-            <p>دسترسی سریع به خدمات، نوبت‌ها و مراقبت‌های شما.</p>
+            <strong>📲 نصب روی گوشی</strong>
+            <p>برای دسترسی سریع‌تر</p>
           </div>
-          <button class="primary compact" id="installCardBtn">نصب اپ</button>
-        </section>
-
-        <section class="quick-grid">
-          <button class="quick-card" data-go="booking"><span>📅</span><strong>نوبت من</strong><small>درخواست نوبت جدید</small></button>
-          <button class="quick-card" data-go="services"><span>✨</span><strong>خدمات</strong><small>انتخاب آگاهانه خدمت</small></button>
-          <button class="quick-card" data-go="products"><span>🧴</span><strong>محصولات</strong><small>مراقبت پوست و مو</small></button>
-          <button class="quick-card" data-go="care"><span>💗</span><strong>برنامه مراقبتی من</strong><small>پیگیری بعد از خدمت</small></button>
-          <button class="quick-card wide" data-go="contact"><span>💬</span><strong>ارتباط با کلینیک</strong><small>تماس، واتساپ و شبکه‌های اجتماعی</small></button>
-        </section>
-
-        <section class="trust-card">
-          <div class="doctor-avatar">پ</div>
-          <div>
-            <span class="eyebrow">اصل کلیدی کلینیک</span>
-            <h2>هر کاری که لازم نیست، انجام نمی‌دهیم.</h2>
-            <p>پزشک ابتدا شرایط شما را بررسی می‌کند و فقط خدمات متناسب با نیاز واقعی شما پیشنهاد می‌شود.</p>
-          </div>
-        </section>
-
-        <section class="section-block">
-          <div class="section-head">
-            <h2>خدمات پرطرفدار</h2>
-            <button class="text-btn" data-go="services">همه خدمات</button>
-          </div>
-          <div class="service-strip">
-            <button data-service="فیلر"><span>💉</span><strong>فیلر</strong><small>فرم‌دهی و جوان‌سازی</small></button>
-            <button data-service="بوتاکس"><span>🌿</span><strong>بوتاکس</strong><small>کاهش خطوط پویا</small></button>
-            <button data-service="جوان‌سازی"><span>✨</span><strong>جوان‌سازی</strong><small>برنامه چندجلسه‌ای</small></button>
-            <button data-service="لیزر موهای زائد"><span>☀️</span><strong>لیزر</strong><small>جلسات منظم</small></button>
-          </div>
+          <button class="primary compact" id="installCardBtn">نصب</button>
         </section>
       </section>
 
