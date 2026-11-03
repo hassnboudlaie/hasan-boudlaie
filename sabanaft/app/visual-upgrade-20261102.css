@@ -182,3 +182,9 @@ button{touch-action:manipulation}
  #homeView .feature-content strong{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){#homeView .feature-card,#homeView .hero-action{transition:none}}
+
+/* Case-first gateway — the learning library remains one tap away. */
+#homeView .hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:7px}
+#homeView .hero-secondary{min-height:55px;border:1px solid #ffffffa8;color:#fff;background:#ffffff1d;border-radius:15px;padding:10px 21px;font-size:16px;font-weight:900;backdrop-filter:blur(9px)}
+#homeView .hero-secondary:hover{background:#ffffff30}
+@media(max-width:700px){#homeView .hero-actions{align-items:stretch;flex-direction:column}#homeView .hero-secondary{min-height:50px}#homeView .hero-action{align-self:stretch}}
