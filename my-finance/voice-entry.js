@@ -277,6 +277,7 @@ function saveLoan(){
  hasSaved=true;$('voice-loan-confirm').disabled=true;
  try{
   bridge.commitData({...data,receivables:[...(data.receivables||[]),claim],tx:entries});
+  document.dispatchEvent(new CustomEvent('myfinance:voice-saved',{detail:{kind:'loan_given',id}}));
   $('quick').value='';$('voice-review').hidden=true;$('voice-loan-review').hidden=true;
   status('✓ قرض در مطالبات ثبت شد.'+(tx?' خروج وجه نیز در حساب مبدأ ثبت شد؛ در گزارش هزینه حساب نمی‌شود.':' به‌دلیل نامشخص‌بودن حساب، موجودی تغییر نکرد.'));
  }catch(e){hasSaved=false;updateLoanReview();status('ثبت قرض ناموفق: '+String(e.message||e),true)}
@@ -585,7 +586,7 @@ function save(){
  const item={id:crypto.randomUUID(),account,currency:v.unit,amount:v.stored,kind,status:'completed',scope,category,memo:note,date:occurredAt,source:'voice'};
  // No network credentials or private data are written to the public repository.
  hasSaved=true;$('voice-confirm').disabled=true;
- try{bridge.commitData({...data,tx:[...(data.tx||[]),item]});$('quick').value='';$('voice-review').hidden=true;
+ try{bridge.commitData({...data,tx:[...(data.tx||[]),item]});document.dispatchEvent(new CustomEvent('myfinance:voice-saved',{detail:{kind,id:item.id}}));$('quick').value='';$('voice-review').hidden=true;
   status('✓ تراکنش با تأیید شما ثبت شد و برای همگام‌سازی امن آماده است.');}
  catch(e){hasSaved=false;updateDetails();status('ثبت انجام نشد: '+String(e.message||e),true)}
 }
