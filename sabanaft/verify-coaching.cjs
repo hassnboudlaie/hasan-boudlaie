@@ -18,6 +18,7 @@ async function run(){
  // PWA case intake and deterministic coaching answer, with AI intentionally disabled.
  const {w,errors}=env(read('app/index.html'),'app/');
  for(const f of ['reflective-content.js','app/app.js','app/coaching-journey.js','app/ai-connector.js'])w.eval(read(f));
+ w.document.dispatchEvent(new w.Event('DOMContentLoaded',{bubbles:true}));
  assert.equal(w.document.getElementById('cj-ask-ai').disabled,true,'AI remains disabled without secure backend/login');
  w.location.hash='#/coach';w.dispatchEvent(new w.HashChangeEvent('hashchange'));
  const $=id=>w.document.getElementById(id);
