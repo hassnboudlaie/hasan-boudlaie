@@ -22,7 +22,7 @@ const elements=new Map();
 function element(id){
  if(elements.has(id))return elements.get(id);
  const e={id,value:'',hidden:false,disabled:false,textContent:'',title:'',dataset:{},
-  style:{},classList:{contains:()=>true,toggle(){}},addEventListener(){},
+  style:{},classList:{contains:()=>true,toggle(){}},events:{},addEventListener(type,fn){this.events[type]=fn;},
   setAttribute(){},append(){},replaceChildren(){},scrollIntoView(){}};
  elements.set(id,e);return e;
 }
@@ -49,15 +49,13 @@ assert.equal(element('voice-confirm').disabled,false,'review should allow a vali
 for(const raw of ['۱۵۰۰۰۰۰','١٥٠٠٠٠٠','۱٬۵۰۰٬۰۰۰','1,500,000','۱.۵۰۰.۰۰۰','1500000']){
  element('voice-amount').value=raw;
  element('voice-amount').value=raw;
- // Trigger the review path via the installed input callback.
- const before=voiceSrc.indexOf('function updateDetails(){');
- assert.ok(before>0);
- vm.runInNewContext('updateDetails()',context);
+ // Trigger the same registered input handler used on the real iPhone.
+ element('voice-amount').events.input();
  assert.equal(element('voice-confirm').disabled,false,'localized positive amount rejected: '+raw);
 }
 for(const raw of ['۱/۵','۱٫۲٫۳','-۱۵۰۰۰۰۰','۰','یک میلیون','']){
  element('voice-amount').value=raw;
- vm.runInNewContext('updateDetails()',context);
+ element('voice-amount').events.input();
  assert.equal(element('voice-confirm').disabled,true,'unsafe amount must be blocked: '+raw);
 }
 const vague=voice.parse('۱/۵ کرایه',[]);
