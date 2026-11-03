@@ -19,7 +19,7 @@ assert(rules.includes('allow write: if false; // Memberships'),'forbid membershi
 assert(rules.includes("['owner','admin','recruiter']"),'staff-only cloud writes');
 assert(rules.includes("['roles','vacancies','evps','tasks']"),'personal profiles never synced');
 assert(app.includes("cloudPushStructures()")&&app.includes("cloudPullStructures()"),'explicit sync actions');
-for(const p of ['firebase-free-client.js?v=4.0.0','cloud-agent-client.js?v=4.0.0','agent-config.js?v=4.0.0','app.js?v=4.0.0']) {
+for(const p of ['firebase-free-client.js?v=4.0.0','cloud-agent-client.js?v=4.0.0','agent-config.js?v=4.0.0','app.js?v=4.1.1','single-hire.js?v=4.1.0','trost-book-workflows.js?v=4.1.1','trost-upgrade.css?v=4.1.1']) {
  assert(html.includes(p),p+' should be in HTML');
  assert(sw.includes(p),p+' should be cached in isolated service worker');
 }
