@@ -2,12 +2,12 @@
 'use strict';
 (()=>{
 const KEY='hb-trm-workspace-localpilot-v1';
-const pages={home:['خانه','⌂'],agent:['دستیار TRM','✧'],vacancies:['فرصت‌های استخدام','▣'],roles:['نقش‌های حیاتی','◎'],evp:['EVP','✦'],sourcing:['جست‌وجوی فعال','⌕'],talents:['استعدادها','♙'],contacts:['حفظ رابطه','♡'],experience:['تجربه نامزد','♢'],reports:['داشبورد','▥'],roadmap:['نقشه اجرا','☷'],playbook:['کتاب در عمل','▤'],settings:['تنظیمات','⚙']};
+const pages={home:['خانه','⌂'],agent:['دستیار TRM','✧'],tasks:['برنامه اقدام','✓'],vacancies:['فرصت‌های استخدام','▣'],roles:['نقش‌های حیاتی','◎'],evp:['EVP','✦'],sourcing:['جست‌وجوی فعال','⌕'],talents:['استعدادها','♙'],contacts:['حفظ رابطه','♡'],experience:['تجربه نامزد','♢'],reports:['داشبورد','▥'],roadmap:['نقشه اجرا','☷'],playbook:['کتاب در عمل','▤'],settings:['تنظیمات','⚙']};
 const sources={referral:'معرفی همکار',linkedin:'شبکه حرفه‌ای',campus:'دانشگاه',alumni:'همکار سابق',event:'رویداد',scouting:'استعدادیابی',direct:'جست‌وجوی مستقیم',other:'سایر'};
 const stages={identified:'شناسایی',contacted:'تماس اولیه',nurturing:'در ارتباط',interested:'علاقه‌مند',opportunity:'فرصت شغلی',selection:'ارزیابی',hired:'استخدام',declined:'منصرف'};
 const priorities={A:'اولویت A',B:'اولویت B',C:'اولویت C'};
 const types={call:'تماس',meeting:'جلسه',email:'ایمیل',followup:'پیگیری',note:'یادداشت'};
-const fresh=()=>({version:2,org:'سازمان من',people:[],roles:[],vacancies:[],analyses:[],evps:[],activities:[],surveys:[],sourcingPlans:[],journeys:[],roadmapChecks:{},roi:{},createdAt:new Date().toISOString()});
+const fresh=()=>({version:2,org:'سازمان من',people:[],roles:[],vacancies:[],analyses:[],tasks:[],evps:[],activities:[],surveys:[],sourcingPlans:[],journeys:[],roadmapChecks:{},roi:{},createdAt:new Date().toISOString()});
 const dateNow=()=>{const d=new Date(),m=String(d.getMonth()+1).padStart(2,'0');return `${d.getFullYear()}-${m}-${String(d.getDate()).padStart(2,'0')}`};
 const id=()=>globalThis.crypto?.randomUUID?.()||('t'+Date.now().toString(36)+Math.random().toString(36).slice(2));
 const el=(sel)=>document.querySelector(sel);
@@ -22,8 +22,8 @@ const inp=(name,label,value='',type='text',extra='')=>`<div class="formgroup"><l
 const txt=(name,label,value='',hint='')=>`<div class="formgroup"><label>${esc(label)}</label><textarea name="${esc(name)}">${esc(value)}</textarea>${hint?`<small>${esc(hint)}</small>`:''}</div>`;
 const opts=(records,attr)=>Object.fromEntries(records.map(x=>[x.id,x[attr]||'بدون عنوان']));
 let db;try{db=JSON.parse(localStorage.getItem(KEY)||'null')||fresh();if(!db||!Array.isArray(db.people)||!Array.isArray(db.roles)||!Array.isArray(db.activities))db=fresh();}catch{db=fresh()}
-for(const k of ['people','roles','vacancies','analyses','evps','activities','surveys','sourcingPlans','journeys'])if(!Array.isArray(db[k]))db[k]=[];if(!db.roadmapChecks||typeof db.roadmapChecks!=='object')db.roadmapChecks={};if(!db.roi||typeof db.roi!=='object')db.roi={};
-const ui={page:'home',search:'',stage:'',detail:null,tab:'history',deferred:null,coachRole:'',coachVacancy:'',lastCoachResult:null};
+for(const k of ['people','roles','vacancies','analyses','tasks','evps','activities','surveys','sourcingPlans','journeys'])if(!Array.isArray(db[k]))db[k]=[];if(!db.roadmapChecks||typeof db.roadmapChecks!=='object')db.roadmapChecks={};if(!db.roi||typeof db.roi!=='object')db.roi={};
+const ui={page:'home',search:'',stage:'',detail:null,tab:'history',deferred:null,coachRole:'',coachVacancy:'',lastCoachResult:null,lastAnalysisId:''};
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(db));return true}catch(e){alert('فضای ذخیره‌سازی دستگاه کافی نیست یا مرورگر ذخیره را مسدود کرده است. لطفاً خروجی پشتیبان بگیرید.');return false}}
 function toast(m){el('#toast-root').innerHTML=`<div class="toast">${esc(m)}</div>`;setTimeout(()=>{const x=el('#toast-root');if(x)x.innerHTML=''},3300)}
 function overlay(title,body){el('#modal-root').innerHTML=`<div class="modal-overlay" data-close-overlay="1"><section class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="modalhead"><h2>${esc(title)}</h2><button class="x" data-action="close" aria-label="بستن">×</button></div>${body}</section></div>`;el('.modal')?.scrollTo(0,0)}
@@ -31,13 +31,13 @@ function close(){el('#modal-root').innerHTML=''}
 function go(page){ui.page=pages[page]?page:'home';ui.detail=null;ui.search='';ui.stage='';location.hash=ui.page==='home'?'':ui.page;render();window.scrollTo({top:0,behavior:'smooth'})}
 function iconText(n){return `<span class="nav-icon">${pages[n][1]}</span>`}
 function navBtn(n,bottom=false){let [name,sym]=pages[n];return `<button class="${bottom?'':'nav-link '}${ui.page===n?'active':''}" type="button" data-go="${n}">${bottom?`<span>${sym}</span>${name}`:`${iconText(n)}${name}`}</button>`}
-function siteShell(){const n=pages[ui.page]||pages.home;return `<div class="shell"><aside class="sidebar"><div class="logo"><img src="./icon-192.png?v=trm-logo-20261103" alt=""><div>مدیریت روابط با استعداد<small>TRM WORKSPACE</small></div></div><div class="org-label">فضای فعلی<strong>${esc(db.org)}</strong></div><nav class="nav-list" aria-label="منوی اصلی">${['home','agent','vacancies','roles','evp','talents','contacts','reports'].map(p=>navBtn(p)).join('')}</nav></aside><div class="main"><header class="top"><div><div class="mobile-brand"><img src="./icon-192.png?v=trm-logo-20261103" alt=""> TRM Workspace</div><div class="crumb">${esc(db.org)} / ${n[0]}</div><h1 class="title-top">${n[0]}</h1></div><div class="actions">${ui.page==='home'?'':`<button class="btn secondary small float-back" data-go="home">⌂ خانه</button>`}<button class="btn secondary small" data-go="settings">تنظیمات</button><button class="btn small" data-action="install">نصب</button></div></header><div id="content">${content()}</div><div class="footer-note">اقتباس اجرایی مستقل از مدل Trost · داده‌های آزمایشی در همین دستگاه ذخیره می‌شوند.</div></div><nav class="bottombar" aria-label="ناوبری موبایل">${['home','agent','vacancies','talents','contacts'].map(x=>navBtn(x,true)).join('')}</nav></div>`}
+function siteShell(){const n=pages[ui.page]||pages.home;return `<div class="shell"><aside class="sidebar"><div class="logo"><img src="./icon-192.png?v=trm-logo-20261103" alt=""><div>مدیریت روابط با استعداد<small>TRM WORKSPACE</small></div></div><div class="org-label">فضای فعلی<strong>${esc(db.org)}</strong></div><nav class="nav-list" aria-label="منوی اصلی">${['home','agent','tasks','vacancies','roles','evp','talents','contacts','reports'].map(p=>navBtn(p)).join('')}</nav></aside><div class="main"><header class="top"><div><div class="mobile-brand"><img src="./icon-192.png?v=trm-logo-20261103" alt=""> TRM Workspace</div><div class="crumb">${esc(db.org)} / ${n[0]}</div><h1 class="title-top">${n[0]}</h1></div><div class="actions">${ui.page==='home'?'':`<button class="btn secondary small float-back" data-go="home">⌂ خانه</button>`}<button class="btn secondary small" data-go="settings">تنظیمات</button><button class="btn small" data-action="install">نصب</button></div></header><div id="content">${content()}</div><div class="footer-note">اقتباس اجرایی مستقل از مدل Trost · داده‌های آزمایشی در همین دستگاه ذخیره می‌شوند.</div></div><nav class="bottombar" aria-label="ناوبری موبایل">${['home','agent','vacancies','talents','contacts'].map(x=>navBtn(x,true)).join('')}</nav></div>`}
 function notice(){return `<div class="notice"><strong>نسخه آزمایشی قابل نصب:</strong> داده‌ها فقط در مرورگر همین دستگاه ذخیره می‌شوند؛ هنوز حساب کاربری مشترک و فضای ابری نداریم. برای اطلاعات واقعی و حساس داوطلبان از نسخه سازمانی امن استفاده کنید. از بخش «تنظیمات» نسخه پشتیبان بگیرید.</div>`}
 function empty(emoji,head,text,button=''){return `<div class="blank"><span class="em">${emoji}</span><strong>${head}</strong>${text}${button?`<p>${button}</p>`:''}</div>`}
 function section(t,action=''){return `<div class="section-heading"><h2>${esc(t)}</h2>${action}</div>`}
 function art(){return `<div class="art" aria-hidden="true"><svg viewBox="0 0 330 260"><g fill="none" stroke="#8bbaa8" stroke-width="3" opacity=".68"><path d="M162 50L60 125 156 213 270 114Z M60 125L270 114 M156 213L162 50" /></g><circle cx="162" cy="50" r="31" fill="#f1d1a3"/><circle cx="60" cy="125" r="27" fill="#b4dcd0"/><circle cx="270" cy="114" r="29" fill="#f4dba7"/><circle cx="156" cy="213" r="33" fill="#9dd4c0"/><g fill="#1e5d5c"><circle cx="162" cy="41" r="10"/><path d="M144 62q18-22 36 0"/><circle cx="60" cy="119" r="8"/><path d="M44 142q16-19 32 0"/><circle cx="270" cy="108" r="9"/><path d="M253 132q17-19 34 0"/><circle cx="156" cy="204" r="10"/><path d="M136 230q20-22 40 0"/></g></svg></div>`}
 function home(){
- const due=db.activities.filter(x=>x.nextDate&&x.nextDate<=dateNow()&&x.state!=="done");
+ const due=db.activities.filter(x=>x.nextDate&&x.nextDate<=dateNow()&&x.state!=="done"); const openTasks=db.tasks.filter(t=>t.status!=='done').sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'));
  const boxes=[
  ['agent','✧','دستیار تصمیم‌یار','تحلیل EVP، Vacancy و رابطه‌ها'],
  ['vacancies','▣','فرصت‌های استخدام','از نیاز واقعی تا اقدام'],
@@ -48,8 +48,8 @@ function home(){
  <div class="command-grid">${boxes.map(([go,em,title,sub])=>`<button type="button" class="command-tile" data-go="${go}"><span class="em">${em}</span><b>${title}</b><small>${sub}</small><span class="tile-arrow">←</span></button>`).join('')}</div>
  <div class="overview-head">${section('امروز در فضای کاری شما',`<button class="btn secondary small" data-go="reports">مشاهده گزارش</button>`)}</div>
  <div class="metrics"><div class="metric"><span>نقش‌ها</span><strong>${fmt(db.roles.length)}</strong></div><div class="metric"><span>فرصت‌های فعال</span><strong>${fmt((db.vacancies||[]).filter(v=>v.status!=='filled'&&v.status!=='closed').length)}</strong></div><div class="metric"><span>استعدادها</span><strong>${fmt(db.people.length)}</strong></div><div class="metric"><span>پیگیری‌های امروز و معوق</span><strong>${fmt(due.length)}</strong></div></div>
- ${section('اقدام بعدی')}<div class="panel action-panel">${due.length?due.slice(0,4).map(activityRow).join(''):db.roles.length?`<p>برای اولین نقش حیاتی، EVP هدفمند تدوین کنید یا فرصت شغلی جدید ثبت کنید.</p><div class="actions"><button class="btn secondary" data-go="evp">ساخت EVP</button><button class="btn secondary" data-action="add-vacancy">+ فرصت جدید</button></div>`:`<p>از استراتژی سازمان شروع کنید و نقش‌هایی را شناسایی کنید که ارزش رقابتی یا دشواری تأمین بالایی دارند.</p><button class="btn" data-action="add-role">+ تعریف اولین نقش</button>`}</div>
- <div class="home-shortcuts"><button data-go="sourcing">جست‌وجوی فعال</button><button data-go="experience">تجربه نامزد</button><button data-go="roadmap">استقرار TRM</button><button data-go="playbook">راهنمای علمی</button></div>`;
+ ${section('اقدام بعدی')}<div class="panel action-panel">${due.length?due.slice(0,4).map(activityRow).join(''):openTasks.length?openTasks.slice(0,4).map(taskRow).join('')+`<button class="btn secondary small" data-go="tasks">همه اقدام‌ها</button>`:db.roles.length?`<p>برای اولین نقش حیاتی، EVP هدفمند تدوین کنید یا فرصت شغلی جدید ثبت کنید.</p><div class="actions"><button class="btn secondary" data-go="evp">ساخت EVP</button><button class="btn secondary" data-action="add-vacancy">+ فرصت جدید</button></div>`:`<p>از استراتژی سازمان شروع کنید و نقش‌هایی را شناسایی کنید که ارزش رقابتی یا دشواری تأمین بالایی دارند.</p><button class="btn" data-action="add-role">+ تعریف اولین نقش</button>`}</div>
+ <div class="home-shortcuts"><button data-go="tasks">برنامه اقدام</button><button data-go="sourcing">جست‌وجوی فعال</button><button data-go="experience">تجربه نامزد</button><button data-go="roadmap">استقرار TRM</button><button data-go="playbook">راهنمای علمی</button></div>`;
 }
 function personRow(c){let role=db.roles.find(r=>r.id===c.roleId);return `<article class="record"><div class="primary"><b>${esc(c.name)}</b><small>${esc([c.title,c.company].filter(Boolean).join(' · ')||'بدون عنوان')}${role?' · '+esc(role.name):''}</small></div><div class="meta"><span class="chip ${c.priority==='A'?'alt':''}">${esc(choose(priorities,c.priority))}</span><span class="chip">${esc(choose(stages,c.stage))}</span><button class="btn secondary small" data-action="view-person" data-id="${esc(c.id)}">مشاهده</button></div></article>`}
 function talents(){let q=ui.search.toLocaleLowerCase();const people=db.people.filter(x=>(!q||[x.name,x.title,x.company,x.skills,x.city].some(v=>String(v||'').toLocaleLowerCase().includes(q)))&&(!ui.stage||x.stage===ui.stage));return `${section('بانک استعدادها',`<button class="btn" data-action="add-person">+ استعداد جدید</button>`)}<div class="filters"><input id="find-person" class="field-input" placeholder="جست‌وجو: نام، تخصص، سازمان…" value="${esc(ui.search)}" autocomplete="off"><select id="stage-filter"><option value="">همه مراحل رابطه</option>${Object.entries(stages).map(([k,v])=>`<option value="${k}" ${ui.stage===k?'selected':''}>${v}</option>`).join('')}</select></div><div id="people-list" class="record-list">${people.length?people.map(personRow).join(''):empty('👥',db.people.length?'استعداد مطابق جست‌وجو پیدا نشد':'هنوز استعدادی ثبت نشده','اولین فرد را ثبت کنید و برای ارتباط بعدی برنامه بگذارید.')}</div><p class="smalltext muted">اولویت A/B/C را براساس شواهد حرفه‌ای تعیین کنید، نه صرفاً برداشت شخصی. قبل از تماس، اجازه و ترجیح فرد را رعایت کنید.</p>`}
@@ -202,7 +202,39 @@ function agent(){
  <section id="coach-result" class="panel coach-output">${empty('✧','آماده تحلیل','نوع تصمیم را انتخاب کنید تا خروجی عملیاتی، اطلاعات ناقص و گام‌های بعدی ساخته شود.')}</section></div>
  ${recent.length?`${section('تحلیل‌های قبلی')}<div class="record-list">${recent.map(x=>`<article class="record"><div class="primary"><b>${esc(x.result.title||'تحلیل')}</b><small>${fd(x.createdAt?.slice(0,10))}</small></div><button class="btn secondary small" data-action="show-analysis" data-id="${esc(x.id)}">مشاهده</button></article>`).join('')}</div>`:''}`;
 }
-function content(){return ({home,roles,evp,vacancies,agent,sourcing,talents,contacts,experience,reports,roadmap:implementation,playbook,settings}[ui.page]||home)()}
+
+function taskRow(t){
+ const role=db.roles.find(r=>r.id===t.roleId);
+ return `<article class="task-record"><strong>${esc(t.title)}</strong><small>${role?esc(role.name)+' · ':''}${t.owner?'مسئول: '+esc(t.owner)+' · ':''}${t.due?'موعد: '+fd(t.due):'بدون موعد'}</small>${t.why?`<p>${esc(t.why)}</p>`:''}<div class="actions"><button class="btn secondary small" data-action="edit-task" data-id="${esc(t.id)}">ویرایش</button>${t.status!=='done'?`<button class="btn secondary small" data-action="complete-task" data-id="${esc(t.id)}">تکمیل ✓</button>`:''}</div></article>`;
+}
+function tasks(){
+ const statuses={open:'برای انجام',inprogress:'در حال انجام',done:'تکمیل‌شده'};
+ const pending=db.tasks.filter(t=>t.status!=='done');
+ return `${section('برنامه اقدام TRM',`<button class="btn" data-action="add-task">+ اقدام جدید</button>`)}
+ <div class="metrics"><div class="metric"><span>اقدامات باز</span><strong>${fmt(pending.length)}</strong></div><div class="metric"><span>سررسیدشده</span><strong>${fmt(pending.filter(t=>t.due&&t.due<=dateNow()).length)}</strong></div><div class="metric"><span>در حال انجام</span><strong>${fmt(db.tasks.filter(t=>t.status==='inprogress').length)}</strong></div><div class="metric"><span>تکمیل‌شده</span><strong>${fmt(db.tasks.filter(t=>t.status==='done').length)}</strong></div></div>
+ <div class="task-board">${Object.entries(statuses).map(([code,label])=>`<section class="panel"><h3>${label}</h3><div class="record-list">${db.tasks.filter(t=>t.status===code).map(t=>taskRow(t)).join('')||empty('✓','موردی ثبت نشده','')}</div></section>`).join('')}</div>
+ <p class="muted smalltext">پیشنهادهای دستیار تنها با تأیید شما در برنامه اقدام ثبت می‌شوند؛ هیچ اعلان یا پیامی به دیگران ارسال نمی‌شود.</p>`;
+}
+function taskForm(uid){
+ const t=db.tasks.find(x=>x.id===uid)||{};
+ overlay(uid?'ویرایش اقدام TRM':'ثبت اقدام TRM',`<form data-form="task" data-id="${esc(uid||'')}" class="forms">${inp('title','اقدام مشخص',t.title||'','text','required maxlength="190"')}
+ ${sel('roleId','نقش مرتبط (اختیاری)',opts(db.roles,'name'),t.roleId||'')}
+ <div class="formrow">${inp('owner','مسئول پیگیری',t.owner||'','text','maxlength="100"')}${inp('due','موعد',t.due||'','date')}</div>
+ ${sel('status','وضعیت',{open:'برای انجام',inprogress:'در حال انجام',done:'تکمیل‌شده'},t.status||'open','')}
+ ${txt('why','دلیل تصمیم',t.why||'')}${modalFoot()}</form>`);
+}
+function approveCoachActions(){
+ const r=ui.lastCoachResult,aid=ui.lastAnalysisId;
+ if(!r||!aid||!(r.steps||[]).length){toast('ابتدا تحلیل را اجرا کنید.');return}
+ if(db.tasks.some(t=>t.analysisId===aid)){toast('این اقدامات قبلاً ثبت شده‌اند.');go('tasks');return}
+ if(!confirm('اقدام‌های پیشنهادی به برنامه کار افزوده شوند؟ هیچ پیام یا اعلان خارجی ارسال نمی‌شود.'))return;
+ const arr=Array.isArray(r.actionObjects)&&r.actionObjects.length?r.actionObjects:r.steps.map(step=>({title:step,targetDays:7,why:r.source}));
+ for(const a of arr){const days=Math.max(0,Math.min(365,Number(a.targetDays)||7)),due=new Date();due.setDate(due.getDate()+days);
+ db.tasks.push({id:id(),title:trim(a.title||'اقدام پیشنهادی').slice(0,190),owner:trim(a.ownerHint||'').slice(0,100),due:due.toISOString().slice(0,10),status:'open',roleId:ui.coachRole||'',vacancyId:ui.coachVacancy||'',analysisId:aid,why:trim(a.why||r.source||'').slice(0,650),createdAt:new Date().toISOString()});}
+ persist();go('tasks');toast('برنامه اقدام برای اجرا ثبت شد.');
+}
+
+function content(){return ({home,roles,evp,vacancies,agent,tasks,sourcing,talents,contacts,experience,reports,roadmap:implementation,playbook,settings}[ui.page]||home)()}
 
 function render(){el('#app').innerHTML=siteShell();}
 function vacancyForm(uid){
@@ -214,14 +246,14 @@ function vacancyForm(uid){
 function coachResultHTML(r){
  const steps=(r.steps||[]).map(s=>`<li>${esc(s)}</li>`).join('');
  const miss=(r.missing||[]).map(s=>`<li>${esc(s)}</li>`).join('');
- return `<div class="coach-answer"><span class="chip alt">${esc(r.readiness||'نتیجه')}</span><h3>${esc(r.title||'تحلیل')}</h3><p>${esc(r.summary||'')}</p>${r.draft?`<div class="coach-draft"><b>پیش‌نویس مشروط</b><p>${esc(r.draft)}</p></div>`:''}${miss?`<details open><summary>داده‌های لازم برای تصمیم معتبر (${fmt(r.missing.length)})</summary><ul>${miss}</ul></details>`:''}<h4>Next Best Actions</h4><ol>${steps}</ol><div class="coach-source">مبنای علمی: ${esc(r.source||'Trost (2014)')}</div><div class="actions"><button class="btn secondary small" data-action="copy-coach-result">کپی نتیجه</button><button class="btn secondary small" data-go="roles">نقش‌ها</button><button class="btn secondary small" data-go="evp">EVP</button><button class="btn secondary small" data-go="talents">Talent Pool</button><button class="btn secondary small" data-go="sourcing">جست‌وجوی فعال</button></div></div>`;
+ return `<div class="coach-answer"><span class="chip alt">${esc(r.readiness||'نتیجه')}</span><h3>${esc(r.title||'تحلیل')}</h3><p>${esc(r.summary||'')}</p>${r.draft?`<div class="coach-draft"><b>پیش‌نویس مشروط</b><p>${esc(r.draft)}</p></div>`:''}${miss?`<details open><summary>داده‌های لازم برای تصمیم معتبر (${fmt(r.missing.length)})</summary><ul>${miss}</ul></details>`:''}<h4>Next Best Actions</h4><ol>${steps}</ol><div class="coach-source">مبنای علمی: ${esc(r.source||'Trost (2014)')}</div><div class="actions"><button class="btn secondary small" data-action="copy-coach-result">کپی نتیجه</button>${ui.page==='agent'&&ui.lastCoachResult===r?'<button class="btn small" data-action="approve-coach-actions">ثبت برنامه اقدام با تأیید من</button>':''}<button class="btn secondary small" data-go="roles">نقش‌ها</button><button class="btn secondary small" data-go="evp">EVP</button><button class="btn secondary small" data-go="talents">Talent Pool</button><button class="btn secondary small" data-go="sourcing">جست‌وجوی فعال</button></div></div>`;
 }
 function runCoach(){
  const form=el('#coach-form');if(!form)return;
  const mode=form.querySelector('#coach-mode').value,roleId=form.querySelector('#coach-role').value,vacancyId=form.querySelector('#coach-vacancy').value;
  ui.coachRole=roleId;ui.coachVacancy=vacancyId;const r=window.TRMEngine.analyze(db,mode,{roleId,vacancyId});
- ui.lastCoachResult=r;el('#coach-result').innerHTML=coachResultHTML(r);
- db.analyses.unshift({id:id(),mode,roleId,vacancyId,result:r,createdAt:new Date().toISOString()});
+ ui.lastCoachResult=r;const analysisId=id();ui.lastAnalysisId=analysisId;el('#coach-result').innerHTML=coachResultHTML(r);
+ db.analyses.unshift({id:analysisId,mode,roleId,vacancyId,result:r,createdAt:new Date().toISOString()});
  if(db.analyses.length>40)db.analyses.length=40;
  persist();
 }
@@ -263,13 +295,13 @@ async function runCloudCoach(){
  const action=el('[data-action="run-cloud-coach"]');if(action){action.disabled=true;action.textContent='در حال تحلیل…'}
  try{
   const data=await window.TRMCloudAgent.analyze(mode,cloudContext(mode,roleId,vacancyId),question);
-  const r={title:'تحلیل پیشنهادی AI Agent',readiness:'پیش‌نویس مولد · تأیید انسانی لازم است',summary:String(data.summary||''),
+  const r={actionObjects:Array.isArray(data.actions)?data.actions:[],title:'تحلیل پیشنهادی AI Agent',readiness:'پیش‌نویس مولد · تأیید انسانی لازم است',summary:String(data.summary||''),
    missing:Array.isArray(data.missingEvidence)?data.missingEvidence:[],draft:String(data.draft||''),
    steps:(data.actions||[]).map(x=>[x.title,x.why,x.evidence?'شاهد لازم: '+x.evidence:'',x.ownerHint?'مسئول پیشنهادی: '+x.ownerHint:'',Number.isInteger(x.targetDays)?'افق پیشنهادی: '+x.targetDays+' روز':''].filter(Boolean).join(' — ')),
    source:(data.bookBasis||[]).join(' · ')||'Trost (2014)',caveats:data.caveats||[]};
-  ui.lastCoachResult=r;
+  ui.lastCoachResult=r;const analysisId=id();ui.lastAnalysisId=analysisId;
   const box=el('#coach-result');if(box)box.innerHTML=coachResultHTML(r)+(r.caveats?.length?'<p class="smalltext muted">محدودیت‌ها: '+esc(r.caveats.join('؛ '))+'</p>':'');
-  db.analyses.unshift({id:id(),mode:'generative:'+mode,roleId,vacancyId,result:r,createdAt:new Date().toISOString()});
+  db.analyses.unshift({id:analysisId,mode:'generative:'+mode,roleId,vacancyId,result:r,createdAt:new Date().toISOString()});
   if(db.analyses.length>40)db.analyses.length=40;persist();
  }finally{if(action){action.disabled=false;action.textContent='✧ تحلیل مولد با AI'}}
 }
@@ -307,17 +339,18 @@ function onForm(form){let kind=form.dataset.form;if(kind==='cloud-login'){cloudL
  case'retention':{let person=db.people.find(x=>x.id===p.personId);if(!person)throw Error('استعداد را انتخاب کنید.');if(person.consent!=='yes')throw Error('برای ثبت برنامه تماس، رضایت فعال فرد باید ثبت شده باشد.');if(!p.nextDate)throw Error('تاریخ پیگیری ضروری است.');const measure=RETENTION_MEASURES.find(x=>x[0]===p.measure)||RETENTION_MEASURES[0];db.activities.unshift({id:id(),personId:p.personId,type:'followup',date:dateNow(),nextDate:p.nextDate,nextAction:measure[1]+(p.owner?' · مسئول: '+p.owner:''),note:measure[2]+(p.note?' | '+p.note:''),state:'open',createdAt:new Date().toISOString()});break;}
  case'journey':{if(!db.people.some(x=>x.id===p.personId))throw Error('ابتدا استعداد را انتخاب کنید.');db.journeys.unshift({...p,id:id(),responded:false,createdAt:new Date().toISOString()});break;}
  case'vacancy':{if(!p.roleId||!db.roles.some(r=>r.id===p.roleId))throw Error('نقش معتبر نیست.');if(!trim(p.owner))throw Error('مسئول جذب را مشخص کنید.');let old=(db.vacancies||[]).find(x=>x.id===uid),rec={...old,...p,id:uid||id(),createdAt:old?.createdAt||new Date().toISOString()};if(!db.vacancies)db.vacancies=[];if(old)db.vacancies=db.vacancies.map(x=>x.id===uid?rec:x);else db.vacancies.unshift(rec);break;}
+ case'task':{if(!trim(p.title))throw Error('عنوان اقدام ضروری است.');let old=db.tasks.find(x=>x.id===uid),rec={...old,...p,id:uid||id(),status:p.status||'open',createdAt:old?.createdAt||new Date().toISOString()};if(old)db.tasks=db.tasks.map(x=>x.id===uid?rec:x);else db.tasks.push(rec);break;}
  case'roi':{const keys=['revenue','totalCosts','hrCosts','fte','newHires','uplift','programCost'];db.roi={};for(const k of keys){if(p[k]!==''&&p[k]!=null){const n=Number(p[k]);if(!Number.isFinite(n)||n<0)throw Error('اعداد مالی باید نامنفی باشند.');db.roi[k]=n;}}if(db.roi.totalCosts&&db.roi.hrCosts>db.roi.totalCosts)throw Error('هزینه کارکنان نمی‌تواند از کل هزینه بیشتر باشد.');break;}
  default:return;}
  if(!persist())return;close();render();toast('اطلاعات ذخیره شد.');}
-async function restore(file){const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.people)||!Array.isArray(data.roles)||!Array.isArray(data.activities))throw Error('قالب فایل پشتیبان معتبر نیست.');if(!confirm('داده‌های فعلی این دستگاه با فایل انتخابی جایگزین شود؟'))return;db={...fresh(),...data};for(const k of ['people','roles','vacancies','analyses','evps','activities','surveys','sourcingPlans','journeys'])if(!Array.isArray(db[k]))db[k]=[];if(!db.roadmapChecks)db.roadmapChecks={};if(!db.roi)db.roi={};if(!persist())return;go('home');toast('پشتیبان با موفقیت بازیابی شد.')}
+async function restore(file){const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.people)||!Array.isArray(data.roles)||!Array.isArray(data.activities))throw Error('قالب فایل پشتیبان معتبر نیست.');if(!confirm('داده‌های فعلی این دستگاه با فایل انتخابی جایگزین شود؟'))return;db={...fresh(),...data};for(const k of ['people','roles','vacancies','analyses','tasks','evps','activities','surveys','sourcingPlans','journeys'])if(!Array.isArray(db[k]))db[k]=[];if(!db.roadmapChecks)db.roadmapChecks={};if(!db.roi)db.roi={};if(!persist())return;go('home');toast('پشتیبان با موفقیت بازیابی شد.')}
 async function clickAct(action,uid){switch(action){case'close':close();break;case'add-person':personForm();break;case'edit-person':personForm(uid);break;case'view-person':ui.tab='history';personDetail(uid);break;case'tab-profile':ui.tab='profile';personDetail(ui.detail);break;case'tab-history':ui.tab='history';personDetail(ui.detail);break;case'tab-survey':ui.tab='survey';personDetail(ui.detail);break;case'add-role':roleForm();break;case'edit-role':roleForm(uid);break;case'add-activity':activityForm();break;case'activity-for':activityForm(uid);break;case'add-evp':evpForm();break;case'edit-evp':evpForm(uid);break;
  case'role-examples':roleExampleGallery();break;case'use-role-example':roleForm('',uid);break;
  case'generate-evp':generateEVP();break;
- case'add-vacancy':vacancyForm();break;case'edit-vacancy':vacancyForm(uid);break;
+ case'add-task':taskForm();break;case'edit-task':taskForm(uid);break;case'approve-coach-actions':approveCoachActions();break;case'complete-task':{let t=db.tasks.find(x=>x.id===uid);if(t){t.status='done';t.completedAt=new Date().toISOString();persist();render();toast('اقدام تکمیل شد.')}break;}case'add-vacancy':vacancyForm();break;case'edit-vacancy':vacancyForm(uid);break;
  case'coach-vacancy':{let v=(db.vacancies||[]).find(x=>x.id===uid);ui.coachVacancy=uid;ui.coachRole=v?.roleId||'';go('agent');break;}
  case'run-coach':runCoach();break;case'run-cloud-coach':await runCloudCoach();break;case'cloud-logout':window.TRMCloudAgent.logout();render();break;case'review-evp':reviewEVP();break;
- case'show-analysis':{const v=(db.analyses||[]).find(x=>x.id===uid);if(v){ui.lastCoachResult=v.result;const box=el('#coach-result');if(box){box.innerHTML=coachResultHTML(v.result);box.scrollIntoView({behavior:'smooth',block:'start'})}}break;}
+ case'show-analysis':{const v=(db.analyses||[]).find(x=>x.id===uid);if(v){ui.lastCoachResult=v.result;ui.lastAnalysisId=v.id;const box=el('#coach-result');if(box){box.innerHTML=coachResultHTML(v.result);box.scrollIntoView({behavior:'smooth',block:'start'})}}break;}
  case'copy-coach-result':{const r=ui.lastCoachResult;if(!r)return;try{await navigator.clipboard.writeText([r.title,r.summary,...(r.missing||[]).map(x=>'داده ناقص: '+x),...(r.steps||[]),r.source].join('\n'));toast('خروجی کپی شد.')}catch{toast('مرورگر اجازه کپی ندارد.')}break;}
  case'add-source':sourcingForm();break;case'edit-source':sourcingForm(uid);break;case'source-preset':sourcingForm('',uid);break;
  case'add-retention':retentionForm(uid);break;case'add-journey':journeyForm();break;
