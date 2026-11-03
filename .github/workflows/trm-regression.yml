@@ -1,0 +1,25 @@
+name: TRM Workspace regression
+on:
+  push:
+    paths:
+      - "trm-workspace/**"
+      - ".github/workflows/trm-regression.yml"
+  pull_request:
+    paths:
+      - "trm-workspace/**"
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: JavaScript syntax
+        run: |
+          node --check trm-workspace/app.js
+          node --check trm-workspace/decision-engine.js
+          node --check trm-workspace/sw.js
+      - name: Grounded decision-engine regression
+        run: node trm-workspace/tests/decision-engine.test.cjs
