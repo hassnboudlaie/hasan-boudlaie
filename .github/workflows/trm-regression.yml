@@ -21,12 +21,14 @@ jobs:
           node --check trm-workspace/app.js
           node --check trm-workspace/agent-config.js
           node --check trm-workspace/cloud-agent-client.js
+          node --check trm-workspace/firebase-free-client.js
           node --check trm-workspace/decision-engine.js
           node --check trm-workspace/sw.js
       - name: Grounded decision-engine regression
         run: |
           node trm-workspace/tests/decision-engine.test.cjs
           node trm-workspace/tests/agent-safety.test.cjs
+          node trm-workspace/tests/firebase-spark.test.cjs
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
