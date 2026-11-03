@@ -279,7 +279,7 @@ function cloudContext(mode,roleId,vacancyId){
  const e=db.evps.find(x=>x.roleId===roleId)||null;
  const v=db.vacancies.find(x=>x.id===vacancyId)||db.vacancies.find(x=>x.roleId===roleId)||null;
  const pick=(obj,fields)=>obj?Object.fromEntries(fields.map(([out,key])=>[out,String(obj[key]??'').slice(0,700)])):{};
- const role=pick(r,[['title','name'],['strategy','strategy'],['strategyEvidence','strategyEvidence'],['strategicImportance','strategic'],['marketAvailability','availability'],['forecastDemand','demand'],['targetGroup','targetGroup'],['criticalIncidents','challenges'],['acceptableGaps','gap'],['marketEvidence','marketEvidence']]);
+ const role=pick(r,[['title','name'],['strategy','strategy'],['strategyEvidence','strategyEvidence'],['strategicImportance','strategic'],['marketAvailability','availability'],['forecastDemand','demand'],['targetGroup','targetGroup'],['criticalIncidents','challenges'],['acceptableGaps','competenceGap'],['marketEvidence','marketEvidence']]);
  const evp=pick(e,[['strengths','strengths'],['preferences','preferences'],['competition','competition'],['difference','difference'],['proof','proof']]);
  const vacancy=pick(v,[['reason','reason'],['status','status'],['deadline','deadline']]);
  const related=db.people.filter(x=>x.roleId===roleId);
