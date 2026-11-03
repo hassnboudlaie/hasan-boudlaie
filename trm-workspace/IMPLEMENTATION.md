@@ -42,3 +42,11 @@ Armin Trost (2014), *Talent Relationship Management: Competitive Recruiting Stra
 - Added dedicated multi-tenant SQL schema, restrictive RLS, atomic daily AI quota and audit-only recording of metadata.
 - GitHub Actions workflow includes unit/safety checks, Deno typecheck and real Chromium desktop/mobile end-to-end tests; completion status of CI and enterprise backend deployment must be confirmed independently.
 - Clear activation/acceptance guide: `agent/README.md`.
+
+## 2026-11-03 — Cost policy updated: FREE ONLY
+- Supabase free project creation failed because the account has already reached its 2 active free project limit. **No existing Supabase project has been modified, paused, upgraded or deleted.**
+- **Selected zero-cost path:** Firebase **Spark** (independent) + Firestore/Auth/App Check + Firebase AI Logic with Gemini Developer API Free Tier.
+- Implementation committed: `agent/firebase/firestore.rules`, `firebase-free-client.js`, `agent-config.js`, and opt-in structure-only synchronization in the existing TRM app. See `agent/firebase/README.md` for activation steps.
+- Public Firebase provider is **disabled** until a dedicated Spark project is created and its App Check config supplied. Cloud sync and generative AI are **not yet live**.
+- Only role, EVP, vacancy and action records can be manually synchronized; no candidate profiles, CVs, contact histories or identifying data. Use fictional, nonconfidential inputs for Gemini free tier.
+- The prior Supabase Edge Function and SQL migration remain **alternative, undeployed code**, not an active recommendation, and may require a paid plan.
