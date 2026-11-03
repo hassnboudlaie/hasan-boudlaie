@@ -1,0 +1,2 @@
+[functions.trm-agent]
+verify_jwt = true
