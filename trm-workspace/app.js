@@ -281,7 +281,7 @@ function cloudContext(mode,roleId,vacancyId){
  const pick=(obj,fields)=>obj?Object.fromEntries(fields.map(([out,key])=>[out,String(obj[key]??'').slice(0,700)])):{};
  const role=pick(r,[['title','name'],['strategy','strategy'],['strategyEvidence','strategyEvidence'],['strategicImportance','strategic'],['marketAvailability','availability'],['forecastDemand','demand'],['targetGroup','targetGroup'],['criticalIncidents','challenges'],['acceptableGaps','gap'],['marketEvidence','marketEvidence']]);
  const evp=pick(e,[['strengths','strengths'],['preferences','preferences'],['competition','competition'],['difference','difference'],['proof','proof']]);
- const vacancy=pick(v,[['reason','reason'],['status','status'],['owner','owner'],['deadline','deadline']]);
+ const vacancy=pick(v,[['reason','reason'],['status','status'],['deadline','deadline']]);
  const related=db.people.filter(x=>x.roleId===roleId);
  const metrics={relatedPoolCount:related.length,contactableWithOptInCount:related.filter(x=>x.consent==='yes'&&x.readiness!=='no').length,
   noContactCount:related.filter(x=>x.consent!=='yes').length,openFollowups:db.activities.filter(x=>x.state!=='done'&&x.nextDate&&x.nextDate<=dateNow()).length};
