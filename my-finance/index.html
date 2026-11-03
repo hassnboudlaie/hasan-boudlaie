@@ -199,7 +199,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div id="voice-warnings" class="voice-warnings" role="status"></div>
 <div class="voice-fields">
 <label>نوع تراکنش<select id="voice-kind"><option value="expense">هزینه</option><option value="income">درآمد</option></select></label>
-<label>مبلغ<input id="voice-amount" type="number" inputmode="decimal" min="0.01" step="any"></label>
+<label>مبلغ<input id="voice-amount" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9۰-۹٠-٩.,٬،٫]+" placeholder="مثلاً ۱۵۰۰۰۰۰"></label>
 <label>ارز<select id="voice-currency"><option value="IRT">تومان (IRT)</option><option value="IRR">ریال (IRR)</option><option value="USD">دلار (USD)</option><option value="EUR">یورو (EUR)</option></select></label>
 <label>دسته‌بندی<input id="voice-category" maxlength="150" placeholder="دسته‌بندی تراکنش"></label>
 <label class="voice-field-wide">حساب<select id="voice-account"></select></label>
@@ -216,7 +216,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div id="voice-loan-warnings" class="voice-warnings" role="status"></div>
 <div class="voice-fields">
 <label>گیرنده قرض<input id="voice-loan-person" maxlength="150" placeholder="مثلاً امیر نوری"></label>
-<label>مبلغ<input type="number" id="voice-loan-amount" min="0.01" step="any" inputmode="decimal"></label>
+<label>مبلغ<input type="text" id="voice-loan-amount" inputmode="decimal" autocomplete="off" pattern="[0-9۰-۹٠-٩.,٬،٫]+" placeholder="مثلاً ۱۵۰۰۰۰۰"></label>
 <label>ارز<select id="voice-loan-currency"><option value="IRT">تومان</option><option value="IRR">ریال</option><option value="USD">دلار</option><option value="EUR">یورو</option></select></label>
 <label>تاریخ پرداخت<input type="date" id="voice-loan-date"></label>
 <label class="voice-field-wide">حساب پرداخت‌کننده<select id="voice-loan-account"></select></label>
@@ -1060,7 +1060,7 @@ financeRouterInitialize();
  }).observe(document.body,{attributes:true,attributeFilter:['class']});
 })();
 /* Authentication and synchronization are handled exclusively by Supabase. */
-</script><script defer src="./voice-entry.js?v=20261103r82"></script><script>
+</script><script defer src="./voice-entry.js?v=20261103r83"></script><script>
 /* My Finance: optional one-tap ChatGPT-to-preview link; no API costs. */
 (()=>{
 'use strict';
