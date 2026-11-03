@@ -79,3 +79,9 @@
  .cj-answer-head h2{font-size:23px}
 }
 @media(prefers-reduced-motion:reduce){.cj-result{scroll-behavior:auto}}
+
+/* Secure-AI integration status — enabled only when a dedicated backend is configured. */
+.cj-ai-submit{width:100%;margin:11px 0}
+.cj-ai-submit:disabled{background:#edf1f6;border-color:#cdd9e6;color:#637993;cursor:not-allowed}
+.cj-ai-response{white-space:pre-wrap;background:#f1f7ff;color:#24435d;border:1px solid #bfcfe3;border-radius:13px;padding:15px;font-size:15px;line-height:2;margin:10px 0}
+.cj-ai-response[hidden]{display:none}
