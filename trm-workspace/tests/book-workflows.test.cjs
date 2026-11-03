@@ -1,4 +1,4 @@
-const assert=require('node:assert/strict');const B=require('./trost-book-workflows.js');
+const assert=require('node:assert/strict');const B=require('../trost-book-workflows.js');
 const db={bookPractice:[]};const seen=[];let renderCalls=0;
 const ctx={persist:()=>{seen.push('persist');return true},render:()=>{renderCalls++},toast:()=>{},go:x=>{seen.push(x)}};
 const rows=B.data;assert.equal(rows.length,41);assert(rows.some(x=>x.key==='socialmedia'));assert(rows.some(x=>x.key==='socialcommunity'));assert(rows.some(x=>x.key==='retentioncycle'));assert(rows.some(x=>x.key==='guerilla'));assert(rows.some(x=>x.key==='survey'));
