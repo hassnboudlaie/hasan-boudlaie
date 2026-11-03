@@ -1,0 +1,32 @@
+name: TRM Trost Book & Single Hire Pilot Checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'trm-workspace/app.js'
+      - 'trm-workspace/index.html'
+      - 'trm-workspace/single-hire.js'
+      - 'trm-workspace/trost-book-workflows.js'
+      - 'trm-workspace/tests/single-hire.test.cjs'
+      - 'trm-workspace/tests/book-workflows.test.cjs'
+      - '.github/workflows/trm-pilot-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax checks
+        run: |
+          node --check trm-workspace/app.js
+          node --check trm-workspace/single-hire.js
+          node --check trm-workspace/trost-book-workflows.js
+      - name: Eight-step hiring flow and all ten book chapters
+        run: |
+          node trm-workspace/tests/single-hire.test.cjs
+          node trm-workspace/tests/book-workflows.test.cjs
