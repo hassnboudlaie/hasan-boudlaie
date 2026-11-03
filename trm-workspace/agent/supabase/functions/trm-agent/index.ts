@@ -108,13 +108,16 @@ Deno.serve(async (req:Request)=>{
   const membership=await supa(query,"GET",bearer,pub);
   if(!membership.ok||!Array.isArray(membership.data)||membership.data[0]?.status!=="active"||!["owner","admin","recruiter","manager"].includes(membership.data[0]?.role))
     return respond(origin,403,{error:"no_active_org_membership"});
-  const stamp=new Date().toISOString().slice(0,10)+"T00:00:00Z";
-  const prior=await supa("/rest/v1/trm_ai_audit?select=id&org_id=eq."+encodeURIComponent(data.org_id)+"&created_at=gte."+encodeURIComponent(stamp)+"&limit=12","GET","",secret);
-  if(!prior.ok)return respond(origin,503,{error:"quota_check_failed"});
-  if((prior.data||[]).length>=12)return respond(origin,429,{error:"daily_ai_quota_reached"});
-  const attempt=await supa("/rest/v1/trm_ai_audit","POST","",secret,{org_id:data.org_id,user_id:userId,mode:data.mode,status:"started" },"return=representation");
-  if(!attempt.ok||!Array.isArray(attempt.data)||!attempt.data[0]?.id)return respond(origin,503,{error:"audit_reservation_failed"});
-  const jobId=attempt.data[0].id;
+  // Atomic daily 12-call cap: unique (organization, UTC date, slot) prevents concurrent overuse.
+  const quotaDate=new Date().toISOString().slice(0,10);
+  let jobId="";
+  for(let slot=1;slot<=12;slot++){
+    const attempt=await supa("/rest/v1/trm_ai_audit","POST","",secret,
+      {org_id:data.org_id,user_id:userId,mode:data.mode,status:"started",quota_date:quotaDate,quota_slot:slot},"return=representation");
+    if(attempt.ok&&Array.isArray(attempt.data)&&attempt.data[0]?.id){jobId=attempt.data[0].id;break;}
+    if(attempt.status!==409)return respond(origin,503,{error:"audit_reservation_failed"});
+  }
+  if(!jobId)return respond(origin,429,{error:"daily_ai_quota_reached"});
   const aiPayload={
    model:Deno.env.get("OPENAI_MODEL")||"gpt-4.1-mini",
    store:false,max_output_tokens:1700,
