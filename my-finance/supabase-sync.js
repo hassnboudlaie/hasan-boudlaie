@@ -804,14 +804,14 @@ function bridgeCheck(identity){
 async function chatgptConnection(){
  const identity=bridgeIdentity();
  const {data,error}=await client.from('finance_chatgpt_connections')
-  .select('enabled,allow_summary,allow_drafts,updated_at').eq('user_id',identity.uid).maybeSingle();
+  .select('enabled,allow_summary,allow_drafts,oauth_client_id,updated_at').eq('user_id',identity.uid).maybeSingle();
  bridgeCheck(identity);if(error)throw error;
  return data||{enabled:false,allow_summary:false,allow_drafts:false};
 }
 async function chatgptSetConnection(enabled,allowSummary,allowDrafts){
  const identity=bridgeIdentity();
  const next={user_id:identity.uid,enabled:enabled===true,allow_summary:enabled===true&&allowSummary===true,
-  allow_drafts:enabled===true&&allowDrafts===true,updated_at:new Date().toISOString()};
+  allow_drafts:enabled===true&&allowDrafts===true,...(enabled===true?{}:{oauth_client_id:null}),updated_at:new Date().toISOString()};
  const {data,error}=await client.from('finance_chatgpt_connections').upsert(next,{onConflict:'user_id'})
   .select('enabled,allow_summary,allow_drafts,updated_at').single();
  bridgeCheck(identity);if(error)throw error;
