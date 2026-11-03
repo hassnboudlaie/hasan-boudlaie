@@ -84,7 +84,7 @@ async function init(){
   const {data:detail,error:detailError}=await client.auth.oauth.getAuthorizationDetails(authorizationId);
   if(detailError||!detail)throw detailError||Error('درخواست پیدا نشد.');
   if(!('authorization_id'in detail)&&detail.redirect_url){location.assign(detail.redirect_url);return;}
-  approvedClientId=String(detail.client?.id||detail.client_id||'');
+  approvedClientId=String(detail.client?.client_id||detail.client?.id||detail.client_id||'');
   if(!authIdPattern.test(approvedClientId))throw Error('شناسه کلاینت OAuth معتبر نیست.');
   approvedUserId=uid;
   $('client-name').textContent=String(detail.client?.name||'سرویس خارجی');
