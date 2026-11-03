@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#5d3b50">
+  <meta name="description" content="اپلیکیشن مشتریان کلینیک زیبایی؛ خدمات، نوبت، محصولات و برنامه مراقبتی.">
+  <title>کلینیک زیبایی | اپ مشتری</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
+  <link rel="stylesheet" href="./app.css?v=1">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-btn" id="backBtn" aria-label="بازگشت" hidden>‹</button>
+      <div class="brand-block">
+        <span class="brand-mark">زی</span>
+        <div>
+          <strong>کلینیک زیبایی</strong>
+          <small>نسخه مشتری</small>
+        </div>
+      </div>
+      <button class="icon-btn" id="installBtn" aria-label="نصب اپ">＋</button>
+    </header>
+
+    <main id="app" tabindex="-1">
+      <section class="page active" data-page="home">
+        <div class="hero">
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <span class="pill">زیبایی با انتخاب آگاهانه</span>
+            <h1>کیفیت بالا، قیمت رقابتی، بدون خدمات غیرضروری</h1>
+            <p>مشاوره بر اساس نیاز واقعی شما؛ نه فروش بیشتر.</p>
+            <div class="hero-actions">
+              <button class="primary" data-go="booking">درخواست نوبت</button>
+              <button class="glass" data-go="services">مشاهده خدمات</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="install-card" id="installCard">
+          <div>
+            <strong>این اپ را روی گوشی نصب کنید</strong>
+            <p>دسترسی سریع به خدمات، نوبت‌ها و مراقبت‌های شما.</p>
+          </div>
+          <button class="primary compact" id="installCardBtn">نصب اپ</button>
+        </section>
+
+        <section class="quick-grid">
+          <button class="quick-card" data-go="booking"><span>📅</span><strong>نوبت من</strong><small>درخواست نوبت جدید</small></button>
+          <button class="quick-card" data-go="services"><span>✨</span><strong>خدمات</strong><small>انتخاب آگاهانه خدمت</small></button>
+          <button class="quick-card" data-go="products"><span>🧴</span><strong>محصولات</strong><small>مراقبت پوست و مو</small></button>
+          <button class="quick-card" data-go="care"><span>💗</span><strong>برنامه مراقبتی من</strong><small>پیگیری بعد از خدمت</small></button>
+          <button class="quick-card wide" data-go="contact"><span>💬</span><strong>ارتباط با کلینیک</strong><small>تماس، واتساپ و شبکه‌های اجتماعی</small></button>
+        </section>
+
+        <section class="trust-card">
+          <div class="doctor-avatar">پ</div>
+          <div>
+            <span class="eyebrow">اصل کلیدی کلینیک</span>
+            <h2>هر کاری که لازم نیست، انجام نمی‌دهیم.</h2>
+            <p>پزشک ابتدا شرایط شما را بررسی می‌کند و فقط خدمات متناسب با نیاز واقعی شما پیشنهاد می‌شود.</p>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-head">
+            <h2>خدمات پرطرفدار</h2>
+            <button class="text-btn" data-go="services">همه خدمات</button>
+          </div>
+          <div class="service-strip">
+            <button data-service="فیلر"><span>💉</span><strong>فیلر</strong><small>فرم‌دهی و جوان‌سازی</small></button>
+            <button data-service="بوتاکس"><span>🌿</span><strong>بوتاکس</strong><small>کاهش خطوط پویا</small></button>
+            <button data-service="جوان‌سازی"><span>✨</span><strong>جوان‌سازی</strong><small>برنامه چندجلسه‌ای</small></button>
+            <button data-service="لیزر موهای زائد"><span>☀️</span><strong>لیزر</strong><small>جلسات منظم</small></button>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" data-page="services">
+        <div class="page-intro">
+          <span class="eyebrow">خدمات کلینیک</span>
+          <h1>خدمت مناسب، بعد از مشاوره مناسب</h1>
+          <p>روی هر خدمت بزنید تا توضیح، مسیر مراجعه و مراقبت‌های مرتبط را ببینید.</p>
+        </div>
+        <div id="servicesList" class="list-grid"></div>
+      </section>
+
+      <section class="page" data-page="service">
+        <div id="serviceDetail"></div>
+      </section>
+
+      <section class="page" data-page="booking">
+        <div class="page-intro">
+          <span class="eyebrow">درخواست نوبت</span>
+          <h1>سه مرحله تا ثبت درخواست</h1>
+          <p>در نسخه آزمایشی، درخواست روی همین گوشی ذخیره می‌شود تا مسیر کار را تست کنیم.</p>
+        </div>
+        <form id="bookingForm" class="form-card">
+          <label>خدمت موردنظر
+            <select id="bookingService" required></select>
+          </label>
+          <label>شعبه
+            <select id="bookingBranch" required>
+              <option value="">انتخاب کنید</option>
+              <option>شعبه شرق تهران</option>
+              <option>شعبه غرب تهران</option>
+            </select>
+          </label>
+          <label>بازه زمانی ترجیحی
+            <select id="bookingTime" required>
+              <option value="">انتخاب کنید</option>
+              <option>صبح</option>
+              <option>ظهر</option>
+              <option>عصر</option>
+            </select>
+          </label>
+          <label>نام و نام خانوادگی
+            <input id="bookingName" autocomplete="name" required placeholder="مثلاً سارا محمدی">
+          </label>
+          <label>شماره موبایل
+            <input id="bookingPhone" inputmode="tel" autocomplete="tel" required placeholder="09xxxxxxxxx">
+          </label>
+          <button class="primary full" type="submit">ثبت درخواست نوبت</button>
+          <small class="form-note">برای نسخه نهایی، این بخش به سامانه نوبت‌دهی و پیام تأیید متصل می‌شود.</small>
+        </form>
+        <div id="bookingResult" class="success-card" hidden></div>
+      </section>
+
+      <section class="page" data-page="products">
+        <div class="page-intro">
+          <span class="eyebrow">فروشگاه مراقبت</span>
+          <h1>محصول مناسب، متناسب با خدمت شما</h1>
+          <p>محصولات نمونه برای طراحی نسخه اولیه؛ موجودی و برندها بعداً از سیستم فروش خوانده می‌شوند.</p>
+        </div>
+        <div id="productsList" class="product-grid"></div>
+      </section>
+
+      <section class="page" data-page="care">
+        <div class="page-intro">
+          <span class="eyebrow">برنامه مراقبتی من</span>
+          <h1>بعد از خدمت، ارتباط ادامه دارد</h1>
+          <p>این بخش در نسخه بعد به پرونده واقعی مشتری متصل می‌شود.</p>
+        </div>
+        <div class="care-card">
+          <div class="care-top">
+            <div><small>نمونه نمایشی</small><h2>برنامه جوان‌سازی</h2></div>
+            <span class="status-chip">فعال</span>
+          </div>
+          <div class="care-row"><span>خدمت اخیر</span><strong>جوان‌سازی پوست</strong></div>
+          <div class="care-row"><span>نوبت بعدی</span><strong>۳۰ روز دیگر</strong></div>
+          <div class="care-row"><span>مراقبت امروز</span><strong>ضدآفتاب + آبرسان</strong></div>
+          <div class="care-row"><span>محصول پیشنهادی</span><strong>سرم ترمیم‌کننده</strong></div>
+          <button class="secondary full" data-go="booking">درخواست نوبت بعدی</button>
+        </div>
+        <div class="info-card"><strong>در نسخه نهایی چه اضافه می‌شود؟</strong><p>سوابق خدمات، یادآوری نوبت، توصیه‌های اختصاصی پزشک، محصولات پیشنهادی و اعلان‌های مراقبتی.</p></div>
+      </section>
+
+      <section class="page" data-page="contact">
+        <div class="page-intro">
+          <span class="eyebrow">ارتباط با کلینیک</span>
+          <h1>ساده و مستقیم</h1>
+          <p>اطلاعات تماس نهایی بعد از تأیید برند و شماره‌های رسمی جایگزین می‌شود.</p>
+        </div>
+        <div class="contact-grid">
+          <button class="contact-card" data-placeholder="شماره تماس نهایی هنوز ثبت نشده است."><span>📞</span><strong>تماس با کلینیک</strong><small>شماره رسمی در نسخه نهایی</small></button>
+          <button class="contact-card" data-placeholder="شماره واتساپ نهایی هنوز ثبت نشده است."><span>💬</span><strong>واتساپ</strong><small>برای مشاوره و نوبت</small></button>
+          <button class="contact-card" data-placeholder="شناسه اینستاگرام نهایی هنوز ثبت نشده است."><span>📷</span><strong>اینستاگرام</strong><small>محتوا و نمونه خدمات</small></button>
+          <button class="contact-card" data-go="booking"><span>📅</span><strong>درخواست نوبت</strong><small>ثبت درخواست در اپ</small></button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="ناوبری اصلی">
+      <button class="active" data-go="home"><span>⌂</span><small>خانه</small></button>
+      <button data-go="services"><span>✦</span><small>خدمات</small></button>
+      <button data-go="booking" class="nav-main"><span>＋</span><small>نوبت</small></button>
+      <button data-go="products"><span>◫</span><small>محصولات</small></button>
+      <button data-go="care"><span>♡</span><small>مراقبت من</small></button>
+    </nav>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="./app.js?v=1" defer></script>
+</body>
+</html>
