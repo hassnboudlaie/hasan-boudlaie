@@ -173,7 +173,8 @@ check('screenshot-reviewed minimal mobile and non-obstructive install UI',()=>{
 });
 check('retained sessions and accurate initial auth diagnostics',()=>{
  const script=read('supabase-sync.js');
- assert.ok(html.includes('supabase-sync.js?v=20261030r66'),'New auth module must not be cached under old version');
+ const currentAuth=html.match(/src="(\.\/supabase-sync\.js\?v=\d{8}r(\d+))"/);
+  assert.ok(currentAuth&&Number(currentAuth[2])>=75&&sw.includes("'"+currentAuth[1]+"'"),'Current auth module must use its new version and match the PWA cache');
  assert.ok(script.includes('financeAuthFailureKind('),'Auth status classifier absent');
  const result=spawnSync(process.execPath,[resolve(root,'qa/check-auth.mjs')],{encoding:'utf8'});
  assert.equal(result.status,0,'Authentication regression failed: '+result.stderr);
@@ -218,6 +219,17 @@ check('release id, PWA cache and stylesheet version align',()=>{
  const rev=html.match(/data-myfinance-release="design-r(\d+)"/)?.[1];
  assert.ok(rev);assert.equal(rev,sw.match(/my-finance-release-\d+r(\d+)/)?.[1]);
  assert.equal(rev,html.match(/visual-upgrade-v75\.css\?v=\d+r(\d+)/)?.[1]);
+});
+check('ChatGPT opt-in is private, cached and consent-based',()=>{
+  const assistant=read('personal-chatgpt-connect-v81.js');
+  assert.ok(html.includes('./personal-chatgpt-connect-v81.js?v=20261103r81'),'ChatGPT feature must load');
+  assert.ok(sw.includes('./personal-chatgpt-connect-v81.js?v=20261103r81'),'ChatGPT feature must be cached offline');
+  assert.ok(assistant.includes("namespace().startsWith('my-finance-user-')"),'ChatGPT setting must be scoped to the current account');
+  assert.ok(assistant.includes("switchMode(false)"),'User must be able to opt out');
+  assert.ok(assistant.includes('navigator.clipboard?.writeText'),'Sharing must be explicit');
+  assert.ok(!assistant.includes('service_role'),'No privileged credential in browser');
+  const syntax=spawnSync(process.execPath,['--check',resolve(root,'personal-chatgpt-connect-v81.js')],{encoding:'utf8'});
+  assert.equal(syntax.status,0,syntax.stderr);
 });
 check('free pilot: no email or manual approval step in signup interface',()=>{
  const app=read('supabase-sync.js');
