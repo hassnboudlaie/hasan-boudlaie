@@ -59,9 +59,9 @@ const storage={
 const client=createClient(URL,KEY,{auth:{persistSession:true,storageKey:AUTH,storage,autoRefreshToken:true,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id),status=t=>$('status').textContent=t;
 const authorizationId=new URL(location.href).searchParams.get('authorization_id');
-const uuid=/^[0-9a-f-]{36}$/i;
-let busy=false;
-if(!authorizationId||!uuid.test(authorizationId)){status('شناسه درخواست معتبر نیست. اتصال از داخل ChatGPT آغاز می‌شود.')}
+const authIdPattern=/^[A-Za-z0-9._-]{8,256}$/;
+let busy=false,approvedUserId='',approvedClientId=';
+if(!authorizationId||!authIdPattern.test(authorizationId)){status('شناسه درخواست معتبر نیست. اتصال از داخل ChatGPT آغاز می‌شود.')}
 else init();
 async function init(){
  $('consent').hidden=true;$('permission').hidden=true;$('login').hidden=true;
@@ -84,6 +84,9 @@ async function init(){
   const {data:detail,error:detailError}=await client.auth.oauth.getAuthorizationDetails(authorizationId);
   if(detailError||!detail)throw detailError||Error('درخواست پیدا نشد.');
   if(!('authorization_id'in detail)&&detail.redirect_url){location.assign(detail.redirect_url);return;}
+  approvedClientId=String(detail.client?.id||detail.client_id||'');
+  if(!authIdPattern.test(approvedClientId))throw Error('شناسه کلاینت OAuth معتبر نیست.');
+  approvedUserId=uid;
   $('client-name').textContent=String(detail.client?.name||'سرویس خارجی');
   $('client-redirect').textContent='Redirect: '+String(detail.redirect_uri||'نامشخص');
   $('scope-line').textContent='محدوده OAuth: '+String(detail.scope||'profile');
@@ -106,6 +109,14 @@ async function decide(allow){
  if(busy||!authorizationId)return;
  busy=true;$('approve').disabled=true;$('deny').disabled=true;
  try{
+  if(allow){
+   const {data:verified,error:verifyError}=await client.auth.getUser();
+   if(verifyError||verified?.user?.id!==approvedUserId||!approvedClientId)throw Error('هویت اتصال تغییر کرده است.');
+   const {data:bound,error:boundError}=await client.from('finance_chatgpt_connections')
+    .update({oauth_client_id:approvedClientId,updated_at:new Date().toISOString()})
+    .eq('user_id',approvedUserId).eq('enabled',true).select('oauth_client_id').maybeSingle();
+   if(boundError||bound?.oauth_client_id!==approvedClientId)throw Error('ثبت مجوز کلاینت انجام نشد.');
+  }
   const {data,error}=allow?await client.auth.oauth.approveAuthorization(authorizationId):
    await client.auth.oauth.denyAuthorization(authorizationId);
   if(error||!data?.redirect_url)throw error||Error('پاسخ معتبر نیست.');
