@@ -55,10 +55,11 @@ async function start(){
  if(!switchMode(true))return;
  const prompt=window.MyFinancePersonalAI?.linkInstruction?.();
  if(!prompt){status('mf-cg-settings-message','راهنما بارگذاری نشده؛ صفحه را به‌روزرسانی کنید.');return;}
- const opened=window.open('https://chatgpt.com/','_blank','noopener,noreferrer');
+ window.open('https://chatgpt.com/','_blank','noopener,noreferrer');
  const ok=await copy(prompt);
- const message=ok?'راهنما کپی شد؛ در ChatGPT شخصی خود Paste کنید.':'دستور در کادر زیر آماده است؛ آن را دستی Copy کنید.';
- status('mf-cg-settings-message',message+(opened?'':' اگر ChatGPT باز نشد، chatgpt.com را باز کنید.'));
+ if(!ok){window.financeNavGo?.('settings');settingsCard.scrollIntoView({behavior:'smooth',block:'start'});}
+ const message=ok?'راهنما کپی شد؛ در ChatGPT شخصی خود Paste کنید.':'دستور در کادر تنظیمات آماده است؛ آن را دستی Copy کنید.';
+ status('mf-cg-settings-message',message+' اگر ChatGPT باز نشد، chatgpt.com را باز کنید.');
  status('mf-cg-home-message',message);
 }
 function parsedDate(v){
