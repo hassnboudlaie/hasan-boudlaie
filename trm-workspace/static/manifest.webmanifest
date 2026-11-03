@@ -1,0 +1,14 @@
+{
+ "name":"TRM Workspace | مدیریت روابط با استعداد",
+ "short_name":"TRM Workspace",
+ "id":"/trm-workspace-armin-trost-independent-pwa/",
+ "description":"سامانه سازمانی مدیریت روابط بلندمدت با استعدادها",
+ "start_url":"/",
+ "scope":"/",
+ "display":"standalone",
+ "background_color":"#f5f4ed",
+ "theme_color":"#115c61",
+ "lang":"fa",
+ "dir":"rtl",
+ "icons":[{"src":"/static/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"/static/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"},{"src":"/static/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}
