@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+*.sqlite3
+.env
+*.log
+*_desktop.png
+*_mobile.png
