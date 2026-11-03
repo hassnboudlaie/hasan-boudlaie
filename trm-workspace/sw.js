@@ -1,6 +1,6 @@
 /* Dedicated TRM Workspace offline shell. Never caches candidate records. */
-const CACHE='hb-trm-workspace-v10-trost-guided-hire-20261103';
-const ASSETS=['./','./index.html','./style.css?v=4.0.0','./decision-engine.js?v=3.2.1','./agent-config.js?v=4.0.0','./firebase-free-client.js?v=4.0.0','./cloud-agent-client.js?v=4.0.0','./app.js?v=4.1.0','./single-hire.js?v=4.1.0','./trost-book-workflows.js?v=4.1.0','./trost-upgrade.css?v=4.1.0','./icon.svg?v=trm-logo-20261103','./icon-192.png?v=trm-logo-20261103','./icon-512.png?v=trm-logo-20261103'];
+const CACHE='hb-trm-workspace-v11-trost-ai-bridge-20261103';
+const ASSETS=['./','./index.html','./style.css?v=4.0.0','./decision-engine.js?v=3.2.1','./agent-config.js?v=4.0.0','./firebase-free-client.js?v=4.0.0','./cloud-agent-client.js?v=4.0.0','./app.js?v=4.1.1','./single-hire.js?v=4.1.0','./trost-book-workflows.js?v=4.1.0','./trost-upgrade.css?v=4.1.0','./icon.svg?v=trm-logo-20261103','./icon-192.png?v=trm-logo-20261103','./icon-512.png?v=trm-logo-20261103'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('hb-trm-workspace-')&&k!==CACHE).map(k=>caches.delete(k)))),self.clients.claim()]));});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin||!u.pathname.startsWith(new URL(self.registration.scope).pathname))return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html'))));});
