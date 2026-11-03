@@ -53,19 +53,22 @@ Deno.serve(async(req:Request)=>{
   .select("status,expires_at").eq("user_id",uid).maybeSingle();
  if(accessError||access?.status!=="active"||
   (access.expires_at&&Date.parse(access.expires_at)<=Date.now()))return reply({error:"FINANCE_ACCESS_DENIED"},403,origin);
- // Optional allowlist is activated when an OAuth client ID is registered in project secrets.
- const expectedClient=Deno.env.get("FINANCE_CHATGPT_OAUTH_CLIENT_ID")||"";
- if(expectedClient){
-  let claims:Record<string,unknown>={};
-  try{claims=JSON.parse(atob(token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));}catch(_){}
-  // For browser first-party actions, the trusted UI is responsible for consent management.
-  if(origin!==APP_ORIGIN&&claims.client_id!==expectedClient)
-   return reply({error:"OAUTH_CLIENT_NOT_ALLOWED"},403,origin);
- }
+
  const route=new URL(req.url).pathname.split("/").filter(Boolean).at(-1)||"";
  const {data:settings,error:settingsError}=await supabase.from("finance_chatgpt_connections")
-  .select("enabled,allow_summary,allow_drafts").eq("user_id",uid).maybeSingle();
+  .select("enabled,allow_summary,allow_drafts,oauth_client_id").eq("user_id",uid).maybeSingle();
  if(settingsError)return reply({error:"CONNECTION_UNAVAILABLE"},503,origin);
+ // Every external action must use a real OAuth access token from the specific client
+ // that the owner approved on the My Finance consent page. No session-token shortcuts.
+ let claims:Record<string,unknown>={};
+ try{
+  const encoded=token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
+  claims=JSON.parse(atob(encoded.padEnd(Math.ceil(encoded.length/4)*4,"=")));
+ }catch(_){}
+ const oauthClient=typeof claims.client_id==="string"?claims.client_id:"";
+ if(!oauthClient||!settings?.oauth_client_id||oauthClient!==settings.oauth_client_id)
+  return reply({error:"OAUTH_CLIENT_NOT_APPROVED"},403,origin);
+
  if(req.method==="GET"&&route==="status"){
   return reply({enabled:settings?.enabled===true,
    allow_summary:settings?.enabled===true&&settings.allow_summary===true,
