@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn() { return request.auth != null; }
+  function memberPath(orgId) {
+   return /databases/$(database)/documents/trm_user_orgs/$(request.auth.uid)/orgs/$(orgId);
+  }
+  function membership(orgId) { return get(memberPath(orgId)).data; }
+  function active(orgId) {
+   return signedIn() && exists(memberPath(orgId)) && membership(orgId).status == 'active';
+  }
+  function canRead(orgId) { return active(orgId) && membership(orgId).role in ['owner','admin','recruiter','manager']; }
+  function canWrite(orgId) { return active(orgId) && membership(orgId).role in ['owner','admin','recruiter']; }
+  function boundedRecord() {
+   return request.resource.data.keys().hasOnly(['data','updatedBy','updatedAt'])
+    && request.resource.data.keys().hasAll(['data','updatedBy','updatedAt'])
+    && request.resource.data.updatedBy == request.auth.uid
+    && request.resource.data.data is map && request.resource.data.data.keys().size() < 35;
+  }
+  match /trm_user_orgs/{uid}/orgs/{orgId} {
+   allow read: if signedIn() && request.auth.uid == uid;
+   allow write: if false; // Memberships bootstrapped only by trusted console/admin SDK.
+  }
+  match /trm_orgs/{orgId} {
+   allow get: if canRead(orgId);
+   allow list,create,update,delete: if false;
+   match /{kind}/{recordId} {
+    allow get,list: if canRead(orgId) && kind in ['roles','vacancies','evps','tasks'];
+    allow create,update: if canWrite(orgId) && kind in ['roles','vacancies','evps','tasks'] && boundedRecord();
+    allow delete: if false; // No client delete in first pilot.
+   }
+  }
+  match /{document=**} { allow read,write: if false; }
+ }
+}
