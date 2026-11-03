@@ -35,7 +35,7 @@ const assert=require('node:assert/strict');
   await page.locator('[data-action="book-open"][data-id="socialmedia"]').click();
   assert((await page.locator('.trost-detail h3').innerText()).includes('Social Media'));
   const f=page.locator('form[data-form="book-practice"]');
-  await f.locator('input[name="choice"][value="0"]').check();
+  await f.locator('.trost-option').first().click();assert(await f.locator('input[name="choice"][value="0"]').isChecked(),'clickable option selected');
   await f.locator('textarea[name="evidence"]').fill('نمونه شاهد ساختگی از برنامه رسانه اجتماعی سازمان برای تست UI');
   await f.locator('input[name="owner"]').fill('کارشناس ارتباطات');
   await f.locator('button[type="submit"]').click();
