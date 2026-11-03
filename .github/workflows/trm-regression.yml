@@ -19,7 +19,25 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check trm-workspace/app.js
+          node --check trm-workspace/agent-config.js
+          node --check trm-workspace/cloud-agent-client.js
           node --check trm-workspace/decision-engine.js
           node --check trm-workspace/sw.js
       - name: Grounded decision-engine regression
-        run: node trm-workspace/tests/decision-engine.test.cjs
+        run: |
+          node trm-workspace/tests/decision-engine.test.cjs
+          node trm-workspace/tests/agent-safety.test.cjs
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Typecheck isolated Supabase Edge AI agent
+        run: deno check trm-workspace/agent/supabase/functions/trm-agent/index.ts
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: End-to-end desktop and mobile TRM journey
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/trm-server.log 2>&1 &
+          sleep 3
+          node trm-workspace/tests/browser-e2e.cjs
