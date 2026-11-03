@@ -8,6 +8,25 @@ const greg=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric
 const jalali=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:'Asia/Tehran',year:'numeric',month:'numeric',day:'numeric'});
 const fmt=new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2});
 const digits=s=>String(s??'').replace(/[۰-۹]/g,c=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(c))).replace(/[٠-٩]/g,c=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(c)));
+/**
+ * iOS Safari can display Persian/Arabic-Indic digits inside number inputs while
+ * returning an empty/invalid value to JavaScript. Treat the amount as localized
+ * text, normalize grouping separators, and reject ambiguous slash fractions.
+ * A digit-only amount is already in the selected currency's base unit; never
+ * silently assume millions for 1/5 or 1.5.
+ */
+function parseLocalizedAmount(raw){
+ const input=digits(String(raw??''))
+  .replace(/[\u200c\u200e\u200f\u202a-\u202e\u2066-\u2069\s]/g,'').trim();
+ if(!input)return null;
+ const thousands=/^\d{1,3}(?:[.,٬،]\d{3})+(?:[٫]\d{1,2})?$/u.test(input);
+ const cleaned=thousands
+  ?input.replace(/[.,٬،]/g,'').replace(/٫/g,'.')
+  :input.replace(/[٬،,]/g,'').replace(/٫/g,'.');
+ if(!/^\d+(?:\.\d{1,2})?$/u.test(cleaned))return null;
+ const value=Number(cleaned);
+ return Number.isFinite(value)&&value>0&&value<=1_000_000_000_000_000?value:null;
+}
 const norm=s=>digits(s).toLowerCase().replace(/ي|ى/g,'ی').replace(/ك/g,'ک').replace(/\u200c/g,' ').replace(/\s+/g,' ').trim();
 const part=(formatter,d)=>Object.fromEntries(formatter.formatToParts(d).filter(x=>['year','month','day'].includes(x.type)).map(x=>[x.type,Number(x.value)]));
 const isoDay=d=>{const p=part(greg,d);return p.year+'-'+String(p.month).padStart(2,'0')+'-'+String(p.day).padStart(2,'0')};
@@ -185,14 +204,14 @@ function accountOptions(selected){
 }
 function details(){
  const data=bridge.getData(),acct=data.accounts.find(a=>a.id===$('voice-account').value);
- const currency=$('voice-currency').value,amount=Number($('voice-amount').value);
+ const currency=$('voice-currency').value,amount=parseLocalizedAmount($('voice-amount').value);
  let stored=amount,unit=currency,problem='';
  if(acct&&acct.currency!==currency){
   if(currency==='IRT'&&acct.currency==='IRR'){stored=amount*10;unit='IRR'}
   else if(currency==='IRR'&&acct.currency==='IRT'){stored=amount/10;unit='IRT'}
   else problem='ارز مبلغ با ارز حساب انتخاب‌شده سازگار نیست. حساب دیگری انتخاب کنید یا ارز را اصلاح کنید.';
  }
- if(!Number.isFinite(amount)||amount<=0||!Number.isFinite(stored)||stored<=0)problem='مبلغ باید یک عدد مثبت و معتبر باشد.';
+ if(!Number.isFinite(amount)||amount<=0||!Number.isFinite(stored)||stored<=0)problem='مبلغ معتبر نیست. فقط عدد را وارد کنید؛ مثلاً ۱۵۰۰۰۰۰ (یک‌ونیم میلیون تومان).';
  if(!$('voice-category').value.trim())problem='دسته‌بندی را تکمیل کنید.';
  const when=$('voice-date').value;
  if(!/^\d{4}-\d{2}-\d{2}$/.test(when)||!Number.isFinite(new Date(when+'T12:00:00+03:30').getTime()))problem='تاریخ معتبر انتخاب کنید.';
@@ -235,13 +254,13 @@ function previewLoan(parsed){
  return parsed;
 }
 function validateLoan(){
- const person=$('voice-loan-person').value.trim(),amount=Number($('voice-loan-amount').value),
+ const person=$('voice-loan-person').value.trim(),amount=parseLocalizedAmount($('voice-loan-amount').value),
  currency=$('voice-loan-currency').value,accountId=$('voice-loan-account').value,date=$('voice-loan-date').value,
  due=digits($('voice-loan-due').value).trim();
  const account=bridge.getData().accounts.find(a=>a.id===accountId);
  let debit=amount,unit=currency,problem='';
  if(!person||person.length>150)problem='نام دریافت‌کننده قرض لازم است.';
- if(!(amount>0)||!Number.isFinite(amount))problem='مبلغ قرض نامعتبر است.';
+ if(!(amount>0)||!Number.isFinite(amount))problem='مبلغ قرض معتبر نیست. مثلاً ۱۵۰۰۰۰۰ وارد کنید.';
  if(!['IRT','IRR','USD','EUR'].includes(currency))problem='ارز نامعتبر است.';
  if(account&&account.currency!==currency){
   if(currency==='IRT'&&account.currency==='IRR'){debit=amount*10;unit='IRR'}
