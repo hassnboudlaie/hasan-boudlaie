@@ -32,4 +32,6 @@ jobs:
       - name: Book alignment, persistence, practice and knowledge checks
         env:
           NODE_PATH: /tmp/saba-ci/node_modules
-        run: node sabanaft/verify-reflective.cjs
+        run: |
+          node sabanaft/verify-reflective.cjs
+          node sabanaft/verify-coaching.cjs
