@@ -1,0 +1,21 @@
+{
+  "name": "کلینیک زیبایی",
+  "short_name": "کلینیک",
+  "description": "اپ مشتریان کلینیک زیبایی؛ خدمات، نوبت، محصولات و برنامه مراقبتی.",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./index.html#home",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f3f5",
+  "theme_color": "#5d3b50",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
