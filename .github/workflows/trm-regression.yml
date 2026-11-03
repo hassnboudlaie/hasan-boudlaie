@@ -39,7 +39,7 @@ jobs:
       - name: Install Chromium
         run: |
           npm install --no-save playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: End-to-end desktop/mobile fictional TRM hiring journey
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/trm-server.log 2>&1 &
