@@ -2,11 +2,11 @@ name: TRM Workspace regression
 on:
   push:
     paths:
-      - "trm-workspace/**"
-      - ".github/workflows/trm-regression.yml"
+      - 'trm-workspace/**'
+      - '.github/workflows/trm-regression.yml'
   pull_request:
     paths:
-      - "trm-workspace/**"
+      - 'trm-workspace/**'
   workflow_dispatch:
 jobs:
   smoke:
@@ -15,30 +15,32 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
       - name: JavaScript syntax
         run: |
           node --check trm-workspace/app.js
+          node --check trm-workspace/single-hire.js
+          node --check trm-workspace/trost-book-workflows.js
           node --check trm-workspace/agent-config.js
           node --check trm-workspace/cloud-agent-client.js
           node --check trm-workspace/firebase-free-client.js
           node --check trm-workspace/decision-engine.js
           node --check trm-workspace/sw.js
-      - name: Grounded decision-engine regression
+      - name: Grounded decision engine and Trost pilot regression
         run: |
           node trm-workspace/tests/decision-engine.test.cjs
           node trm-workspace/tests/agent-safety.test.cjs
           node trm-workspace/tests/firebase-spark.test.cjs
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-      - name: Typecheck isolated Supabase Edge AI agent
-        run: deno check trm-workspace/agent/supabase/functions/trm-agent/index.ts
+          node trm-workspace/tests/single-hire.test.cjs
+          node trm-workspace/tests/book-workflows.test.cjs
+      # The undeployed Supabase alternative is deliberately not part of this
+      # local-first, zero-backend pilot. Its optional typecheck belongs to
+      # a separate enterprise-infrastructure workflow after that route is selected.
       - name: Install Chromium
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: End-to-end desktop and mobile TRM journey
+      - name: End-to-end desktop/mobile fictional TRM hiring journey
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/trm-server.log 2>&1 &
           sleep 3
