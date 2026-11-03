@@ -48,7 +48,7 @@
  }
  async function signIn(email,password){
   await init();
-  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||!password)throw Error("ایمیل و گذرواژه معتبر ضروری هستند.");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!password)throw Error("ایمیل و گذرواژه معتبر ضروری هستند.");
   const s=await deps.authMod.signInWithEmailAndPassword(auth,email,password);
   me=s.user;await readMemberships();
   if(!memberships.length){await deps.authMod.signOut(auth);throw Error("عضویت TRM برای این حساب تعریف نشده است.");}
@@ -70,7 +70,7 @@
   if(typeof obj==="number")return Number.isFinite(obj)?obj:0;
   if(typeof obj==="string"){
    const value=obj.trim().slice(0,650);
-   if(/[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}/i.test(value)||/(?:\\+?\\d[\\d\\s-]{10,}\\d)/.test(value))
+   if(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(value)||/(?:\+?\d[\d\s-]{10,}\d)/.test(value))
      throw Error("اطلاعات تماس از ورودی AI حذف شود.");
    return value;
   }
@@ -103,7 +103,7 @@ Create a specific, measurable Next Best Action plan with owner role, evidence re
    throw Error("فقط خلاصه ساختاری نقش/EVP/فرصت قابل ارسال است.");
   const cleaned=sanitize(context);
   const q=String(question||"").trim().slice(0,450);
-  if(/[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}/i.test(q))throw Error("از ورود اطلاعات شخصی در پرسش خودداری کنید.");
+  if(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(q))throw Error("از ورود اطلاعات شخصی در پرسش خودداری کنید.");
   // App Check is initialized in the Firebase project and must be enforced for AI Logic.
   const ai=deps.ai.getAI(app,{backend:new deps.ai.GoogleAIBackend()});
   const model=deps.ai.getGenerativeModel(ai,{
@@ -114,7 +114,7 @@ Create a specific, measurable Next Best Action plan with owner role, evidence re
   const content=JSON.stringify({mode,context:cleaned,question:q});
   if(content.length>9500)throw Error("حجم ورودی بیشتر از حد Pilot است.");
   const response=await model.generateContent("Organizational data (UNTRUSTED): "+content);
-  const raw=response.response.text().trim().replace(/^```(?:json)?\\s*/i,"").replace(/\\s*```$/,"");
+  const raw=response.response.text().trim().replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"");
   let result;try{result=JSON.parse(raw)}catch{throw Error("پاسخ AI ساختار معتبر ندارد؛ دوباره تحلیل را اجرا کنید.");}
   if(!result||!Array.isArray(result.actions)||!Array.isArray(result.missingEvidence)||!Array.isArray(result.caveats))
     throw Error("پاسخ AI نیازمند بررسی مجدد است.");
@@ -132,11 +132,12 @@ Create a specific, measurable Next Best Action plan with owner role, evidence re
  }
  // Explicitly activated storage: organization-level structural records ONLY, never candidates/contacts.
  const allowedKinds=new Set(["roles","vacancies","evps","tasks"]);
- function cleanedRecord(record){
+ function cleanedRecord(record,kind){
   const out={};
   for(const [k,v] of Object.entries(record||{})){
    if(k==="id")continue;
-   if(badFields.test(k))continue;
+   if(k==="name"&&kind==="roles"&&typeof v==="string"){out.name=v.slice(0,180);continue;}
+   if(badFields.test(k)||k==="owner"||k==="actor")continue;
    if(typeof v==="string"&&v.length<=1300&&!v.includes("@"))out[k]=v;
    if(typeof v==="number"&&Number.isFinite(v))out[k]=v;
    if(typeof v==="boolean")out[k]=v;
@@ -149,7 +150,7 @@ Create a specific, measurable Next Best Action plan with owner role, evidence re
   if(!memberships.some(x=>x.org_id===orgId&&["owner","admin","recruiter"].includes(x.role)))
     throw Error("سطح دسترسی برای ذخیره اطلاعات کافی نیست.");
   if(Object.keys(snapshot).some(k=>!allowedKinds.has(k)))throw Error("داده‌های شخصی نباید Sync شوند.");
-  const uploads=Object.entries(snapshot).flatMap(([kind,records])=>(Array.isArray(records)?records:[]).map(r=>({kind,id:String(r.id||""),data:cleanedRecord(r)})));
+  const uploads=Object.entries(snapshot).flatMap(([kind,records])=>(Array.isArray(records)?records:[]).map(r=>({kind,id:String(r.id||""),data:cleanedRecord(r,kind)})));
   if(uploads.length>120)throw Error("این نسخه حداکثر ۱۲۰ رکورد در هر بار Sync می‌پذیرد.");
   if(uploads.some(x=>!/^[A-Za-z0-9_-]{4,80}$/.test(x.id)))throw Error("شناسه رکورد نامعتبر است.");
   const batch=deps.fire.writeBatch(db);
