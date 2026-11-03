@@ -379,6 +379,7 @@ function fromEntry(row){
  return {id:row.id,kind:row.entry_type,amount:Number(row.amount),currency:row.currency,
   category:row.category||'',memo:row.description||'',date:row.occurred_at,status:row.status,
   account:meta.accountId||null,accountName:meta.accountName||'',
+  direction:meta.direction||'',principalRepayment:meta.principalRepayment===true,
   paymentMethod:meta.paymentMethod||'',scope:meta.scope||'personal',legacyId:meta.legacyId||null,
   recurringId:meta.recurringId||null,dueDate:meta.dueDate||null,paidAt:meta.paidAt||null,source:'supabase'};
 }
@@ -386,6 +387,7 @@ function toEntry(item){
  const account=bridge.getData().accounts.find(a=>a.id===item.account);
  const currency=item.currency||account?.currency||'IRT';
  const metadata={accountId:item.account||null,accountName:item.accountName||account?.name||null,
+  direction:item.direction||null,principalRepayment:item.principalRepayment===true,
   paymentMethod:item.paymentMethod||null,scope:item.scope||'personal',legacyId:item.legacyId||null,
   recurringId:item.recurringId||null,dueDate:item.dueDate||null,paidAt:item.paidAt||null};
  return {id:item.id,user_id:user.id,entry_type:item.kind,amount:Number(item.amount),currency,
