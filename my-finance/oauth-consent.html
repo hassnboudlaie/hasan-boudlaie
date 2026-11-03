@@ -48,7 +48,7 @@ a{color:#0d665f}
 </main>
 <script type="module">
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
-const URL='https://hxcjkewlaniahvuqwwbb.supabase.co',KEY='sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6';
+const SUPABASE_URL='https://hxcjkewlaniahvuqwwbb.supabase.co',KEY='sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6';
 const AUTH='myfinance-supabase-session-v1',KEEP='myfinance-keep-signed-in-v1';
 const remembered=()=>localStorage.getItem(KEEP)!=='no';
 const storage={
@@ -56,11 +56,11 @@ const storage={
  setItem(k,v){if(remembered()){localStorage.setItem(k,v);sessionStorage.removeItem(k)}else{sessionStorage.setItem(k,v);localStorage.removeItem(k)}},
  removeItem(k){localStorage.removeItem(k);sessionStorage.removeItem(k)}
 };
-const client=createClient(URL,KEY,{auth:{persistSession:true,storageKey:AUTH,storage,autoRefreshToken:true,detectSessionInUrl:false}});
+const client=createClient(SUPABASE_URL,KEY,{auth:{persistSession:true,storageKey:AUTH,storage,autoRefreshToken:true,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id),status=t=>$('status').textContent=t;
 const authorizationId=new URL(location.href).searchParams.get('authorization_id');
 const authIdPattern=/^[A-Za-z0-9._-]{8,256}$/;
-let busy=false,approvedUserId='',approvedClientId=';
+let busy=false,approvedUserId='',approvedClientId='';
 if(!authorizationId||!authIdPattern.test(authorizationId)){status('شناسه درخواست معتبر نیست. اتصال از داخل ChatGPT آغاز می‌شود.')}
 else init();
 async function init(){
