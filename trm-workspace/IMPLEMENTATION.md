@@ -24,3 +24,13 @@ Armin Trost (2014), *Talent Relationship Management: Competitive Recruiting Stra
 ## Tests
 - Headless Chromium multi-step flow: choose role template, save workforce assumptions, create EVP draft, save sourcing plan, register consented test candidate, retention follow-up, candidate experience reply promise, roadmap checklist, finance assumptions, export JSON, and inspect all 10 playbook chapters.
 - Native APK build through GitHub Actions must be confirmed separately; do not claim install is verified before the build succeeds.
+## Revision 3.0 · 2026-11-03 — Trost × CRM × Decision Support
+- CRM-inspired focused home page, four action tiles, clean next-step display, and stable mobile navigation.
+- Vacancies stage board: `open / plan / active / filled / closed`; persistent vacancy records linked to role ID, owner, rationale and target date.
+- Explainable `decision-engine.js`: four analysis tools (critical-role assessment, evidence-led EVP review, vacancy activation plan and consent-aware relationship next actions).
+- EVP wizard now offers an additional "ممیزی EVP" review; missing evidence and signature stories are visible before publication.
+- Outputs disclose Trost chapter basis, readiness, missing evidence and suggested next steps; no model-based candidate ranking or automatic contact.
+- Analytics results stored locally with a bounded history (40).
+- Independent tests and an Actions regression workflow added.
+- **Important:** decision engine runs deterministic logic locally; it is *not* a live generative AI Agent. A protected organization backend, verified auth, isolation, privacy controls and server-only model provider integration remain prerequisites.
+- Audited roadmap: `docs/TRM-ARCHITECTURE-AUDIT-20261103.md`. Existing browser storage key and legacy records retained. No other application was modified.
