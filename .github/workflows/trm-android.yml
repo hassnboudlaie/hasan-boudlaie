@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - 'trm-android/**'
+      - 'trm-workspace/render-logo.py'
+      - 'trm-workspace/icon.svg'
       - '.github/workflows/trm-android.yml'
   workflow_dispatch:
 permissions:
@@ -29,6 +31,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate TRM icon assets
+        run: |
+          python -m pip install --disable-pip-version-check cairosvg
+          python trm-workspace/render-logo.py
       - name: Build signed debug pilot APK
         run: cd trm-android && gradle --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
@@ -41,5 +50,5 @@ jobs:
           cp trm-android/app/build/outputs/apk/debug/app-debug.apk trm-workspace/downloads/TRM-Workspace-Android-Pilot.apk
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add trm-workspace/downloads/TRM-Workspace-Android-Pilot.apk
+          git add trm-workspace/downloads/TRM-Workspace-Android-Pilot.apk trm-workspace/icon-192.png trm-workspace/icon-512.png trm-android/app/src/main/res/drawable-nodpi/trm_brand.png
           git diff --cached --quiet || (git commit -m 'Publish TRM Android installable pilot package [skip ci]' && git push)
