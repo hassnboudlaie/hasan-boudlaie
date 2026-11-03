@@ -5,6 +5,7 @@ create table if not exists public.finance_chatgpt_connections (
   enabled boolean not null default false,
   allow_summary boolean not null default false,
   allow_drafts boolean not null default false,
+  oauth_client_id text check (oauth_client_id is null or char_length(oauth_client_id) between 8 and 256),
   updated_at timestamptz not null default now()
 );
 
