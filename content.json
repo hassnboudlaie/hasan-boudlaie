@@ -5,16 +5,16 @@
   },
   "hero": {
     "eyebrow": {
-      "en": "Management · Leadership · Organization",
-      "fa": "مدیریت · رهبری · سازمان"
+      "en": "Strategy · Leadership · People",
+      "fa": "راهبرد · رهبری · سرمایه انسانی"
     },
     "title": {
-      "en": "Ideas into practice.",
-      "fa": "از ایده تا عمل."
+      "en": "From complex challenges to practical progress.",
+      "fa": "از چالش‌های پیچیده تا پیشرفت عملی."
     },
     "description": {
-      "en": "Management Consultant & Leadership Advisor. I work with leaders to connect strategy, organization and people—and turn that thinking into practical tools.",
-      "fa": "مشاور مدیریت و توسعهٔ رهبری؛ همراه مدیران برای پیوند راهبرد، سازمان و سرمایهٔ انسانی و تبدیل این نگاه به ابزارهای قابل استفاده."
+      "en": "I work with executives and organizations to turn strategic choices, leadership challenges and people priorities into decisions, capabilities and measurable action.",
+      "fa": "با مدیران و سازمان‌ها کار می‌کنم تا انتخاب‌های راهبردی، چالش‌های رهبری و اولویت‌های سرمایه انسانی را به تصمیم، قابلیت و اقدام قابل سنجش تبدیل کنیم."
     },
     "artLabel": {
       "en": "Current practice",
@@ -43,8 +43,8 @@
       }
     ],
     "credentials": {
-      "en": "PhD in HRM · 15+ years in consulting and executive education",
-      "fa": "دکترای مدیریت منابع انسانی · بیش از ۱۵ سال تجربهٔ مشاوره و آموزش مدیران"
+      "en": "PhD in Human Resource Management · 15+ years in consulting and executive education",
+      "fa": "دکترای مدیریت منابع انسانی · بیش از ۱۵ سال تجربه مشاوره و آموزش مدیران"
     }
   },
   "focus": [
@@ -626,5 +626,119 @@
       "en": "For advisory work, executive education or research collaboration, email is the simplest way to get in touch.",
       "fa": "برای مشاوره، آموزش مدیران یا همکاری پژوهشی، ایمیل ساده‌ترین مسیر ارتباط است."
     }
-  }
+  },
+  "caseStudies": [
+    {
+      "id": "kish",
+      "client": {
+        "en": "Kish Ports & Airports",
+        "fa": "بنادر و فرودگاه‌های کیش"
+      },
+      "label": {
+        "en": "Strategy execution",
+        "fa": "اجرای راهبرد"
+      },
+      "title": {
+        "en": "Making strategy visible in day-to-day execution",
+        "fa": "پیوند راهبرد با اقدامات روزمره"
+      },
+      "focus": {
+        "en": "Strategy, objectives, KPIs and review rhythms need a shared place to stay connected.",
+        "fa": "پیوند برنامه راهبردی، اهداف، شاخص‌ها و مرورهای مدیریتی در یک فضای روشن و قابل پیگیری."
+      },
+      "approach": {
+        "en": "A structured digital workspace connecting OKRs, KPIs, initiatives and management reviews.",
+        "fa": "طراحی فضای یکپارچه برای اهداف و نتایج کلیدی، شاخص‌ها، اقدامات و جلسات مرور مدیریتی."
+      },
+      "deliverable": {
+        "en": "Public working prototype: Strategy & OKR Execution Platform.",
+        "fa": "خروجی قابل مشاهده: نمونه اجرایی سامانه راهبرد و OKR."
+      },
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/okr-system/"
+    },
+    {
+      "id": "behparvar",
+      "client": {
+        "en": "Behparvar",
+        "fa": "به‌پرور"
+      },
+      "label": {
+        "en": "Management development",
+        "fa": "توسعه مدیریت"
+      },
+      "title": {
+        "en": "From learning content to workplace practice",
+        "fa": "از محتوای آموزشی تا تمرین مهارت در کار"
+      },
+      "focus": {
+        "en": "Make managerial competencies understandable and practiceable for supervisors and managers.",
+        "fa": "تبدیل شایستگی‌های مدیریتی به تمرین‌های قابل فهم و کاربردی برای مدیران و سرپرستان."
+      },
+      "approach": {
+        "en": "Competency paths, real managerial scenarios, paired dialogue and collaborative role play.",
+        "fa": "مسیرهای شایستگی، موقعیت‌های واقعی مدیریتی، گفت‌وگوهای دو نفره و تمرین‌های گروهی."
+      },
+      "deliverable": {
+        "en": "Public learning prototype: My Management Lab.",
+        "fa": "خروجی قابل مشاهده: اپلیکیشن یادگیری My Management Lab."
+      },
+      "url": "https://hassnboudlaie.github.io/behparvar-leadership-lab/"
+    },
+    {
+      "id": "alborz",
+      "client": {
+        "en": "Alborz Insurance",
+        "fa": "بیمه البرز"
+      },
+      "label": {
+        "en": "Communication capability",
+        "fa": "مهارت‌های ارتباطی"
+      },
+      "title": {
+        "en": "Practicing the moments that matter in branch conversations",
+        "fa": "تمرین لحظه‌های مهم در گفت‌وگوهای شعب"
+      },
+      "focus": {
+        "en": "Bring difficult customer and colleague conversations into practical manager training.",
+        "fa": "تبدیل گفت‌وگوهای دشوار با مشتریان و همکاران به موقعیت‌های واقعی یادگیری مدیران."
+      },
+      "approach": {
+        "en": "Sample dialogues, scenario-based questions, observer checklists and facilitation prompts.",
+        "fa": "گفت‌وگوهای نمونه، پرسش‌های موقعیتی، چک‌لیست مشاهده و راهنمای اجرای کلاس."
+      },
+      "deliverable": {
+        "en": "Public learning prototype: Communication Academy.",
+        "fa": "خروجی قابل مشاهده: آکادمی ارتباطات اثربخش."
+      },
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/alborz-communication-skills/"
+    },
+    {
+      "id": "saba",
+      "client": {
+        "en": "Saba Naft",
+        "fa": "صبانفت"
+      },
+      "label": {
+        "en": "Reflective leadership",
+        "fa": "رهبری بازتابی"
+      },
+      "title": {
+        "en": "Helping leaders turn reflection into daily practice",
+        "fa": "تبدیل بازاندیشی مدیران به تمرین روزانه"
+      },
+      "focus": {
+        "en": "Support leadership learning through reflection on actual workplace decisions.",
+        "fa": "پشتیبانی از یادگیری رهبری با بازاندیشی درباره تصمیم‌ها و موقعیت‌های واقعی محیط کار."
+      },
+      "approach": {
+        "en": "A nine-session guided learning journey with reflective prompts and practice studio.",
+        "fa": "طراحی مسیر یادگیری نه‌جلسه‌ای همراه با پرسش‌های بازتابی و استودیوی تمرین."
+      },
+      "deliverable": {
+        "en": "Public learning prototype: Reflective Leadership application.",
+        "fa": "خروجی قابل مشاهده: اپلیکیشن رهبری بازتابی."
+      },
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/"
+    }
+  ]
 }
