@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {JSDOM,VirtualConsole}=require('jsdom');
 const root=__dirname,html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const scripts=['reflective-content.js','reflective-cases.js','reflective-app.js'].map(f=>fs.readFileSync(path.join(root,f),'utf8'));
+const scripts=['reflective-content.js','reflective-cases.js','practice-kits.js','assessment-upgrade.js','reflective-app.js'].map(f=>fs.readFileSync(path.join(root,f),'utf8'));
 const KEY='sabanaft_reflective_v2',old={'sabanaft_session1_v4':'{"note":"یادداشت قبلی"}','sabanaft_session6_v1':'{"answer":"پاسخ قبلی"}','sabanaft_practice_v1':'{"kept":true}'};
 let assertions=0;const check=(x,message)=>{assert.ok(x,message);assertions++};
 const equal=(a,b,message)=>{assert.equal(a,b,message);assertions++};
@@ -30,11 +30,14 @@ async function run(){
  const t=boot(old),{w,$,$$,api,state,ctx,go,click,input}=t,D=w.SABA_REFLECTIVE,C=w.SABA_CASES;
  equal(D.sessions.length,9,'nine sessions');equal(D.sessions.reduce((n,s)=>n+s.sections.length,0),47,'47 sections');
  equal(D.dimensions.length,18,'18 dimensions');equal(D.roles.length,4,'four roles');equal(D.benefits.length,8,'eight benefits');equal(C.length,15,'15 appendix themes');
+ equal(Object.keys(w.SABA_PRACTICE_KITS).length,9,'nine applied practice kits');
  assert.deepEqual(plain(D.sessions.map(s=>s.sections.length)),[5,5,5,5,6,5,5,6,5]);assertions++;
  equal($$('.session-card').length,9,'home cards');equal(ctx().completed.length,0,'opening home never completes lessons');
  check(!Object.values(ctx().mix).flatMap(Object.values).some(x=>x!==null),'no preselected mix');
  for(const s of D.sessions){
-  equal(s.checks.length,2,'two concept checks');
+  check(w.SABA_PRACTICE_KITS[s.id].section,'each session has a signature section');
+  check(s.checks.every(q=>Array.isArray(q.optionReasons)&&q.optionReasons.length===q.options.length),'each choice has a rationale');
+  equal(s.checks.length,4,'four concept and applied checks');
   for(const q of s.checks)check(q.correct>=0&&q.correct<q.options.length&&q.why,'concept answer valid');
   go('s/'+s.id+'/overview');equal($$('.section-card').length,s.sections.length,'overview section count');
   for(const x of s.sections){
@@ -81,7 +84,7 @@ async function run(){
   go('s/'+s.id+'/'+s.sections.at(-1).id);equal($$('.knowledge .feedback').length,0,'explanations withheld');
   click('[data-submit-check]');check(!ctx().checks[s.id]?.submitted,'cannot submit unanswered check');
   for(let i=0;i<s.checks.length;i++)click('[data-check-question="'+i+'"][data-check-option="'+s.checks[i].correct+'"]');
-  equal($$('.knowledge .feedback').length,0,'explanations withheld until submit');click('[data-submit-check]');equal($$('.knowledge .feedback').length,2,'analyses revealed');check(ctx().checks[s.id].submitted,'submission saved');
+  equal($$('.knowledge .feedback').length,0,'explanations withheld until submit');click('[data-submit-check]');equal($$('.knowledge .feedback').length,4,'analyses revealed');check($$('.knowledge .option-explanations li').length===12,'each option has a distinct explanation');check(ctx().checks[s.id].submitted,'submission saved');
   click('[data-check-question="0"][data-check-option="'+((s.checks[0].correct+1)%s.checks[0].options.length)+'"]');equal($$('.knowledge .feedback').length,0,'changing answer clears prior analysis');
  }
  go('portfolio');for(const text of ['یادداشت اختصاصی ستاد','شاهد بافت','استدلال بر اساس شواهد','دلیل بافتی من','گزینه دیگر معقول','شرط تغییر من','انتظار گفته‌شده','روش پیشنهادی من','رفتار قابل مشاهده'])check($('#main').textContent.includes(text),'portfolio includes '+text);

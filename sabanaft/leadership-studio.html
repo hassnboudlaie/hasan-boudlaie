@@ -151,7 +151,28 @@ q('#nav-toggle').addEventListener('click',function(){var rail=q('#rail');rail.cl
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){var rail=q('#rail');if(rail.classList.contains('open')){rail.classList.remove('open');q('#nav-toggle').setAttribute('aria-expanded','false');var more=q('#mobile-more-toggle');if(more)more.setAttribute('aria-expanded','false');if(more&&typeof more.focus==='function')more.focus();}}});
 window.addEventListener('hashchange',function(){var p=location.hash.replace('#','');if(renders[p]&&p!==active){active=p;render();var rail=q('#rail');rail.classList.remove('open');q('#nav-toggle').setAttribute('aria-expanded','false');var more=q('#mobile-more-toggle');if(more)more.setAttribute('aria-expanded','false');}});
 active=renders[location.hash.slice(1)]?location.hash.slice(1):'home';render();
+/* Cross-page case handoff: a one-time, same-origin transfer from the PWA coaching desk.
+   Existing personal drafts and records are never replaced. */
+function consumeCoachingHandoff(){
+ var handoffKey='sabanaft_case_handoff_v1',raw,p;
+ try{raw=localStorage.getItem(handoffKey);if(!raw)return;p=JSON.parse(raw);}
+ catch(e){return;}
+ if(!p||p.schema!==1||typeof p.text!=='string'||p.text.trim().length<12||p.text.length>2200)return;
+ var situation=p.text.trim(),id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+ var c={id:id,title:trim(situation.split(/[.؟!\n]/)[0]||situation,82),situation:situation,
+ urgency:'unknown',risk:'unknown',authority:'unknown',capability:'unknown',dependencies:'unknown',
+ createdAt:new Date().toISOString(),inputMode:'app-handoff'};
+ state.cases.unshift(c);
+ if(save()){
+  try{localStorage.removeItem(handoffKey);}catch(e){}
+  editorId=id;roleDraft='';goto('workbench');
+  toast('کیس جدید ثبت شد؛ اکنون می‌توانید آن را تکمیل و بررسی کنید.');
+ }else{state.cases.shift();toast('ذخیره انجام نشد. از داده‌ها نسخه پشتیبان تهیه کنید.');}
+}
+window.addEventListener('storage',function(event){if(event.key==='sabanaft_case_handoff_v1'&&event.newValue)consumeCoachingHandoff();});
+
 window.SabanaftLeadershipStudio={getState:function(){return JSON.parse(JSON.stringify(state))},navigate:goto,dimensions:D.dimensions.length,roles:D.roles.length,contextInsights:contextInsights,commercialBridge:{state:function(){return state;},currentCase:activeCase,save:save,render:render,go:goto,toast:toast,openCase:function(id){editorId=id;roleDraft='';goto('workbench');}},dailyBridge:{state:function(){return state;},save:save,render:render,go:goto,toast:toast}};
+consumeCoachingHandoff();
 })();
 </script>
 </body></html>

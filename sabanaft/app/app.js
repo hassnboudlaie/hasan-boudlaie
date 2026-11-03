@@ -48,7 +48,7 @@ courseFrame.addEventListener("load",function(){courseReady=true;try{courseLast=c
 studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=studioFrame.contentWindow.location.href}catch(e){}E("studioLoader").hidden=true});
 document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.nav)})});
 document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.go)})});
-E("heroStart").addEventListener("click",function(){go("course")});
+E("heroStart").addEventListener("click",function(){go("coach")});
 E("futureCoachEntry").addEventListener("click",function(){go("coach")});
 E("futureCoachBack").addEventListener("click",function(){go("home")});
 E("resume").addEventListener("click",function(){var l=latest();openLesson(l.s,l.p)});

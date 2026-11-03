@@ -1,0 +1,50 @@
+/* Book-mapped leadership practice kits: readable, classroom-friendly and mobile-first. */
+.signature-kit{margin:25px 0;padding:clamp(17px,2.7vw,29px);border-radius:24px;background:#f5f9ff;border:1px solid #bdd5ed;box-shadow:0 8px 26px #164a7a12}
+.signature-kit h2,.signature-kit h3{margin:0;color:#183f65;line-height:1.65}
+.signature-kit h2{font-size:clamp(24px,2.8vw,32px);font-weight:950}
+.signature-kit h3{font-size:clamp(20px,2.2vw,24px);font-weight:900}
+.signature-kit p{font-size:16px;line-height:2;color:#28465f;margin:9px 0 0}
+.kit-heading{padding-bottom:17px;border-bottom:1px solid #d6e5f5}
+.kit-heading>span{display:block;font-size:13px;font-weight:900;color:#a65a29}
+.kit-heading h2{margin:6px 0}
+.kit-heading p{font-size:16px}
+.kit-scene,.kit-choice,.kit-turning,.kit-exercise,.kit-transfer{margin-top:16px;padding:17px 20px;background:white;border:1px solid #dce7f2;border-radius:18px}
+.kit-scene{border-right:5px solid #1768aa}
+.kit-dialogue{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.kit-turn{padding:12px 14px;border-radius:12px;background:#f3f7fd;border-right:3px solid #6ba5d1}
+.kit-turn:nth-child(even){background:#fff8f1;border-right-color:#f3a260}
+.kit-turn strong{font-size:15px;color:#123d6c;font-weight:900}
+.kit-turn p{margin:3px 0 0;color:#29465c;font-size:16px;line-height:1.9}
+.kit-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.kit-option{background:#fcfdff;border:1px solid #d1e1ef;border-radius:15px;padding:12px 16px;min-width:0}
+.kit-option>summary{font-size:18px;font-weight:900;color:#124980;cursor:pointer;min-height:46px;padding:9px 0}
+.kit-option .kit-dialogue{margin-top:7px}
+.kit-option p{font-size:15px}
+.kit-caution{background:#fff4e9;border:1px solid #f5dfbf;border-radius:9px;padding:9px}
+.kit-turning{background:#e9f2ff;border-color:#bfd8f0}
+.kit-exercise{background:#fff}
+.kit-exercise>p{margin-top:12px}
+.kit-check{margin-top:18px;border:1px solid #d0e1ef;border-radius:15px;padding:15px 17px}
+.kit-check legend{font-size:17px;font-weight:900;padding:0 9px;color:#1c4f78}
+.kit-check label{display:flex;gap:12px;align-items:flex-start;margin:8px 0;cursor:pointer;font-size:16px;line-height:1.85;color:#2b4d69}
+.kit-check input{width:22px;height:22px;flex:0 0 22px;margin:5px 0 0;accent-color:#176ea8}
+.kit-debrief{padding-top:12px;border-top:1px dashed #cadce8}
+.kit-transfer{background:linear-gradient(115deg,#e8f7ef,#f4fcf8);border-color:#bfdfd1}
+.kit-transfer a{color:#0d568f;text-decoration:underline;font-weight:900}
+.knowledge .option-explanations{display:grid;gap:8px;margin-top:10px}
+.knowledge .option-explanations>li{list-style:none;padding:10px 13px;background:#f6f8fb;border:1px solid #e0e7ee;border-radius:9px;font-size:15px;line-height:1.85}
+.knowledge .option-explanations .correct{background:#ebf8f1;border-color:#bee5cc}
+.knowledge .option-explanations .incorrect{background:#fff4ee;border-color:#f1d3c5}
+.knowledge .option-explanations strong{display:inline-block;margin-left:8px;color:#244565}
+@media(max-width:730px){
+ .signature-kit{padding:14px;border-radius:18px;margin:18px 0}
+ .signature-kit h2{font-size:24px}
+ .signature-kit h3{font-size:20px}
+ .signature-kit p{font-size:15px;line-height:1.95}
+ .kit-scene,.kit-choice,.kit-turning,.kit-exercise,.kit-transfer{padding:15px;border-radius:15px}
+ .kit-options{grid-template-columns:1fr;gap:10px}
+ .kit-turn p{font-size:16px}
+ .kit-option>summary{font-size:17px}
+ .kit-check{padding:12px}
+ .kit-check label{font-size:15px}
+}

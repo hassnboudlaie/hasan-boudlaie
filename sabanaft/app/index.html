@@ -9,6 +9,7 @@
 <link rel="preload" href="../assets/vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./app.css?v=2">
 <link rel="stylesheet" href="./visual-upgrade-20261102.css?v=1">
+<link rel="stylesheet" href="./coaching-journey.css?v=1">
 <title>رهبری بازتابی من | صبا نفت</title>
 </head>
 <body><div class="app-shell">
@@ -22,9 +23,9 @@
  <div class="hero">
   <div class="hero-copy">
    <span class="eyebrow light">صبا نفت | مسیر توسعه رهبری</span>
-   <h1>رهبری را آگاهانه‌تر تجربه کنید.</h1>
-   <p>از تجربه‌های واقعی کار شروع کنید؛ با شناخت بافت، انتخاب نقش مناسب و بازاندیشی، به اقدام مؤثرتر برسید.</p>
-   <button type="button" id="heroStart" class="hero-action">شروع یادگیری <span aria-hidden="true">←</span></button>
+   <h1>از یک مسئله واقعی شروع کنید.</h1>
+   <p>مسئله را مطرح کنید، گزینه‌های تصمیم را بررسی کنید، گفت‌وگو را تمرین کنید و نتیجه را بازاندیشی کنید.</p>
+   <div class="hero-actions"><button type="button" id="heroStart" class="hero-action">طرح مسئله و دریافت راهنما <span aria-hidden="true">←</span></button><button type="button" class="hero-secondary" data-go="course">مسیر ۹ جلسه‌ای کتاب</button></div>
   </div>
   <div class="hero-image"><img src="../assets/sabanaft-meeting.jpg" alt="تصویر واقعی نشست مدیران و پیمانکاران پروژه نیایش صبا نفت" fetchpriority="high"></div>
  </div>
@@ -47,9 +48,9 @@
    <img src="../assets/sabanaft-farmanieh.webp" alt="تصویر طرح معماری پروژه صبا فرمانیه" loading="lazy">
    <span class="feature-content"><small>پیگیری مسیر شخصی</small><strong>یادگیری من</strong><span>مشاهده پیشرفت و دسترسی به درس‌های نشان‌شده</span><b>مشاهده پیشرفت ←</b></span>
   </button>
-  <button type="button" class="feature-card feature-card-coach" id="futureCoachEntry" aria-label="معرفی مربی هوش مصنوعی رهبری من؛ به‌زودی">
-   <span class="coach-art" aria-hidden="true"><span>✦</span><small>به‌زودی</small></span>
-   <span class="feature-content"><small>قابلیت آینده</small><strong>مربی هوش مصنوعی من</strong><span>معرفی امکان راهنمایی هوشمند برای موقعیت‌های مدیریتی</span><b>آشنایی با قابلیت ←</b></span>
+  <button type="button" class="feature-card feature-card-coach" id="futureCoachEntry" aria-label="ورود به میز راهنمای رهبری و کوچینگ">
+   <span class="coach-art" aria-hidden="true"><span>✦</span><small>راهنمای اولیه فعال</small></span>
+   <span class="feature-content"><small>راهنمایی و کوچینگ</small><strong>میز کوچینگ من</strong><span>بررسی مسئله، راهنمای اولیه، ChatGPT و درخواست کوچ انسانی</span><b>طرح مسئله ←</b></span>
   </button>
  </div>
  <div class="section-title"><div><span class="eyebrow">ادامه یادگیری</span><h2>ادامه از آخرین درس</h2></div></div>
@@ -91,19 +92,63 @@
   <p class="fineprint">اطلاعات فضای شخصی روی همین مرورگر ذخیره می‌شوند؛ این نسخه حساب کاربری، همگام‌سازی یا فضای امن سازمانی ندارد. از واردکردن داده محرمانه خودداری کنید.</p>
 </section>
 
-<section id="coachView" class="view" aria-label="مربی هوش مصنوعی رهبری من؛ به‌زودی">
- <div class="page-heading"><button type="button" id="futureCoachBack" class="backlink">→ بازگشت به خانه</button><span class="eyebrow">MY AI LEADERSHIP COACH · COMING SOON</span><h1>مربی هوش مصنوعی رهبری من</h1><p>در به‌روزرسانی‌های آینده، یک همراه هوشمند برای موقعیت‌های واقعی مدیریتی در اینجا فعال می‌شود.</p></div>
- <div class="future-coach-hero">
-  <div class="future-coach-hero-text"><span class="future-coach-hero-icon" aria-hidden="true">✦</span><h2>یک فضای جدید برای Reflection & Growth</h2><p>از فهم بهتر Context تا تمرین گفت‌وگو و Follow-through، بر پایه چهار نقش Boss، Coach، Partner و Enabler.</p><span class="future-coach-main-status">به‌زودی فعال می‌شود</span></div>
-  <img src="../assets/sabanaft-meeting.jpg" alt="جلسه پیمانکاران صبا نفت؛ تصویر رسمی شرکت" loading="lazy">
+<section id="coachView" class="view" aria-label="میز راهنمای رهبری و کوچینگ">
+ <div class="page-heading cj-heading">
+  <button type="button" id="futureCoachBack" class="backlink">→ بازگشت به خانه</button>
+  <span class="eyebrow">میز رهبری من</span>
+  <h1>مسئله را مطرح کنید؛ گزینه‌های تصمیم را بررسی کنید.</h1>
+  <p>از یک موقعیت کاری فرضی و بدون اطلاعات محرمانه شروع کنید. راهنمای اولیه در همین اپ ارائه می‌شود؛ AI Coach واقعی به اتصال امن مجزا نیاز دارد.</p>
  </div>
- <div class="section-title"><div><span class="eyebrow">PLANNED EXPERIENCE</span><h2>قابلیت‌های پیش‌بینی‌شده</h2></div></div>
- <div class="future-coach-grid">
-  <article class="future-coach-feature"><span aria-hidden="true">◎</span><strong>تحلیل موقعیت مدیریتی</strong><p>Clarify the context و بررسی گزینه‌های رفتاری بدون تجویز مکانیکی نقش.</p><small>به‌زودی</small></article>
-  <article class="future-coach-feature"><span aria-hidden="true">♧</span><strong>تمرین گفت‌وگو</strong><p>AI Role-play برای گفت‌وگوهای دشوار و دریافت بازخورد ساختاریافته.</p><small>به‌زودی</small></article>
-  <article class="future-coach-feature"><span aria-hidden="true">↗</span><strong>اقدام و بازاندیشی</strong><p>Action Plan، مشاهده نتیجه و یادگیری از تجربه واقعی.</p><small>به‌زودی</small></article>
+ <div class="cj-layout">
+  <div class="cj-main">
+   <section class="cj-card cj-case-form" aria-labelledby="cj-start-title">
+    <div class="cj-step"><span>۱</span><div><h2 id="cj-start-title">موقعیت مدیریتی من</h2><p>شرح کوتاه، بدون نام افراد، قرارداد یا جزئیات حساس پروژه</p></div></div>
+    <label for="cj-situation">چه اتفاقی افتاده و تصمیم شما درباره چیست؟</label>
+    <textarea id="cj-situation" maxlength="2200" rows="5" placeholder="مثلاً یکی از سرپرستان پروژه می‌گوید اولویت کارها روشن نیست و واحدهای مختلف از او درخواست متفاوت دارند."></textarea>
+    <div class="cj-fields">
+     <label for="cj-context">بافت کاری<select id="cj-context"><option value="project">پروژه و عملیات</option><option value="team">سرپرستی و تیم</option><option value="headquarters">ستاد و بین‌واحدی</option></select></label>
+     <label for="cj-urgency">فوریت<select id="cj-urgency"><option value="normal">غیرفوری</option><option value="urgent">فوری و زمان‌دار</option><option value="sensitive">دارای ریسک ایمنی/حقوقی/منابع انسانی</option></select></label>
+     <label for="cj-choice">مسئله غالب<select id="cj-choice"><option value="clarity">ابهام در تصمیم یا مسئولیت</option><option value="capability">کمبود مهارت یا حمایت</option><option value="conflict">تعارض دیدگاه و هماهنگی</option><option value="performance">اختلال در عملکرد یا پیگیری</option></select></label>
+    </div>
+    <div class="cj-controls">
+     <button type="button" class="cj-primary" id="cj-guide">دریافت راهنمای اولیه <span aria-hidden="true">←</span></button>
+     <button type="button" class="cj-secondary" id="cj-send-studio">ادامه همین کیس در استودیو</button>
+    </div>
+    <p class="cj-note">راهنمای اولیه این صفحه مبتنی بر قواعد آموزشی کتاب است؛ تحلیل معنایی AI یا ارزیابی واقعی عملکرد افراد نیست.</p>
+    <div id="cj-output" class="cj-result" role="region" aria-live="polite" hidden></div>
+   </section>
+   <section class="cj-card cj-steps" aria-labelledby="cj-next-title">
+    <div class="cj-step"><span>۲</span><div><h2 id="cj-next-title">تمرین و پیگیری</h2><p>از تصمیم به رفتار قابل مشاهده برسید.</p></div></div>
+    <div class="cj-quick-links">
+     <button type="button" data-go="studio/roleplay">تمرین گفت‌وگو <span>↖</span></button>
+     <button type="button" data-go="studio/daily">بازاندیشی پس از اقدام <span>↖</span></button>
+     <button type="button" data-go="course">مطالعه ۹ جلسه کتاب <span>↖</span></button>
+    </div>
+   </section>
+  </div>
+  <aside class="cj-side">
+   <section class="cj-card cj-ai" aria-label="کوچ هوش مصنوعی">
+    <span class="cj-symbol">✦</span><h2>AI Leadership Coach</h2>
+    <p><strong>اتصال AI هنوز فعال نیست.</strong> پس از فعال‌سازی حساب امن سازمانی و سرویس اختصاصی، می‌توانید همین کیس را ارسال کنید و پاسخ مولد را در همین صفحه دریافت کنید.</p>
+    <label class="cj-consent"><input type="checkbox" id="cj-ai-consent"> موافقم فقط متن بدون اطلاعات محرمانه این کیس برای پردازش به سرویس AI ارسال شود.</label>
+    <button type="button" class="cj-primary cj-ai-submit" id="cj-ask-ai" disabled>AI Coach داخل اپ · نیازمند اتصال امن</button>
+    <div class="cj-ai-response" id="cj-ai-response" role="status" aria-live="polite" hidden></div>
+    <p>راه جایگزین فعلی: پرسش را به انتخاب خودتان کپی کنید و در حساب شخصی ChatGPT وارد کنید. پاسخ در ChatGPT دریافت می‌شود، نه این اپ.</p>
+    <div class="cj-side-actions">
+      <button type="button" class="cj-secondary" id="cj-copy-ai">آماده‌کردن پرسش برای ChatGPT</button>
+      <a class="cj-outlink" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">بازکردن ChatGPT ↗</a>
+    </div>
+    <small>اتصال امن سازمانی، حساب کاربر، رضایت برای پردازش داده و API اختصاصی پیش‌نیاز فعال‌سازی AI درون اپ است.</small>
+   </section>
+   <section class="cj-card cj-human" aria-label="کوچ و منتور انسانی">
+    <span class="cj-symbol">◈</span><h2>کوچ و منتور انسانی</h2>
+    <p>برای بررسی عمیق‌تر موضوع، می‌توانید درخواست یک جلسه Coaching/Mentoring ارسال کنید. هیچ متن کیس بدون اقدام صریح شما ایمیل نمی‌شود.</p>
+    <label class="cj-consent"><input type="checkbox" id="cj-share-summary"> خلاصه غیرمحرمانه موضوع را هم در ایمیل قرار بده.</label>
+    <a href="mailto:hasanboudlaie@ut.ac.ir?subject=Leadership%20Coaching%20Request" id="cj-book-human" class="cj-outlink">درخواست جلسه با دکتر بودلایی ↗</a>
+    <small>این گزینه ایمیل شما را باز می‌کند؛ رزرو قطعی، تقویم و پرداخت آنلاین هنوز فعال نیست.</small>
+   </section>
+  </aside>
  </div>
- <p class="future-coach-notice">این صفحه فقط معرفی قابلیت‌های آینده است. در نسخه فعلی هیچ گفت‌وگوی AI، تحلیل خودکار، ثبت پرونده یا تبادل داده‌ای از این بخش انجام نمی‌شود.</p>
 </section>
 <section id="passportView" class="view" aria-label="پیشرفت و نشان شده‌ها">
  <div class="page-heading"><span class="eyebrow">MY REFLECTIVE LEADERSHIP PASSPORT</span><h1>مسیر یادگیری من</h1><p>پیشرفت واقعی ثبت‌شده در وب‌سایت دوره؛ برای حوزه کاری انتخاب‌شده در همان مرورگر.</p></div>
@@ -117,11 +162,13 @@
 </div>
 <nav class="bottom-nav" aria-label="ناوبری اصلی">
  <button type="button" data-nav="home"><span aria-hidden="true">⌂</span><small>خانه</small></button>
+ <button type="button" data-nav="coach"><span aria-hidden="true">✦</span><small>مسئله من</small></button>
  <button type="button" data-nav="course"><span aria-hidden="true">▦</span><small>جلسات</small></button>
  <button type="button" data-nav="studio/daily"><span aria-hidden="true">◉</span><small>استودیو</small></button>
- <button type="button" data-nav="passport"><span aria-hidden="true">✧</span><small>یادگیری من</small></button>
 </nav>
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 <script src="../reflective-content.js"></script>
 <script src="./app.js?v=2"></script>
+<script src="./coaching-journey.js?v=1"></script>
+<script src="./ai-connector.js?v=1"></script>
 </body></html>
