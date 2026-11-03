@@ -792,7 +792,61 @@ window.MyFinanceAI={
  }
 };
 
-window.MyFinanceCloud={sync,authenticated:()=>!!user,currentUserId:()=>user?.id||null};
+// The secure ChatGPT bridge is opt-in per verified finance user. No tokens or passwords
+// are copied into the ChatGPT browser tab; this client only manages first-party consent.
+function bridgeIdentity(){
+ if(!user||!document.body.classList.contains('finance-unlocked'))throw Error('ابتدا وارد حساب My Finance خود شوید.');
+ return {uid:user.id,epoch:identityEpoch};
+}
+function bridgeCheck(identity){
+ if(user?.id!==identity.uid||identityEpoch!==identity.epoch)throw Error('حساب فعال تغییر کرده است؛ درخواست لغو شد.');
+}
+async function chatgptConnection(){
+ const identity=bridgeIdentity();
+ const {data,error}=await client.from('finance_chatgpt_connections')
+  .select('enabled,allow_summary,allow_drafts,oauth_client_id,updated_at').eq('user_id',identity.uid).maybeSingle();
+ bridgeCheck(identity);if(error)throw error;
+ return data||{enabled:false,allow_summary:false,allow_drafts:false};
+}
+async function chatgptSetConnection(enabled,allowSummary,allowDrafts){
+ const identity=bridgeIdentity();
+ const next={user_id:identity.uid,enabled:enabled===true,allow_summary:enabled===true&&allowSummary===true,
+  allow_drafts:enabled===true&&allowDrafts===true,...(enabled===true?{}:{oauth_client_id:null}),updated_at:new Date().toISOString()};
+ const {data,error}=await client.from('finance_chatgpt_connections').upsert(next,{onConflict:'user_id'})
+  .select('enabled,allow_summary,allow_drafts,updated_at').single();
+ bridgeCheck(identity);if(error)throw error;
+ return data;
+}
+const draftIdPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+async function chatgptDraft(id){
+ const identity=bridgeIdentity();
+ if(!draftIdPattern.test(id))throw Error('شناسه پیش‌نویس معتبر نیست.');
+ const {data,error}=await client.from('finance_chatgpt_drafts')
+  .select('id,action,amount,currency,person,account_name,occurred_on,category,memo,status,expires_at,created_at')
+  .eq('id',id).eq('user_id',identity.uid).maybeSingle();
+ bridgeCheck(identity);if(error)throw error;
+ return data;
+}
+async function chatgptDrafts(){
+ const identity=bridgeIdentity();
+ const {data,error}=await client.from('finance_chatgpt_drafts')
+  .select('id,action,amount,currency,person,occurred_on,category,memo,status,expires_at,created_at')
+  .eq('user_id',identity.uid).in('status',['pending','opened'])
+  .gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(20);
+ bridgeCheck(identity);if(error)throw error;return data||[];
+}
+async function chatgptUpdateDraft(id,status){
+ const identity=bridgeIdentity();
+ if(!draftIdPattern.test(id)||!['opened','accepted','dismissed'].includes(status))throw Error('درخواست معتبر نیست.');
+ const {data,error}=await client.from('finance_chatgpt_drafts')
+  .update({status,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',identity.uid)
+  .in('status',['pending','opened']).select('id,status').maybeSingle();
+ bridgeCheck(identity);if(error)throw error;return data;
+}
+window.MyFinanceCloud={
+ sync,authenticated:()=>!!user,currentUserId:()=>user?.id||null,
+ chatgptConnection,chatgptSetConnection,chatgptDraft,chatgptDrafts,chatgptUpdateDraft
+};
 // Avoid flashing the sign-in form on every refresh while a valid remembered session is being verified.
 byId('auth-form').hidden=true;
 byId('auth-pending').hidden=true;

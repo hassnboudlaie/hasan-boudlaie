@@ -231,6 +231,24 @@ check('ChatGPT opt-in is private, cached and consent-based',()=>{
   const syntax=spawnSync(process.execPath,['--check',resolve(root,'personal-chatgpt-connect-v81.js')],{encoding:'utf8'});
   assert.equal(syntax.status,0,syntax.stderr);
 });
+check('opt-in ChatGPT bridge is isolated, review-only, and offline-ready',()=>{
+  const bridge=read('chatgpt-bridge-v82.js');
+  const sync=read('supabase-sync.js'),voice=read('voice-entry.js');
+  const server=read('chatgpt/edge/index.ts');
+  assert.ok(html.includes('./chatgpt-bridge-v82.js?v=20261103r82'),'bridge must be loaded');
+  assert.ok(sw.includes('./chatgpt-bridge-v82.js?v=20261103r82'),'bridge must be available offline');
+  assert.ok(html.includes("location.hash)?location.href:financeRouteUrl(route)"),'deep-link authorization flow must survive the initial router');
+  assert.ok(sync.includes('chatgptSetConnection')&&sync.includes('chatgptDrafts'),'private cloud bridge actions must exist');
+  assert.ok(voice.includes('myfinance:voice-saved'),'review completion signal must exist');
+  assert.ok(bridge.includes('myfinance:voice-saved'),'drafts only close after an explicit voice save');
+  assert.ok(bridge.includes('finance-unlocked'),'bridge must respect verified sign-in');
+  assert.ok(server.includes('OAUTH_CLIENT_NOT_APPROVED'),'OAuth client must match user consent');
+  assert.ok(server.includes('user_id",uid'),'server must scope every query to verified user');
+  assert.ok(!server.includes('SUPABASE_SERVICE_ROLE_KEY'),'bridge must not bypass RLS');
+  assert.ok(!server.includes('.from("finance_entries").insert'),'ChatGPT may not directly save finance entries');
+  const js=spawnSync(process.execPath,['--check',resolve(root,'chatgpt-bridge-v82.js')],{encoding:'utf8'});
+  assert.equal(js.status,0,js.stderr);
+});
 check('free pilot: no email or manual approval step in signup interface',()=>{
  const app=read('supabase-sync.js');
  assert.ok(html.includes('id="auth-confirm-help" hidden aria-hidden="true"'),'Legacy confirmation help must be hidden');

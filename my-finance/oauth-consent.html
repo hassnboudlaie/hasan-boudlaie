@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Cache-Control" content="no-store">
+<title>اجازه اتصال امن | My Finance</title>
+<style>
+:root{font-family:Tahoma,system-ui,sans-serif;color:#16344a;background:#f3f7f9}
+*{box-sizing:border-box}body{margin:0;padding:24px 16px}
+main{max-width:580px;margin:28px auto;background:white;border-radius:24px;border:1px solid #d9e7ed;box-shadow:0 12px 35px #173b5210;padding:25px}
+h1{font-size:25px;margin:5px 0 10px}h2{font-size:19px}.muted{color:#536a7b;line-height:2}
+section{margin:20px 0;border-top:1px solid #e3eaed;padding-top:17px}
+input{font:inherit;width:100%;border:1px solid #bdd0d9;border-radius:12px;padding:13px;margin:7px 0;font-size:18px}
+button{font:inherit;cursor:pointer;border:0;background:#09695b;color:white;font-weight:700;border-radius:12px;padding:14px 18px;min-height:52px;font-size:18px}
+button:disabled{opacity:.5;cursor:wait}.alt{background:#e6eef1;color:#21465b}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+.actions button{flex:1 1 180px}
+#status{line-height:1.9;min-height:27px;font-size:16px}
+#client-name{font-size:21px;font-weight:700}
+#client-redirect{direction:ltr;overflow-wrap:anywhere;text-align:right;font-size:13px;color:#526b7b}
+.note{padding:12px;border-radius:12px;background:#ecf7f3;line-height:2;font-size:16px}
+a{color:#0d665f}
+</style>
+</head>
+<body>
+<main>
+<h1>🔐 اجازه اتصال به My Finance</h1>
+<p class="muted">برای اتصال ابزار ChatGPT به اطلاعات مالی شما، ابتدا هویت خود را تأیید کنید. دسترسی فقط به حساب شخصی شما محدود است.</p>
+<p id="status" role="status" aria-live="polite">در حال بررسی درخواست امن…</p>
+<section id="login" hidden>
+<h2>ورود با حساب My Finance</h2>
+<label for="email">ایمیل</label><input id="email" type="email" autocomplete="email" dir="ltr">
+<label for="password">رمز عبور</label><input id="password" type="password" autocomplete="current-password" dir="ltr">
+<div class="actions"><button type="button" id="login-btn">ورود</button><a href="./" rel="noopener">بازگشت به My Finance</a></div>
+</section>
+<section id="consent" hidden>
+<div>سرویس درخواست‌کننده</div><div id="client-name"></div>
+<p id="client-redirect"></p>
+<p class="note">دسترسی فعلی فقط طبق مجوزهایی است که در My Finance روشن کرده‌اید. ساخت تراکنش از ChatGPT صرفاً پیش‌نویس خواهد بود و ثبت نهایی در اپ با تأیید خودتان انجام می‌شود.</p>
+<p id="scope-line" class="muted"></p>
+<div class="actions"><button type="button" id="approve" disabled>تأیید اتصال</button><button type="button" id="deny" class="alt">رد درخواست</button></div>
+</section>
+<section id="permission" hidden>
+<p>ابتدا در My Finance بخش «مجوز اتصال امن» را فعال کنید؛ سپس به همین صفحه برگردید.</p>
+<div class="actions"><a href="./#/settings" rel="noopener">ورود به تنظیمات My Finance</a><button type="button" id="retry" class="alt">بررسی دوباره</button></div>
+</section>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+const SUPABASE_URL='https://hxcjkewlaniahvuqwwbb.supabase.co',KEY='sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6';
+const AUTH='myfinance-supabase-session-v1',KEEP='myfinance-keep-signed-in-v1';
+const remembered=()=>localStorage.getItem(KEEP)!=='no';
+const storage={
+ getItem(k){if(!remembered())return sessionStorage.getItem(k);return localStorage.getItem(k)||sessionStorage.getItem(k)},
+ setItem(k,v){if(remembered()){localStorage.setItem(k,v);sessionStorage.removeItem(k)}else{sessionStorage.setItem(k,v);localStorage.removeItem(k)}},
+ removeItem(k){localStorage.removeItem(k);sessionStorage.removeItem(k)}
+};
+const client=createClient(SUPABASE_URL,KEY,{auth:{persistSession:true,storageKey:AUTH,storage,autoRefreshToken:true,detectSessionInUrl:false}});
+const $=id=>document.getElementById(id),status=t=>$('status').textContent=t;
+const authorizationId=new URL(location.href).searchParams.get('authorization_id');
+const authIdPattern=/^[A-Za-z0-9._-]{8,256}$/;
+let busy=false,approvedUserId='',approvedClientId='';
+if(!authorizationId||!authIdPattern.test(authorizationId)){status('شناسه درخواست معتبر نیست. اتصال از داخل ChatGPT آغاز می‌شود.')}
+else init();
+async function init(){
+ $('consent').hidden=true;$('permission').hidden=true;$('login').hidden=true;
+ try{
+  const {data,error}=await client.auth.getUser();
+  if(error||!data?.user){$('login').hidden=false;status('برای ادامه با ایمیل و رمز My Finance وارد شوید.');return;}
+  const uid=data.user.id;
+  const {data:grant,error:grantError}=await client.from('finance_access')
+   .select('status,expires_at').eq('user_id',uid).maybeSingle();
+  if(grantError||grant?.status!=='active'||(grant.expires_at&&Date.parse(grant.expires_at)<Date.now())){
+   status('حساب مالی فعال نیست. ابتدا وضعیت My Finance را بررسی کنید.');return;
+  }
+  const {data:settings,error:settingsError}=await client.from('finance_chatgpt_connections')
+   .select('enabled,allow_summary,allow_drafts').eq('user_id',uid).maybeSingle();
+  if(settingsError)throw settingsError;
+  if(!settings?.enabled||(!settings.allow_summary&&!settings.allow_drafts)){
+   $('permission').hidden=false;status('مجوز اتصال سمت My Finance هنوز خاموش است.');return;
+  }
+  if(!client.auth.oauth?.getAuthorizationDetails)throw Error('نسخه OAuth در دسترس نیست.');
+  const {data:detail,error:detailError}=await client.auth.oauth.getAuthorizationDetails(authorizationId);
+  if(detailError||!detail)throw detailError||Error('درخواست پیدا نشد.');
+  if(!('authorization_id'in detail)&&detail.redirect_url){location.assign(detail.redirect_url);return;}
+  approvedClientId=String(detail.client?.id||detail.client_id||'');
+  if(!authIdPattern.test(approvedClientId))throw Error('شناسه کلاینت OAuth معتبر نیست.');
+  approvedUserId=uid;
+  $('client-name').textContent=String(detail.client?.name||'سرویس خارجی');
+  $('client-redirect').textContent='Redirect: '+String(detail.redirect_uri||'نامشخص');
+  $('scope-line').textContent='محدوده OAuth: '+String(detail.scope||'profile');
+  $('consent').hidden=false;$('approve').disabled=false;
+  status('حساب شما تأیید شد. فقط اگر سرویس بالا را می‌شناسید، اجازه بدهید.');
+ }catch(e){status('اتصال OAuth قابل تکمیل نیست: '+String(e.message||e).slice(0,200))}
+}
+$('login-btn').addEventListener('click',async()=>{
+ if(busy)return;busy=true;$('login-btn').disabled=true;status('در حال بررسی ورود...');
+ try{
+  const email=$('email').value.trim(),password=$('password').value;
+  const {error}=await client.auth.signInWithPassword({email,password});
+  $('password').value='';
+  if(error)throw error;
+  await init();
+ }catch(e){status('ورود ناموفق بود: '+String(e.message||e).slice(0,160))}
+ finally{busy=false;$('login-btn').disabled=false}
+});
+async function decide(allow){
+ if(busy||!authorizationId)return;
+ busy=true;$('approve').disabled=true;$('deny').disabled=true;
+ try{
+  if(allow){
+   const {data:verified,error:verifyError}=await client.auth.getUser();
+   if(verifyError||verified?.user?.id!==approvedUserId||!approvedClientId)throw Error('هویت اتصال تغییر کرده است.');
+   const {data:bound,error:boundError}=await client.from('finance_chatgpt_connections')
+    .update({oauth_client_id:approvedClientId,updated_at:new Date().toISOString()})
+    .eq('user_id',approvedUserId).eq('enabled',true).select('oauth_client_id').maybeSingle();
+   if(boundError||bound?.oauth_client_id!==approvedClientId)throw Error('ثبت مجوز کلاینت انجام نشد.');
+  }
+  const {data,error}=allow?await client.auth.oauth.approveAuthorization(authorizationId):
+   await client.auth.oauth.denyAuthorization(authorizationId);
+  if(error||!data?.redirect_url)throw error||Error('پاسخ معتبر نیست.');
+  const url=new URL(data.redirect_url);
+  if(url.protocol!=='https:')throw Error('آدرس بازگشت امن نیست.');
+  location.assign(url.href);
+ }catch(e){status('درخواست انجام نشد: '+String(e.message||e).slice(0,160));$('approve').disabled=false;$('deny').disabled=false}
+ finally{busy=false}
+}
+$('approve').addEventListener('click',()=>decide(true));
+$('deny').addEventListener('click',()=>decide(false));
+$('retry').addEventListener('click',init);
+</script>
+</body></html>

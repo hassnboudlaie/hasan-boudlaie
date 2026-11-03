@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "My Finance — Personal ChatGPT Bridge",
+    "version": "1.0.0",
+    "description": "Opt-in access to the currently signed-in user's financial summary and transaction drafts. Drafts are NEVER recorded until the owner reviews and confirms them in My Finance."
+  },
+  "servers": [
+    {
+      "url": "https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/finance-chatgpt-api"
+    }
+  ],
+  "security": [
+    {
+      "userOAuth": [
+        "profile"
+      ]
+    }
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "operationId": "myFinanceConnectionStatus",
+        "summary": "Check whether the current user's My Finance connection is enabled",
+        "responses": {
+          "200": {
+            "description": "Connection permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "allow_summary": {
+                      "type": "boolean"
+                    },
+                    "allow_drafts": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/summary": {
+      "get": {
+        "operationId": "getMyFinanceSummary",
+        "summary": "Read only an aggregate financial summary for the authorized user",
+        "description": "Never returns individual accounts, personal profile fields, card numbers, or individual transactions.",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90,
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aggregated financial amounts per currency"
+          },
+          "403": {
+            "description": "Connection disabled or summary access not allowed"
+          }
+        }
+      }
+    },
+    "/draft": {
+      "post": {
+        "operationId": "createMyFinanceReviewDraft",
+        "summary": "Create a review-only personal finance draft",
+        "description": "Creates a pending draft belonging only to the authenticated user; DOES NOT save an actual transaction. Show review_url and ask the user to open and confirm it.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action",
+                  "amount",
+                  "currency"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "expense",
+                      "income",
+                      "loan_given"
+                    ],
+                    "description": "Money lent to others is loan_given, not expense."
+                  },
+                  "amount": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1000000000000000
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "IRT",
+                      "IRR",
+                      "USD",
+                      "EUR"
+                    ]
+                  },
+                  "occurred_on": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Gregorian YYYY-MM-DD, leave out to use today in Tehran."
+                  },
+                  "person": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "account_name": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "description": "Do not guess an account. If none stated leave empty."
+                  },
+                  "category": {
+                    "type": "string",
+                    "maxLength": 150
+                  },
+                  "memo": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "request_key": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9._-]{12,100}$",
+                    "description": "Optional stable idempotency key for retries of the same request."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Private review link; no financial entry created"
+          },
+          "403": {
+            "description": "Consent disabled"
+          },
+          "422": {
+            "description": "Input invalid or unsupported action"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "userOAuth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://hxcjkewlaniahvuqwwbb.supabase.co/auth/v1/oauth/authorize",
+            "tokenUrl": "https://hxcjkewlaniahvuqwwbb.supabase.co/auth/v1/oauth/token",
+            "scopes": {
+              "profile": "Authorize access to My Finance account identity (financial permissions are separately controlled in the My Finance app)."
+            }
+          }
+        }
+      }
+    }
+  }
+}
