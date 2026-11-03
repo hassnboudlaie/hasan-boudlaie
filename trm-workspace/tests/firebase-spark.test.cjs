@@ -1,0 +1,33 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const dir=path.join(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(dir,p),'utf8');
+const cfg=read('agent-config.js'),firebase=read('firebase-free-client.js'),old=read('cloud-agent-client.js');
+const rules=read('agent/firebase/firestore.rules'),app=read('app.js'),html=read('index.html'),sw=read('sw.js');
+assert(cfg.includes('provider:"firebase"'),'free provider should be default');
+assert(cfg.includes('enabled:false'),'cloud must remain opt-in');
+assert(firebase.includes('new appCheck.ReCaptchaV3Provider'),'require production App Check');
+assert(firebase.includes('new deps.ai.GoogleAIBackend()'),'use managed Firebase AI Logic proxy');
+assert(firebase.includes('gemini-2.5-flash-lite'),'free model only');
+assert(!firebase.includes('OPENAI_API_KEY'),'no paid OpenAI key');
+assert(firebase.includes('allowedKinds=new Set(["roles","vacancies","evps","tasks"])'),'structural-only cloud sync');
+assert(firebase.includes('safeKeyNames=new Set(["role","evp","vacancy","metrics"])'),'no candidate list to AI');
+assert(firebase.includes('if(!me?.uid||!orgId)'),'authenticated org context required');
+assert(old.includes('cfg.provider==="firebase"'),'Supabase adapter must not shadow Firebase client');
+assert(rules.includes('request.auth.uid == uid'),'identity-bound membership reads');
+assert(rules.includes('allow write: if false; // Memberships'),'forbid membership escalation');
+assert(rules.includes("['owner','admin','recruiter']"),'staff-only cloud writes');
+assert(rules.includes("['roles','vacancies','evps','tasks']"),'personal profiles never synced');
+assert(app.includes("cloudPushStructures()")&&app.includes("cloudPullStructures()"),'explicit sync actions');
+for(const p of ['firebase-free-client.js?v=4.0.0','cloud-agent-client.js?v=4.0.0','agent-config.js?v=4.0.0','app.js?v=4.0.0']) {
+ assert(html.includes(p),p+' should be in HTML');
+ assert(sw.includes(p),p+' should be cached in isolated service worker');
+}
+const win={};
+new Function('window',cfg)(win);
+new Function('window',firebase)(win);
+new Function('window',old)(win);
+assert.equal(win.TRMCloudAgent.configured,false,'disabled Firebase cannot call remote service');
+assert.equal(win.TRMCloudAgent.status().authenticated,false);
+assert.equal(win.TRMCloudAgent.status().signedIn,false);
+Promise.all([win.TRMCloudAgent.analyze('evp',{},'test').then(()=>{throw Error('must fail closed')},()=>true),win.TRMCloudAgent.saveWorkspace({roles:[]}).then(()=>{throw Error('must fail closed')},()=>true)]).then(()=>console.log('PASS Firebase Spark opt-in, privacy and security gates')).catch(err=>{console.error(err);process.exitCode=1});
