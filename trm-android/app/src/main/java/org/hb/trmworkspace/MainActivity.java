@@ -8,6 +8,7 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -29,6 +30,8 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends Activity {
   private WebView web;
+  private ValueCallback<Uri[]> pendingFileChoice;
+  private static final int PICK_JSON_FILE=420;
   private static final String URL="https://hassnboudlaie.github.io/hasan-boudlaie/trm-workspace/";
   @Override public void onCreate(Bundle b) {
     super.onCreate(b);
@@ -43,7 +46,18 @@ public class MainActivity extends Activity {
     settings.setAllowContentAccess(false);
     settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
     settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-    web.setWebChromeClient(new WebChromeClient());
+    web.setWebChromeClient(new WebChromeClient(){
+      @Override public boolean onShowFileChooser(WebView wv, ValueCallback<Uri[]> callback, FileChooserParams params){
+        if(pendingFileChoice!=null){pendingFileChoice.onReceiveValue(null);}
+        pendingFileChoice=callback;
+        Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("application/json");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {startActivityForResult(intent,PICK_JSON_FILE);return true;}
+        catch(Exception ex){pendingFileChoice.onReceiveValue(null);pendingFileChoice=null;return false;}
+      }
+    });
     // Export of explicit user-created backups; app may only navigate within the owned origin.
     web.addJavascriptInterface(new Object(){
       @JavascriptInterface public void saveFile(final String requestedName, final String mime, final String data) {
@@ -92,6 +106,14 @@ public class MainActivity extends Activity {
     TextView msg=new TextView(this);msg.setText("ارتباط اینترنت برقرار نیست. برای ورود به TRM اتصال را بررسی کنید.");msg.setTextSize(22);msg.setTextDirection(View.TEXT_DIRECTION_RTL);
     Button retry=new Button(this);retry.setText("تلاش دوباره");retry.setOnClickListener(v->{setContentView(web);web.loadUrl(URL);});
     panel.addView(msg);panel.addView(retry);setContentView(panel);
+  }
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    super.onActivityResult(requestCode,resultCode,data);
+    if(requestCode==PICK_JSON_FILE && pendingFileChoice!=null){
+      Uri[] result=null;
+      if(resultCode==RESULT_OK && data!=null && data.getData()!=null){result=new Uri[]{data.getData()};}
+      pendingFileChoice.onReceiveValue(result);pendingFileChoice=null;
+    }
   }
   @Override public void onBackPressed(){ if(web!=null&&web.canGoBack()) web.goBack(); else super.onBackPressed(); }
   @Override protected void onDestroy(){if(web!=null){web.destroy();web=null;}super.onDestroy();}
