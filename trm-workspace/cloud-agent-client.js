@@ -2,7 +2,9 @@
    Uses Supabase Auth access token kept in memory only; no plaintext credentials persisted. */
 (function(root){
 "use strict";
-const cfg=root.TRM_CLOUD_CONFIG||{},base=String(cfg.supabaseUrl||"").replace(/\/$/,"");
+const cfg=root.TRM_CLOUD_CONFIG||{};
+if(cfg.provider==="firebase")return;
+const base=String(cfg.supabaseUrl||"").replace(/\/$/,"");
 let accessToken="",user=null,memberships=[],orgId="";
 const configured=Boolean(cfg.enabled&&base.startsWith("https://")&&String(cfg.publishableKey||"").length>12);
 function errorMessage(response){return response?.msg||response?.error_description||response?.message||response?.error||"درخواست با خطا مواجه شد."}
