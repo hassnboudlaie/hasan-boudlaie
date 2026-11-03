@@ -34,3 +34,11 @@ Armin Trost (2014), *Talent Relationship Management: Competitive Recruiting Stra
 - Independent tests and an Actions regression workflow added.
 - **Important:** decision engine runs deterministic logic locally; it is *not* a live generative AI Agent. A protected organization backend, verified auth, isolation, privacy controls and server-only model provider integration remain prerequisites.
 - Audited roadmap: `docs/TRM-ARCHITECTURE-AUDIT-20261103.md`. Existing browser storage key and legacy records retained. No other application was modified.
+
+## Revision 3.2.1 · secure AI delivery boundary
+- Added cloud agent **connection pathway** with Supabase Auth/membership checks and fully server-side OpenAI Responses API design. Public config remains disabled pending dedicated infrastructure.
+- Kept the deterministic Trost decision engine usable in offline pilot mode; normalized role Critical Incident, EVP and competence-gap fields.
+- Added CRM operational action center, with task owner/status/due date and **explicit approval** gate for suggestions. No auto-mail, no auto-hiring.
+- Added dedicated multi-tenant SQL schema, restrictive RLS, atomic daily AI quota and audit-only recording of metadata.
+- GitHub Actions workflow includes unit/safety checks, Deno typecheck and real Chromium desktop/mobile end-to-end tests; completion status of CI and enterprise backend deployment must be confirmed independently.
+- Clear activation/acceptance guide: `agent/README.md`.
