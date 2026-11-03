@@ -116,13 +116,13 @@ async function refreshPairStatus(){
  if(!user)return;
  const {data,error}=await client.from('finance_voice_pairings').select('consumed_at,expires_at').eq('user_id',user.id).maybeSingle();
  if(error)return;
- if(data?.consumed_at)byId('supabase-pair-status').textContent='✓ اتصال ChatGPT تأیید شده است. از این به بعد می‌توانید تراکنش را در همین چت اعلام کنید.';
+ if(data?.consumed_at)byId('supabase-pair-status').textContent='✓ کد در یک گفت‌وگوی مجاز مصرف شده است؛ این وضعیت به معنی اتصال همۀ حساب‌های ChatGPT نیست.';
  else if(data?.expires_at&&new Date(data.expires_at)>new Date())byId('supabase-pair-status').textContent='کد اتصال فعال است؛ اگر کد را گم کرده‌اید، یک کد جدید ایجاد کنید.';
- else byId('supabase-pair-status').textContent='برای اتصال مستقیم به ChatGPT یک کد یک‌بارمصرف بسازید.';
+ else byId('supabase-pair-status').textContent='این کد فقط در گفت‌وگوی ChatGPT دارای دسترسی خصوصی به My Finance قابل استفاده است.';
 }
 function renderAuth(){
  login.hidden=!!user;actions.hidden=!user;
- if(!user){notice('حالت محلی · ورود امن برای اتصال');byId('supabase-pair-status').textContent='پس از ورود، برای اتصال مستقیم به ChatGPT کد یک‌بارمصرف بسازید.'}
+ if(!user){notice('حالت محلی · ورود امن برای اتصال');byId('supabase-pair-status').textContent='این گزینه فقط برای اتصال پیشرفته با ابزار اختصاصی My Finance است.'}
  else {notice('حساب متصل: '+user.email,true);refreshPairStatus().catch(()=>{});}
 }
 
@@ -733,7 +733,7 @@ byId('supabase-pair').addEventListener('click',async()=>{
  const expires_at=new Date(Date.now()+15*60*1000).toISOString();
  const {error}=await client.from('finance_voice_pairings').upsert({user_id:user.id,pairing_code:code,expires_at,consumed_at:null},{onConflict:'user_id'});
  if(error)return byId('supabase-pair-status').textContent='ساخت کد انجام نشد: '+error.message;
- byId('supabase-pair-status').textContent='کد اتصال شما: '+code+' · این کد فقط ۱۵ دقیقه معتبر است. آن را یک‌بار در همین گفتگوی ChatGPT اعلام کنید.';
+ byId('supabase-pair-status').textContent='کد اتصال پیشرفته شما: '+code+' · اعتبار ۱۵ دقیقه؛ فقط در گفت‌وگویی استفاده کنید که ابزار مجاز My Finance به آن متصل است.';
 });
 byId('supabase-logout').addEventListener('click',async()=>{
  const {error}=await client.auth.signOut({scope:'local'});
