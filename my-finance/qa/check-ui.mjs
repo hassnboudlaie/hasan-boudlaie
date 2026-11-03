@@ -249,6 +249,20 @@ check('opt-in ChatGPT bridge is isolated, review-only, and offline-ready',()=>{
   const js=spawnSync(process.execPath,['--check',resolve(root,'chatgpt-bridge-v82.js')],{encoding:'utf8'});
   assert.equal(js.status,0,js.stderr);
 });
+check('iPhone localized amount input and spoken rent preview',()=>{
+ const voice=read('voice-entry.js');
+ assert.ok(html.includes('id="voice-amount" type="text" inputmode="decimal"'),
+  'iPhone amount must use text to preserve Persian digits');
+ assert.ok(html.includes('id="voice-loan-amount" inputmode="decimal"'),
+  'loan input must preserve localized numbers too');
+ assert.ok(html.includes('voice-entry.js?v=20261103r83'),
+  'updated parser must be fetched after app upgrade');
+ assert.ok(sw.includes('voice-entry.js?v=20261103r83'),
+  'new parser must be cached by PWA');
+ assert.ok(voice.includes('parseLocalizedAmount'),'safe amount parser missing');
+ const checkFile=spawnSync(process.execPath,[resolve(root,'qa/check-voice-ios-amounts.mjs')],{encoding:'utf8'});
+ assert.equal(checkFile.status,0,(checkFile.stderr||'')+(checkFile.stdout||''));
+});
 check('free pilot: no email or manual approval step in signup interface',()=>{
  const app=read('supabase-sync.js');
  assert.ok(html.includes('id="auth-confirm-help" hidden aria-hidden="true"'),'Legacy confirmation help must be hidden');
