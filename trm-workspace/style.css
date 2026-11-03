@@ -38,3 +38,10 @@
 @media(max-width:630px){body{font-size:17px}.command-hero{align-items:flex-start;min-height:0;flex-direction:column;padding:23px}.command-hero h2{font-size:25px}.hero-stat{width:100%;flex-direction:row;min-width:0;padding:11px 15px;justify-content:space-between}.hero-stat strong{font-size:30px}.hero-stat small{display:none}.command-grid{gap:10px}.command-tile{min-height:160px;padding:15px;gap:8px}.command-tile b{font-size:17px}.command-tile small{font-size:13px}.command-tile .em{font-size:27px}.tile-arrow{left:11px;bottom:10px}.coach-intro{padding:13px}.coach-orbit{width:45px;height:45px;font-size:25px}.coach-intro h3{font-size:18px}.coach-intro p{font-size:13px}.pipeline-column{min-width:225px}.main{padding-bottom:103px}.metrics .metric{padding:13px}.metrics .metric span{font-size:12px}.metrics .metric strong{font-size:24px}}
 
 .cloud-panel{margin-bottom:17px;max-width:620px}.cloud-panel h3{margin:0 0 12px}.cloud-ready{display:flex;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid #c2ded0;background:#edf7f1;padding:12px 15px;border-radius:15px;margin-bottom:15px}.cloud-ready span{font-size:14px}.coach-output ol{counter-reset:trm}.coach-output li{overflow-wrap:anywhere}@media(max-width:630px){.cloud-panel{padding:15px}.cloud-ready{font-size:13px}}
+
+/* Human-approved CRM action workbench */
+.task-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+.task-board .panel{min-width:0;padding:18px}.task-board h3{margin:0 0 15px;font-size:18px}
+.task-record{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;display:flex;flex-direction:column;gap:8px;margin-bottom:9px;overflow-wrap:anywhere}
+.task-record strong{font-size:15px;line-height:1.7}.task-record small{font-size:12px;color:var(--muted);line-height:1.7}.task-record p{font-size:13px;line-height:1.8;margin:0 0 5px}
+@media(max-width:1050px){.task-board{grid-template-columns:1fr}}
