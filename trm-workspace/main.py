@@ -11,6 +11,7 @@ import re
 import secrets
 import time
 from datetime import datetime, timedelta, timezone, date
+from urllib.parse import urlparse
 from typing import Optional, Literal
 from uuid import uuid4
 
@@ -196,6 +197,10 @@ app.mount('/static',StaticFiles(directory=os.path.join(ROOT,'static')),name='sta
 
 @app.middleware('http')
 async def security_headers(request: Request,call_next):
+    if request.method in ('POST','PUT','PATCH','DELETE') and request.url.path.startswith('/api/'):
+        origin=request.headers.get('origin')
+        if origin and urlparse(origin).hostname!=request.url.hostname:
+            return JSONResponse(status_code=403, content={'detail':'درخواست از مبدأ نامعتبر ارسال شده است.'})
     response=await call_next(request)
     response.headers['X-Content-Type-Options']='nosniff'
     response.headers['X-Frame-Options']='DENY'
@@ -407,7 +412,15 @@ def validate_related(db,user,fields):
 def export_candidates(user:User=Depends(require_hr),db:Session=Depends(session_db)):
     rows=scoped(db,Candidate,user).all();output=io.StringIO();fields=sorted(CANDIDATE_FIELDS)
     writer=csv.DictWriter(output,fieldnames=fields);writer.writeheader()
-    for obj in rows:writer.writerow({k:getattr(obj,k) for k in fields})
+    for obj in rows:
+        # Neutralize formula injection when opened in spreadsheet software.
+        vals={}
+        for k in fields:
+            v=getattr(obj,k)
+            if isinstance(v,str) and v.lstrip().startswith(('=','+','-','@')):
+                v="'"+v
+            vals[k]=v
+        writer.writerow(vals)
     audit(db,user,'export','candidates');db.commit()
     content='\ufeff'+output.getvalue()
     return Response(content=content,media_type='text/csv; charset=utf-8',headers={'Content-Disposition':'attachment; filename="trm-candidates.csv"'})
@@ -525,6 +538,8 @@ def get_activities(pending:bool=False,user:User=Depends(require_user),db:Session
 @app.post('/api/activities')
 def create_activity(p:ActivityIn,user:User=Depends(require_editor),db:Session=Depends(session_db)):
     c=pick(db,Candidate,p.candidate_id,user)
+    if (c.do_not_contact or c.consent=='revoked') and p.type in ('call','email','meeting','event'):
+        raise HTTPException(409,'این فرد درخواست عدم تماس دارد؛ مجوز جدید و معتبر لازم است.')
     if p.due_date:
         try:date.fromisoformat(p.due_date)
         except ValueError:raise HTTPException(422,'تاریخ معتبر نیست.')
