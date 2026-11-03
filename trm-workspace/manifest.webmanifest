@@ -2,7 +2,7 @@
   "id": "/hasan-boudlaie/trm-workspace/",
   "name": "مدیریت روابط با استعداد | TRM Workspace",
   "short_name": "روابط استعداد",
-  "description": "نسخه آزمایشی مستقل مدیریت روابط با استعداد",
+  "description": "نسخه آزمایشی عملیاتی بر اساس مدل Trost",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
