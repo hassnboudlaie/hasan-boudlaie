@@ -1,24 +1,35 @@
+const IMG={
+  hero:"https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=85",
+  skin:"https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1000&q=85",
+  care:"https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=85",
+  product:"https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=85",
+  spa:"https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1000&q=85",
+  beauty:"https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1000&q=85",
+  serum:"https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=900&q=85",
+  clinic:"https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1000&q=85"
+};
+
 const services=[
- {name:"فیلر",icon:"💉",short:"فرم‌دهی و اصلاح حجم",sessions:"معمولاً یک جلسه با ارزیابی دوره‌ای",before:["عدم مصرف خودسرانه داروهای رقیق‌کننده خون","اطلاع به پزشک درباره حساسیت یا بیماری زمینه‌ای"],after:["پرهیز از فشار و ماساژ محل مگر با دستور پزشک","پیگیری در صورت تورم یا درد غیرعادی"]},
- {name:"بوتاکس",icon:"🌿",short:"کاهش خطوط ناشی از حرکت عضلات",sessions:"معمولاً یک جلسه با ارزیابی نتیجه",before:["مشاوره پزشکی و بررسی سابقه دارویی","عدم انجام در صورت وجود منع پزشکی"],after:["از ماساژ محل خودداری کنید","توصیه‌های پزشک درباره فعالیت روزانه را رعایت کنید"]},
- {name:"جوان‌سازی",icon:"✨",short:"بهبود کیفیت و شادابی پوست",sessions:"بسته به روش، معمولاً چند جلسه",before:["ارزیابی پوست و انتخاب پروتکل مناسب","اعلام سابقه حساسیت پوستی"],after:["استفاده منظم از ضدآفتاب","رعایت برنامه مراقبتی پیشنهادی"]},
- {name:"نخ",icon:"🧵",short:"خدمت تخصصی برای لیفت و اصلاح فرم",sessions:"بر اساس ارزیابی پزشک",before:["مشاوره دقیق و تعیین انتظار واقع‌بینانه","بررسی داروها و بیماری‌های زمینه‌ای"],after:["رعایت محدودیت‌های حرکتی توصیه‌شده","پیگیری طبق برنامه پزشک"]},
- {name:"مزوتراپی مو",icon:"🌱",short:"برنامه تقویتی برای پوست سر و مو",sessions:"معمولاً چند جلسه دوره‌ای",before:["بررسی علت ریزش مو","ثبت داروها و درمان‌های قبلی"],after:["رعایت فاصله زمانی جلسات","استفاده از محصولات توصیه‌شده"]},
- {name:"پی‌آرپی",icon:"🩸",short:"درمان مبتنی بر پلاسمای خود فرد",sessions:"معمولاً ۳ تا ۵ جلسه بر اساس نیاز",before:["آب کافی و وضعیت عمومی مناسب","مشاوره و بررسی سابقه پزشکی"],after:["رعایت توصیه‌های محل تزریق","پیگیری منظم جلسات"]},
- {name:"فیلر بادی",icon:"◌",short:"اصلاح حجم و فرم بدن",sessions:"کاملاً وابسته به ارزیابی پزشک",before:["مشاوره حضوری الزامی","تعیین هدف و میزان موردنیاز"],after:["پیگیری نزدیک طبق دستور پزشک","رعایت مراقبت‌های اختصاصی"]},
- {name:"لاغری",icon:"⚖️",short:"برنامه چندجلسه‌ای متناسب با شرایط فرد",sessions:"بر اساس نوع برنامه و هدف",before:["ارزیابی اولیه و تعیین هدف","بررسی سوابق پزشکی"],after:["تداوم برنامه و جلسات","ثبت تغییرات و پیگیری"]},
- {name:"لیزر موهای زائد",icon:"☀️",short:"جلسات منظم برای کاهش موهای زائد",sessions:"چندجلسه‌ای و دوره‌ای",before:["اصلاح مو طبق دستور مرکز","پرهیز از آفتاب شدید"],after:["ضدآفتاب در نواحی در معرض نور","رعایت فاصله جلسات"]},
- {name:"لیزر کیوسوییچ",icon:"✦",short:"خدمات پوستی بر اساس تشخیص",sessions:"وابسته به نوع ضایعه و پاسخ پوست",before:["ارزیابی پوست و نوع ضایعه","پرهیز از آفتاب و برنزه‌کردن"],after:["مراقبت دقیق از پوست","ضدآفتاب و ترمیم‌کننده طبق توصیه"]},
- {name:"فیشیال",icon:"🫧",short:"پاک‌سازی و مراقبت غیرتهاجمی پوست",sessions:"قابل تکرار بر اساس نوع پوست",before:["بررسی حساسیت و وضعیت پوست","اعلام درمان‌های پوستی اخیر"],after:["مرطوب‌کننده و ضدآفتاب","پرهیز از محصولات محرک در ساعات اول"]}
+ {name:"فیلر",icon:"💉",image:IMG.beauty,sessions:"۱ جلسه",before:["مشاوره پزشک","اعلام داروها"],after:["فشار ندهید","پیگیری غیرعادی"]},
+ {name:"بوتاکس",icon:"🌿",image:IMG.skin,sessions:"۱ جلسه",before:["مشاوره پزشکی","بررسی منع مصرف"],after:["ماساژ ندهید","طبق توصیه پزشک"]},
+ {name:"جوان‌سازی",icon:"✨",image:IMG.spa,sessions:"چند جلسه",before:["ارزیابی پوست","انتخاب پروتکل"],after:["ضدآفتاب","مراقبت منظم"]},
+ {name:"نخ",icon:"🧵",image:IMG.beauty,sessions:"با نظر پزشک",before:["انتظار واقع‌بینانه","شرح سوابق"],after:["محدودیت حرکتی","پیگیری"]},
+ {name:"مزوتراپی مو",icon:"🌱",image:IMG.clinic,sessions:"دوره‌ای",before:["بررسی علت ریزش","شرح درمان‌ها"],after:["فاصله جلسات","محصول مناسب"]},
+ {name:"پی‌آرپی",icon:"🩸",image:IMG.hero,sessions:"۳–۵ جلسه",before:["آب کافی","بررسی سوابق"],after:["مراقبت محل","پیگیری جلسات"]},
+ {name:"فیلر بادی",icon:"◌",image:IMG.beauty,sessions:"با نظر پزشک",before:["مشاوره حضوری","تعیین هدف"],after:["پیگیری نزدیک","مراقبت اختصاصی"]},
+ {name:"لاغری",icon:"⚖️",image:IMG.care,sessions:"چند جلسه",before:["هدف‌گذاری","بررسی سوابق"],after:["تداوم برنامه","ثبت تغییرات"]},
+ {name:"لیزر موهای زائد",icon:"☀️",image:IMG.clinic,sessions:"دوره‌ای",before:["اصلاح طبق دستور","بدون آفتاب شدید"],after:["ضدآفتاب","فاصله جلسات"]},
+ {name:"لیزر کیوسوییچ",icon:"✦",image:IMG.skin,sessions:"با نظر پزشک",before:["ارزیابی پوست","عدم برنزه‌کردن"],after:["ترمیم‌کننده","ضدآفتاب"]},
+ {name:"فیشیال",icon:"🫧",image:IMG.hero,sessions:"قابل تکرار",before:["بررسی حساسیت","اعلام درمان اخیر"],after:["آبرسان","محصول ملایم"]}
 ];
 
 const products=[
- {name:"ضدآفتاب",icon:"☀️",desc:"مناسب برای مراقبت روزانه و بسیاری از خدمات پوستی."},
- {name:"سرم آبرسان",icon:"💧",desc:"برای حفظ رطوبت و آرام‌سازی پوست."},
- {name:"کرم ترمیم‌کننده",icon:"🧴",desc:"برای برخی مراقبت‌های بعد از درمان، با توصیه پزشک."},
- {name:"محصولات مو",icon:"🌿",desc:"مراقبت مکمل در برنامه‌های تقویت مو."},
- {name:"پاک‌کننده ملایم",icon:"🫧",desc:"مناسب برای روتین پوستی ساده و منظم."},
- {name:"سرم تخصصی پوست",icon:"✨",desc:"انتخاب بر اساس نوع پوست و نیاز واقعی فرد."}
+ {name:"ضدآفتاب",icon:"☀️",image:IMG.product},
+ {name:"سرم آبرسان",icon:"💧",image:IMG.serum},
+ {name:"کرم ترمیم‌کننده",icon:"🧴",image:IMG.spa},
+ {name:"مراقبت مو",icon:"🌿",image:IMG.clinic},
+ {name:"پاک‌کننده",icon:"🫧",image:IMG.hero},
+ {name:"سرم تخصصی",icon:"✨",image:IMG.skin}
 ];
 
 let currentPage="home";
@@ -32,7 +43,7 @@ const installCard=document.getElementById("installCard");
 
 function showToast(msg){
  toast.textContent=msg;toast.classList.add("show");
- clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove("show"),2800);
+ clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove("show"),2400);
 }
 
 function go(page,push=true){
@@ -48,8 +59,9 @@ function go(page,push=true){
 
 function renderServices(){
  const box=document.getElementById("servicesList");
- box.innerHTML=services.map((s,i)=>`<button class="service-card" data-service-index="${i}">
-   <span class="service-icon">${s.icon}</span><span class="service-copy"><strong>${s.name}</strong><small>${s.short}</small></span><span class="arrow">‹</span>
+ box.innerHTML=services.map((s,i)=>`<button class="service-card visual-service" data-service-index="${i}">
+   <img src="${s.image}" alt="${s.name}" loading="lazy">
+   <span class="service-label"><b>${s.icon}</b><strong>${s.name}</strong></span>
  </button>`).join("");
  document.getElementById("bookingService").innerHTML='<option value="">انتخاب کنید</option>'+services.map(s=>`<option>${s.name}</option>`).join("");
 }
@@ -58,21 +70,29 @@ function openService(index){
  const s=services[index];
  if(!s)return;
  document.getElementById("serviceDetail").innerHTML=`
-  <div class="detail-hero"><div class="big-icon">${s.icon}</div><span class="pill">خدمات کلینیک</span><h1>${s.name}</h1><p>${s.short}</p></div>
-  <div class="detail-grid">
-   <div class="detail-card"><h3>برای چه کسی مناسب است؟</h3><p>تشخیص مناسب‌بودن این خدمت فقط بعد از بررسی شرایط فرد و مشاوره انجام می‌شود. هدف، انجام خدمت متناسب با نیاز واقعی شماست.</p></div>
-   <div class="detail-card"><h3>تعداد جلسات تقریبی</h3><p>${s.sessions}</p></div>
-   <div class="detail-card"><h3>قبل از مراجعه</h3><ul>${s.before.map(x=>'<li>'+x+'</li>').join("")}</ul></div>
-   <div class="detail-card"><h3>بعد از خدمت</h3><ul>${s.after.map(x=>'<li>'+x+'</li>').join("")}</ul></div>
-   <button class="primary full" id="detailBooking">درخواست نوبت برای ${s.name}</button>
-  </div>`;
+  <div class="service-photo-hero">
+    <img src="${s.image}" alt="${s.name}">
+    <div><span>${s.icon}</span><h1>${s.name}</h1></div>
+  </div>
+  <div class="mini-info-grid">
+    <div><span>🕒</span><small>جلسات</small><strong>${s.sessions}</strong></div>
+    <div><span>✅</span><small>قبل</small><strong>${s.before[0]}</strong></div>
+    <div><span>💗</span><small>بعد</small><strong>${s.after[0]}</strong></div>
+  </div>
+  <div class="care-mini">
+    <div><span>قبل</span>${s.before.map(x=>'<b>• '+x+'</b>').join("")}</div>
+    <div><span>بعد</span>${s.after.map(x=>'<b>• '+x+'</b>').join("")}</div>
+  </div>
+  <button class="primary full big-cta" id="detailBooking">📅 نوبت ${s.name}</button>`;
  go("service");
  document.getElementById("detailBooking").onclick=()=>{document.getElementById("bookingService").value=s.name;go("booking");};
 }
 
 function renderProducts(){
- document.getElementById("productsList").innerHTML=products.map(p=>`<article class="product-card">
-  <div class="product-art">${p.icon}</div><h3>${p.name}</h3><p>${p.desc}</p><button data-product="${p.name}">درخواست مشاوره خرید</button>
+ document.getElementById("productsList").innerHTML=products.map(p=>`<article class="product-card visual-product">
+  <img src="${p.image}" alt="${p.name}" loading="lazy">
+  <div><span>${p.icon}</span><strong>${p.name}</strong></div>
+  <button data-product="${p.name}">مشاوره</button>
  </article>`).join("");
 }
 
@@ -86,7 +106,7 @@ document.addEventListener("click",e=>{
  const placeholder=e.target.closest("[data-placeholder]");
  if(placeholder){showToast(placeholder.dataset.placeholder);return;}
  const product=e.target.closest("[data-product]");
- if(product){showToast("درخواست «"+product.dataset.product+"» در نسخه نهایی به فروش کلینیک ارسال می‌شود.");}
+ if(product){showToast("🧴 "+product.dataset.product+" — درخواست مشاوره در نسخه بعدی مستقیم ارسال می‌شود.");}
 });
 
 backBtn.addEventListener("click",()=>history.length>1?history.back():go("home"));
@@ -105,23 +125,28 @@ document.getElementById("bookingForm").addEventListener("submit",e=>{
  localStorage.setItem("clinic-booking-demo",JSON.stringify(data));
  const result=document.getElementById("bookingResult");
  result.hidden=false;
- result.innerHTML="<strong>درخواست شما ثبت شد ✓</strong><br>این نسخه آزمایشی است و اطلاعات فقط روی همین گوشی ذخیره شده. در نسخه نهایی، درخواست مستقیماً برای کلینیک ارسال می‌شود.";
+ result.innerHTML="<strong>✓ ثبت شد</strong><br>نسخه آزمایشی";
  e.target.reset();
 });
 
 window.addEventListener("beforeinstallprompt",e=>{
- e.preventDefault();deferredPrompt=e;installCard.hidden=false;
+ e.preventDefault();deferredPrompt=e;if(installCard)installCard.hidden=false;
 });
 async function installApp(){
  if(deferredPrompt){
   deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;
  }else{
-  showToast("اگر گزینه نصب ظاهر نشد، از منوی مرورگر «افزودن به صفحه اصلی» یا «نصب برنامه» را انتخاب کنید.");
+  showToast("از منوی مرورگر «نصب برنامه» را بزنید.");
  }
 }
-installBtn.addEventListener("click",installApp);
-installCardBtn.addEventListener("click",installApp);
-window.addEventListener("appinstalled",()=>{installCard.hidden=true;showToast("اپ با موفقیت نصب شد.");});
+if(installBtn) installBtn.addEventListener("click",installApp);
+if(installCardBtn) installCardBtn.addEventListener("click",installApp);
+window.addEventListener("appinstalled",()=>{if(installCard)installCard.hidden=true;showToast("✓ نصب شد");});
+
+if(navigator.userAgent.includes("ClinicCustomerAndroid")){
+ if(installCard) installCard.hidden=true;
+ if(installBtn) installBtn.hidden=true;
+}
 
 renderServices();renderProducts();
 const initial=location.hash.replace("#","")||"home";
