@@ -84,7 +84,7 @@ async function run(){
   go('s/'+s.id+'/'+s.sections.at(-1).id);equal($$('.knowledge .feedback').length,0,'explanations withheld');
   click('[data-submit-check]');check(!ctx().checks[s.id]?.submitted,'cannot submit unanswered check');
   for(let i=0;i<s.checks.length;i++)click('[data-check-question="'+i+'"][data-check-option="'+s.checks[i].correct+'"]');
-  equal($$('.knowledge .feedback').length,0,'explanations withheld until submit');click('[data-submit-check]');equal($('.knowledge .feedback').length,4,'analyses revealed');check($('.knowledge .option-explanations li').length===12,'each option has a distinct explanation');check(ctx().checks[s.id].submitted,'submission saved');
+  equal($$('.knowledge .feedback').length,0,'explanations withheld until submit');click('[data-submit-check]');equal($$('.knowledge .feedback').length,4,'analyses revealed');check($$('.knowledge .option-explanations li').length===12,'each option has a distinct explanation');check(ctx().checks[s.id].submitted,'submission saved');
   click('[data-check-question="0"][data-check-option="'+((s.checks[0].correct+1)%s.checks[0].options.length)+'"]');equal($$('.knowledge .feedback').length,0,'changing answer clears prior analysis');
  }
  go('portfolio');for(const text of ['یادداشت اختصاصی ستاد','شاهد بافت','استدلال بر اساس شواهد','دلیل بافتی من','گزینه دیگر معقول','شرط تغییر من','انتظار گفته‌شده','روش پیشنهادی من','رفتار قابل مشاهده'])check($('#main').textContent.includes(text),'portfolio includes '+text);
