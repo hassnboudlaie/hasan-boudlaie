@@ -87,17 +87,9 @@
   details.append(summary,pair);
   if(receivables)details.append(receivables);
  }
- // Move full cashflow chart into a disclosure without removing its route
- // (cashflow/analysis still display the original content).
- const chart=$('finance-cashflow-card');
- if(chart&&!$('mf-calm-cashflow')){
-  const details=document.createElement('details');
-  details.id='mf-calm-cashflow';details.className='mf-calm-chart';
-  const summary=document.createElement('summary');
-  summary.innerHTML='<span aria-hidden="true">◫</span><strong></strong><span aria-hidden="true">⌄</span>';
-  summary.querySelector('strong').textContent=label('نمودار جریان پول','Cash-flow chart');
-  chart.before(details);details.append(summary,chart);
- }
+ // Leave the original cashflow card as a direct child of #home: virtual
+ // cashflow and analysis routes depend on that structure. It is hidden on Home
+ // via CSS and remains fully accessible through its navigation route.
  // Settings are a quiet directory; every existing form stays present inside its own
  // accessible disclosure. Profile can be automatically expanded by its own route.
  const settings=$('settings');
