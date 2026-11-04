@@ -199,3 +199,18 @@ body{background:radial-gradient(ellipse at 96% -17%,#e0efe4 0%,transparent 43%),
  #page-final .final-block p{font-size:8px}
  .canvas-dialog{display:none!important}
 }
+
+
+/* اصلاح چیدمان لمسی در متن راست‌به‌چپ */
+@media(max-width:800px){
+ .dash-action{padding:14px;padding-inline-start:70px;padding-inline-end:38px}
+ #page-canvas .canvas .block.value,
+ #page-canvas .canvas .block.costs,
+ #page-canvas .canvas .block.revenues{grid-column:1/-1!important}
+ #page-final .final-block[data-block="value"],
+ #page-final .final-block[data-block="costs"],
+ #page-final .final-block[data-block="revenues"]{grid-column:1/-1!important}
+}
+@media(max-width:580px){
+ #page-final .final-block{grid-column:1/-1!important}
+}
