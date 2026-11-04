@@ -520,7 +520,7 @@ body.finance-unlocked.mf-calm-ui .finance-more-dialog .finance-more-top{
 body.finance-unlocked.mf-calm-ui .finance-more-dialog .finance-more-footnote{display:none!important}
 
 /* Settings: accessible, low-clutter directory with tap-to-open panels. */
-body.finance-unlocked.mf-calm-ui #settings{
+body.finance-unlocked.mf-calm-ui #settings:not([hidden]){
  display:block!important;max-width:800px;margin:auto!important
 }
 body.finance-unlocked.mf-calm-ui #settings>.card{
@@ -707,4 +707,16 @@ body.finance-unlocked.mf-calm-ui .finance-insight-card{box-shadow:none!important
 }
 @media(prefers-reduced-motion:reduce){
  body.mf-calm-ui :is(*, *::before, *::after){transition-duration:0s!important;animation-duration:0s!important}
+}
+
+/* Route visibility is a hard safety invariant. Never override [hidden] on
+   an inactive section: mobile tabs must not leak other screens into Home. */
+body.mf-calm-ui main > section[hidden]{display:none!important}
+body.finance-unlocked.mf-calm-ui[data-finance-view="home"] #home > #finance-cashflow-card{
+ display:none!important
+}
+/* In dedicated cashflow route, retain the original live chart. */
+body.finance-unlocked.mf-calm-ui[data-finance-view="cashflow"] #home > #finance-cashflow-card{
+ display:block!important;background:var(--card)!important;
+ border:1px solid var(--line)!important;border-radius:20px!important
 }
