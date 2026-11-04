@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123f37">
+<meta name="description" content="راه‌اندازی و رشد کسب‌وکار کوچک و متوسط؛ پرسشنامه گام‌به‌گام و برنامه اقدام اختصاصی">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="کسب‌وکار من">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="stylesheet" href="./style.css?v=1">
+<title>راه‌اندازی کسب‌وکار من</title>
+<script src="./steps.js?v=1" defer></script>
+<script src="./app.js?v=1" defer></script>
+</head>
+<body>
+<header class="topbar">
+<div class="shell header-inner">
+ <a class="brand" href="./" aria-label="صفحه نخست"><span class="brand-logo">رشد</span><span>کسب‌وکار من</span></a>
+ <div class="header-actions">
+  <label class="project-select"><span>مدل من</span><select id="projectPicker" aria-label="انتخاب کسب‌وکار"></select></label>
+  <details class="menu" id="mainMenu"><summary aria-label="گزینه‌های بیشتر">⋯</summary><div class="menu-panel">
+   <button type="button" id="addProject">＋ کسب‌وکار جدید</button>
+   <button type="button" id="backupBtn">دریافت فایل پشتیبان</button>
+   <button type="button" id="restoreBtn">بازیابی فایل</button>
+   <input type="file" id="restoreFile" accept="application/json,.json" hidden>
+   <button type="button" id="installBtn">نصب روی گوشی</button>
+   <button type="button" id="resetBtn" class="menu-danger">پاک‌کردن این کسب‌وکار</button>
+   <a href="../products.html">بازگشت به وب‌سایت</a>
+  </div></details>
+ </div>
+</div></header>
+<main class="shell main">
+<div class="topline"><h1 id="pageHeading">راه‌اندازی کسب‌وکار من</h1><span id="saveLabel" role="status">ذخیره خودکار</span></div>
+<nav class="simple-nav" aria-label="بخش‌های اصلی">
+ <button type="button" data-nav="home" class="selected">خانه</button>
+ <button type="button" data-nav="wizard">پرسش‌ها</button>
+ <button type="button" data-nav="status">وضعیت من</button>
+ <button type="button" data-nav="plan">برنامه من</button>
+</nav>
+
+<section id="page-home" class="screen active">
+ <div class="hero">
+  <div class="hero-copy"><span class="hero-tag" id="heroTag">برنامه شخصی کسب‌وکار</span>
+   <h2 id="heroTitle">ایده‌ات را به کسب‌وکار تبدیل کن.</h2>
+   <p>از تصمیم اول تا نخستین فروش و رشد؛ گام‌به‌گام پیش برو.</p>
+  </div>
+  <div class="hero-score"><strong id="homeProgress">۰٪</strong><span>پیشرفت پاسخ‌ها</span></div>
+  <div class="hero-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+ </div>
+ <div class="progress-track"><span id="homeBar"></span></div>
+ <div class="home-actions">
+  <button type="button" data-go="wizard" class="home-tile primary">
+    <span class="tile-ico" aria-hidden="true">✦</span><span class="tile-title">شروع یا ادامه</span><small>پرسش‌های گام‌به‌گام</small><span class="tile-arrow">←</span>
+  </button>
+  <button type="button" data-go="status" class="home-tile">
+    <span class="tile-ico" aria-hidden="true">◫</span><span class="tile-title">وضعیت کسب‌وکار من</span><small>پیشرفت و کارهای باقی‌مانده</small><span class="tile-arrow">←</span>
+  </button>
+  <button type="button" data-go="plan" class="home-tile">
+    <span class="tile-ico" aria-hidden="true">▤</span><span class="tile-title">برنامه و خروجی من</span><small>نقشه اقدام و دریافت فایل</small><span class="tile-arrow">←</span>
+  </button>
+ </div>
+ <button type="button" class="text-link" data-go="profile">✎ ویرایش اطلاعات کسب‌وکار</button>
+</section>
+
+<section id="page-profile" class="screen">
+ <div class="paper">
+  <div class="section-heading"><div><span class="eyebrow">گام نخست</span><h2>کسب‌وکار خود را معرفی کنید</h2></div></div>
+  <form id="profileForm" class="form-grid">
+   <label class="field"><span>نام کسب‌وکار یا ایده</span><input name="businessName" id="businessName" placeholder="نام دلخواه" maxlength="100" required></label>
+   <label class="field"><span>نام تکمیل‌کننده (اختیاری)</span><input name="owner" maxlength="80" placeholder="نام یا نام مستعار"></label>
+   <label class="field"><span>نوع فعالیت</span><select name="sector" id="sector" required>
+    <option value="services">خدمات</option><option value="retail">فروشگاه و خرده‌فروشی</option>
+    <option value="manufacturing">تولید و صنعت</option><option value="food">غذا، کافه و رستوران</option>
+    <option value="healthcare">سلامت و زیبایی</option><option value="education">آموزش</option>
+    <option value="tourism">گردشگری و اقامت</option><option value="digital">فناوری و کسب‌وکار اینترنتی</option>
+    <option value="trade">تجارت و توزیع</option><option value="agriculture">کشاورزی</option>
+    <option value="construction">ساخت‌وساز و پیمانکاری</option><option value="other">سایر فعالیت‌ها</option>
+   </select></label>
+   <label class="field"><span>وضعیت کسب‌وکار</span><select name="stage"><option value="idea">فقط ایده دارم</option><option value="starting">در حال راه‌اندازی هستم</option><option value="operating">کسب‌وکار فعال دارم</option><option value="expanding">در حال توسعه هستم</option></select></label>
+   <label class="field"><span>اندازه کسب‌وکار</span><select name="size"><option value="solo">فردی</option><option value="micro">خرد</option><option value="small">کوچک</option><option value="medium">متوسط</option></select></label>
+   <label class="field"><span>مشتری اصلی</span><select name="market"><option value="individual">اشخاص و خانواده‌ها</option><option value="organization">شرکت‌ها و سازمان‌ها</option><option value="both">هر دو گروه</option><option value="unknown">هنوز مشخص نیست</option></select></label>
+   <details class="extra-profile"><summary>اطلاعات تکمیلی (اختیاری)</summary><div class="extra-fields">
+    <label class="field"><span>کشور</span><input name="country" placeholder="کشور محل فعالیت" maxlength="80"></label>
+    <label class="field"><span>شهر</span><input name="city" placeholder="شهر محل فعالیت" maxlength="80"></label>
+    <label class="field"><span>واحد پول محاسبات</span><input name="currency" placeholder="تومان، ریال، یورو یا واحد دیگر" maxlength="35"></label>
+    <label class="field"><span>توضیح کوتاه (اختیاری)</span><textarea name="description" rows="2" maxlength="700" placeholder="نکته مهم درباره کسب‌وکار شما"></textarea></label>
+   </div></details>
+   <div class="form-actions"><button type="submit" class="btn primary">ثبت و شروع پرسش‌ها</button><button type="button" class="btn ghost" data-go="home">بازگشت</button></div>
+  </form>
+ </div>
+</section>
+
+<section id="page-wizard" class="screen">
+ <div class="paper questions-paper">
+  <div class="wizard-head">
+   <span class="eyebrow" id="wizardIndex">مرحله ۱ از ۱۰</span>
+   <h2 id="wizardTitle">آمادگی من</h2>
+   <p id="wizardSubtitle"></p>
+   <div class="progress-track"><span id="wizardBar"></span></div>
+   <div class="step-counter"><span id="answeredThisStep">۰ از ۶ پاسخ</span><button type="button" class="tiny-link" id="skipStep">گام بعد</button></div>
+  </div>
+  <div id="questionList" class="questions"></div>
+  <details class="source-note"><summary>این مرحله از کدام فصل‌های کتاب الهام گرفته است؟</summary><p id="sourceText"></p></details>
+  <div class="form-actions step-actions">
+   <button type="button" class="btn ghost" id="previousStep">مرحله قبل</button>
+   <button type="button" class="btn primary" id="nextStep">مرحله بعد</button>
+  </div>
+ </div>
+</section>
+
+<section id="page-status" class="screen">
+ <div class="paper">
+  <div class="section-heading"><div><h2>وضعیت کسب‌وکار من</h2><p>پیشرفت در تکمیل اطلاعات، نه تأیید موفقیت کسب‌وکار</p></div><button type="button" class="btn ghost" data-go="wizard">ادامه پرسش‌ها</button></div>
+  <div class="metric-row">
+   <div class="metric"><strong id="statusPercent">۰٪</strong><span>پرسش‌های پاسخ‌داده‌شده</span></div>
+   <div class="metric"><strong id="statusCount">۰ از ۵۶</strong><span>پاسخ ثبت‌شده</span></div>
+   <div class="metric"><strong id="statusStages">۰ از ۱۰</strong><span>مرحله تکمیل‌شده</span></div>
+  </div>
+  <h3 class="subheading">مراحل طراحی</h3>
+  <div class="stage-list" id="stageList"></div>
+  <p class="muted-note">پاسخ‌های «هنوز مشخص نیست» به‌عنوان موضوع نیازمند بررسی باقی می‌مانند.</p>
+ </div>
+</section>
+
+<section id="page-plan" class="screen">
+ <div class="paper">
+  <div class="section-heading"><div><span class="eyebrow">برنامه اختصاصی</span><h2 id="planTitle">برنامه کسب‌وکار من</h2><p id="planMeta"></p></div></div>
+  <div class="report-summary" id="planSummary"></div>
+  <div class="action-row no-print">
+   <button type="button" class="btn primary" id="downloadReport">دریافت برنامه من</button>
+   <button type="button" class="btn ghost" id="printReport">چاپ برنامه</button>
+  </div>
+  <h3 class="subheading">تصمیم‌های ثبت‌شده من</h3>
+  <div class="decision-grid" id="decisionGrid"></div>
+  <h3 class="subheading">برنامه اقدام ۹۰ روزه</h3>
+  <div class="roadmap" id="roadmap"></div>
+  <details class="finance" id="financeArea">
+    <summary>محاسبه قیمت، سود و نقطه سربه‌سر <span>اختیاری</span></summary>
+    <div class="finance-body">
+      <p class="muted-note">برای محاسبه، عدد واقعی وارد کنید. همه ارقام متعلق به یک واحد فروش یا خدمت و یک ماه هستند.</p>
+      <div class="finance-grid">
+        <label class="field"><span>قیمت هر واحد فروش یا خدمت</span><input type="text" inputmode="decimal" data-fin="price" placeholder="مثلاً ۵۰۰۰۰۰"></label>
+        <label class="field"><span>هزینه متغیر هر واحد</span><input type="text" inputmode="decimal" data-fin="variable" placeholder="مثلاً ۲۰۰۰۰۰"></label>
+        <label class="field"><span>هزینه ثابت ماهانه</span><input type="text" inputmode="decimal" data-fin="fixed" placeholder="مثلاً ۳۰۰۰۰۰۰۰"></label>
+        <label class="field"><span>تعداد فروش ماهانه (اختیاری)</span><input type="text" inputmode="decimal" data-fin="volume" placeholder="مثلاً ۱۳۰"></label>
+        <label class="field"><span>موجودی نقد آزاد (اختیاری)</span><input type="text" inputmode="decimal" data-fin="cash" placeholder="مثلاً ۵۰۰۰۰۰۰۰"></label>
+        <label class="field"><span>خروج نقد ماهانه (اختیاری)</span><input type="text" inputmode="decimal" data-fin="burn" placeholder="مثلاً ۱۰۰۰۰۰۰۰"></label>
+      </div>
+      <div class="financial-results" id="financeResults"></div>
+      <p class="muted-note">این محاسبه ساده است؛ مالیات، هزینه مالی، تغییر قیمت و محدودیت ظرفیت به‌طور خودکار در آن لحاظ نمی‌شود.</p>
+    </div>
+  </details>
+ </div>
+</section>
+<p class="page-footer">اطلاعات فقط در مرورگر همین دستگاه ذخیره می‌شود. برای انتقال به دستگاه دیگر از فایل پشتیبان استفاده کنید.</p>
+</main>
+<div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+</body>
+</html>
