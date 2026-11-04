@@ -1,5 +1,5 @@
 'use strict';
-const PREFIX='hb-bmc-independent-', CACHE=PREFIX+'20261104-dropdown-v2';
+const PREFIX='hb-bmc-independent-', CACHE=PREFIX+'20261104-minimal-v1';
 const BASE=new URL('./',self.registration.scope);
 const CORE=['./','./index.html','./studio.html','./studio.css','./choice-bank.js','./studio.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE.map(path=>new URL(path,BASE).href))).then(()=>self.skipWaiting())));
