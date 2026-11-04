@@ -1,22 +1,44 @@
 <!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153c34"><meta name="description" content="Business Model Canvas Studio - ابزار طراحی گام به گام، تحلیل و توسعه مدل کسب و کار"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="BMC Studio"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png"><link rel="stylesheet" href="./studio.css?v=2"><title>BMC Studio | طراحی و تحلیل مدل کسب‌وکار</title></head>
-<body><header class="topbar"><div class="shell top-inner"><a class="brand" href="./index.html"><span class="logo">BMC</span><span>Business Model Canvas<small>Business Design &amp; Consulting Studio</small></span></a><div class="top-actions"><label class="workspace-label" for="workspaceSelect">پروژه: <select id="workspaceSelect" aria-label="انتخاب پروژه شخصی"></select></label><button id="newWorkspace" class="btn subtle" type="button">+ مدل جدید</button><span class="status">Independent PWA</span><a class="top-link" href="./index.html">دموی کوتاه</a><a class="top-link" href="../products.html">وب‌سایت</a><button id="installButton" class="btn subtle" type="button">راهنمای نصب</button></div></div></header>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153c34"><meta name="description" content="Business Model Canvas Studio - ابزار طراحی گام به گام، تحلیل و توسعه مدل کسب و کار"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="BMC Studio"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png"><link rel="stylesheet" href="./studio.css?v=3"><title>BMC Studio | طراحی و تحلیل مدل کسب‌وکار</title></head>
+<body><header class="topbar"><div class="shell top-inner">
+<a class="brand" href="./studio.html" aria-label="خانه بوم مدل کسب‌وکار"><span class="logo">BMC</span><span>بوم کسب‌وکار<small>Business Model Canvas</small></span></a>
+<div class="top-actions"><label class="workspace-label" for="workspaceSelect"><span class="workspace-heading">مدل من</span><select id="workspaceSelect" aria-label="انتخاب مدل کسب‌وکار"></select></label>
+<details class="header-menu"><summary aria-label="تنظیمات و گزینه‌های بیشتر">⋯ <span>بیشتر</span></summary><div class="header-menu-body">
+<button id="newWorkspace" class="menu-action" type="button">＋ ساخت مدل جدید</button>
+<a class="menu-action" href="./index.html">دموی کوتاه رایگان</a>
+<a class="menu-action" href="../products.html">بازگشت به وب‌سایت</a>
+<button id="installButton" class="menu-action" type="button">راهنمای نصب اپ</button>
+</div></details></div>
+</div></header>
 <main class="shell app">
-<section class="welcome"><div><p class="eyebrow">BUSINESS MODEL CONSULTING</p><h1 id="welcomeTitle">استودیوی طراحی مدل کسب‌وکار</h1><p>پاسخ بده، فرضیات را شفاف کن، Canvas را تکمیل کن و از تحلیل آن به یک Actionable Roadmap برس. این ابزار به تصمیم‌گیری کمک می‌کند؛ جایگزین اعتبارسنجی بازار نیست.</p></div><span class="save-label" id="saveStatus" role="status">ذخیره خودکار در همین دستگاه</span></section>
-<div class="layout"><aside class="sidebar" aria-label="بخش‌های اپلیکیشن"><h2>مسیر طراحی</h2>
-<button class="navitem active" data-page="dashboard" type="button"><span class="ico">⌂</span>داشبورد</button>
+<section class="welcome"><div><h1 id="welcomeTitle">مدل کسب‌وکار من</h1><p>به چند سؤال پاسخ بده و بوم اختصاصی خودت را بساز.</p></div><span class="save-label" id="saveStatus" role="status">ذخیره خودکار</span></section>
+<div class="layout"><aside class="sidebar" aria-label="مسیر اصلی طراحی">
+<button class="navitem active" data-page="dashboard" type="button"><span class="ico">⌂</span><span>خانه</span></button>
+<button class="navitem" data-page="wizard" type="button"><span class="ico">▣</span><span>پرسش‌ها</span><span class="nav-progress" id="stepProgress">۰/۹</span></button>
+<button class="navitem" data-page="canvas" type="button"><span class="ico">▦</span><span>بوم من</span></button>
+<button class="navitem" data-page="final" type="button"><span class="ico">▤</span><span>گزارش نهایی</span></button>
+<details class="sidebar-more"><summary>ابزارهای بیشتر <span aria-hidden="true">⌄</span></summary>
+<div class="sidebar-extra">
 <button class="navitem" data-page="onboard" type="button"><span class="ico">◇</span>شناخت کسب‌وکار</button>
-<button class="navitem" data-page="wizard" type="button"><span class="ico">▣</span>پرسش‌های ۹ بلوک <span class="nav-progress" id="stepProgress">۰/۹</span></button>
-<button class="navitem" data-page="canvas" type="button"><span class="ico">▦</span>Canvas قابل ویرایش</button>
 <button class="navitem" data-page="evidence" type="button"><span class="ico">◉</span>شواهد و فرضیات</button>
-<button class="navitem" data-page="diagnosis" type="button"><span class="ico">⌁</span>تحلیل و گزارش</button>
+<button class="navitem" data-page="diagnosis" type="button"><span class="ico">⌁</span>تحلیل و ریسک‌ها</button>
 <button class="navitem" data-page="roadmap" type="button"><span class="ico">↗</span>نقشه اقدام</button>
-<button class="navitem" data-page="final" type="button"><span class="ico">▤</span>بوم نهایی من</button><button class="navitem" data-page="reflection" type="button"><span class="ico">✧</span>Guided Reflection</button>
+<button class="navitem" data-page="reflection" type="button"><span class="ico">✧</span>پرسش‌های راهنما</button>
+</div></details>
 </aside><div class="mainpages">
 <section class="page active" id="page-dashboard">
-<div class="panel hero-card"><p class="eyebrow" style="color:#d4c69c">START WITH CLARITY</p><h2>از ایده تا یک مدل قابل آزمون</h2><p>نه بلوک را با پرسش‌های هدفمند بررسی می‌کنی؛ سپس شکاف‌ها، نقاط مبهم و اولویت‌های اجرا مشخص می‌شوند. هیچ پاسخی را به‌جای داده واقعی بازار فرض نمی‌کنیم.</p><div class="button-row"><button class="btn" data-goto="onboard" type="button">شروع / تکمیل پروفایل</button><button class="btn" data-goto="wizard" type="button">ورود به پرسش‌ها</button><button class="btn" data-goto="final" type="button">بوم اختصاصی من</button></div></div>
-<div class="panel"><div class="section-header"><h2>وضعیت مدل شما</h2><span class="mini-badge" id="projectStage">مرحله شناسایی</span></div><div class="grid"><div class="metric"><b id="dashboardBlocks">۰ از ۹</b><span>بلوک دارای پاسخ</span></div><div class="metric"><b id="dashboardQuestions">۰</b><span>پرسش پاسخ‌داده‌شده</span></div><div class="metric"><b id="dashboardEvidence">۰</b><span>بلوک دارای شاهد اولیه</span></div></div><p class="notice">تکمیل بلوک، به معنای اعتبارسنجی مدل نیست. درصد پیشرفت صرفاً میزان اطلاعات واردشده را نشان می‌دهد.</p><div class="progress" aria-label="پیشرفت تکمیل" style="margin-top:12px"><span id="progressBar"></span></div></div>
-<div class="panel"><h2>چطور پیش برویم؟</h2><p class="subtitle">مسیر ساده و مرحله‌ای</p><div class="mini-steps"><div class="mini-step"><strong>۱. Business Discovery</strong><p>شناخت ایده، مشتری، مرحله کسب‌وکار و مسئله اصلی.</p></div><div class="mini-step"><strong>۲. Canvas &amp; Diagnosis</strong><p>تکمیل ۹ بلوک و مشخص‌کردن فرضیات پرریسک.</p></div><div class="mini-step"><strong>۳. Execution Roadmap</strong><p>آزمایش‌های پیشنهادی، اقدام‌های ۳۰/۶۰/۹۰ روزه و پیگیری.</p></div></div></div></section>
+<div class="dashboard-lead"><div>
+<span class="mini-badge" id="projectStage">ایده کسب‌وکار</span>
+<h2>از کجا شروع کنیم؟</h2><p>سه قدم ساده برای ساخت مدل کسب‌وکار شما</p></div>
+<div class="dashboard-count"><strong id="dashboardBlocks">۰ از ۹</strong><span>بلوک تکمیل‌شده</span></div></div>
+<div class="progress dashboard-progress" aria-label="پیشرفت طراحی بوم"><span id="progressBar"></span></div>
+<div class="dashboard-actions">
+<button class="dash-action main-action" data-goto="wizard" type="button"><span class="dash-symbol" aria-hidden="true">▣</span><span class="dash-title">شروع / ادامه طراحی</span><small>پرسش‌های انتخابی و گام‌به‌گام</small><span class="dash-arrow" aria-hidden="true">←</span></button>
+<button class="dash-action" data-goto="canvas" type="button"><span class="dash-symbol" aria-hidden="true">▦</span><span class="dash-title">بوم کسب‌وکار من</span><small>مشاهده و ویرایش ۹ بخش</small><span class="dash-arrow" aria-hidden="true">←</span></button>
+<button class="dash-action" data-goto="final" type="button"><span class="dash-symbol" aria-hidden="true">▤</span><span class="dash-title">گزارش نهایی</span><small>تحلیل و دریافت خروجی اختصاصی</small><span class="dash-arrow" aria-hidden="true">←</span></button>
+</div>
+<div class="dashboard-bottom"><button class="btn subtle" type="button" data-goto="onboard">✎ اطلاعات کسب‌وکار</button><span class="quiet-stat" hidden><span id="dashboardQuestions">۰</span><span id="dashboardEvidence">۰</span></span></div>
+</section>
 <section class="page" id="page-onboard"><div class="panel"><div class="section-header"><div><h2>شناخت اولیه کسب‌وکار</h2><p>Business Discovery · مبنای پرسش‌های بعدی</p></div></div><div class="formgrid">
 <div class="field"><label for="ownerName">نام تکمیل‌کننده (اختیاری)</label><input id="ownerName" name="ownerName" placeholder="نام یا نام مستعار" maxlength="80"></div>
 <div class="field"><label for="businessName">نام کسب‌وکار / ایده</label><input id="businessName" name="businessName" placeholder="مثلاً فروشگاه غذای سالم" maxlength="120"></div>
