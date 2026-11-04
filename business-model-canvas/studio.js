@@ -51,7 +51,7 @@ const BLOCKS=[
 {id:'val_alt',title:'مشتری در نبود شما از چه جایگزین‌هایی استفاده می‌کند؟',help:'رقبا، انجام کار به روش دستی یا حتی انجام ندادن کار.',type:'text'},
 {id:'val_edge',title:'چه تمایز قابل اثباتی در برابر این جایگزین‌ها دارید؟',help:'از ادعاهایی مانند «کیفیت عالی» بدون شاهد پرهیز کن.',type:'text'}
 ]},
-{id:'channels',title:'کانال‌ها',en:'کانالs',desc:'مشتری چگونه از شما مطلع می‌شود، می‌خرد و خدمت را دریافت می‌کند؟',questions:[
+{id:'channels',title:'کانال‌ها',en:'کانال‌ها',desc:'مشتری چگونه از شما مطلع می‌شود، می‌خرد و خدمت را دریافت می‌کند؟',questions:[
 {id:'chan_discovery',title:'مشتریان چطور با شما آشنا خواهند شد؟',help:'یک یا چند کانال واقعاً قابل آزمون انتخاب کن.',type:'multi',options:['معرفی مشتریان','شبکه‌های اجتماعی','سئو و وب‌سایت','فروش حضوری','فروش مستقیم سازمانی','نمایندگی یا شریک فروش','تبلیغات پولی','رویدادها و شبکه‌سازی'],core:true},
 {id:'chan_sale',title:'مراحل خرید از آشنایی تا پرداخت چیست؟',help:'مثال: آشنایی → مشاوره اولیه → پیشنهاد قیمت → قرارداد.',type:'text',core:true},
 {id:'chan_delivery',title:'محصول یا خدمت چگونه تحویل داده می‌شود؟',help:'فروش اینترنتی، ارسال، جلسه حضوری، تحویل پروژه یا روش دیگر.',type:'text'},
@@ -156,8 +156,7 @@ function optionsFor(q){
  return{mode:spec.mode||'select',options:[...new Set([...(spec.options||q.options||[]),...relevant])]};
 }
 function fieldFor(q){
- const answer=parts(q.id),spec=optionsFor(q),root=el('div','choice-wrapper'),label=el('div','choice-label','پاسخ انتخابی');
- root.append(label);
+ const answer=parts(q.id),spec=optionsFor(q),root=el('div','choice-wrapper');
  const known=answer.choices.length?answer.choices:(answer.note&&spec.options.includes(answer.note)?[answer.note]:[]);
  let selection=[],selectedNote=answer.note;
  if(spec.mode==='multi'){
@@ -205,7 +204,7 @@ function renderStep(){
  $('#wizardTitle').textContent=b.title;$('#wizardDesc').textContent=b.desc;
  $('#wizardProgress').style.width=(100*(state.step+1)/9)+'%';
  const qlist=$('#questionList');qlist.replaceChildren();
- for(const q of questions(b)){const wrap=el('div','question');wrap.append(el('label','',q.title+(q.core?' *':'')),el('p','help',q.help),fieldFor(q));qlist.append(wrap)}
+ for(const q of questions(b)){const wrap=el('div','question');wrap.append(el('label','',q.title),fieldFor(q));qlist.append(wrap)}
  $('#wizardCount').textContent=questions(b).filter(q=>value(q.id)).length+' / '+questions(b).length;
  $('#previousStep').disabled=state.step===0;
  $('#nextStep').textContent=state.step===8?'تولید بوم اختصاصی من':'مرحله بعد';
