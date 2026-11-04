@@ -22,3 +22,16 @@ A clear coming-soon card on Home routes to `#/coach`, which is a product-preview
 - Human coaching is currently a `mailto:` request to the owner. The case description is omitted by default, and attached only if the user explicitly ticks the disclosure box; no booking confirmation or payment integration exists.
 - The ChatGPT option **copies a prompt on request** and opens ChatGPT separately. There is no embedded OpenAI model, automatic transmission, account linkage or API key. True AI and user authentication require a private, funded backend and security review.
 - The nine-session main course now includes detailed signature role-plays and four scenario-aware checks per session with reasons for every option. These use the original course storage and do not change its schema.
+
+
+## Interactive leadership business model canvas (2026-11-04)
+- Independent route: `/sabanaft/app/business-model.html` (linked from the app Home).
+- Standalone, responsive RTL visual Business Model Canvas: nine clickable areas in a readable, horizontally scrollable comprehensive overview plus nine tappable navigation cards and deep-linked visual explanation panels.
+- Each block explains the user's selected strategy from the 32-question discovery: customer segments, value, channels, customer relations, activities, resources, key partners, revenues, costs, execution next step and caveats. Includes sales packages and customer journey.
+- Full-screen overview, print/PDF-friendly styling, keyboard focus, and Escape to leave expanded mode.
+- Self-contained, zero user data, no API calls or storage; original course, cases, studio and coaching flows are untouched.
+- This is a DOM/CSS re-creation of the approved schematic for clickable, readable text and accessibility, **not the original generated raster file**.
+- No authentication is imposed: business/pricing assumptions on this page are publicly accessible wherever the app URL is accessible. Do not place private company or client data here.
+- The commercial target of 11 × 2-hour sessions is distinct from the currently published nine-session course.
+- Service worker v6 precaches this page and preserves per-path navigation cache boundaries (business model navigation cannot overwrite cached app Home).
+- Verification: static source audits check JavaScript syntax, 9 unique interactive blocks, 9 detail definitions, Home route and offline manifest; an actual external browser test is still needed.
