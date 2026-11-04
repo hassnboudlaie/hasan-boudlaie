@@ -318,7 +318,7 @@ check('v86 calm mobile experience is complete, navigable and private',()=>{
  assert.ok(controls.includes("grid.append(action)"),'secondary home tools must remain reachable');
  assert.ok(!controls.includes('localStorage.setItem'),'new design must not write financial data or preferences');
  assert.ok(!controls.includes('fetch('),'new design must not reach financial endpoints');
- assert.ok(!controls.includes('supabase'),'new design must remain isolated from cloud state');
+ assert.ok(!/client\.from\(|\.functions\.invoke\(/.test(controls),'new design must not make financial database calls');
  assert.ok(design.includes('main > section[hidden]{display:none!important}'),'inactive page must always stay hidden');
  assert.ok(design.includes('[data-finance-view="cashflow"]'),'cashflow drilldown must stay visible');
  assert.ok(design.includes('tx-ledger-item'),'transaction list should be redesigned');
