@@ -113,3 +113,41 @@
 .app-utilities .panel:last-child{margin-bottom:0}
 @media(max-width:600px){.app-utilities-content{padding:8px}.app-utilities .panel{padding:14px}}
 @media print{.app-utilities{display:none!important}}
+
+
+/* Persian minimalist interface: quiet questions, fewer visible controls */
+:root{--cream:#f8f9f5;--shadow:0 3px 16px rgba(21,60,52,.035)}
+.topbar,.sidebar,.panel{box-shadow:none}
+.app{padding-top:14px}
+.mainpages>.page>.panel{padding:22px 23px;border-radius:17px}
+.mainpages>.page>.panel>.section-header{margin-bottom:14px}
+.mainpages>.page>.panel>.section-header h2{font-size:1.17rem}
+.welcome{margin-bottom:12px}
+.welcome p{font-size:.82rem}
+.question-list{display:block}
+.question{background:transparent;border:0;border-bottom:1px solid #e5ede5;border-radius:0;padding:16px 0;margin:0}
+.question:last-child{border-bottom:0}
+.question>label{font-weight:700;font-size:.94rem;line-height:1.75;margin-bottom:9px}
+.question .help{display:none}
+.choice-wrapper{gap:4px}
+.choice-wrapper select{border-color:#d5e3d8;background:#fafcf9;min-height:49px;font-size:.9rem}
+.note-details{border:0;padding:0;margin-top:4px}
+.note-details summary{font-weight:600;font-size:.75rem;color:#678274}
+.note-details textarea{font-size:.86rem}
+.profile-more{grid-column:1/-1;margin-top:2px;border:1px solid #e2eae2;border-radius:13px;padding:0}
+.profile-more>summary{padding:12px 14px;cursor:pointer;color:#577361;font-size:.82rem;font-weight:700}
+.profile-extra-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:0 13px 14px}
+.sidebar-more{margin-top:6px}
+.sidebar-extra .navitem{font-size:.78rem}
+#page-final .final-document{padding:23px}
+#page-final .final-canvas{gap:10px}
+#page-final .final-block{border-radius:12px;padding:14px}
+#page-final .final-block strong{font-size:.9rem}
+#page-final .final-block p{font-size:.83rem}
+#page-final .final-disclaimer{font-size:.74rem;color:#6d8075;margin:16px 0 0}
+#page-final .final-subhead{display:none}
+#page-final .button-row{margin-top:18px}
+.app-utilities{background:transparent;border:0}
+.app-utilities>summary{padding:7px 3px;color:#7c8c7f;font-size:.72rem}
+.app-utilities[open]{background:white;border:1px solid var(--line);padding:0 9px}
+@media(max-width:650px){.mainpages>.page>.panel{padding:17px}.profile-extra-grid{grid-template-columns:1fr}.question{padding:13px 0}.question>label{font-size:.91rem}.final-canvas{grid-template-columns:1fr}.app-utilities{margin-top:10px}}
