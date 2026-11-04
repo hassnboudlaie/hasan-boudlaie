@@ -120,15 +120,24 @@ function save(){
 }
 const UNKNOWN=/^(هنوز|نامشخص|مطمئن نیستم|قیمت هنوز|فعلاً برنامه‌ای|هیچ شاهدی ندارم|مسئله هنوز|فرایند هنوز|مسئول مشخص نیست|تعیین نشده|برآورد نکرده|فعالیت‌ها هنوز|مزیت خاصی فعلاً|تمایز هنوز|هزینه‌ها هنوز|هزینه جذب را|برنامه نگهداشت هنوز|نقش‌ها هنوز|جایگزین‌ها را شناسایی نکرده)/;
 function unknown(s){return UNKNOWN.test(String(s||'').trim())}
+
+function persianOption(v){return String(v||'')
+.replaceAll('فروش مستقیم B2B','فروش مستقیم سازمانی')
+.replaceAll('خودخدمتی / DIY','انجام کار توسط خود مشتری')
+.replaceAll('قرارداد و SLA مشخص داریم','قرارداد و توافق سطح خدمت مشخص داریم')
+.replaceAll('نرم‌افزار تحت وب (SaaS)','نرم‌افزار اشتراکی برخط')
+.replaceAll('پرداخت به‌ازای مصرف API','پرداخت به‌ازای میزان استفاده')
+.replaceAll('B2B','سازمانی').replaceAll('B2C','فردی');
+}
 function parts(id){
  const x=state.answers[id];
- if(x&&typeof x==='object'&&!Array.isArray(x)){return {choices:Array.isArray(x.choices)?x.choices.filter(v=>typeof v==='string'):[],note:typeof x.note==='string'?x.note.trim():''}}
- if(Array.isArray(x))return{choices:x.filter(v=>typeof v==='string'),note:''};
+ if(x&&typeof x==='object'&&!Array.isArray(x)){return {choices:Array.isArray(x.choices)?x.choices.filter(v=>typeof v==='string').map(persianOption):[],note:typeof x.note==='string'?x.note.trim():''}}
+ if(Array.isArray(x))return{choices:x.filter(v=>typeof v==='string').map(persianOption),note:''};
  return{choices:[],note:typeof x==='string'?x.trim():''};
 }
 function text(v){
- if(Array.isArray(v))return v.map(text).filter(Boolean).join('، ');
- if(v&&typeof v==='object'){const a=Array.isArray(v.choices)?v.choices.filter(x=>!unknown(x)&&x!=='سایر (با توضیح)').join('، '):'';return [a,typeof v.note==='string'?v.note.trim():''].filter(Boolean).join('؛ ')}
+ if(Array.isArray(v))return v.map(x=>text(persianOption(x))).filter(Boolean).join('، ');
+ if(v&&typeof v==='object'){const a=Array.isArray(v.choices)?v.choices.map(persianOption).filter(x=>!unknown(x)&&x!=='سایر (با توضیح)').join('، '):'';return [a,typeof v.note==='string'?v.note.trim():''].filter(Boolean).join('؛ ')}
  return typeof v==='string'?(unknown(v)?'':v.trim()):typeof v==='number'?String(v):'';
 }
 function value(id){return text(state.answers[id])}
@@ -265,7 +274,7 @@ function initProfile(){$$('#page-onboard [name]').forEach(input=>{const k=input.
 
 function init(){
  $$('[data-page]').forEach(b=>b.addEventListener('click',()=>goto(b.dataset.page)));
- $$('[data-goto]').forEach(b=>b.addEventListener('click',()=>goto(b.dataset.goto)));
+ $('[data-goto]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('main-action')&&!String(state.profile.businessName||'').trim())goto('onboard');else goto(b.dataset.goto)}));
  $('#previousStep').addEventListener('click',()=>moveStep(-1));
  $('#nextStep').addEventListener('click',()=>moveStep(1));
  $('#regenerateCanvas').addEventListener('click',()=>{if(!confirm('بوم ویرایش‌شده با پاسخ‌های پرسشنامه جایگزین شود؟'))return;state.manual={};save();renderCanvas();renderDashboard()});
