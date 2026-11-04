@@ -78,11 +78,11 @@ check('redesign has eight icon actions with working routes',()=>{
  assert.ok(html.includes('class="mf-auth-identity"'),'login brand missing');
  assert.ok(html.includes('id="mf-header-release"'),'visible design version missing');
  assert.ok(html.includes('class="mf-action-grid"'),'new action deck missing');
- const home=html.slice(html.indexOf('<section id="home"'),html.indexOf('</section>',html.indexOf('<section id="home"')));
- assert.equal((home.match(/class="mf-action mf-action-/g)||[]).length,8,'Home must expose exactly eight distinct icon actions');
- for(const route of ['accounts','loans','analysis','reports','assistant'])assert.ok(home.includes("financeNavGo('"+route+"')"),'missing Home route '+route);
- assert.ok(home.includes('financeOpenQuickEntry()'),'voice-entry tile missing');
- assert.ok(home.includes('id="mf-market-disclosure"'),'collapsible market entry missing');
+ const homeActions=html.slice(html.indexOf('<section id="home"'),html.indexOf('</section>',html.indexOf('<section id="home"')));
+ assert.equal((homeActions.match(/class="mf-action mf-action-/g)||[]).length,8,'Home must expose exactly eight distinct icon actions');
+ for(const route of ['accounts','loans','analysis','reports','assistant'])assert.ok(homeActions.includes("financeNavGo('"+route+"')"),'missing Home route '+route);
+ assert.ok(homeActions.includes('financeOpenQuickEntry()'),'voice-entry tile missing');
+ assert.ok(homeActions.includes('id="mf-market-disclosure"'),'collapsible market entry missing');
  for(const kind of ['expense','income'])
   assert.ok(html.includes("financeStartRecord('"+kind+"')"),kind+' action missing');
  assert.ok(html.includes("financeNavGo('transfers')"),'transfer shortcut missing');
