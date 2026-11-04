@@ -52,7 +52,7 @@ async function fullCase(item,idx){
   await page.locator('#view-wizard.active').waitFor();
   let questions=0;
   for(let i=0;i<10;i++){
-   assert((await page.locator('#stepCounter').innerText()).includes(String(i+1)),'Step label '+i);
+   assert((await page.locator('#stepCounter').innerText()).includes(new Intl.NumberFormat('fa-IR').format(i+1)),'Step label '+i);
    questions+=await answerStep(page,i,item);
    if(i===4){
     const fin=page.locator('#financialInputs');
