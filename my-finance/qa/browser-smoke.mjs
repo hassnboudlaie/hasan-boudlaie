@@ -60,6 +60,15 @@ try{
  await page.locator('#mf-market-disclosure summary').click();
 
  // The full report assistant and ChatGPT onboarding are accessible from the Home icon.
+ assert.equal(await page.locator('#home .mf-action-grid > .mf-action').count(),4,
+  'Only four primary actions should be visible without scrolling');
+ assert.equal(await page.locator('#mf-calm-extras').evaluate(el=>el.open),false,
+  'Additional home tools must start collapsed');
+ assert.equal(await page.locator('#mf-calm-insights').evaluate(el=>el.open),false,
+  'Monthly KPIs must start collapsed');
+ await page.locator('#mf-calm-extras>summary').click();
+ assert.equal(await page.locator('#home .mf-action-assistant').isVisible(),true,
+  'Assistant must be reachable with a single disclosure tap');
  await page.locator('#home .mf-action-assistant').click();await check('assistant');
  assert.equal(await page.locator('#finance-smart-assistant').isVisible(),true,'Voice reporting must be accessible inside Assistant');
  assert.equal(await page.locator('#home .mf-cg-card').isVisible(),true,'ChatGPT onboarding must be accessible inside Assistant');
@@ -110,11 +119,23 @@ try{
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-360.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/home-390.png',fullPage:true});
+ await page.locator('.finance-mobile-nav [data-finance-route="transactions"]').click();
+ await check('transactions');
+ assert.equal(await page.locator('#transactions .mf-calm-composer').evaluate(el=>el.open),false);
+ await page.locator('#transactions .mf-calm-composer > summary').click();
+ assert.equal(await page.locator('#amount').isVisible(),true,'Transaction registration must open on tap');
+ await page.locator('#transactions .mf-calm-composer > summary').click();
+ await page.goBack();await check('home');
  await page.locator('#mf-last-tx').click();await check('transaction-detail');
  assert.ok((await page.locator('#finance-transaction-detail-body').innerText()).includes('هزینه آزمایشی'));
  await page.goBack();await check('home');
  await page.locator('.finance-balance-hero').click();await check('accounts');
- await page.locator('button[data-account="account-example"]').click();await check('account-detail');
+ assert.equal(await page.locator('#accounts .mf-calm-composer').evaluate(el=>el.open),false,
+   'Account creation must be tucked away until requested');
+  await page.locator('#accounts .mf-calm-composer > summary').click();
+  assert.equal(await page.locator('#accname').isVisible(),true,'Account form must open on tap');
+  await page.locator('#accounts .mf-calm-composer > summary').click();
+  await page.locator('button[data-account="account-example"]').click();await check('account-detail');
  await page.waitForSelector('.mf-drill-balance');
  assert.ok((await page.locator('#finance-account-detail-body').innerText()).includes('حساب آزمایشی'));
  assert.ok(!page.url().includes('account-example'),'Account ID leaked in URL');
