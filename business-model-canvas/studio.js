@@ -225,7 +225,38 @@ function moveStep(delta){
 }
 
 function renderDashboard(){const filled=completedBlocks(),count=countAnswers(),total=totalQuestions();$('#dashboardBlocks').textContent=filled+' از ۹';$('#dashboardQuestions').textContent=count+' از '+total;$('#dashboardEvidence').textContent='';$('#progressBar').style.width=(100*count/Math.max(total,1))+'%';$('#stepProgress').textContent=filled+'/۹';$('#projectStage').textContent=({idea:'مرحله ایده',testing:'آزمون بازار',running:'کسب‌وکار فعال',growing:'مرحله رشد'})[state.profile.stage]||'شناخت اولیه';$('#welcomeTitle').textContent=state.profile.businessName?('مدل کسب‌وکار «'+state.profile.businessName+'»') :'بوم کسب‌وکار من'}
-function renderCanvas(){for(const block of BLOCKS){const node=document.querySelector('[data-block="'+block.id+'"] textarea');if(!node)continue;node.value=blockValue(block.id);node.oninput=()=>{state.manual[block.id]=node.value;save();renderDashboard()}}}
+let canvasEditingId=null;
+function renderCanvas(){
+ for(const block of BLOCKS){
+  const tile=document.querySelector('#canvas [data-block="'+block.id+'"]');
+  if(!tile)continue;
+  const summary=tile.querySelector('.block-preview');
+  const content=blockValue(block.id);
+  if(summary)summary.textContent=content||'هنوز تکمیل نشده';
+  tile.classList.toggle('filled',Boolean(content));
+ }
+}
+function openCanvasEditor(id){
+ const block=BLOCKS.find(b=>b.id===id),dialog=$('#canvasDialog');
+ if(!block||!dialog)return;
+ canvasEditingId=id;
+ $('#canvasEditTitle').textContent=block.title;
+ $('#canvasEditText').value=blockValue(id);
+ if(typeof dialog.showModal==='function')dialog.showModal();
+ else dialog.setAttribute('open','');
+ $('#canvasEditText').focus();
+}
+function saveCanvasEditor(){
+ if(!canvasEditingId)return;
+ state.manual[canvasEditingId]=$('#canvasEditText').value;
+ save();renderCanvas();renderDashboard();
+}
+function closeCanvasEditor(){
+ const dialog=$('#canvasDialog');
+ if(dialog?.open&&typeof dialog.close==='function')dialog.close();
+ else dialog?.removeAttribute('open');
+ canvasEditingId=null;
+}
 
 function roadmapData(){const stage=state.profile.stage;const isStart=stage==='idea'||stage==='testing';const customer=value('seg_main')||'مشتریان هدف';const channel=value('chan_discovery')||'کانال جذب اولیه';const tasks=[
 [{id:'30a',label:'بازنگری مشتری هدف: '+customer},{id:'30b',label:'انجام ۵ تا ۱۰ گفتگوی مسئله‌محور با مشتریان واقعی'},{id:'30c',label:'بررسی سه فرضیه مهم مدل'},{id:'30d',label:isStart?'طراحی پیشنهاد اولیه قابل آزمون':'جمع‌آوری داده فروش، ریزش و بازخورد مشتریان فعلی'}],
@@ -252,7 +283,7 @@ function renderFinal(){
  $('#finalMeta').textContent='تکمیل‌کننده: '+report.owner+' · '+report.industry+' · '+report.date;
  const grid=$('#finalCanvas');grid.replaceChildren();
  report.blocks.forEach(b=>{
-  const card=el('article','final-block');card.append(el('strong','',b.name),el('p','',b.text));grid.append(card);
+  const card=el('article','final-block');card.dataset.block=b.id;card.append(el('strong','',b.name),el('p','',b.text));grid.append(card);
  });
 }
 function htmlEscape(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -288,6 +319,15 @@ function init(){
  $('#newWorkspace').addEventListener('click',createWorkspace);
  $('#downloadCanvasReport').addEventListener('click',downloadCanvasReport);
  $('#printFinal').addEventListener('click',printFinal);
+ $('#canvas').addEventListener('click',event=>{
+  const tile=event.target.closest('[data-block]');
+  if(tile)openCanvasEditor(tile.dataset.block);
+ });
+ $('#canvasEditText').addEventListener('input',saveCanvasEditor);
+ $('#canvasDialogClose').addEventListener('click',closeCanvasEditor);
+ $('#canvasDialogDone').addEventListener('click',closeCanvasEditor);
+ $('#canvasDialog').addEventListener('click',event=>{if(event.target===event.currentTarget)closeCanvasEditor()});
+ $('#canvasDialog').addEventListener('close',()=>{canvasEditingId=null});
  initProfile();refreshWorkspaceSelector();goto('dashboard');
  let prompt=null;
  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();prompt=e;$('#installButton').textContent='نصب برنامه'});
