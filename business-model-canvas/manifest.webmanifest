@@ -1,11 +1,11 @@
 {
   "name": "Business Model Canvas | BMC Studio",
   "short_name": "BMC Studio",
-  "description": "Interactive Business Model Canvas free demo",
+  "description": "Standalone full business model consulting and design studio, with free interactive demo",
   "lang": "fa-IR",
   "dir": "rtl",
   "id": "./",
-  "start_url": "./",
+  "start_url": "./studio.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f5f5f0",
