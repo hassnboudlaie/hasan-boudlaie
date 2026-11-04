@@ -150,7 +150,7 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
    assert(res.ok(),'Free demo does not load');
    await page.locator('#name').fill('فروشگاه آزمایشی');
    await page.locator('#owner').fill('فرد آزمایشی');
-   await page.locator('#demoExtra summary').click();
+   await page.locator('#demoExtra > summary').click();
    for(const id of ['segments','problem','value','channels','revenue','costs'])await page.locator('#'+id).selectOption({index:1});
    await page.locator('#businessForm button[type=submit]').click();
    assert(await page.locator('#resultPanel').isVisible(),'Demo result not shown');
