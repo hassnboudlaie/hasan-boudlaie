@@ -116,7 +116,7 @@ body.finance-unlocked #auth-gate{display:none!important}
 <div class="finance-home-heading">
  <div class="mf-heading-copy"><small>PERSONAL FINANCE / OVERVIEW</small><h2 data-fa="نمای مالی من" data-en="My financial overview">نمای مالی من</h2><p class="muted" data-fa="حساب‌ها، هزینه‌ها و تعهدات؛ در یک نگاه" data-en="Accounts, spending and payments at a glance">حساب‌ها، هزینه‌ها و تعهدات؛ در یک نگاه</p><div class="finance-overview-meta"><span id="finance-period-pill" class="finance-period-pill" aria-live="polite">ماه جاری</span><span class="finance-overview-caption" data-fa="نمای اختصاصی · بر اساس اطلاعات ثبت‌شده" data-en="Private overview · from recorded transactions">نمای اختصاصی · بر اساس اطلاعات ثبت‌شده</span></div></div>
  <div class="mf-home-visual" aria-hidden="true"><img src="./finance-hero-growth-v77.svg?v=20261102r77" alt="" width="360" height="240" loading="eager" decoding="async"></div>
- <div class="finance-head-actions" data-myfinance-release="design-r78"><button type="button" class="finance-new-entry" onclick="financeOpenQuickEntry()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button></div>
+ <div class="finance-head-actions" data-myfinance-release="design-r84"><button type="button" class="finance-new-entry" onclick="financeOpenQuickEntry()" data-fa="+ ثبت جدید" data-en="+ New entry">+ ثبت جدید</button></div>
 </div>
 <div class="mf-home-notices" aria-label="آخرین اطلاعات مالی من">
 <div id="loan-due-notice" class="loan-reminder-banner" role="status" aria-live="polite">
@@ -534,9 +534,8 @@ function financeNavGo(id,options={}){
   if(title){title.setAttribute('tabindex','-1');title.focus({preventScroll:true})}
  });
  if(typeof window.scrollTo==='function')window.scrollTo({top:0,behavior:'auto'});
- if(id==='profile'||id==='assistant'){
-  const target=id==='profile'?'finance-profile-card':'finance-smart-assistant';
-  requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({block:'start',behavior:'auto'}));
+ if(id==='profile'){
+  requestAnimationFrame(()=>document.getElementById('finance-profile-card')?.scrollIntoView({block:'start',behavior:'auto'}));
  }
 }
 function financeBack(){
