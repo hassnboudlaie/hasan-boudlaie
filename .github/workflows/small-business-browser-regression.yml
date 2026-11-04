@@ -1,0 +1,43 @@
+name: Small Business - Browser End to End
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'small-business/**'
+      - 'scripts/small-business-browser-qa.mjs'
+      - '.github/workflows/small-business-browser-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JavaScript
+        run: |
+          node --check small-business/app.js
+          node --check small-business/question-bank.js
+          node --check small-business/demo.js
+          node --check small-business/sw.js
+          node --check scripts/small-business-browser-qa.mjs
+      - name: Install headless browser
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Execute free browser QA across industries
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/small-business-http.log 2>&1 &
+          sleep 3
+          node scripts/small-business-browser-qa.mjs
+      - name: Upload screenshots, reports and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: small-business-browser-qa-artifacts
+          path: artifacts/small-business-qa/
+          if-no-files-found: warn
