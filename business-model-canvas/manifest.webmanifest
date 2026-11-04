@@ -1,7 +1,7 @@
 {
-  "name": "Business Model Canvas | BMC Studio",
-  "short_name": "BMC Studio",
-  "description": "Standalone full business model consulting and design studio, with free interactive demo",
+  "name": "بوم کسب‌وکار من",
+  "short_name": "بوم کسب‌وکار",
+  "description": "برنامه فارسی طراحی و تکمیل نه بخش بوم مدل کسب‌وکار",
   "lang": "fa-IR",
   "dir": "rtl",
   "id": "./",
