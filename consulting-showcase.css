@@ -1,0 +1,26 @@
+
+/* Consulting product suite — scoped to avoid impacts on other site/app styles */
+.consulting-showcase{margin-block:36px 56px;padding-block:30px;scroll-margin-top:94px}
+.consulting-showcase .consulting-head{display:flex;justify-content:space-between;align-items:end;gap:22px;margin-bottom:25px;flex-wrap:wrap}
+.consulting-showcase .consulting-head h2{font-size:clamp(1.7rem,3.2vw,2.65rem);line-height:1.35;margin:7px 0}
+.consulting-showcase .consulting-head p:last-child{max-width:630px;font-size:.95rem;color:#61746d;line-height:1.9}
+.consulting-showcase .consulting-eyebrow{font-size:.79rem;font-weight:800;letter-spacing:.06em;color:#ad7b43}
+.consulting-showcase .consulting-groups{display:grid;grid-template-columns:1fr 1.7fr;gap:18px}
+.consulting-showcase .consulting-group{background:#f0f4ef;border:1px solid #d8e4db;border-radius:23px;padding:20px;min-width:0}
+.consulting-showcase .consulting-group-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 2px 16px}
+.consulting-showcase .consulting-group-heading h3{font-size:1.18rem;line-height:1.5;margin:0}
+.consulting-showcase .consulting-group-heading small{color:#697b72;font-size:.75rem}
+.consulting-showcase .consulting-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.consulting-showcase .consulting-cards.single{grid-template-columns:1fr}
+.consulting-showcase .consulting-product{display:flex;flex-direction:column;background:#fffefa;border:1px solid #dce7dd;border-radius:18px;padding:22px;min-width:0}
+.consulting-showcase .consulting-symbol{width:48px;height:48px;border-radius:14px;background:#dbece0;display:grid;place-items:center;color:#1f5849;font-size:1.4rem;margin-bottom:15px}
+.consulting-showcase .consulting-product h4{font-size:1.12rem;color:#173f36;line-height:1.45;margin:0 0 9px;overflow-wrap:anywhere}
+.consulting-showcase .consulting-product p{font-size:.88rem;color:#65776d;line-height:1.9;margin:0 0 18px;flex:1}
+.consulting-showcase .consulting-status{align-self:flex-start;font-size:.72rem;font-weight:800;background:#eef3ea;color:#335d4a;padding:5px 10px;border-radius:99px;margin-bottom:12px}
+.consulting-showcase .consulting-status.pending{background:#fff3df;color:#91672c}
+.consulting-showcase .consulting-links{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.consulting-showcase .consulting-link{border-radius:10px;padding:9px 13px;font-size:.82rem;line-height:1.7;font-weight:800;background:#153e37;color:white;text-decoration:none}
+.consulting-showcase .consulting-link.secondary{background:#e7f0e9;color:#1c5747}
+.consulting-showcase .consulting-link:hover{filter:brightness(.95)}
+@media(max-width:850px){.consulting-showcase .consulting-groups{grid-template-columns:1fr}}
+@media(max-width:610px){.consulting-showcase .consulting-cards{grid-template-columns:1fr}.consulting-showcase .consulting-group{padding:14px}.consulting-showcase .consulting-product{padding:18px}.consulting-showcase .consulting-group-heading{flex-wrap:wrap}}
