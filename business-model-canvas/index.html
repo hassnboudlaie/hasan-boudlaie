@@ -34,6 +34,33 @@ footer{border-top:1px solid var(--line);padding:25px 0;margin-top:36px;font-size
 .demo-menu-items a,.demo-menu-items button{text-align:start;font-size:.83rem;padding:9px}
 #resultPanel[hidden]{display:none!important}
 @media(max-width:650px){.container{width:calc(100% - 24px)}.form-grid,.extra-fields{grid-template-columns:1fr}.panel{padding:17px}.hero{padding-top:19px}.hero p{font-size:.82rem}.head-actions{gap:7px}.brand span:last-child{font-size:.82rem}.brand-mark{padding:9px 11px;font-size:1rem}.demo-extra{grid-column:1/-1}.extra-fields .field.wide{grid-column:auto}}
+
+/* هماهنگی بصری نمونه رایگان با برنامه اصلی؛ بدون افزودن اجزای جدید */
+body{background:linear-gradient(180deg,#f7faf6 0%,#f2f6f0 100%);color:#183b2f}
+header{background:#ffffffef;border-bottom-color:#dbe8df}
+.brand-mark{background:linear-gradient(140deg,#155842,#0f362f);border-radius:12px}
+.hero{margin-top:20px;padding:28px 31px 29px;border-radius:23px;overflow:hidden;position:relative;
+ background:linear-gradient(115deg,#123e37,#256d51);box-shadow:0 15px 32px #13432d26}
+.hero::after{content:"";position:absolute;width:160px;height:160px;left:-35px;top:-70px;border-radius:48px;
+ border:1px solid #e7d2aa5b;transform:rotate(-18deg);box-shadow:0 0 0 23px #ffffff07,0 0 0 48px #e7d2aa10;pointer-events:none}
+.hero h1{color:#fff;font-size:clamp(1.5rem,3vw,2.05rem)}
+.hero p{color:#e3f2e9;line-height:1.8;position:relative}
+.hero .tag{background:#ffffff1d;color:#f8dfb8;border:1px solid #ffffff30}
+.panel{border-color:#dce8df;border-radius:19px;box-shadow:0 5px 16px #1e54330a}
+.field label{font-weight:750}
+.field select,.field input,.field textarea{border-color:#d6e6da!important;background:#fafdfa!important}
+.field :is(input,textarea,select):focus{outline:2px solid #ccead5;border-color:#42966d!important}
+.btn.primary{background:#176047;color:#fff}
+#resultPanel .canvas .block{padding:0;overflow:hidden;border-color:#dce8df;background:#fff;border-radius:13px}
+#resultPanel .canvas .block b{display:block;padding:9px 12px;background:#185a47;color:white;font-size:.82rem}
+#resultPanel .canvas .block p{padding:10px 12px;margin:0;font-size:.8rem;color:#466c59}
+#resultPanel .canvas .block.value{background:#fff8ec;border-color:#e8cb9c}
+#resultPanel .canvas .block.value b{background:#b9803a}
+#resultPanel .canvas .block.value p{color:#78562d}
+.demo-extra{background:#f9fbf8;border-color:#e0e9df}
+.bottom-cta{border-radius:15px;background:#e8f2e9}
+@media(max-width:650px){.hero{margin-top:13px;padding:22px 18px;border-radius:17px}.hero h1{font-size:1.4rem}.hero p{font-size:.8rem}.panel{border-radius:16px}}
+
 </style></head><body>
 <header><div class="container nav"><a class="brand" href="../products.html"><span class="brand-mark">بوم</span><span>بوم کسب‌وکار</span></a><div class="head-actions"><a class="btn primary" href="./studio.html">نسخه کامل</a><details class="demo-menu"><summary>⋯</summary><div class="demo-menu-items"><a href="../advisory.html#business-consulting">مشاوره کسب‌وکار</a><button id="install" class="btn secondary" type="button">راهنمای نصب</button></div></details></div></div></header>
 <main class="container"><section class="hero"><span class="tag">دموی رایگان</span><h1>مدل کسب‌وکار خودت را بساز.</h1><p>چند انتخاب ساده، یک بوم اولیه و سه قدم بعدی.</p></section>
