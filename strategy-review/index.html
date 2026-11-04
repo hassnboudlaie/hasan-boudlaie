@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123d49">
+<meta name="description" content="پرسشنامه بازنگری سند راهبردی شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش بر اساس Perdoo 3.0">
+<title>پرسشنامه بازنگری سند راهبردی | بنادر و فرودگاه‌های کیش</title>
+<style>
+:root{--navy:#113843;--teal:#147b76;--gold:#ca9b42;--light:#f4f7f6;--ink:#172e38;--muted:#5e7279;--edge:#dbe5e4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--light);font-family:Tahoma,"Segoe UI",Arial,sans-serif;color:var(--ink);line-height:1.8;font-size:15px}button,select,input,textarea{font-family:inherit;font-size:15px}button{cursor:pointer}a{color:#006c73}
+header{background:linear-gradient(120deg,#0c303c,#185766);color:white;padding:27px max(20px,calc((100% - 1120px)/2));border-bottom:5px solid var(--gold)}header .eyebrow{color:#d8c48d;font-size:12px;letter-spacing:.08em;font-weight:700}h1{margin:6px 0;font-size:clamp(22px,3vw,33px);line-height:1.55}header p{margin:5px 0;color:#dfedec;font-size:14px;max-width:800px}.shell{max-width:1160px;margin:18px auto 40px;padding:0 15px}.statusbar{display:flex;gap:12px;align-items:center;justify-content:space-between;background:white;padding:13px 18px;border:1px solid var(--edge);border-radius:16px;flex-wrap:wrap;box-shadow:0 5px 18px #143c4210}.progress{height:9px;background:#e0e8e7;border-radius:20px;overflow:hidden;margin-top:5px}.progress>div{height:100%;background:linear-gradient(90deg,#20a99f,#94bd72);transition:width .3s}.progresswrap{min-width:220px;flex:1}.statusline{font-size:13px;color:var(--muted)}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:17px;margin-top:18px}.side,.panel{background:white;border:1px solid var(--edge);border-radius:18px;box-shadow:0 8px 30px #1538400b}.side{align-self:start;padding:15px;position:sticky;top:15px}.sidenav{display:grid;gap:6px}.sidenav button{border:0;border-radius:10px;background:transparent;color:#435a62;text-align:right;padding:9px 10px;line-height:1.5;display:flex;justify-content:space-between;gap:8px}.sidenav button.active{background:#e1f1ed;color:#096a65;font-weight:700}.sidenav button:hover{background:#eef4f2}.sidenav small{color:#637e7d;white-space:nowrap}.panel{padding:clamp(16px,3vw,30px)}h2{font-size:23px;margin:0 0 3px;color:#143d49}.lead{color:#5f737c;margin:0 0 24px;font-size:14px}.question{border:1px solid #e0e9e7;border-radius:14px;padding:19px;margin-bottom:12px;background:#fff}.question:focus-within{border-color:#48a49b;box-shadow:0 0 0 3px #3faaa01b}.qtop{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}.num{display:inline-block;background:#e8f2f0;color:#136b68;font-size:12px;padding:0px 7px;border-radius:6px;direction:ltr;font-weight:bold;white-space:nowrap}.question label{display:block;font-weight:700;font-size:15px;margin-bottom:12px}.hint{font-size:12px;color:#73858c;margin:0 0 12px}.question select{width:100%;min-height:46px;border:1px solid #cbdad8;padding:9px 12px;border-radius:9px;background:#f9fcfb;color:#1c3940;outline-color:var(--teal)}.question details{margin-top:11px}.question summary{color:#357c79;font-size:13px;cursor:pointer}.question textarea{margin-top:8px;width:100%;min-height:74px;resize:vertical;border-radius:9px;border:1px solid #cbdad8;padding:10px;background:#fcfdfd}.question .source{margin-top:7px;min-height:40px}.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}.btn{border-radius:10px;border:1px solid #b7d1cc;background:white;padding:10px 16px;color:#175851;font-weight:700;min-height:44px}.btn.primary{background:var(--teal);border-color:var(--teal);color:white}.btn.dark{background:var(--navy);color:white;border-color:var(--navy)}.btn:hover{filter:brightness(.96)}.btn:disabled{opacity:.4;cursor:not-allowed}.notice{background:#fff8e9;color:#76572c;border-right:4px solid var(--gold);padding:11px 15px;border-radius:9px;font-size:13px;margin:10px 0 22px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}.fields label{font-size:13px;font-weight:bold}.fields input{width:100%;margin-top:6px;border:1px solid #cadbd7;background:#fafdfc;padding:11px;border-radius:9px}.topButtons{display:flex;flex-wrap:wrap;gap:7px}.topButtons button{padding:7px 11px;font-size:12px;border-radius:9px;border:1px solid #cbdad8;background:white}.micro{font-size:12px;color:var(--muted)}footer{text-align:center;color:#6d8187;font-size:12px;padding:10px 15px 25px}.tag{display:inline-block;background:#e7f3f1;padding:1px 8px;border-radius:6px;font-size:12px;color:#276d67}.outpanel{display:none;background:#fff;border:1px solid var(--edge);border-radius:18px;padding:22px;margin-top:15px}.outpanel.open{display:block}#preview{white-space:pre-wrap;overflow:auto;max-height:350px;background:#f5f8f7;padding:15px;border-radius:12px;border:1px solid var(--edge);direction:rtl;font-size:12px;line-height:2}.pill{border-radius:50px;background:#eaf4f2;padding:4px 11px;font-size:12px;color:#176761}.importfile{display:none}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.side{position:static;max-height:none}.sidenav{grid-template-columns:1fr 1fr}.panel{padding:14px}.fields{grid-template-columns:1fr}.question{padding:15px}.statusbar{display:block}.topButtons{margin-top:12px}.qtop{display:block}.num{margin-bottom:5px}}
+@media print{header,.side,.statusbar,.toolbar,footer,#qcontainer{display:none!important}.layout{display:block}.outpanel{display:block!important;border:0}#preview{max-height:none;border:0;white-space:pre-wrap;font-size:11pt}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">KISH PORTS & AIRPORTS · STRATEGIC DOCUMENT REVISION · PERDOO 3.0</div>
+<h1>پرسشنامه بازنگری و به‌روزرسانی سند راهبردی</h1>
+<p>شرکت توسعه و مدیریت بنادر و فرودگاه‌های کیش | ویژه دستیار جمع‌آوری اطلاعات و هماهنگی مدیریتی</p></header>
+<main class="shell">
+<div class="statusbar">
+ <div class="progresswrap"><div class="statusline"><strong id="counter">۰ پرسش پاسخ‌داده‌شده</strong> <span id="total"></span> <span class="pill" id="save-state">ذخیره محلی</span></div><div class="progress"><div id="bar" style="width:0%"></div></div></div>
+ <div class="topButtons"><button id="summaryTop" type="button">📋 پیش‌نمایش گزارش</button><button id="jsonTop" type="button">⬇️ دریافت JSON</button><button id="txtTop" type="button">⬇️ گزارش متنی</button></div>
+</div>
+<div class="layout"><aside class="side"><div style="font-weight:700;margin:0 4px 10px">بخش‌های پرسشنامه</div><nav class="sidenav" id="sidenav" aria-label="بخش‌های پرسشنامه"></nav><p class="micro" style="margin:16px 5px 0">راهنما: هر سؤال یک Dropdown دارد. در صورت نداشتن مدرک، گزینه «نیازمند استعلام» را انتخاب کنید؛ از حدس زدن خودداری کنید.</p></aside>
+<section class="panel"><div id="section-title"></div><div id="qcontainer"></div><div class="toolbar" id="pager"><button class="btn" id="prev" type="button">مرحله قبل</button><button class="btn primary" id="next" type="button">مرحله بعد</button><button class="btn dark" type="button" id="report">مشاهده و دریافت گزارش</button></div></section></div>
+<section id="outpanel" class="outpanel" aria-label="گزارش پاسخ‌ها"><h2>گزارش یکپارچه برای بازنگری سند</h2><p class="lead">این خروجی شامل تمام پاسخ‌ها، موارد نامشخص، توضیحات و منابع است. فایل JSON را برای تحلیل دقیق به مشاور تحویل دهید.</p><div class="toolbar"><button class="btn primary" id="json" type="button">دانلود فایل پاسخ‌ها (JSON)</button><button class="btn" id="txt" type="button">دانلود گزارش (TXT)</button><button class="btn" id="csv" type="button">دانلود جدول (CSV)</button><button class="btn" id="copy" type="button">کپی گزارش</button><button class="btn" id="print" type="button">چاپ / PDF</button><label class="btn" style="cursor:pointer">بازیابی فایل JSON<input id="restore" type="file" accept=".json,application/json" class="importfile"></label></div><p class="micro">اطلاعات به‌صورت خودکار فقط روی همین مرورگر ذخیره می‌شود و خودبه‌خود برای مشاور یا سرور ارسال نمی‌شود. برای تحویل باید خروجی را دانلود و ارسال کنید.</p><pre id="preview"></pre></section>
+</main><footer>پرسشنامه اختصاصی بازنگری سند کیش · برگرفته از سند موجود و راهنمای Perdoo 3.0 · این صفحه وابسته به نرم‌افزار Perdoo نیست.</footer>
+<script>
+(function(){
+'use strict';
+var EX='نیازمند استعلام / فاقد اطلاع';
+var OPT={
+decision:['بدون تغییر باقی بماند','اصلاح محتوایی لازم است','اصلاح عبارتی/ساختاری لازم است','با مورد دیگری ادغام شود','حذف آن پیشنهاد می‌شود','برای تصویب مدیرعامل ارجاع شود',EX],
+priority:['فوری و حیاتی','بالا؛ اولویت سال اول','متوسط؛ در برنامه سالانه','بلندمدت؛ فعلاً خارج از تمرکز سالانه','فاقد اولویت / پیشنهاد توقف',EX],
+status:['مستند و تأییدشده','در حال اجرا؛ پیشرفت قابل تأیید','در مرحله مطالعه یا مذاکره','صرفاً ایده / پیشنهاد','متوقف یا رد شده',EX],
+data:['مقدار مبنا، هدف و منبع معتبر موجود است','شاخص وجود دارد؛ داده یا هدف ناقص است','شاخص پیشنهادی است؛ داده ندارد','برای این موضوع کاربرد ندارد',EX],
+govern:['تصویب رسمی/صورت‌جلسه معتبر موجود است','توافق مدیریتی وجود دارد؛ تصویب رسمی ناقص است','موضوع مطرح شده ولی تصمیمی نیست','رد شده / خارج از اختیار شرکت',EX],
+owner:['حوزه مدیرعامل','اداره کل فرودگاه','اداره کل بنادر','معاونت مالی و اداری','معاونت اقتصادی','چند واحد با مسئول راهبر مشترک','نهاد خارج از شرکت',EX],
+cadence:['هفتگی','دو هفته یک‌بار','ماهانه','فصلی','شش‌ماهه','سالانه','هنوز تعریف نشده',EX],
+level:['بالا / کاملاً آماده','متوسط / بخشی آماده','پایین / نیازمند اقدام','نامرتبط',EX],
+choice:['بله، مستند و روشن','تا حدی / ناقص','خیر','نیازمند تصویب یا مجوز',EX],
+type:['Objective راهبردی','Key Result پیامدی و قابل‌اندازه‌گیری','KPI سلامت و عملیات جاری','Initiative / پروژه اجرایی','موضوع مستقل برای مطالعه بیشتر',EX]
+};
+var goals=[
+'ارتقای مستمر کیفیت و ایمنی خدمات حمل‌ونقل هوایی و دریایی',
+'افزایش بهره‌وری و بهینه‌سازی هزینه‌ها در فرایندهای سازمانی',
+'توسعه خدمات نوآورانه و هوشمندسازی عملیات کلیدی',
+'تقویت مدل‌های درآمدزایی پایدار و کاهش وابستگی به منابع سنتی',
+'جذب و هدایت سرمایه‌گذاری‌های راهبردی در پروژه‌های زیرساختی',
+'حفظ و تقویت جایگاه شرکت در سطح ملی و ارتقای اعتبار منطقه‌ای',
+'ارتقای تجربه ذی‌نفعان و ایفای نقش در توسعه برند ملی جزیره کیش',
+'افزایش تعاملات راهبردی با نهادهای کلیدی داخلی و بین‌المللی',
+'نهادینه‌سازی فرهنگ سازمانی مبتنی بر اخلاق، پاسخگویی و حرفه‌گرایی',
+'توسعه زیرساخت‌های داده‌محور برای تصمیم‌سازی و پایش عملکرد',
+'پایش و ارتقای اثربخشی اجتماعی و زیست‌محیطی فعالیت‌های شرکت',
+'افزایش تاب‌آوری سازمانی در برابر تحولات محیطی، اقتصادی و فناورانه',
+'توسعه سرمایه انسانی، توانمندسازی تخصصی و تقویت شایستگی‌های حرفه‌ای'
+];
+var pillars=['ایمنی و کیفیت','بهره‌وری و مدیریت هزینه','نوآوری و هوشمندسازی','سرمایه‌گذاری و توسعه پایدار','سرمایه انسانی و فرهنگ سازمانی','جایگاه و برند ملی/منطقه‌ای'];
+function q(t,k,h){return {t:t,k:k||'choice',h:h||''};}
+var sections=[
+{t:'مشخصات و اعتبار اطلاعات',desc:'ابتدا هویت پاسخ‌دهنده و سطح اتکاپذیری پاسخ‌ها مشخص شود. توضیح کوتاه کافی است.',qs:[
+q('نسخه مرجع سند راهبردی که باید ویرایش شود، مشخص و مورد توافق است؟','govern','مبنای فعلی: سند راهبردی تحول و پیشرفت منتشرشده در ۱۴۰۴'),
+q('تاریخ و دوره زمانی موردنظر برای Revision جدید نهایی شده است؟','govern','بازه پنج‌ساله فعلی و آغاز چرخه اجرایی جدید را تعیین کنید'),
+q('سطح دسترسی پاسخ‌دهنده به اطلاعات پنج حوزه اصلی چگونه است؟','level','بندر، فرودگاه، مالی و اداری، اقتصادی و حوزه مدیرعامل'),
+q('آیا برای داده‌های عملیاتی و مالی، مالک و منبع معتبر قابل معرفی است؟','data'),
+q('اسناد جدید لجستیک بندر و فرودگاه در چه سطحی تأیید شده‌اند؟','status','در توضیحات، وضعیت دو سند را جداگانه ذکر کنید'),
+q('آیا محدودیت محرمانگی یا نیاز به تأیید نهایی پیش از انتشار سند وجود دارد؟','choice')
+]},
+{t:'مقصد و ستون‌های راهبردی',desc:'مطابق پیوست اصلی سند: Ultimate Goal، شش ستون راهبردی و اتصال آن‌ها به ۱۳ هدف.',qs:[
+q('آیا Ultimate Goal / North Star موجود، بدون تغییر قابل حفظ است؟','decision'),
+q('آیا چشم‌انداز، مأموریت و ارزش‌ها همچنان با شرایط جدید شرکت هم‌خوان هستند؟','decision'),
+...pillars.map(function(p,i){return q('وضعیت ستون راهبردی '+(i+1)+' — '+p+' چیست؟','decision','در صورت نیاز به بازتعریف، عنوان جایگزین را در توضیح بنویسید');}),
+q('آیا برای هر هدف، یک Strategic Pillar اصلی و مسئول مشخص می‌توان تعیین کرد؟','choice'),
+q('آیا برای سال اول لازم است فقط ۳ تا ۵ Company OKR دارای تمرکز اجرایی باشند؟','choice','اصل سند شامل ۱۳ هدف بلندمدت است؛ Company OKRs سالانه لزوماً نباید هر ۱۳ هدف را تکرار کنند')
+]},
+{t:'ارزیابی ۱۳ هدف مصوب',desc:'اولویت پیشنهادی هر هدف را مشخص کنید. متن اهداف از سند موجود اقتباس شده است؛ این بخش تصمیم قطعی مدیریتی نیست.',qs:[
+...goals.map(function(g,i){return q('اولویت و جایگاه هدف '+(i+1)+': '+g,'priority','در توضیح: حفظ/اصلاح/ادغام احتمالی، KR مهم و مسئول مرتبط را بنویسید');}),
+q('آیا بین ۱۳ هدف راهبردی، موارد تکراری یا هم‌پوشانی قابل توجه وجود دارد؟','choice'),
+q('آیا اهداف راهبردی به زبان Outcome و با نتایج قابل سنجش بازنویسی نیاز دارند؟','decision')
+]},
+{t:'ساختار اجرایی Perdoo 3.0',desc:'مرزبندی Objective، Key Result، KPI و Initiative و سازوکار Cascading / Ownership.',qs:[
+q('برای هر Company Objective سالانه، Lead واحد و مسئول پاسخگو معلوم است؟','owner','در صورت تعدد، در توضیح الگوی تصمیم‌گیری را مشخص کنید'),
+q('آیا Key Results فعلی عمدتاً پیامد قابل‌اندازه‌گیری هستند، نه فهرست فعالیت‌ها؟','level'),
+q('آیا تفکیک Health KPI از Key Result دوره‌ای در سند فعلی روشن است؟','level'),
+q('آیا Initiatives به KR یا KPI مربوط متصل‌اند و پروژه مستقل نیز قابل ثبت است؟','level'),
+q('آیا برای فرودگاه، بندر و بخش‌های ستادی، Team Objectiveهای مستقل ولی همسو لازم است؟','choice'),
+q('مسئولیت Lead و Contributors برای KRها و Initiatives شفاف است؟','level'),
+q('آیا زمان‌بندی یک‌ساله، سه‌ساله و پنج‌ساله باید با فصل‌های شمسی یکپارچه شود؟','decision')
+]},
+{t:'اعتبار KPI و داده‌ها',desc:'اینجا عددی اختراع نمی‌کنیم. برای هر حوزه، کفایت Baseline / Target / Data Source سنجیده می‌شود.',qs:[
+q('شاخص‌های ایمنی و کیفیت عملیات دریایی و هوایی مستند و قابل گزارش هستند؟','data'),
+q('شاخص‌های بهره‌وری، زمان خدمت، هزینه واحد عملیات و مصرف منابع معتبرند؟','data'),
+q('نرخ دیجیتال‌سازی فرایندها و میزان استفاده از خدمات دیجیتال قابل سنجش است؟','data'),
+q('میزان سرمایه‌گذاری جذب‌شده و سهم پروژه‌های PPP / BOT / JV داده معتبر دارد؟','data'),
+q('سهم درآمدهای غیرهوانوردی / غیربندری و درآمدهای جدید تعریف و قابل استخراج است؟','data'),
+q('ساعات آموزش، نگهداشت کارکنان و مشارکت/انگیزش کارکنان سنجش می‌شود؟','data'),
+q('رضایت مشتری، ذی‌نفعان، NPS و اعتبار برند مبنای داده معتبر دارند؟','data'),
+q('آیا فرکانس به‌روزرسانی شاخص‌ها و روش راستی‌آزمایی داده مشخص است؟','cadence')
+]},
+{t:'توسعه و عملیات فرودگاه',desc:'شش محور سند لجستیک فرودگاه: چهار محور یک‌ساله و دو محور سه‌ساله.',qs:[
+q('فروش سوخت هواپیما و طراحی تعرفه رقابتی در چه مرحله‌ای است؟','status','گزارش‌های مقایسه قیمت سوخت و مجوزها باید مجدداً اعتبارسنجی شوند'),
+q('توسعه مسیرهای پرواز بین‌المللی و مذاکره با ایرلاین‌ها در چه مرحله‌ای است؟','status'),
+q('استقرار Business Jet و خدمات VIP در چه مرحله‌ای است؟','status'),
+q('برنامه شب‌خوابی پروازها و خدمات پارکینگ Overnight در چه مرحله‌ای است؟','status'),
+q('توسعه کارگو، ترمینال بار و زنجیره سرد در چه مرحله‌ای است؟','status'),
+q('توسعه ترانزیت مسافر و جذب ایرلاین بیس در چه مرحله‌ای است؟','status'),
+q('مجوزهای Open Sky، سازمان هواپیمایی، امنیتی و گمرکی تعیین تکلیف شده‌اند؟','govern'),
+q('آمار پایه بار، مسافر، پرواز و ظرفیت و پیش‌بینی تقاضا با سند پشتیبان موجود است؟','data','پیوست‌های آماری را با تاریخ و منبع بررسی کنید')
+]},
+{t:'توسعه و عملیات بنادر',desc:'طرح جدید توسعه لجستیک بنادر برای کیش، چارک، میرمهنا و هندورابی به‌صورت پیشنهاد مکمل بررسی می‌شود.',qs:[
+q('لایروبی، تجهیز اسکله ۳۵هزار تنی و ظرفیت کانتینری بندر کیش در چه مرحله است؟','status'),
+q('پروژه TOS / WMS / RFID و دیجیتال‌سازی عملیات بندری چه وضعیتی دارد؟','status'),
+q('توسعه بانکرینگ دریایی و خدمات کشتی در چه مرحله‌ای است؟','status'),
+q('برنامه فیدرپورت، هوم‌پورت و ترانشیپمنت مستند به مطالعه تقاضاست؟','data'),
+q('تکمیل موج‌شکن، اسکله و ایمنی بندر چارک در چه مرحله‌ای است؟','status'),
+q('زنجیره سرد، شیلات و زیرساخت‌های تخصصی بندر میرمهنا در چه مرحله‌ای است؟','status'),
+q('توسعه گردشگری دریایی و خدمات متناسب با ظرفیت هندورابی در چه مرحله‌ای است؟','status'),
+q('برای بنادر چهارگانه Baseline مربوط به زمان انتظار، گردش کشتی، اشغال اسکله و بهره‌وری تجهیزات موجود است؟','data')
+]},
+{t:'اقتصادی، مالی و سرمایه‌گذاری',desc:'برای اولویت‌دهی پروژه‌ها، اطلاعات قابلیت اجرا و توجیه اقتصادی ضروری است.',qs:[
+q('درآمد و هزینه عملیاتی به تفکیک فرودگاه، بندر و سایر خدمات استخراج‌پذیر است؟','data'),
+q('برنامه بودجه و Cash Flow پروژه‌های کلیدی با اهداف راهبردی همسو است؟','level'),
+q('برای پروژه‌های پیشنهادی CAPEX، OPEX و مدل درآمد/بازگشت سرمایه بررسی شده است؟','level'),
+q('وضعیت حقوقی و مدل مشارکت سرمایه‌گذار (PPP / BOT / JV) تعیین تکلیف شده است؟','govern'),
+q('آیا اولویت سرمایه‌گذاری براساس ارزش اقتصادی، ریسک، فوریت و توان اجرا تعیین شده است؟','choice'),
+q('آیا برای اهداف درآمدی و کاهش هزینه، KPI و Owner مالی مشخص است؟','data')
+]},
+{t:'سرمایه انسانی، سازمان و فناوری',desc:'توان اجرای استراتژی به ظرفیت سازمان، مهارت، فناوری و پاسخگویی وابسته است.',qs:[
+q('ساختار تیم‌های Perdoo و نقش‌های پنج حوزه مسئولیت با ساختار واقعی شرکت منطبق است؟','level'),
+q('آیا برای مسئولان هر KR یا Initiative مهارت و اختیار لازم وجود دارد؟','level'),
+q('برنامه توسعه شایستگی، آموزش تخصصی و جانشین‌پروری با اولویت‌های راهبردی پیوند دارد؟','level'),
+q('زیرساخت تجمیع داده، کیفیت داده و داشبوردهای قابل اتکا فراهم است؟','level'),
+q('آیا هماهنگی بین بندر، فرودگاه، مالی، اقتصادی و حوزه مدیرعامل سازوکار مشخص دارد؟','level')
+]},
+{t:'ریسک، مجوزها و ملاحظات حاکمیتی',desc:'تفاوت میان تعهد قابل انجام شرکت و وابستگی به تصمیم نهادهای بیرونی باید ثبت شود.',qs:[
+q('برای اهداف وابسته به مجوزهای سازمان منطقه آزاد و نهادهای ملی، فهرست Approval Gate وجود دارد؟','level'),
+q('آیا مسائل ایمنی، امنیت، تداوم کسب‌وکار و مدیریت بحران به‌عنوان Non-negotiable KPI پایش می‌شوند؟','level'),
+q('آیا ریسک‌های تحریم، بازار، تأمین مالی و محدودیت مقرراتی در زمان‌بندی پروژه‌ها لحاظ شده‌اند؟','level'),
+q('آیا ملاحظات محیط‌زیست دریایی و هوایی و آثار اجتماعی پروژه‌ها مستند است؟','level'),
+q('آیا وضعیت حقوقی طرح‌های جدید، با اختیارات واقعی شرکت تطبیق داده شده است؟','govern'),
+q('مواردی که باید در سند «مشروط به تأیید/تأمین مالی/مطالعه» بمانند مشخص شده‌اند؟','choice')
+]},
+{t:'نظام استقرار و چرخه مدیریت',desc:'ویرایش نهایی باید برای اجرا، بازبینی و مدیریت توسط هیئت‌مدیره و مدیرعامل مناسب باشد.',qs:[
+q('چرخه بازبینی Company OKRs و Team OKRs بهتر است چگونه باشد؟','cadence'),
+q('آیا Check-in شاخص‌های عملیاتی و سلامت باید هفتگی یا ماهانه باشد؟','cadence'),
+q('آیا برای هر هدف Decision Owner و جلسه مدیریت عملکرد مشخص می‌شود؟','owner'),
+q('آیا بازنگری و بستن KPI / OKR و ثبت درس‌آموخته‌ها باید در Governance رسمی سند بیاید؟','choice'),
+q('آیا Priority Roadmap بر مبنای سال اول، سال سوم و سال پنجم قابل توافق است؟','choice'),
+q('آیا لازم است وضعیت هر پروژه به یکی از «تصویب‌شده/مشروط/پیشنهادی/متوقف» تبدیل شود؟','choice'),
+q('آیا گزارش Executive Dashboard باید فقط اهداف، KPIهای حیاتی، وضعیت ریسک و تصمیمات لازم را نشان دهد؟','choice')
+]},
+{t:'تکمیل و تحویل برای تصمیم‌گیری',desc:'پاسخ نهایی این بخش نشان می‌دهد از نظر اجرایی، فایل برای بازنگری آماده است یا چه داده‌ای هنوز کم است.',qs:[
+q('تمام اختلاف‌ها میان سند راهبردی ۱۴۰۴ و دو طرح لجستیک جدید شناسایی شده‌اند؟','level'),
+q('آیا نیاز به جلسه Validation با پنج حوزه سازمانی قبل از بازنویسی وجود دارد؟','choice'),
+q('آیا اهداف و پروژه‌های پیشنهادی را می‌توان از تعهدات مصوب تفکیک کرد؟','choice'),
+q('آیا فهرست داده‌های مفقود و افراد مسئول تأمین آن تکمیل شده است؟','level'),
+q('نسخه نهایی ویرایش‌شده برای چه سطحی ارائه می‌شود؟','govern','در توضیح بنویسید: مدیرعامل / هیئت‌مدیره / سازمان منطقه آزاد / سند داخلی'),
+q('آیا پاسخ‌های این پرسشنامه برای تهیه Draft بازنگری کفایت دارند؟','level','پاسخ «متوسط» هم قابل قبول است؛ موارد باز باید صریح باقی بمانند')
+]}
+];
+var all=[];sections.forEach(function(s,si){s.qs.forEach(function(z,qi){z.id='S'+(si+1)+'Q'+(qi+1);z.si=si;z.qi=qi;all.push(z);});});
+var storageKey='kish-strategy-questionnaire-v1';
+var state={profile:{name:'',title:'',unit:'',reviewDate:''},answers:{}},current=0;
+try{var saved=localStorage.getItem(storageKey);if(saved){var parse=JSON.parse(saved);if(parse&&parse.answers){state=parse;}}}catch(e){}
+function persist(){try{localStorage.setItem(storageKey,JSON.stringify(state));document.getElementById('save-state').textContent='ذخیره شد ✓';}catch(e){document.getElementById('save-state').textContent='ذخیره مرورگر غیرفعال';}}
+function count(){return all.filter(function(x){return state.answers[x.id]&&state.answers[x.id].answer;}).length;}
+function getA(id){return state.answers[id]||{answer:'',note:'',source:''};}
+function updateUI(){
+ var c=count(),n=all.length,p=Math.round(100*c/n);
+ document.getElementById('counter').textContent=c.toLocaleString('fa-IR')+' پرسش پاسخ‌داده‌شده';
+ document.getElementById('total').textContent='از '+n.toLocaleString('fa-IR')+' پرسش · '+p.toLocaleString('fa-IR')+'٪';
+ document.getElementById('bar').style.width=p+'%';
+ document.querySelectorAll('.sidenav button').forEach(function(b,i){var section=sections[i];var a=section.qs.filter(function(x){return getA(x.id).answer;}).length;b.querySelector('small').textContent=a.toLocaleString('fa-IR')+'/'+section.qs.length.toLocaleString('fa-IR');b.classList.toggle('active',i===current);});
+}
+function el(tag,cl,txt){var n=document.createElement(tag);if(cl)n.className=cl;if(txt!==undefined)n.textContent=txt;return n;}
+function field(labelText,key,placeholder){
+ var wrap=el('label');wrap.textContent=labelText;var input=el('input');input.type='text';input.placeholder=placeholder||'';input.value=state.profile[key]||'';input.autocomplete='off';input.addEventListener('input',function(){state.profile[key]=input.value;persist();});wrap.appendChild(input);return wrap;
+}
+function render(){
+ var s=sections[current];
+ document.getElementById('section-title').innerHTML='';
+ var title=el('h2','',String(current+1).padStart(2,'0')+' / '+s.t);
+ var sub=el('p','lead',s.desc);
+ document.getElementById('section-title').append(title,sub);
+ var box=document.getElementById('qcontainer');box.replaceChildren();
+ if(current===0){
+ var profiles=el('div','fields');
+ profiles.append(field('نام تکمیل‌کننده','name','نام و نام خانوادگی'),field('سمت سازمانی','title','مثلاً دستیار مدیرعامل'),field('حوزه سازمانی','unit','مثلاً حوزه مدیرعامل'),field('تاریخ تکمیل / بررسی','reviewDate','مثلاً ۱۴۰۵/۰۸/۲۰'));
+ box.appendChild(profiles);
+ }
+ if(current===1){box.appendChild(el('p','notice','شش ستون این بخش بر اساس پیوست سند اصلی هستند. تغییر عنوان یا ساختار آن‌ها نیازمند تصمیم مدیریتی است.'));}
+ s.qs.forEach(function(z){
+  var a=getA(z.id),wrap=el('article','question'),top=el('div','qtop');
+  var lab=el('label','',z.t);var id='sel-'+z.id;lab.htmlFor=id;top.appendChild(lab);top.appendChild(el('span','num',z.id));wrap.appendChild(top);
+  if(z.h)wrap.appendChild(el('p','hint',z.h));
+  var select=el('select');select.id=id;select.setAttribute('aria-label',z.t);
+  var blank=el('option','','— انتخاب کنید —');blank.value='';select.appendChild(blank);
+  (OPT[z.k]||OPT.choice).forEach(function(op){var opt=el('option','',op);opt.value=op;select.appendChild(opt);});select.value=a.answer||'';
+  select.addEventListener('change',function(){if(!state.answers[z.id])state.answers[z.id]={};state.answers[z.id].answer=select.value;persist();updateUI();});
+  wrap.appendChild(select);
+  var detail=el('details');if(a.note||a.source)detail.open=true;
+  var sum=el('summary','','+ توضیح، اصلاح پیشنهادی یا منبع داده (اختیاری)');detail.appendChild(sum);
+  var notes=el('textarea');notes.placeholder='توضیح کوتاه، عدد/وضعیت واقعی، مسئول پیگیری، یا متن اصلاح پیشنهادی...';notes.value=a.note||'';notes.addEventListener('input',function(){if(!state.answers[z.id])state.answers[z.id]={};state.answers[z.id].note=notes.value;persist();});detail.appendChild(notes);
+  var source=el('textarea','source');source.placeholder='منبع / شماره سند / تاریخ داده یا نام فرد تأییدکننده...';source.value=a.source||'';source.addEventListener('input',function(){if(!state.answers[z.id])state.answers[z.id]={};state.answers[z.id].source=source.value;persist();});detail.appendChild(source);
+  wrap.appendChild(detail);box.appendChild(wrap);
+ });
+ document.getElementById('prev').disabled=current===0;
+ document.getElementById('next').textContent=current===sections.length-1?'پایان پرسشنامه؛ مشاهده گزارش':'بخش بعد';
+ updateUI();
+}
+function renderNav(){
+ var nav=document.getElementById('sidenav');nav.replaceChildren();
+ sections.forEach(function(s,i){var b=el('button');b.type='button';b.append(el('span','',String(i+1).toLocaleString('fa-IR')+' · '+s.t),el('small','','۰/'+s.qs.length));b.addEventListener('click',function(){go(i);});nav.appendChild(b);});
+}
+function go(i){current=Math.min(Math.max(0,i),sections.length-1);render();window.scrollTo({top:0,behavior:'smooth'});}
+function serial(){return {schema:'kish-strategy-review-v1',generatedAt:new Date().toISOString(),source:'Kish strategic document 1404 + airport and port logistics proposals + Perdoo 3.0',profile:state.profile,completion:{answered:count(),total:all.length},sections:sections.map(function(s){return {title:s.t,questions:s.qs.map(function(z){return {id:z.id,question:z.t,answer:getA(z.id).answer||'',note:getA(z.id).note||'',source:getA(z.id).source||''};})};})};}
+function textReport(){
+ var lines=['گزارش تکمیل پرسشنامه بازنگری سند راهبردی بنادر و فرودگاه‌های کیش','چارچوب: Perdoo 3.0 و سند مصوب مبنا','نام: '+(state.profile.name||'نامشخص'),'سمت: '+(state.profile.title||'نامشخص'),'حوزه: '+(state.profile.unit||'نامشخص'),'تاریخ بررسی: '+(state.profile.reviewDate||'ثبت نشده'),'تعداد پاسخ‌ها: '+count()+' از '+all.length,'توجه: پاسخ‌های بدون منبع، ادعای تأییدشده نیستند.',''];
+ sections.forEach(function(s,si){lines.push('════════════════════════════════','بخش '+(si+1)+' ـ '+s.t);s.qs.forEach(function(z){var a=getA(z.id);lines.push(z.id+' | '+z.t,'پاسخ: '+(a.answer||'[بی‌پاسخ]'));if(a.note)lines.push('توضیح: '+a.note);if(a.source)lines.push('مستند/مرجع: '+a.source);lines.push('');});});
+ return lines.join('\n');
+}
+function download(name,content,mime){var b=new Blob([content],{type:mime});var url=URL.createObjectURL(b);var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1500);}
+function fileName(ext){return 'Kish-Strategic-Revision-Responses-'+new Date().toISOString().slice(0,10)+'.'+ext;}
+function jsonOut(){download(fileName('json'),JSON.stringify(serial(),null,2),'application/json;charset=utf-8');}
+function txtOut(){download(fileName('txt'),'\uFEFF'+textReport(),'text/plain;charset=utf-8');}
+function csvOut(){
+ function csv(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}
+ var rows=[['شناسه','بخش','پرسش','گزینه انتخابی','توضیح','منبع']];
+ sections.forEach(function(s){s.qs.forEach(function(z){var a=getA(z.id);rows.push([z.id,s.t,z.t,a.answer||'',a.note||'',a.source||'']);});});
+ download(fileName('csv'),'\uFEFF'+rows.map(function(r){return r.map(csv).join(',');}).join('\r\n'),'text/csv;charset=utf-8');
+}
+function showReport(){document.getElementById('preview').textContent=textReport();document.getElementById('outpanel').classList.add('open');document.getElementById('outpanel').scrollIntoView({behavior:'smooth',block:'start'});}
+document.getElementById('prev').addEventListener('click',function(){go(current-1);});
+document.getElementById('next').addEventListener('click',function(){if(current===sections.length-1)showReport();else go(current+1);});
+document.getElementById('report').addEventListener('click',showReport);
+document.getElementById('summaryTop').addEventListener('click',showReport);
+document.getElementById('json').addEventListener('click',jsonOut);
+document.getElementById('jsonTop').addEventListener('click',jsonOut);
+document.getElementById('txt').addEventListener('click',txtOut);
+document.getElementById('txtTop').addEventListener('click',txtOut);
+document.getElementById('csv').addEventListener('click',csvOut);
+document.getElementById('print').addEventListener('click',function(){showReport();window.print();});
+document.getElementById('copy').addEventListener('click',function(){var t=textReport();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){alert('گزارش کپی شد.');}).catch(function(){prompt('گزارش را از این قسمت کپی کنید:',t);});}else prompt('گزارش را کپی کنید:',t);});
+document.getElementById('restore').addEventListener('change',function(ev){var f=ev.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var data=JSON.parse(reader.result);if(data.schema!=='kish-strategy-review-v1'||!Array.isArray(data.sections))throw Error('قالب فایل معتبر نیست.');if(!confirm('اطلاعات فعلی با نسخه فایل جایگزین شود؟'))return;state={profile:data.profile||{},answers:{}};data.sections.forEach(function(s){(s.questions||[]).forEach(function(z){state.answers[z.id]={answer:z.answer||'',note:z.note||'',source:z.source||''};});});persist();render();showReport();}catch(e){alert('بازیابی ناموفق: '+e.message);}};reader.readAsText(f);});
+renderNav();render();persist();
+})();
+</script></body></html>
