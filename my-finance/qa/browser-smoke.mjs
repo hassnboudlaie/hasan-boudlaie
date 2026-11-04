@@ -43,32 +43,32 @@ try{
  await page.waitForSelector('body.finance-unlocked');await check('home');
  assert.equal(await page.locator('#finance-cashflow-card').isVisible(),false,'Home should not render long chart');
  assert.equal(await page.locator('#mf-home-more').isVisible(),false,'Home should not render long insights');
- assert.equal(await page.locator('.finance-home-hub').count(),2,'Only two short detail links expected');
+ assert.equal(await page.locator('#home .mf-action').count(),8,'Home must present eight clickable icon tiles');
+ assert.equal(await page.locator('#home .finance-home-hubs').isVisible(),false,'Duplicate secondary hubs must not crowd Home');
+ assert.equal(await page.locator('#home #finance-smart-assistant').isVisible(),false,'Long voice report form must not crowd Home');
+ assert.equal(await page.locator('#home .mf-cg-card').isVisible(),false,'ChatGPT onboarding must remain one tap away');
  await page.waitForFunction(()=>document.getElementById('mf-last-tx-title')?.textContent.includes('هزینه آزمایشی'));
  await page.waitForFunction(()=>document.getElementById('loan-reminder-detail')?.textContent.includes('وام آزمایشی نزدیک'));
  assert.ok((await page.locator('#loan-reminder-detail').innerText()).includes('۵٬۰۰۰٬۰۰۰'),'Nearest installment amount must show in toman');
  assert.equal(await page.locator('#loan-due-notice').isVisible(),true,'Nearest installment must always appear');
+ assert.equal(await page.locator('#mf-market-disclosure').evaluate(el=>el.open),false,'Live market details should default collapsed');
  await page.waitForFunction(()=>document.querySelectorAll('.mf-market-rate').length===4);
+ await page.locator('#mf-market-disclosure summary').click();
+ assert.equal(await page.locator('#mf-market-grid').isVisible(),true,'Market values should expand on tap');
  assert.ok((await page.locator('#mf-market-grid').innerText()).includes('۲۵۰٬۰۰۰'),'Live market widget must render JSON values');
  assert.ok((await page.locator('#mf-market-status').innerText()).includes('۳۰ دقیقه'),'Market feed cadence must be disclosed');
+ await page.locator('#mf-market-disclosure summary').click();
 
- // The entire assistant must be directly usable on Home (not merely a shortcut).
- assert.equal(await page.locator('#home #finance-smart-assistant').isVisible(),true,'Voice report form must be on Home');
- const order=await page.evaluate(()=>{
-  const home=document.getElementById('home'),notices=home.querySelector('.mf-home-notices');
-  const assistant=home.querySelector('#finance-smart-assistant'),metrics=home.querySelector('.finance-dashboard-metrics');
-  return {notices:[...home.children].indexOf(notices),assistant:[...home.children].indexOf(assistant),metrics:[...home.children].indexOf(metrics)};
- });
- assert.ok(order.notices<order.assistant&&order.assistant<order.metrics,'Show alerts then assistant before dashboard metrics');
+ // The full report assistant and ChatGPT onboarding are accessible from the Home icon.
+ await page.locator('#home .mf-action-assistant').click();await check('assistant');
+ assert.equal(await page.locator('#finance-smart-assistant').isVisible(),true,'Voice reporting must be accessible inside Assistant');
+ assert.equal(await page.locator('#home .mf-cg-card').isVisible(),true,'ChatGPT onboarding must be accessible inside Assistant');
  await page.locator('#mf-va-question').fill('گزارش کل دوره');
  await page.locator('#mf-va-go').click();
  assert.ok((await page.locator('#mf-va-summary').innerText()).includes('۱٬۰۰۰٬۰۰۰'),'Report must use the synthetic expense');
  await page.locator('#mf-va-pdf').click();
  assert.equal(await page.locator('#mf-va-print').isVisible(),true,'Printable report should open');
  await page.locator('#mf-va-print-close').click();
- // The existing Assistant route must still bring users back to this same Home form.
- await page.evaluate(()=>financeNavGo('assistant'));await check('assistant');
- assert.equal(await page.locator('#finance-smart-assistant').isVisible(),true,'Assistant nav should preserve Home form');
  await page.goBack();await check('home');
  assert.equal(await page.locator('#finance-quick-fab').isVisible(),false,'Floating button obscures content');
  const installOverlap=await page.evaluate(()=>{
@@ -82,28 +82,28 @@ try{
  const visual=await page.evaluate(()=>{
   const font=selector=>parseFloat(getComputedStyle(document.querySelector(selector)).fontSize);
   const height=selector=>document.querySelector(selector).getBoundingClientRect().height;
+  const css=[...document.styleSheets].some(x=>x.href?.includes('home-dashboard-v84.css'));
   return {
    heading:font('#home .finance-home-heading h2'),
-   hub:font('#home .finance-home-hub-copy strong'),
+   tile:font('#home .mf-action span:last-child'),
    amount:font('#home .finance-kpi b'),
    buttonHeight:height('#home .mf-action'),
-   hubHeight:height('#home .finance-home-hub'),
-   cssLoaded:[...document.styleSheets].some(x=>x.href?.includes('visual-upgrade-v75.css'))
+   cashHeight:height('#home .finance-balance-hero'),
+   cssLoaded:css
   };
  });
- assert.equal(visual.cssLoaded,true,'v75 visual stylesheet not loaded');
- const heroImg=page.locator('#home .mf-home-visual img');
- assert.equal(await heroImg.count(),1,'Original home image missing');
- await page.waitForFunction(()=>{const img=document.querySelector('#home .mf-home-visual img');return img?.complete&&img.naturalWidth>0;});
- assert.ok(await heroImg.isVisible(),'Welcome illustration is not visible');
- assert.ok(await page.locator('#home .finance-home-heading').evaluate(el=>getComputedStyle(el).backgroundImage.includes('gradient')),'Visual hero gradient missing');
+ assert.equal(visual.cssLoaded,true,'r84 home-dashboard CSS not loaded');
+ assert.equal(await page.locator('#home .mf-home-visual img').isVisible(),false,'Decorative hero should not crowd Home');
+ assert.ok(await page.locator('#home .finance-home-heading').evaluate(el=>getComputedStyle(el).backgroundImage==='none'),'Oversized welcome gradient should be removed');
  const actionInk=await page.locator('#home .mf-action-expense').evaluate(el=>({background:getComputedStyle(el).backgroundColor,color:getComputedStyle(el).color}));
  assert.notEqual(actionInk.background,actionInk.color,'Expense tile lacks color contrast');
-
- assert.ok(visual.heading>=28,'Home title is too small: '+visual.heading);
- assert.ok(visual.hub>=19,'Clickable tile label is too small: '+visual.hub);
- assert.ok(visual.amount>=27,'Financial KPI amount is too small: '+visual.amount);
- assert.ok(visual.buttonHeight>=85&&visual.hubHeight>=85,'Mobile tap surface too small: '+JSON.stringify(visual));
+ assert.ok(visual.heading>=19,'Home title is too small: '+visual.heading);
+ assert.ok(visual.tile>=14,'Clickable icon label is too small: '+visual.tile);
+ assert.ok(visual.amount>=20,'Financial KPI amount is too small: '+visual.amount);
+ assert.ok(visual.buttonHeight>=88&&visual.cashHeight>=105,'Tap surface too small: '+JSON.stringify(visual));
+ await page.locator('#home .mf-action-voice').click();await check('quick-entry');
+ assert.equal(await page.locator('#quick').isVisible(),true,'Voice quick-entry tile is not actionable');
+ await page.goBack();await check('home');
  await page.setViewportSize({width:360,height:780});
  const overflow360=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
  assert.ok(overflow360<=2,'360px horizontal overflow: '+overflow360);
@@ -171,7 +171,7 @@ try{
  assert.equal(wide.detected,true,'Android wide desktop mode must be recognized');
  assert.ok(wide.zoom>=2.2,'Wide viewport downscale must be compensated: '+JSON.stringify(wide));
  await page.screenshot({path:'/tmp/myfinance-ui-smoke/desktop-mode-fallback.png',fullPage:true});
- console.log('PASS Chromium 360/390px + wide desktop-mode fallback: large text, illustration, tap targets, nested Back and reload');
+ console.log('PASS Chromium 360/390px + wide desktop-mode fallback: icon dashboard, tappable routes, nested Back and reload');
 }finally{
  await context.close();await browser.close();
 }
