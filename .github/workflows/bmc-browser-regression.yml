@@ -1,0 +1,41 @@
+name: Business Model Canvas - End-to-End QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'business-model-canvas/**'
+      - 'scripts/bmc-browser-qa.mjs'
+      - '.github/workflows/bmc-browser-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check business-model-canvas/studio.js
+          node --check business-model-canvas/choice-bank.js
+          node --check scripts/bmc-browser-qa.mjs
+      - name: Install free Playwright browser
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test business models and mobile / desktop
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/bmc-http.log 2>&1 &
+          sleep 3
+          node scripts/bmc-browser-qa.mjs
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bmc-browser-qa-results
+          path: artifacts/bmc-qa/
+          if-no-files-found: warn
