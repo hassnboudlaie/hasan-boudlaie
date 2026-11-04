@@ -15,13 +15,14 @@ function check(label,fn){
 }
 check('consolidated styles and latest r84 icon dashboard layer',()=>{
  const links=[...html.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"/g)].map(m=>m[1]);
- assert.equal(links.length,6);
+ assert.equal(links.length,7);
  assert.match(links[0],/^\.\/my-finance-ui-v54\.css\?v=/);
  assert.match(links[1],/^\.\/navigation-v60\.css\?v=/);
  assert.match(links[2],/^\.\/drilldown-v61\.css\?v=/);
  assert.match(links[3],/^\.\/mobile-polish-v58\.css\?v=/);
  assert.match(links[4],/^\.\/visual-upgrade-v75\.css\?v=20261102r78$/);
  assert.match(links[5],/^\.\/home-dashboard-v84\.css\?v=20261104r84$/);
+ assert.match(links[6],/^\.\/calm-ui-v86\.css\?v=20261104r86$/);
  let pos=-1;
  for(const name of ['premium.css','dashboard-r33.css','design-v49.css','interior-v51.css','mobile-ux-v52.css']){
   const next=css.indexOf(read(name));assert.ok(next>pos,'CSS source missing/reordered: '+name);pos=next;
@@ -299,6 +300,35 @@ check('free pilot: no email or manual approval step in signup interface',()=>{
  assert.ok(!app.includes("مدیر می‌تواند حساب کاربران آزمایشی را مستقیم فعال کند"),'Manual approval prompt must be absent');
  assert.ok(app.includes('persistSession:true'),'Secure session persistence must remain enabled');
  assert.ok(app.includes("const created=await client.from('finance_access').insert({user_id:identity.id,email:identity.email,status:'active'})"),'First sign-in must create automatically active access');
+});
+check('v86 calm mobile experience is complete, navigable and private',()=>{
+ const design=read('calm-ui-v86.css');
+ const controls=read('calm-ui-v86.js');
+ assert.ok(html.includes('./calm-ui-v86.css?v=20261104r86'),'new calm stylesheet must be last');
+ assert.ok(html.includes('<script defer src="./calm-ui-v86.js?v=20261104r86"></script>'),'progressive navigation must be loaded');
+ assert.ok(sw.includes("'./calm-ui-v86.css?v=20261104r86'"),'new design must be cached offline');
+ assert.ok(sw.includes("'./calm-ui-v86.js?v=20261104r86'"),'new disclosure controller must be cached offline');
+ assert.ok(sw.includes('my-finance-release-20261104r84-calm86'),'PWA must rotate cache');
+ for(const route of ['transactions','accounts','transfers','receivables','commitments'])
+  assert.ok(controls.includes("togglePanel('"+route+"'"),'missing tap-to-open form for '+route);
+ assert.ok(controls.includes("window.financeStartRecord=function(kind)"),'expense/income shortcuts must still open the hidden composer');
+ assert.ok(controls.includes("window.financeNavGo=function(id,options)"),'profile route must still open profile settings');
+ assert.ok(controls.includes("metrics.insertBefore(notices,bar)"),'installment and last transaction remain near primary balance');
+ assert.ok(controls.includes("details.append(summary,pair)"),'monthly financial details must remain reachable');
+ assert.ok(controls.includes("grid.append(action)"),'secondary home tools must remain reachable');
+ assert.ok(!controls.includes('localStorage.setItem'),'new design must not write financial data or preferences');
+ assert.ok(!controls.includes('fetch('),'new design must not reach financial endpoints');
+ assert.ok(!controls.includes('supabase'),'new design must remain isolated from cloud state');
+ assert.ok(design.includes('main > section[hidden]{display:none!important}'),'inactive page must always stay hidden');
+ assert.ok(design.includes('[data-finance-view="cashflow"]'),'cashflow drilldown must stay visible');
+ assert.ok(design.includes('tx-ledger-item'),'transaction list should be redesigned');
+ assert.ok(design.includes('mf-calm-settings-detail'),'settings must use readable disclosure rows');
+ assert.ok(design.includes('finance-mobile-nav'),'new stable tab bar missing');
+ for(const path of ['calm-ui-v86.js','transaction-history.js','supabase-sync.js']){
+  const script=spawnSync(process.execPath,['--check',resolve(root,path)],{encoding:'utf8'});
+  assert.equal(script.status,0,(script.stderr||'')+' in '+path);
+ }
+ assert.equal((design.match(/\{/g)||[]).length,(design.match(/\}/g)||[]).length,'CSS blocks mismatched');
 });
 check('no private service credentials committed',()=>{
  for(const p of ['index.html','supabase-sync.js','assets.html','contracts.html']){
