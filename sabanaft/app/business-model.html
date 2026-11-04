@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#062e65">
+<meta name="description" content="بوم کسب‌وکار اپلیکیشن رهبری؛ مدل نه‌بلوکی تعاملی Reflective Leadership OS مبتنی بر چارچوب Armin Trost.">
+<title>بوم کسب و کار اپلیکیشن رهبری | صبا نفت</title>
+<link rel="icon" href="../assets/sabanaft-logo.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:Vazirmatn;src:url("../assets/vazirmatn.woff2") format("woff2");font-display:swap}
+:root{--navy:#092e5a;--deep:#061b39;--blue:#135298;--orange:#f47b20;--ink:#142b45;--muted:#5f7488;--line:#d8e3f0;--paper:#f4f8fc;--cream:#fff3e6;--shadow:0 14px 36px rgba(7,40,84,.10)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#eaf2fb 0%,#f8fbff 32%,#f3f7fc 100%);color:var(--ink);font:16px/1.9 Vazirmatn,Tahoma,sans-serif;text-align:right;direction:rtl}
+button,a{font:inherit}button{cursor:pointer}a{text-decoration:none}
+button:focus-visible,a:focus-visible{outline:3px solid #fc9a43;outline-offset:3px}
+.skip{position:absolute;top:-100px;right:12px;z-index:101;background:#fff;padding:7px 14px}.skip:focus{top:8px}
+.top{position:relative;overflow:hidden;color:#fff;background:linear-gradient(112deg,rgba(4,24,53,.98),rgba(7,56,111,.92)),url("../assets/sabanaft-meeting.jpg") center/cover;isolation:isolate}
+.top:after{content:"";position:absolute;inset:auto -3% -23px;height:63px;z-index:-1;transform:rotate(-1deg);background:#f4f8fc;border-top:9px solid var(--orange)}
+.topbar,.hero,.main{max-width:1310px;margin:0 auto;padding-left:clamp(16px,3vw,36px);padding-right:clamp(16px,3vw,36px)}
+.topbar{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;font-weight:900}.brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:13px;padding:5px}.brand small{display:block;font-size:11px;color:#bcd4ee;letter-spacing:.03em;font-weight:500}
+.home-link{border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:12px;padding:8px 14px;font-size:14px;font-weight:750;background:rgba(255,255,255,.10)}
+.home-link:hover{background:#fff;color:var(--navy)}
+.hero{padding-top:25px;padding-bottom:86px;position:relative}
+.eyebrow{color:#ffc18d;font-size:12px;font-weight:950;letter-spacing:.05em}
+.hero h1{font-size:clamp(28px,4.8vw,47px);line-height:1.45;margin:8px 0 11px;font-weight:950}
+.hero p{color:#dce9f8;font-size:clamp(15px,1.7vw,19px);margin:0;max-width:850px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}
+.hero-tags span{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:650}
+.main{position:relative;margin-top:-44px;padding-bottom:90px}
+.map-shell,.detail-wrap,.packages,.disclaimer{background:#fff;border:1px solid #d7e3ef;border-radius:24px;box-shadow:var(--shadow)}
+.map-shell{padding:clamp(14px,2.6vw,27px);position:relative}
+.section-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:18px}
+.section-top h2{font-size:clamp(20px,2.8vw,27px);color:var(--navy);margin:0}
+.section-top p{margin:0;color:var(--muted);font-size:13px}
+.map-actions{display:flex;gap:8px}
+.map-actions button,.outline-btn{border:1px solid #c6d8ec;border-radius:11px;background:#f0f6ff;color:#154a82;min-height:42px;padding:7px 13px;font-size:13px;font-weight:900}
+.map-actions button:hover,.outline-btn:hover{background:#dfeeff}
+.scroll-hint{display:none;font-size:12px;color:#6c7b8e;margin:0 0 9px}
+.canvas-scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:3px}
+.canvas{min-width:1070px;display:grid;grid-template-columns:1fr 1fr 1.32fr 1fr 1fr;grid-template-areas:"segments relations value activities partners" "costs revenue value channels resources";gap:10px;align-items:stretch;direction:rtl}
+.canvas-block{border:2px solid #cddded;border-radius:17px;background:linear-gradient(160deg,#fff,#f6faff);padding:0;overflow:hidden;text-align:right;color:var(--ink);box-shadow:0 5px 14px rgba(7,42,83,.035);min-height:170px;transition:transform .18s,border-color .18s,box-shadow .18s;display:flex;flex-direction:column}
+.canvas-block:hover{transform:translateY(-3px);border-color:#f0a15f;box-shadow:0 10px 25px #113d751d}
+.canvas-block.selected{border-color:var(--orange);box-shadow:0 0 0 3px #fa8d3026}
+.canvas-block .head{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px 11px;background:var(--navy);color:#fff;font-size:15px;font-weight:900;line-height:1.45}
+.canvas-block .head i{font-style:normal;font-size:20px}
+.canvas-block .inner{display:flex;flex-direction:column;gap:6px;padding:11px 12px;flex:1}
+.canvas-block .inner span{font-size:12px;line-height:1.5;padding-right:10px;position:relative}
+.canvas-block .inner span:before{content:"";position:absolute;right:0;top:8px;width:5px;height:5px;border-radius:2px;background:var(--orange)}
+.canvas-block .hint{padding:4px 10px 8px;color:#17538b;font-size:10px;font-weight:800}
+.canvas-block[data-bmc="segments"]{grid-area:segments}
+.canvas-block[data-bmc="relationships"]{grid-area:relations}
+.canvas-block[data-bmc="value"]{grid-area:value;border-color:#f89837;background:linear-gradient(150deg,#fffaf2,#fff)}
+.canvas-block[data-bmc="activities"]{grid-area:activities}
+.canvas-block[data-bmc="partners"]{grid-area:partners}
+.canvas-block[data-bmc="costs"]{grid-area:costs}
+.canvas-block[data-bmc="revenue"]{grid-area:revenue}
+.canvas-block[data-bmc="channels"]{grid-area:channels}
+.canvas-block[data-bmc="resources"]{grid-area:resources}
+.canvas-block[data-bmc="value"] .head{font-size:19px;justify-content:center;background:linear-gradient(110deg,#ea6513,#ff9d29);color:#fff;padding:15px 10px}
+.canvas-block[data-bmc="value"] .inner{gap:8px;padding:13px}
+.canvas-block[data-bmc="value"] .inner span{font-size:13px;font-weight:750;background:#fff0dd;border:1px solid #f7dfc1;padding:9px 11px;border-radius:10px}
+.canvas-block[data-bmc="value"] .inner span:before{display:none}
+.canvas-block[data-bmc="value"] .hint{background:var(--navy);color:#fff;text-align:center;margin:9px 12px 13px;padding:11px;border-radius:11px}
+.canvas-footer{border:1px solid #cfdfec;background:#f7fbff;border-radius:15px;margin-top:12px;padding:13px 16px}
+.canvas-footer strong{display:block;color:var(--navy);font-size:15px;margin-bottom:6px}
+.steps{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;font-weight:750}
+.steps span{display:inline-block;border-radius:9px;background:#e4effb;padding:6px 10px}
+.steps i{font-style:normal;color:var(--orange);font-size:20px}
+.mini-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#5d6e80;margin-top:8px}
+.mini-foot b{color:#b55d15}
+.instructions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:25px 3px 13px;flex-wrap:wrap}
+.instructions h2{margin:0;font-size:clamp(21px,2.7vw,29px);color:var(--navy)}
+.instructions p{margin:0;color:var(--muted);font-size:14px}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.quick button{min-height:89px;padding:14px 15px;border-radius:17px;border:1px solid #d4e2f1;background:#fff;display:flex;align-items:center;gap:13px;text-align:right;color:var(--navy);box-shadow:0 7px 17px rgba(11,54,99,.055);transition:.2s}
+.quick button:hover,.quick button.active{border-color:var(--orange);background:#fff9f1;transform:translateY(-1px)}
+.quick .ico{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#e8f1ff,#c5ddf8);display:grid;place-items:center;font-size:27px;flex:none}
+.quick button.active .ico{background:linear-gradient(140deg,#ffd4ae,#ff9b54)}
+.quick .word{min-width:0;flex:1}
+.quick strong{display:block;font-size:16px;line-height:1.5}
+.quick small{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;line-height:1.6}
+.quick .arrow{color:#ed7b22;font-size:23px}
+.detail-wrap{margin-top:24px;overflow:hidden;scroll-margin-top:22px}
+.detail-hero{display:flex;align-items:center;justify-content:space-between;gap:15px;background:linear-gradient(110deg,#06376a,#0a2852);padding:22px clamp(18px,3vw,29px);color:#fff;border-bottom:5px solid var(--orange)}
+.detail-badge{font-size:11px;color:#fcd8b1;letter-spacing:.08em;font-weight:800}
+.detail-hero h2{margin:2px 0 0;font-size:clamp(25px,3vw,33px);color:#fff}
+.detail-icon{background:linear-gradient(135deg,#ffd6ad,#fb861d);color:#10345b;width:69px;height:69px;display:grid;place-items:center;border-radius:19px;font-size:36px;flex:none}
+.detail-body{padding:clamp(20px,3vw,33px)}
+.detail-intro{font-size:clamp(16px,1.7vw,19px);line-height:2;color:#2b4964;margin:0 0 21px}
+.detail-columns{display:grid;grid-template-columns:1.6fr .95fr;gap:19px;align-items:start}
+.detail-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.detail-item{border:1px solid #dce5ef;background:linear-gradient(145deg,#fff,#f8fbff);border-radius:15px;padding:15px;min-height:110px}
+.detail-item .dot{display:inline-flex;align-items:center;justify-content:center;background:#ebf3ff;color:#174980;border-radius:10px;min-width:29px;height:29px;font-size:15px;font-weight:900;margin-bottom:7px}
+.detail-item b{display:block;font-size:16px;color:#1a3e67}
+.detail-item p{margin:4px 0 0;color:#60758a;font-size:13px;line-height:1.75}
+.why{border-radius:15px;background:#fff5e8;border:1px solid #f7d2a9;padding:17px}
+.why .overline{font-size:11px;font-weight:900;color:#a75a14}
+.why h3{font-size:18px;color:var(--navy);margin:6px 0 8px}
+.why p{font-size:14px;color:#40546b;line-height:1.9;margin:0 0 15px}
+.why .separator{height:1px;background:#f0d1ac;margin:11px 0}
+.why .minor{font-weight:900;font-size:13px;color:#8f531c}
+.detail-footer{padding:0 clamp(20px,3vw,33px) 23px;display:flex;gap:10px;flex-wrap:wrap}
+.detail-footer button{border:1px solid #cbddec;background:#f7fbff;color:#124d87;border-radius:11px;padding:9px 16px;font-size:14px;font-weight:850}
+.packages{margin-top:23px;padding:24px}
+.packages h2{margin:0 0 13px;font-size:23px;color:var(--navy)}
+.package-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.package{background:#f8fbff;border:1px solid #d6e5f2;border-radius:16px;padding:15px}
+.package strong{display:block;color:#123c6a;font-size:16px}
+.package p{margin:4px 0 0;font-size:13px;line-height:1.8;color:#526a80}
+.disclaimer{margin-top:19px;padding:16px 19px;font-size:13px;color:#5b7185;line-height:1.85;box-shadow:none}
+.disclaimer strong{color:#163b67}
+footer{padding:29px 14px;text-align:center;color:#6b7e92;font-size:12px}
+body.bm-zoom{overflow:hidden}
+body.bm-zoom .map-shell{position:fixed;inset:0;z-index:99;overflow:auto;border-radius:0;padding:clamp(12px,2vw,28px)}
+body.bm-zoom .map-shell .canvas-scroll{max-height:none}
+body.bm-zoom .map-shell .canvas{min-width:1110px}
+@media(max-width:990px){.scroll-hint{display:block}.canvas{min-width:1040px}.detail-columns{grid-template-columns:1fr}.detail-items{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){body{font-size:15px}.topbar{min-height:68px}.brand img{width:41px;height:41px}.brand small{font-size:10px}.home-link{padding:7px 10px;font-size:12px}.hero{padding-top:14px;padding-bottom:78px}.hero-tags{gap:6px}.hero-tags span{font-size:11px}.main{margin-top:-41px}.map-shell{padding:14px;border-radius:19px}.section-top h2{font-size:20px}.map-actions button{font-size:12px;padding:6px 9px}.quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quick button{min-height:95px;padding:10px;gap:9px;border-radius:13px}.quick .ico{width:37px;height:37px;font-size:21px;border-radius:10px}.quick strong{font-size:14px}.quick small{font-size:11px}.quick .arrow{display:none}.detail-items{grid-template-columns:1fr}.detail-hero{padding:19px}.detail-icon{width:54px;height:54px;font-size:28px}.detail-body{padding:18px}.package-grid{grid-template-columns:1fr}.packages{padding:17px}.steps{font-size:11px}.steps span{padding:4px 7px}.canvas-footer{padding:11px}}
+@media print{body{background:#fff}header,.quick,.map-actions,.detail-footer,.instructions,.disclaimer,footer{display:none!important}.main{margin:0;padding:0}.map-shell,.detail-wrap,.packages{box-shadow:none;border-color:#aaa;break-inside:avoid}.canvas-scroll{overflow:visible}.canvas{min-width:0;grid-template-columns:repeat(5,1fr);gap:4px}.canvas-block{min-height:135px}.canvas-block .head{font-size:10px}.canvas-block .inner span{font-size:8px}.canvas-block[data-bmc="value"] .inner span{font-size:9px}.canvas-block .hint{font-size:8px}.detail-wrap{break-before:page}}
+</style>
+</head>
+<body>
+<a class="skip" href="#overview">رفتن به بوم کسب‌وکار</a>
+<header class="top">
+<nav class="topbar" aria-label="ناوبری">
+<a class="brand" href="./#/home"><img src="../assets/sabanaft-logo.svg" alt="لوگوی صبانفت"><span>رهبری بازتابی صبا نفت<small>REFLECTIVE LEADERSHIP OS</small></span></a>
+<a class="home-link" href="./#/home">⌂ بازگشت به اپ</a>
+</nav>
+<div class="hero">
+<span class="eyebrow">BUSINESS MODEL CANVAS · OWNER STRATEGY</span>
+<h1>بوم کسب و کار اپلیکیشن رهبری</h1>
+<p>مدل نه‌بلوکی تجاری‌سازی آموزش رهبری مبتنی بر کتاب Armin Trost، سامانه هوشمند و کوچینگ اختصاصی مدیران ارشد</p>
+<div class="hero-tags"><span>آموزش Hybrid · ۲۲ ساعت پیشنهادی</span><span>AI Leadership Coach</span><span>Executive Coaching</span><span>Enterprise B2B / White-Label</span></div>
+</div>
+</header>
+<main class="main">
+<section id="overview" class="map-shell" aria-label="تصویر جامع و تعاملی بوم کسب‌وکار">
+<div class="section-top">
+<div><h2>تصویر جامع بوم کسب‌وکار</h2><p>بازآفرینی تعاملی همان شماتیک مدیریتی؛ با لمس هر بخش، شرح کامل آن را ببینید.</p></div>
+<div class="map-actions"><button id="zoomBtn" type="button" aria-pressed="false">⤢ نمای کامل</button><button id="printBtn" type="button">⎙ چاپ / PDF</button></div>
+</div>
+<p class="scroll-hint">← برای مشاهده کامل نمودار روی گوشی، تصویر را به طرفین بکشید یا «نمای کامل» را انتخاب کنید.</p>
+<div class="canvas-scroll" tabindex="0" role="region" aria-label="نمودار نه‌بلوکی قابل پیمایش افقی">
+<div class="canvas" id="canvas">
+<button class="canvas-block" type="button" data-bmc="partners"><span class="head">شرکای کلیدی <i>🤝</i></span><span class="inner"><span>فریلنسرهای توسعه فنی</span><span>تأمین‌کنندگان Cloud و AI</span><span>امنیت و مشاور حقوقی IP</span><span>سازمان‌های پایلوت</span></span><span class="hint">مشاهده جزئیات ←</span></button>
+<button class="canvas-block" type="button" data-bmc="activities"><span class="head">فعالیت‌های کلیدی <i>⚙️</i></span><span class="inner"><span>طراحی و اجرای دوره ۲۲ساعته</span><span>توسعه و نگهداری سامانه</span><span>AI Coach و ارزیابی</span><span>White-Label و پشتیبانی</span></span><span class="hint">مشاهده جزئیات ←</span></button>
+<button class="canvas-block" type="button" data-bmc="value"><span class="head">ارزش پیشنهادی ✦</span><span class="inner"><span>🎓 آموزش کامل ۲۲ ساعته</span><span>🧭 کاربرد روزمره در مسائل واقعی مدیران</span><span>✦ AI Leadership Coach</span><span>👤 کوچینگ اختصاصی مدیران ارشد</span><span>🔁 بازاندیشی و توسعه مستمر</span></span><span class="hint">اتصال یادگیری، تمرین و تصمیم‌گیری در یک سامانه</span></button>
+<button class="canvas-block" type="button" data-bmc="relationships"><span class="head">روابط با مشتری <i>🧑‍💼</i></span><span class="inner"><span>فروش مشاوره‌ای و رابطه‌محور</span><span>Pilot پولی سه‌ماهه</span><span>Account Management</span><span>مرور ارزش و تمدید قرارداد</span></span><span class="hint">مشاهده جزئیات ←</span></button>
+<button class="canvas-block" type="button" data-bmc="segments"><span class="head">بخش‌های مشتری <i>🎯</i></span><span class="inner"><span>هلدینگ‌ها و سازمان‌های بزرگ</span><span>نفت، گاز، پتروشیمی، ساخت‌وساز</span><span>۲۰ تا ۵۰ مدیر ارشد و میانی</span><span>خریدار: مدیرعامل / مدیر ارشد</span></span><span class="hint">مشاهده جزئیات ←</span></button>
+<button class="canvas-block" type="button" data-bmc="resources"><span class="head">منابع کلیدی <i>📚</i></span><span class="inner"><span>تخصص و برند حرفه‌ای</span><span>محتوای آموزشی تألیفی و Trost</span><span>پلتفرم نرم‌افزاری و AI</span><span>شبکه ارتباطی مشتریان</span></span><span class="hint">مشاهده جزئیات ←</span></button>
+<button class="canvas-block" type="button" data-bmc="channels"><span class="head">کانال‌ها <i>📣</i></span><span class="inner"><span>روابط مشاوره‌ای و شبکه مدیران</span><span>جلسه معرفی و Demo</span><span>پیشنهاد تجاری اختصاصی</span><span>Pilot و توسعه درون‌سازمانی</span></span><span class="hint">مشاهده جزئیات ←</span></button>
+<button class="canvas-block" type="button" data-bmc="revenue"><span class="head">جریان‌های درآمدی <i>🪙</i></span><span class="inner"><span>درآمد آموزش ۲۲ ساعته</span><span>Setup Fee و White-Label</span><span>اشتراک سالانه سامانه</span><span>AI Credits و Premium Coaching</span></span><span class="hint">Education + SaaS + Coaching ←</span></button>
+<button class="canvas-block" type="button" data-bmc="costs"><span class="head">ساختار هزینه <i>📊</i></span><span class="inner"><span>زمان تدریس و کوچینگ</span><span>توسعه و سفارشی‌سازی</span><span>Cloud / AI / Hosting</span><span>امنیت، پشتیبانی و فروش</span></span><span class="hint">سرمایه اولیه: ۲۰۰–۵۰۰ میلیون ←</span></button>
+</div>
+</div>
+<div class="canvas-footer">
+<strong>🚩 مسیر مشتری و منطق تجاری</strong>
+<div class="steps"><span>جذب سازمان هدف</span><i>←</i><span>Pilot پولی سه‌ماهه</span><i>←</i><span>آموزش ۲۲ساعته Hybrid</span><i>←</i><span>استفاده از سامانه و AI Coach</span><i>←</i><span>تمدید سالانه و خدمات Premium</span></div>
+<div class="mini-foot"><span>هدف سال اول: <b>۱ تا ۲ سازمان قرارداددار</b></span><span>سناریوها: ۲۵ / ۷۰ / ۱۰۰ مدیر · هدف Gross Margin کمتر از ۳۰٪</span></div>
+</div>
+</section>
+<section class="instructions" aria-label="راهنمای انتخاب"><h2>۹ بخش قابل باز شدن</h2><p>هر کارت را لمس کنید تا تحلیل آن بخش، تصمیم‌های ثبت‌شده و نکات اجرایی نمایش داده شود.</p></section>
+<nav class="quick" id="quick" aria-label="انتخاب بلوک بوم کسب‌وکار">
+<button type="button" data-bmc="segments"><span class="ico">🎯</span><span class="word"><strong>بخش‌های مشتری</strong><small>بازار هدف و خریدار اقتصادی</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="value"><span class="ico">💎</span><span class="word"><strong>ارزش پیشنهادی</strong><small>آموزش، AI و توسعه مستمر</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="channels"><span class="ico">📣</span><span class="word"><strong>کانال‌ها</strong><small>فروش مستقیم، Demo و Pilot</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="relationships"><span class="ico">🤝</span><span class="word"><strong>روابط با مشتری</strong><small>رابطه حرفه‌ای و تمدید</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="revenue"><span class="ico">🪙</span><span class="word"><strong>جریان‌های درآمدی</strong><small>آموزش، اشتراک و Premium</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="resources"><span class="ico">📚</span><span class="word"><strong>منابع کلیدی</strong><small>تخصص، محتوا و فناوری</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="activities"><span class="ico">⚙️</span><span class="word"><strong>فعالیت‌های کلیدی</strong><small>آموزش، توسعه و اجرا</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="partners"><span class="ico">🤝</span><span class="word"><strong>شرکای کلیدی</strong><small>تیم فنی و تأمین‌کنندگان</small></span><span class="arrow">‹</span></button>
+<button type="button" data-bmc="costs"><span class="ico">📊</span><span class="word"><strong>ساختار هزینه</strong><small>هزینه مستقیم و سرمایه‌گذاری</small></span><span class="arrow">‹</span></button>
+</nav>
+<section class="detail-wrap" id="bm-detail" tabindex="-1" aria-live="polite" aria-label="شرح بلوک انتخاب‌شده">
+<div class="detail-hero"><div><span class="detail-badge">BUSINESS MODEL CANVAS / BLOCK</span><h2 id="detailTitle">ارزش پیشنهادی</h2></div><div class="detail-icon" id="detailIcon" aria-hidden="true">💎</div></div>
+<div class="detail-body">
+<p class="detail-intro" id="detailIntro"></p>
+<div class="detail-columns"><div><div class="detail-items" id="detailItems"></div></div><aside class="why"><span class="overline">STRATEGIC RATIONALE</span><h3>تصمیم ثبت‌شده شما</h3><p id="detailDecision"></p><div class="separator"></div><div class="minor">اقدام اجرایی / Next Best Step</div><p id="detailAction"></p><div class="separator"></div><div class="minor">ریسک و معیار بررسی</div><p id="detailRisk"></p></aside></div>
+</div>
+<div class="detail-footer"><button type="button" id="goOverview">↑ بازگشت به بوم جامع</button><button type="button" id="nextBlock">بخش بعدی ←</button></div>
+</section>
+<section class="packages" aria-label="سه بسته تجاری">
+<h2>📦 معماری بسته‌های فروش</h2>
+<div class="package-grid">
+<div class="package"><strong>🎓 Leadership Academy</strong><p>دوره پیشنهادی ۱۱ جلسه × ۲ ساعت؛ مبلغ پایه گروه + شهریه متغیر هر مدیر. نسخه اجرایی کنونی اپ هنوز مسیر ۹جلسه‌ای دارد.</p></div>
+<div class="package"><strong>💻 Reflective Leadership OS</strong><p>حق راه‌اندازی، White-Label استاندارد، اشتراک سالانه، سهمیه AI و بسته اعتباری اضافی.</p></div>
+<div class="package"><strong>👤 Executive Coaching</strong><p>خدمت Premium اختصاصی توسط دکتر حسن بودلایی، با قرارداد مجزا بر اساس مسئله و سطح مدیر.</p></div>
+</div>
+</section>
+<section class="disclaimer"><strong>دامنه این بوم:</strong> این صفحه طرح کسب‌وکار و فرضیات قیمت‌گذاریِ مالک محصول را نمایش می‌دهد، نه شرایط فروش قطعی. در Pilot اولیه فقط استفاده از سامانه و تکمیل آموزش قابل سنجش است؛ برای ادعای اثربخشی بر KPI عملیاتی داده تکمیلی لازم است. این صفحه در نسخه عمومی اپ قابل مشاهده است و هیچ اطلاعات محرمانه مدیران را دریافت یا ذخیره نمی‌کند.</section>
+</main>
+<footer>Reflective Leadership OS · Business Model Canvas | اقتباس علمی مستقل از چارچوب Armin Trost</footer>
+<script>
+(function(){
+"use strict";
+var D={
+segments:{title:"بخش‌های مشتری",icon:"🎯",intro:"این محصول برای سازمان‌ها و هلدینگ‌های بزرگ طراحی شده است؛ مدیرعامل و تیم مدیریت ارشد خریدار اقتصادی هستند، اما استفاده روزمره توسط مدیران ارشد و میانی انجام می‌شود.",items:[["بازار اصلی","نفت، گاز، پتروشیمی و ساخت‌وساز؛ اولویت بر اساس صنعت و دسترسی مستقیم به تصمیم‌گیرنده."],["سازمان نخست","۲۰ تا ۵۰ مدیر ارشد و میانی در هر قرارداد اولیه."],["Economic Buyer","مدیرعامل، هیئت‌مدیره یا مدیر ارشد؛ Budget Owner و Sponsor اجرا باید مشخص باشند."],["End User","مدیرانی که در دوره شرکت می‌کنند و با AI Coach و Reflection کار می‌کنند."]],decision:"سؤالات ۱، ۲، ۹ و ۲۹: سازمان بزرگ، مدیرعامل/مدیر ارشد، ۲۰–۵۰ مدیر و شروع از صنایع نفت/گاز/ساخت‌وساز.",action:"برای هر فرصت، فهرست سازمان‌های هدف، خریدار اقتصادی، حامی اجرایی و تعداد مدیران بالقوه را ثبت کنید.",risk:"خریدار با کاربر متفاوت است؛ Purchase Approval لزوماً به Adoption تبدیل نمی‌شود."},
+relationships:{title:"روابط با مشتری",icon:"🤝",intro:"فروش Enterprise در این محصول یک رابطه حرفه‌ای بلندمدت است: کشف نیاز، Pilot قابل‌ارزیابی، مرور تجربه استفاده و تبدیل آن به قرارداد سالانه.",items:[["Consultative Selling","شناخت مسئله سازمان قبل از ارائه ویژگی‌های سامانه."],["Paid Pilot","قرارداد آزمایشی پولی سه‌ماهه با Scope و خروجی روشن."],["Account Management","پشتیبانی و مدیریت ارتباط پس از استقرار."],["Renewal Review","گزارش استفاده و تکمیل آموزش؛ سپس تصمیم تمدید."]],decision:"سؤال ۱۴: Pilot پولی سه‌ماهه؛ سؤال ۱۵: هدف بلندمدت اتصال گزارش به KPI؛ سؤال ۳۲: داده موجود Pilot فعلاً استفاده و تکمیل آموزش.",action:"از ابتدای Pilot معیار پذیرش و تاریخ جلسه Review با مدیرعامل/اسپانسر را در قرارداد ثبت کنید.",risk:"گزارش استفاده به‌تنهایی اثبات افزایش عملکرد یا ROI نیست. حریم خصوصی داده‌های کوچینگ را حفظ کنید."},
+value:{title:"ارزش پیشنهادی",icon:"💎",intro:"ترکیب آموزش علمی مبتنی بر کتاب The Reflective Leader با استفاده روزمره از ایده و بافت رهبری هر مدیر؛ تبدیل یک دوره آموزشی به چرخه مداوم تمرین، تصمیم‌گیری و بازاندیشی.",items:[["🎓 آموزش کامل ۲۲ ساعته","۱۱ جلسه دو‌ساعته پیشنهادی مبتنی بر فصل‌ها؛ آموزش Hybrid با تدریس شخصی شما."],["🧭 کاربرد روزمره","My Case و Voice-to-Text برای ورود سریع مسئله‌های واقعی مدیران، با بازبینی متن."],["✦ AI Leadership Coach","پرسشگری و مقایسه چند رفتار متناسب با Context، Role Mix و کتاب؛ بدون نقش قطعیِ ازپیش‌تعیین‌شده."],["👤 کوچینگ مدیران ارشد","Executive Coaching اختصاصی، به‌عنوان محصول Premium مستقل."],["🔁 بازاندیشی مستمر","My Reflection، ثبت اقدام، شواهد پیامد و اصلاح انتخاب‌های بعدی."]],decision:"سؤال ۳: ارزش اصلی آموزش + کاربرد روزمره + توسعه مستمر؛ سؤال‌های ۴ و ۷: فروش مستقل آموزش/سامانه و کوچینگ انسانی Premium.",action:"در Demo، مسیر واقعی «تکمیل Leadership Idea → گفتن یک کیس → دو گزینه رفتاری → اقدام → Reflection» نمایش داده شود.",risk:"AI مولد امنِ داخل اپ هنوز برای استفاده سازمانی باید فعال و آزموده شود؛ آموزش پیشنهادی ۱۱جلسه‌ای نیز با دوره فعلی ۹جلسه‌ای یکسان نیست."},
+activities:{title:"فعالیت‌های کلیدی",icon:"⚙️",intro:"خلق ارزش مستلزم مدیریت هم‌زمان طراحی آموزشی، اجرای دوره، توسعه محصول SaaS، راه‌اندازی مشتری و بهبود مستمر تجربه مدیران است.",items:[["طراحی دوره و تدریس","آموزش ۲۲ ساعته Hybrid و توسعه کیس‌های اصیل و قابل‌استفاده."],["فناوری و AI","پروفایل فردی، Context، Voice-to-Case، AI Coach و Roleplay."],["استقرار سازمانی","Branding، حساب‌های مستقل، White-Label، Security و Support."],["اندازه‌گیری","ارزیابی Adoption و Learning Completion در Pilot."],["توسعه تجاری","Demo، Proposal، مذاکره، Pilot و تمدید اشتراک."]],decision:"سؤال ۱۷: تمام جلسات زنده توسط شما؛ سؤال ۱۳: White-Label؛ سؤال ۲۶: توسعه فنی با فریلنسرهای متخصص.",action:"برای هر فعالیت، Owner، Budget، Deliverable و Acceptance Criteria تعیین شود.",risk:"تدریس انحصاری شخص شما محدودیت ظرفیت ایجاد می‌کند؛ سفارشی‌سازی بی‌ضابطه هزینه اجرای هر مشتری را افزایش می‌دهد."},
+partners:{title:"شرکای کلیدی",icon:"🤝",intro:"در سال اول ساختار تیم باید سبک و کنترل‌پذیر باشد؛ شرکای فنی و امنیتی به‌صورت قراردادهای مشخص و با مالکیت فکری محفوظ به محصول متصل شوند.",items:[["توسعه‌دهندگان فریلنسر","Frontend، Backend، هوش مصنوعی و یکپارچه‌سازی."],["Cloud & AI Providers","زیرساخت امن، پردازش صوت، مدل‌های زبانی و کنترل مصرف."],["امنیت و حریم خصوصی","بررسی دسترسی، جداسازی داده‌های سازمان‌ها و قراردادهای محرمانگی."],["مشاور حقوقی","حقوق اقتباس مستقل از کتاب، مالکیت کد و قراردادهای SaaS."],["سازمان‌های Pilot","خریداران اولیه و شریک اعتبارسنجی تجربه واقعی."]],decision:"سؤال ۲۶: فریلنسر و مدیریت پروژه توسط شما؛ سؤال ۱۸: اقتباس تألیفی مستقل با ارجاع علمی و بدون بازنشر آثار حفاظت‌شده.",action:"قرارداد مالکیت سورس، تحویل مستندات، مدیریت دسترسی و SLA پشتیبانی را از ابتدا مشخص کنید.",risk:"وابستگی به یک توسعه‌دهنده، نشت داده، یا استفاده بدون مجوز از محتوای حفاظت‌شده کتاب."},
+resources:{title:"منابع کلیدی",icon:"📚",intro:"مزیت محصول از ترکیب دارایی‌های دانشی و رابطه‌ای با زیرساخت فنی و تجربه آموزشی قابل‌تکرار ایجاد می‌شود.",items:[["تخصص انسانی","دانش مدیریت و رهبری، طراحی یادگیری و خدمات Coaching/Mentoring."],["محتوای تألیفی","سناریوها، توضیحات و ابزارهای آموزشی اقتباسی مستقل با ارجاع به کتاب Trost."],["هسته محصول","کد، Context/Leadership Idea/Profile، Case History، AI Gateway و Data Model."],["شبکه حرفه‌ای","روابط مشاوره‌ای و ارتباط با مدیران ارشد مشتریان بالقوه."]],decision:"سؤال‌های ۵، ۷، ۸ و ۱۸: تدریس Hybrid توسط شما، کوچینگ شخصی مدیران ارشد، Direct Sales و محتوای تألیفی مستقل.",action:"دانش فنی، محتوای آموزشی و مالکیت داده‌ها باید مستند و قابل نگهداری مستقل از پیمانکاران باشند.",risk:"اگر کیفیت تجربه به زمان شخص شما یا یک فایل/پیمانکار وابسته بماند، مقیاس‌پذیری کاهش می‌یابد."},
+channels:{title:"کانال‌ها",icon:"📣",intro:"مسیر اصلی فروش اولیه Direct Enterprise Sales به مدیرعامل و مدیران ارشد از طریق ارتباطات حرفه‌ای فعلی است، نه تبلیغات انبوه یا اشتراک فردی.",items:[["Executive Discovery","جلسه تشخیص نیاز و معرفی مسئله قابل‌حل."],["Interactive Demo","نمایش دوره، Leadership Profile و Case-to-Reflection Journey."],["Custom Proposal","پیشنهاد تجاری با قیمت آموزش و اشتراک مستقل."],["Paid Pilot","ورود پولی سه‌ماهه، نمایش ارزش و توسعه قرارداد."],["Account Expansion","افزودن واحدهای جدید در سازمان و هلدینگ."]],decision:"سؤال ۸: فروش مستقیم از طریق شبکه حرفه‌ای موجود؛ سؤال ۲۵: هدف ۱ تا ۲ سازمان در سال اول.",action:"برای سال اول یک Funnel آزمایشی شامل ۸–۱۰ Discovery، چهار Demo و دو Pilot تعریف و اعتبارسنجی کنید.",risk:"رابطه شخصی به‌تنهایی جایگزین Procurement، ارزیابی امنیت و توافق ارزش تجاری نیست."},
+revenue:{title:"جریان‌های درآمدی",icon:"🪙",intro:"سه جریان مستقل درآمد: Education Revenue، Recurring SaaS و Premium Coaching. هزینه راه‌اندازی و اعتبار AI نیز در قرارداد سازمانی جداگانه قابل تعریف هستند.",items:[["آموزش ۲۲ ساعته","مبلغ پایه هر گروه: ۱۲۰–۲۰۰ میلیون تومان؛ به‌علاوه ۶–۱۲ میلیون به‌ازای هر مدیر."],["راه‌اندازی و White-Label","۱۰۰–۲۰۰ میلیون تومان یک‌باره برای دامنه استاندارد؛ Integration اختصاصی با برآورد جدا."],["اشتراک سالانه","۲۰۰–۴۰۰ میلیون تومان برای سازمان ۲۰–۵۰ مدیر؛ قرارداد اختصاصی."],["AI Credits","سهمیه پایه + فروش بسته‌های اعتباری سازمانی اضافه."],["Executive Coaching","قرارداد Premium اختصاصی بر اساس موضوع و سطح مدیر."]],decision:"سؤالات ۶، ۱۰–۱۲، ۱۹–۲۳، ۳۰ و ۳۱: Enterprise Contract؛ قیمت آموزش ثابت+متغیر؛ Setup+Annual Subscription؛ اعتبار AI سازمانی؛ Premium Coaching.",action:"برای هر قرارداد، درآمد One-Time و Recurring را جدا و هزینه مصرف AI را با سقف و شیوه محاسبه ثبت کنید.",risk:"قیمت‌های این بوم انتخاب‌های هدف هستند، نه نرخ‌های تأییدشده بازار؛ درآمد Pilot و اشتراک نباید دوبار شمرده شوند."},
+costs:{title:"ساختار هزینه",icon:"📊",intro:"هزینه‌های محصول شامل مخارج توسعه اولیه، هزینه مستقیم ارائه خدمت برای هر مشتری و هزینه مشترک جذب و مدیریت مشتری است؛ زمان تدریس شما نیز هزینه اقتصادی واقعی دارد.",items:[["توسعه اولیه","بودجه انتخابی شش ماه نخست: ۲۰۰–۵۰۰ میلیون تومان برای توسعه محصول، امنیت و QA."],["تحویل آموزش","۲۲ ساعت تدریس زنده برای هر گروه، آماده‌سازی، سفر، پشتیبانی و مواد آموزشی."],["Software & White-Label","هزینه اجرا، Data Isolation، Integration، آزمون و نگهداری."],["Cloud / AI / Voice","مصرف مدل، پردازش صوت، زیرساخت، Logging مجاز و پشتیبانی."],["فروش و قرارداد","Demo، Proposal، مذاکرات، حقوقی و Account Management."]],decision:"سؤال‌های ۲۴–۲۸: ظرفیت ۲۶–۴۵ ساعت تدریس ماهانه؛ سرمایه اولیه ۲۰۰–۵۰۰ میلیون؛ Gross Margin هدف زیر ۳۰٪.",action:"برای Pilot واقعی یک Cost Sheet به تفکیک Fixed، Variable، Customer-Specific و Opportunity Cost تهیه کنید.",risk:"حاشیه سود زیر ۳۰٪ در کنار White-Label گسترده، فضای محدودی برای خطا و Scope Creep ایجاد می‌کند؛ ارقام نیاز به اعتبارسنجی دارند."}
+};
+var order=["segments","relationships","value","activities","partners","resources","channels","revenue","costs"];
+var current="value";
+function put(id,s){document.getElementById(id).textContent=s}
+function render(key,scroll){
+var b=D[key];if(!b)return;current=key;
+document.querySelectorAll("[data-bmc]").forEach(function(el){var active=el.getAttribute("data-bmc")===key;el.classList.toggle("selected",active);el.classList.toggle("active",active);el.setAttribute("aria-pressed",String(active));});
+put("detailTitle",b.title);put("detailIcon",b.icon);put("detailIntro",b.intro);put("detailDecision",b.decision);put("detailAction",b.action);put("detailRisk",b.risk);
+var items=document.getElementById("detailItems");items.replaceChildren();
+b.items.forEach(function(x,i){var card=document.createElement("article");card.className="detail-item";var badge=document.createElement("span");badge.className="dot";badge.textContent=String(i+1).replace(/[0-9]/g,function(n){return "۰۱۲۳۴۵۶۷۸۹"[Number(n)]});var h=document.createElement("b");h.textContent=x[0];var p=document.createElement("p");p.textContent=x[1];card.append(badge,h,p);items.appendChild(card)});
+try{history.replaceState(null,"","#"+key)}catch(e){}
+if(scroll){if(document.body.classList.contains("bm-zoom"))toggleZoom(false);document.getElementById("bm-detail").scrollIntoView({behavior:"smooth",block:"start"});}
+}
+function toggleZoom(force){var newValue=typeof force==="boolean"?force:!document.body.classList.contains("bm-zoom");document.body.classList.toggle("bm-zoom",newValue);document.getElementById("zoomBtn").textContent=newValue?"✕ بستن نمای کامل":"⤢ نمای کامل";document.getElementById("zoomBtn").setAttribute("aria-pressed",String(newValue));if(newValue)document.getElementById("zoomBtn").focus();}
+document.addEventListener("click",function(e){var btn=e.target.closest("[data-bmc]");if(btn){render(btn.getAttribute("data-bmc"),true)}});
+document.getElementById("zoomBtn").addEventListener("click",function(){toggleZoom()});
+document.getElementById("printBtn").addEventListener("click",function(){window.print()});
+document.getElementById("goOverview").addEventListener("click",function(){document.getElementById("overview").scrollIntoView({behavior:"smooth"})});
+document.getElementById("nextBlock").addEventListener("click",function(){render(order[(order.indexOf(current)+1)%order.length],true)});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("bm-zoom"))toggleZoom(false)});
+window.addEventListener("hashchange",function(){var hash=location.hash.slice(1);if(D[hash]&&hash!==current)render(hash,false)});
+render(D[location.hash.slice(1)]?location.hash.slice(1):"value",false);
+})();
+</script>
+</body></html>
