@@ -339,7 +339,7 @@ body.finance-unlocked.mf-calm-ui #home .mf-calm-insights .finance-kpi{
 }
 body.finance-unlocked.mf-calm-ui #home .mf-calm-insights .finance-kpi-title{font-size:12px!important}
 body.finance-unlocked.mf-calm-ui #home .mf-calm-insights .finance-kpi b{
- font-size:clamp(17px,2vw,24px)!important;overflow-wrap:anywhere!important;
+ font-size:clamp(20px,2.5vw,25px)!important;overflow-wrap:anywhere!important;
  font-weight:850!important;line-height:1.5!important
 }
 body.finance-unlocked.mf-calm-ui #home .mf-calm-insights .finance-kpi .finance-kpi-action{display:none!important}
@@ -661,7 +661,7 @@ body.finance-unlocked.mf-calm-ui .finance-insight-card{box-shadow:none!important
   flex:0 0 56px!important;border-radius:18px!important
  }
  body.finance-unlocked.mf-calm-ui #home .mf-action span:last-child{
-  font-size:12px!important;line-height:1.35!important;white-space:nowrap!important
+  font-size:14px!important;line-height:1.3!important;white-space:normal!important
  }
  body.finance-unlocked.mf-calm-ui #home .mf-calm-extras-grid .mf-action{
   background:transparent!important;border:0!important;min-height:88px!important
@@ -690,7 +690,7 @@ body.finance-unlocked.mf-calm-ui .finance-insight-card{box-shadow:none!important
  body.finance-unlocked.mf-calm-ui #home .mf-action-icon{
   width:45px!important;height:45px!important;min-width:45px!important;flex-basis:45px!important
  }
- body.finance-unlocked.mf-calm-ui #home .mf-action span:last-child{font-size:10px!important}
+ body.finance-unlocked.mf-calm-ui #home .mf-action span:last-child{font-size:12px!important;line-height:1.2!important}
  body.finance-unlocked.mf-calm-ui #home .finance-hero-amount b{font-size:24px!important}
  body.finance-unlocked.mf-calm-ui .finance-mobile-nav button>span[data-fa]{font-size:10px!important}
 }
