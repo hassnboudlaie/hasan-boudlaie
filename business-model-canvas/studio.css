@@ -144,3 +144,16 @@
 .app-utilities>summary{padding:7px 3px;color:#7c8c7f;font-size:.72rem}
 .app-utilities[open]{background:white;border:1px solid var(--line);padding:0 9px}
 @media(max-width:650px){.mainpages>.page>.panel{padding:17px}.profile-extra-grid{grid-template-columns:1fr}.question{padding:13px 0}.question>label{font-size:.91rem}.final-canvas{grid-template-columns:1fr}.app-utilities{margin-top:10px}}
+
+
+/* Client-to-consultant business-model intake */
+.client-submission{margin:22px 0 4px;border:1px solid #cfe4d5;border-radius:20px;padding:22px;background:linear-gradient(125deg,#f3faf4,#fff);box-shadow:0 8px 24px #143f2a0b}
+.client-submission-heading{display:flex;gap:14px;align-items:flex-start}.client-submission-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:13px;background:#175443;color:white;font-size:1.6rem}
+.client-submission h3{margin:0 0 4px;font-size:1.15rem;color:#164a37}.client-submission p{margin:0;font-size:.87rem;color:#4d6d5b;line-height:1.9}
+.client-submission-consent{display:flex;align-items:flex-start;gap:10px;margin:16px 0;background:#fff;border:1px solid #e0e9df;padding:13px 14px;border-radius:12px;font-size:.83rem;line-height:1.9;cursor:pointer}
+.client-submission-consent input{margin-top:5px;accent-color:#1e6851;min-width:18px;min-height:18px}
+.client-submission-actions{display:flex;gap:10px;flex-wrap:wrap}.client-submission-actions button:disabled{opacity:.64;cursor:wait}
+.client-submission-status{margin-top:14px!important;font-size:.81rem!important;overflow-wrap:anywhere}
+.client-submission-status[data-kind="ok"]{color:#17613c!important;font-weight:700}
+.client-submission-status[data-kind="error"]{color:#a12d25!important}
+@media(max-width:650px){.client-submission{padding:16px;border-radius:16px}.client-submission-heading{gap:10px}.client-submission-actions .btn{flex:1 1 100%}}
