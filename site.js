@@ -55,7 +55,7 @@ function renderSite(data){
  renderProducts(data.products);renderServices(data.advisory?.services);renderList('aboutCredentials',data.about?.credentials);renderList('researchTopics',data.research?.topics);renderPublications(data.research?.publications);
  document.querySelectorAll('[data-contact]').forEach(el=>{const url=webURL(data.contact?.[el.dataset.contact]);if(url){el.href=url;el.hidden=false}else el.hidden=true});
  const email=emailAddress(data.contact?.email);const emailLink=document.getElementById('emailLink');if(emailLink&&email){emailLink.href='mailto:'+email;emailLink.textContent=email}
- const subjects=currentLang==='fa'?{advisory:'درخواست همکاری مشاوره‌ای',education:'درخواست آموزش مدیران',research:'پیشنهاد همکاری پژوهشی'}:{advisory:'Advisory inquiry',education:'Executive education inquiry',research:'Research collaboration'};
+ const subjects=currentLang==='fa'?{advisory:'درخواست همکاری مشاوره‌ای',business:'درخواست مشاوره کسب‌وکار',education:'درخواست آموزش مدیران',research:'پیشنهاد همکاری پژوهشی'}:{advisory:'Advisory inquiry',business:'Business consulting inquiry',education:'Executive education inquiry',research:'Research collaboration'};
  if(email)document.querySelectorAll('[data-inquiry]').forEach(el=>el.href='mailto:'+email+'?subject='+encodeURIComponent(subjects[el.dataset.inquiry]||''));
  const page=document.body?.dataset.page;const labels={index:{en:'Management & Leadership',fa:'مدیریت و رهبری'},products:{en:'Applications & learning tools',fa:'اپلیکیشن‌ها و ابزارهای یادگیری'},advisory:{en:'Advisory',fa:'مشاوره'},about:{en:'About',fa:'دربارهٔ من'},research:{en:'Research',fa:'پژوهش'},contact:{en:'Contact',fa:'تماس'}};
  if(labels[page])document.title=textOf(labels[page])+' | '+textOf(data.brand);
