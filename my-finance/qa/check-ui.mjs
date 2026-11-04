@@ -273,6 +273,21 @@ check('iPhone localized amount input and spoken rent preview',()=>{
  const checkFile=spawnSync(process.execPath,[resolve(root,'qa/check-voice-ios-amounts.mjs')],{encoding:'utf8'});
  assert.equal(checkFile.status,0,(checkFile.stderr||'')+(checkFile.stdout||''));
 });
+check('cloud bank balance updates on resume without mixing user accounts',()=>{
+ const sync=read('supabase-sync.js');
+ assert.ok(sync.includes('async function refreshIdentityAndBalances(force=false)'),'automatic cloud refresh missing');
+ assert.ok(sync.includes('await refreshIdentity();'),'account identity must be verified before refresh');
+ assert.ok(sync.includes('await sync();'),'cloud balances must be fetched while session remains open');
+ assert.ok(sync.includes('lastBalanceSyncAt<120000'),'foreground polling must be throttled');
+ assert.ok(sync.includes("document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIdentityAndBalances(true)});"),
+  'app resume must refresh bank balances');
+ assert.ok(sync.includes('refreshIdentityAndBalances(false)'), 'long-lived sessions must get automatic balance updates');
+ assert.ok(sync.includes("account:meta.accountId||null"),'bank account mapping is needed for correct balance');
+ assert.ok(html.includes('supabase-sync.js?v=20261104r85'), 'new sync script not loaded');
+ assert.ok(sw.includes('supabase-sync.js?v=20261104r85'), 'new sync script not cached');
+ const syntax=spawnSync(process.execPath,['--check',resolve(root,'supabase-sync.js')],{encoding:'utf8'});
+ assert.equal(syntax.status,0,syntax.stderr);
+});
 check('free pilot: no email or manual approval step in signup interface',()=>{
  const app=read('supabase-sync.js');
  assert.ok(html.includes('id="auth-confirm-help" hidden aria-hidden="true"'),'Legacy confirmation help must be hidden');

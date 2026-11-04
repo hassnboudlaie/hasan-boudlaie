@@ -761,9 +761,25 @@ byId('supabase-signout-wipe').addEventListener('click',async()=>{
 byId('supabase-pull').addEventListener('click',()=>sync().catch(()=>{}));
 byId('supabase-push').addEventListener('click',()=>sync().catch(()=>{}));
 document.addEventListener('myfinance:changed',setDirty);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIdentity()});
-window.addEventListener('online',()=>refreshIdentity());
-setInterval(()=>{if(!document.hidden&&navigator.onLine&&!authPending)refreshIdentity().catch(()=>{})},60000);
+// Cloud transactions and account balances can be corrected on another device (or via
+// an explicitly authorized financial adjustment). Refresh them when the app resumes
+// and while it stays open; checking the auth session alone is not enough.
+let lastBalanceSyncAt=0;
+async function refreshIdentityAndBalances(force=false){
+ if(document.hidden||!navigator.onLine)return;
+ try{
+  await refreshIdentity();
+  if(!user||authPending||busy||!document.body.classList.contains('finance-unlocked'))return;
+  if(!force&&Date.now()-lastBalanceSyncAt<120000)return;
+  lastBalanceSyncAt=Date.now();
+  await sync();
+ }catch(e){
+  if(user)notice('به‌روزرسانی مانده انجام نشد؛ دوباره امتحان کنید.',false);
+ }
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIdentityAndBalances(true)});
+window.addEventListener('online',()=>refreshIdentityAndBalances(true));
+setInterval(()=>{if(!document.hidden&&navigator.onLine&&!authPending)refreshIdentityAndBalances(false)},60000);
 client.auth.onAuthStateChange(event=>{if(event==='PASSWORD_RECOVERY'){recovery=true;byId('auth-reset-panel').hidden=false}setTimeout(refreshIdentity,0)});
 async function runFinanceAI(body){
  if(!user)throw Error('ابتدا به حساب شخصی خود وارد شوید.');
