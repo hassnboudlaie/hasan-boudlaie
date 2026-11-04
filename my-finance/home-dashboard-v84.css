@@ -327,3 +327,20 @@ body.finance-unlocked[data-finance-view="home"] #home .mf-market-card{
 @media(prefers-reduced-motion:reduce){
  body.finance-unlocked[data-finance-view="home"] #home .mf-action{transition:none!important}
 }
+
+/* Assistant and ChatGPT onboarding remain intact, but are one tap away from Home. */
+body.finance-unlocked[data-finance-view="home"] #home>.mf-voice-reports,
+body.finance-unlocked[data-finance-view="home"] #home>.mf-cg-card{
+  display:none!important
+}
+body.finance-unlocked[data-finance-view="assistant"] #home{
+  display:flex!important;flex-direction:column!important;
+  gap:14px!important;min-width:0!important;padding-top:5px!important
+}
+body.finance-unlocked[data-finance-view="assistant"] #home>:not(.mf-cg-card):not(#finance-smart-assistant){
+  display:none!important
+}
+body.finance-unlocked[data-finance-view="assistant"] #home>.mf-cg-card,
+body.finance-unlocked[data-finance-view="assistant"] #home>#finance-smart-assistant{
+  display:block!important;max-width:100%;min-width:0;margin:0!important
+}
