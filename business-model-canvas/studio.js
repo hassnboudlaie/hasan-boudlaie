@@ -234,6 +234,8 @@ function roadmapData(){const stage=state.profile.stage;const isStart=stage==='id
 ];return tasks}
 function renderRoadmap(){const root=$('#roadmap');root.replaceChildren();const names=['۳۰ روز اول · کشف و شفاف‌سازی','۶۰ روز · آزمایش و اعتبارسنجی','۹۰ روز · تصمیم و اجرا'],desc=['Outcome: فرضیات اولویت‌دار و مشتری هدف','Outcome: داده واقعی برای سنجش ارزش و درآمد','Outcome: تصمیم مستند و طرح پیاده‌سازی'];let total=0;roadmapData().forEach((tasks,i)=>{const panel=el('div','phase');panel.append(el('h3','',names[i]),el('p','',desc[i]));tasks.forEach(t=>{const label=el('label','task'),check=el('input');check.type='checkbox';check.checked=!!state.tasks[t.id];if(check.checked)total++;check.addEventListener('change',()=>{state.tasks[t.id]=check.checked;save();$('#doneCount').textContent=Object.values(state.tasks).filter(Boolean).length+' اقدام انجام‌شده'});label.append(check,el('span','',t.label));panel.append(label)});root.append(panel)});$('#doneCount').textContent=total+' اقدام انجام‌شده'}
 
+const INDUSTRY_NAMES={service:'خدمات',retail:'فروشگاه و خرده‌فروشی',digital:'فناوری و نرم‌افزار',manufacturing:'تولید و صنعت',health:'سلامت و زیبایی',education:'آموزش',other:'سایر'};
+const STAGE_NAMES={idea:'ایده',testing:'آزمایش اولیه',running:'فعال',growing:'در حال رشد'};
 function answerNotes(){return BLOCKS.flatMap(b=>questions(b).map(q=>({block:b,title:q.title,note:parts(q.id).note})).filter(q=>q.note))}
 function buildFinalModel(){return {
  title:'بوم کسب‌وکار من',
