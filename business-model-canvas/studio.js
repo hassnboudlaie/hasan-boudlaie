@@ -1,6 +1,42 @@
 
 (()=>{'use strict';
 const KEY='hb-bmc-studio-v2', OLD='hb-bmc-demo-v1';
+
+const BANK=window.BMCChoiceBank||{questions:{},industry:{}};
+const REGISTRY_KEY='hb-bmc-project-registry-v1', ACTIVE_KEY='hb-bmc-active-project-v1', PROJECT_PREFIX='hb-bmc-project-v1-';
+function makeId(){return 'bmc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
+function registry(){try{const x=JSON.parse(localStorage.getItem(REGISTRY_KEY)||'[]');return Array.isArray(x)?x.filter(y=>y&&typeof y.id==='string'):[]}catch(e){return []}}
+function setRegistry(rows){try{localStorage.setItem(REGISTRY_KEY,JSON.stringify(rows))}catch(e){}}
+function initWorkspace(){let rows=registry();if(!rows.length){rows=[{id:makeId(),name:'اولین مدل کسب‌وکار',owner:'',updatedAt:new Date().toISOString()}];setRegistry(rows)}
+let active='';try{active=localStorage.getItem(ACTIVE_KEY)||''}catch(e){}
+if(!rows.some(r=>r.id===active))active=rows[0].id;
+try{localStorage.setItem(ACTIVE_KEY,active)}catch(e){}
+return active}
+let workspaceId=initWorkspace();
+function refreshWorkspaceSelector(){
+ const picker=document.getElementById('workspaceSelect');if(!picker)return;
+ picker.replaceChildren();registry().forEach(w=>{const opt=document.createElement('option');opt.value=w.id;opt.textContent=(w.name||'مدل بدون نام')+(w.owner?' · '+w.owner:'');picker.append(opt)});picker.value=workspaceId;
+}
+function updateWorkspaceLabel(){
+ const rows=registry(),r=rows.find(x=>x.id===workspaceId);if(!r)return;
+ r.name=String(state.profile.businessName||'مدل بدون نام').trim().slice(0,90);
+ r.owner=String(state.profile.ownerName||'').trim().slice(0,80);
+ r.updatedAt=state.updatedAt||new Date().toISOString();
+ setRegistry(rows);refreshWorkspaceSelector();
+}
+function switchWorkspace(id){
+ if(!registry().some(w=>w.id===id)||id===workspaceId)return;
+ save();workspaceId=id;try{localStorage.setItem(ACTIVE_KEY,id)}catch(e){}
+ state=load();initProfile();initFinancial();refreshWorkspaceSelector();goto('dashboard');
+}
+function createWorkspace(){
+ const owner=prompt('نام یا نام مستعار صاحب مدل جدید (اختیاری):','');if(owner===null)return;
+ save();const id=makeId(),rows=registry();rows.push({id,name:'مدل جدید',owner:owner.trim().slice(0,80),updatedAt:new Date().toISOString()});
+ setRegistry(rows);workspaceId=id;state=fresh();state.profile.ownerName=owner.trim().slice(0,80);
+ try{localStorage.setItem(ACTIVE_KEY,id)}catch(e){}
+ save();initProfile();initFinancial();goto('onboard');
+}
+
 const BLOCKS=[
 {id:'segments',title:'بخش‌های مشتریان',en:'Customer Segments',desc:'مشتری مشخص، مسئله مشخص؛ نه «همه مردم».',questions:[
 {id:'seg_main',title:'اولین و مهم‌ترین بخش مشتریان شما دقیقاً چه کسانی هستند؟',help:'مثال: مدیران منابع انسانی سازمان‌های ۲۰۰ تا ۵۰۰ نفر، نه صرفاً «شرکت‌ها».',type:'text',core:true},
@@ -60,30 +96,120 @@ const BLOCKS=[
 ];
 const LABEL=Object.fromEntries(BLOCKS.map(b=>[b.id,b.title]));
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-function fresh(){return{version:2,profile:{businessName:'',industry:'',stage:'idea',market:'b2c',team:'solo',city:'',challenge:''},answers:{},manual:{},evidence:{},financial:{},tasks:{},reflection:'',step:0,createdAt:new Date().toISOString(),updatedAt:''}}
-function load(){try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.version===2&&d.profile&&typeof d.answers==='object')return Object.assign(fresh(),d)}}catch(e){}let d=fresh();try{const old=JSON.parse(localStorage.getItem(OLD)||'null');if(old&&typeof old==='object'){d.profile.businessName=old.name||'';d.profile.stage={idea:'idea',validation:'testing',running:'running',growth:'growing'}[old.stage]||'idea';const map={segments:'seg_main',problem:'val_problem',value:'val_solution',channels:'chan_delivery',revenue:'rev_model',costs:'cost_fixed'};Object.entries(map).forEach(([k,v])=>{if(old[k])d.answers[v]=old[k]});if(old.evidence==='sales')d.evidence.revenues={status:'paid',note:'از دموی قبلی منتقل شده؛ شواهد را مجدداً بررسی کنید'};}}catch(e){}return d}
+
+function fresh(){return{version:2,profile:{ownerName:'',businessName:'',industry:'',stage:'idea',market:'b2c',team:'solo',city:'',challenge:''},answers:{},manual:{},evidence:{},financial:{},tasks:{},reflection:'',step:0,createdAt:new Date().toISOString(),updatedAt:''}}
+function load(){
+ try{
+  const local=localStorage.getItem(PROJECT_PREFIX+workspaceId);
+  if(local){const d=JSON.parse(local);if(d&&d.version===2&&d.profile&&typeof d.answers==='object')return Object.assign(fresh(),d)}
+ }catch(e){}
+ const first=registry()[0];if(!first||workspaceId!==first.id)return fresh();
+ try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.version===2&&d.profile&&typeof d.answers==='object')return Object.assign(fresh(),d)}}catch(e){}
+ let d=fresh();
+ try{const old=JSON.parse(localStorage.getItem(OLD)||'null');if(old&&typeof old==='object'){d.profile.businessName=old.name||'';d.profile.stage={idea:'idea',validation:'testing',running:'running',growth:'growing'}[old.stage]||'idea';const map={segments:'seg_main',problem:'val_problem',value:'val_solution',channels:'chan_delivery',revenue:'rev_model',costs:'cost_fixed'};Object.entries(map).forEach(([k,v])=>{if(old[k])d.answers[v]=old[k]});if(old.evidence==='sales')d.evidence.revenues={status:'paid',note:'از دموی قبلی منتقل شده؛ شواهد را مجدداً بررسی کنید'};}}catch(e){}
+ return d
+}
+
 let state=load(),active='dashboard',reflectionTopic='customer',saveCount=0;
-function save(){state.updatedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify(state));$('#saveStatus').textContent='ذخیره در همین دستگاه · '+new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}catch(e){$('#saveStatus').textContent='ذخیره محلی ممکن نیست؛ خروجی JSON تهیه کنید'}saveCount++}
-function text(v){if(Array.isArray(v))return v.join('، ');return typeof v==='string'?v.trim():typeof v==='number'?String(v):''}
+
+function save(){
+ state.updatedAt=new Date().toISOString();
+ try{localStorage.setItem(PROJECT_PREFIX+workspaceId,JSON.stringify(state));$('#saveStatus').textContent='ذخیره خودکار · '+new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}
+ catch(e){$('#saveStatus').textContent='ذخیره ممکن نیست؛ از گزارش خروجی بگیرید'}
+ updateWorkspaceLabel();saveCount++;
+}
+const UNKNOWN=/^(هنوز|نامشخص|مطمئن نیستم|قیمت هنوز|فعلاً برنامه‌ای|هیچ شاهدی ندارم|مسئله هنوز|فرایند هنوز|مسئول مشخص نیست|تعیین نشده|برآورد نکرده|فعالیت‌ها هنوز|ریسک مهمی فعلاً|کمبود جدی نداریم|مزیت خاصی فعلاً)/;
+function unknown(s){return UNKNOWN.test(String(s||'').trim())}
+function parts(id){
+ const x=state.answers[id];
+ if(x&&typeof x==='object'&&!Array.isArray(x)){return {choices:Array.isArray(x.choices)?x.choices.filter(v=>typeof v==='string'):[],note:typeof x.note==='string'?x.note.trim():''}}
+ if(Array.isArray(x))return{choices:x.filter(v=>typeof v==='string'),note:''};
+ return{choices:[],note:typeof x==='string'?x.trim():''};
+}
+function text(v){
+ if(Array.isArray(v))return v.map(text).filter(Boolean).join('، ');
+ if(v&&typeof v==='object'){const a=Array.isArray(v.choices)?v.choices.filter(x=>!unknown(x)&&x!=='سایر (با توضیح)').join('، '):'';return [a,typeof v.note==='string'?v.note.trim():''].filter(Boolean).join('؛ ')}
+ return typeof v==='string'?(unknown(v)?'':v.trim()):typeof v==='number'?String(v):'';
+}
 function value(id){return text(state.answers[id])}
 function shownQuestion(q){return !q.when||q.when(state.profile)}
 function questions(b){return b.questions.filter(shownQuestion)}
-function countAnswers(){return BLOCKS.reduce((n,b)=>n+questions(b).filter(q=>text(state.answers[q.id])).length,0)}
+function countAnswers(){return BLOCKS.reduce((n,b)=>n+questions(b).filter(q=>value(q.id)).length,0)}
 function totalQuestions(){return BLOCKS.reduce((n,b)=>n+questions(b).length,0)}
-function generatedBlock(block){return questions(block).filter(q=>value(q.id)).map(q=>'• '+q.title.replace('؟','')+': '+value(q.id)).join('\n')};
-function blockValue(id){if(Object.prototype.hasOwnProperty.call(state.manual,id))return text(state.manual[id]);return generatedBlock(BLOCKS.find(b=>b.id===id))}
+function generatedBlock(block){return questions(block).filter(q=>value(q.id)).map(q=>'• '+q.title.replace('؟','')+': '+value(q.id)).join('\n')}
+function blockValue(id){if(Object.prototype.hasOwnProperty.call(state.manual,id))return String(state.manual[id]||'').trim();const b=BLOCKS.find(x=>x.id===id);return b?generatedBlock(b):''}
 function completedBlocks(){return BLOCKS.filter(b=>blockValue(b.id).length>0).length}
-function evidenceCount(){return Object.values(state.evidence).filter(e=>e&&e.status&&e.status!=='assumed').length}
-function goto(page){const allowed=['dashboard','onboard','wizard','canvas','evidence','diagnosis','roadmap','reflection'];if(!allowed.includes(page))page='dashboard';active=page;$$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));$$('.navitem').forEach(b=>{const on=b.dataset.page===page;b.classList.toggle('active',on);b.setAttribute('aria-current',on?'page':'false')});if(page==='wizard')renderStep();if(page==='canvas')renderCanvas();if(page==='evidence')renderEvidence();if(page==='diagnosis')renderDiagnosis();if(page==='roadmap')renderRoadmap();if(page==='reflection')renderReflection();renderDashboard();document.querySelector('main')?.scrollIntoView({behavior:'smooth',block:'start'})}
+function evidenceCount(){return BLOCKS.filter(b=>{const e=state.evidence[b.id];return e&&e.status&&e.status!=='assumed'&&blockValue(b.id)}).length}
+
+function goto(page){const allowed=['dashboard','onboard','wizard','canvas','evidence','diagnosis','roadmap','reflection','final'];if(!allowed.includes(page))page='dashboard';active=page;$$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));$$('.navitem').forEach(b=>{const on=b.dataset.page===page;b.classList.toggle('active',on);b.setAttribute('aria-current',on?'page':'false')});if(page==='wizard')renderStep();if(page==='canvas')renderCanvas();if(page==='evidence')renderEvidence();if(page==='diagnosis')renderDiagnosis();if(page==='roadmap')renderRoadmap();if(page==='reflection')renderReflection();if(page==='final')renderFinal();renderDashboard();document.querySelector('main')?.scrollIntoView({behavior:'smooth',block:'start'})}
 function el(tag,cls='',txt=''){const n=document.createElement(tag);if(cls)n.className=cls;if(txt)n.textContent=txt;return n}
-function fieldFor(q){const ans=state.answers[q.id];let ctrl;
-if(q.type==='text'){ctrl=el('textarea');ctrl.rows=3;ctrl.placeholder='پاسخ خود را اینجا بنویسید…';ctrl.value=text(ans);ctrl.addEventListener('input',()=>setAnswer(q.id,ctrl.value))}
-else if(q.type==='select'){ctrl=el('select');let first=el('option','','انتخاب کنید');first.value='';ctrl.append(first);q.options.forEach(op=>{const x=el('option','',op);x.value=op;ctrl.append(x)});ctrl.value=text(ans);ctrl.addEventListener('change',()=>setAnswer(q.id,ctrl.value))}
-else if(q.type==='multi'){ctrl=el('div','choices');q.options.forEach(op=>{const label=el('label','choice'),inpt=el('input');inpt.type='checkbox';inpt.value=op;inpt.checked=Array.isArray(ans)&&ans.includes(op);inpt.addEventListener('change',()=>{const arr=[...ctrl.querySelectorAll('input:checked')].map(x=>x.value);setAnswer(q.id,arr)});label.append(inpt,document.createTextNode(op));ctrl.append(label)})}
-return ctrl}
-function setAnswer(id,v){state.answers[id]=v;save();renderDashboard();const b=BLOCKS[state.step];if(b){const count=questions(b).filter(q=>value(q.id)).length;$('#wizardCount').textContent=count+' / '+questions(b).length}}
-function renderStep(){const b=BLOCKS[state.step]||BLOCKS[0];$('#wizardStepLabel').textContent='بخش '+(state.step+1)+' از ۹';$('#wizardTitle').textContent=b.title+' · '+b.en;$('#wizardDesc').textContent=b.desc;$('#wizardProgress').style.width=(100*(state.step+1)/9)+'%';const qlist=$('#questionList');qlist.replaceChildren();for(const q of questions(b)){const wrap=el('div','question');const label=el('label','',q.title+(q.core?' *':''));const help=el('p','help',q.help);const input=fieldFor(q);if(input.tagName==='TEXTAREA'||input.tagName==='SELECT'){input.id='q-'+q.id;label.htmlFor=input.id;}wrap.append(label,help,input);qlist.append(wrap)}$('#wizardCount').textContent=questions(b).filter(q=>value(q.id)).length+' / '+questions(b).length;$('#previousStep').disabled=state.step===0;$('#nextStep').textContent=state.step===8?'تکمیل و مشاهده Canvas':'مرحله بعد'}
-function moveStep(delta){if(delta>0&&state.step>=8){goto('canvas');return}state.step=Math.max(0,Math.min(8,state.step+delta));save();renderStep();$('.page.active')?.scrollIntoView({behavior:'smooth',block:'start'})}
+
+function optionsFor(q){
+ const spec=BANK.questions[q.id]||{mode:q.type==='multi'?'multi':'select',options:q.options||[]};
+ const relevant=BANK.industry?.[state.profile.industry]?.[q.id]||[];
+ return{mode:spec.mode||'select',options:[...new Set([...(spec.options||q.options||[]),...relevant])]};
+}
+function fieldFor(q){
+ const answer=parts(q.id),spec=optionsFor(q),root=el('div','choice-wrapper'),label=el('div','choice-label','پاسخ انتخابی');
+ root.append(label);
+ const known=answer.choices.length?answer.choices:(answer.note&&spec.options.includes(answer.note)?[answer.note]:[]);
+ let selection=[],selectedNote=answer.note;
+ if(spec.mode==='multi'){
+  const details=el('details','dropdown-multi'),summary=el('summary','','انتخاب یک یا چند گزینه');
+  const choices=el('div','dropdown-options');
+  details.append(summary,choices);
+  for(const option of spec.options){
+   const line=el('label','dropdown-choice'),input=el('input');input.type='checkbox';input.value=option;input.checked=known.includes(option);
+   input.addEventListener('change',()=>{
+    let chosen=[...choices.querySelectorAll('input:checked')].map(x=>x.value);
+    if(input.checked&&unknown(option)){for(const ch of choices.querySelectorAll('input'))if(ch!==input)ch.checked=false;chosen=[option]}
+    else if(input.checked){for(const ch of choices.querySelectorAll('input'))if(unknown(ch.value))ch.checked=false;chosen=[...choices.querySelectorAll('input:checked')].map(x=>x.value)}
+    update(chosen);summary.textContent=chosen.length?chosen.join('، '):'انتخاب یک یا چند گزینه';
+   });
+   line.append(input,el('span','',option));choices.append(line);
+  }
+  summary.textContent=known.length?known.join('، '):'انتخاب یک یا چند گزینه';
+  root.append(details);
+ }else{
+  const select=el('select');select.id='q-'+q.id;const first=el('option','','انتخاب کنید');first.value='';select.append(first);
+  for(const option of spec.options){const opt=el('option','',option);opt.value=option;select.append(opt)}
+  select.value=known[0]||'';select.addEventListener('change',()=>update(select.value?[select.value]:[]));root.append(select);
+ }
+ const other=el('details','note-details'),summaryNote=el('summary','','توضیح تکمیلی (اختیاری)'),textarea=el('textarea','note-text');
+ textarea.rows=2;textarea.placeholder='مثال، عدد، شاهد یا نکته اختصاصی کسب‌وکار خود را بنویسید. این متن در گزارش شما لحاظ می‌شود.';
+ const isLegacy=typeof state.answers[q.id]==='string';
+ if(isLegacy&&spec.options.includes(selectedNote))selectedNote='';
+ textarea.value=selectedNote;
+ other.append(summaryNote,textarea);
+ if(textarea.value)other.open=true;
+ textarea.addEventListener('input',()=>update(currentChoices()));
+ root.append(other);
+ function currentChoices(){
+  if(spec.mode==='multi')return [...root.querySelectorAll('.dropdown-options input:checked')].map(i=>i.value);
+  const elSelect=root.querySelector('select');return elSelect&&elSelect.value?[elSelect.value]:[];
+ }
+ function update(chosen){state.answers[q.id]={choices:chosen,note:textarea.value.trim()};save();renderDashboard();const block=BLOCKS[state.step];if(block)$('#wizardCount').textContent=questions(block).filter(x=>value(x.id)).length+' / '+questions(block).length}
+ return root;
+}
+
+
+function renderStep(){
+ const b=BLOCKS[state.step]||BLOCKS[0];
+ $('#wizardStepLabel').textContent='بخش '+(state.step+1)+' از ۹';
+ $('#wizardTitle').textContent=b.title+' · '+b.en;$('#wizardDesc').textContent=b.desc;
+ $('#wizardProgress').style.width=(100*(state.step+1)/9)+'%';
+ const qlist=$('#questionList');qlist.replaceChildren();
+ for(const q of questions(b)){const wrap=el('div','question');wrap.append(el('label','',q.title+(q.core?' *':'')),el('p','help',q.help),fieldFor(q));qlist.append(wrap)}
+ $('#wizardCount').textContent=questions(b).filter(q=>value(q.id)).length+' / '+questions(b).length;
+ $('#previousStep').disabled=state.step===0;
+ $('#nextStep').textContent=state.step===8?'تولید بوم اختصاصی من':'مرحله بعد';
+}
+function moveStep(delta){
+ if(delta>0&&state.step>=8){goto('final');return}
+ state.step=Math.max(0,Math.min(8,state.step+delta));save();renderStep();
+ $('.page.active')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function renderDashboard(){const filled=completedBlocks(),count=countAnswers(),total=totalQuestions();$('#dashboardBlocks').textContent=filled+' از ۹';$('#dashboardQuestions').textContent=count+' از '+total;$('#dashboardEvidence').textContent=evidenceCount();$('#progressBar').style.width=(100*count/Math.max(total,1))+'%';$('#stepProgress').textContent=filled+'/۹';$('#projectStage').textContent=({idea:'مرحله ایده',testing:'آزمون بازار',running:'کسب‌وکار فعال',growing:'مرحله رشد'})[state.profile.stage]||'شناخت اولیه';$('#welcomeTitle').textContent=state.profile.businessName?('مدل کسب‌وکار «'+state.profile.businessName+'»'):'استودیوی طراحی مدل کسب‌وکار'}
 function renderCanvas(){for(const block of BLOCKS){const node=document.querySelector('[data-block="'+block.id+'"] textarea');if(!node)continue;node.value=blockValue(block.id);node.oninput=()=>{state.manual[block.id]=node.value;save();renderDashboard()}}}
 function renderEvidence(){const list=$('#evidenceList');list.replaceChildren();for(const b of BLOCKS){const item=el('div','evidence-item'),label=el('label','',b.title),sel=el('select'),current=state.evidence[b.id]||{status:'assumed',note:''};[['assumed','فرضیه / نامشخص'],['interview','مصاحبه یا مشاهده'],['paid','پرداخت یا خرید واقعی'],['data','داده عملکردی مستند']].forEach(([v,t])=>{let o=el('option','',t);o.value=v;sel.append(o)});sel.value=current.status||'assumed';sel.addEventListener('change',()=>{const x=state.evidence[b.id]||{};x.status=sel.value;state.evidence[b.id]=x;save();renderDashboard()});const note=el('input');note.placeholder='منبع یا شرح شاهد (اختیاری)';note.value=current.note||'';note.addEventListener('input',()=>{const x=state.evidence[b.id]||{};x.note=note.value;state.evidence[b.id]=x;save()});item.append(label,sel,note,el('small','','فقط شواهد واقعی را ثبت کنید.'));list.append(item)}}
