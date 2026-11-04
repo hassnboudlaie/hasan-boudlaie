@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153c34"><meta name="description" content="ابزار ساده طراحی بوم کسب‌وکار"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="بوم کسب‌وکار"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png"><link rel="stylesheet" href="./studio.css?v=6"><title>بوم کسب‌وکار من</title></head>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153c34"><meta name="description" content="ابزار ساده طراحی بوم کسب‌وکار"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="بوم کسب‌وکار"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png"><link rel="stylesheet" href="./studio.css?v=6"><link rel="stylesheet" href="./visual-refresh.css?v=1"><title>بوم کسب‌وکار من</title></head>
 <body><header class="topbar"><div class="shell top-inner">
 <a class="brand" href="./studio.html" aria-label="خانه بوم مدل کسب‌وکار"><span class="logo">بوم</span><span>بوم کسب‌وکار</span></a>
 <div class="top-actions"><label class="workspace-label" for="workspaceSelect"><span class="workspace-heading">مدل من</span><select id="workspaceSelect" aria-label="انتخاب مدل کسب‌وکار"></select></label>
@@ -27,15 +27,15 @@
 </div></details>
 </aside><div class="mainpages">
 <section class="page active" id="page-dashboard">
-<div class="dashboard-lead"><div>
+<div class="dashboard-lead"><div class="dashboard-motif" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div>
 <span class="mini-badge" id="projectStage">ایده کسب‌وکار</span>
 <h2>از کجا شروع کنیم؟</h2><p>سه قدم ساده برای ساخت مدل کسب‌وکار شما</p></div>
 <div class="dashboard-count"><strong id="dashboardBlocks">۰ از ۹</strong><span>بلوک تکمیل‌شده</span></div></div>
 <div class="progress dashboard-progress" aria-label="پیشرفت طراحی بوم"><span id="progressBar"></span></div>
 <div class="dashboard-actions">
-<button class="dash-action main-action" data-goto="wizard" type="button"><span class="dash-symbol" aria-hidden="true">▣</span><span class="dash-title">شروع / ادامه طراحی</span><small>پرسش‌های انتخابی و گام‌به‌گام</small><span class="dash-arrow" aria-hidden="true">←</span></button>
-<button class="dash-action" data-goto="canvas" type="button"><span class="dash-symbol" aria-hidden="true">▦</span><span class="dash-title">بوم کسب‌وکار من</span><small>مشاهده و ویرایش ۹ بخش</small><span class="dash-arrow" aria-hidden="true">←</span></button>
-<button class="dash-action" data-goto="final" type="button"><span class="dash-symbol" aria-hidden="true">▤</span><span class="dash-title">گزارش نهایی</span><small>تحلیل و دریافت خروجی اختصاصی</small><span class="dash-arrow" aria-hidden="true">←</span></button>
+<button class="dash-action main-action" data-goto="wizard" type="button"><span class="dash-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17h7m-3.5-3.5v7"/></svg></span><span class="dash-title">شروع / ادامه طراحی</span><small>پرسش‌های انتخابی و گام‌به‌گام</small><span class="dash-arrow" aria-hidden="true">←</span></button>
+<button class="dash-action" data-goto="canvas" type="button"><span class="dash-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="3" width="19" height="18" rx="2"/><path d="M10 3v18m5-18v18M2.5 15h19"/></svg></span><span class="dash-title">بوم کسب‌وکار من</span><small>مشاهده و ویرایش ۹ بخش</small><span class="dash-arrow" aria-hidden="true">←</span></button>
+<button class="dash-action" data-goto="final" type="button"><span class="dash-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M15 3v5h4M9 13h6M9 17h7"/></svg></span><span class="dash-title">گزارش نهایی</span><small>دریافت بوم تکمیل‌شده</small><span class="dash-arrow" aria-hidden="true">←</span></button>
 </div>
 <div class="dashboard-bottom"><button class="btn subtle" type="button" data-goto="onboard">✎ اطلاعات کسب‌وکار</button><span class="quiet-stat" hidden><span id="dashboardQuestions">۰</span><span id="dashboardEvidence">۰</span></span></div>
 </section>
@@ -52,16 +52,22 @@
 <section class="page" id="page-wizard"><div class="panel"><div class="section-header"><div><p class="eyebrow" id="wizardStepLabel">بخش ۱ از ۹</p><h2 id="wizardTitle">بخش‌های مشتریان</h2><p id="wizardDesc" class="subtitle"></p></div><span class="mini-badge" id="wizardCount">۰/۴</span></div><div class="progress" style="margin-bottom:18px"><span id="wizardProgress"></span></div><div class="question-list" id="questionList"></div><div class="step-pager"><button class="btn subtle" id="previousStep" type="button">مرحله قبل</button><div class="inline"><button class="btn" data-goto="canvas" type="button">مشاهده بوم</button><button class="btn primary" id="nextStep" type="button">مرحله بعد</button></div></div></div></section>
 <section class="page" id="page-canvas"><div class="panel"><div class="section-header"><div><h2>بوم کسب‌وکار من</h2></div></div>
 <div class="canvas" id="canvas">
-<div class="block partners" data-block="partners"><b>شرکای کلیدی</b><textarea aria-label="شرکای کلیدی" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block activities" data-block="activities"><b>فعالیت‌های کلیدی</b><textarea aria-label="فعالیت‌های کلیدی" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block resources" data-block="resources"><b>منابع کلیدی</b><textarea aria-label="منابع کلیدی" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block value" data-block="value"><b>ارزش پیشنهادی</b><textarea aria-label="ارزش پیشنهادی" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block relations" data-block="relations"><b>ارتباط با مشتری</b><textarea aria-label="ارتباط با مشتری" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block channels" data-block="channels"><b>کانال‌ها</b><textarea aria-label="کانال‌ها" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block segments" data-block="segments"><b>بخش‌های مشتریان</b><textarea aria-label="بخش‌های مشتریان" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block costs" data-block="costs"><b>ساختار هزینه</b><textarea aria-label="ساختار هزینه" placeholder="هنوز تکمیل نشده"></textarea></div>
-<div class="block revenues" data-block="revenues"><b>جریان درآمد</b><textarea aria-label="جریان درآمد" placeholder="هنوز تکمیل نشده"></textarea></div>
-</div><div class="button-row no-print"><button class="btn primary" data-goto="final" type="button">تولید خروجی اختصاصی</button><button id="regenerateCanvas" class="btn subtle" type="button">بازسازی بوم</button></div></div></section>
+<button class="block partners" data-block="partners" type="button" aria-label="ویرایش شرکای کلیدی"><span class="block-head"><span class="block-icon" aria-hidden="true">🤝</span><span class="block-title">شرکای کلیدی</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block activities" data-block="activities" type="button" aria-label="ویرایش فعالیت‌های کلیدی"><span class="block-head"><span class="block-icon" aria-hidden="true">⚙️</span><span class="block-title">فعالیت‌های کلیدی</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block resources" data-block="resources" type="button" aria-label="ویرایش منابع کلیدی"><span class="block-head"><span class="block-icon" aria-hidden="true">📚</span><span class="block-title">منابع کلیدی</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block value" data-block="value" type="button" aria-label="ویرایش ارزش پیشنهادی"><span class="block-head"><span class="block-icon" aria-hidden="true">💎</span><span class="block-title">ارزش پیشنهادی</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block relations" data-block="relations" type="button" aria-label="ویرایش ارتباط با مشتری"><span class="block-head"><span class="block-icon" aria-hidden="true">💬</span><span class="block-title">ارتباط با مشتری</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block channels" data-block="channels" type="button" aria-label="ویرایش کانال‌ها"><span class="block-head"><span class="block-icon" aria-hidden="true">📣</span><span class="block-title">کانال‌ها</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block segments" data-block="segments" type="button" aria-label="ویرایش بخش‌های مشتریان"><span class="block-head"><span class="block-icon" aria-hidden="true">🎯</span><span class="block-title">بخش‌های مشتریان</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block costs" data-block="costs" type="button" aria-label="ویرایش ساختار هزینه"><span class="block-head"><span class="block-icon" aria-hidden="true">📊</span><span class="block-title">ساختار هزینه</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+<button class="block revenues" data-block="revenues" type="button" aria-label="ویرایش جریان درآمد"><span class="block-head"><span class="block-icon" aria-hidden="true">🪙</span><span class="block-title">جریان درآمد</span><span class="block-edit" aria-hidden="true">↖</span></span><span class="block-preview">هنوز تکمیل نشده</span></button>
+</div>
+<dialog id="canvasDialog" class="canvas-dialog" aria-labelledby="canvasEditTitle">
+<div class="canvas-dialog-header"><h3 id="canvasEditTitle">ویرایش بخش</h3><button type="button" class="canvas-dialog-close" id="canvasDialogClose" aria-label="بستن">×</button></div>
+<div class="canvas-dialog-body"><textarea id="canvasEditText" aria-label="محتوای بخش انتخاب‌شده" placeholder="اطلاعات این بخش را بنویسید"></textarea><p>تغییرات به‌صورت خودکار ذخیره می‌شوند.</p></div>
+<div class="canvas-dialog-actions"><button type="button" class="btn primary" id="canvasDialogDone">تأیید و بازگشت</button></div>
+</dialog>
+<div class="button-row no-print"><button class="btn primary" data-goto="final" type="button">دریافت بوم اختصاصی</button><button id="regenerateCanvas" class="btn subtle" type="button">بازسازی بوم</button></div></div></section>
 <section class="page" id="page-roadmap"><div class="panel"><div class="section-header"><div><h2>برنامه اقدام</h2></div><span id="doneCount" class="mini-badge">۰ اقدام انجام‌شده</span></div><div id="roadmap" class="roadmap"></div></div></section>
 
 <section class="page" id="page-final"><div class="panel final-document" id="finalDocument">
