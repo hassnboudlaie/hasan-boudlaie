@@ -34,7 +34,7 @@ function createWorkspace(){
  save();const id=makeId(),rows=registry();rows.push({id,name:'مدل جدید',owner:owner.trim().slice(0,80),updatedAt:new Date().toISOString()});
  setRegistry(rows);workspaceId=id;state=fresh();state.profile.ownerName=owner.trim().slice(0,80);
  try{localStorage.setItem(ACTIVE_KEY,id)}catch(e){}
- save();initProfile();initFinancial();goto('onboard');
+ save();initProfile();refreshWorkspaceSelector();goto('onboard');
 }
 
 const BLOCKS=[
@@ -263,7 +263,7 @@ function roadmapData(){const stage=state.profile.stage;const isStart=stage==='id
 [{id:'60a',label:'آزمایش کانال: '+channel},{id:'60b',label:'ارائه پیشنهاد واقعی و سنجش تمایل به پرداخت'},{id:'60c',label:'محاسبه حاشیه مشارکت و نقطه سربه‌سر با ارقام واقعی'},{id:'60d',label:'بازنگری ارزش پیشنهادی براساس شواهد آزمایش'}],
 [{id:'90a',label:'بازطراحی بلوک‌هایی که فرضیات آن‌ها رد شده است'},{id:'90b',label:'تعیین شاخص‌های فروش، جذب مشتری و نقدینگی برای دوره بعد'},{id:'90c',label:'تصمیم برای ادامه، اصلاح یا توقف بر اساس نتایج آزمون'},{id:'90d',label:stage==='growing'?'انتخاب یک آزمایش توسعه بازار با بودجه و مسئول مشخص':'تعیین مسئول، منابع و تاریخ شروع فاز اجرایی بعدی'}]
 ];return tasks}
-function renderRoadmap(){const root=$('#roadmap');root.replaceChildren();const names=['۳۰ روز اول · کشف و شفاف‌سازی','۶۰ روز · آزمایش و اعتبارسنجی','۹۰ روز · تصمیم و اجرا'],desc=['Outcome: فرضیات اولویت‌دار و مشتری هدف','Outcome: داده واقعی برای سنجش ارزش و درآمد','Outcome: تصمیم مستند و طرح پیاده‌سازی'];let total=0;roadmapData().forEach((tasks,i)=>{const panel=el('div','phase');panel.append(el('h3','',names[i]),el('p','',desc[i]));tasks.forEach(t=>{const label=el('label','task'),check=el('input');check.type='checkbox';check.checked=!!state.tasks[t.id];if(check.checked)total++;check.addEventListener('change',()=>{state.tasks[t.id]=check.checked;save();$('#doneCount').textContent=Object.values(state.tasks).filter(Boolean).length+' اقدام انجام‌شده'});label.append(check,el('span','',t.label));panel.append(label)});root.append(panel)});$('#doneCount').textContent=total+' اقدام انجام‌شده'}
+function renderRoadmap(){const root=$('#roadmap');root.replaceChildren();const names=['۳۰ روز اول · کشف و شفاف‌سازی','۶۰ روز · آزمایش و اعتبارسنجی','۹۰ روز · تصمیم و اجرا'],desc=['خروجی: شناخت مشتری و فرضیات اصلی','خروجی: نتیجه آزمون ارزش و درآمد','خروجی: تصمیم مستند و برنامه اجرا'];let total=0;roadmapData().forEach((tasks,i)=>{const panel=el('div','phase');panel.append(el('h3','',names[i]),el('p','',desc[i]));tasks.forEach(t=>{const label=el('label','task'),check=el('input');check.type='checkbox';check.checked=!!state.tasks[t.id];if(check.checked)total++;check.addEventListener('change',()=>{state.tasks[t.id]=check.checked;save();$('#doneCount').textContent=Object.values(state.tasks).filter(Boolean).length+' اقدام انجام‌شده'});label.append(check,el('span','',t.label));panel.append(label)});root.append(panel)});$('#doneCount').textContent=total+' اقدام انجام‌شده'}
 
 const INDUSTRY_NAMES={service:'خدمات',retail:'فروشگاه و خرده‌فروشی',digital:'فناوری و نرم‌افزار',manufacturing:'تولید و صنعت',health:'سلامت و زیبایی',education:'آموزش',other:'سایر'};
 const STAGE_NAMES={idea:'ایده',testing:'آزمایش اولیه',running:'فعال',growing:'در حال رشد'};
@@ -306,7 +306,7 @@ function downloadCanvasReport(){
 function printFinal(){goto('final');document.body.classList.add('print-final');window.addEventListener('afterprint',()=>document.body.classList.remove('print-final'),{once:true});window.print();}
 
 
-function resetData(){if(!confirm('تمام اطلاعات این پروژه در این مرورگر پاک شود؟ این کار قابل بازگشت نیست.'))return;state=fresh();save();$$('.field input,.field select,.field textarea').forEach(i=>{if(i.dataset.profile)i.value=''});initProfile();goto('dashboard')}
+function resetData(){if(!confirm('تمام اطلاعات این پروژه در این مرورگر پاک شود؟ این کار قابل بازگشت نیست.'))return;state=fresh();save();initProfile();goto('dashboard')}
 function exportData(){const b=new Blob([JSON.stringify({application:'بوم کسب‌وکار',exportedAt:new Date().toISOString(),data:state},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=el('a');a.href=u;a.download='bmc-studio-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),900)}
 function readImport(file){if(!file)return;if(file.size>2000000){alert('فایل بسیار بزرگ است.');return}const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result),d=obj.data||obj;if(!d||d.version!==2||!d.profile||!d.answers||typeof d.answers!=='object')throw Error('format');if(!confirm('فایل جایگزین پروژه فعلی شود؟ ابتدا در صورت نیاز نسخه پشتیبان بگیرید.'))return;state=Object.assign(fresh(),d);save();initProfile();goto('dashboard');alert('پروژه بازیابی شد.')}catch(e){alert('فایل پشتیبان این برنامه معتبر نیست.')}};reader.readAsText(file)}
 function initProfile(){$$('#page-onboard [name]').forEach(input=>{const k=input.name;input.value=state.profile[k]===undefined?'':state.profile[k];input.oninput=input.onchange=()=>{state.profile[k]=input.value;save();renderDashboard()}});}
