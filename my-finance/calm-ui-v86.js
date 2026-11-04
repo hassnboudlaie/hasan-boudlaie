@@ -24,8 +24,8 @@
   const mark=document.createElement('span');
   mark.className='mf-calm-composer-icon';mark.setAttribute('aria-hidden','true');mark.textContent=icon;
   const title=document.createElement('strong');
-  title.textContent=label(titleFa,titleEn);
-  const hint=document.createElement('span');hint.className='mf-calm-composer-hint';hint.textContent=label('بازکردن','Open');
+  title.textContent=label(titleFa,titleEn);title.dataset.fa=titleFa;title.dataset.en=titleEn;
+  const hint=document.createElement('span');hint.className='mf-calm-composer-hint';hint.textContent=label('بازکردن','Open');hint.dataset.fa='بازکردن';hint.dataset.en='Open';
   summary.append(mark,title,hint);
   root.insertBefore(details,card);
   details.append(summary,card);
@@ -65,7 +65,7 @@
  const actions=home.querySelector('.mf-action-grid');
  if(actions&&!$('mf-calm-extras')){
   const extra=document.createElement('details');extra.id='mf-calm-extras';extra.className='mf-calm-extras';
-  const summary=document.createElement('summary');summary.textContent=label('سایر خدمات','Other tools');
+  const summary=document.createElement('summary');summary.textContent=label('سایر خدمات','Other tools');summary.dataset.fa='سایر خدمات';summary.dataset.en='Other tools';
   const grid=document.createElement('div');grid.className='mf-calm-extras-grid';
   for(const klass of ['mf-action-loans','mf-action-analysis','mf-action-reports','mf-action-assistant']){
    const action=actions.querySelector('.'+klass);
@@ -82,7 +82,9 @@
   details.id='mf-calm-insights';details.className='mf-calm-insights';
   const summary=document.createElement('summary');
   summary.innerHTML='<span class="mf-calm-insights-symbol" aria-hidden="true">▥</span><span class="mf-calm-insights-copy"></span><span class="mf-calm-chevron" aria-hidden="true">⌄</span>';
-  summary.querySelector('.mf-calm-insights-copy').textContent=label('گزارش مالی این ماه','This month');
+  const insightLabel=summary.querySelector('.mf-calm-insights-copy');
+  insightLabel.textContent=label('گزارش مالی این ماه','This month');
+  insightLabel.dataset.fa='گزارش مالی این ماه';insightLabel.dataset.en='This month';
   metrics.insertBefore(details,pair);
   details.append(summary,pair);
   if(receivables)details.append(receivables);
@@ -108,7 +110,7 @@
    const detail=document.createElement('details');detail.className='mf-calm-settings-detail';
    const summary=document.createElement('summary');
    const mark=document.createElement('span');mark.className='mf-calm-settings-icon';mark.setAttribute('aria-hidden','true');mark.textContent=icon;
-   const text=document.createElement('strong');text.textContent=label(fa,en);
+   const text=document.createElement('strong');text.textContent=label(fa,en);text.dataset.fa=fa;text.dataset.en=en;
    const chevron=document.createElement('span');chevron.textContent='⌄';chevron.className='mf-calm-chevron';
    summary.append(mark,text,chevron);
    const body=document.createElement('div');body.className='mf-calm-settings-body';
