@@ -313,7 +313,7 @@ function initProfile(){$$('#page-onboard [name]').forEach(input=>{const k=input.
 
 function init(){
  $$('[data-page]').forEach(b=>b.addEventListener('click',()=>goto(b.dataset.page)));
- $('[data-goto]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('main-action')&&!String(state.profile.businessName||'').trim())goto('onboard');else goto(b.dataset.goto)}));
+ $$('[data-goto]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('main-action')&&!String(state.profile.businessName||'').trim())goto('onboard');else goto(b.dataset.goto)}));
  $('#previousStep').addEventListener('click',()=>moveStep(-1));
  $('#nextStep').addEventListener('click',()=>moveStep(1));
  $('#regenerateCanvas').addEventListener('click',()=>{if(!confirm('بوم ویرایش‌شده با پاسخ‌های پرسشنامه جایگزین شود؟'))return;state.manual={};save();renderCanvas();renderDashboard()});
