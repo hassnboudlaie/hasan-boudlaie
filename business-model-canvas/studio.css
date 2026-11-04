@@ -65,11 +65,6 @@
 .sidebar{padding:11px;top:91px;box-shadow:none;border-color:#e0e9df}
 .navitem{padding:11px 10px;margin:0 0 3px;font-size:.89rem;min-height:47px;gap:9px}
 .navitem .ico{font-size:1.25rem;min-width:23px}
-.sidebar-more{margin-top:9px;border-top:1px solid var(--line);padding-top:8px}
-.sidebar-more summary{list-style:none;cursor:pointer;color:#587361;font-size:.79rem;font-weight:700;padding:10px 12px;display:flex;justify-content:space-between}
-.sidebar-more summary::-webkit-details-marker{display:none}
-.sidebar-extra{padding-top:2px}
-.sidebar-extra .navitem{font-size:.79rem}
 .header-menu{position:relative}
 .header-menu>summary{list-style:none;cursor:pointer;border-radius:12px;border:1px solid var(--line);background:#fff;padding:8px 13px;min-height:42px;display:flex;gap:8px;align-items:center;color:var(--deep);font-size:.85rem;font-weight:800}
 .header-menu>summary::-webkit-details-marker{display:none}
@@ -100,9 +95,9 @@
 .dashboard-bottom{display:flex;justify-content:flex-start;margin-top:15px;gap:10px}
 .dashboard-bottom .btn{font-weight:700;font-size:.78rem;min-height:39px}
 @media(max-width:950px){.layout{grid-template-columns:155px 1fr}.dashboard-actions{grid-template-columns:1fr}.dash-action{min-height:94px;padding:15px 17px 15px 75px;justify-content:center;gap:0}.dash-symbol{position:absolute;inset-inline-start:14px;top:calc(50% - 21px);margin:0;width:42px;height:42px}.dash-arrow{top:calc(50% - 9px);bottom:auto}}
-@media(max-width:800px){.app{padding-top:15px}.layout{display:block}.sidebar{position:static;display:flex;align-items:center;gap:4px;overflow-x:auto;border-radius:13px;padding:6px;margin-bottom:14px;box-shadow:none}.sidebar .navitem{flex:none;min-width:0;width:auto;padding:9px 12px;margin:0;white-space:nowrap;min-height:43px;font-size:.84rem}.sidebar-more{flex:none;padding:0;margin:0 0 0 2px;border:0;position:relative}.sidebar-more summary{white-space:nowrap;border-radius:10px;background:#f0f5ef;padding:11px 12px}.sidebar-extra{position:relative;display:flex;gap:4px}.sidebar-more[open]{display:flex;align-items:center}.sidebar-more[open] .sidebar-extra{padding:0}.dashboard-lead{padding:18px}.dashboard-actions{grid-template-columns:1fr;gap:10px}.dash-action{min-height:90px}.welcome{margin-bottom:13px}}
+@media(max-width:800px){.app{padding-top:15px}.layout{display:block}.sidebar{position:static;display:flex;align-items:center;gap:4px;overflow-x:auto;border-radius:13px;padding:6px;margin-bottom:14px;box-shadow:none}.sidebar .navitem{flex:none;min-width:0;width:auto;padding:9px 12px;margin:0;white-space:nowrap;min-height:43px;font-size:.84rem}.sidebar-more[open] .dashboard-lead{padding:18px}.dashboard-actions{grid-template-columns:1fr;gap:10px}.dash-action{min-height:90px}.welcome{margin-bottom:13px}}
 @media(max-width:550px){.top-inner{min-height:65px}.brand{gap:7px;font-size:.88rem}.brand .logo{padding:10px 11px;font-size:.95rem}.brand small{font-size:.61rem}.workspace-heading{display:none}.workspace-label select{min-width:0;width:110px;max-width:110px;padding:7px 5px}.header-menu>summary{padding:8px;font-size:.85rem}.header-menu>summary span{display:none}.header-menu-body{width:205px}.welcome h1{font-size:1.4rem}.welcome p{font-size:.8rem}.save-label{display:none}.dashboard-lead{gap:6px;padding:15px}.dashboard-count{padding-inline-start:10px;min-width:88px}.dashboard-count strong{font-size:1.08rem}.dashboard-lead h2{font-size:1.15rem}.dashboard-lead p{font-size:.76rem}.dash-action .dash-title{font-size:.96rem}.dash-action small{font-size:.75rem}.dashboard-bottom .btn{width:100%;justify-content:center}}
-@media print{.header-menu,.sidebar-more{display:none!important}}
+@media print{.header-menu,}
 
 
 .app-utilities{margin-top:16px;border:1px solid var(--line);border-radius:15px;background:#fff;overflow:hidden}
@@ -137,8 +132,6 @@
 .profile-more{grid-column:1/-1;margin-top:2px;border:1px solid #e2eae2;border-radius:13px;padding:0}
 .profile-more>summary{padding:12px 14px;cursor:pointer;color:#577361;font-size:.82rem;font-weight:700}
 .profile-extra-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:0 13px 14px}
-.sidebar-more{margin-top:6px}
-.sidebar-extra .navitem{font-size:.78rem}
 #page-final .final-document{padding:23px}
 #page-final .final-canvas{gap:10px}
 #page-final .final-block{border-radius:12px;padding:14px}
