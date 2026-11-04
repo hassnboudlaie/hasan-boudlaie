@@ -154,7 +154,7 @@ function goto(page){
  const allowed=['dashboard','onboard','wizard','canvas','roadmap','final'];if(!allowed.includes(page))page='dashboard';active=page;
  $$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
  $$('.navitem').forEach(b=>{const on=b.dataset.page===page;b.classList.toggle('active',on);b.setAttribute('aria-current',on?'page':'false')});
- if(page==='wizard')renderStep();if(page==='canvas')renderCanvas();if(page==='roadmap')renderRoadmap();if(page==='final')renderFinal();
+ if(page==='wizard')renderStep();if(page==='canvas')renderCanvas();if(page==='roadmap')renderRoadmap();if(page==='final'){renderFinal();restoreSubmissionReceipt();}
  renderDashboard();document.querySelector('main')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function el(tag,cls='',txt=''){const n=document.createElement(tag);if(cls)n.className=cls;if(txt)n.textContent=txt;return n}
@@ -311,6 +311,76 @@ function exportData(){const b=new Blob([JSON.stringify({application:'بوم کس
 function readImport(file){if(!file)return;if(file.size>2000000){alert('فایل بسیار بزرگ است.');return}const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result),d=obj.data||obj;if(!d||d.version!==2||!d.profile||!d.answers||typeof d.answers!=='object')throw Error('format');if(!confirm('فایل جایگزین پروژه فعلی شود؟ ابتدا در صورت نیاز نسخه پشتیبان بگیرید.'))return;state=Object.assign(fresh(),d);save();initProfile();goto('dashboard');alert('پروژه بازیابی شد.')}catch(e){alert('فایل پشتیبان این برنامه معتبر نیست.')}};reader.readAsText(file)}
 function initProfile(){$$('#page-onboard [name]').forEach(input=>{const k=input.name;input.value=state.profile[k]===undefined?'':state.profile[k];input.oninput=input.onchange=()=>{state.profile[k]=input.value;save();renderDashboard()}});}
 
+
+const SUBMISSION_URL='https://hxcjkewlaniahvuqwwbb.supabase.co/rest/v1/bmc_client_submissions';
+const SUBMISSION_PUBLIC_KEY="sb_publishable_KpklYvrvXyorJVy4gQOWAw_SA8zaQy6";
+function submissionStatus(message,kind='info'){
+ const status=$('#analystSubmitStatus');if(!status)return;
+ status.textContent=message;status.dataset.kind=kind;
+}
+function restoreSubmissionReceipt(){
+ const receipt=state.analystSubmission;
+ if(receipt&&receipt.id){
+  submissionStatus('نسخه قبلی با موفقیت ثبت شده است. کد پیگیری: '+receipt.id+' — پس از تغییر پاسخ‌ها می‌توانید نسخه جدیدی ارسال کنید.','ok');
+ }else{
+  submissionStatus('ارسال فقط با انتخاب دکمه بالا انجام می‌شود؛ تا پیش از آن داده‌ها روی همین دستگاه باقی می‌مانند.');
+ }
+}
+let submittingToAnalyst=false;
+async function sendToAnalyst(){
+ if(submittingToAnalyst)return;
+ const submitBtn=$('#submitToAnalyst');
+ const name=String(state.profile.ownerName||'').trim();
+ const business=String(state.profile.businessName||'').trim();
+ if(name.length<2||business.length<2){
+  submissionStatus('برای ارسال، نام تکمیل‌کننده و نام کسب‌وکار را در بخش «اطلاعات کسب‌وکار» ثبت کنید.','error');
+  alert('لطفاً نام تکمیل‌کننده و نام کسب‌وکار را ثبت کنید. سپس از «گزارش نهایی» ارسال را انجام دهید.');
+  goto('onboard');return;
+ }
+ const missing=BLOCKS.filter(b=>!blockValue(b.id)).map(b=>b.title);
+ if(missing.length){
+  submissionStatus('قبل از ارسال، این بخش‌های بوم را تکمیل کنید: '+missing.join('، ')+' .','error');
+  return;
+ }
+ if(!$('#analystConsent').checked){submissionStatus('برای اشتراک‌گذاری اطلاعات با تحلیلگر، ابتدا گزینه موافقت را فعال کنید.','error');return;}
+ if(!navigator.onLine){submissionStatus('اینترنت متصل نیست. پاسخ‌ها روی همین دستگاه حفظ شده‌اند؛ پس از اتصال دوباره ارسال کنید.','error');return;}
+ const id=crypto.randomUUID();
+ const submittedAt=new Date().toISOString();
+ const snapshot={
+  schema_version:1,
+  exported_at:submittedAt,
+  project_id:workspaceId,
+  application:'Business Model Canvas – Client Intake',
+  data:JSON.parse(JSON.stringify(state)),
+  report:buildFinalModel()
+ };
+ const packet={
+  id,contact_name:name,business_name:business,
+  industry:String(state.profile.industry||'other'),
+  completed_blocks:9,share_consent:true,source:'business-model-canvas/studio',
+  payload:snapshot
+ };
+ if(new Blob([JSON.stringify(snapshot)]).size>230000){
+  submissionStatus('حجم اطلاعات زیاد است. لطفاً نسخه پاسخ‌ها را دریافت و از طریق مشاور ارسال کنید.','error');return;
+ }
+ submittingToAnalyst=true;submitBtn.disabled=true;submitBtn.textContent='در حال ثبت اطلاعات...';
+ submissionStatus('در حال ثبت امن نسخه کامل بوم...');
+ try{
+  const response=await fetch(SUBMISSION_URL,{
+   method:'POST',
+   headers:{apikey:SUBMISSION_PUBLIC_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+   body:JSON.stringify(packet),cache:'no-store'
+  });
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  state.analystSubmission={id,submittedAt,modelUpdatedAt:state.updatedAt};
+  save();
+  submissionStatus('✓ تمام پاسخ‌ها و بوم ۹ بخشی با موفقیت برای تحلیلگر ثبت شد. کد پیگیری: '+id+' . برای تغییرات جدید، دوباره «ارسال به تحلیلگر» را انتخاب کنید.','ok');
+  $('#analystConsent').checked=false;
+ }catch(error){
+  submissionStatus('ثبت در سامانه تأیید نشد ('+(error.message||'خطای ارتباط')+'). پاسخ‌ها از بین نرفته‌اند. لطفاً دوباره تلاش کنید یا «نسخه تمام پاسخ‌ها» را دریافت کنید.','error');
+ }finally{submittingToAnalyst=false;submitBtn.disabled=false;submitBtn.textContent='ارسال به تحلیلگر';}
+}
+
 function init(){
  $$('[data-page]').forEach(b=>b.addEventListener('click',()=>goto(b.dataset.page)));
  $$('[data-goto]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('main-action')&&!String(state.profile.businessName||'').trim())goto('onboard');else goto(b.dataset.goto)}));
@@ -318,6 +388,8 @@ function init(){
  $('#nextStep').addEventListener('click',()=>moveStep(1));
  $('#regenerateCanvas').addEventListener('click',()=>{if(!confirm('بوم ویرایش‌شده با پاسخ‌های پرسشنامه جایگزین شود؟'))return;state.manual={};save();renderCanvas();renderDashboard()});
  $('#exportJSON').addEventListener('click',exportData);
+ $('#submitToAnalyst').addEventListener('click',sendToAnalyst);
+ $('#downloadFullAnswers').addEventListener('click',exportData);
  $('#importJSON').addEventListener('click',()=>$('#importFile').click());
  $('#importFile').addEventListener('change',e=>{readImport(e.target.files[0]);e.target.value=''});
  $('#clearAll').addEventListener('click',resetData);
