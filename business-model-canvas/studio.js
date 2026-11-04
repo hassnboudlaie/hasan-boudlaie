@@ -334,7 +334,7 @@ async function sendToAnalyst(){
  const business=String(state.profile.businessName||'').trim();
  if(name.length<2||business.length<2){
   submissionStatus('برای ارسال، نام تکمیل‌کننده و نام کسب‌وکار را در بخش «اطلاعات کسب‌وکار» ثبت کنید.','error');
-  alert('لطفاً نام تکمیل‌کننده و نام کسب‌وکار را ثبت کنید. سپس از «گزارش نهایی» ارسال را انجام دهید.');
+  alert('لطفاً نام تکمیل‌کننده و نام کسب‌وکار را ثبت کنید. سپس از «پیش‌نویس بوم» ارسال را انجام دهید.');
   goto('onboard');return;
  }
  const missing=BLOCKS.filter(b=>!blockValue(b.id)).map(b=>b.title);
