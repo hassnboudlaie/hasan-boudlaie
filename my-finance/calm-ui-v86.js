@@ -1,4 +1,4 @@
-/* My Finance v86 — calm, tap-first, multi-screen presentation layer.
+/* My Finance v87 — calm, tap-first, multi-screen presentation layer.
  * Intentionally does not read/write financial data, accounts, tokens or Supabase.
  * Existing routes, forms, element IDs and account-level permissions stay intact.
  */
@@ -57,10 +57,11 @@
  togglePanel('transfers','انتقال پول','Transfer money','⇄');
  togglePanel('receivables','ثبت طلب یا سرمایه‌گذاری','Add receivable','＋');
  togglePanel('commitments','تعهد جدید','New recurring payment','＋');
- // Move the always-needed notices directly below the main cash balance.
+ // Keep the main actions above reminders, matching a mobile banking task-first flow.
+ // Notices remain visible below the four primary action buttons.
  const notices=home.querySelector(':scope > .mf-home-notices');
  const bar=metrics.querySelector('.mf-command-bar');
- if(notices&&bar)metrics.insertBefore(notices,bar);
+ if(notices&&bar){metrics.insertBefore(notices,bar);metrics.insertBefore(bar,notices);}
  // Keep all eight quick actions, but show just four choices in the primary view.
  const actions=home.querySelector('.mf-action-grid');
  if(actions&&!$('mf-calm-extras')){
