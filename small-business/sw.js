@@ -1,7 +1,7 @@
 'use strict';
-const CACHE='hb-small-business-independent-v1';
+const CACHE='hb-small-business-independent-v2-browser-install';
 const PREFIX='hb-small-business-independent-';
-const FILES=['./','./index.html','./style.css','./steps.js','./app.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+const FILES=['./','./index.html','./style.css','./steps.js','./app.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./install.html','./pwa-install.js'];
 const BASE=new URL('./',self.registration.scope);
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(f=>new URL(f,BASE).href))).then(()=>self.skipWaiting()));
