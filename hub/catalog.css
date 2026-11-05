@@ -1,0 +1,30 @@
+/* HB Hub — full launcher: 19 distinct applications from the public catalog.
+   No embedded iframes, no cross-application storage or authentication. */
+.super-controls{display:grid;gap:13px;margin:20px 0 21px}
+.super-search{position:relative;width:min(100%,490px)}
+.super-search>span{position:absolute;inset-inline-start:15px;top:50%;transform:translateY(-50%);font-size:22px;color:#648778}
+.super-search input{border:1px solid #cbdcd1;border-radius:14px;background:white;color:#183f35;min-height:51px;width:100%;padding:10px 46px 10px 14px;font:600 14px Vazirmatn,Tahoma,Arial,sans-serif}
+.super-filters{display:flex;gap:8px;flex-wrap:wrap}
+.super-filters button{border:1px solid #c7dad0;background:#fff;color:#255b47;border-radius:999px;padding:7px 13px;font:750 12px/1.7 Vazirmatn,Tahoma,sans-serif;min-height:40px;cursor:pointer}
+.super-filters button[aria-pressed=true]{background:#164d3c;color:#fff;border-color:#164d3c}
+.super-directory{display:grid;gap:27px;margin:0 0 23px}
+.super-group-head{display:flex;align-items:center;gap:11px;margin:0 0 11px}
+.super-group-head h3{font-size:18px;margin:0;color:#183f36}
+.super-group-head .group-count{background:#e5f0e9;color:#306b52;font-size:12px;font-weight:850;padding:2px 11px;border-radius:999px}
+.super-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.super-app-link{border:1px solid #d9e8df;border-radius:16px;background:white;display:flex;align-items:center;gap:12px;min-width:0;min-height:89px;padding:14px;box-shadow:0 4px 15px #143d2308;text-decoration:none;color:#193f31;transition:transform .15s ease,border-color .15s ease}
+.super-app-link:hover{transform:translateY(-2px);border-color:#8fbda1}
+.super-app-media{width:57px;height:57px;min-width:57px;display:grid;place-items:center;overflow:hidden;border-radius:14px;background:#edf4ed}
+.super-app-media img{display:block;width:100%;height:100%;object-fit:contain}
+.super-app-media img[hidden]{display:none}
+.super-fallback{width:100%;height:100%;display:grid;place-items:center;font:900 17px Tahoma,sans-serif;background:#1a5442;color:#fff}
+.super-fallback[hidden]{display:none}
+.super-app-meta{flex:1;min-width:0;display:grid;gap:2px}
+.super-app-meta strong{font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+.super-app-meta small{font-size:11px;color:#6a8979}
+.super-arrow{font-size:17px;color:#679d7c}
+.super-no-results{border-radius:14px;border:1px dashed #a5c4b3;background:#f6fbf7;padding:18px;color:#597a67}
+.super-app-link[hidden],.super-group[hidden],.super-no-results[hidden]{display:none!important}
+@media(max-width:1050px){.super-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:630px){.super-grid{grid-template-columns:1fr 1fr;gap:9px}.super-app-link{padding:10px;min-height:100px;gap:8px;flex-direction:column;align-items:flex-start}.super-app-media{width:49px;height:49px;min-width:49px;border-radius:12px}.super-app-meta strong{font-size:12px}.super-app-meta small{display:none}.super-arrow{display:none}.super-group-head h3{font-size:16px}.super-filters button{font-size:11px;padding:7px 10px}.super-search{width:100%}}
+@media(prefers-reduced-motion:reduce){.super-app-link{transition:none}.super-app-link:hover{transform:none}}
