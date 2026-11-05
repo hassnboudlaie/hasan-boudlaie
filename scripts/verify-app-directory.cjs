@@ -64,6 +64,6 @@ assert.ok(read('okr-service/index.html').includes('./model.js?v=2'),'Independent
 assert.ok(read('okr-service/sw.js').includes("hb-public-okr-service-"),'Independent OKR app cache namespace is unique');
 assert.ok(read('hub/manifest.webmanifest').includes("Super App"),'Hub identity clarifies the super app role');
 assert.equal((hub.match(/data-kind="strategy"/g)||[]).length,2,'Public OKR and Kish OKR are two distinct Strategy entries');
-assert.equal((hub.match(/href="../okr-system/"/g)||[]).length,1,'Kish destination remains unmodified and unique inside Super App');
+assert.equal(hub.split('href="../okr-system/"').length-1,1,'Kish destination remains unmodified and unique inside Super App');
 
 console.log('PASS: 12 installed apps mapped correctly, public OKR separated from Kish, all 19 products in Super App; categories and links verified.');
