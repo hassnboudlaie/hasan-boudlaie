@@ -17,6 +17,13 @@ st.SabanaftLeadershipStudio.navigate('development');assert.equal(st.document.que
 st.document.querySelector('#dev-focus').value='C';st.document.querySelector('#dev-goal').value='پرسش باز در موقعیت واقعی';
 st.document.querySelector('#role-development-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
 assert.equal(st.SabanaftLeadershipStudio.getState().development.focus,'C');
+st.SabanaftLeadershipStudio.navigate('workbench');assert.ok(st.document.getElementById('wb-toolUsed'),'role-tool fit in case workbench');
+st.document.getElementById('wb-toolUsed').value='پرسش باز';
+st.document.getElementById('wb-toolFit').value='تناسب با نقش Coach و شرایط تیم';
+st.document.getElementById('decision-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
+assert.equal(st.SabanaftLeadershipStudio.getState().cases[0].toolUsed,'پرسش باز');
+assert.equal(st.SabanaftLeadershipStudio.getState().cases[0].toolFit,'تناسب با نقش Coach و شرایط تیم');
+
 st.document.querySelector('#dev-review-action').value='در گفت‌وگوی آزمایشی دو سؤال باز پرسیدم';
 st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
 assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews.length,1);
