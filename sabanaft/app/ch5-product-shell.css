@@ -1,81 +1,226 @@
-/* Reflective Leadership OS — Chapter 1–5 product-first shell, November 2026.
-   Scoped to Saba Naft PWA; data models, learning routes and other apps unchanged. */
-:root{--ch5-ink:#0b2443;--ch5-muted:#536982;--ch5-blue:#143d78;--ch5-teal:#078b8b;--ch5-line:#d9e5ed;--ch5-orange:#ee6d36}
-#homeView{max-width:1140px;margin-inline:auto}
-#homeView .hero{min-height:286px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(245px,.9fr);align-items:stretch;overflow:hidden;border-radius:27px;background:linear-gradient(125deg,#082b50,#174a76);box-shadow:0 14px 36px #123a6816}
-#homeView .hero-copy{padding:31px clamp(23px,3vw,46px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:11px}
-#homeView .hero .eyebrow{font-size:11px;letter-spacing:.03em;color:#add8ec}
-#homeView .hero h1{font-size:clamp(27px,3.6vw,43px);line-height:1.48;margin:0;max-width:650px;letter-spacing:-.8px}
-#homeView .hero-copy>p{font-size:15px;line-height:1.85;color:#e0edf9;margin:0;max-width:500px}
-#homeView .hero-actions{margin-top:13px;gap:10px}
-#homeView .hero-action{min-height:52px;border-radius:14px;font-weight:900;font-size:15px}
-#homeView .hero-secondary{background:#ffffff13;border-color:#ffffff6b;min-height:52px;font-size:14px;border-radius:14px}
-#homeView .hero-image{min-height:256px;position:relative}
-#homeView .hero-image:after{content:"";position:absolute;inset:0;background:linear-gradient(to left,transparent 30%,#082b50ad 100%);pointer-events:none}
-#homeView .hero-image img{height:100%;width:100%;object-fit:cover}
-#homeView .ch5-section-heading{margin:25px 2px 15px;display:flex;align-items:end;justify-content:space-between;gap:12px}
-#homeView .ch5-section-heading small{display:block;font-size:11px;letter-spacing:.07em;color:var(--ch5-teal);font-weight:900}
-#homeView .ch5-section-heading h2{font-size:clamp(21px,2.1vw,27px);line-height:1.5;margin:2px 0 0;color:var(--ch5-ink)}
-#homeView .ch5-section-heading p{margin:0;color:var(--ch5-muted);font-size:13px}
-#homeView .ch5-workspaces{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:0}
-#homeView .ch5-workspace{position:relative;min-width:0;min-height:202px;padding:20px 19px;display:flex;flex-direction:column;text-align:right;align-items:flex-start;gap:9px;border:1px solid #dde6ee;border-radius:22px;background:#fff;box-shadow:0 7px 21px #0d345a0b;color:var(--ch5-ink);transition:transform .17s,border-color .17s,box-shadow .17s}
-#homeView .ch5-workspace:first-child{border-color:#b3cbdc;background:linear-gradient(151deg,#f0f9fc,#fff 72%)}
-#homeView .ch5-workspace:hover{transform:translateY(-3px);border-color:#a4cfda;box-shadow:0 13px 26px #0b42711a}
-#homeView .ch5-workspace:focus-visible{outline:3px solid #eb9c45;outline-offset:3px}
-#homeView .ch5-workspace .ch5-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:#e9f6fa;color:#176288;font-size:26px;line-height:1;font-weight:700;flex-shrink:0}
-#homeView .ch5-workspace:nth-child(2) .ch5-icon{background:#e7f4ef;color:#148774}
-#homeView .ch5-workspace:nth-child(3) .ch5-icon{background:#edf0fa;color:#3857a0}
-#homeView .ch5-workspace:nth-child(4) .ch5-icon{background:#fff0e7;color:#c45f26}
-#homeView .ch5-workspace small{font-size:11px;color:#637d95;font-weight:750;line-height:1.5}
-#homeView .ch5-workspace strong{font-size:18px;font-weight:950;line-height:1.5;margin:0}
-#homeView .ch5-workspace .ch5-desc{font-size:12px;color:#516b81;line-height:1.7;max-width:260px;flex:1}
-#homeView .ch5-workspace .ch5-arrow{font-size:16px;color:#117a94;font-weight:900;align-self:flex-end}
-#homeView .ch5-learning-dock{margin-top:17px;border:1px solid #d9e6ef;background:linear-gradient(100deg,#eef5fa,#fff);border-radius:21px;padding:18px 23px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-#homeView .ch5-learning-dock .ch5-learning-copy{display:flex;align-items:center;gap:13px}
-#homeView .ch5-learning-dock .ch5-learning-symbol{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:white;color:#1c5d8e;font-size:24px}
-#homeView .ch5-learning-dock strong{display:block;font-size:16px;color:#123456}
-#homeView .ch5-learning-dock small{display:block;color:#617991;font-size:12px}
-#homeView .ch5-learning-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-#homeView .ch5-learning-actions>a,#homeView .ch5-learning-actions>button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:43px;border:1px solid #c2d9e8;border-radius:11px;background:#fff;color:#17547b;font-size:13px;font-weight:850;padding:8px 14px}
-#homeView .ch5-learning-actions>button{background:#164b78;color:#fff;border-color:#164b78}
-#homeView .ch5-resources{margin:21px 0 22px;border:1px solid #e2e9f0;border-radius:18px;background:#fff;overflow:hidden}
-#homeView .ch5-resources>summary{cursor:pointer;padding:17px 20px;font-size:14px;font-weight:850;color:#35546e;display:flex;align-items:center;justify-content:space-between}
-#homeView .ch5-resources>summary:after{content:"＋";font-size:21px;color:#3a85a2}
-#homeView .ch5-resources[open]>summary:after{content:"−"}
-#homeView .ch5-resources>summary::marker{content:""}
-#homeView .ch5-resource-body{padding:0 19px 20px}
-#homeView .ch5-resource-body .stats{margin-top:4px}
-#homeView .ch5-resource-body .home-learning-extra{margin-top:8px}
-#homeView .ch5-resource-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
-#homeView .ch5-resource-links a,#homeView .ch5-resource-links button{border:1px solid #dbe4ee;border-radius:12px;background:#f9fbfd;text-decoration:none;color:#245878;min-height:55px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;font-size:14px;font-weight:800}
-#homeView .ch5-resources .resume{margin-top:9px}
-#homeView .ch5-resources .home-learning-extra{padding-top:8px}
-#homeView .ch5-home-footnote{text-align:center;color:#75879a;font-size:11px;line-height:1.8;margin:13px 8px 20px}
-@media(max-width:980px){#homeView .ch5-workspaces{grid-template-columns:repeat(2,minmax(0,1fr))}#homeView .ch5-workspace{min-height:165px}#homeView .hero{grid-template-columns:1.08fr .92fr}}
-@media(max-width:700px){
- #homeView .hero{grid-template-columns:1fr;min-height:0;border-radius:21px}
- #homeView .hero-image{grid-row:1;min-height:122px;max-height:156px}
- #homeView .hero-image:after{background:linear-gradient(to top,#082b50d9,transparent 90%)}
- #homeView .hero-copy{padding:19px 20px 22px;gap:7px}
- #homeView .hero h1{font-size:28px;letter-spacing:0}
- #homeView .hero-copy>p{font-size:13px;line-height:1.75}
- #homeView .hero-actions{display:flex;flex-direction:row;align-items:stretch;flex-wrap:wrap;margin-top:10px}
- #homeView .hero-action,#homeView .hero-secondary{min-height:48px;font-size:13px}
- #homeView .ch5-section-heading{margin:23px 1px 12px}
- #homeView .ch5-section-heading h2{font-size:23px}
- #homeView .ch5-section-heading p{display:none}
- #homeView .ch5-workspaces{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
- #homeView .ch5-workspace{min-height:177px;border-radius:18px;padding:13px 14px;gap:5px}
- #homeView .ch5-workspace .ch5-icon{width:43px;height:43px;border-radius:13px;font-size:23px}
- #homeView .ch5-workspace strong{font-size:16px}
- #homeView .ch5-workspace small{font-size:10px}
- #homeView .ch5-workspace .ch5-desc{font-size:11px;line-height:1.55}
- #homeView .ch5-workspace .ch5-arrow{font-size:15px}
- #homeView .ch5-learning-dock{padding:15px;flex-direction:column;align-items:stretch;border-radius:18px}
- #homeView .ch5-learning-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
- #homeView .ch5-learning-actions>a,#homeView .ch5-learning-actions>button{padding:8px 10px;font-size:12px}
- #homeView .ch5-resources{margin:17px 0}
- #homeView .ch5-resource-links{grid-template-columns:1fr}
+/* Saba Naft Reflective Leadership OS | Full-bleed photographic home, 2026-11-05.
+   All styles scoped to the home route; learning, Case and studio content preserved. */
+body.saba-home{background:#071c30;color:#fff}
+body.saba-home .app-shell{max-width:none;width:100%;padding:0;min-height:100dvh;margin:0}
+body.saba-home #main{min-height:100dvh}
+body.saba-home .topbar{
+ position:absolute;z-index:16;top:0;inset-inline:0;height:84px;
+ max-width:none;padding:11px clamp(19px,4.5vw,70px);margin:0;
+ background:transparent;border:0;box-shadow:none;color:#fff;
 }
-@media(max-width:360px){#homeView .ch5-workspace strong{font-size:15px}#homeView .ch5-workspace{min-height:186px;padding:12px}}
-@media(prefers-reduced-motion:reduce){#homeView .ch5-workspace{transition:none}}
+body.saba-home .topbar .brand{gap:0;text-decoration:none}
+body.saba-home .topbar .brand img{
+ width:70px;height:54px;padding:5px;object-fit:contain;
+ background:rgba(255,255,255,.96);border-radius:13px;
+ box-shadow:0 6px 22px rgba(0,0,0,.23);
+}
+body.saba-home .topbar .brand span{display:none}
+body.saba-home .topbar .install{
+ min-height:43px;padding:7px 13px;background:rgba(255,255,255,.14);
+ border:1px solid rgba(255,255,255,.44);color:white;
+ border-radius:13px;font-size:13px;font-weight:800;backdrop-filter:blur(12px);
+ -webkit-backdrop-filter:blur(12px);
+}
+#homeView.active{
+ position:relative;isolation:isolate;overflow:hidden;width:100%;
+ max-width:none;margin:0;min-height:100dvh;min-height:100svh;
+ background:#071e33;color:#fff;
+}
+#homeView .saba-home-photo,#homeView .saba-home-scrim{position:absolute;inset:0;pointer-events:none}
+#homeView .saba-home-photo{z-index:0;overflow:hidden;background:#13304a}
+#homeView .saba-home-photo img{
+ display:block;width:100%;height:100%;min-height:100%;object-fit:cover;
+ object-position:50% 48%;filter:brightness(.84) saturate(.87);
+}
+#homeView .saba-home-scrim{
+ z-index:1;background:
+ linear-gradient(180deg,rgba(3,17,31,.65) 0%,rgba(3,18,33,.59) 25%,rgba(2,16,29,.79) 62%,rgba(2,13,24,.94) 100%),
+ linear-gradient(90deg,rgba(4,23,39,.23),rgba(4,23,39,.10),rgba(4,23,39,.23));
+}
+#homeView .saba-home-content{
+ position:relative;z-index:2;display:flex;align-items:center;
+ justify-content:center;flex-direction:column;text-align:center;
+ gap:clamp(22px,3.1vh,39px);width:min(100%,1160px);margin:0 auto;
+ min-height:100dvh;min-height:100svh;
+ padding:clamp(120px,15.5vh,180px) clamp(19px,4vw,55px) calc(128px + env(safe-area-inset-bottom));
+}
+#homeView .saba-home-heading{text-align:center;margin:0;max-width:900px}
+#homeView .saba-home-overline{
+ display:block;color:rgba(225,240,251,.82);
+ font-size:11px;font-weight:850;letter-spacing:.23em;line-height:1.7;
+ text-shadow:0 2px 10px rgba(0,0,0,.32);
+}
+#homeView .saba-home-heading h1{
+ color:#fff;font-size:clamp(34px,4.8vw,60px);line-height:1.48;
+ font-weight:950;letter-spacing:-.035em;margin:9px 0 3px;
+ text-shadow:0 5px 28px rgba(0,0,0,.46);
+}
+#homeView .saba-home-heading p{
+ margin:0;color:rgba(249,253,255,.94);font-size:clamp(15px,1.8vw,21px);
+ font-weight:600;line-height:1.8;text-shadow:0 3px 12px rgba(0,0,0,.48);
+}
+#homeView .saba-home-grid{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ width:min(100%,900px);gap:clamp(11px,1.45vw,17px);
+ margin:0 auto;align-items:stretch;
+}
+#homeView .saba-home-tile{
+ display:flex;align-items:center;justify-content:center;flex-direction:column;
+ gap:8px;min-height:173px;padding:18px 12px 14px;cursor:pointer;
+ color:white;text-align:center;border:1px solid rgba(245,252,255,.30);
+ border-radius:22px;
+ background:linear-gradient(152deg,rgba(244,251,255,.18),rgba(241,249,255,.075));
+ box-shadow:0 9px 28px rgba(0,10,25,.17),inset 0 1px 0 rgba(255,255,255,.13);
+ -webkit-backdrop-filter:blur(16px) saturate(1.18);backdrop-filter:blur(16px) saturate(1.18);
+ transition:background .17s ease,border-color .17s ease,transform .17s ease,box-shadow .17s ease;
+ font:inherit;
+}
+#homeView .saba-home-tile:hover{
+ background:linear-gradient(155deg,rgba(255,255,255,.27),rgba(235,250,255,.13));
+ border-color:rgba(255,255,255,.60);transform:translateY(-4px);
+ box-shadow:0 18px 33px rgba(0,10,25,.30);
+}
+#homeView .saba-home-tile:focus-visible,
+#homeView .saba-home-more>summary:focus-visible{
+ outline:3px solid #ffe2a3;outline-offset:4px;
+}
+#homeView .saba-tile-icon{
+ display:grid;place-items:center;width:62px;height:62px;
+ color:#fff;background:rgba(255,255,255,.11);
+ border:1px solid rgba(255,255,255,.15);border-radius:19px;
+}
+#homeView .saba-tile-icon svg{width:33px;height:33px}
+#homeView .saba-home-tile strong{
+ font-size:clamp(15px,1.55vw,19px);font-weight:900;line-height:1.55;
+ text-shadow:0 2px 7px rgba(0,0,0,.23);
+}
+#homeView .saba-home-tile small{
+ font:800 10px/1.4 Vazirmatn,Tahoma,sans-serif;letter-spacing:.04em;
+ color:rgba(230,247,255,.74);
+}
+#homeView .saba-home-more{
+ width:min(100%,650px);margin:0 auto;text-align:right;flex:0 0 auto;
+ color:#fff;border:0;background:transparent;box-shadow:none;
+}
+#homeView .saba-home-more>summary{
+ display:flex;align-items:center;justify-content:center;gap:9px;
+ width:max-content;max-width:100%;margin:0 auto;list-style:none;cursor:pointer;
+ border:1px solid rgba(255,255,255,.32);background:rgba(7,25,42,.43);
+ border-radius:999px;padding:10px 20px;min-height:44px;
+ font-size:13px;font-weight:850;line-height:1.6;color:#fff;
+ backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+ transition:background .15s ease;
+}
+#homeView .saba-home-more>summary::-webkit-details-marker{display:none}
+#homeView .saba-home-more>summary::marker{content:""}
+#homeView .saba-home-more>summary:hover{background:rgba(255,255,255,.16)}
+#homeView .saba-more-mark{font:500 21px/1 Arial,sans-serif}
+#homeView .saba-home-more[open] .saba-more-mark{transform:rotate(45deg)}
+#homeView .saba-more-panel{
+ margin-top:12px;padding:15px;border-radius:19px;
+ border:1px solid rgba(244,254,255,.27);
+ background:rgba(5,23,38,.80);
+ box-shadow:0 14px 39px rgba(0,0,0,.22);
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+#homeView .saba-more-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+}
+#homeView .saba-more-actions button,#homeView .saba-more-actions a{
+ display:flex;align-items:center;justify-content:center;
+ text-decoration:none;color:#fff;font:800 13px/1.6 Vazirmatn,Tahoma,sans-serif;
+ border:1px solid rgba(255,255,255,.26);border-radius:12px;
+ background:rgba(255,255,255,.10);min-height:48px;padding:10px;
+ cursor:pointer;
+}
+#homeView .saba-more-actions button:hover,#homeView .saba-more-actions a:hover{background:rgba(255,255,255,.20)}
+#homeView .saba-resume{
+ margin-top:10px;display:flex;align-items:center;justify-content:space-between;
+ gap:9px;min-height:50px;width:100%;padding:9px 15px;
+ color:#fff;border:1px solid rgba(255,255,255,.19);border-radius:12px;
+ background:rgba(255,255,255,.08);font:inherit;font-size:12px;text-align:right;
+}
+#homeView .saba-resume strong{font-size:12px;font-weight:850;color:#fff}
+#homeView .saba-resume:hover{background:rgba(255,255,255,.15)}
+#homeView .saba-home-hidden-progress{
+ display:flex;justify-content:space-between;align-items:center;gap:7px;
+ color:rgba(234,246,253,.82);margin:10px 2px 0;font-size:11px;
+}
+#homeView .saba-home-hidden-progress button{
+ color:#fff;background:none;border:0;text-decoration:underline;
+ text-underline-offset:4px;cursor:pointer;font-size:11px;
+}
+#homeView .saba-home-disclaimer{
+ margin:-11px 0 0;color:rgba(234,245,252,.68);
+ font-size:10px;line-height:1.8;text-align:center;
+ text-shadow:0 2px 7px rgba(0,0,0,.5);
+}
+body.saba-home .bottom-nav{
+ left:50%;right:auto;transform:translateX(-50%);bottom:max(10px,env(safe-area-inset-bottom));
+ width:min(475px,calc(100% - 26px));max-width:none;
+ padding:6px;border-radius:19px;
+ border:1px solid rgba(255,255,255,.28);
+ background:rgba(6,23,39,.70);box-shadow:0 10px 34px rgba(0,0,0,.32);
+ backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px);
+}
+body.saba-home .bottom-nav button{
+ width:25%;max-width:25%;min-width:0;min-height:54px;
+ color:rgba(240,250,255,.82);font-size:12px;
+ background:transparent;border-radius:14px;
+}
+body.saba-home .bottom-nav button>span{font-size:23px}
+body.saba-home .bottom-nav button small{color:inherit;font-size:11px}
+body.saba-home .bottom-nav button.active,
+body.saba-home .bottom-nav button[aria-current=page]{
+ background:rgba(245,252,255,.19);color:white;
+}
+@media (max-width:720px){
+ body.saba-home .topbar{height:72px;padding:9px 18px}
+ body.saba-home .topbar .brand img{width:61px;height:47px;border-radius:11px}
+ body.saba-home .topbar .install{min-height:38px;padding:6px 11px;font-size:12px}
+ #homeView .saba-home-photo img{object-position:53% 48%}
+ #homeView .saba-home-scrim{
+  background:linear-gradient(180deg,rgba(3,16,30,.50) 0%,rgba(3,16,30,.58) 20%,rgba(2,16,28,.82) 56%,rgba(2,12,23,.95) 100%);
+ }
+ #homeView .saba-home-content{
+  padding:102px 20px calc(112px + env(safe-area-inset-bottom));
+  min-height:100dvh;min-height:100svh;gap:24px;
+ }
+ #homeView .saba-home-overline{font-size:9px;letter-spacing:.13em}
+ #homeView .saba-home-heading h1{font-size:clamp(31px,8vw,42px);margin:8px 0 1px}
+ #homeView .saba-home-heading p{font-size:15px}
+ #homeView .saba-home-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,390px);gap:11px;
+ }
+ #homeView .saba-home-tile{min-height:134px;padding:12px 8px;border-radius:19px;gap:6px}
+ #homeView .saba-tile-icon{width:49px;height:49px;border-radius:16px}
+ #homeView .saba-tile-icon svg{width:28px;height:28px}
+ #homeView .saba-home-tile strong{font-size:16px}
+ #homeView .saba-home-tile small{font-size:9px}
+ #homeView .saba-home-more>summary{padding:9px 18px;font-size:12px;min-height:42px}
+ #homeView .saba-home-disclaimer{font-size:9px;max-width:280px;margin:-9px 0 0}
+ body.saba-home .bottom-nav{bottom:max(8px,env(safe-area-inset-bottom));width:calc(100% - 22px);border-radius:17px}
+ body.saba-home .bottom-nav button{min-height:50px}
+ body.saba-home .bottom-nav button>span{font-size:21px}
+ body.saba-home .bottom-nav button small{font-size:11px}
+}
+@media (max-height:720px) and (max-width:720px){
+ #homeView .saba-home-content{gap:15px;padding-top:88px;padding-bottom:98px}
+ #homeView .saba-home-heading h1{font-size:29px}
+ #homeView .saba-home-heading p{font-size:14px}
+ #homeView .saba-home-tile{min-height:115px}
+ #homeView .saba-tile-icon{width:42px;height:42px}
+ #homeView .saba-tile-icon svg{width:25px;height:25px}
+ #homeView .saba-home-tile strong{font-size:15px}
+ #homeView .saba-home-tile small{display:none}
+}
+@media (max-width:350px){
+ #homeView .saba-home-content{padding-left:12px;padding-right:12px}
+ #homeView .saba-home-grid{gap:8px}
+ #homeView .saba-home-tile{min-height:118px}
+ #homeView .saba-home-heading h1{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){
+ #homeView .saba-home-tile,#homeView .saba-home-more>summary{transition:none}
+ #homeView .saba-home-tile:hover{transform:none}
+}
