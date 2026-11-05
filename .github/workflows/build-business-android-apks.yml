@@ -1,0 +1,97 @@
+name: Build and publish three independent Android business APKs
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'android-business-suite/**'
+      - '.github/workflows/build-business-android-apks.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Configure Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager"; fi
+          if [ -x "$SDKMANAGER" ]; then
+            yes | "$SDKMANAGER" --licenses >/dev/null || true
+            "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+          else
+            echo "Android SDK manager not found"; exit 1
+          fi
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Build three uniquely identified APKs
+        working-directory: android-business-suite
+        run: gradle --no-daemon --stacktrace assembleBmcDebug assembleSmallDebug assembleOkrDebug
+      - name: Validate APKs, signatures and package identifiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}"
+          AAPT="$SDK/build-tools/35.0.0/aapt"
+          APKSIGNER="$SDK/build-tools/35.0.0/apksigner"
+          declare -A EXPECT=(
+            [bmc]=com.hasanboudlaie.businesscanvas
+            [small]=com.hasanboudlaie.smallbusiness
+            [okr]=com.hasanboudlaie.okrservice
+          )
+          mkdir -p dist
+          for flavor in bmc small okr; do
+            APK="android-business-suite/app/build/outputs/apk/$flavor/debug/app-$flavor-debug.apk"
+            test -s "$APK"
+            "$APKSIGNER" verify --verbose "$APK"
+            BADGING=$("$AAPT" dump badging "$APK")
+            echo "$BADGING" | grep -F "package: name='${EXPECT[$flavor]}'"
+            case "$flavor" in
+              bmc) OUTPUT=business-model-canvas.apk ;;
+              small) OUTPUT=small-business.apk ;;
+              okr) OUTPUT=okr-service.apk ;;
+            esac
+            cp "$APK" "dist/$OUTPUT"
+            sha256sum "dist/$OUTPUT"
+          done
+          test -s dist/business-model-canvas.apk
+          test -s dist/small-business.apk
+          test -s dist/okr-service.apk
+      - name: Upload backup downloadable artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: business-suite-three-independent-apks
+          path: dist/*.apk
+          if-no-files-found: error
+      - name: Publish direct public APK links in website downloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p downloads
+          cp dist/business-model-canvas.apk downloads/business-model-canvas.apk
+          cp dist/small-business.apk downloads/small-business.apk
+          cp dist/okr-service.apk downloads/okr-service.apk
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add downloads/business-model-canvas.apk downloads/small-business.apk downloads/okr-service.apk
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish three independently installable business Android APKs [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
