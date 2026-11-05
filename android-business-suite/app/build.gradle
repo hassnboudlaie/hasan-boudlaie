@@ -1,0 +1,46 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.hasanboudlaie.businessapps'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    flavorDimensions 'service'
+    productFlavors {
+        bmc {
+            dimension 'service'
+            applicationId 'com.hasanboudlaie.businesscanvas'
+            resValue 'string', 'app_name', 'بوم کسب‌وکار'
+            resValue 'string', 'start_url', 'https://hassnboudlaie.github.io/hasan-boudlaie/business-model-canvas/studio.html'
+            resValue 'string', 'allowed_prefix', '/hasan-boudlaie/business-model-canvas/'
+        }
+        small {
+            dimension 'service'
+            applicationId 'com.hasanboudlaie.smallbusiness'
+            resValue 'string', 'app_name', 'راه‌اندازی کسب‌وکار'
+            resValue 'string', 'start_url', 'https://hassnboudlaie.github.io/hasan-boudlaie/small-business/index.html'
+            resValue 'string', 'allowed_prefix', '/hasan-boudlaie/small-business/'
+        }
+        okr {
+            dimension 'service'
+            applicationId 'com.hasanboudlaie.okrservice'
+            resValue 'string', 'app_name', 'اهداف و نتایج کلیدی'
+            resValue 'string', 'start_url', 'https://hassnboudlaie.github.io/hasan-boudlaie/okr-consulting.html'
+            resValue 'string', 'allowed_prefix', '/hasan-boudlaie/okr-consulting.html'
+        }
+    }
+
+    buildFeatures { buildConfig true }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {}
