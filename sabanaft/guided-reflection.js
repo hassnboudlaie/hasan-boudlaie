@@ -30,8 +30,10 @@ function prompt(s,d){
  if(!t)return '';
  if(d.stage===0&&c)return 'برای کیس «'+c.title+'»: '+t.question+' لازم نیست شرح کامل کیس را تکرار کنید.';
  if(d.stage===1){var mix=s.mix||{},r=Object.keys(roleNames).filter(function(k){return mix[k]!==null&&Number(mix[k])>0;}).sort(function(a,b){return Number(mix[b])-Number(mix[a]);})[0];return t.question+(r?' در نقش غالب شما '+roleNames[r]+' دیده می‌شود، ولی این الزاماً نقش همین موقعیت نیست.':'');}
+ if(d.stage===2&&c&&c.toolUsed)return 'در کیس، روش یا ابزار «'+c.toolUsed+'» ثبت شده بود. '+t.question+' آیا با نقش واقعی شما تناسب داشت؟';
  if(d.stage===2&&d.role)return 'با ایفای نقش '+roleNames[d.role]+'، '+t.question;
  if(d.stage===3)return t.question+' از برچسب‌زدن به نیت دیگران پرهیز کنید.';
+ if(d.stage===4&&c&&c.toolFit)return 'در کیس، برای تناسب ابزار و نقش چنین استدلال کردید: «'+c.toolFit+'». با تجربه واقعی، چه چیزی را بازبینی می‌کنید؟ '+t.question;
  if(d.stage===4&&d.role)return 'وقتی نقش '+roleNames[d.role]+' را انتخاب کردید، '+t.question;
  return t.question;
 }
