@@ -411,7 +411,7 @@ function init(){
  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();prompt=e;$('#installButton').textContent='نصب برنامه'});
  $('#installButton').addEventListener('click',async()=>{
   if(prompt){prompt.prompt();await prompt.userChoice;prompt=null;$('#installButton').textContent='راهنمای نصب';return}
-  alert(/iPad|iPhone|iPod/.test(navigator.userAgent)?'برای نصب روی آیفون، در مرورگر سافاری گزینه اشتراک‌گذاری و سپس افزودن به صفحه اصلی را انتخاب کنید.':'برای نصب روی گوشی، از منوی مرورگر گزینه نصب برنامه یا افزودن به صفحه اصلی را انتخاب کنید.')
+  window.location.href='./install.html'
  });
  window.addEventListener('appinstalled',()=>$('#installButton').textContent='نصب شده');
  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));
