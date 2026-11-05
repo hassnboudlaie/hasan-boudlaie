@@ -6,7 +6,18 @@ function renderActions(){
  const data=bridge.getData(),items=[...(data.receivables||[])].reverse();
  const cards=$('rcvlist')?.querySelectorAll('.notice')||[];
  cards.forEach((card,index)=>{
-  const r=items[index];if(!r||r.status==='paid'||r.expected==null||card.querySelector('button[data-rcv]'))return;
+  const r=items[index];
+  if(!r)return;
+  if(r.pendingSettlementStatus==='awaiting_bank_credit'&&Number(r.pendingSettlementIRT)>0&&!card.querySelector('[data-pending-bank-credit]')){
+   const note=document.createElement('p');
+   note.dataset.pendingBankCredit='true';
+   note.className='muted';
+   note.style.cssText='font-size:14px;line-height:1.9;margin:10px 0;padding:11px;border:1px solid var(--line);border-radius:12px;';
+   const usd=Number(r.pendingSettlementUSDApprox)||0;
+   note.textContent='⏳ حواله '+money(r.pendingSettlementIRT)+' تومان به حساب '+(r.pendingSettlementBank||'مقصد')+'؛ در انتظار تأیید وصول بانکی. معادل تقریبی '+money(usd)+' دلار از این طلب؛ پس از تأیید وصول کسر می‌شود.';
+   card.append(note);
+  }
+  if(r.status==='paid'||r.expected==null||card.querySelector('button[data-rcv]'))return;
   const remain=Math.max(0,Number(r.expected||0)-Number(r.receivedAmount||0));
   const button=document.createElement('button');button.className='alt';
   button.dataset.rcv=r.id;button.textContent='ثبت وصول ('+money(remain)+' '+r.currency+')';
