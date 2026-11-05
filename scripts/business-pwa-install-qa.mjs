@@ -9,7 +9,8 @@ await fs.mkdir(dir,{recursive:true});
 const browser=await chromium.launch({headless:true});
 const sites=[
  {name:'Business Model Canvas',slug:'business-model-canvas',entry:'studio.html',headline:'بوم کسب‌وکار'},
- {name:'Small Business',slug:'small-business',entry:'index.html',headline:'راه‌اندازی و رشد کسب‌وکار'}
+ {name:'Small Business',slug:'small-business',entry:'index.html',headline:'راه‌اندازی و رشد کسب‌وکار'},
+ {name:'OKR service guide',slug:'okr-service',entry:'index.html',headline:'اهداف و نتایج کلیدی'}
 ];
 const results=[],issues=[],ids=[];
 function record(name,pass,reason=''){const item={name,pass,reason};results.push(item);console.log((pass?'PASS ':'FAIL ')+name+(reason?' — '+reason:''))}
@@ -64,12 +65,13 @@ for(const site of sites){
   await page.locator('#install').click();
   const status=await page.locator('#status').innerText();
   assert(status.includes('منوی')||status.includes('نصب'),'No accessible installation guidance');
-  const label=await page.locator('a.alt').getAttribute('href');
+  const launcher=page.locator(site.slug==='okr-service'?'a[href="./index.html"]':'a.alt');
+  const label=await launcher.getAttribute('href');
   assert.equal(label,'./'+site.entry,'Landing link not in same app');
-  await page.locator('a.alt').click();
+  await launcher.click();
   await page.waitForURL(base+site.entry,{timeout:10000});
   await page.locator('body').waitFor();
-  assert((await page.locator('body').innerText()).includes(site.name==='Business Model Canvas'?'بوم':'کسب‌وکار'),'App page failed');
+  assert((await page.locator('body').innerText()).includes(site.slug==='okr-service'?'اهداف و نتایج کلیدی':site.name==='Business Model Canvas'?'بوم':'کسب‌وکار'),'App page failed');
   await page.screenshot({path:path.join(dir,site.slug+'.png'),fullPage:true});
   record(site.name+' installation page, manifest, scoped service worker, and correct app',true);
  }catch(error){
@@ -77,8 +79,8 @@ for(const site of sites){
   await page.screenshot({path:path.join(dir,'FAIL-'+site.slug+'.png'),fullPage:true}).catch(()=>{});
  }finally{await ctx.close()}
 }
-try{assert.equal(new Set(ids).size,2,'Installed app IDs collide');record('Two apps have unique install IDs',true,ids.join(' / '))}
-catch(e){record('Two apps have unique install IDs',false,e.message)}
+try{assert.equal(new Set(ids).size,3,'Installed app IDs collide');record('Three apps have unique install IDs',true,ids.join(' / '))}
+catch(e){record('Three apps have unique install IDs',false,e.message)}
 {
  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true});
  const page=await ctx.newPage();page.on('pageerror',error=>issues.push('catalog: '+error.message));
@@ -87,6 +89,7 @@ catch(e){record('Two apps have unique install IDs',false,e.message)}
   assert(response?.ok());
   assert.equal(await page.locator('a[href="../business-model-canvas/install.html"]').count(),1);
   assert.equal(await page.locator('a[href="../small-business/install.html"]').count(),1);
+  assert.equal(await page.locator('a[href="../okr-service/install.html"]').count(),1);
   assert.equal(await page.locator('a[href$=".apk"]').count(),0,'Unsafe APK promoted as primary download');
   assert.equal(await page.locator('a[href$=".zip"]').count(),0,'APK ZIP sideload promoted');
   record('Public app installer directory routes to safe PWA installation',true);
