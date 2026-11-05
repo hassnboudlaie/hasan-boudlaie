@@ -1,7 +1,7 @@
 package com.hasanboudlaie.businessapps;
 
 import android.app.Activity;
-import android.app.PrintManager;
+import android.print.PrintManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
