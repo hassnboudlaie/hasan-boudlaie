@@ -1,0 +1,40 @@
+name: Business apps PWA installation QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'business-model-canvas/**'
+      - 'small-business/**'
+      - 'downloads/install.html'
+      - 'scripts/business-pwa-install-qa.mjs'
+      - '.github/workflows/business-pwa-install-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installability:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser installation test syntax
+        run: node --check scripts/business-pwa-install-qa.mjs
+      - name: Install open-source browser test framework
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Audit PWA identity, icons, offline registration, and install pages
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/business-pwa-install-http.log 2>&1 &
+          sleep 3
+          node scripts/business-pwa-install-qa.mjs
+      - name: Publish screenshots and test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: business-pwa-installation-qa
+          path: artifacts/business-pwa-install/
+          if-no-files-found: warn
