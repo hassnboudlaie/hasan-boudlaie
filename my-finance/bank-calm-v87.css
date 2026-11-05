@@ -7,3 +7,5 @@ body.finance-unlocked.mf-calm-ui #home .mf-bank-overview-head strong{font-size:1
 body.finance-unlocked.mf-calm-ui #home .mf-bank-overview-head button{background:transparent!important;border:0!important;box-shadow:none!important;color:var(--accent)!important;font-size:14px!important}
 body.finance-unlocked.mf-calm-ui #home .mf-bank-row{display:flex!important;align-items:center!important;justify-content:space-between!important;width:100%!important;min-height:63px!important;gap:9px!important}
 body.finance-unlocked.mf-calm-ui #home .mf-bank-row{padding:10px 2px!important;background:transparent!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;color:var(--fg)!important;text-align:start!important}
+body.finance-unlocked.mf-calm-ui #home .mf-bank-row:last-child{border-bottom:0!important}
+body.finance-unlocked.mf-calm-ui #home .mf-bank-name{display:flex;align-items:center;min-width:0;gap:9px;flex:1}
