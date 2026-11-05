@@ -1,15 +1,15 @@
 {
-  "name": "اهداف و نتایج کلیدی — راهنمای خدمت",
+  "name": "اهداف و نتایج کلیدی | OKR",
   "short_name": "اهداف کلیدی",
-  "description": "راهنمای مستقل خدمت اهداف و نتایج کلیدی؛ سامانه عمومی در مرحله طراحی",
+  "description": "اپلیکیشن مستقل و تعاملی OKR با نقشه راهبرد، Objectives، Key Results، KPI، Initiatives و Weekly Check-ins؛ مبتنی بر مفاهیم Perdoo 3.0",
   "lang": "fa-IR",
   "dir": "rtl",
   "id": "./",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fa",
-  "theme_color": "#1b4668",
+  "background_color": "#f4f7fb",
+  "theme_color": "#122e49",
   "icons": [
     {
       "src": "./icon.svg",
