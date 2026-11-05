@@ -5,6 +5,7 @@ on:
     paths:
       - 'business-model-canvas/**'
       - 'small-business/**'
+      - 'okr-service/**'
       - 'downloads/install.html'
       - 'scripts/business-pwa-install-qa.mjs'
       - '.github/workflows/business-pwa-install-qa.yml'
