@@ -3,3 +3,5 @@ body.finance-unlocked.mf-calm-ui #home .mf-bank-overview{display:block!important
 
 body.finance-unlocked.mf-calm-ui #home .mf-bank-rows{display:flex;flex-direction:column;padding:0 12px}
 body.finance-unlocked.mf-calm-ui #home .mf-bank-overview-head{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:10px 15px;border-bottom:1px solid var(--line)}
+body.finance-unlocked.mf-calm-ui #home .mf-bank-overview-head strong{font-size:17px;font-weight:800}
+body.finance-unlocked.mf-calm-ui #home .mf-bank-overview-head button{background:transparent!important;border:0!important;box-shadow:none!important;color:var(--accent)!important;font-size:14px!important}
