@@ -47,8 +47,17 @@ jobs:
       - name: Preserve a consistent Android signing identity
         uses: actions/cache@v4
         with:
-          path: ~/.android/debug.keystore
+          path: android-business-suite/.signing/debug.keystore
           key: hb-business-suite-debug-signing-v1
+      - name: Initialize the one-time private signing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p android-business-suite/.signing
+          if [ ! -s android-business-suite/.signing/debug.keystore ]; then
+            keytool -genkeypair -noprompt -keystore android-business-suite/.signing/debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Hasan Business Apps,O=HB,C=IR'
+          fi
+          test -s android-business-suite/.signing/debug.keystore
       - name: Build three uniquely identified APKs
         working-directory: android-business-suite
         run: gradle --no-daemon --stacktrace assembleBmcDebug assembleSmallDebug assembleOkrDebug
