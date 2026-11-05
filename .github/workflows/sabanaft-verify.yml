@@ -1,0 +1,39 @@
+name: Saba Naft regression
+on:
+  pull_request:
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-verify.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-verify.yml'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install isolated DOM test dependency
+        run: npm install --prefix /tmp/saba-test-deps --no-save --no-package-lock --ignore-scripts jsdom@26
+      - name: Static syntax verification
+        run: |
+          node --check sabanaft/role-development.js
+          node --check sabanaft/guided-reflection.js
+          node --check sabanaft/app/coaching-journey.js
+          node --check sabanaft/verify-chapters.cjs
+      - name: Book-aligned core regression
+        run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-reflective.cjs
+      - name: Case & coaching regression
+        run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-coaching.cjs
+      - name: Chapters 1–5 regression
+        run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-chapters.cjs
