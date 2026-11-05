@@ -1,0 +1,33 @@
+{
+  "name": "اهداف و نتایج کلیدی — راهنمای خدمت",
+  "short_name": "اهداف کلیدی",
+  "description": "راهنمای مستقل خدمت اهداف و نتایج کلیدی؛ سامانه عمومی در مرحله طراحی",
+  "lang": "fa-IR",
+  "dir": "rtl",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#1b4668",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
