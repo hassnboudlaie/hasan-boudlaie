@@ -157,6 +157,10 @@ function render(){
    section.append(h,cards);all.appendChild(section);
   });
   root.appendChild(all);
+  const pilot=el('section','container');pilot.style.cssText='padding:22px;margin-bottom:35px;background:#edf6fb;border:1px solid #cde0eb;border-radius:17px';
+ pilot.appendChild(el('h2','', 'اپلیکیشن اهداف و نتایج کلیدی (OKR)'));
+ pilot.appendChild(el('p','', 'بر اساس مفاهیم Perdoo 3؛ نقشه راهبرد، اهداف، نتایج کلیدی، KPI و بازبینی هفتگی. پایلوت مستقل با ذخیره محلی و بدون ارتباط با سامانه OKR کیش.'));
+ const go=el('a','item','ورود به اپلیکیشن OKR عمومی ←');go.href='../okr-service/index.html';go.style.cssText='display:inline-flex;margin-top:12px;max-width:320px';pilot.appendChild(go);root.appendChild(pilot);
   return;
  }
  const section=el('div','container'),crumbs=el('div','breadcrumbs');
@@ -171,6 +175,7 @@ function render(){
  const [key,en,fa]=item.page, title=t(en,fa);
  document.title=title+' | مدیریت استراتژیک';
  root.appendChild(hero(title,t('Content preparation is pending.','محتوای این صفحه هنوز تدوین نشده است.')));
+ if(key==='solutions/goals'){const panel=el('section','container');panel.style.cssText='padding:18px 20px;margin:20px auto;background:#eff8fb;border:1px solid #cce0e9;border-radius:14px';panel.appendChild(el('p','', 'محصول عمومی اهداف و نتایج کلیدی، یک اپ مستقل مبتنی بر مفاهیم Perdoo 3 است؛ سامانه OKR کیش یک محصول جداگانه است.'));const a=el('a','item','ورود به اپلیکیشن OKR ←');a.href='../okr-service/index.html';panel.appendChild(a);root.appendChild(panel);}
  const body=el('section','container detail');
  const blocks=(window.STRATEGY_CONTENT||{})[key];
  if(Array.isArray(blocks)&&blocks.length){
