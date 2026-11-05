@@ -34,6 +34,42 @@ assert.equal(st.SabanaftLeadershipStudio.getState().cases[0].toolFit,'تناسب
 st.SabanaftLeadershipStudio.navigate('development');st.document.querySelector('#dev-review-action').value='در گفت‌وگوی آزمایشی دو سؤال باز پرسیدم';
 st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
 assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews.length,1);assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews[0].caseId,'old');
+// Independent retention regressions: real input events, navigation, restore, quota failure.
+const api=st.SabanaftLeadershipStudio, state=api.dialogueBridge.state();
+api.navigate('daily');
+function typeDraft(value){const el=st.document.getElementById('gd-answer');el.value=value;el.dispatchEvent(new st.Event('input',{bubbles:true}));}
+function submitDialogue(){st.document.getElementById('guided-reflection-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));}
+const answer='پاسخ آزمایشی با <متن> و & علامت';
+typeDraft(answer);
+assert.equal(JSON.parse(st.localStorage.getItem('sabanaft_leadership_studio_v1')).guidedDialogue.answers.moment,answer);
+api.navigate('development');api.navigate('daily');
+assert.equal(st.document.getElementById('gd-answer').value,answer,'unsent text survives route change');
+submitDialogue();typeDraft('پاسخ مرحله دوم برای حفظ پیش نویس');
+st.document.querySelector('[data-gd-back]').click();
+assert.equal(st.document.getElementById('gd-answer').value,answer,'Back prefills submitted answer safely');
+typeDraft('پاسخ ویرایش شده در مرحله اول');submitDialogue();
+assert.equal(st.document.getElementById('gd-answer').value,'پاسخ مرحله دوم برای حفظ پیش نویس','later draft survives editing an earlier answer');
+const restored={};st.SabaGuidedReflection.restore(restored,JSON.parse(st.localStorage.getItem('sabanaft_leadership_studio_v1')));
+assert.equal(restored.guidedDialogue.stage,1);assert.equal(restored.guidedDialogue.answers.action,'پاسخ مرحله دوم برای حفظ پیش نویس');
+// First-step draft must require confirmation before a new dialogue discards it.
+state.guidedDialogue.stage=0;api.dialogueBridge.render();let confirmations=0;st.confirm=()=>{confirmations++;return false;};
+st.document.querySelector('[data-gd-reset]').click();assert.equal(confirmations,1);assert.equal(state.guidedDialogue.answers.moment,'پاسخ ویرایش شده در مرحله اول');
+// More than 60 development reviews survive a new entry and full normalization.
+api.navigate('development');state.development.reviews=Array.from({length:65},(_,i)=>({date:'2026-11-05',caseId:'old',action:'retained review '+i,evidence:'',learning:''}));
+st.document.querySelector('#dev-review-action').value='مرور شصت و ششم برای کنترل حفظ سوابق';
+st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
+assert.equal(state.development.reviews.length,66);assert.equal(state.development.reviews[0].action,'retained review 0');
+const reloaded={};st.SabaRoleDevelopment.restore(reloaded,JSON.parse(st.localStorage.getItem('sabanaft_leadership_studio_v1')));
+assert.equal(reloaded.development.reviews.length,66);assert.equal(reloaded.development.reviews[0].action,'retained review 0');
+// Keep earlier save-failure assertion independent of the history-size test.
+state.development.reviews=state.development.reviews.slice(-1);api.developmentBridge.save();
+const originalSetItem=st.Storage.prototype.setItem;st.Storage.prototype.setItem=function(){throw Error('quota')};
+api.navigate('daily');typeDraft('پیش نویس هنگام پر بودن حافظه');api.navigate('development');api.navigate('daily');
+assert.equal(st.document.getElementById('gd-answer').value,'پیش نویس هنگام پر بودن حافظه','failed save retains in-session text');
+const unload=new st.Event('beforeunload',{cancelable:true});st.dispatchEvent(unload);assert.ok(unload.defaultPrevented,'failed persistence warns before closing');
+st.Storage.prototype.setItem=originalSetItem;typeDraft('پیش نویس پس از بازیابی امکان ذخیره');
+assert.equal(JSON.parse(st.localStorage.getItem('sabanaft_leadership_studio_v1')).guidedDialogue.answers.moment,'پیش نویس پس از بازیابی امکان ذخیره');
+
 st.SabanaftLeadershipStudio.navigate('review');st.document.querySelector('#r-actual').value='نتیجه آزمایشی';st.Storage.prototype.setItem=function(){throw Error('quota')};st.document.querySelector('#reflection-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));assert.equal(st.SabanaftLeadershipStudio.getState().reflections.length,0);assert.equal(st.document.querySelector('#r-actual').value,'نتیجه آزمایشی');assert.match(st.document.querySelector('#toast').textContent,/موفق نبود/);
 st.SabanaftLeadershipStudio.navigate('development');st.document.querySelector('#dev-review-action').value='یک تمرین دیگر انجام شد';
 st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));

@@ -18,7 +18,7 @@ function restore(s,raw){
   d.focus=roles[x.focus]?x.focus:'';d.caseId=clean(x.caseId,55);
   ['goal','microAction','superiorExpectations','authorityLimit','supportRequest'].forEach(function(k){d[k]=clean(x[k],900);});
   d.due=clean(x.due,20);
-  if(Array.isArray(x.reviews))d.reviews=x.reviews.slice(-60).filter(function(r){return r&&typeof r==='object';}).map(function(r){return {date:clean(r.date,30),caseId:clean(r.caseId,55),action:clean(r.action,800),evidence:clean(r.evidence,800),learning:clean(r.learning,800)};});
+  if(Array.isArray(x.reviews))d.reviews=x.reviews.filter(function(r){return r&&typeof r==='object';}).map(function(r){return {date:clean(r.date,30),caseId:clean(r.caseId,55),action:clean(r.action,800),evidence:clean(r.evidence,800),learning:clean(r.learning,800)};});
  }
  s.development=d;
 }
@@ -70,7 +70,6 @@ function handle(e){
   var a=clean(document.getElementById('dev-review-action').value,800);
   if(a.length<8){b.toast('برای ثبت مرور، اقدام واقعی انجام‌شده را روشن‌تر بنویسید.');return;}
   d.reviews.push({date:new Date().toLocaleDateString('fa-IR'),caseId:d.caseId||'',action:a,evidence:clean(document.getElementById('dev-review-evidence').value,800),learning:clean(document.getElementById('dev-review-learning').value,800)});
-  if(d.reviews.length>60)d.reviews=d.reviews.slice(-60);
  }
  s.development=d;
  if(!b.save()){s.development=old;b.toast('ذخیره انجام نشد؛ متن فرم را نگه دارید یا در حافظه دیگری کپی کنید.');return;}
@@ -83,7 +82,7 @@ document.addEventListener('click',function(e){
  var s=b.state(),d=s.development||fresh(),caseId=d.caseId;
  if(!caseId||!s.cases||!s.cases.some(function(c){return c.id===caseId;})){b.go('daily');return;}
  var old=JSON.parse(JSON.stringify(s.guidedDialogue||{}));
- if(s.guidedDialogue&&s.guidedDialogue.stage>0&&!window.confirm('پیش‌نویس بازاندیشی فعلی با گفت‌وگوی تازه جایگزین شود؟'))return;
+ if(window.SabaGuidedReflection&&window.SabaGuidedReflection.hasDraft(s.guidedDialogue)&&!window.confirm('پیش‌نویس بازاندیشی فعلی با گفت‌وگوی تازه جایگزین شود؟'))return;
  if(!window.SabaGuidedReflection){b.go('daily');return;}
  s.guidedDialogue=window.SabaGuidedReflection.fresh();s.guidedDialogue.caseId=caseId;
  if(!b.save()){s.guidedDialogue=old;b.toast('انتقال کیس به بازاندیشی ذخیره نشد.');return;}
