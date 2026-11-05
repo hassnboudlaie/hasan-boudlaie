@@ -77,17 +77,19 @@ function searchText(t,accounts,date){
  const gregDate=date?parts(greg,date):null;
  const dateText=gregDate?gregDate.year+'-'+String(gregDate.month).padStart(2,'0')+'-'+String(gregDate.day).padStart(2,'0'):'';
  return normal([kind,t.category,t.memo,t.scope,t.status,t.amount,number.format(t.amount),
-  t.currency,account?.name,t.accountName,solarDate(date),dateText].join(' '));
+  t.currency,account?.name,t.accountName,accounts.find(a=>a.id===t.toAccount)?.name,solarDate(date),dateText].join(' '));
 }
 function row(t,accounts,date,expanded=false){
  const account=accounts.find(a=>a.id===t.account);
+ const internal=t.internalTransfer===true;
+ const destination=accounts.find(a=>a.id===t.toAccount);
  const kind=t.kind==='income'?'income':t.kind==='expense'?'expense':t.kind==='investment'?'investment':'other';
- const type=t.kind==='investment'&&/قرض/.test(t.category||'')?(en()?'Loan paid':'پرداخت اصل قرض'):en()?({income:'Income',expense:'Expense',investment:'Investment',transfer:'Transfer'}[t.kind]||'Transaction'):({income:'درآمد',expense:'هزینه',investment:'سرمایه‌گذاری',transfer:'انتقال'}[t.kind]||'تراکنش');
+ const type=internal?(en()?'Own-account transfer':'انتقال داخلی'):t.kind==='investment'&&/قرض/.test(t.category||'')?(en()?'Loan paid':'پرداخت اصل قرض'):en()?({income:'Income',expense:'Expense',investment:'Investment',transfer:'Transfer'}[t.kind]||'Transaction'):({income:'درآمد',expense:'هزینه',investment:'سرمایه‌گذاری',transfer:'انتقال'}[t.kind]||'تراکنش');
  const status=t.status==='pending'?(en()?'Pending':'در انتظار پرداخت'):t.status==='cancelled'?(en()?'Cancelled':'لغوشده'):'';
  const title=String(t.category||type).trim();
  const currency=t.currency||account?.currency||'';
- const sign=['expense','investment'].includes(kind)?'−':(kind==='income'||(t.kind==='transfer'&&t.direction==='incoming'))?'+':(t.kind==='transfer'&&t.direction==='outgoing')?'−':'';
- const accountName=account?.name||t.accountName||'';
+ const sign=internal?'⇄':['expense','investment'].includes(kind)?'−':(kind==='income'||(t.kind==='transfer'&&t.direction==='incoming'))?'+':(t.kind==='transfer'&&t.direction==='outgoing')?'−':'';
+ const accountName=internal?[account?.name||'حساب مبدأ',destination?.name||'حساب مقصد'].join(' ← '):(account?.name||t.accountName||'');
  const amount=number.format(Number(t.amount)||0);
  const dateText=solarDate(date,true);
  return '<details class="tx-ledger-item"'+(expanded?' open':'')+'><summary class="tx-ledger-summary">'
@@ -101,14 +103,25 @@ function row(t,accounts,date,expanded=false){
   +'<div><span>'+(en()?'Type':'نوع تراکنش')+'</span><strong>'+esc(type)+'</strong></div>'
   +'<div><span>'+(en()?'Category':'دسته‌بندی')+'</span><strong>'+esc(title)+'</strong></div>'
   +'<div><span>'+(en()?'Status':'وضعیت')+'</span><strong>'+esc(status|| (en()?'Completed':'ثبت‌شده'))+'</strong></div>'
+  +(internal?'<div><span>حساب مقصد</span><strong>'+esc(destination?.name||'حساب نامشخص')+'</strong></div>':'')
   +(t.memo?'<p>'+esc(t.memo)+'</p>':'')
-  +'<button type="button" class="tx-ledger-open-page" data-tx-open-id="'+esc(t.id)+'">'+(en()?'Open transaction page':'نمایش صفحه جزئیات')+' ‹</button></div></details>';
+  +(internal?'<p>این انتقال فقط یک بار در موجودی حساب‌ها محاسبه می‌شود؛ نمایش آن در این فهرست ثبت مالی جدیدی ایجاد نمی‌کند.</p>':'')
+  +(internal?'<button type="button" class="tx-ledger-open-page" data-transfer-open-id="'+esc(t.sourceTransferId)+'">'+(en()?'View in Transfers':'مشاهده در انتقال پول')+' ‹</button>':'<button type="button" class="tx-ledger-open-page" data-tx-open-id="'+esc(t.id)+'">'+(en()?'Open transaction page':'نمایش صفحه جزئیات')+' ‹</button>')+'</div></details>';
 }
 function renderHistory(){
  const data=bridge.getData();
- const accounts=data.accounts||[],all=(data.tx||[]).filter(t=>t.status!=='cancelled'),context=periodContext(),needle=normal(search);
+ const accounts=data.accounts||[];
+ // Internal transfers live in finance_objects and affect balances through the transfer ledger.
+ // Display a virtual history row only; never persist a second finance_entry or duplicate balance impacts.
+ const internal=(data.transfers||[])
+  .filter(t=>t.type!=='external'&&t.from&&t.to&&Number(t.send)>=0&&t.status!=='cancelled')
+  .map(t=>({id:'internal-'+t.id,sourceTransferId:t.id,internalTransfer:true,kind:'transfer',
+   amount:Number(t.send)||0,currency:accounts.find(a=>a.id===t.from)?.currency||'IRR',
+   account:t.from,toAccount:t.to,category:'انتقال داخلی بین حساب‌ها',memo:t.notes||'',
+   date:t.date||t.occurredAt||'',status:t.status||'completed'}));
+ const all=[...(data.tx||[]).filter(t=>t.status!=='cancelled'),...internal],context=periodContext(),needle=normal(search);
  const selected=all.map((t,i)=>({t,i,date:parseDate(t.date||t.occurredAt)}))
-  .filter(({t,date})=>inPeriod(date,context)&&(!kindFilter||t.kind===kindFilter)&&(!accountFilter||t.account===accountFilter)&&(!categoryFilter||normal(t.category)===normal(categoryFilter))&&(!transactionFilter||t.id===transactionFilter)&&(!needle||searchText(t,accounts,date).includes(needle)))
+  .filter(({t,date})=>inPeriod(date,context)&&(!kindFilter||t.kind===kindFilter)&&(!accountFilter||t.account===accountFilter||(t.internalTransfer&&t.toAccount===accountFilter))&&(!categoryFilter||normal(t.category)===normal(categoryFilter))&&(!transactionFilter||t.id===transactionFilter)&&(!needle||searchText(t,accounts,date).includes(needle)))
   .sort((a,b)=>(b.date?.getTime()||0)-(a.date?.getTime()||0)||b.i-a.i);
  holder.innerHTML=selected.length?selected.map(({t,date})=>row(t,accounts,date,t.id===transactionFilter)).join(''):
   '<div class="tx-ledger-empty">'+(en()?'No transactions match the selected period or search.':'تراکنشی برای این بازه یا عبارت جست‌وجو پیدا نشد.')+'</div>';
@@ -150,6 +163,16 @@ function openFiltered(opts={}){
  requestAnimationFrame(()=>document.querySelector('.tx-history-card')?.scrollIntoView({block:'start',behavior:'smooth'}));
 }
 holder.addEventListener('click',event=>{
+ const transfer=event.target.closest?.('[data-transfer-open-id]');
+ if(transfer){
+  const transferId=transfer.dataset.transferOpenId;
+  if(typeof window.financeNavGo==='function')window.financeNavGo('transfers');
+  requestAnimationFrame(()=>{
+   const target=[...document.querySelectorAll('#transferrows tr[data-transfer-id]')].find(el=>el.dataset.transferId===transferId);
+   if(target){target.scrollIntoView({block:'center',behavior:'smooth'});target.style.outline='2px solid var(--accent)';}
+  });
+  return;
+ }
  const button=event.target.closest?.('[data-tx-open-id]');
  if(!button||!holder.contains(button))return;
  const id=button.dataset.txOpenId;
@@ -159,9 +182,20 @@ byId('tx-filter-reset')?.addEventListener('click',()=>openFiltered());
 window.MyFinanceHistory={openFiltered,renderHistory};
 window.renderTransactionHistory=renderHistory;
 document.addEventListener('myfinance:changed',renderHistory);
+let transferDeepLinkOpened=false;
 document.addEventListener('myfinance:cloud-synced',()=>{
  renderHistory();
- const target=new URLSearchParams(location.search).get('finance_tx');
+ const url=new URLSearchParams(location.search);
+ const directTransfer=url.get('finance_transfer');
+ if(directTransfer&&/^[0-9a-f-]{36}$/i.test(directTransfer)){
+  const found=(bridge.getData().transfers||[]).some(t=>t.id===directTransfer);
+  if(found&&!transferDeepLinkOpened){transferDeepLinkOpened=true;openFiltered({transactionId:'internal-'+directTransfer});}
+  let status=byId('tx-cloud-verification');
+  if(!status){status=document.createElement('p');status.id='tx-cloud-verification';status.setAttribute('role','status');holder.parentElement?.insertBefore(status,holder);}
+  status.textContent=found?'✓ انتقال داخلی در پایگاه داده موجود است و در فهرست تراکنش‌ها نمایش داده شد.':'انتقال هنوز از پایگاه داده به اپ همگام نشده است.';
+  return;
+ }
+ const target=url.get('finance_tx');
  if(!target||!/^[0-9a-f-]{36}$/i.test(target))return;
  const found=(bridge.getData().tx||[]).some(t=>t.id===target);
  if(found){
