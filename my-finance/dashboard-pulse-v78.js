@@ -43,10 +43,12 @@
   const category=String(newest.category||newest.memo||kind).trim();
   title.textContent=category.length>75?category.slice(0,75)+'…':category;
   const numeric=Number(newest.amount);
-  const sign=newest.kind==='income'?'+':newest.kind==='expense'?'−':'';
+  const inbound=newest.kind==='income'||(newest.kind==='transfer'&&newest.direction==='incoming');
+  const outbound=newest.kind==='expense'||(newest.kind==='transfer'&&newest.direction==='outgoing');
+  const sign=inbound?'+':outbound?'−':'';
   amount.textContent=Number.isFinite(numeric)?sign+money(numeric)+' '+unit:'مبلغ نامشخص';
-  amount.classList.toggle('mf-positive',newest.kind==='income');
-  amount.classList.toggle('mf-negative',newest.kind==='expense');
+  amount.classList.toggle('mf-positive',inbound);
+  amount.classList.toggle('mf-negative',outbound);
   const at=new Date(newest.date||newest.occurredAt||'');
   const date=Number.isFinite(at.getTime())?new Intl.DateTimeFormat('fa-IR-u-ca-persian',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Tehran'}).format(at):'';
   extra.textContent=[kind,date,account?.name||newest.accountName||''].filter(Boolean).join(' · ');
