@@ -41,6 +41,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Preserve a consistent Android signing identity
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: hb-business-suite-debug-signing-v1
       - name: Build three uniquely identified APKs
         working-directory: android-business-suite
         run: gradle --no-daemon --stacktrace assembleBmcDebug assembleSmallDebug assembleOkrDebug
@@ -74,6 +79,20 @@ jobs:
           test -s dist/business-model-canvas.apk
           test -s dist/small-business.apk
           test -s dist/okr-service.apk
+          CURRENT_CERT=$("$APKSIGNER" verify --print-certs dist/business-model-canvas.apk | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          test -n "$CURRENT_CERT"
+          for flavor in small-business okr-service; do
+            EXTRA_CERT=$("$APKSIGNER" verify --print-certs "dist/$flavor.apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+            test "$EXTRA_CERT" = "$CURRENT_CERT"
+          done
+          if [ -f downloads/android-business-signing-fingerprint.txt ]; then
+            EXPECTED_CERT=$(cat downloads/android-business-signing-fingerprint.txt)
+            if [ "$CURRENT_CERT" != "$EXPECTED_CERT" ]; then
+              echo "::error::Signing identity changed; refusing to publish APKs incompatible with installed versions"
+              exit 1
+            fi
+          fi
+          printf '%s\\n' "$CURRENT_CERT" > dist/android-business-signing-fingerprint.txt
       - name: Upload backup downloadable artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -88,9 +107,10 @@ jobs:
           cp dist/business-model-canvas.apk downloads/business-model-canvas.apk
           cp dist/small-business.apk downloads/small-business.apk
           cp dist/okr-service.apk downloads/okr-service.apk
+          cp dist/android-business-signing-fingerprint.txt downloads/android-business-signing-fingerprint.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add downloads/business-model-canvas.apk downloads/small-business.apk downloads/okr-service.apk
+          git add downloads/business-model-canvas.apk downloads/small-business.apk downloads/okr-service.apk downloads/android-business-signing-fingerprint.txt
           git diff --cached --quiet && exit 0
           git commit -m "Publish three independently installable business Android APKs [skip ci]"
           git pull --rebase origin main
