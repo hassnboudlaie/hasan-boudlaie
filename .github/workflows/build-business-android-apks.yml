@@ -105,11 +105,29 @@ jobs:
             fi
           fi
           echo "$CURRENT_CERT" > dist/android-business-signing-fingerprint.txt
+      - name: Package each verified APK as an easy-to-download ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in business-model-canvas small-business okr-service; do
+            (
+              cd dist
+              zip -j -q "$name.zip" "$name.apk"
+              unzip -t "$name.zip" | grep -q 'No errors detected'
+            )
+          done
+          (
+            cd dist
+            zip -j -q all-three-business-apps.zip business-model-canvas.apk small-business.apk okr-service.apk
+            unzip -t all-three-business-apps.zip | grep -q 'No errors detected'
+          )
       - name: Upload backup downloadable artifacts
         uses: actions/upload-artifact@v4
         with:
           name: business-suite-three-independent-apks
-          path: dist/*.apk
+          path: |
+            dist/*.apk
+            dist/*.zip
           if-no-files-found: error
       - name: Publish direct public APK links in website downloads
         shell: bash
@@ -119,10 +137,14 @@ jobs:
           cp dist/business-model-canvas.apk downloads/business-model-canvas.apk
           cp dist/small-business.apk downloads/small-business.apk
           cp dist/okr-service.apk downloads/okr-service.apk
+          cp dist/business-model-canvas.zip downloads/business-model-canvas.zip
+          cp dist/small-business.zip downloads/small-business.zip
+          cp dist/okr-service.zip downloads/okr-service.zip
+          cp dist/all-three-business-apps.zip downloads/all-three-business-apps.zip
           cp dist/android-business-signing-fingerprint.txt downloads/android-business-signing-fingerprint.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add downloads/business-model-canvas.apk downloads/small-business.apk downloads/okr-service.apk downloads/android-business-signing-fingerprint.txt
+          git add downloads/business-model-canvas.apk downloads/small-business.apk downloads/okr-service.apk downloads/business-model-canvas.zip downloads/small-business.zip downloads/okr-service.zip downloads/all-three-business-apps.zip downloads/android-business-signing-fingerprint.txt
           git diff --cached --quiet && exit 0
           git commit -m "Publish three independently installable business Android APKs [skip ci]"
           git pull --rebase origin main
