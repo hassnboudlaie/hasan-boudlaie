@@ -24,7 +24,7 @@ st.document.getElementById('decision-form').dispatchEvent(new st.Event('submit',
 assert.equal(st.SabanaftLeadershipStudio.getState().cases[0].toolUsed,'پرسش باز');
 assert.equal(st.SabanaftLeadershipStudio.getState().cases[0].toolFit,'تناسب با نقش Coach و شرایط تیم');
 
-st.document.querySelector('#dev-review-action').value='در گفت‌وگوی آزمایشی دو سؤال باز پرسیدم';
+st.SabanaftLeadershipStudio.navigate('development');st.document.querySelector('#dev-review-action').value='در گفت‌وگوی آزمایشی دو سؤال باز پرسیدم';
 st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
 assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews.length,1);
 st.SabanaftLeadershipStudio.navigate('review');st.document.querySelector('#r-actual').value='نتیجه آزمایشی';st.Storage.prototype.setItem=function(){throw Error('quota')};st.document.querySelector('#reflection-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));assert.equal(st.SabanaftLeadershipStudio.getState().reflections.length,0);assert.equal(st.document.querySelector('#r-actual').value,'نتیجه آزمایشی');assert.match(st.document.querySelector('#toast').textContent,/موفق نبود/);
