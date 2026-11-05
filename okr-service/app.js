@@ -44,7 +44,7 @@ home(){
  let active=state.objectives.filter(x=>x.status==='active'),scores=active.map(M.objectiveProgress).filter(x=>x!==null),avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
  const stats='<div class="grid">'+[
  ['هدف فعال',active.length,''],['میانگین پیشرفت',avg===null?'—':avg+'٪','بر پایه KRهای ثبت‌شده'],['شاخص‌های کسب‌وکار',state.kpis.length,'KPI'],['بازبینی ثبت‌شده',state.checkins.length,'Check-ins']
- ].map(([n,v,d])=>card('<span class="metric-label">'+n+'</span><div class="metric">'+fmt(v).replace('٪','')+(typeof v==='string'&&v.includes('٪')?'٪':'')+'</div><small class="metric-hint">'+d+'</small>','span3')).join('')+'</div>';
+ ].map(([n,v,d])=>card('<span class="metric-label">'+n+'</span><div class="metric">'+(typeof v==='string'&&v.includes('٪')?fmt(Number(v.replace('٪','')))+'٪':v==='—'?'—':fmt(v))+'</div><small class="metric-hint">'+d+'</small>','span3')).join('')+'</div>';
  const hero='<section class="hero"><div><span class="eyebrow" style="color:#b4dce8">YOUR STRATEGY OPERATING SYSTEM</span><h2>استراتژی را به نتیجه تبدیل کنید.</h2><p>راهبرد ← هدف ← نتیجه قابل‌اندازه‌گیری ← بازبینی مستمر</p><div class="row-actions" style="margin-top:14px">'+btn('new-objective','+ هدف جدید','')+btn('new-pillar','+ رکن راهبردی','')+'</div></div><span class="hero-icon" aria-hidden="true">◈</span></section>';
  const latest=[...state.objectives].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,4);
  return hero+'<div class="section">'+stats+'</div><div class="section"><div class="section-title"><div><h2>اولویت‌های جاری</h2><p>پیشرفت بر اساس Key Resultهای قابل‌سنجش</p></div>'+btn('go-explore','مشاهده همه اهداف')+'</div>'+
