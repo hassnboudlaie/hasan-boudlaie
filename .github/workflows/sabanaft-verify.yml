@@ -39,3 +39,5 @@ jobs:
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-chapters.cjs
       - name: Private impact export regression
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-impact.cjs
+      - name: Chapter 1–5 visual dashboard and navigation
+        run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-ui-ch5.cjs

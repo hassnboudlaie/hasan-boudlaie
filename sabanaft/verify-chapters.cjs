@@ -7,16 +7,23 @@ const secondary=d.querySelector('[data-cj-secondary][value="capability"]');secon
 const notes=new JSDOM(read('app/lesson-notes.html')).window.document;assert.equal(notes.querySelectorAll('article').length,5);assert.equal(notes.querySelectorAll('#chapter5 li').length,10);assert.equal(notes.querySelectorAll('#chapter5 details,#chapter5 button,#chapter5 a').length,0);assert.ok(!/[a-z]/i.test(notes.querySelector('#chapter5').textContent));assert.match(notes.querySelector('#chapter5').textContent,/توانمندساز/);
 // Ensure service-worker upgrade retains unrelated app caches and offline notes resolve correctly.
 const callbacks={},deleted=[];const sw={addEventListener:(n,f)=>callbacks[n]=f,skipWaiting:()=>{},clients:{claim:()=>{}}};let cached;
-const caches={keys:async()=>['my-finance-cache','sabanaft-reflective-pwa-shell-v7','sabanaft-reflective-pwa-shell-v8'],delete:async k=>deleted.push(k),match:async k=>typeof k==='string'?(cached=k,'offline notes'):undefined};
+const caches={keys:async()=>['my-finance-cache','sabanaft-reflective-pwa-shell-v7','sabanaft-reflective-pwa-shell-v8','sabanaft-reflective-pwa-shell-v9'],delete:async k=>deleted.push(k),match:async k=>typeof k==='string'?(cached=k,'offline notes'):undefined};
 vm.runInNewContext(read('app/sw.js'),{self:sw,caches,location:{origin:'https://example.test'},URL,fetch:async()=>{throw Error('offline')}});
-(async()=>{let done;callbacks.activate({waitUntil:p=>done=p});await done;assert.deepEqual(deleted,['sabanaft-reflective-pwa-shell-v7','sabanaft-reflective-pwa-shell-v8']);callbacks.fetch({request:{method:'GET',url:'https://example.test/sabanaft/app/lesson-notes.html',mode:'navigate'},respondWith:p=>done=p});assert.equal(await done,'offline notes');assert.equal(cached,'./lesson-notes.html');
+(async()=>{let done;callbacks.activate({waitUntil:p=>done=p});await done;assert.deepEqual(deleted,['sabanaft-reflective-pwa-shell-v7','sabanaft-reflective-pwa-shell-v8','sabanaft-reflective-pwa-shell-v9']);callbacks.fetch({request:{method:'GET',url:'https://example.test/sabanaft/app/lesson-notes.html',mode:'navigate'},respondWith:p=>done=p});assert.equal(await done,'offline notes');assert.equal(cached,'./lesson-notes.html');
 // Studio save failure must retain existing records and entered text.
-const st=new JSDOM(read('leadership-studio.html'),{url:'https://example.test/sabanaft/leadership-studio.html',runScripts:'outside-only'}).window;st.scrollTo=()=>{};for(const f of ['role-development.js','guided-reflection.js','reflective-content.js','my-reflection.js','light-flow.js','commercial-ux.js','case-clarity.js','impact-pulse.js','impact-report.js'])st.eval(read(f));const scripts=[...read('leadership-studio.html').matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(x=>x.trim());st.localStorage.setItem('sabanaft_leadership_studio_v1',JSON.stringify({schema:1,cases:[{id:'old',title:'کیس قبلی',situation:'سناریوی آزمایشی'}]}));st.eval(scripts[0]);st.SabanaftLeadershipStudio.navigate('daily');assert.ok(st.document.getElementById('guided-reflection-form'),'guided reflection is accessible');assert.ok(st.document.getElementById('rfx-form'),'legacy reflection remains accessible');
+const st=new JSDOM(read('leadership-studio.html'),{url:'https://example.test/sabanaft/leadership-studio.html',runScripts:'outside-only'}).window;st.scrollTo=()=>{};for(const f of ['role-communication.js','role-development.js','guided-reflection.js','reflective-content.js','my-reflection.js','light-flow.js','commercial-ux.js','case-clarity.js','impact-pulse.js','impact-report.js'])st.eval(read(f));const scripts=[...read('leadership-studio.html').matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(x=>x.trim());st.localStorage.setItem('sabanaft_leadership_studio_v1',JSON.stringify({schema:1,cases:[{id:'old',title:'کیس قبلی',situation:'سناریوی آزمایشی'}]}));st.eval(scripts[0]);st.SabanaftLeadershipStudio.navigate('daily');assert.ok(st.document.getElementById('guided-reflection-form'),'guided reflection is accessible');assert.ok(st.document.getElementById('rfx-form'),'legacy reflection remains accessible');
 st.SabanaftLeadershipStudio.navigate('insights');assert.ok(st.document.querySelector('[data-saba-export-impact]'),'user-controlled CSV export available');
+st.SabanaftLeadershipStudio.navigate('mix');assert.ok(st.document.getElementById('role-communication-form'),'Chapter 5 H06 communication prompt is visible');
+st.document.getElementById('rc-statement').value='در تصمیم فوری Boss و در توسعه Coach هستم';
+st.document.getElementById('rc-expectation').value='انتظار مشارکت واقعی در تصمیم‌ها دارم';
+st.document.getElementById('rc-checkPrompt').value='برداشت شما از اختیار خودتان چیست؟';
+st.document.getElementById('role-communication-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
+assert.match(st.SabanaftLeadershipStudio.getState().roleCommunication.statement,/Boss/);
+assert.ok(st.SabanaftLeadershipStudio.contextInsights(st.SabanaftLeadershipStudio.getState().cases[0]).some(x=>x.includes('پیام نقش رهبری')));
 st.SabanaftLeadershipStudio.navigate('development');assert.equal(st.document.querySelectorAll('#role-development-form .dimension').length,4);
-st.document.querySelector('#dev-focus').value='C';st.document.querySelector('#dev-goal').value='پرسش باز در موقعیت واقعی';
+st.document.querySelector('#dev-focus').value='C';st.document.querySelector('#dev-goal').value='پرسش باز در موقعیت واقعی';st.document.querySelector('#dev-case').value='old';
 st.document.querySelector('#role-development-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
-assert.equal(st.SabanaftLeadershipStudio.getState().development.focus,'C');
+assert.equal(st.SabanaftLeadershipStudio.getState().development.focus,'C');assert.equal(st.SabanaftLeadershipStudio.getState().development.caseId,'old');
 st.SabanaftLeadershipStudio.navigate('workbench');assert.ok(st.document.getElementById('wb-toolUsed'),'role-tool fit in case workbench');
 st.document.getElementById('wb-toolUsed').value='پرسش باز';
 st.document.getElementById('wb-toolFit').value='تناسب با نقش Coach و شرایط تیم';
@@ -26,7 +33,7 @@ assert.equal(st.SabanaftLeadershipStudio.getState().cases[0].toolFit,'تناسب
 
 st.SabanaftLeadershipStudio.navigate('development');st.document.querySelector('#dev-review-action').value='در گفت‌وگوی آزمایشی دو سؤال باز پرسیدم';
 st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));
-assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews.length,1);
+assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews.length,1);assert.equal(st.SabanaftLeadershipStudio.getState().development.reviews[0].caseId,'old');
 st.SabanaftLeadershipStudio.navigate('review');st.document.querySelector('#r-actual').value='نتیجه آزمایشی';st.Storage.prototype.setItem=function(){throw Error('quota')};st.document.querySelector('#reflection-form').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));assert.equal(st.SabanaftLeadershipStudio.getState().reflections.length,0);assert.equal(st.document.querySelector('#r-actual').value,'نتیجه آزمایشی');assert.match(st.document.querySelector('#toast').textContent,/موفق نبود/);
 st.SabanaftLeadershipStudio.navigate('development');st.document.querySelector('#dev-review-action').value='یک تمرین دیگر انجام شد';
 st.document.querySelector('#role-development-review').dispatchEvent(new st.Event('submit',{bubbles:true,cancelable:true}));

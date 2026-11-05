@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="./app.css?v=2">
 <link rel="stylesheet" href="./visual-upgrade-20261102.css?v=1">
 <link rel="stylesheet" href="./coaching-journey.css?v=1">
+<link rel="stylesheet" href="./ch5-product-shell.css?v=1">
 <title>رهبری بازتابی من | صبا نفت</title>
 
 <style>
@@ -30,64 +31,69 @@
 <button type="button" id="install" class="install" hidden>نصب اپ <span aria-hidden="true">＋</span></button>
 </header>
 <main id="main">
-<section id="homeView" class="view" aria-label="خانه اپ">
-
+<section id="homeView" class="view" aria-label="داشبورد رهبری بازاندیشانه صبا نفت">
  <div class="hero">
   <div class="hero-copy">
-   <span class="eyebrow light">صبا نفت | مسیر توسعه رهبری</span>
-   <h1>از یک مسئله واقعی شروع کنید.</h1>
-   <p>مسئله را مطرح کنید، گزینه‌های تصمیم را بررسی کنید، گفت‌وگو را تمرین کنید و نتیجه را بازاندیشی کنید.</p>
-   <div class="hero-actions"><button type="button" id="heroStart" class="hero-action">طرح مسئله و دریافت راهنما <span aria-hidden="true">←</span></button><button type="button" class="hero-secondary" data-go="course">مسیر ۹ جلسه‌ای کتاب</button></div>
+   <span class="eyebrow light">SABA NAFT · REFLECTIVE LEADERSHIP OS</span>
+   <h1>از مسئله واقعی تا تصمیم بهتر.</h1>
+   <p>با یک موقعیت کاری شروع کنید؛ نقش مناسب را بررسی کنید، گفت‌وگو را تمرین کنید و از نتیجه بیاموزید.</p>
+   <div class="hero-actions">
+    <button type="button" id="heroStart" class="hero-action">شروع با مسئله من <span aria-hidden="true">←</span></button>
+    <button type="button" class="hero-secondary" data-go="course">مسیر یادگیری کتاب</button>
+   </div>
   </div>
-  <div class="hero-image"><img src="../assets/sabanaft-meeting.jpg" alt="تصویر واقعی نشست مدیران و پیمانکاران پروژه نیایش صبا نفت" fetchpriority="high"></div>
+  <div class="hero-image"><img src="../assets/sabanaft-meeting.jpg" alt="تصویر واقعی نشست مدیران پروژه صبا نفت" fetchpriority="high"></div>
  </div>
- <div class="stats" aria-label="وضعیت مسیر آموزشی">
-  <div><b>۹</b><small>جلسه آموزشی</small></div>
-  <div><b>۴۷</b><small>بخش یادگیری</small></div>
-  <div><b id="homeCompleted">۰</b><small>بخش تکمیل‌شده</small></div>
+
+ <div class="ch5-section-heading"><div><small>MY LEADERSHIP WORKSPACE</small><h2>امروز از کجا شروع می‌کنید؟</h2></div><p>چهار مسیر روشن، یک تجربه پیوسته</p></div>
+ <div class="ch5-workspaces" aria-label="چهار مسیر اصلی اپلیکیشن">
+  <button type="button" class="ch5-workspace" id="futureCoachEntry" aria-label="طرح مسئله و دریافت راهنمای اولیه">
+   <span class="ch5-icon" aria-hidden="true">◇</span>
+   <small>01 · MY CASE</small><strong>مسئله من</strong>
+   <span class="ch5-desc">موضوع واقعی را بنویسید یا بگویید؛ بدون فرم طولانی.</span>
+   <span class="ch5-arrow" aria-hidden="true">←</span>
+  </button>
+  <button type="button" class="ch5-workspace" data-go="studio/daily">
+   <span class="ch5-icon" aria-hidden="true">◷</span>
+   <small>02 · MY REFLECTION</small><strong>بازاندیشی من</strong>
+   <span class="ch5-desc">رفتار، شواهد و یادگیری را در یک گفت‌وگوی مرحله‌ای مرور کنید.</span>
+   <span class="ch5-arrow" aria-hidden="true">←</span>
+  </button>
+  <button type="button" class="ch5-workspace" data-go="studio/mix">
+   <span class="ch5-icon" aria-hidden="true">◎</span>
+   <small>03 · LEADERSHIP IDENTITY</small><strong>هویت رهبری من</strong>
+   <span class="ch5-desc">ایده رهبری، Context و ترکیب چهار نقش را روشن کنید.</span>
+   <span class="ch5-arrow" aria-hidden="true">←</span>
+  </button>
+  <button type="button" class="ch5-workspace" data-go="studio/development">
+   <span class="ch5-icon" aria-hidden="true">✧</span>
+   <small>04 · MY DEVELOPMENT</small><strong>رشد و تمرین من</strong>
+   <span class="ch5-desc">برای مهارت نقش‌ها هدف بگذارید و اقدام واقعی را پیگیری کنید.</span>
+   <span class="ch5-arrow" aria-hidden="true">←</span>
+  </button>
  </div>
- <div class="section-title"><div><span class="eyebrow">مسیر من</span><h2>از کجا شروع می‌کنید؟</h2></div></div>
- <div class="feature-grid" aria-label="چهار بخش اصلی اپلیکیشن">
-  <button type="button" class="feature-card" data-go="course">
-   <img src="../assets/sabanaft-niayesh.webp" alt="تصویر واقعی پروژه نیایش صبا نفت" loading="lazy">
-   <span class="feature-content"><small>یادگیری و تمرین</small><strong>جلسات رهبری</strong><span>۹ جلسه مهارت‌محور بر اساس کتاب رهبر بازتابی</span><b>مشاهده جلسات ←</b></span>
-  </button>
-  <button type="button" class="feature-card" data-go="studio/daily">
-   <img src="../assets/sabanaft-site.webp" alt="بازدید میدانی از پروژه صبا نفت" loading="lazy">
-   <span class="feature-content"><small>بازاندیشی در عمل</small><strong>استودیوی رهبری من</strong><span>ثبت مسئله، تمرین تصمیم و یادگیری از تجربه</span><b>ورود به استودیو ←</b></span>
-  </button>
-  <button type="button" class="feature-card feature-card-progress" data-go="passport">
-   <img src="../assets/sabanaft-farmanieh.webp" alt="تصویر طرح معماری پروژه صبا فرمانیه" loading="lazy">
-   <span class="feature-content"><small>پیگیری مسیر شخصی</small><strong>یادگیری من</strong><span>مشاهده پیشرفت و دسترسی به درس‌های نشان‌شده</span><b>مشاهده پیشرفت ←</b></span>
-  </button>
-  <button type="button" class="feature-card feature-card-coach" id="futureCoachEntry" aria-label="ورود به میز راهنمای رهبری و کوچینگ">
-   <span class="coach-art" aria-hidden="true"><span>✦</span><small>راهنمای اولیه فعال</small></span>
-   <span class="feature-content"><small>راهنمایی و کوچینگ</small><strong>میز کوچینگ من</strong><span>بررسی مسئله، راهنمای اولیه، ChatGPT و درخواست کوچ انسانی</span><b>طرح مسئله ←</b></span>
-  </button>
+ <div class="ch5-learning-dock">
+  <div class="ch5-learning-copy"><span class="ch5-learning-symbol" aria-hidden="true">▤</span><div><strong>یادگیری از کتاب، کنار تجربه واقعی</strong><small>درسنامه پنج فصل نخست · دوره و تمرین‌های آموزشی</small></div></div>
+  <div class="ch5-learning-actions"><a href="./lesson-notes.html">درسنامه ۵ فصل</a><button type="button" data-go="course">جلسات آموزشی ←</button></div>
  </div>
- <div class="section-title"><div><span class="eyebrow">ادامه یادگیری</span><h2>ادامه از آخرین درس</h2></div></div>
- <button type="button" id="resume" class="resume">
-  <span><small>آخرین مسیر شما</small><strong id="resumeTitle">جلسه اول · یک درخواست ساده، چهار امکان</strong></span><span class="arrow" aria-hidden="true">←</span>
- </button>
- <details class="home-learning-extra">
-  <summary>چهار نقش رهبری و پرسش بازاندیشی</summary>
-  <div class="section-title"><div><h2>چهار نقش در یک نگاه</h2></div><button class="text-action" type="button" id="openRoles">مرور درس ←</button></div>
-  <div class="roles">
-   <div><span class="role-icon boss">B</span><strong>Boss</strong><small>تصمیم و جهت‌دهی</small></div>
-   <div><span class="role-icon coach">C</span><strong>Coach</strong><small>برانگیختن فکر</small></div>
-   <div><span class="role-icon partner">P</span><strong>Partner</strong><small>تصمیم مشترک</small></div>
-   <div><span class="role-icon enabler">E</span><strong>Enabler</strong><small>ساخت قابلیت</small></div>
+ <details class="ch5-resources">
+  <summary>منابع، ادامه یادگیری و ابزارهای تکمیلی</summary>
+  <div class="ch5-resource-body">
+   <div class="stats" aria-label="وضعیت مسیر آموزشی">
+    <div><b>۹</b><small>جلسه آموزشی موجود</small></div>
+    <div><b>۴۷</b><small>بخش یادگیری</small></div>
+    <div><b id="homeCompleted">۰</b><small>بخش تکمیل‌شده</small></div>
+   </div>
+   <button type="button" id="resume" class="resume"><span><small>ادامه آخرین درس شما</small><strong id="resumeTitle">جلسه اول · یک درخواست ساده، چهار امکان</strong></span><span class="arrow" aria-hidden="true">←</span></button>
+   <details class="home-learning-extra">
+    <summary>مرور سریع چهار نقش رهبری</summary>
+    <div class="section-title"><div><h2>چهار نقش در یک نگاه</h2></div><button class="text-action" type="button" id="openRoles">مرور درس ←</button></div>
+    <div class="roles"><div><span class="role-icon boss">B</span><strong>Boss</strong><small>تصمیم و جهت‌دهی</small></div><div><span class="role-icon coach">C</span><strong>Coach</strong><small>برانگیختن فکر</small></div><div><span class="role-icon partner">P</span><strong>Partner</strong><small>تصمیم مشترک</small></div><div><span class="role-icon enabler">E</span><strong>Enabler</strong><small>توانمندسازی</small></div></div>
+   </details>
+   <div class="ch5-resource-links"><a href="./business-model.html">▦ بوم کسب‌وکار اپلیکیشن <span aria-hidden="true">←</span></a><button type="button" data-go="passport">◈ پیشرفت و نشان‌های یادگیری <span aria-hidden="true">←</span></button></div>
   </div>
-  <div class="reflection-tip"><span class="lightbulb" aria-hidden="true">✦</span><div><strong>پرسشی برای گفت‌وگوی بعدی</strong><p>«در این موقعیت، کدام نقش به روشن‌شدن مسئولیت و پیشرفت کار کمک می‌کند؟»</p></div></div>
  </details>
- <div class="bmc-home-section"><a href="./lesson-notes.html" class="bmc-home-link"><span class="bmc-home-icon" aria-hidden="true">▤</span><strong>درسنامه</strong><span>پیام‌های کلیدی پنج فصل نخست</span></a></div>
- <div class="bmc-home-section" aria-label="دسترسی به بوم کسب‌وکار">
-  <a href="./business-model.html" class="bmc-home-link">
-   <span class="bmc-home-icon" aria-hidden="true">▦</span>
-   <strong>بوم کسب‌وکار</strong>
-   <span>مدل ۹بخشی اپلیکیشن رهبری</span>
-  </a>
- </div>
+ <p class="ch5-home-footnote">در نسخه آزمایشی، اطلاعات شخصی در مرورگر همین دستگاه ذخیره می‌شوند. AI Coach متصل نیست و ثبت موضوع محرمانه توصیه نمی‌شود.</p>
 </section>
 <section id="courseView" class="view" aria-label="جلسات دوره">
  <div class="page-heading"><span class="eyebrow">YOUR NINE-SESSION JOURNEY</span><h1>مسیر رهبری بازتابی</h1><p>۹ جلسه و ۴۷ بخش واقعی؛ ترتیب مشاهده آزاد است. هر جلسه را انتخاب کنید.</p></div>
@@ -193,8 +199,8 @@
 <nav class="bottom-nav" aria-label="ناوبری اصلی">
  <button type="button" data-nav="home"><span aria-hidden="true">⌂</span><small>خانه</small></button>
  <button type="button" data-nav="coach"><span aria-hidden="true">✦</span><small>مسئله من</small></button>
- <button type="button" data-nav="course"><span aria-hidden="true">▦</span><small>جلسات</small></button>
- <button type="button" data-nav="studio/daily"><span aria-hidden="true">◉</span><small>استودیو</small></button>
+ <button type="button" data-nav="studio/daily"><span aria-hidden="true">◷</span><small>بازاندیشی</small></button>
+ <button type="button" data-nav="studio/mix"><span aria-hidden="true">◎</span><small>هویت من</small></button>
 </nav>
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 <script src="../reflective-content.js"></script>

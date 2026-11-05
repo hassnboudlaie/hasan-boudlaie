@@ -1,0 +1,78 @@
+/* Saba Naft — five-chapter visual continuity and simplified interaction density.
+   Presentation-only: no model changes, no effect on other site apps. */
+:root{--navy:#0d345a;--deep:#092641;--blue:#185989;--sky:#5bb9c8;--orange:#ed7d43;--green:#0d8c80;--ink:#16314b;--muted:#586f85;--line:#dbe5ee;--paper:#f6f8fb;--radius:20px}
+body{background:var(--paper);color:var(--ink)}
+.rail{background:linear-gradient(175deg,#092d50,#0c3453 78%,#09263e);box-shadow:inset -1px 0 0 #ffffff17}
+.rail .brand{padding-bottom:16px}
+.rail .section-kicker{font-size:10px;letter-spacing:.08em;margin:17px 12px 8px}
+.nav button{min-height:47px;font-size:14px;font-weight:750;border-radius:13px;margin:3px 0}
+.nav button[aria-current=page]{background:#ffffff1e;border-color:#8acbd57a;box-shadow:inset -3px 0 #57c4bb}
+.nav .num{font-size:17px;width:30px;height:30px;border-radius:10px;background:#ffffff13}
+.ux-subnav button{font-size:13px;min-height:42px}
+.main{padding-top:20px}
+.pane{max-width:1160px}
+.top{border-bottom:1px solid #dfe7ef;padding-bottom:12px;margin-bottom:15px}
+.top .eyebrow{color:#426985;letter-spacing:0}
+.status{background:#e8f3f0;color:#146b5c;font-size:11px}
+#view .page-title{font-size:clamp(25px,2.6vw,34px);font-weight:950;letter-spacing:-.02em;line-height:1.55}
+#view .intro{color:#526c82;font-size:14px;line-height:1.8;max-width:770px;margin-bottom:17px}
+#view .card{border:1px solid #e0e8f0;box-shadow:0 6px 22px #1a456708;border-radius:21px;padding:22px}
+#view .kicker{color:#228090}
+#view .grid{gap:14px}
+#view .title-row h2{color:#153e5e;font-size:20px}
+#view .form-grid{gap:14px}
+#view .field label{font-size:14px;line-height:1.65}
+#view .field textarea,#view .field input,#view .field select{background:#fcfdff;border:1px solid #ccdde7;border-radius:13px;font-size:15px;min-height:48px;transition:border-color .13s,box-shadow .13s}
+#view .field textarea:focus,#view .field input:focus,#view .field select:focus{border-color:#4a9ab5;box-shadow:0 0 0 3px #b8e4e375}
+#view .btn{min-height:47px;border-radius:13px;box-shadow:none}
+#view .btn:not(.light):not(.danger):not(.ghost){background:#145b83}
+#view details.card summary{font-size:15px;line-height:1.8}
+#view details[open].card{border-color:#c7dae5}
+#view .note{border-right-color:#4e9bb0;background:#eff7fa;color:#315d74}
+#view .warn{border-right-color:#eda46b;background:#fff7f0}
+#view .role-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#view .role{background:#fbfdff;padding:12px;border-color:#dce8ef}
+#view .role .cap{margin-bottom:8px}
+#view .role h3{font-size:17px}
+#view .role-result{padding:11px;border-color:#dfe9ef}
+#view .role-table{gap:9px}
+#view .case-context{background:#f9f5f0;border-right:3px solid #de9050;padding:15px}
+#view .dimension{background:#fbfdff;padding:13px;border-color:#dde8f0}
+#view #role-communication{background:#f7fbff;border-color:#ccdfeb}
+#view #role-communication>summary{color:#145c85}
+#view #role-development-form>section.card>h2{font-size:21px;margin:0 0 10px;color:#194562}
+#view #role-development-form .dimension h3{font-size:16px;color:#194f6c}
+#view #role-development-review{margin-top:11px}
+#view .ed-hero{border-radius:22px}
+#view .ed-compose{border-radius:20px}
+#view .ed-journey-item{border-radius:19px}
+#view .ed-journey-action{border-radius:13px}
+#view .ch5-studio-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0 2px}
+#view .ch5-studio-shortcut{background:#fff;border:1px solid #dce6ee;padding:15px 12px;min-height:100px;border-radius:17px;color:#214762;display:flex;flex-direction:column;align-items:flex-start;text-align:right;gap:5px;box-shadow:0 5px 14px #1745690b;transition:transform .15s,border-color .15s}
+#view .ch5-studio-shortcut:hover{transform:translateY(-2px);border-color:#9dc8d8}
+#view .ch5-studio-shortcut>span{font-size:26px;color:#258b95;line-height:1.15}
+#view .ch5-studio-shortcut strong{font-size:15px}
+#view .ch5-studio-shortcut small{font-size:11px;color:#627a8d;line-height:1.6}
+#view .ch5-studio-shortcut:nth-child(4)>span{color:#cf7f4e}
+@media(max-width:1050px){#view .role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#view .ch5-studio-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .rail{padding:9px 11px}.main{padding:12px 12px 82px}
+ .top{padding-bottom:8px}
+ #view .card{padding:16px;border-radius:17px}
+ #view .page-title{font-size:26px}
+ #view .intro{font-size:13px}
+ #view .role-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #view .role{padding:10px;border-radius:13px}
+ #view .role h3{font-size:16px}
+ #view .role h3 small{display:block}
+ #view .field label{font-size:14px}
+ #view .field input,#view .field select,#view .field textarea{font-size:16px}
+ #view .ch5-studio-shortcuts{gap:9px;margin:12px 0 0}
+ #view .ch5-studio-shortcut{min-height:93px;padding:13px;border-radius:16px}
+ #view .ch5-studio-shortcut>span{font-size:24px}
+ #view .ch5-studio-shortcut strong{font-size:14px}
+ #view .ch5-studio-shortcut small{font-size:11px}
+ .mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid #dbe6ee}
+ .mobile-bottom-nav button{min-width:0}
+}
+@media(prefers-reduced-motion:reduce){#view .ch5-studio-shortcut{transition:none}}
