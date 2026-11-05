@@ -52,4 +52,18 @@ assert.ok(hub.includes('superDirectory'),'Super App must group all independent a
 assert.ok(hub.includes('catalog.js?v=2'),'Super App searchable directory script is linked');
 assert.ok(!hub.includes('app not yet released'),'Super App must not advertise released OKR as future guide');
 assert.ok(products.includes('href="hub/"'),'HB Hub must be independently discoverable in full catalog');
+assert.ok(products.includes('href="okr-service/index.html"'),'General OKR must open its own app path');
+assert.ok(products.includes('data-category="strategy" data-search="OKR'),'General OKR belongs to Strategy');
+assert.ok(products.includes('data-category="business" data-search="Business Model Canvas'),'BMC belongs to Business Consulting');
+assert.ok(products.includes('data-category="business" data-search="Small Business'),'Small Business belongs to Business Consulting');
+assert.ok(read('index.html').includes('href="okr-service/index.html"'),'Main website Strategy section must link directly to public OKR');
+assert.ok(read('okr-consulting.html').includes('href="okr-service/index.html"'),'Strategic service landing must open functional OKR');
+assert.ok(read('strategic-management/index.html').includes("../okr-service/index.html"),'Strategic Management section must expose OKR product');
+assert.ok(read('downloads/install.html').includes('نصب اپ OKR'),'Install directory must present actual OKR app, not service guide');
+assert.ok(read('okr-service/index.html').includes('./model.js?v=2'),'Independent OKR model is linked');
+assert.ok(read('okr-service/sw.js').includes("hb-public-okr-service-"),'Independent OKR app cache namespace is unique');
+assert.ok(read('hub/manifest.webmanifest').includes("Super App"),'Hub identity clarifies the super app role');
+assert.equal((hub.match(/data-kind="strategy"/g)||[]).length,2,'Public OKR and Kish OKR are two distinct Strategy entries');
+assert.equal((hub.match(/href="../okr-system/"/g)||[]).length,1,'Kish destination remains unmodified and unique inside Super App');
+
 console.log('PASS: 12 installed apps mapped correctly, public OKR separated from Kish, all 19 products in Super App; categories and links verified.');
