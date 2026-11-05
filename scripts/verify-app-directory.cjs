@@ -10,6 +10,9 @@ const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const products=read('products.html'),hub=read('hub/index.html');
 const entries=[...products.matchAll(/<article class="app-card"[^>]*>[\s\S]*?<\/article>/g)].map(m=>m[0]);
+const hubEntries=[...hub.matchAll(/<a class="super-app-link"[^>]*>/g)].map(m=>m[0]);
+assert.equal(hubEntries.length,19,'HB Hub Super App must contain all 19 other catalog products');
+
 assert.equal(entries.length,20,'The website should list all 20 current cards including HB Hub');
 function card(href){
  const matches=entries.filter(s=>s.includes('href="'+href+'"'));
@@ -40,9 +43,13 @@ for(const [name,href,category,target] of expected){
 for(const filt of ['all','organization','strategy','business','client','personal']){
  assert.ok(products.includes('data-filter="'+filt+'"'),'Missing discoverable filter: '+filt);
 }
-for(const route of ['../okr-system/','../trm-workspace/','../sabanaft/app/','../business-model-canvas/studio.html','../small-business/index.html','../okr-service/index.html','../alborz-communication-skills/','../clinic-customer-app/','../life-organization/','../my-finance/']){
+for(const route of ['../okr-system/','../trm-workspace/','../sabanaft/app/','../business-model-canvas/studio.html','../small-business/index.html','../okr-service/index.html','../alborz-communication-skills/','../clinic-customer-app/','../life-organization/','../my-finance/','../ba-parastoo/','../alborz-performance/my-branch/','../alborz-performance/','../sabanaft/leadership-studio.html','../zilux-jewels/','https://hassnboudlaie.github.io/afra-tejarat-mad/','https://hassnboudlaie.github.io/reflective-leader/','https://hassnboudlaie.github.io/naavsanat-culture-app/','https://hassnboudlaie.github.io/behparvar-leadership-lab/']){
  assert.ok(hub.includes('href="'+route+'"'),'The HB Hub must still link to '+route);
 }
-assert.ok(products.includes('The general-purpose OKR application is not yet available.'),'OKR guide must not be presented as completed general-purpose system');
+assert.ok(products.includes('Independent interactive OKR pilot: strategy map'),'OKR product must be explicitly described as functional local pilot');
+assert.ok(products.includes('data-en="Interactive public pilot"'),'strategy category describes public pilot');
+assert.ok(hub.includes('superDirectory'),'Super App must group all independent applications');
+assert.ok(hub.includes('catalog.js?v=2'),'Super App searchable directory script is linked');
+assert.ok(!hub.includes('app not yet released'),'Super App must not advertise released OKR as future guide');
 assert.ok(products.includes('href="hub/"'),'HB Hub must be independently discoverable in full catalog');
-console.log('PASS: 12 screenshot-distinct apps mapped to site; 11 internal entrypoints exist, Behparvar external repo verified separately; categories and hub routes correct.');
+console.log('PASS: 12 installed apps mapped correctly, public OKR separated from Kish, all 19 products in Super App; categories and links verified.');
