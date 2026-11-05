@@ -130,6 +130,16 @@
      <label for="cj-urgency">فوریت<select id="cj-urgency"><option value="normal">غیرفوری</option><option value="urgent">فوری و زمان‌دار</option><option value="sensitive">دارای ریسک ایمنی/حقوقی/منابع انسانی</option></select></label>
      <label for="cj-choice">نوع چالش (اختیاری)<select id="cj-choice"><option value="unknown">مطمئن نیستم / سایر موارد</option><option value="clarity">ابهام در تصمیم یا مسئولیت</option><option value="capability">کمبود مهارت یا حمایت</option><option value="conflict">تعارض دیدگاه و هماهنگی</option><option value="performance">اختلال در عملکرد یا پیگیری</option></select></label>
     </div>
+    <details class="cj-more-issues" style="margin:10px 0 16px;padding:12px 14px;border:1px solid #dbe5ee;border-radius:12px;background:#f8fbff">
+      <summary style="cursor:pointer;font-weight:700">آیا مسئله چند چالش همزمان دارد؟ (اختیاری)</summary>
+      <fieldset style="border:0;margin:10px 0 0;padding:0;display:grid;gap:7px">
+        <legend style="font-size:13px">فقط چالش‌های مرتبط را انتخاب کنید؛ تشخیص نهایی با شماست.</legend>
+        <label><input type="checkbox" data-cj-secondary value="clarity"> ابهام تصمیم یا مسئولیت</label>
+        <label><input type="checkbox" data-cj-secondary value="capability"> مهارت، حمایت یا منابع</label>
+        <label><input type="checkbox" data-cj-secondary value="conflict"> اختلاف‌نظر و هماهنگی</label>
+        <label><input type="checkbox" data-cj-secondary value="performance"> عملکرد و پیگیری</label>
+      </fieldset>
+    </details>
     <div class="cj-controls">
      <button type="button" class="cj-primary" id="cj-guide">دریافت راهنمای اولیه <span aria-hidden="true">←</span></button>
      <button type="button" class="cj-secondary" id="cj-send-studio">ادامه همین کیس در استودیو</button>
