@@ -1,12 +1,42 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="معرفی خدمت اهداف و نتایج کلیدی"><meta name="theme-color" content="#1b4668"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="اهداف کلیدی">
-<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png"><title>اهداف و نتایج کلیدی</title>
-<link rel="stylesheet" href="./style.css?v=1"><script defer src="./app.js?v=1"></script></head><body>
-<header><div class="shell top"><div class="brand"><img src="./icon.svg" width="48" height="48" alt=""><strong>اهداف و نتایج کلیدی</strong></div><a href="../products.html" class="text-link">سایر اپ‌ها</a></div></header>
-<main class="shell"><section class="hero"><span class="eyebrow">مدیریت استراتژیک</span><h1>اهداف روشن، نتایج قابل سنجش</h1><p>راهنمای خدمت طراحی، اجرا و بازبینی اهداف و نتایج کلیدی</p></section>
-<div class="note"><strong>وضعیت این محصول</strong><p>این نسخه، راهنمای مستقل خدمت است. سامانه عمومی ثبت اهداف و پایش نتایج هنوز منتشر نشده است؛ سامانه اختصاصی مشتریان نیز به این اپ متصل نیست.</p></div>
-<div class="items"><section class="tile"><span class="circle">۱</span><div><h2>هدف‌گذاری</h2><p>تعریف چند اولویت روشن و نتیجه مورد انتظار در بازه مشخص</p></div></section>
-<section class="tile"><span class="circle">۲</span><div><h2>نتایج کلیدی</h2><p>تبدیل هدف به شاخص‌های قابل اندازه‌گیری و قابل ارزیابی</p></div></section>
-<section class="tile"><span class="circle">۳</span><div><h2>بازبینی و پیگیری</h2><p>گفت‌وگو درباره پیشرفت، موانع و اقدام بعدی با مسئولیت مشخص</p></div></section></div>
-<div class="actions"><a class="button primary" href="../contact.html">درخواست مشاوره</a><a class="button" href="./install.html">نصب راهنمای خدمت روی گوشی</a></div>
-</main><footer class="shell"><a href="../strategic-management/">مدیریت استراتژیک</a> · <a href="../products.html">اپلیکیشن‌ها</a></footer></body></html>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#122e49"><meta name="description" content="اپلیکیشن مستقل و تعاملی OKR؛ نقشه راهبرد، اهداف، نتایج کلیدی، شاخص‌ها و بازبینی هفتگی بر اساس مفاهیم Perdoo 3">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="اهداف کلیدی">
+<link rel="manifest" href="./manifest.webmanifest?v=2"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png">
+<title>OKR | اهداف و نتایج کلیدی</title><link rel="stylesheet" href="./style.css?v=2">
+<script defer src="./model.js?v=2"></script><script defer src="./app.js?v=2"></script></head><body>
+<a class="skip" href="#main">پرش به محتوا</a>
+<div class="app">
+<aside class="sidebar">
+ <a class="logo" href="./index.html"><img src="./icon-192.png" width="42" height="42" alt=""><span><strong>اهداف و نتایج کلیدی</strong><small>OKR WORKSPACE</small></span></a>
+ <p class="nav-caption">فضای کاری</p>
+ <nav class="side-nav" aria-label="بخش‌های اپلیکیشن">
+  <button type="button" data-route="home" aria-current="page"><span class="ico">⌂</span>خانه</button>
+  <button type="button" data-route="map"><span class="ico">◈</span>نقشه راهبرد</button>
+  <button type="button" data-route="explore"><span class="ico">◎</span>اهداف و نتایج</button>
+  <button type="button" data-route="board"><span class="ico">▦</span>شاخص‌ها و ابتکارات</button>
+  <button type="button" data-route="checkins"><span class="ico">◷</span>بازبینی هفتگی</button>
+ </nav>
+ <p class="nav-caption extra">مدیریت</p>
+ <nav class="side-nav" aria-label="داده و تنظیمات"><button type="button" data-route="settings"><span class="ico">☷</span>داده و تنظیمات</button></nav>
+ <div class="side-foot"><span class="tiny-dot"></span>پایلوت مستقل · ذخیره فقط در این دستگاه</div>
+</aside>
+<div class="workspace">
+<header class="topbar">
+ <div class="title-cluster"><span class="eyebrow">STRATEGY EXECUTION · PERDOO 3 CONCEPTS</span><h1 id="pageTitle">داشبورد راهبرد و OKR</h1></div>
+ <div class="top-actions"><button type="button" class="btn subtle" data-action="export-json">پشتیبان</button><button type="button" class="btn primary" data-action="new-objective">+ هدف جدید</button></div>
+</header>
+<main id="main" tabindex="-1"><div id="view" aria-live="polite"><div class="loading">آماده‌سازی فضای کاری…</div></div></main>
+<footer class="footer"><span>این اپ محصول مستقلی است و به OKR کیش یا حساب‌های دیگر متصل نیست.</span><a href="../products.html">همه اپلیکیشن‌ها</a><a href="../strategic-management/">مدیریت استراتژیک</a></footer>
+</div></div>
+<nav class="mobile-nav" aria-label="ناوبری موبایل">
+<button type="button" data-route="home"><span>⌂</span>خانه</button>
+<button type="button" data-route="map"><span>◈</span>راهبرد</button>
+<button type="button" data-route="explore"><span>◎</span>اهداف</button>
+<button type="button" data-route="board"><span>▦</span>شاخص‌ها</button>
+<button type="button" data-route="checkins"><span>◷</span>بازبینی</button>
+</nav>
+<div id="modalLayer" class="modal-layer" hidden><div class="modal-backdrop" data-action="close-dialog"></div><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="modal-title"><h2 id="dialogTitle">ویرایش</h2><button type="button" class="close" data-action="close-dialog" aria-label="بستن">×</button></div><div id="dialogBody"></div></section></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+</body></html>
