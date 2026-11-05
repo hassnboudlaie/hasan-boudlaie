@@ -11,3 +11,4 @@ body.finance-unlocked.mf-calm-ui #home .mf-bank-row:last-child{border-bottom:0!i
 body.finance-unlocked.mf-calm-ui #home .mf-bank-name{display:flex;align-items:center;min-width:0;gap:9px;flex:1}
 body.finance-unlocked.mf-calm-ui #home .mf-bank-initial{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:12px;background:#e9f2fb;color:#2869a0;font-weight:850}
 body.finance-unlocked.mf-calm-ui #home .mf-bank-amount{font-size:18px!important}
+body.finance-unlocked.mf-calm-ui #home .mf-bank-name strong{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
