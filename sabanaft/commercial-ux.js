@@ -65,7 +65,7 @@ function home(s){
  +'<button type="button" class="ed-journey-action" '+actionAttr+' aria-label="'+esc(actionText+(c?' برای '+c.title:''))+'">'+actionText+' <span aria-hidden="true">←</span></button></article>'
  +'<button type="button" class="ed-journey-item ed-journey-reflect" data-ux-go="daily"><span class="ed-journey-number">02</span><span class="ed-journey-content"><span class="ed-kicker">MY REFLECTION</span><strong>سه دقیقه برای بازاندیشی</strong><small>'+(todayCount?'ادامه یادگیری از تجربه امروز':'یک اتفاق کوچک امروز کافی است')+'</small></span><span class="ed-journey-arrow" aria-hidden="true">←</span></button>'
  +'</div>'
- +'<div class="ed-footlinks"><span>Context من: '+dimensions+' از ۱۸ بُعد</span><button type="button" data-ux-go="mix">ایده رهبری من</button><button type="button" data-ux-go="coach">کوچ و منتور</button></div>'
+ +'<div class="ed-footlinks"><a href="app/lesson-notes.html">درسنامه</a><span>Context من: '+dimensions+' از ۱۸ بُعد</span><button type="button" data-ux-go="mix">ایده رهبری من</button><button type="button" data-ux-go="coach">کوچ و منتور</button></div>'
  +'</div>';
 }
 function select(id,label,opts,v){return '<div class="field"><label for="'+id+'">'+label+'</label><select id="'+id+'" data-ux-select="'+id+'">'+opts.map(function(o){return '<option value="'+o[0]+'" '+(o[0]===v?'selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>';}

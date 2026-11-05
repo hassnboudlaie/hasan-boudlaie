@@ -19,14 +19,14 @@ var issues={
  performance:{lesson:'8/performance',first:'C',second:'B',look:'معیار عملکرد، شواهد رفتار، توانایی، انگیزه و مجوز عمل'}
 };
 var labels={project:'پروژه و عملیات',team:'سرپرستی و تیم',headquarters:'ستاد و بین‌واحدی'};
-var draft={text:'',context:'project',urgency:'normal',issue:'clarity'};
-try{var p=JSON.parse(localStorage.getItem(DRAFT)||'null');if(p&&typeof p==='object'){draft.text=String(p.text||'').slice(0,2200);if(labels[p.context])draft.context=p.context;if(issues[p.issue])draft.issue=p.issue;if(['normal','urgent','sensitive'].includes(p.urgency))draft.urgency=p.urgency;}}catch(e){}
+var draft={text:'',context:'project',urgency:'normal',issue:'unknown'};
+try{var p=JSON.parse(localStorage.getItem(DRAFT)||'null');if(p&&typeof p==='object'){draft.text=String(p.text||'').slice(0,2200);if(labels[p.context])draft.context=p.context;if(issues[p.issue]||p.issue==='unknown')draft.issue=p.issue;if(['normal','urgent','sensitive'].includes(p.urgency))draft.urgency=p.urgency;}}catch(e){}
 function values(){return {text:byId('cj-situation').value.trim().slice(0,2200),context:byId('cj-context').value,urgency:byId('cj-urgency').value,issue:byId('cj-choice').value};}
 function persist(){try{localStorage.setItem(DRAFT,JSON.stringify(values()));}catch(e){}}
 function status(s){var el=byId('cj-output');el.hidden=false;el.textContent=s;}
 function advice(v){
- var i=issues[v.issue]||issues.clarity;
- var r1=roles[i.first],r2=roles[i.second];
+ var i=issues[v.issue]||{first:'B',second:'C',look:'بافت و مسئولیت تصمیم',lesson:'1/daily'};
+ var selectedRoles=issues[v.issue]?[roles[i.first],roles[i.second]]:Object.values(roles);
  var sensitive=v.urgency==='sensitive',urgent=v.urgency==='urgent';
  var pre=sensitive?'این موضوع دارای ریسک حساس است. پیش از هر تصمیم، مسیرهای رسمی ایمنی، حقوقی یا منابع انسانی، اختیارات و الزامات سازمان را رعایت کنید؛ این راهنما جایگزین تصمیم مسئول مجاز نیست.':urgent?'فوریت را از فشار لحظه‌ای جدا کنید؛ مشخص کنید تا چه زمانی باید درباره چه چیزی تصمیم گرفته شود.':'ابتدا فرض‌ها و شواهد را روشن کنید؛ لازم نیست فوراً یک نقش را قطعی انتخاب کنید.';
  var context= v.context==='project'?'وابستگی‌های اجرا، پیمانکاران و تحویل کار':v.context==='team'?'توان تیم، اختیار سرپرست و تعهد افراد':'هماهنگی بین‌واحدی، پاسخ‌گویی و مسیر تصویب';
@@ -39,7 +39,7 @@ function advice(v){
  var warn='<div class="cj-result-disclaimer"><strong>محدوده راهنما:</strong> این پاسخ از یک چارچوب آموزشی ثابت ساخته شده و تحلیل AI نیست. انتخاب نقش «درست قطعی» وجود ندارد و مسئولیت تصمیم با مدیر است.</div>';
  return '<div class="cj-answer-head"><span>راهنمای اولیه آماده شد</span><h2>از تشخیص مسئله تا اقدام</h2><p>'+esc(pre)+'</p></div>'+
  '<div class="cj-answer-block"><h3>۱. پرسش‌های شفاف‌سازی</h3><ol>'+q.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ol></div>'+
- '<div class="cj-answer-block"><h3>۲. دو گزینه رفتاری قابل دفاع</h3><div class="cj-roles">'+[r1,r2].map(function(r){return '<article><strong>'+esc(r.name)+' — '+esc(r.label)+'</strong><p>'+esc(r.appropriate)+'</p><blockquote>'+esc(r.sample)+'</blockquote><small>نقطه احتیاط: '+esc(r.risk)+'</small></article>';}).join('')+'</div><p>این دو گزینه، پاسخ قطعی نیستند. بافت ممکن است انتخاب یا ترکیب متفاوتی را توجیه کند.</p></div>'+
+ '<div class="cj-answer-block"><h3>۲. '+(issues[v.issue]?'دو گزینه رفتاری قابل دفاع':'چهار نقش برای بررسی؛ بدون دسته‌بندی قطعی')+'</h3><div class="cj-roles">'+selectedRoles.map(function(r){return '<article><strong>'+esc(r.name)+' — '+esc(r.label)+'</strong><p>'+esc(r.appropriate)+'</p><blockquote>'+esc(r.sample)+'</blockquote><small>نقطه احتیاط: '+esc(r.risk)+'</small></article>';}).join('')+'</div><p>این گزینه‌ها، پاسخ قطعی نیستند. بافت ممکن است انتخاب یا ترکیب متفاوتی را توجیه کند.</p></div>'+
  '<div class="cj-answer-block"><h3>۳. اقدام و شواهد قابل مشاهده</h3><p>برای گفت‌وگوی بعدی، فقط یک اقدام مشخص تعیین کنید: با چه کسی، درباره کدام تصمیم، تا چه موعدی؟ سپس یک شاهد قابل مشاهده از نتیجه ثبت کنید. اگر نتیجه نامعلوم است، «نامعلوم» را ثبت کنید؛ موفقیت را فرض نکنید.</p></div>'+
  '<div class="cj-answer-actions"><button type="button" class="cj-secondary" data-cj-lesson="'+esc(i.lesson)+'">درس مرتبط کتاب ←</button><button type="button" class="cj-primary" id="cj-after-guide">ثبت و ادامه کیس در استودیو ←</button></div>'+warn;
 }
@@ -76,12 +76,13 @@ function humanLink(){
 }
 function addVoice(){
  var Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!Rec)return;
+ if(!Rec){var hint=document.createElement('p');hint.className='small';hint.textContent='تبدیل گفتار در این مرورگر پشتیبانی نمی‌شود؛ از میکروفن صفحه‌کلید یا تایپ استفاده کنید.';byId('cj-situation').insertAdjacentElement('afterend',hint);return;}
  var textarea=byId('cj-situation'),b=document.createElement('button');
  b.type='button';b.className='cj-voice';b.textContent='🎙️ گفتن مسئله';b.setAttribute('aria-pressed','false');textarea.insertAdjacentElement('afterend',b);
  var rec=null,live=false;
  b.addEventListener('click',function(){
   if(live&&rec){rec.stop();return;}
+  if(!window.confirm('تبدیل گفتار ممکن است صدا را به سرویس بیرونی مرورگر ارسال کند. بدون اطلاعات محرمانه ادامه می‌دهید؟'))return;
   try{rec=new Rec();rec.lang='fa-IR';rec.interimResults=false;rec.maxAlternatives=1;
    rec.onresult=function(e){var text=Array.from(e.results).map(function(r){return r[0].transcript;}).join(' ');textarea.value=(textarea.value?textarea.value+'\n':'')+text;persist();};
    rec.onerror=function(){b.textContent='میکروفون در دسترس نیست؛ تایپ کنید';};
