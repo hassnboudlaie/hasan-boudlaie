@@ -714,6 +714,24 @@ function balance(a){
   if(homeCurrency==='IRT'&&transactionCurrency==='IRR')return n/10;
   return 0; // Never silently mix unrelated currencies.
  };
+ // A verified bank-app snapshot is a balance anchor, not a fabricated transaction.
+ // Apply ONLY transactions that occurred after the photographed balance.
+ const verifiedAt=Date.parse(a.balanceSnapshotAt||'');
+ const verifiedIRR=Number(a.balanceSnapshotIRR);
+ if(homeCurrency==='IRR'&&a.balanceSnapshotVerified===true&&
+    Number.isFinite(verifiedAt)&&Number.isFinite(verifiedIRR)){
+  const afterSnapshot=t=>{
+   const timestamp=Date.parse(t.date||t.occurredAt||'');
+   return Number.isFinite(timestamp)&&timestamp>verifiedAt;
+  };
+  const newTx=(db.tx||[])
+   .filter(t=>t.account===a.id&&!['pending','cancelled'].includes(t.status)&&afterSnapshot(t))
+   .reduce((sum,t)=>sum+((t.kind==='income'||(t.kind==='transfer'&&t.direction==='incoming'))?inAccountCurrency(t):-inAccountCurrency(t)),0);
+  const newTransfers=(db.transfers||[])
+   .filter(t=>afterSnapshot(t))
+   .reduce((sum,t)=>sum+(t.to===a.id?t.receive:0)-(t.from===a.id?t.send+t.fee:0),0);
+  return verifiedIRR+newTx+newTransfers;
+ }
  return (Number(a.opening)||0)
   +db.tx.filter(t=>t.account===a.id&&!['pending','cancelled'].includes(t.status))
    .reduce((sum,t)=>sum+((t.kind==='income'||(t.kind==='transfer'&&t.direction==='incoming'))?inAccountCurrency(t):-inAccountCurrency(t)),0)
