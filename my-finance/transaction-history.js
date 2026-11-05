@@ -86,7 +86,7 @@ function row(t,accounts,date,expanded=false){
  const status=t.status==='pending'?(en()?'Pending':'در انتظار پرداخت'):t.status==='cancelled'?(en()?'Cancelled':'لغوشده'):'';
  const title=String(t.category||type).trim();
  const currency=t.currency||account?.currency||'';
- const sign=['expense','investment'].includes(kind)?'−':kind==='income'?'+':'';
+ const sign=['expense','investment'].includes(kind)?'−':(kind==='income'||(t.kind==='transfer'&&t.direction==='incoming'))?'+':(t.kind==='transfer'&&t.direction==='outgoing')?'−':'';
  const accountName=account?.name||t.accountName||'';
  const amount=number.format(Number(t.amount)||0);
  const dateText=solarDate(date,true);
