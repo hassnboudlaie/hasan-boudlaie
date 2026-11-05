@@ -92,7 +92,7 @@ jobs:
               exit 1
             fi
           fi
-          printf '%s\\n' "$CURRENT_CERT" > dist/android-business-signing-fingerprint.txt
+          echo "$CURRENT_CERT" > dist/android-business-signing-fingerprint.txt
       - name: Upload backup downloadable artifacts
         uses: actions/upload-artifact@v4
         with:
