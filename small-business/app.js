@@ -336,7 +336,7 @@ function setupInstall(){
  $('#installBtn').addEventListener('click',async()=>{
   closeMenu();
   if(installEvent){await installEvent.prompt();await installEvent.userChoice;installEvent=null;return}
-  alert(/iPhone|iPad|iPod/.test(navigator.userAgent)?'برای نصب، در مرورگر سافاری از منوی اشتراک‌گذاری «افزودن به صفحه اصلی» را انتخاب کنید.':'برای نصب، از منوی مرورگر گزینه «نصب برنامه» یا «افزودن به صفحه اصلی» را انتخاب کنید.');
+  window.location.href='./install.html';
  });
  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));
 }
