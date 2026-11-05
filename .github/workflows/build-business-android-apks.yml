@@ -8,6 +8,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: business-suite-android-publication
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-24.04
