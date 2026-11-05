@@ -35,7 +35,7 @@ function page(s){
  var selected=focus?'<div class="note"><strong>تمرین پیشنهادی '+esc(focus.name)+':</strong> '+esc(focus.exercise)+'</div>':'<div class="note">یک نقش را برای تمرین انتخاب کنید؛ کمتر غالب بودن یک نقش، به‌تنهایی نشانه ضعف در آن نیست.</div>';
  return '<h1 class="page-title">برنامه توسعه فردی رهبری من</h1><p class="intro">یک چرخه ساده: شواهد → هدف → تمرین → اقدام واقعی → بازاندیشی و بازبینی.</p>'+
  '<div class="note">این ابزار خودارزیابی و تمرین شخصی است، نه آزمون معتبر، امتیازدهی سازمانی یا تشخیص خودکار. اطلاعات فقط در مرورگر همین دستگاه ذخیره می‌شود؛ از واردکردن اطلاعات محرمانه اشخاص خودداری کنید.</div>'+
- '<form id="role-development-form"><section class="card"><h2>۱. توانمندی من در چهار نقش</h2><p class="muted">ارزیابی اختیاری است و فقط با شواهد و بازخورد واقعی معنا پیدا می‌کند.</p>'+skill+'</div></section>'+
+ '<form id="role-development-form"><section class="card"><h2>۱. توانمندی من در چهار نقش</h2><p class="muted">ارزیابی اختیاری است و فقط با شواهد و بازخورد واقعی معنا پیدا می‌کند.</p>'+skill+'</section>'+
  '<section class="card" style="margin-top:16px"><h2>۲. هدف و برنامه تمرین من</h2><div class="field"><label for="dev-focus">نقش هدف</label><select id="dev-focus"><option value="">هنوز انتخاب نکرده‌ام</option>'+
  Object.keys(roles).map(function(k){return '<option value="'+k+'" '+(d.focus===k?'selected':'')+'>'+roles[k].name+' · '+esc(roles[k].label)+'</option>';}).join('')+
  '</select></div>'+field('goal','رفتار مشخصی که می‌خواهم بهتر انجام دهم',d.goal,'مثلاً به جای دستور فوری، دو سؤال باز بپرسم')+
