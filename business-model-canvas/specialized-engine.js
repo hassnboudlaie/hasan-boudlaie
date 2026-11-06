@@ -173,6 +173,50 @@ function go(i,scroll=true){
  updateProgress();
  if(scroll)$("#block-nav").scrollIntoView({block:"start",behavior:"smooth"});
 }
+
+const visualItems=[];
+function renderVisual(){
+ const grid=$("#visual-grid");if(!grid)return;
+ const order=["partners","activities","resources","value","relations","channels","segments","costs","revenues"];
+ for(const id of order){
+   const index=cfg.blocks.findIndex(b=>b.id===id),block=cfg.blocks[index];if(!block)continue;
+   const tile=node("button","sb-visual-tile");tile.type="button";tile.dataset.block=id;
+   const heading=node("strong","sb-visual-title",block.title);
+   const short=node("span","sb-visual-text","هنوز پاسخی ثبت نشده");
+   const count=node("small","sb-visual-count","۰ / "+num(block.questions.length));
+   tile.append(heading,short,count);tile.addEventListener("click",()=>go(index));
+   grid.append(tile);visualItems.push({id,block,tile,short,count});
+ }
+ refreshVisual();
+}
+function refreshVisual(){
+ for(const v of visualItems){
+   const snippets=[];let filled=0;
+   v.block.questions.forEach((q,i)=>{
+     const a=d.answers[v.id+"-"+i]||{};
+     if((a.choices&&a.choices.length)||(a.note&&a.note.trim()))filled++;
+     if(snippets.length>=3)return;
+     const choices=(a.choices||[]).filter(x=>!x.includes("نیازمند بررسی")&&!x.startsWith("سایر /"));
+     if(choices.length)snippets.push(choices.slice(0,2).join("، "));
+     else if(a.note&&a.note.trim())snippets.push(a.note.trim().slice(0,90));
+   });
+   if(!snippets.length&&d.notes[v.id])snippets.push(d.notes[v.id].slice(0,110));
+   v.short.textContent=snippets.length?snippets.join(" • "):"هنوز پاسخی ثبت نشده";
+   v.count.textContent=num(filled)+" / "+num(v.block.questions.length)+" پرسش";
+   v.tile.classList.toggle("sb-has-data",filled>0);
+   v.tile.classList.toggle("sb-fully-answered",filled===v.block.questions.length);
+ }
+}
+function renderSources(){
+ const dest=$("#research-sources"),audit=cfg.audit;
+ if(!dest||!audit?.references)return;
+ const list=node("div","sb-source-list");
+ audit.references.forEach(item=>{
+   const a=node("a","sb-source",item.label);a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";list.append(a);
+ });
+ dest.append(list);
+}
+
 function updateProgress(){
  let answered=0;
  for(let i=0;i<cfg.blocks.length;i++){
@@ -188,6 +232,7 @@ function updateProgress(){
  $("#overall-progress").style.width=(answered/Math.max(1,totalQuestions)*100)+"%";
  $("#overall-count").textContent=num(answered)+" از "+num(totalQuestions)+" سؤال پاسخ داده شده";
  for(const item of questionEls){const a=d.answers[item.k]||{},status=item.summary.querySelector("small");status.textContent=(a.choices||[]).some(x=>x.includes("نیازمند بررسی"))?"نیازمند بررسی":((a.choices&&a.choices.length)||(a.note&&a.note.trim()))?"پاسخ ثبت شد":"برای تکمیل باز کنید";}
+ refreshVisual();
  counters.risks=riskUI.filter(x=>x.check.checked).length;
  $("#risk-count").textContent="ریسک‌های انتخاب‌شده: "+num(counters.risks);
  counters.actions=actionUI.filter(x=>x.c.checked).length;
@@ -231,5 +276,5 @@ function actions(){
    $("#result-status").textContent="فایل پاسخ‌ها دانلود شد؛ آن را در واتساپ ارسال کنید.";
  };
 }
-modelIntro();renderBMC();renderRisks();renderActions();actions();updateProgress();go(0,false);
+modelIntro();renderBMC();renderRisks();renderActions();renderVisual();renderSources();actions();updateProgress();go(0,false);
 })();
