@@ -1,0 +1,58 @@
+/* Linear, distraction-free completion flow; scoped to the two industry-specific questionnaires. */
+body.sb-linear-active main.container{padding-bottom:112px}
+body.sb-linear-active .sb-jump,
+body.sb-linear-active #bmc-navigation{display:none!important}
+body.sb-linear-active .hero{margin-bottom:12px;padding:18px 20px;border-radius:18px;box-shadow:0 8px 26px color-mix(in srgb,var(--accent) 14%,transparent)}
+body.sb-linear-active .hero h1{font-size:1.32rem;margin-top:0}
+body.sb-linear-active .hero p{font-size:.8rem;line-height:1.65}
+body.sb-linear-active .hero .sb-progress,
+body.sb-linear-active .hero #overall-count{display:none}
+.sb-wizard-status{position:relative;border:1px solid color-mix(in srgb,var(--accent) 25%,#fff);border-radius:16px;background:#fff;padding:15px 18px;margin:8px 0 15px;box-shadow:0 4px 18px rgba(23,25,26,.04)}
+.sb-wizard-eyebrow{font-size:.69rem;letter-spacing:.03em;font-weight:850;color:var(--accent)}
+.sb-wizard-heading{font-size:1.08rem;line-height:1.55;font-weight:900;margin-top:3px;color:var(--ink)}
+.sb-wizard-count{font-size:.77rem;font-weight:750;color:#706970;margin-top:5px;line-height:1.75}
+.sb-wizard-track{height:8px;background:#e5e0e2;border-radius:100px;overflow:hidden;margin:11px 0 0}
+#sb-wizard-fill{height:100%;display:block;width:1%;background:var(--accent);border-radius:100px;transition:width .2s}
+.sb-wizard-help{color:#625d61;font-size:.78rem;line-height:1.9;margin:9px 0 0}
+#sb-wizard-controls{position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;gap:11px;justify-content:center;padding:12px max(14px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:color-mix(in srgb,#fff 94%,transparent);box-shadow:0 -7px 28px rgba(25,25,29,.10);border-top:1px solid #e6e0e3;backdrop-filter:blur(15px)}
+#sb-wizard-controls button{border-radius:12px;max-width:410px;min-height:50px;font-weight:850;font-size:.94rem;line-height:1.6;margin:0;padding:10px 17px}
+.sb-wizard-back{flex:0 1 130px;color:var(--accent);background:#fff;border:1px solid color-mix(in srgb,var(--accent) 40%,#fff)}
+.sb-wizard-forward{flex:1 1 220px;color:white;background:var(--accent);border:1px solid var(--accent)}
+.sb-wizard-back:disabled{opacity:.38;cursor:not-allowed}
+#sb-wizard-next[hidden]{display:none}
+body.sb-linear-active .sb-block{scroll-margin-top:120px}
+body.sb-linear-active .sb-block>h2{margin:0 0 6px;font-size:1.1rem}
+body.sb-linear-active .sb-block>p.sb-hint{margin-bottom:7px}
+body.sb-linear-active .sb-block>p.sb-essential-note{display:none!important}
+body.sb-linear-active .sb-question{border:0;box-shadow:none;background:transparent;margin:8px 0;overflow:visible}
+body.sb-linear-active .sb-question>summary{background:var(--accent-soft);padding:13px;border-radius:12px;pointer-events:none;cursor:default}
+body.sb-linear-active .sb-question>summary::before{display:none}
+body.sb-linear-active .sb-question>.sb-checkgrid{padding:4px 0;gap:5px}
+body.sb-linear-active .sb-question>.sb-note{margin:7px 0 9px;padding:11px 0 0}
+body.sb-linear-active .sb-question>.sb-note>summary{pointer-events:none;list-style:none;cursor:default}
+body.sb-linear-active .sb-question>.sb-note>summary::-webkit-details-marker{display:none}
+body.sb-linear-active .sb-question>.sb-note .sb-prompt{line-height:1.8}
+body.sb-linear-active .sb-risk,
+body.sb-linear-active .sb-action{margin:7px 0}
+body.sb-linear-active .sb-riskdetail,
+body.sb-linear-active .sb-action .sb-riskdetail{padding-top:14px}
+body.sb-linear-active .sb-riskhead input:disabled{opacity:1;cursor:default}
+body.sb-linear-active .sb-visual-grid.sb-review-only button{cursor:default}
+body.sb-linear-active #visual-section{scroll-margin-top:110px}
+body.sb-linear-active #research-method{margin-bottom:35px}
+body.sb-linear-active footer{padding-bottom:125px}
+@media(max-width:550px){
+ body.sb-linear-active .hero{padding:15px 16px;margin-top:10px}
+ body.sb-linear-active .hero h1{font-size:1.24rem}
+ body.sb-linear-active .hero .eyebrow{font-size:.65rem}
+ .sb-wizard-status{padding:13px 14px;border-radius:13px}
+ .sb-wizard-heading{font-size:1.04rem}
+ .sb-wizard-count{font-size:.75rem}
+ #sb-wizard-controls{gap:8px;padding:9px 12px calc(9px + env(safe-area-inset-bottom))}
+ #sb-wizard-controls button{min-height:49px;font-size:.86rem;padding:9px 11px}
+ .sb-wizard-back{flex:0 1 98px}
+ .sb-wizard-forward{flex:1}
+ body.sb-linear-active .card{padding:15px}
+ body.sb-linear-active .sb-block>h2{font-size:1.05rem}
+ body.sb-linear-active .sb-question>.sb-checkgrid{grid-template-columns:1fr}
+}
