@@ -34,6 +34,7 @@
  .s1-stepper{padding:16px}
  .s1-step-q{font-size:19px}
 }
+.simple-academy{padding:25px 0 55px}.simple-academy h1{font-size:26px;color:#173d5d;margin:0 0 18px}.simple-academy .academy-course-card{display:block;text-decoration:none}.simple-academy .academy-course-card h2{font-size:21px}.direct-entry{display:block;text-align:center;background:#0e5647;color:white;border-radius:12px;padding:13px 16px;margin-top:14px;font-weight:800}.claims-poster{overflow:hidden;border-radius:17px;background:linear-gradient(130deg,#063f37,#117258);color:#fff;padding:20px;min-height:230px}.claims-poster h2{color:#fff!important;line-height:1.65;margin:10px 0}.poster-themes{font-size:14px;color:#e0f3e8}.poster-visual{height:110px;position:relative;background:radial-gradient(circle at 65% 60%,#348d79,transparent 42%)}.poster-mark{position:absolute;right:4px;top:0;font-weight:900;color:#d6c393}.poster-scene{position:absolute;left:10%;bottom:0;display:flex;gap:18px;align-items:end}.poster-person{display:block;width:65px;height:76px;background:linear-gradient(#e2c4a5 0 32%,#173d5d 32%);border-radius:40px 40px 9px 9px}.poster-shield,.poster-file{display:grid;place-items:center;width:56px;height:62px;border:2px solid #c9e7d8;border-radius:15px;font-size:32px}.simple-academy .academy-courses{gap:18px}@media(max-width:650px){.simple-academy{padding:16px 0}.claims-poster{min-height:220px}}
 </style>
 <link rel="preload" href="assets/fonts/Vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/theme.css?v=20261022-1">
@@ -604,8 +605,8 @@ const sessions=[
 {id:10,title:"مشتری سازمانی، اقناع و مذاکره + ارتباطات دیجیتال",desc:"ارتباط با مشتری سازمانی، کشف نیاز، ارزش‌آفرینی، اعتراض و پیگیری.",topics:["ارتباط بین کسب‌وکارها","اقناع","مذاکره","آداب ارتباطات دیجیتال"],goal:"رئیس شعبه بتواند ارتباط اولیه و جلسه حرفه‌ای با مشتری سازمانی را ساختاریافته مدیریت کند.",outline:["تفاوت ارتباط بین کسب‌وکارها و ارتباط با مصرف‌کننده","آمادگی قبل از جلسه","پرسش‌های کشف نیاز","گفت‌وگوی ارزش‌آفرین","اصول پایه اقناع و مذاکره","آداب تماس تلفنی، واتس‌اپ و رایانامه","پیگیری و ثبت توافقات"]}
 ];
 
-function header(){return '<header class="top"><div class="wrap topin"><a class="brand" href="?"><span class="logo">ا</span><span><b>آکادمی مدیریت و یادگیری بیمه البرز</b><small>مسیرهای آموزشی کارشناسان و مدیران</small></span></a><div style="display:flex;align-items:center;gap:10px"><nav class="nav"><a href="?">جلسات</a><a href="?view=guide">راهنما</a></nav><div class="utility-nav"><a class="utility-btn" href="?">⌂ خانه</a><button class="utility-btn" onclick="history.length>1?history.back():location.href=\'?\'">→ برگشت</button></div></div></div></header>'}
-function footer(){return '<footer class="footer"><div class="wrap">آکادمی مدیریت و یادگیری بیمه البرز</div></footer>'}
+function header(){return '<header class="top"><div class="wrap topin"><a class="brand" href="?"><span class="logo">ا</span><span><b>آکادمی مدیریت و یادگیری بیمه البرز</b></span></a><div class="utility-nav"><a class="utility-btn" href="?">⌂ خانه</a><button class="utility-btn" onclick="history.length>1?history.back():location.href=\'?\'">→ برگشت</button></div></div></header>'}
+function footer(){return ''}
 function communicationHome(){
 document.title="آکادمی مهارت‌های ارتباطات اثربخش | بیمه البرز";
 document.getElementById("app").innerHTML=header()+
@@ -616,25 +617,13 @@ sessions.map(s=>'<a class="card" href="?m='+s.id+'"><div class="num">جلسه '+
 
 
 function home(){
- document.title="آکادمی مدیریت و یادگیری | بیمه البرز";
+ document.title="آکادمی مدیریت و یادگیری بیمه البرز";
  document.getElementById("app").innerHTML=header()+
- '<main><section class="academy-portal-hero"><div class="wrap"><span class="tag">آکادمی مدیریت و یادگیری بیمه البرز</span><h1>دوره‌های آموزشی بیمه البرز</h1><p>مسیر آموزشی خود را انتخاب کنید. هر دوره محتوای اختصاصی و فضای یادگیری مستقل دارد.</p></div></section>'+
- '<section class="section"><div class="wrap"><h2>انتخاب دوره</h2><div class="academy-courses">'+
- '<a class="academy-course-card academy-course-resilience" href="claims-workshop-v2.html"><span class="academy-course-tag">دوره ارتقایافته · ویژه کارشناسان خسارت</span>'+
- '<span class="academy-course-art" aria-hidden="true">🐪　🧘　🗣️</span><h3>تاب‌آوری، مدیریت خشم و جرأت‌ورزی</h3>'+
- '<p>سه بخش مستقل ویژه کارشناسان خسارت؛ سناریوهای واقعی، خودارزیابی، رول‌پلی و تحلیل گروهی.</p>'+
- '<span class="academy-course-metas"><span>۸ ساعت</span><span>۱۰ گروه پنج‌نفره</span><span>۵۰ شرکت‌کننده</span></span>'+
- '<span class="academy-course-cta">ورود به کارگاه کارشناسان خسارت ←</span></a>'+
- '<a class="academy-course-card academy-course-communication" href="?course=communication"><span class="academy-course-tag">دوره اصلی · رؤسای شعب</span>'+
- '<span class="academy-course-art" aria-hidden="true">🤝　💬　🎯</span><h3>مهارت‌های ارتباطات اثربخش</h3>'+
- '<p>دسترسی کامل به جلسه صفر، ده جلسه اصلی، آموزش‌ها، ارزیابی‌ها، سناریوها و تمرین‌های ارتباطی.</p>'+
- '<span class="academy-course-metas"><span>رؤسای شعب</span><span>جلسات تعاملی</span></span>'+
- '<span class="academy-course-cta">ورود به دوره مهارت‌های ارتباطی ←</span></a>'+
- '</div></div></section></main>'+footer();
+ '<main class="simple-academy"><div class="wrap"><h1>انتخاب دوره</h1><div class="academy-courses">'+
+ '<article class="academy-course-card academy-course-resilience"><div class="claims-poster"><div class="poster-visual"><span class="poster-mark">البرز</span><div class="poster-scene"><span class="poster-person"></span><span class="poster-shield">✓</span><span class="poster-file">▤</span></div></div><h2>کارگاه مهارت‌های فردی کارشناسان خسارت بیمه البرز</h2><div class="poster-themes">تاب‌آوری · مدیریت خشم · جرأت‌ورزی</div></div><a class="academy-course-cta direct-entry" href="claims-workshop-v2.html">ورود به کارگاه کارشناسان خسارت</a></article>'+
+ '<article class="academy-course-card academy-course-communication"><h2>مهارت‌های ارتباطات اثربخش</h2><a class="academy-course-cta direct-entry" href="?course=communication">ورود به دوره مهارت‌های ارتباطی</a></article>'+
+ '</div></div></main>';
 }
-
-
-
 const labs={
 1:{sample:"سناریو: مشتری مهمی بدون وقت قبلی وارد شعبه می‌شود و هم‌زمان نماینده‌ای منتظر دیدار رئیس شعبه است. رئیس شعبه باید نحوه استقبال، معرفی و مدیریت انتظار هر دو نفر را انتخاب کند.",exercise:"در سه دقیقه، برای یک مشتری جدید، یک همکار ستادی و یک نماینده سه شیوه متفاوت برای شروع گفت‌وگو بنویسید.",task:"تا جلسه بعد یک موقعیت واقعی را ثبت کنید که برداشت اولیه روی ادامه رابطه اثر گذاشته است.",note:"هدف تمرین، «تشریفاتی شدن» رفتار نیست؛ هدف، آگاهانه شدن رفتار حرفه‌ای است."},
 2:{sample:"سناریو: مدیر ارشد سازمان برای بازدید به شعبه می‌آید و هم‌زمان جلسه‌ای با مشتری سازمانی در جریان است. ترتیب استقبال، معرفی و نشستن را تصمیم‌گیری کنید.",exercise:"چیدمان یک جلسه چهارنفره را برای رئیس شعبه، مدیر ستادی، مشتری و کارشناس شعبه طراحی کنید و دلیل آن را بگویید.",task:"یک فهرست کنترل پنج‌مرحله‌ای برای بازدید رسمی شعبه بسازید.",note:"Protocol خوب باید دیده نشود؛ اگر درست طراحی شده باشد، جریان جلسه طبیعی و بدون سردرگمی پیش می‌رود."},
