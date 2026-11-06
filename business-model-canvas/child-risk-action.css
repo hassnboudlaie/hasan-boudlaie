@@ -1,0 +1,23 @@
+/* Scoped add-on for the child-culture BMC only */
+.ra-section{scroll-margin-top:18px}
+.ra-section>h2{color:#164b3e}
+.ra-section>.muted{margin-top:4px}
+.ra-list{display:grid;gap:10px;margin-top:12px}
+.ra-item{border:1px solid #dae9dd;background:#fbfdfb;border-radius:13px;padding:10px 13px}
+.ra-check{display:flex;align-items:flex-start;gap:11px;cursor:pointer;font-weight:650;padding:7px 2px;line-height:1.8}
+.ra-check input{width:21px;height:21px;flex:none;margin-top:5px;accent-color:#176047}
+.ra-check:has(input:checked){color:#176047}
+.ra-details{border-top:1px solid #e0e9e2;margin-top:7px;padding:14px 2px 6px;display:grid;gap:13px}
+.ra-details[hidden]{display:none!important}
+.ra-field{display:grid;gap:6px;font-size:.91rem;font-weight:500;padding:0}
+.ra-field-title{font-size:.84rem;color:#3b6250;font-weight:650}
+.ra-details :is(input[type=text],input[type=date],select,textarea),
+.ra-custom :is(input[type=text],input[type=date],textarea){width:100%;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid #c4d9cb;border-radius:10px;padding:10px;background:#fff;color:#163d32;font:inherit}
+.ra-details textarea,.ra-custom textarea{min-height:85px;resize:vertical}
+.ra-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ra-phase{margin:16px 0 0;font-weight:800;background:#e8f3e9;padding:8px 13px;border-radius:9px;color:#176047}
+.ra-custom{background:#f3f8f3;border:1px dashed #c0d7c4;border-radius:13px;padding:14px;margin-top:17px;display:grid;gap:13px}
+.ra-custom h3{margin:0}
+.ra-stats{color:#176047;background:#e7f2e8;padding:7px 12px;border-radius:10px;font-size:.84rem;font-weight:800}
+.ra-item:focus-within{border-color:#8bbda1}
+@media(max-width:520px){.ra-pair{grid-template-columns:1fr}.ra-item{padding:9px 11px}.ra-check{font-size:.91rem}.ra-section{padding:15px}}
