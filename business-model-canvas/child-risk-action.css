@@ -25,3 +25,20 @@
 .ra-topnav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .ra-topnav a{border-radius:10px;padding:7px 11px;border:1px solid #b5dbc6;background:#f3fbf6;color:#17523e;text-decoration:none;font-size:.81rem;font-weight:800}
 .ra-topnav a:focus-visible,.ra-topnav a:hover{background:#e5f3e7;outline:2px solid #b0dac0}
+
+
+/* Progressive, mobile-first additional business-model discovery questions. */
+.deep-details{margin-top:16px;border:1px solid #cbded0;border-radius:13px;background:#f6faf7;overflow:hidden}
+.deep-summary{padding:14px 15px;color:#165540;font-size:.97rem;font-weight:800;cursor:pointer;background:#e6f2e9;line-height:1.7}
+.deep-summary::marker{color:#247251}
+.deep-help{margin:12px 15px;color:#566f61;font-size:.81rem}
+.deep-question{background:#fff;border:1px solid #dae8de;border-radius:12px;padding:14px;margin:12px}
+.deep-question h3{font-size:.95rem;line-height:1.8;margin:0 0 8px;color:#174938}
+.deep-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+.deep-option{display:flex;align-items:flex-start;gap:9px;padding:8px 4px;font-size:.84rem;line-height:1.85;border-bottom:1px solid #edf3ee;cursor:pointer}
+.deep-option input{width:19px;height:19px;flex:none;accent-color:#176047;margin:5px 0 0}
+.deep-note{padding:10px 0 4px}
+.deep-note>summary{font-weight:750;color:#356850;font-size:.85rem;cursor:pointer}
+.deep-open-prompt{font-size:.83rem;color:#526f61;line-height:1.9;margin:10px 0 8px}
+.deep-note textarea{min-height:95px;width:100%;box-sizing:border-box;background:white}
+@media(max-width:560px){.deep-options{grid-template-columns:1fr}.deep-question{padding:12px;margin:10px 7px}.deep-summary{font-size:.92rem}.deep-option{font-size:.87rem}}
