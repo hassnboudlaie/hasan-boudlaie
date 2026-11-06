@@ -25,6 +25,7 @@ jobs:
           node --check business-model-canvas/child-discovery.js
           node --check business-model-canvas/child-flow.js
           node --check business-model-canvas/specialized-engine.js
+          node --check business-model-canvas/specialized-linear.js
           node --check business-model-canvas/special-parastoo-data.js
           node --check business-model-canvas/special-jewelry-data.js
           node --check business-model-canvas/choice-bank.js
