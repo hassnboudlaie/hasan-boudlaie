@@ -152,12 +152,12 @@ function renderActions(){
  }
 }
 let current=0;
-function go(i){
+function go(i,scroll=true){
  current=Math.max(0,Math.min(8,i));
  $("#block-sections").querySelectorAll(".sb-block").forEach((section,k)=>{section.hidden=k!==current;});
  $("#block-nav").querySelectorAll(".sb-tile").forEach((tile,k)=>{tile.classList.toggle("sb-active",k===current);tile.setAttribute("aria-current",k===current?"step":"false");});
  updateProgress();
- $("#block-nav").scrollIntoView({block:"start",behavior:"smooth"});
+ if(scroll)$("#block-nav").scrollIntoView({block:"start",behavior:"smooth"});
 }
 function updateProgress(){
  let answered=0;
@@ -214,5 +214,5 @@ function actions(){
    $("#result-status").textContent="فایل پاسخ‌ها دانلود شد؛ آن را در واتساپ ارسال کنید.";
  };
 }
-modelIntro();renderBMC();renderRisks();renderActions();actions();updateProgress();go(0);
+modelIntro();renderBMC();renderRisks();renderActions();actions();updateProgress();go(0,false);
 })();
