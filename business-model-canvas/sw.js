@@ -1,5 +1,5 @@
 'use strict';
-const PREFIX='hb-bmc-independent-', CACHE=PREFIX+'20261106-bmc-forms-v14';
+const PREFIX='hb-bmc-independent-', CACHE=PREFIX+'20261106-bmc-forms-v15';
 const BASE=new URL('./',self.registration.scope);
 const CORE=['./','./index.html','./studio.html','./parastoo-canvas.html','./jewelry-canvas.html','./specialized-engine.js','./specialized-engine.css','./special-parastoo-data.js','./special-jewelry-data.js','./child-culture.html','./child-risk-action.js','./child-discovery.js','./child-flow.js','./child-risk-action.css','./studio.css','./visual-refresh.css','./choice-bank.js','./studio.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./install.html','./pwa-install.js'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE.map(path=>new URL(path,BASE).href))).then(()=>self.skipWaiting())));
