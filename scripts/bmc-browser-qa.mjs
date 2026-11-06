@@ -252,47 +252,81 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
 {
  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,acceptDownloads:true});
  const pg=await ctx.newPage();pg.on('pageerror',e=>errors.push('specialized: '+e.message));
- for(const v of [{id:'parastoo',file:'parastoo-canvas.html',total:60},{id:'jewelry',file:'jewelry-canvas.html',total:51}]){
+ for(const v of [{id:'parastoo',file:'parastoo-canvas.html',total:60,firstBlock:7},{id:'jewelry',file:'jewelry-canvas.html',total:51,firstBlock:6}]){
   try{
    const res=await pg.goto(ROOT+v.file,{waitUntil:'load'});
    assert(res?.ok(),v.id+' page failed to open');
-   assert.equal(await pg.locator('#block-nav .sb-tile').count(),9,'Nine tiles missing');
+   assert.equal(await pg.locator('#block-nav .sb-tile').count(),9,'Nine BMC section definitions missing');
    assert.equal(await pg.locator('.sb-question').count(),v.total,'Question count incorrect');
    assert.equal(await pg.locator('.sb-risk').count(),12,'Risk count incorrect');
    assert.equal(await pg.locator('.sb-action').count(),12,'Action count incorrect');
-   assert.equal(await pg.locator('#visual-grid .sb-visual-tile').count(),9,'Missing live visual 9-block BMC overview');
-   assert.equal(await pg.locator('#research-sources .sb-source').count(),4,'Missing methodology and source links');
-   assert.equal(await pg.locator('.sb-evidencebox').count(),9,'Missing nine block evidence fields');
-   assert.equal(await pg.locator('#block-sections .sb-block:visible').count(),1,'Only one questionnaire block must be displayed');
-   await pg.locator('#special-block-0 .sb-evidencebox select').selectOption('interview');
-   await pg.locator('#special-block-0 .sb-evidencebox textarea').fill('مصاحبه تست با ۱۰ مشتری واقعی');
-
+   assert.equal(await pg.locator('#visual-grid .sb-visual-tile').count(),9,'Missing live 9-block BMC overview');
+   assert.equal(await pg.locator('#research-sources .sb-source').count(),4,'Missing scientific methodology links');
+   assert.equal(await pg.locator('.sb-evidencebox').count(),9,'Missing nine evidence sections');
+   assert.equal(await pg.locator('#sb-wizard-controls').count(),1,'Linear previous-next controls missing');
+   assert.equal(await pg.locator('#business-intro:visible').count(),1,'Intro not first');
+   assert.equal(await pg.locator('#risk-section:visible').count(),0,'Risk stage improperly shown during intro');
+   assert.equal(await pg.locator('#visual-section:visible').count(),0,'Preview shown before review step');
+   assert.equal(await pg.locator('#block-sections:visible').count(),0,'Questions shown before intro');
    await pg.locator('textarea[name=idea]').fill('Test idea '+v.id);
-   await pg.locator('.sb-question').first().locator('input[type=checkbox]').first().check();
-   const risk=pg.locator('.sb-risk').first();await risk.locator('input[type=checkbox]').check();
+   await pg.locator('#sb-wizard-next').click();
+   assert.equal(await pg.locator('.sb-question:visible').count(),1,'A question must be individually shown');
+   const firstQ=pg.locator('.sb-question:visible');
+   await firstQ.locator('input[type=checkbox]').first().check();
+   await firstQ.locator('textarea').fill('Observed customer evidence '+v.id);
+   for(let i=0;i<v.total;i++){
+     assert.equal(await pg.locator('.sb-question:visible').count(),1,'More than one question visible at step '+i);
+     if(i===v.firstBlock-1){
+       await pg.locator('#special-block-0 .sb-evidencebox select').selectOption('interview');
+       await pg.locator('#special-block-0 .sb-evidencebox textarea').fill('مصاحبه تست با ۱۰ مشتری واقعی');
+     }
+     await pg.locator('#sb-wizard-next').click();
+   }
+   assert.equal(await pg.locator('#risk-section:visible').count(),1,'Risk selection did not follow final BMC question');
+   assert.equal(await pg.locator('.sb-risk:visible').count(),12,'Risk selection list missing');
+   const risk=pg.locator('.sb-risk').first();
+   await risk.locator('input[type=checkbox]').check();
+   assert.equal(await risk.locator('.sb-riskdetail:visible').count(),0,'Risk details must be on next linear step');
+   await pg.locator('#sb-wizard-next').click();
+   assert.equal(await pg.locator('.sb-risk:visible').count(),1,'More than one risk detail shown');
    await risk.locator('textarea').first().fill('Risk evidence '+v.id);
-   const action=pg.locator('.sb-action').first();await action.locator('input[type=checkbox]').check();
+   await pg.locator('#sb-wizard-next').click();
+   assert.equal(await pg.locator('#action-section:visible').count(),1,'Action selection did not follow risks');
+   assert.equal(await pg.locator('.sb-action:visible').count(),12,'Action selection list missing');
+   const action=pg.locator('.sb-action').first();
+   await action.locator('input[type=checkbox]').check();
+   await pg.locator('#sb-wizard-next').click();
+   assert.equal(await pg.locator('.sb-action:visible').count(),1,'More than one action detail shown');
    await action.locator('input[type=text]').fill('Owner '+v.id);
+   await pg.locator('#sb-wizard-next').click();
+   assert.equal(await pg.locator('#output-section:visible').count(),1,'Final report did not follow action details');
+   assert.equal(await pg.locator('#visual-section:visible').count(),1,'Nine-cell preview not visible on review');
+   assert.equal(await pg.locator('#sb-wizard-next:visible').count(),0,'Next must disappear on review');
    const promise=pg.waitForEvent('download');
    await pg.locator('#download-text').click();
    const file=await promise;
    const filename=path.join(DIR,'intake-'+v.id+'.txt');await file.saveAs(filename);
    const output=await fs.readFile(filename,'utf8');
-   for(const term of ['Test idea '+v.id,'Risk evidence '+v.id,'Owner '+v.id,'مصاحبه تست با ۱۰ مشتری واقعی','سطح شواهد: مصاحبه'])assert(output.includes(term),'Missing export term '+term);
+   for(const term of ['Test idea '+v.id,'Risk evidence '+v.id,'Owner '+v.id,'Observed customer evidence '+v.id,'مصاحبه تست با ۱۰ مشتری واقعی','سطح شواهد: مصاحبه']){
+     assert(output.includes(term),'Missing export term '+term);
+   }
    await pg.reload({waitUntil:'load'});
+   assert.equal(await pg.locator('#output-section:visible').count(),1,'Wizard must resume its last stage after reload');
    assert.equal(await pg.locator('textarea[name=idea]').inputValue(),'Test idea '+v.id,'Autosave missing');
-   assert.equal(await pg.locator('#special-block-0 .sb-evidencebox select').inputValue(),'interview','Evidence status did not persist');
-   assert.equal(await pg.locator('#special-block-0 .sb-evidencebox textarea').inputValue(),'مصاحبه تست با ۱۰ مشتری واقعی','Evidence source did not persist');
-   await pg.locator('#visual-grid .sb-visual-tile[data-block="segments"]').click();
-   assert(await pg.locator('#special-block-0').isVisible(),'Live nine-cell visual card did not navigate to block');
-   const proofPath=path.join(DIR,'specialized-premium-'+v.id+'.png');
-   await pg.screenshot({path:proofPath,fullPage:true});
-
+   assert.equal(await pg.locator('#special-block-0 .sb-evidencebox select').inputValue(),'interview','Evidence did not persist');
    assert(await pg.locator('.sb-risk').first().locator('input[type=checkbox]').isChecked(),'Risk did not persist');
    assert(await pg.locator('.sb-action').first().locator('input[type=checkbox]').isChecked(),'Action did not persist');
+   await pg.locator('#sb-wizard-back').click();
+   assert.equal(await pg.locator('.sb-action:visible').count(),1,'Back navigation to selected action did not work');
+   await pg.locator('#sb-wizard-next').click();
+   assert.equal(await pg.locator('#output-section:visible').count(),1,'Forward after back did not work');
    if(v.id==='jewelry')assert(await pg.evaluate(()=>!!localStorage.getItem('hb-specialized-bmc-v1-parastoo')),'Parastoo data lost after jewelry');
-   test('Specialized '+v.id+' — nine blocks, questions, risks, actions, independent save, file export',true);
-  }catch(e){test('Specialized '+v.id,false,e.stack||String(e));await pg.screenshot({path:path.join(DIR,'specialized-failure-'+v.id+'.png'),fullPage:true}).catch(()=>{});}
+   await pg.screenshot({path:path.join(DIR,'specialized-linear-'+v.id+'.png'),fullPage:true});
+   test('Specialized '+v.id+' — linear intro, one question per step, selected risk and action, review, independent save and export',true);
+  }catch(e){
+   test('Specialized '+v.id+' — linear flow',false,e.stack||String(e));
+   await pg.screenshot({path:path.join(DIR,'specialized-linear-failure-'+v.id+'.png'),fullPage:true}).catch(()=>{});
+  }
  }
  await ctx.close();
 }
