@@ -297,8 +297,8 @@
       const label=entry ? entry.title : 'مأموریت نهایی';
       const emoji=entry ? entry.emoji : '🎯';
       return '<button type="button" data-module="' + E(m) + '" class="' + (m===s.module?'active':'') +
-       '" aria-current="' + (m===s.module?'true':'false') + '"><span class="emoji">' + E(emoji) +
-       '</span>' + E(label) + '</button>';
+       '" aria-current="' + (m===s.module?'true':'false') + '"><img class="module-thumb" alt="" src="' +
+       E(artOf(m)) + '" loading="lazy" decoding="async"><span>' + E(label) + '</span></button>';
     }).join('');
     $('slide-nav').innerHTML=moduleSlides.map((item,i) => '<button type="button" class="' +
       (i===offset?'active':'') + '" data-slide="' + i + '" aria-current="' + (i===offset?'true':'false') +
