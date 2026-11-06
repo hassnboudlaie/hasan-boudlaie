@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#145a49">
+<title>آزمایشگاه گروهی زنده | نمونه آزمایشی بیمه البرز</title>
+<style>
+:root{--green:#135e4e;--bg:#f3f6f4;--line:#d5e5dd;--muted:#587068;--red:#aa463f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:17px/1.85 Tahoma,Arial,sans-serif;color:#173e34;direction:rtl}
+header{background:var(--green);color:#fff;padding:18px 20px}header>div,main{max-width:1120px;margin:auto}header b{font-size:23px}header small{display:block;color:#d8efe5}main{padding:24px 16px 80px}
+.card{background:white;border:1px solid var(--line);border-radius:19px;padding:18px;margin:16px 0;box-shadow:0 5px 18px #104c3611}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}
+h1,h2,h3{line-height:1.5;margin:0 0 10px}h2{font-size:21px}h3{font-size:18px}
+label{display:block;font-size:15px;font-weight:700;margin:12px 0 5px}
+input,textarea,select,button{font:inherit}input,textarea,select{width:100%;border:1px solid #a8cbbd;border-radius:10px;padding:9px;background:white;color:#133e31}
+textarea{min-height:112px;resize:vertical}button{border:0;border-radius:10px;padding:10px 17px;cursor:pointer;background:var(--green);color:white;font-weight:700}
+button:disabled{opacity:.5}button.secondary{background:#e6efe9;color:#235341}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #efb55e;outline-offset:2px}
+.muted,.note{color:var(--muted);font-size:14px}.note{background:#eff4f0;padding:8px 12px;border-radius:10px}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.row>*{flex:1}.row button{flex:0 0 auto}
+.chip{display:inline-block;background:#e7f2ed;border-radius:99px;padding:3px 10px;margin:3px;font-size:14px}.danger{color:var(--red)}
+.mission{padding:14px;border:1px solid #d5e4d9;border-radius:14px;background:#f9fcfa}
+.mission.current{border:2px solid #147960;background:#eef8f2}
+button.mission{color:#244e3e;text-align:right;font-weight:400;width:100%}button.mission strong{display:block}
+.student{border:1px solid #e1ebe6;padding:11px;border-radius:10px;margin:8px 0;background:#f7faf8;white-space:pre-wrap}
+.info{border-right:4px solid #c99b56;background:#fff8ee;padding:9px 12px;margin:8px 0;border-radius:8px}
+.status{font-size:14px;color:#1b6952}.hidden{display:none!important}details{padding:8px;border:1px solid var(--line);border-radius:13px;margin:10px 0}summary{cursor:pointer;font-weight:700}
+small{font-size:13px}
+</style></head><body><header><div><b>آزمایشگاه همکاری گروهی بیمه البرز</b><small>نسخه مستقل Pilot · اتصال چند گوشی · چهار مأموریت تاب‌آوری</small></div></header>
+<main><section id="signin" class="card"><h1>ورود به فضای کارگاه</h1><p class="muted">این صفحه فقط برای تست Live Collaboration است و هنوز جایگزین نسخه اصلی کارگاه نشده است.</p>
+<div class="grid"><div><label for="role">نحوه ورود</label><select id="role"><option value="team">شرکت‌کننده</option><option value="teacher">مدرس</option></select></div>
+<div id="team-box"><label for="team">شماره گروه</label><select id="team"></select></div>
+<div id="member-box"><label for="member">شماره عضو در گروه</label><select id="member"></select></div></div>
+<label for="access">کد اختصاصی گروه / مدرس</label><input id="access" type="password" autocomplete="off" maxlength="24" placeholder="کد ۲۴ کاراکتری">
+<div class="row" style="margin-top:14px"><button id="join">ورود و اتصال</button><span id="signin-status" role="status" class="status"></span></div></section>
+<section id="workspace" class="hidden"><div class="row"><h1 id="workspace-title"></h1><button class="secondary" id="logout">خروج</button></div>
+<p id="live-status" role="status" class="status"></p>
+<div id="team-view" class="hidden">
+<div class="card"><h2>چهار سناریوی تاب‌آوری</h2><p class="muted">گفت‌وگو و اجرای کامل سناریوها در کارگاه اصلی انجام می‌شود؛ این صفحه ثبت فردی و تصمیم مشترک را همگام می‌کند.</p><div id="mission-buttons" class="grid"></div></div>
+<div id="mission-panel" class="card"></div></div>
+<div id="teacher-view" class="hidden"><div id="teacher-summary" class="card"></div><div id="teacher-teams" class="grid"></div></div>
+</section><p class="note">داده‌ها در پروژه Beta و فقط در جداول Alborz نگهداری می‌شوند. هیچ اطلاعات واقعی بیمه‌گذار، پرونده خسارت یا اطلاعات شخصی حساس وارد نکنید. همگام‌سازی آزمایشی با Refresh خودکار حدود هر ۱۰ تا ۱۲ ثانیه است.</p></main>
+<script>
+"use strict";
+const ENDPOINT="https://cymatyfnwuxikrghydrn.supabase.co/functions/v1/alborz-workshop-sync";
+const missions=[
+{icon:"🐪",title:"شتر",name:"صف سه‌برابری خسارت",description:"اختلال موقت و صف طولانی؛ خدمت اصلی معتبر است. کیفیت، نوبت‌بندی و ظرفیت تیم را حفظ کنید.",shock:"سامانه برگشته ولی دو ثبت موقت ناقص است؛ بدون منابع جدید تصمیم را اصلاح کنید."},
+{icon:"🐟",title:"ماهی آزاد",name:"خدمت مستقل پایش ریسک",description:"مدل جاری معتبر است؛ فرصت یک خدمت تازه با مدل درآمدی مستقل را بیازمایید.",shock:"دو مشتری ایده را دوست دارند اما حاضر به پرداخت نیستند؛ ادامه، اصلاح یا توقف؟"},
+{icon:"🦎",title:"آفتاب‌پرست",name:"بازطراحی مسیر خسارت درمان",description:"بازگشت مداوم پرونده میان واحدها؛ نیاز به تغییر هسته فرایند داریم.",shock:"زمان رسیدگی کمتر شده اما خطای ورود داده افزایش یافته؛ کنترل کیفیت را بازنگری کنید."},
+{icon:"🐙",title:"اختاپوس",name:"تحول دوگانه خسارت اموال",description:"هم مدل اصلی خدمت تغییر می‌کند هم یک کسب‌وکار مستقل پایش ریسک شکل می‌گیرد.",shock:"بودجه دور بعد نصف شده؛ توالی و نقطه توقف دو مسیر را مشخص کنید."}];
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fa=x=>Number(x).toLocaleString("fa-IR");
+let auth=null,records={},round=0,pollTimer=null,busy=false;
+for(let i=1;i<=10;i++)$("team").add(new Option("گروه "+fa(i),String(i)));
+for(let i=1;i<=5;i++)$("member").add(new Option("عضو "+fa(i),String(i)));
+$("role").addEventListener("change",()=>{const teacher=$("role").value==="teacher";$("team-box").classList.toggle("hidden",teacher);$("member-box").classList.toggle("hidden",teacher);});
+function message(text,bad=false){$("live-status").textContent=text;$("live-status").classList.toggle("danger",bad);}
+async function request(body){
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
+ try {const response=await fetch(ENDPOINT,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...body,code:auth.code}),signal:controller.signal});
+ const data=await response.json();if(!response.ok)throw Error(data.error||"ارتباط برقرار نشد");
+ return data;}finally{clearTimeout(timer);}
+}
+function selection(){return auth.role==="team"?{team:auth.team}:{};}
+function current(k){return records[k]?.field_value??"";}
+function makeField(key,label,placeholder=""){
+ return '<label for="f-'+esc(key)+'">'+label+'</label><textarea id="f-'+esc(key)+'" data-key="'+esc(key)+'" placeholder="'+esc(placeholder)+'" maxlength="2500">'+esc(current(key))+'</textarea>'+
+ '<div class="row"><button data-save="'+esc(key)+'">ذخیره و اشتراک‌گذاری</button><small id="stamp-'+esc(key)+'" class="muted">'+(records[key]?'آخرین ثبت: '+esc(records[key].editor_label||"عضو گروه"):"هنوز ثبت نشده")+'</small></div>';
+}
+function missionNavigation(){
+ $("mission-buttons").innerHTML=missions.map((m,i)=>'<button class="mission '+(round===i?'current':'')+'" data-round="'+i+'"><strong>'+m.icon+" "+m.title+' · سناریو '+fa(i+1)+'</strong><small>'+m.name+'</small></button>').join("");
+}
+function renderMission(){
+ const m=missions[round],p="r"+round;
+ missionNavigation();
+ $("mission-panel").innerHTML='<div class="mission"><h2>'+m.icon+' '+m.name+'</h2><p>'+m.description+'</p><div class="info"><b>کارت رویداد:</b> '+m.shock+'</div></div>'+
+ '<h3>ثبت فردی هر عضو</h3><p class="muted">هر نفر فقط مشارکت شماره خودش را ویرایش کند؛ همه اعضا دیدگاه‌های پنج نفر را می‌بینند.</p>'+
+ makeField(p+"member"+auth.member,"نظر و پیشنهاد من · عضو "+fa(auth.member),"شواهد، پیشنهاد و نگرانی خود را بنویسید")+
+ '<h3>مشارکت‌های ثبت‌شده پنج نفر</h3><div id="members"></div>'+
+ '<h3>جمع‌بندی مشترک تیم</h3>'+
+ makeField(p+"initial","تصمیم اولیه گروه","راهبرد، مسئول، اقدام و دلیل انتخاب را ثبت کنید")+
+ makeField(p+"revision","تصمیم اصلاح‌شده پس از رویداد","بر اساس چه شاهدی، چه چیزی تغییر کرد؟")+
+ makeField(p+"evidence","شواهد و بازخورد گروه","از کدام اطلاعات اعضا استفاده کردید؟")+
+ '<div class="row" style="margin-top:14px"><button data-progress="'+(round+1)+'">ثبت اتمام مأموریت '+fa(round+1)+'</button><small class="muted">آخرین ویرایش در هر فیلد ملاک است؛ هم‌زمان روی یک کادر ننویسید.</small></div>';
+ updateMembers();
+}
+function updateMembers(){
+ const box=$("members");if(!box)return;
+ box.innerHTML=Array.from({length:5},(_,i)=>{const row=records["r"+round+"member"+(i+1)];
+ return '<div class="student"><b>عضو '+fa(i+1)+'</b> · <small>'+(row?esc(row.editor_label||"ثبت‌شده"):"بدون ثبت")+'</small><div>'+esc(row?.field_value||"هنوز پیشنهادی ثبت نشده")+'</div></div>';}).join("");
+}
+function applyRecords(rows){
+ records={};rows.forEach(r=>records[r.field_key]=r);
+ for(const field of document.querySelectorAll("textarea[data-key]")){
+ if(field===document.activeElement||field.dataset.dirty==="1")continue;
+ field.value=current(field.dataset.key);
+ const stamp=$("stamp-"+field.dataset.key);
+ if(stamp)stamp.textContent=records[field.dataset.key]?"آخرین ثبت: "+(records[field.dataset.key].editor_label||"عضو گروه"):"هنوز ثبت نشده";
+ }
+ updateMembers();
+}
+function showTeam(){
+ $("workspace-title").textContent="گروه "+fa(auth.team)+" · عضو "+fa(auth.member);
+ $("teacher-view").classList.add("hidden");$("team-view").classList.remove("hidden");renderMission();
+}
+function showTeacher(rows){
+ const groups=Array.from({length:10},(_,i)=>({num:i+1,fields:rows.filter(r=>r.team_no===i+1)}));
+ const active=groups.filter(g=>g.fields.length>0).length;
+ $("teacher-summary").innerHTML='<h2>Instructor Dashboard</h2><p><b>'+fa(active)+'</b> گروه دارای ثبت از '+fa(10)+' گروه · '+fa(rows.length)+' فیلد ثبت‌شده</p><p class="muted">وضعیت با فاصله زمانی حدود ۱۲ ثانیه دریافت می‌شود؛ Screen Sharing یا مشاهده صفحه خصوصی افراد نیست.</p>';
+ $("teacher-teams").innerHTML=groups.map(g=>{
+  const byKey=Object.fromEntries(g.fields.map(x=>[x.field_key,x]));
+  const done=missions.map((_,i)=>!!byKey["r"+i+"initial"]?.field_value);
+  const recent=g.fields.reduce((x,r)=>!x||r.updated_at>x?r.updated_at:x,null);
+  return '<section class="card"><h2>گروه '+fa(g.num)+'</h2><p class="muted">آخرین ثبت: '+(recent?new Date(recent).toLocaleString("fa-IR"):"هنوز فعالیتی ثبت نشده")+'</p>'+
+  '<p>'+done.map((v,i)=>'<span class="chip">'+missions[i].icon+' '+(v?"تصمیم ثبت شده":"ثبت نشده")+'</span>').join("")+'</p>'+
+  '<details><summary>مشاهده مشارکت و تصمیم‌ها</summary>'+
+  missions.map((m,i)=>'<h3>'+m.icon+' '+m.title+'</h3>'+
+  [1,2,3,4,5].map(j=>'<p><b>عضو '+fa(j)+':</b> '+esc(byKey["r"+i+"member"+j]?.field_value||"—")+'</p>').join("")+
+  '<p><b>تصمیم اولیه:</b> '+esc(byKey["r"+i+"initial"]?.field_value||"—")+'</p>'+
+  '<p><b>اصلاح تصمیم:</b> '+esc(byKey["r"+i+"revision"]?.field_value||"—")+'</p>').join("")+'</details></section>';
+ }).join("");
+}
+async function refresh(){
+ if(!auth||busy||document.hidden)return;
+ busy=true;
+ try{
+  const response=await request({action:auth.role==="teacher"?"teacher":"read",...selection()});
+  if(auth.role==="teacher")showTeacher(response.records);
+  else applyRecords(response.records);
+  message("اتصال برقرار است · آخرین دریافت: "+new Date().toLocaleTimeString("fa-IR"));
+ }catch(e){message("اتصال موقتاً قطع است: "+e.message,true);}
+ finally{busy=false;}
+}
+$("join").addEventListener("click",async()=>{
+ const role=$("role").value,code=$("access").value.trim().toLowerCase();
+ if(!/^[a-f0-9]{24}$/.test(code)){$("signin-status").textContent="کد ۲۴ کاراکتری معتبر وارد کنید";return;}
+ auth={role,code,team:Number($("team").value),member:Number($("member").value)};
+ $("join").disabled=true;$("signin-status").textContent="در حال بررسی دسترسی";
+ try{await request({action:role==="teacher"?"teacher":"read",...selection()});
+ $("signin").classList.add("hidden");$("workspace").classList.remove("hidden");
+ if(role==="teacher"){$("workspace-title").textContent="داشبورد مدرس";$("teacher-view").classList.remove("hidden");}
+ else showTeam();
+ await refresh();pollTimer=setInterval(refresh,role==="teacher"?12000:10000);
+ }catch(e){$("signin-status").textContent=e.message;auth=null;}
+ finally{$("join").disabled=false;}
+});
+$("workspace").addEventListener("input",e=>{if(e.target.matches("textarea[data-key]"))e.target.dataset.dirty="1";});
+$("workspace").addEventListener("click",async e=>{
+ const button=e.target.closest("button");if(!button||!auth)return;
+ if(button.dataset.round!==undefined){round=Number(button.dataset.round);renderMission();return;}
+ let fields=null;
+ if(button.dataset.save){const field=$("f-"+button.dataset.save);fields={[button.dataset.save]:field.value};}
+ if(button.dataset.progress!==undefined)fields={stage:Math.min(8,Number(button.dataset.progress))};
+ if(!fields)return;
+ button.disabled=true;
+ try {await request({action:"write",team:auth.team,editor:"عضو "+auth.member,fields});
+ if(button.dataset.save){const field=$("f-"+button.dataset.save);field.dataset.dirty="0";}
+ message("اطلاعات با موفقیت برای همه اعضای گروه ثبت شد");await refresh();
+ }catch(err){message("ذخیره انجام نشد: "+err.message,true);}
+ finally{button.disabled=false;}
+});
+$("logout").addEventListener("click",()=>{clearInterval(pollTimer);pollTimer=null;auth=null;records={};$("workspace").classList.add("hidden");$("signin").classList.remove("hidden");$("access").value="";$("signin-status").textContent="";});
+</script></body></html>
