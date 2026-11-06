@@ -54,4 +54,28 @@ if(typeof priorReport==="function"){
     }).join("\n");
   }).join("\n\n");
 }
+
+const shareButton=document.getElementById("wa");
+if(shareButton){
+  shareButton.textContent="ارسال پاسخ‌های کامل در واتساپ";
+  shareButton.onclick=async()=>{
+    const full=window.report();
+    const file=new File(["\ufeff"+full],"child-culture-bmc-complete.txt",{type:"text/plain;charset=utf-8"});
+    const status=document.getElementById("status");
+    if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+      try {
+        await navigator.share({files:[file],title:"پاسخ‌های بوم کسب‌وکار فرهنگی کودک",text:"پاسخ‌های کامل بوم، ریسک‌ها و برنامه اقدام"});
+        if(status)status.textContent="اشتراک‌گذاری از طریق برنامه انتخاب‌شده انجام شد.";
+        return;
+      }catch(e){
+        if(e&&e.name==="AbortError"){if(status)status.textContent="اشتراک‌گذاری لغو شد؛ پاسخ‌ها همچنان ذخیره هستند.";return;}
+      }
+    }
+    const blobUrl=URL.createObjectURL(file),a=document.createElement("a");
+    a.href=blobUrl;a.download=file.name;document.body.append(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(blobUrl),5000);
+    if(status)status.textContent="فایل کامل دانلود شد؛ آن را به‌عنوان فایل در واتساپ ارسال کنید.";
+  };
+}
+
 })();
