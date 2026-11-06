@@ -1,5 +1,5 @@
 'use strict';
-const PREFIX='hb-bmc-independent-', CACHE=PREFIX+'20261106-child-culture-v8';
+const PREFIX='hb-bmc-independent-', CACHE=PREFIX+'20261106-child-culture-v9';
 const BASE=new URL('./',self.registration.scope);
 const CORE=['./','./index.html','./studio.html','./child-culture.html','./studio.css','./visual-refresh.css','./choice-bank.js','./studio.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./install.html','./pwa-install.js'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE.map(path=>new URL(path,BASE).href))).then(()=>self.skipWaiting())));
