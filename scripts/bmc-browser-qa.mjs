@@ -176,6 +176,17 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
    assert.equal(await page.locator('#action-plan .ra-item').count(),12,'90-day action plan incomplete');
    assert.equal(await page.locator('#blocks .block').count(),9,'The nine standard BMC blocks were changed');
    await page.locator('#idea').fill('ایده آزمایشی محصولات فرهنگی کودک');
+   assert.equal(await page.locator('#blocks .deep-details').count(),9,'Missing deep discovery accordions');
+   assert.equal(await page.locator('#blocks .deep-question').count(),45,'Expected exactly 45 tailored deep questions');
+   const deepSection=page.locator('#blocks .deep-details').first();
+   await deepSection.locator('summary.deep-summary').click();
+   const deepQuestion=deepSection.locator('.deep-question').first();
+   assert(await deepQuestion.isVisible(),'Deep question must expand on click');
+   await deepQuestion.locator('.deep-option input[type=checkbox]').first().check();
+   await deepQuestion.locator('.deep-note > summary').click();
+   await deepQuestion.locator('textarea').fill('توضیح معتبر از مشتری آزمایشی');
+   assert((await deepSection.locator('summary.deep-summary').innerText()).includes('۱ از ۵'),'Deep-question progress missing');
+
    const risk=page.locator('#risk-assessment .ra-item').first();
    await risk.locator('input[type=checkbox]').check();
    assert(await risk.locator('.ra-details').isVisible(),'Checked risk details did not open');
@@ -192,10 +203,15 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
    let report=await page.evaluate(()=>window.report());
    for(const textValue of ['ایده آزمایشی محصولات فرهنگی کودک','شاهد آزمایشی از مصاحبه والدین','آزمون بازار با ۱۰ والد','مدیر محصول','مصاحبه با حداقل ۱۰ خانواده'])
      assert(report.includes(textValue),'Export report omitted: '+textValue);
+   assert(report.includes('توضیح معتبر از مشتری آزمایشی'),'Full exported report missing deep answer');
+   assert(report.includes('پرسش‌های تکمیلی ۹ بخش بوم'),'Deep report section absent');
    await page.reload({waitUntil:'load'});
    assert(await page.locator('#risk-assessment .ra-item').first().locator('input[type=checkbox]').isChecked(),'Risk autosave failed');
    assert(await page.locator('#action-plan .ra-item').first().locator('input[type=checkbox]').isChecked(),'Action autosave failed');
    assert.equal(await page.locator('#idea').inputValue(),'ایده آزمایشی محصولات فرهنگی کودک','Existing idea autosave lost');
+   assert(await page.locator('#blocks .deep-question').first().locator('.deep-option input[type=checkbox]').first().isChecked(),'Deep answer autosave failed');
+   assert.equal(await page.locator('#blocks .deep-question').first().locator('textarea').inputValue(),'توضیح معتبر از مشتری آزمایشی','Deep note autosave lost');
+
    const downloadWait=page.waitForEvent('download',{timeout:10000});
    await page.locator('#download').click();
    const download=await downloadWait;
@@ -203,6 +219,8 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
    await download.saveAs(localFile);
    const downloaded=await fs.readFile(localFile,'utf8');
    assert(downloaded.includes('آزمون بازار با ۱۰ والد'),'Downloaded report missing risk mitigation');
+   assert(downloaded.includes('توضیح معتبر از مشتری آزمایشی'),'Downloaded report missing deep discovery note');
+
    assert(downloaded.includes('مصاحبه با حداقل ۱۰ خانواده'),'Downloaded report missing action note');
    test('فرم اختصاصی کودک: ۹ بخش بوم، ریسک‌ها، برنامه اقدام، ذخیره و خروجی',true);
    await page.screenshot({path:path.join(DIR,'child-culture-risk-action.png'),fullPage:true});
