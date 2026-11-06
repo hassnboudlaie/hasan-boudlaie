@@ -9,16 +9,16 @@ if(blocks.length!==9)return;
 const elm=(tag,cl,txt)=>{const e=document.createElement(tag);if(cl)e.className=cl;if(txt!==undefined)e.textContent=txt;return e;};
 const summaryTxt=(i)=>{let answered=0;for(let j=0;j<SECTIONS[i].items.length;j++){const x=state.answers[i+"-"+j];if(x&&((x.choices&&x.choices.length)||(x.note&&x.note.trim())))answered++;}return answered;};
 const headers=[];
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){const x=document.getElementById("status");if(x)x.textContent="ذخیره در این مرورگر ممکن نیست؛ لطفاً فایل خروجی دریافت کنید.";}for(let i=0;i<headers.length;i++)headers[i].textContent="پرسش‌های تکمیلی ("+summaryTxt(i).toLocaleString("fa-IR")+" از "+SECTIONS[i].items.length.toLocaleString("fa-IR")+" پاسخ داده شده)";};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){const x=document.getElementById("status");if(x)x.textContent="ذخیره در این مرورگر ممکن نیست؛ لطفاً فایل خروجی دریافت کنید.";}for(let i=0;i<headers.length;i++)headers[i].textContent="پرسش‌های تکمیلی ("+summaryTxt(i).toLocaleString("fa-IR")+" از "+SECTIONS[i].items.length.toLocaleString("fa-IR")+" پاسخ داده شده)";document.querySelectorAll(".deep-question").forEach((q)=>{const data=state.answers[q.dataset.discoveryQuestion]||{},status=q.querySelector(".deep-question-status");if(!status)return;status.textContent=(data.choices||[]).includes("نیازمند بررسی")?"نیازمند بررسی":((data.choices&&data.choices.length)||(data.note&&data.note.trim()))?"پاسخ ثبت شد":"برای مشاهده باز کنید";});};
 SECTIONS.forEach((section,i)=>{
   const main=blocks[i],details=elm("details","deep-details"),sum=elm("summary","deep-summary");
   headers.push(sum);details.append(sum);
-  const intro=elm("p","deep-help","هر سؤال چندانتخابی است؛ برای شرح آزاد، «توضیح تکمیلی» را باز کنید. می‌توانید پرسش‌هایی را که هنوز پاسخشان مشخص نیست خالی بگذارید.");
+  const intro=elm("p","deep-help","روی عنوان هر سؤال بزنید تا گزینه‌های آن باز شوند. امکان چند انتخاب، گزینه «هنوز نمی‌دانم» و پاسخ آزاد وجود دارد. سؤال‌هایی که هنوز آماده نیستید را می‌توانید بعداً تکمیل کنید.");
   details.append(intro);
   section.items.forEach(([question,options,openQuestion],j)=>{
-    const key=i+"-"+j,prior=state.answers[key]||{},box=elm("section","deep-question");
+    const key=i+"-"+j,prior=state.answers[key]||{},box=elm("details","deep-question");
     box.dataset.discoveryQuestion=key;
-    box.append(elm("h3",null,(j+1)+". "+question));
+    const questionHead=elm("summary","deep-question-title",(j+1)+". "+question),mark=elm("small","deep-question-status");questionHead.append(mark);box.append(questionHead);if(i===0&&j===0)box.open=true;
     const group=elm("div","deep-options");
     options.forEach((o,k)=>{
       const label=elm("label","deep-option"),check=elm("input");
