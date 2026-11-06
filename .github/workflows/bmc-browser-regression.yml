@@ -21,6 +21,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check business-model-canvas/studio.js
+          node --check business-model-canvas/child-risk-action.js
           node --check business-model-canvas/choice-bank.js
           node --check scripts/bmc-browser-qa.mjs
       - name: Install free Playwright browser
