@@ -6,7 +6,12 @@ const fieldPattern = /^(?:teamname|stage|r[0-3](?:pick|initial|revision|reveal|s
 const headers = (origin) => ({'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':origins.has(origin)?origin:'https://hassnboudlaie.github.io','access-control-allow-headers':'content-type','access-control-allow-methods':'POST, OPTIONS','vary':'Origin','x-content-type-options':'nosniff'});
 const respond = (data,status,origin) => new Response(JSON.stringify(data),{status,headers:headers(origin)});
 async function hash(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');}
-async function db(path,body){const r=await fetch(endpoint+'/rest/v1/'+path,{method:body===undefined?'GET':'POST',headers:{apikey:serviceKey,authorization:'Bearer '+serviceKey,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error('Database '+r.status);return r.json();}
+async function db(path,body,method){const r=await fetch(endpoint+'/rest/v1/'+path,{method:method||(body===undefined?'GET':'POST'),headers:{apikey:serviceKey,authorization:'Bearer '+serviceKey,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error('Database '+r.status);const text=await r.text();return text?JSON.parse(text):null;}
+// Domain-separated HMAC pepper stays in server environment, never in the database.
+// Rotating SUPABASE_SERVICE_ROLE_KEY requires reissuing PINs.
+async function pinHash(pin){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(serviceKey),{name:'HMAC',hash:'SHA-256'},false,['sign']);return Array.from(new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode('alborz-pin-v1:'+pin))),v=>v.toString(16).padStart(2,'0')).join('');}
+const randomSession=()=>Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('');
+async function gate(bucket,limit,seconds){return db('rpc/alborz_login_gate',{p_bucket:bucket,p_limit:limit,p_seconds:seconds});}
 function valid(k,v){
  if(!fieldPattern.test(k))return false;
  if(k==='stage')return Number.isInteger(v)&&v>=0&&v<=8;
@@ -26,16 +31,35 @@ Deno.serve(async req=>{
   const raw=await limitedBody(req);let body;try{body=JSON.parse(raw);}catch{return respond({error:'Invalid JSON'},400,origin);}
   if(!body||Array.isArray(body)||typeof body!=='object')return respond({error:'Invalid request'},400,origin);
   const token=typeof body.code==='string'?body.code.trim().toLowerCase():'';
-  if(!/^[a-f0-9]{24}$/.test(token))return respond({error:'کد ورود معتبر نیست'},401,origin);
   const ip=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'unknown';
-  // Shared NAT supports 50 polling clients; separate capability bucket limits each member.
-  if(!await db('rpc/alborz_rate_limit',{p_bucket:'ip:'+await hash(ip),p_limit:1200}))return respond({error:'کمی بعد دوباره تلاش کنید'},429,origin);
-  const digest=await hash(token);
-  const permission=(await db('alborz_access_keys?secret_hash=eq.'+digest+'&select=access_role,team_no,member_no,expires_at,revoked&limit=1'))?.[0];
-  if(!permission||permission.revoked||Date.parse(permission.expires_at)<=Date.now()||(permission.access_role==='team'&&!permission.member_no))return respond({error:'کد نامعتبر، لغوشده یا منقضی است'},401,origin);
+  const ipHash=await hash(ip);
+  if(!await db('rpc/alborz_rate_limit',{p_bucket:'ip:'+ipHash,p_limit:1200}))return respond({error:'کمی بعد دوباره تلاش کنید'},429,origin);
+  let permission,digest,session;
+  if(/^\d{8}$/.test(token)){
+   // PINs only authenticate once. Polling always uses a random 256-bit session.
+   if(body.action!=='login')return respond({error:'ابتدا وارد شوید'},401,origin);
+   // Shared classroom NAT allows 50 logins. Global budget also bounds distributed guessing.
+   if(!await gate('pin-ip:'+ipHash,60,900)||!await gate('pin-global',200,86400))return respond({error:'تلاش‌های ورود زیاد شده است؛ بعداً تلاش کنید یا به مدرس اطلاع دهید.'},429,origin);
+   digest=await pinHash(token);
+   permission=(await db('alborz_pin_keys?digest=eq.'+digest+'&select=*&limit=1'))?.[0];
+   if(permission&&!permission.revoked&&Date.parse(permission.expires_at)>Date.now()){
+    session=randomSession();
+    await db('alborz_pin_sessions',{digest:await hash(session),pin_digest:digest,expires_at:new Date(Math.min(Date.now()+12*3600000,Date.parse(permission.expires_at))).toISOString()});
+    permission.access_role='team';
+   }else permission=null;
+  }else if(/^[a-f0-9]{64}$/.test(token)){
+   digest=await hash(token);
+   const row=(await db('alborz_pin_sessions?digest=eq.'+digest+'&select=expires_at,alborz_pin_keys(*)&limit=1'))?.[0];
+   if(row&&Date.parse(row.expires_at)>Date.now())permission={...row.alborz_pin_keys,access_role:'team'};
+  }else if(/^[a-f0-9]{24}$/.test(token)){
+   digest=await hash(token);
+   permission=(await db('alborz_access_keys?secret_hash=eq.'+digest+'&select=access_role,team_no,member_no,expires_at,revoked&limit=1'))?.[0];
+  }
+  if(!permission||permission.revoked||Date.parse(permission.expires_at)<=Date.now()||(permission.access_role==='team'&&!permission.member_no))return respond({error:'کد درست نیست یا اعتبار آن تمام شده است.'},401,origin);
   if(!await db('rpc/alborz_rate_limit',{p_bucket:'key:'+digest,p_limit:120}))return respond({error:'تعداد درخواست زیاد است؛ کمی صبر کنید'},429,origin);
   const identity={role:permission.access_role,team:permission.team_no,member:permission.member_no};
-  if(body.action==='login')return respond({ok:true,identity},200,origin);
+  if(body.action==='logout'&&/^[a-f0-9]{64}$/.test(token)){await db('alborz_pin_sessions?digest=eq.'+digest,undefined,'DELETE');return respond({ok:true},200,origin);}
+  if(body.action==='login')return respond({ok:true,identity,...(session?{session}:{})},200,origin);
   const cols='team_no,field_key,field_value,editor_label,updated_at,version';
   if(body.action==='teacher'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
