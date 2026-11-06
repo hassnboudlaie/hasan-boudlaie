@@ -56,6 +56,13 @@ async function runCase(item,index){
    assert(res && res.ok(),'Cannot open app');
    await page.locator('#page-dashboard.active').waitFor({timeout:10000});
    assert.equal(await page.locator('.dash-action').count(),3,'Three dashboard actions');
+   assert.equal(await page.locator('#special-entry').count(),0,'Child culture spotlight must not dominate general home');
+   assert.equal(await page.locator('#specializedModels').count(),1,'Missing optional specialized-model catalog');
+   assert(!(await page.locator('#specializedModels').evaluate(el=>el.open)),'Specialized catalog must be collapsed by default');
+   await page.locator('#specializedModels summary').click();
+   assert(await page.locator('#specializedModels a[href="./child-culture.html"]').isVisible(),'Dedicated child-culture link missing');
+   await page.locator('#specializedModels summary').click();
+
    await page.locator('.dash-action.main-action').click();
    await page.locator('#page-onboard.active').waitFor();
    await page.locator('#ownerName').fill('تکمیل‌کننده '+item.name);
