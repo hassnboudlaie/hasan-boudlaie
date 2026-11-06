@@ -95,8 +95,8 @@ body:fullscreen .layout{max-width:none}body:fullscreen .slide{min-height:calc(10
 /* NOV 2026 | Instructor-led editorial redesign.
    Reference language: approved claims resilience poster + Alborz communication Session 2.
    These classes intentionally affect ONLY claims-presentation.html. */
-@font-face{font-family:"AlborzVazir";src:url("assets/fonts/Vazirmatn-Regular.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:"AlborzVazir";src:url("assets/fonts/Vazirmatn-Bold.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap}
+@font-face{font-family:"AlborzVazir";src:url("assets/fonts/Vazirmatn.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"AlborzVazir";src:url("assets/fonts/Vazirmatn.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap}
 :root{--forest:#084f3c;--forest2:#087556;--gold:#ddb05d;--ink:#133d32;--paper:#f1f5f1;--line:#d3e4d8;--mint:#e8f5ec;--shadow:0 16px 45px #08452f15}
 body{font-family:"AlborzVazir",Vazirmatn,Tahoma,Arial,sans-serif;background:linear-gradient(155deg,#edf4ef,#f9faf7 52%,#f1f5f1)}
 .slide{background:linear-gradient(155deg,#fff 60%,#f6faf6);padding:clamp(22px,3vw,45px);gap:10px;min-height:min(70vh,750px)}
