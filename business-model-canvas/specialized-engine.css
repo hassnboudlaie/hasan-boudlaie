@@ -1,0 +1,78 @@
+
+:root{--accent:#70415a;--accent-soft:#f7edf1;--ink:#352730;--line:#e6dde1;--paper:#fff;--bg:#fbf7f8}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{direction:rtl;background:var(--bg);margin:0;font:15px/1.95 Tahoma,Arial,sans-serif;color:var(--ink)}
+button,textarea,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.container{width:min(850px,calc(100% - 28px));margin:0 auto}
+.sitebar{position:sticky;top:0;z-index:20;background:#ffffffee;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.sitebar .container{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 0;min-height:56px}
+.sitebar a{text-decoration:none;font-weight:750;font-size:.88rem}
+.sitebar .name{color:var(--accent)}
+.hero{background:linear-gradient(132deg,var(--accent-soft),#fff);border:1px solid var(--line);border-radius:20px;padding:22px 23px;margin:20px 0}
+.eyebrow{color:var(--accent);font-size:.76rem;font-weight:800;letter-spacing:.03em}
+h1{font-size:clamp(1.45rem,4vw,1.85rem);line-height:1.6;margin:4px 0 9px;color:var(--accent)}
+.hero p{font-size:.88rem;margin:4px 0 13px;max-width:650px}
+h2{font-size:1.15rem;line-height:1.7;margin:0 0 12px}
+h3{font-size:.96rem;margin:0}
+.savehint{display:inline-block;background:#fff9;border-radius:8px;padding:3px 9px;color:var(--accent);font-size:.72rem}
+.card{border:1px solid var(--line);background:var(--paper);border-radius:17px;padding:19px;margin:13px 0;scroll-margin-top:84px}
+.sb-hint{font-size:.85rem;color:#68616a;margin:2px 0 15px}
+.sb-field{display:flex;flex-direction:column;gap:5px;font-size:.84rem;font-weight:650;margin-bottom:13px;min-width:0}
+.sb-fieldname{color:var(--ink)}
+.sb-field :is(textarea,input,select){border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fefefe;color:var(--ink);width:100%;min-width:0;outline-offset:1px}
+.sb-field textarea{min-height:85px;resize:vertical}
+.sb-introitem{background:#fafafa;border-radius:12px;border:1px solid var(--line);padding:14px;margin:12px 0}
+.sb-introitem h3{margin-bottom:9px}
+.sb-checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 13px;margin:8px 0}
+.sb-check{display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid #e9e9e9;padding:8px 2px;cursor:pointer;font-size:.84rem;font-weight:400}
+.sb-check input{width:18px;height:18px;flex:none;margin:5px 0 0;accent-color:var(--accent)}
+.sb-note{border-top:1px solid var(--line);margin:12px 0 0;padding:9px 0}
+.sb-note>summary{color:var(--accent);font-weight:750;font-size:.84rem;cursor:pointer}
+.sb-note textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;min-height:85px;margin:8px 0 0;resize:vertical}
+.sb-prompt{font-size:.82rem;margin:7px 0;color:#756770}
+.sb-progress{height:9px;background:#ded5d9;border-radius:30px;overflow:hidden;margin:15px 0 4px}
+.sb-progress>span{height:100%;display:block;width:0;background:var(--accent);transition:width .18s}
+#overall-count{font-size:.83rem;font-weight:700;color:var(--accent)}
+.sb-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.sb-tile{display:flex;flex-direction:column;align-items:stretch;text-align:right;justify-content:space-between;gap:7px;min-height:78px;background:#fcfcfc;color:var(--ink);padding:11px;border:1px solid var(--line);border-radius:11px}
+.sb-tiletitle{font-weight:700;font-size:.82rem;line-height:1.65}
+.sb-tilecount{font-size:.7rem;opacity:.7}
+.sb-tile.sb-active{background:var(--accent-soft);border:2px solid var(--accent);padding:10px;color:var(--accent)}
+.sb-block h2{color:var(--accent)}
+.sb-question{border:1px solid var(--line);border-radius:12px;margin:10px 0;background:#fff;overflow:hidden}
+.sb-questiontitle{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;list-style:none;padding:12px;font-size:.88rem;font-weight:750;line-height:1.7;cursor:pointer}
+.sb-questiontitle::-webkit-details-marker{display:none}
+.sb-questiontitle::before{content:'+';color:var(--accent);font-size:1.1rem}
+.sb-question[open]>.sb-questiontitle::before{content:'−'}
+.sb-questiontitle small{font-size:.68rem;background:#f4f2f3;padding:2px 8px;border-radius:9px;color:#807680}
+.sb-question[open]>.sb-questiontitle{background:var(--accent-soft)}
+.sb-question>.sb-checkgrid{padding:10px 13px}
+.sb-question>.sb-note{margin:0 13px 10px}
+.sb-primary,.sb-secondary{border-radius:10px;border:1px solid var(--accent);padding:11px 16px;min-height:44px;font-weight:800}
+.sb-primary{background:var(--accent);color:white}
+.sb-secondary{background:white;color:var(--accent)}
+.sb-pager{display:flex;justify-content:space-between;gap:8px;margin-top:18px;padding-top:13px;border-top:1px solid var(--line)}
+.sb-pager>*{flex:1}
+.sb-risk,.sb-action{border:1px solid var(--line);border-radius:12px;padding:11px;margin:9px 0;background:#fff}
+.sb-riskhead{display:flex;gap:10px;align-items:flex-start;font-size:.89rem;font-weight:700;cursor:pointer}
+.sb-riskhead input{width:21px;height:21px;flex:none;accent-color:var(--accent);margin-top:4px}
+.sb-riskdetail{border-top:1px solid var(--line);padding:12px 0 0;margin-top:10px}
+.sb-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sb-phase{padding:8px 12px;background:var(--accent-soft);color:var(--accent);border-radius:9px;margin:17px 0 9px}
+.countline{font-size:.8rem;color:var(--accent);font-weight:800;background:var(--accent-soft);padding:7px 11px;border-radius:9px;display:inline-block}
+.sb-actions{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
+.sb-actions button{flex:1 1 150px;min-height:46px}
+#result-status{color:var(--accent);font-size:.83rem}
+.helper{font-size:.8rem;color:#6c656d}
+footer{padding:18px 0 35px;color:#817981;text-align:center;font-size:.74rem}
+@media(max-width:530px){
+.container{width:calc(100% - 22px)}
+.card{padding:14px;border-radius:14px}
+.hero{padding:17px}
+.sb-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.sb-tile{min-height:72px}
+.sb-checkgrid,.sb-cols{grid-template-columns:1fr}
+.sb-pager{flex-wrap:wrap}
+}
