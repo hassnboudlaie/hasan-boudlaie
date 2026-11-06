@@ -248,6 +248,41 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
  }finally{await context.close()}
 }
 
+
+{
+ const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,acceptDownloads:true});
+ const pg=await ctx.newPage();pg.on('pageerror',e=>errors.push('specialized: '+e.message));
+ for(const v of [{id:'parastoo',file:'parastoo-canvas.html',total:54},{id:'jewelry',file:'jewelry-canvas.html',total:45}]){
+  try{
+   const res=await pg.goto(ROOT+v.file,{waitUntil:'load'});
+   assert(res?.ok(),v.id+' page failed to open');
+   assert.equal(await pg.locator('#block-nav .sb-tile').count(),9,'Nine tiles missing');
+   assert.equal(await pg.locator('.sb-question').count(),v.total,'Question count incorrect');
+   assert.equal(await pg.locator('.sb-risk').count(),12,'Risk count incorrect');
+   assert.equal(await pg.locator('.sb-action').count(),12,'Action count incorrect');
+   await pg.locator('textarea[name=idea]').fill('Test idea '+v.id);
+   await pg.locator('.sb-question').first().locator('input[type=checkbox]').first().check();
+   const risk=pg.locator('.sb-risk').first();await risk.locator('input[type=checkbox]').check();
+   await risk.locator('textarea').first().fill('Risk evidence '+v.id);
+   const action=pg.locator('.sb-action').first();await action.locator('input[type=checkbox]').check();
+   await action.locator('input[type=text]').fill('Owner '+v.id);
+   const promise=pg.waitForEvent('download');
+   await pg.locator('#download-text').click();
+   const file=await promise;
+   const filename=path.join(DIR,'intake-'+v.id+'.txt');await file.saveAs(filename);
+   const output=await fs.readFile(filename,'utf8');
+   for(const term of ['Test idea '+v.id,'Risk evidence '+v.id,'Owner '+v.id])assert(output.includes(term),'Missing export term '+term);
+   await pg.reload({waitUntil:'load'});
+   assert.equal(await pg.locator('textarea[name=idea]').inputValue(),'Test idea '+v.id,'Autosave missing');
+   assert(await pg.locator('.sb-risk').first().locator('input[type=checkbox]').isChecked(),'Risk did not persist');
+   assert(await pg.locator('.sb-action').first().locator('input[type=checkbox]').isChecked(),'Action did not persist');
+   if(v.id==='jewelry')assert(await pg.evaluate(()=>!!localStorage.getItem('hb-specialized-bmc-v1-parastoo')),'Parastoo data lost after jewelry');
+   test('Specialized '+v.id+' — nine blocks, questions, risks, actions, independent save, file export',true);
+  }catch(e){test('Specialized '+v.id,false,e.stack||String(e));await pg.screenshot({path:path.join(DIR,'specialized-failure-'+v.id+'.png'),fullPage:true}).catch(()=>{});}
+ }
+ await ctx.close();
+}
+
 await browser.close();
 await fs.writeFile(path.join(DIR,'results.json'),JSON.stringify({results,errors},null,2));
 console.log('نتایج:',results.filter(x=>x.pass).length,'موفق،',results.filter(x=>!x.pass).length,'ناموفق،',errors.length,'خطای جاوااسکریپت');
