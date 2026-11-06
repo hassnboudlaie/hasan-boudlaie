@@ -214,3 +214,22 @@ body{background:radial-gradient(ellipse at 96% -17%,#e0efe4 0%,transparent 43%),
 @media(max-width:580px){
  #page-final .final-block{grid-column:1/-1!important}
 }
+
+
+/* Compact, opt-in specialized-model catalog. General BMC remains primary. */
+.specialized-models{background:#fff;border:1px solid #dce7dc;border-radius:15px;margin:14px 0 12px;overflow:hidden;box-shadow:0 3px 12px rgba(14,57,40,.03)}
+.specialized-models>summary{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 16px;padding:13px 16px;cursor:pointer;list-style:none}
+.specialized-models>summary::-webkit-details-marker{display:none}
+.specialized-models>summary::after{content:"⌄";font-size:1.15rem;color:#537763;margin-inline-start:auto;order:2;transition:transform .15s}
+.specialized-models[open]>summary::after{transform:rotate(180deg)}
+.specialized-title{display:flex;align-items:center;gap:9px;font-weight:800;color:#245a44;font-size:.93rem;order:0}
+.specialized-icon{width:29px;height:29px;border-radius:9px;background:#eaf3eb;color:#237048;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;flex:none}
+.specialized-summary-sub{color:#77877e;font-size:.73rem;order:1;flex:1 1 auto;min-width:160px}
+.specialized-options{padding:5px 12px 13px;border-top:1px solid #edf2ed}
+.specialized-link{display:flex;align-items:center;gap:10px;padding:11px 9px;border-radius:10px;text-decoration:none;color:#245844;min-height:56px}
+.specialized-link:hover,.specialized-link:focus-visible{background:#f1f7f2}
+.specialized-link>span:nth-child(2){flex:1;min-width:0}
+.specialized-link strong{display:block;font-size:.88rem;line-height:1.6}
+.specialized-link small{display:block;font-size:.74rem;color:#687e70;line-height:1.65;margin-top:3px}
+.specialized-chevron{color:#347755}
+@media(max-width:650px){.specialized-models>summary{padding:10px 12px;gap:4px 8px}.specialized-title{font-size:.85rem}.specialized-summary-sub{flex-basis:100%;padding-inline-start:38px;font-size:.7rem;line-height:1.5;order:3}.specialized-models>summary::after{order:2}.specialized-link{padding:10px 5px}.specialized-link strong{font-size:.84rem}}
