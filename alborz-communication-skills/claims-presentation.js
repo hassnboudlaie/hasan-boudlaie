@@ -70,104 +70,203 @@
     }
   }
 
+  
+  // Shared asset family: approved resilience poster + existing Session 2 editorial photographs.
+  // These are visual aids, not evidence photographs of actual insurance claimants.
+  const art={
+    resilience:'assets/claims-resilience-approved-20261106.png',
+    anger:'assets/session2-facial-expression-hq.webp',
+    assertiveness:'assets/session2-body-language-hq.webp',
+    capstone:'assets/session2-hero-hq.webp',
+    voice:'assets/session2-voice-tone-hq.webp',
+    conversation:'assets/session2-welcome-hq.webp'
+  };
+  const artOf=(module,kind)=>kind==='dialogue'?art.conversation:kind==='conversation'?art.voice:(art[module]||art.capstone);
+  const media=(module,kind,caption='تصویر مفهومی · هویت بصری آکادمی بیمه البرز')=>
+    '<figure class="slide-media"><img src="'+E(artOf(module,kind))+'" alt="'+E(caption)+'" loading="lazy" decoding="async"><figcaption>'+E(caption)+'</figcaption></figure>';
+  const overline=(n,title)=>'<div class="narrative-overline"><span class="chapter-num">'+fa(n)+'</span><span>'+E(title)+'</span></div>';
+  const challenge=(title,questions)=>
+    '<section class="challenge-box"><div class="challenge-kicker">؟ پرسش چالشی · Challenge the assumption</div><h3>'+E(title)+'</h3>'+points(questions)+'</section>';
+  const lesson=(title,lead,items)=>'<section class="teaching-frame"><span class="teaching-label">درسنامه · Key learning</span><h3>'+E(title)+'</h3><p>'+E(lead)+'</p><ol class="lesson-steps">'+items.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol></section>';
+  const playLines=(rows)=>'<section class="stage-dialogue"><div class="chapter-caption">گفت‌وگوی نمونه · Role Play</div>'+dialogue(rows)+'</section>';
+  const modelMap=(m)=>{
+    if(m.id==='resilience')return '<div class="strategy-matrix" role="img" aria-label="چهار راهبرد تاب‌آوری بر اساس دو محور حفظ یا تغییر هسته و ایجاد یا عدم ایجاد کسب‌وکار جدید">'+
+      '<div class="matrix-head">مقایسه دو تصمیم: هسته را حفظ یا تغییر بدهیم؟ کسب‌وکار جدید ایجاد کنیم یا نه؟</div>'+
+      '<div class="matrix-grid">'+
+      '<div class="matrix-cell"><span>۱ · حفظ هسته، بدون کسب‌وکار تازه</span><strong>🐪 شتر</strong><small>تداوم خدمت و بازیابی ظرفیت</small></div>'+
+      '<div class="matrix-cell"><span>۲ · حفظ هسته، کسب‌وکار تازه</span><strong>🐟 ماهی آزاد</strong><small>آزمایش مدل ارزش مستقل در کنار هسته</small></div>'+
+      '<div class="matrix-cell"><span>۳ · تغییر هسته، بدون کسب‌وکار تازه</span><strong>🦎 آفتاب‌پرست</strong><small>بازطراحی شیوه اصلی رسیدگی</small></div>'+
+      '<div class="matrix-cell"><span>۴ · تغییر هسته، کسب‌وکار تازه</span><strong>🐙 اختاپوس</strong><small>تحول هسته + مسیر ارزش‌آفرینی تازه</small></div>'+
+      '</div><p class="model-footnote">چهار حیوان برچسب شخصیت افراد نیستند؛ هر راهبرد انتخابی وابسته به شرایط است.</p></div>';
+    return '<div class="process-flow" aria-label="چهار گام عملی">'+m.skills.map((x,i)=>
+      '<div class="process-step"><span class="process-number">'+fa(i+1)+'</span><div><b>'+E(x[0])+'</b><p>'+E(x[1])+'</p></div></div>').join('')+'</div>';
+  };
+  const nextStep=(label,text)=>
+    '<div class="transfer-panel"><span>Next Best Step</span><h3>'+E(label)+'</h3><p>'+E(text)+'</p></div>';
+  function makeSlide(module,kind,label,title,lead,body,stages,notes){
+    return {module,kind,label,title,lead,body,stages,notes};
+  }
   function buildSlides(d) {
-    const out = [];
-    for (const m of d.modules) {
-      out.push({
-        module: m.id, kind: 'intro', label: 'هدف و نقشه یادگیری', title: m.title,
-        lead: m.aim,
-        body: '<div class="paper-card highlight"><h3>پرسش آغاز کلاس</h3><p>' + E(m.subtitle) + '</p></div>',
-        stages: [
-          '<h3>چهار محور کاربردی</h3><div class="slide-grid">' +
-             m.skills.map(item => card(item[0], item[1])).join('') + '</div>',
-          card('ملاحظه علمی و حرفه‌ای', m.note, 'warning')
+    const out=[];
+    for(const m of d.modules){
+      const firstCase=m.cases[0];
+      out.push(makeSlide(
+        m.id,'intro','نقشه یادگیری','اگر فردا این اتفاق بیفتد…',m.aim,
+        '<div class="narrative-lead">'+
+        overline(1,'چرا این مهارت به کارشناس خسارت مربوط است؟')+
+        '<p class="scene-line">'+E(firstCase?.context||m.subtitle)+'</p>'+
+        challenge('در همین لحظه، چه چیزی باید تغییر کند؟',[
+          'مسئله اصلی چیست: شرایط، رفتار ما یا کیفیت تصمیم؟',
+          'چه تصمیمی ممکن است سریع اما غیرحرفه‌ای باشد؟',
+          'با چه شاهدی می‌توانیم از تصمیم بهتر دفاع کنیم؟'
+        ])+'</div>',
+        [
+          lesson('آنچه در این بخش یاد می‌گیریم',m.subtitle,m.skills.map(x=>x[0])),
+          modelMap(m),
+          lesson('مرز علمی و حرفه‌ای',m.note,['بر رفتار قابل مشاهده تمرکز کنید، نه برچسب‌زدن به اشخاص.','تصمیم باید با شواهد پرونده و حدود اختیار سازگار باشد.','در پایان یک اقدام مشخص برای محیط واقعی کار انتخاب کنید.']),
+          nextStep('به نخستین سناریو فکر کنید','از شرکت‌کنندگان بخواهید پیش از دریافت «پاسخ درست»، فرض خود را درباره مسئله و راه‌حل توضیح دهند.')
         ],
-        notes: [m.note, 'پیش از نمایش چهار محور، یک موقعیت واقعیِ بدون اطلاعات محرمانه را از شرکت‌کنندگان بپرسید.']
-      });
-      for (let i = 0; i < m.skills.length; i++) {
-        const sk = m.skills[i];
-        out.push({
-          module:m.id, kind:'skill', label:'مفهوم ' + fa(i+1) + ' از ' + fa(m.skills.length),
-          title:sk[0], lead:sk[1],
-          body: '<div class="paper-card highlight"><h3>تمرکز کلاس</h3><p>' + E(sk[1]) + '</p></div>',
-          stages:[
-            card('نقطه گفت‌وگو', 'در یک پرونده فرضیِ خسارت، چه رفتار قابل مشاهده‌ای نشان می‌دهد این مهارت به کار رفته است؟'),
-            card('مرز کاربرد', m.note, 'warning')
+        [m.note,'این اسلاید سخنرانی صرف نیست: ابتدا روایت واقعی‌نما را بخوانید، یک تصمیم فوری از کلاس بگیرید و سپس مدل را آشکار کنید.']
+      ));
+      for(let i=0;i<m.skills.length;i++){
+        const sk=m.skills[i],anchor=m.cases[i % m.cases.length];
+        out.push(makeSlide(
+          m.id,'skill','تکنیک '+fa(i+1)+' از '+fa(m.skills.length),
+          sk[0],sk[1],
+          overline(i+1,'یک مهارت در یک لحظه واقعی')+
+          '<div class="editorial-quote"><span class="quote-mark">“</span><p>'+E(anchor.context)+'</p></div>',
+          [
+            lesson('این مهارت دقیقاً چه کمکی می‌کند؟',sk[1],[
+              'نشانه یا مسئله را قبل از واکنش تشخیص دهید.',
+              'یک رفتار حرفه‌ای مشخص و قابل مشاهده انتخاب کنید.',
+              'نتیجه را با کیفیت خدمت و اعتماد مراجع بسنجید.'
+            ]),
+            challenge('اگر مسئول همین پرونده بودید، چه می‌کردید؟',[
+              'اولین جمله حرفه‌ای شما چه خواهد بود؟',
+              'کدام اقدام عجولانه می‌تواند وضعیت را بدتر کند؟',
+              'کدام شاهد نشان می‌دهد این مهارت درست اجرا شده است؟'
+            ]),
+            lesson('نمونه کاربرد و محدودیت',anchor.title,[anchor.context,anchor.strategy,m.note]),
+            nextStep('یک جمله تمرین کنید','هر نفر جمله یا رفتار پیشنهادی خود را در کمتر از ۲۰ ثانیه بگوید؛ سپس همتای او بازخوردی بر پایه شواهد بدهد.')
           ],
-          notes:[m.note, 'از مخاطبان یک نمونه رفتار مشخص بخواهید؛ به‌جای قضاوت درباره شخصیت، بر جمله و تصمیم تمرکز کنید.']
-        });
+          [m.note,'از یادگیرنده بخواهید رفتار خود را با یک جمله واقعی و بدون وعده خارج از اختیار بیان کند.']
+        ));
       }
-      for (const c of m.cases) {
-        const answerStages = c.options.map((opt, j) =>
-          '<div class="answer ' + (opt[2] ? 'correct' : 'weak') + '"><span class="number">' + fa(j+1) +
-          '.</span><div><b>' + E(opt[0]) + '</b><div class="feedback">' +
-          (opt[2] ? 'پاسخ مناسب‌تر: ' : 'نکته قابل اصلاح: ') + E(opt[1]) +
-          '</div></div></div>'
-        ).join('');
-        out.push({
-          module:m.id, kind:'case', label:'سناریو · ' + c.line, title:c.title,
-          lead:c.context,
-          body:chips([c.line, c.strategy]),
-          stages:[
-            '<h3>تقسیم نقش در تیم پنج‌نفره</h3>' + points(c.roles),
-            '<h3>گفت‌وگوی نمونه</h3>' + dialogue(c.dialogue),
-            card('اتفاق غیرمنتظره', c.twist, 'warning'),
-            '<h3>برای تصمیم‌گیری مکث کنید</h3><div class="reveal-stage">' + c.options.map((opt,j) =>
-              '<div class="answer"><span class="number">' + fa(j+1) + '.</span>' + E(opt[0]) + '</div>'
-            ).join('') + '</div>',
-            '<h3>تحلیل تک‌تک گزینه‌ها</h3><div class="reveal-stage">' + answerStages + '</div>',
-            '<h3>پرسش‌های Debrief</h3>' + points(c.turning) +
-            '<h3>لحظه‌های مهارتی</h3><div class="slide-grid">' +
-              (c.moments || []).map(item => card('جمله کلیدی: ' + item.quote, item.why)).join('') + '</div>'
+      for(const c of m.cases){
+        const introductoryQuestions=[
+          'صورت مسئله واقعی چیست و از کدام اطلاعات هنوز مطمئن نیستیم؟',
+          'اگر بدون بازبینی فرض‌ها تصمیم بگیریم، چه ریسکی ایجاد می‌شود؟',
+          ...(c.turning||[]).slice(0,1)
+        ];
+        const dialogueCut=Math.max(2,Math.ceil(c.dialogue.length/2));
+        out.push(makeSlide(
+          m.id,'case','سناریو · '+c.line,c.title,
+          'یک موقعیت واقعی‌نما در رسیدگی خسارت؛ ابتدا تشخیص بدهید، سپس تصمیم را بیازمایید.',
+          '<div class="case-opening">'+overline(1,'صحنه اول · The Situation')+
+          '<p class="scene-line">'+E(c.context)+'</p>'+
+          '<div class="scene-stats">'+chips([c.line,c.strategy,'پنج نقش فعال'])+'</div>'+
+          '<div class="hook-question">اگر همین حالا مسئول تصمیم بودید، اولین اقدام‌تان چه بود؟</div></div>',
+          [
+            challenge('قبل از دیدن تحلیل، فرض خود را بررسی کنید',introductoryQuestions),
+            lesson('تشخیص مسئله و منطق تصمیم','صورت مسئله را از نشانه‌های آن جدا کنید.',[
+              'چه اتفاقی افتاده است؟ '+c.context,
+              'چرا تصمیم عجولانه می‌تواند کیفیت خدمت را تهدید کند؟',
+              'راهبرد مطرح در این Case: '+c.strategy
+            ]),
+            '<section class="numbered-roles">'+overline(2,'پنج نقش، پنج زاویه دید')+
+              '<h3>هر نقش چه چیزی می‌داند؟</h3>'+points(c.roles)+'</section>',
+            playLines(c.dialogue.slice(0,dialogueCut)),
+            '<div class="facilitation-callout">وقتی گفت‌وگو را متوقف می‌کنید، از کلاس بپرسید: کدام جمله مسئله را روشن‌تر کرد و کدام فرض هنوز بررسی نشده است؟</div>'+
+              playLines(c.dialogue.slice(dialogueCut)),
+            '<div class="crisis-moment">'+overline(3,'نقطه عطف · The Twist')+
+              '<h3>شرایط تغییر کرد!</h3><p>'+E(c.twist)+'</p>'+
+              '<div class="crisis-question">با این اطلاعات جدید، تصمیم اولیه را حفظ می‌کنید یا اصلاح؟ چرا؟</div></div>',
+            challenge('کدام گزینه را انتخاب می‌کنید؟',[
+              'پیش از آشکارشدن تحلیل، هر نفر یک گزینه و دلیل خود را مطرح کند.',
+              'کدام گزینه با شواهد موجود و حدود اختیار سازگارتر است؟'
+            ])+'<div class="decision-list">'+c.options.map((opt,i)=>
+              '<div class="answer"><span class="number">'+fa(i+1)+'</span><span>'+E(opt[0])+'</span></div>').join('')+'</div>',
+            ...c.options.map((opt,i)=>'<section class="option-breakdown">'+overline(i+1,'تحلیل انتخاب شماره '+fa(i+1))+
+              '<div class="answer '+(opt[2]?'correct':'weak')+'"><span class="number">'+fa(i+1)+'</span><span>'+E(opt[0])+'</span></div>'+
+              '<div class="diagnosis '+(opt[2]?'positive':'caution')+'"><h3>'+(opt[2]?'چرا این انتخاب مناسب‌تر است؟':'این انتخاب چه ضعفی دارد؟')+'</h3>'+
+              '<p>'+E(opt[1])+'</p></div>'+
+              '<p class="analytical-prompt">کدام شاهد در روایت این نتیجه را پشتیبانی می‌کند؟</p></section>'),
+            '<section class="facilitated-debrief">'+overline(4,'Debrief · تحلیل جمعی')+
+              '<h3>از توصیف رفتار به یادگیری برسیم</h3>'+points(c.turning)+
+              '<div class="slide-grid">'+(c.moments||[]).map(x=>card('لحظه مهارتی: '+x.quote,x.why,'highlight')).join('')+'</div></section>',
+            nextStep('از این پرونده چه با خود می‌بریم؟','در موقعیت مشابه، یک رفتار را مشخص کنید که بتوانید اجرا کنید، شاهدش را ثبت کنید و پس از آن بازبینی انجام دهید.')
           ],
-          notes:[ 'ابتدا نقش‌ها را بین پنج نفر تقسیم کنید. تا زمان اجرای Role Play، تحلیل گزینه‌ها را آشکار نکنید.',
-            ...(c.turning || []), m.note ]
-        });
+          [
+            'ابتدا از افراد بخواهید در ۳۰ ثانیه درباره تصمیم اولیه رأی بدهند. هنوز پاسخ مناسب را فاش نکنید.',
+            'پس از اطلاعات نقش‌ها، Role Play سه تا پنج دقیقه اجرا شود؛ از مشاهده‌گر شواهد بخواهید.',
+            'بعد از «اتفاق غیرمنتظره»، گروه باید فرض و تصمیم قبلی را بازبینی کند.',
+            ...c.turning,
+            'تحلیل گزینه‌های اشتباه را جداگانه بخوانید؛ اجتناب از خطا به اندازه انتخاب درست اهمیت دارد.'
+          ]
+        ));
       }
-      const qs = d.quizzes[m.id] || [];
-      for (let i=0; i<qs.length; i++) {
-        const q = qs[i];
-        out.push({
-          module:m.id, kind:'quiz', label:'پرسش کلاسی · ' + fa(i+1), title:'تصمیم مناسب‌تر چیست؟',
-          lead:q.q,
-          body:'<h3>ابتدا از کلاس رأی بگیرید</h3><div class="reveal-stage">' +
-            q.a.map((opt,j) => '<div class="answer"><span class="number">' + fa(j+1) + '.</span>' + E(opt[0]) + '</div>').join('') + '</div>',
-          stages:[
-            '<h3>تحلیل و دلیل هر سه گزینه</h3><div class="reveal-stage">' +
-              q.a.map((opt,j) => '<div class="answer ' + (j===q.right ? 'correct':'weak') +
-                '"><span class="number">' + fa(j+1) + '.</span><div><b>' + E(opt[0]) + '</b>' +
-                '<div class="feedback">' + (j===q.right?'گزینه مناسب‌تر: ':'نقطه ضعف: ') + E(opt[1]) + '</div></div></div>').join('') +
-            '</div>'
+      for(let i=0;i<(d.quizzes[m.id]||[]).length;i++){
+        const q=d.quizzes[m.id][i];
+        out.push(makeSlide(
+          m.id,'quiz','چالش تصمیم‌گیری · '+fa(i+1),
+          'اگر جای کارشناس بودید…',q.q,
+          overline(1,'رأی‌گیری پیش از پاسخ')+
+          '<div class="decision-list">'+q.a.map((opt,j)=>
+            '<div class="answer"><span class="number">'+fa(j+1)+'</span><span>'+E(opt[0])+'</span></div>').join('')+'</div>',
+          [
+            challenge('پشت انتخابتان چه فرضی هست؟',[
+              'چه اطلاعاتی برای قضاوت کافی نیست؟',
+              'کدام پاسخ کوتاه‌مدت جذاب است اما در بلندمدت ریسک دارد؟',
+              'اگر همکار شما گزینه دیگری انتخاب کرده باشد، با چه شاهدی گفت‌وگو می‌کنید؟'
+            ]),
+            ...q.a.map((opt,j)=>'<section class="option-breakdown">'+overline(j+1,'بررسی گزینه '+fa(j+1))+
+              '<div class="answer '+(j===q.right?'correct':'weak')+'"><span class="number">'+fa(j+1)+'</span><span>'+E(opt[0])+'</span></div>'+
+              '<div class="diagnosis '+(j===q.right?'positive':'caution')+'"><h3>'+(j===q.right?'منطق گزینه مناسب‌تر':'چرایی ضعف این گزینه')+
+              '</h3><p>'+E(opt[1])+'</p></div></section>'),
+            nextStep('تعریف یک رفتار قابل اجرا','یک جمله یا اقدام حرفه‌ای جایگزین بنویسید که بتوانید فردا در شعبه به کار ببرید.')
           ],
-          notes:['قبل از نمایش تحلیل، از دو نفر بخواهید با شاهد و استدلال از انتخاب متفاوت دفاع کنند.',
-                 'جواب مطلوب را فقط پس از دریافت چند پاسخ و بحث کوتاه نمایش دهید.']
-        });
+          ['قبل از نمایش پاسخ، از دو شرکت‌کننده با انتخاب‌های متفاوت استدلال بخواهید.','دلیل تک‌تک سه گزینه را مستقل از هم تشریح کنید.']
+        ));
       }
-      out.push({
-        module:m.id, kind:'transfer', label:'جمع‌بندی و انتقال', title:'از یادگیری تا اقدام',
-        lead:'مهارت در رفتار مشخص و قابل مشاهده معنا پیدا می‌کند.',
-        body:'<h3>چک‌لیست مشاهده</h3>' + points(d.observer.slice(0,4)),
-        stages:[
-          '<h3>شواهد تکمیلی</h3>' + points(d.observer.slice(4)),
-          card('Next Best Step', 'هر نفر یک رفتار مشخص را انتخاب کند که در اولین موقعیت شغلی مشابه اجرا و بازبینی خواهد کرد.', 'highlight')
+      out.push(makeSlide(
+        m.id,'transfer','جمع‌بندی و انتقال','از فهمیدن تا انجام‌دادن',
+        'هدف کلاس، توانایی تصمیم حرفه‌ای تحت فشار است؛ نه حفظ نام تکنیک‌ها.',
+        overline(1,'شواهد یادگیری')+'<h3>چه چیزی در رفتار واقعاً تغییر کرد؟</h3>'+points(d.observer.slice(0,4)),
+        [
+          lesson('فقط رفتار قابل مشاهده را ارزیابی کنید','این‌ها معیار گفتگو برای بازخورد آموزشی‌اند، نه ابزار رسمی ارزیابی کارکنان.',d.observer.slice(4)),
+          challenge('تا هفته آینده چه چیزی را امتحان می‌کنید؟',[
+            'در چه موقعیتی دقیقاً می‌خواهم رفتار تازه را اجرا کنم؟',
+            'چه شاهدی نشان می‌دهد اقدامم مؤثر بوده است؟',
+            'از چه کسی بازخورد می‌خواهم؟'
+          ]),
+          nextStep('تعهد رفتاری یک‌هفته‌ای','هر نفر یک اقدام مشخص، یک موقعیت اجرا و یک معیار بازبینی را با همتایش در میان بگذارد.')
         ],
-        notes:['از گروه‌ها شاهد رفتاری بخواهید؛ این تمرین، ابزار ارزیابی رسمی عملکرد کارکنان نیست.']
-      });
+        ['برای جمع‌بندی از افراد «یک رفتار» بخواهید، نه یک شعار یا فهرست طولانی.']
+      ));
     }
-    for (const c of d.capstones) {
-      out.push({
-        module:'capstone', kind:'capstone', label:'مأموریت یکپارچه', title:c.title,
-        lead:c.context,
-        body:chips([c.line, 'ترکیب سه مهارت']),
-        stages:[
-          '<h3>نقش‌ها</h3>' + points(c.roles),
-          '<h3>گفت‌وگوی نمونه</h3>' + dialogue(c.dialogue),
-          card('تغییر شرایط', c.twist, 'warning'),
-          '<h3>تحلیل پایانی</h3>' + points(c.turning)
+    for(const c of d.capstones){
+      const mid=Math.ceil(c.dialogue.length/2);
+      out.push(makeSlide(
+        'capstone','capstone','مأموریت نهایی · ترکیبی',c.title,
+        'سه مهارت در یک موقعیت واقعی‌نما به هم پیوند می‌خورند.',
+        overline(1,'صحنه مشترک · Integrated Challenge')+
+        '<p class="scene-line">'+E(c.context)+'</p>'+chips([c.line,'تاب‌آوری','مدیریت خشم','جرأت‌ورزی'])+
+        '<div class="hook-question">کدام بخش موقعیت به تصمیم، کدام به تنظیم هیجان و کدام به بیان قاطع نیاز دارد؟</div>',
+        [
+          challenge('پیش از نقش‌آفرینی',[
+            'مسئله اصلی چیست و کدام بخش از اختیار کارشناس خارج است؟',
+            'کدام تصمیم به شواهد بیشتر نیاز دارد؟',
+            'اگر مشتری ناراحت‌تر شود، چه چیزی در پاسخ باید ثابت بماند؟'
+          ]),
+          '<h3>نقش‌های اجرایی</h3>'+points(c.roles),
+          playLines(c.dialogue.slice(0,mid)),
+          playLines(c.dialogue.slice(mid)),
+          '<div class="crisis-moment">'+overline(2,'نقطه عطف')+'<h3>آیا تصمیم هنوز معتبر است؟</h3><p>'+E(c.twist)+'</p></div>',
+          '<h3>تحلیل تلفیقی و بازخورد گروهی</h3>'+points(c.turning),
+          nextStep('سه شاهد، یک برنامه اقدام','برای تاب‌آوری، مدیریت خشم و جرأت‌ورزی هرکدام یک جمله یا رفتار قابل مشاهده از همین روایت پیدا کنید.')
         ],
-        notes:['از گروه بخواهید برای هر مهارت یک شاهد از متن ارائه دهد.',
-          'توصیه‌های مرتبط با ایمنی، محرمانگی و اختیار کارشناسان باید با رویه سازمان تطبیق داده شوند.']
-      });
+        ['هر پنج نقش را توزیع کنید و نقش مشاهده‌گر را جدی بگیرید.','سه مهارت را در یک سناریو با شواهد ملموس تحلیل کنید.',...c.turning]
+      ));
     }
     return out;
   }
@@ -198,18 +297,25 @@
       const label=entry ? entry.title : 'مأموریت نهایی';
       const emoji=entry ? entry.emoji : '🎯';
       return '<button type="button" data-module="' + E(m) + '" class="' + (m===s.module?'active':'') +
-       '" aria-current="' + (m===s.module?'true':'false') + '"><span class="emoji">' + E(emoji) +
-       '</span>' + E(label) + '</button>';
+       '" aria-current="' + (m===s.module?'true':'false') + '"><img class="module-thumb" alt="" src="' +
+       E(artOf(m)) + '" loading="lazy" decoding="async"><span>' + E(label) + '</span></button>';
     }).join('');
     $('slide-nav').innerHTML=moduleSlides.map((item,i) => '<button type="button" class="' +
       (i===offset?'active':'') + '" data-slide="' + i + '" aria-current="' + (i===offset?'true':'false') +
       '"><span class="idx">' + fa(i+1) + '</span><span>' + E(item.label) + (item.kind==='case'?' · '+E(item.title):'') + '</span></button>').join('');
     $('nav-count').textContent=fa(moduleSlides.length)+' موضوع';
     $('trail').textContent=className(s.module)+' / '+s.label;
-    $('slide').innerHTML='<div class="section-label">' + E(className(s.module)) +
-      ' · ' + E(s.label) + '</div><h2>' + E(s.title) + '</h2><p class="lead">' + E(s.lead) +
-      '</p><div class="reveal-stage">' + (revealed === 0 ? s.body : s.stages[revealed-1]) + '</div>' +
-      (revealed===0?'<p class="reveal-help">برای ادامه تدریس، «نمایش مرحله بعد» را انتخاب کنید. هر مرحله جایگزین مرحله قبلی می‌شود تا پرده شلوغ نشود.</p>':'');
+    $('slide').className='slide slide--'+s.kind+' slide--'+s.module;
+    const sectionTitle=E(className(s.module));
+    const stageLabel=revealed===0?'صورت مسئله و شروع تدریس':'مرحله '+fa(revealed)+' از '+fa(s.stages.length);
+    $('slide').innerHTML='<div class="slide-brandline"><img src="assets/alborz-logo.png" alt="بیمه البرز" loading="lazy"><span>آکادمی مدیریت بیمه البرز · Instructor Presentation</span><b>'+sectionTitle+'</b></div>'+
+      '<div class="slide-feature"><div class="slide-feature-copy"><div class="section-label">'+sectionTitle+' / '+E(s.label)+'</div>'+
+      '<div class="stage-indicator">'+E(stageLabel)+'</div>'+
+      '<h2>'+E(s.title)+'</h2><p class="lead">'+E(s.lead)+'</p></div>'+
+      media(s.module,s.kind==='case'||s.kind==='capstone'?'conversation':s.kind,
+        s.module==='resilience'&&s.kind==='intro'?'پوستر مصوب دوره تاب‌آوری بیمه البرز':'تصویر مفهومی از مجموعه بصری آکادمی')+'</div>'+
+      '<div class="slide-content"><div class="stage-content">'+(revealed === 0 ? s.body : s.stages[revealed-1])+'</div></div>'+
+      (revealed===0?'<p class="reveal-help">مسیر یادگیری: روایت ← پرسش چالشی ← تصمیم اولیه ← تحلیل ← انتقال به کار</p>':'');
     $('instructor-notes').hidden=!showNotes;
     $('instructor-notes').innerHTML='<h3>یادداشت مدرس · روی همین نمایشگر قابل مشاهده است</h3>' +
        points(s.notes) + '<p class="warning">هنگام نمایش روی پرده، این بخش را پنهان نگه دارید؛ یادداشت‌ها کنترل دسترسی خصوصی ندارند.</p>';

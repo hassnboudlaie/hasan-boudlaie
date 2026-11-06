@@ -32,7 +32,13 @@ const server = http.createServer((req, res) => {
       'course homepage links to presentation');
     await page.locator('a[href="./claims-presentation.html"]').click();
     await page.locator('#slide h2').waitFor();
-    assert.match(await page.locator('#slide h2').innerText(), /تاب‌آوری/);
+    assert.match(await page.locator('#trail').innerText(), /تاب‌آوری/);
+    assert.match(await page.locator('#slide h2').innerText(), /اگر فردا/);
+    assert.equal(await page.locator('#slide .slide-media img').count(), 1, 'visual storytelling should include a verified art asset');
+    assert(await page.locator('#slide .slide-media img').evaluate(img => img.complete && img.naturalWidth > 0), 'approved resilience poster should load');
+    assert.equal(await page.locator('#module-nav img.module-thumb').count(), 4, 'all modules must have editorial images');
+    assert.equal(await page.locator('#slide .narrative-overline').count(), 1, 'narrative must open with a clear numbered scene');
+    assert.equal(await page.locator('#slide .challenge-box').count(), 1, 'opening scenario must include challenge questions');
     assert.equal(await page.locator('#module-nav button').count(), 4);
     const firstSlideCount = await page.locator('#slide-nav button').count();
     assert(firstSlideCount >= 12, 'resilience has a complete lesson and scenario list');
@@ -45,20 +51,39 @@ const server = http.createServer((req, res) => {
     await page.locator('#notes-toggle').click();
     assert.equal(await page.locator('#instructor-notes').isHidden(), true);
     await page.locator('#module-nav [data-module="anger"]').click();
-    assert.match(await page.locator('#slide h2').innerText(), /خشم/);
+    assert.match(await page.locator('#trail').innerText(), /خشم/);
+    assert.equal(await page.locator('#slide .slide-media img').count(), 1);
+    assert(await page.locator('#slide .slide-media img').evaluate(img => img.complete && img.naturalWidth > 0), 'anger section photo must load');
     assert(await page.locator('#slide-nav button').count() >= 12, 'anger module includes scenarios and quizzes');
     await page.locator('#slide-nav button:has-text("سناریو")').first().click();
-    assert.equal(await page.getByText('تحلیل تک‌تک گزینه‌ها').count(), 0,
-      'answer reasons must stay hidden initially');
-    for (let j = 0; j < 5; j++) await page.locator('#reveal').click();
-    assert.equal(await page.getByText('تحلیل تک‌تک گزینه‌ها').count(), 1,
-      'complete reasons become visible by deliberate reveal');
-    assert.equal(await page.locator('#slide .answer.correct').count(), 1);
-    assert.equal(await page.locator('#slide .answer.weak').count(), 2);
+    assert.equal(await page.locator('#slide .diagnosis').count(), 0, 'no answer key may be visible at case entry');
+    assert.equal(await page.locator('#slide .narrative-overline').count(), 1, 'case starts with the story and situation');
+    assert.equal(await page.locator('#slide .hook-question').count(), 1, 'case includes instructor hook');
+    for (let j = 0; j < 6; j++) await page.locator('#reveal').click();
+    assert.equal(await page.locator('#slide .crisis-moment').count(), 1, 'new information/turning point must appear');
+    assert.equal(await page.locator('#slide .diagnosis').count(), 0, 'no early answer disclosure');
+    await page.locator('#reveal').click();
+    assert.equal(await page.locator('#slide .decision-list .answer').count(), 3, 'all decision options visible before analysis');
+    assert.equal(await page.locator('#slide .diagnosis').count(), 0, 'choices must not leak solution');
+    for(let j=0;j<3;j++){
+      await page.locator('#reveal').click();
+      assert.equal(await page.locator('#slide .option-breakdown').count(),1, 'independent option feedback');
+      assert.equal(await page.locator('#slide .diagnosis').count(),1, 'one explanation at a time');
+      assert.equal(await page.locator('#slide .option-breakdown .answer').count(),1,'only one option is analyzed per step');
+    }
+    await page.locator('#reveal').click();
+    assert.equal(await page.locator('#slide .facilitated-debrief').count(),1,'case ends with debrief, not just story');
+    assert((await page.locator('#slide .facilitated-debrief li').count())>=3,'case includes substantive debrief questions');
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),'no horizontal overflow in case steps');
     await page.locator('#module-nav [data-module="assertiveness"]').click();
-    assert.match(await page.locator('#slide h2').innerText(), /جرأت‌ورزی/);
+    assert.match(await page.locator('#trail').innerText(), /جرأت‌ورزی/);
+    await page.locator('#module-nav [data-module="resilience"]').click();
+    await page.locator('#reveal').click();
+    await page.locator('#reveal').click();
+    assert.equal(await page.locator('#slide .strategy-matrix .matrix-cell').count(),4,'scientifically defined four-strategy diagram');
     await page.locator('#module-nav [data-module="capstone"]').click();
     assert.match(await page.locator('#slide h2').innerText(), /روز پرتلاطم|مأموریت|خسارت/);
+    assert.equal(await page.locator('#slide .hook-question').count(),1,'integrated capstone requires problem framing');
     await page.screenshot({path: dest + '/presentation-' + width + '.png', fullPage: true});
     // Once the published source has been seen, a local-only backup can render it.
     await page.route('**/claims-workshop-v2.html', route => route.abort('internetdisconnected'));
@@ -66,7 +91,7 @@ const server = http.createServer((req, res) => {
     await page.locator('#slide h2').waitFor();
     assert.match(await page.locator('#source-status').innerText(), /نسخه ذخیره‌شده/);
     assert.equal(errors.length, 0, 'no uncaught browser errors: ' + errors.join('; '));
-    console.log('PASS presentation width=' + width + ' RTL, 3 modules, sources, progressive reveal, lecturer notes, offline cache, integration');
+    console.log('PASS EDITORIAL presentation width=' + width + ' RTL, approved poster/assets, 3 modules, narrative, 4-strategy matrix, deferred answer reasoning, debrief, lecturer notes, offline cache, integration');
     await ctx.close();
   }
   await browser.close();
