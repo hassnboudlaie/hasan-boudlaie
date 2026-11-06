@@ -164,6 +164,54 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
  }catch(e){test('نمونه رایگان',false,e.stack||String(e))}
  finally{await context.close()}
 }
+
+{
+ const context=await browser.newContext({viewport:{width:390,height:844},acceptDownloads:true});
+ const page=await context.newPage();
+ page.on('pageerror',e=>errors.push('child-culture: '+e.message));
+ try{
+   const res=await page.goto(ROOT+'child-culture.html',{waitUntil:'load',timeout:30000});
+   assert(res && res.ok(),'Dedicated child culture page did not open');
+   assert.equal(await page.locator('#risk-assessment .ra-item').count(),11,'Risk catalog incomplete');
+   assert.equal(await page.locator('#action-plan .ra-item').count(),12,'90-day action plan incomplete');
+   assert.equal(await page.locator('#blocks .block').count(),9,'The nine standard BMC blocks were changed');
+   await page.locator('#idea').fill('ایده آزمایشی محصولات فرهنگی کودک');
+   const risk=page.locator('#risk-assessment .ra-item').first();
+   await risk.locator('input[type=checkbox]').check();
+   assert(await risk.locator('.ra-details').isVisible(),'Checked risk details did not open');
+   await risk.locator('select').nth(0).selectOption('زیاد');
+   await risk.locator('select').nth(1).selectOption('متوسط');
+   await risk.locator('textarea').first().fill('شاهد آزمایشی از مصاحبه والدین');
+   await risk.locator('textarea').nth(1).fill('آزمون بازار با ۱۰ والد');
+   const action=page.locator('#action-plan .ra-item').first();
+   await action.locator('input[type=checkbox]').check();
+   assert(await action.locator('.ra-details').isVisible(),'Checked action details did not open');
+   await action.locator('input[type=text]').fill('مدیر محصول');
+   await action.locator('select').selectOption('doing');
+   await action.locator('textarea').fill('مصاحبه با حداقل ۱۰ خانواده');
+   let report=await page.evaluate(()=>window.report());
+   for(const textValue of ['ایده آزمایشی محصولات فرهنگی کودک','شاهد آزمایشی از مصاحبه والدین','آزمون بازار با ۱۰ والد','مدیر محصول','مصاحبه با حداقل ۱۰ خانواده'])
+     assert(report.includes(textValue),'Export report omitted: '+textValue);
+   await page.reload({waitUntil:'load'});
+   assert(await page.locator('#risk-assessment .ra-item').first().locator('input[type=checkbox]').isChecked(),'Risk autosave failed');
+   assert(await page.locator('#action-plan .ra-item').first().locator('input[type=checkbox]').isChecked(),'Action autosave failed');
+   assert.equal(await page.locator('#idea').inputValue(),'ایده آزمایشی محصولات فرهنگی کودک','Existing idea autosave lost');
+   const downloadWait=page.waitForEvent('download',{timeout:10000});
+   await page.locator('#download').click();
+   const download=await downloadWait;
+   const localFile=path.join(DIR,'child-culture-risk-action.txt');
+   await download.saveAs(localFile);
+   const downloaded=await fs.readFile(localFile,'utf8');
+   assert(downloaded.includes('آزمون بازار با ۱۰ والد'),'Downloaded report missing risk mitigation');
+   assert(downloaded.includes('مصاحبه با حداقل ۱۰ خانواده'),'Downloaded report missing action note');
+   test('فرم اختصاصی کودک: ۹ بخش بوم، ریسک‌ها، برنامه اقدام، ذخیره و خروجی',true);
+   await page.screenshot({path:path.join(DIR,'child-culture-risk-action.png'),fullPage:true});
+ }catch(e){
+   test('فرم اختصاصی کودک: ریسک و اقدام',false,e.stack||String(e));
+   await page.screenshot({path:path.join(DIR,'child-culture-failure.png'),fullPage:true}).catch(()=>{});
+ }finally{await context.close()}
+}
+
 await browser.close();
 await fs.writeFile(path.join(DIR,'results.json'),JSON.stringify({results,errors},null,2));
 console.log('نتایج:',results.filter(x=>x.pass).length,'موفق،',results.filter(x=>!x.pass).length,'ناموفق،',errors.length,'خطای جاوااسکریپت');
