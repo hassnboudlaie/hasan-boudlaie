@@ -252,7 +252,7 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
 {
  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,acceptDownloads:true});
  const pg=await ctx.newPage();pg.on('pageerror',e=>errors.push('specialized: '+e.message));
- for(const v of [{id:'parastoo',file:'parastoo-canvas.html',total:54},{id:'jewelry',file:'jewelry-canvas.html',total:45}]){
+ for(const v of [{id:'parastoo',file:'parastoo-canvas.html',total:60},{id:'jewelry',file:'jewelry-canvas.html',total:51}]){
   try{
    const res=await pg.goto(ROOT+v.file,{waitUntil:'load'});
    assert(res?.ok(),v.id+' page failed to open');
@@ -260,6 +260,13 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
    assert.equal(await pg.locator('.sb-question').count(),v.total,'Question count incorrect');
    assert.equal(await pg.locator('.sb-risk').count(),12,'Risk count incorrect');
    assert.equal(await pg.locator('.sb-action').count(),12,'Action count incorrect');
+   assert.equal(await pg.locator('#visual-grid .sb-visual-tile').count(),9,'Missing live visual 9-block BMC overview');
+   assert.equal(await pg.locator('#research-sources .sb-source').count(),4,'Missing methodology and source links');
+   assert.equal(await pg.locator('.sb-evidencebox').count(),9,'Missing nine block evidence fields');
+   assert.equal(await pg.locator('#block-sections .sb-block:visible').count(),1,'Only one questionnaire block must be displayed');
+   await pg.locator('#special-block-0 .sb-evidencebox select').selectOption('interview');
+   await pg.locator('#special-block-0 .sb-evidencebox textarea').fill('مصاحبه تست با ۱۰ مشتری واقعی');
+
    await pg.locator('textarea[name=idea]').fill('Test idea '+v.id);
    await pg.locator('.sb-question').first().locator('input[type=checkbox]').first().check();
    const risk=pg.locator('.sb-risk').first();await risk.locator('input[type=checkbox]').check();
@@ -271,9 +278,16 @@ for(let i=0;i<cases.length;i++)await runCase(cases[i],i);
    const file=await promise;
    const filename=path.join(DIR,'intake-'+v.id+'.txt');await file.saveAs(filename);
    const output=await fs.readFile(filename,'utf8');
-   for(const term of ['Test idea '+v.id,'Risk evidence '+v.id,'Owner '+v.id])assert(output.includes(term),'Missing export term '+term);
+   for(const term of ['Test idea '+v.id,'Risk evidence '+v.id,'Owner '+v.id,'مصاحبه تست با ۱۰ مشتری واقعی','سطح شواهد: مصاحبه'])assert(output.includes(term),'Missing export term '+term);
    await pg.reload({waitUntil:'load'});
    assert.equal(await pg.locator('textarea[name=idea]').inputValue(),'Test idea '+v.id,'Autosave missing');
+   assert.equal(await pg.locator('#special-block-0 .sb-evidencebox select').inputValue(),'interview','Evidence status did not persist');
+   assert.equal(await pg.locator('#special-block-0 .sb-evidencebox textarea').inputValue(),'مصاحبه تست با ۱۰ مشتری واقعی','Evidence source did not persist');
+   await pg.locator('#visual-grid .sb-visual-tile[data-block="segments"]').click();
+   assert(await pg.locator('#special-block-0').isVisible(),'Live nine-cell visual card did not navigate to block');
+   const proofPath=path.join(DIR,'specialized-premium-'+v.id+'.png');
+   await pg.screenshot({path:proofPath,fullPage:true});
+
    assert(await pg.locator('.sb-risk').first().locator('input[type=checkbox]').isChecked(),'Risk did not persist');
    assert(await pg.locator('.sb-action').first().locator('input[type=checkbox]').isChecked(),'Action did not persist');
    if(v.id==='jewelry')assert(await pg.evaluate(()=>!!localStorage.getItem('hb-specialized-bmc-v1-parastoo')),'Parastoo data lost after jewelry');
