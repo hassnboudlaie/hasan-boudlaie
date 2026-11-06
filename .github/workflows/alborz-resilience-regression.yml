@@ -1,7 +1,7 @@
 name: Alborz Claims Resilience - Group Learning QA
 on:
   push:
-    branches: [main, feat/alborz-resilience-claims-20261102, 'fix/alborz-*']
+    branches: [main, feat/alborz-resilience-claims-20261102, 'fix/alborz-*', 'feat/alborz-classroom-*']
     paths:
       - 'alborz-communication-skills/index.html'
       - 'alborz-communication-skills/resilience.html'
@@ -10,6 +10,8 @@ on:
       - 'alborz-communication-skills/resilience-game.*'
       - 'alborz-communication-skills/resilience-live.js'
       - 'alborz-communication-skills/claims-workshop-v2.html'
+      - 'alborz-communication-skills/claims-presentation.*'
+      - 'scripts/alborz-presentation-qa.cjs'
       - 'scripts/alborz-four-hour-qa.cjs'
       - 'scripts/alborz-resilience-browser-qa.mjs'
       - '.github/workflows/alborz-resilience-regression.yml'
@@ -30,6 +32,8 @@ jobs:
           node --check alborz-communication-skills/resilience-game.js
           node --check alborz-communication-skills/resilience-live.js
           node --check scripts/alborz-four-hour-qa.cjs
+          node --check alborz-communication-skills/claims-presentation.js
+          node --check scripts/alborz-presentation-qa.cjs
           node --check scripts/alborz-resilience-browser-qa.mjs
       - name: Install browser
         run: |
@@ -38,6 +42,7 @@ jobs:
       - name: Verify desktop and simulated mobile workshop
         run: |
           node scripts/alborz-resilience-browser-qa.mjs
+          node scripts/alborz-presentation-qa.cjs
       - name: Save visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
