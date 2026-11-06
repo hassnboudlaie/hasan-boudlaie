@@ -41,16 +41,33 @@ function showTechniqueDetail(index){
 }
 
 function showStage(){
- const host=document.getElementById("s3-focus");if(!host)return;if(state.current<0){host.innerHTML="";return;}
- const c=cases[state.current],b=briefs[state.current],s=state.step;
- const nav='<div class="s3-tabs" role="tablist" aria-label="مراحل کیس">'+stages.map((name,i)=>'<button type="button" data-s3-step="'+i+'" role="tab" aria-selected="'+(i===s)+'" class="'+(i===s?"active":"")+'" '+(i>state.max?"disabled":"")+'>'+(i>state.max?"🔒 ":"")+name+'</button>').join("")+'</div>';
+ const host=document.getElementById("s3-focus");if(!host)return;
+ if(state.current<0){host.innerHTML="";return;}
+ const c=cases[state.current],b=briefs[state.current],i=state.current,t=state.step;
+ const tabs='<nav class="s3-tabs" aria-label="چهار مرحله گفت‌وگو">'+stages.map((name,j)=>'<button type="button" data-s3-step="'+j+'" aria-current="'+(t===j?"step":"false")+'" class="'+(j===t?"active":"")+'" '+(j>state.max?"disabled":"")+'>'+(j>state.max?"🔒 ":"")+name+'</button>').join("")+'</nav>';
+ const roles=t===0?renderBriefs(b,c):'<details class="s3-role-access"><summary>👥 مشاهده دوباره برگه‌های شخصیت‌ها</summary>'+renderBriefs(b,c)+'</details>';
  let content="";
- if(s===0)content=renderBriefs(b,c)+'<h4>اجرای اول · پیش از آشکارشدن قواعد</h4>'+bubble(c.before,c.role,b)+'<p class="s3-question">چالش: در کدام نقطه، رئیس شعبه از شنیدن فاصله گرفت؟</p>';
- if(s===1)content='<h4>قواعد مختص این سناریو</h4><div class="s3-rule-list">'+b.rules.map((x,i)=>'<div class="s3-rule-item"><span>'+digits(i+1)+'</span><p>'+escapeHtml(x)+'</p></div>').join("")+'</div><details class="s3-feedback-extra"><summary>👁 لنز مشاهده مدرس</summary><p><b>رفتار قابل مشاهده:</b> '+escapeHtml(b.watch)+'</p><p><b>خطای رایج:</b> '+escapeHtml(b.avoid)+'</p><p><b>تن صدا و رفتار غیرکلامی:</b> '+escapeHtml(c.delivery)+'</p></details>';
- if(s===2)content='<h4>اجرای دوم · ادامه مکالمه</h4><p class="s3-soft">این گفت‌وگو از آخرین جمله اجرای اول ادامه پیدا می‌کند. رئیس شعبه با شنود مؤثر مسیر گفت‌وگو را ترمیم می‌کند؛ نه اینکه از ابتدا تکرارش کند.</p>'+bubble(c.after,c.role,b)+'<p class="s3-question">کدام پاسخ توانست مسیر گفت‌وگو را اصلاح کند، بدون آنکه بحث از ابتدا شروع شود؟</p>';
- if(s===3)content='<h4>جمع‌بندی · دو نکته کلیدی</h4><div class="s3-summary">'+c.keys.map((t,i)=>'<div><span>'+digits(i+1)+'</span><p>'+escapeHtml(t)+'</p></div>').join("")+'</div><p class="s3-question">Feedback: یک رفتار مشخص را از اجرای اول و دوم مقایسه کنید.</p>';
- const next=s===3?'<button type="button" class="s3-primary" data-s3-nextcase>کیس بعدی ←</button>':'<button type="button" class="s3-primary" data-s3-next>مرحله بعد: '+stages[s+1]+' ←</button>';
- host.innerHTML='<article class="s3-work"><div class="s3-workhead"><div><small>کیس '+digits(state.current+1)+' از ۱۲ · '+escapeHtml(c.role)+'</small><h3>'+escapeHtml(c.title)+'</h3></div><button type="button" data-s3-close class="s3-close" aria-label="بستن کیس">×</button></div><p class="s3-scene">'+escapeHtml(c.scene)+'</p>'+nav+'<div class="s3-stage" role="tabpanel">'+content+'</div><div class="s3-actions">'+next+'<button type="button" data-s3-close class="s3-secondary">بازگشت به کیس‌ها</button></div></article>';
+ if(t===0){
+   content='<h4>اجرای اول · پیش از مشاهده قواعد</h4>'+bubble(c.before,c.role,b)+'<div class="s3-observer"><b>پرسش تشخیصی برای مشاهده‌گران</b><p>'+escapeHtml(b.probe)+'</p></div>';
+ }
+ if(t===1){
+   content='<h4>قواعد اختصاصی این کیس</h4><div class="s3-rule-list">'+b.rules.map((x,j)=>'<div class="s3-rule-item"><span>'+digits(j+1)+'</span><p>'+escapeHtml(x)+'</p></div>').join("")+'</div>'+
+   '<details class="s3-feedback-extra"><summary>👁 نکات مشاهده برای مدرس</summary><p><b>شاخص اصلی:</b> '+escapeHtml(b.watch)+'</p><p><b>خطای قابل اجتناب:</b> '+escapeHtml(b.avoid)+'</p><p><b>لحن و رفتار غیرکلامی:</b> '+escapeHtml(c.delivery)+'</p></details>';
+ }
+ if(t===2){
+   content='<h4>اجرای دوم · ادامه زنده همان گفت‌وگو</h4>'+
+   '<div class="s3-practice"><strong>نوبت اجرای شماست</strong><p>از آخرین جمله اجرای اول ادامه بدهید. رئیس شعبه باید بدون تکرار شروع مکالمه، مسیر گفت‌وگو را با شنود مؤثر اصلاح کند. متن مرجع را فقط بعد از اجرای دو نفر باز کنید.</p><div class="s3-timing">۲ دقیقه گفت‌وگوی زنده · سپس مشاهده نمونه</div></div>'+
+   '<details class="s3-sample"><summary>🗣 مشاهده نمونه حرفه‌ای ادامه گفت‌وگو</summary><p class="s3-soft">نمونه راهنماست، نه متن لازم‌الحفظ. هر دو نقش با واژه‌های طبیعی خودشان صحبت کنند.</p>'+
+   bubble(c.after,c.role,b)+'</details>';
+ }
+ if(t===3){
+   content='<h4>جمع‌بندی · دو نکته کلیدی</h4><div class="s3-summary">'+c.keys.map((x,j)=>'<div><span>'+digits(j+1)+'</span><p>'+escapeHtml(x)+'</p></div>').join("")+'</div>'+
+   '<div class="s3-feedback-panel"><h4>بازخورد مشاهده‌محور</h4><p><b>معیار این کیس:</b> '+escapeHtml(b.watch)+'</p><p><b>پرسش مدرس:</b> '+escapeHtml(b.feedback)+'</p><p><b>انتقال به محیط کار:</b> '+escapeHtml(b.transfer)+'</p><small>Feedback را به جمله و رفتار قابل مشاهده ارجاع دهید؛ نه قضاوت درباره شخصیت مجری.</small></div>';
+ }
+ const next=t===3?'<button class="s3-primary" type="button" data-s3-nextcase>کیس بعدی ←</button>':'<button class="s3-primary" type="button" data-s3-next>مرحله بعد: '+stages[t+1]+' ←</button>';
+ const meter='<div class="s3-progress" role="progressbar" aria-label="پیشرفت در ۱۲ کیس" aria-valuemin="0" aria-valuemax="12" aria-valuenow="'+(i+1)+'"><span style="width:'+(((i+1)/12)*100).toFixed(2)+'%"></span></div>';
+ host.innerHTML='<article class="s3-work"><div class="s3-workhead"><div><small>کیس '+digits(i+1)+' از ۱۲ · '+escapeHtml(c.role)+'</small><h3>'+escapeHtml(c.title)+'</h3></div><button type="button" data-s3-close class="s3-close" aria-label="بستن کیس و بازگشت به فهرست">×</button></div>'+meter+
+ '<p class="s3-scene">'+escapeHtml(c.scene)+'</p>'+tabs+roles+'<div class="s3-stage">'+content+'</div><div class="s3-actions">'+next+'<button type="button" class="s3-secondary" data-s3-close>بازگشت به فهرست ۱۲ کیس</button></div></article>';
 }
 function select(n){
  if(n<0||n>=cases.length)return;state.current=n;state.step=0;state.max=0;
