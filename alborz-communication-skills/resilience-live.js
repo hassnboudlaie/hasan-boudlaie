@@ -1,7 +1,8 @@
 'use strict';
 (()=>{
-const W=window.AlborzWorkshop,teacher=new URLSearchParams(location.search).has('teacher');
-if(!W||(!W.group&&!teacher))return;
+const W=window.AlborzWorkshop,params=new URLSearchParams(location.search),teacher=params.has('teacher');
+// The local-only scorecard is an explicit offline fallback, never a second live instructor dashboard.
+if(!W||(teacher&&params.get('offline')==='1')||(!W.group&&!teacher))return;
 const endpoint='https://cymatyfnwuxikrghydrn.supabase.co/functions/v1/alborz-workshop-sync';
 const shared=/^(?:teamname|stage|r[0-3](?:pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
 const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

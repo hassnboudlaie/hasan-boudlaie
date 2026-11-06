@@ -1,7 +1,7 @@
 name: Alborz Claims Resilience - Group Learning QA
 on:
   push:
-    branches: [main, feat/alborz-resilience-claims-20261102]
+    branches: [main, feat/alborz-resilience-claims-20261102, 'fix/alborz-*']
     paths:
       - 'alborz-communication-skills/index.html'
       - 'alborz-communication-skills/resilience.html'
