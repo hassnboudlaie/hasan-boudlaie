@@ -24,6 +24,9 @@ jobs:
           node --check business-model-canvas/child-risk-action.js
           node --check business-model-canvas/child-discovery.js
           node --check business-model-canvas/child-flow.js
+          node --check business-model-canvas/specialized-engine.js
+          node --check business-model-canvas/special-parastoo-data.js
+          node --check business-model-canvas/special-jewelry-data.js
           node --check business-model-canvas/choice-bank.js
           node --check scripts/bmc-browser-qa.mjs
       - name: Install free Playwright browser
