@@ -208,9 +208,8 @@
     $('trail').textContent=className(s.module)+' / '+s.label;
     $('slide').innerHTML='<div class="section-label">' + E(className(s.module)) +
       ' · ' + E(s.label) + '</div><h2>' + E(s.title) + '</h2><p class="lead">' + E(s.lead) +
-      '</p><div class="reveal-stage">' + s.body + '</div>' +
-      s.stages.slice(0,revealed).map(markup => '<div class="reveal-stage">' + markup + '</div>').join('') +
-      (revealed===0?'<p class="reveal-help">برای ادامه تدریس، «نمایش مرحله بعد» را انتخاب کنید.</p>':'');
+      '</p><div class="reveal-stage">' + (revealed === 0 ? s.body : s.stages[revealed-1]) + '</div>' +
+      (revealed===0?'<p class="reveal-help">برای ادامه تدریس، «نمایش مرحله بعد» را انتخاب کنید. هر مرحله جایگزین مرحله قبلی می‌شود تا پرده شلوغ نشود.</p>':'');
     $('instructor-notes').hidden=!showNotes;
     $('instructor-notes').innerHTML='<h3>یادداشت مدرس · روی همین نمایشگر قابل مشاهده است</h3>' +
        points(s.notes) + '<p class="warning">هنگام نمایش روی پرده، این بخش را پنهان نگه دارید؛ یادداشت‌ها کنترل دسترسی خصوصی ندارند.</p>';
