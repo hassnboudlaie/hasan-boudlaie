@@ -586,6 +586,12 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 .academy-course-communication .academy-course-cta{background:#173d5d}
 @media(max-width:690px){.academy-portal-hero{padding:24px 0}.academy-portal-hero p{font-size:18px}.academy-courses{grid-template-columns:1fr;gap:12px}.academy-course-card{min-height:0;padding:21px}.academy-course-card h3{font-size:26px}.academy-course-card p{font-size:18px}.academy-course-art{font-size:39px}}
 </style>
+<style>
+.simple-academy .academy-courses{align-items:start}
+.claims-approved-poster{display:block;width:100%;height:auto;border-radius:16px}
+.simple-academy .academy-course-resilience{padding:14px;min-width:0}
+.simple-academy .direct-entry:focus-visible{outline:3px solid #b18b36;outline-offset:4px}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -620,7 +626,7 @@ function home(){
  document.title="آکادمی مدیریت و یادگیری بیمه البرز";
  document.getElementById("app").innerHTML=header()+
  '<main class="simple-academy"><div class="wrap"><h1>انتخاب دوره</h1><div class="academy-courses">'+
- '<article class="academy-course-card academy-course-resilience"><div class="claims-poster"><div class="poster-visual"><span class="poster-mark">البرز</span><div class="poster-scene"><span class="poster-person"></span><span class="poster-shield">✓</span><span class="poster-file">▤</span></div></div><h2>کارگاه مهارت‌های فردی کارشناسان خسارت بیمه البرز</h2><div class="poster-themes">تاب‌آوری · مدیریت خشم · جرأت‌ورزی</div></div><a class="academy-course-cta direct-entry" href="claims-workshop-v2.html">ورود به کارگاه کارشناسان خسارت</a></article>'+
+ '<article class="academy-course-card academy-course-resilience"><img class="claims-approved-poster" src="assets/claims-resilience-approved-20261106.png" width="1024" height="1536" alt="پوستر کارگاه آموزشی استراتژی‌های تاب‌آوری فردی در دوران پرتلاطم؛ بیمه البرز" fetchpriority="high"><a class="academy-course-cta direct-entry" href="claims-workshop-v2.html">ورود به کارگاه کارشناسان خسارت</a></article>'+
  '<article class="academy-course-card academy-course-communication"><h2>مهارت‌های ارتباطات اثربخش</h2><a class="academy-course-cta direct-entry" href="?course=communication">ورود به دوره مهارت‌های ارتباطی</a></article>'+
  '</div></div></main>';
 }
