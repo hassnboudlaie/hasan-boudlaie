@@ -1,48 +1,39 @@
-# Alborz Insurance — Isolated Live Collaboration Pilot (Work handoff)
+# Alborz Live Collaboration — reviewed integration
 
-**Date:** 2026-11-06  
-**Branch:** `feature/alborz-live-sync-isolated`  
-**Do not merge without reconciling any concurrently running ChatGPT Work changes.**
+Reviewed 2026-11-06 against main `dd0aaee` and PR #68 head `cee3af9`.
 
-## User-approved scope
-- Keep the existing **My Finance main** project unchanged.
-- Keep the **Beta Supabase project**; repurpose only a logically isolated portion for Alborz.
-- Do not delete any Finance users or data before independent backup and acceptance.
-- Preserve the original communications course and claims workshop files in `main`.
-- Target 10 groups × 5 members, four original resilience missions, instructor monitoring.
+## Scope and integration
+- The existing 240-minute course remains the source of teaching content. The live layer is loaded only by `resilience.html` and decorates its existing group fields.
+- Communications course index, session files, claims-workshop-v2.html and My Finance are unchanged by this PR.
+- Supabase Beta `cymatyfnwuxikrghydrn`: only Alborz tables, indexes and the `alborz-workshop-sync` function were changed. No Finance tables, auth users, secrets or global Auth settings were changed.
+- Polling is near-live, approximately ten seconds; this is not WebSocket push.
 
-## Implemented now
-1. In Supabase project `cymatyfnwuxikrghydrn`:
-   - Created `public.alborz_team_fields` (field-granularity shared team state).
-   - Created `public.alborz_access_keys` (SHA-256 hashes of high-entropy team and teacher codes).
-   - Enabled RLS and revoked anonymous/authenticated table privileges; access via isolated Edge Function only.
-   - Generated 10 independent team access codes and one teacher access code. **Raw codes must never be committed.**
-   - Deployed Edge Function `alborz-workshop-sync`, currently version 2 (teacher read-all, scoped team read/write).
-   - No Finance tables, users, app code or Finance-related Edge Functions changed.
-2. On this branch only:
-   - `alborz-communication-skills/alborz-live-pilot.html`: standalone, nonproduction group workspace + instructor view.
-   - Participant inputs are segregated by both team and member; team-level decisions are shared.
-   - Polls every ~10 seconds (group) / ~12 seconds (teacher) after authentication.
+## Security and concurrency fixes
+- Each of 50 members has an independent 96-bit random code; one separate teacher code. Only SHA-256 hashes are stored server-side. Initial pilot codes are revoked; test credentials are rotated before release. Raw codes are delivered privately and never committed.
+- Server derives team, member and editor label from the capability. A member cannot edit another member's contribution, another team or instructor grades.
+- Direct anon/authenticated table and RPC privileges are revoked; RLS remains enabled. The service-only RPC is SECURITY INVOKER with a fixed empty search_path.
+- Atomic per-team transaction with optimistic field versions: a stale writer receives 409. The UI retains the draft and requires explicit review before another write.
+- Code expiration/revocation and database-backed request rate limits. No body/code logging. CORS allowlist, bounded request bodies and validated field names/types.
+- Private pre/post assessments and individual action plans are rejected by the shared API. Online drafts survive failed saves in the current tab. Offline course data is not automatically uploaded.
+- Server data is rendered as escaped text. Credentials are held in sessionStorage for the current tab and cleared at logout.
 
-## Integration contract for future Work session
-The existing four-hour resilience app lives in `alborz-communication-skills/resilience.html` and `resilience-game.js` on `main`. **Those files have NOT been modified by this work.**
+## Verification performed
+- 20 API acceptance assertions passed, including cross-team isolation, teacher isolation, member impersonation denial, private-field denial, conflict detection and atomic rejection.
+- 50 simultaneous member writes and 50 simultaneous scoped reads passed; all 50 contributions appeared in a ten-team dashboard. Burst write p50 7208ms, p95 9058ms, max 9328ms in this environment.
+- Four independent browser contexts exercised two collaborating members, another team and instructor: sharing, isolation, conflicts, offline recovery, grading and logout passed.
+- Existing nine-stage course tests passed at 390px and 1366px: navigation, local state isolation, budget, event reveal and exports.
+- Additional checks: expired code 401, revoked code 401, rate limit 429. Direct tables and service RPCs denied to anon; SQL confirms authenticated has no table or RPC privileges either.
+- No claim of a test on 50 physical phones or a full four-hour endurance test. Browser tests used a local source route with the real Beta endpoint. The test proxy's private CA required a harness-only TLS override; API tests used normal TLS validation. Production code has no TLS bypass.
 
-When Work resumes:
-- Compare current `main` and this branch before any cherry-pick or merge.
-- Reuse the isolated API and field contract; do not duplicate the database schema or token system.
-- Map existing keys `r0initial` ... `r3revision`, `r0evidence`, team name, stage to shared writes.
-- Personal group contributions use `r0member1` ... `r3member5`.
-- Self-assessment may contain personal reflections; do not automatically sync or publicly display personal pre/post answers.
-- Protect instructor view by teacher-only code; each team's secret cannot read another team's data.
-- No Finance data should appear in the Alborz app or in the public repository.
+## Advisories and operational limits
+Supabase reports INFO for RLS without policies on the service-only Alborz tables; this is intentional deny-all for client roles, with revoked grants. The pre-existing project-wide leaked-password-protection warning remains unchanged because this code uses no Supabase Auth passwords and altering shared Auth would exceed scope.
+- https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy
+- https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
 
-## Pilot QA still required
-- Functional verification of Edge Function HTTP responses (valid team read/write, wrong-team 403, invalid code 401, teacher view).
-- Two-device concurrent editing test with same team code; cross-team isolation test.
-- Ten-team aggregate teacher test; mobile UX, cache behavior, expired connections.
-- Replace polling with genuinely pushed Realtime events if subsecond feedback is required; for now polling is near-live, not websocket streaming.
-- Real use requires distributing each team's 24-character code confidentially; never expose codes in frontend or GitHub.
-- Require an explicit content/feature reconciliation before adding a production link to the Academy home page.
+One capability identifies a workshop seat, not a verified human identity. Keep member and teacher codes confidential. No real claim records or sensitive personal data belong in this educational system. Follow-on workshops should rotate keys and use a separate data lifecycle; this integration serves the existing ten-team cohort.
 
-## Status definition
-**Backend deployed; isolated frontend staged in branch; NOT production-integrated or field-tested.**
+## Reproducible tests
+- `node scripts/alborz-resilience-browser-qa.mjs` (Playwright 1.56.1).
+- `python scripts/alborz-live-api-qa.py /private/path/test-codes.json` (temporary credentials only).
+- `node scripts/alborz-live-browser-qa.cjs /private/path/test-codes.json` (same temporary credentials).
+- Do not run write tests against live learner data. Test credentials are not repository assets.
