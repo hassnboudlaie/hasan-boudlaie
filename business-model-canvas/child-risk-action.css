@@ -42,3 +42,41 @@
 .deep-open-prompt{font-size:.83rem;color:#526f61;line-height:1.9;margin:10px 0 8px}
 .deep-note textarea{min-height:95px;width:100%;box-sizing:border-box;background:white}
 @media(max-width:560px){.deep-options{grid-template-columns:1fr}.deep-question{padding:12px;margin:10px 7px}.deep-summary{font-size:.92rem}.deep-option{font-size:.87rem}}
+
+
+/* Readable progressive questionnaire — 90 questions, 9 manageable steps. */
+.block[hidden]{display:none!important}
+.deep-question{padding:0;margin:9px 8px;border:1px solid #d7e6dc;border-radius:12px;background:#fff;overflow:hidden}
+.deep-question-title{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:13px;font-size:.93rem;font-weight:750;color:#194e3d;cursor:pointer;list-style:none;line-height:1.8}
+.deep-question-title::-webkit-details-marker{display:none}
+.deep-question-title::before{content:"+";width:22px;height:22px;border-radius:50%;background:#edf5ef;display:inline-flex;align-items:center;justify-content:center;color:#21724e;margin-left:6px;flex:0 0 22px;font-size:1.15rem;line-height:1}
+.deep-question[open] .deep-question-title::before{content:"−";background:#d9ebdf}
+.deep-question[open] .deep-question-title{border-bottom:1px solid #e0ece4;background:#f5fbf6}
+.deep-question-status{font-size:.73rem;font-weight:600;color:#667d6d;background:#f1f5f0;padding:1px 8px;border-radius:99px}
+.deep-question[open] .deep-options{padding:12px}
+.deep-question[open] .deep-note{margin:0 12px 12px;border-top:1px solid #e9f0e9}
+.deep-unknown{color:#876a40}
+.cq-guide{margin:8px 0 14px;padding:15px;background:#edf6ef;border:1px solid #c4dfca;border-radius:14px}
+.cq-guide>strong{display:block;font-size:1rem}
+.cq-guide>p{margin:6px 0 13px;font-size:.84rem;color:#4b6b59}
+.cq-progress{height:8px;overflow:hidden;border-radius:8px;background:#d5e5d8}
+#cq-progress-fill{display:block;background:#187350;height:100%;width:0;transition:width .2s}
+.cq-stats{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:.81rem;color:#245a43;margin:9px 0}
+.cq-hint{font-size:.83rem;color:#496b54;margin:14px 0 9px}
+#tiles .tile{background:#fff;border:1px solid #cddfd3;min-height:82px;text-decoration:none;color:#265542;display:flex;flex-direction:column;justify-content:space-between;gap:6px;padding:12px;text-align:right}
+#tiles .tile strong{font-size:.86rem;line-height:1.6}
+#tiles .tile small{font-size:.76rem;color:#647d69}
+#tiles .tile.cq-current{border:2px solid #14754d;background:#e9f5ed;box-shadow:0 0 0 2px #d8ebdf}
+.cq-pager{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:19px;border-top:1px solid #e3eae3;padding-top:14px}
+button.cq-primary,button.cq-secondary{margin:0;padding:10px 14px;border-radius:10px;font-weight:800;font-size:.86rem;min-height:44px}
+button.cq-primary{background:#166b49;color:#fff}
+button.cq-secondary{background:#fff;border:1px solid #a8cdb3;color:#205840}
+#cq-show-all{margin:4px 0}
+@media(max-width:550px){
+ #tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #tiles .tile{padding:10px;min-height:76px}
+ .cq-guide{padding:13px}
+ .deep-question-title{font-size:.9rem;padding:12px}
+ .deep-question[open] .deep-options{padding:9px}
+ .cq-pager button{flex:1 1 44%}
+}
