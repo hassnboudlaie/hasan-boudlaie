@@ -25,7 +25,7 @@ function modelIntro(){
  ["stage","وضعیت فعلی کسب‌وکار","ایده، پایلوت، فعال، در حال توسعه...","input"],
  ["objective","مهم‌ترین هدف ۱۲ ماه آینده","یک دستاورد مشخص و قابل سنجش","textarea"]]){
     const el=kind==="textarea"?box(placeholder,d.profile[key]||""):inp("text",key,d.profile[key]||"");
-    if(kind==="input")el.placeholder=placeholder;
+    el.name=key;if(kind==="input")el.placeholder=placeholder;
     entry(p,label,el);
     el.addEventListener("input",()=>{d.profile[key]=el.value;safeSet();});
  }
