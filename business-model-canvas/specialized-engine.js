@@ -5,9 +5,10 @@ if(!cfg || !Array.isArray(cfg.blocks) || cfg.blocks.length!==9)return;
 const $=s=>document.querySelector(s), node=(tag,cl,txt)=>{let e=document.createElement(tag);if(cl)e.className=cl;if(txt!==undefined)e.textContent=txt;return e;};
 const text=(e)=>e.value.trim(), num=n=>Number(n).toLocaleString("fa-IR");
 const KEY="hb-specialized-bmc-v1-"+cfg.id;
-const blank=()=>({schema:1,id:cfg.id,profile:{name:"",business:"",idea:"",stage:"",objective:""},intro:{},answers:{},notes:{},risks:{},otherRisk:"",actions:{},customAction:{title:"",owner:"",due:"",note:""},updatedAt:""});
+const blank=()=>({schema:1,id:cfg.id,profile:{name:"",business:"",idea:"",stage:"",objective:""},intro:{},answers:{},notes:{},evidence:{},risks:{},otherRisk:"",actions:{},customAction:{title:"",owner:"",due:"",note:""},updatedAt:""});
 let d=blank();
 try{const old=JSON.parse(localStorage.getItem(KEY)||"null");if(old&&old.id===cfg.id&&old.schema===1){d={...d,...old,profile:{...d.profile,...old.profile}};}}catch(e){}
+if(!d.evidence || typeof d.evidence!=="object")d.evidence={};
 const counters={questions:0,risks:0,actions:0};
 const countQuestions=()=>cfg.blocks.reduce((a,b)=>a+b.questions.length,0);
 const totalQuestions=countQuestions();
@@ -56,11 +57,16 @@ function renderBMC(){
    nav.append(tile);
    const sec=node("section","sb-block");sec.id="special-block-"+i;sec.hidden=i!==0;
    sec.append(node("h2",null,num(i+1)+". "+block.title),node("p","sb-hint",block.description||""));
+   const essential=node("p","sb-essential-note","پیشنهاد: ابتدا ۲ سؤال اول این خانه را پاسخ دهید؛ سایر موارد برای Deep Dive و اعتبارسنجی بیشترند.");
+   sec.append(essential);
    block.questions.forEach((q,j)=>{
      const k=block.id+"-"+j,previous=d.answers[k]||{choices:[],note:""};
      const question=node("details","sb-question");question.dataset.key=k;
      const summary=node("summary","sb-questiontitle");
-     summary.append(node("span",null,num(j+1)+". "+q.prompt),node("small","sb-questionstatus","برای مشاهده باز کنید"));
+     const qtitle=node("span","sb-questionlabel",num(j+1)+". "+q.prompt);
+     if(j<2)qtitle.append(node("em","sb-core-tag","پرسش اصلی"));
+     if(q.level==="advanced")qtitle.append(node("em","sb-research-tag","پرسش به‌روزشده ۲۰۲۶"));
+     summary.append(qtitle,node("small","sb-questionstatus","برای مشاهده باز کنید"));
      question.append(summary);
      if(j===0)question.open=true;
      const options=node("div","sb-checkgrid");
@@ -90,6 +96,14 @@ function renderBMC(){
    const bNote=box("جمع‌بندی این خانه، فرضیات اصلی و شواهد موجود…",d.notes[block.id]||"");
    entry(sec,"جمع‌بندی آزاد این خانه",bNote);
    bNote.addEventListener("input",()=>{d.notes[block.id]=bNote.value;safeSet();});
+   const proof=d.evidence[block.id]||{},evid=node("div","sb-evidencebox");
+   evid.append(node("h3",null,"اعتبار شواهد این خانه"));
+   const sel=choose([["not_yet","هنوز بررسی نشده"],["assumption","فرضیه / برآورد شخصی"],["interview","مصاحبه با مشتری یا متخصص"],["observation","مشاهده رفتار یا تست واقعی"],["transaction","فروش، پرداخت یا قرارداد واقعی"]],proof.status||"not_yet");
+   entry(evid,"Evidence Level — وضعیت داده‌های پشت پاسخ‌ها",sel);
+   const eNote=entry(evid,"منبع شواهد و تاریخ آن (اختیاری)",box("برای مثال: مصاحبه با ۱۰ مشتری در آبان ۱۴۰۵، نتیجه فروش آزمایشی یا شماره گزارش داخلی",proof.note||""));
+   const updateEvidence=()=>{d.evidence[block.id]={status:sel.value,note:eNote.value};safeSet();};
+   sel.addEventListener("change",updateEvidence);eNote.addEventListener("input",updateEvidence);
+   sec.append(evid);
    const pager=node("nav","sb-pager");
    if(i){const prev=node("button","sb-secondary","خانه قبلی");prev.type="button";prev.onclick=()=>go(i-1);pager.append(prev);}
    const next=node("button","sb-primary",i===8?"ادامه: ارزیابی ریسک‌ها":"ادامه: خانه "+num(i+2));next.type="button";
@@ -187,6 +201,9 @@ function report(){
    out.push("","━━━━━━━━━━━━━━━━━━",num(i+1)+". "+b.title);
    b.questions.forEach((q,j)=>{const a=d.answers[b.id+"-"+j]||{};out.push(num(j+1)+") "+q.prompt,"گزینه‌ها: "+((a.choices||[]).join("، ")||"ثبت نشده"),"توضیح: "+(a.note||"ثبت نشده"));});
    out.push("جمع‌بندی: "+(d.notes[b.id]||"ثبت نشده"));
+   const evidence=d.evidence[b.id]||{};
+   out.push("سطح شواهد: "+({not_yet:"بررسی نشده",assumption:"فرضیه",interview:"مصاحبه",observation:"مشاهده / تست",transaction:"فروش / پرداخت واقعی"}[evidence.status]||"نامشخص"));
+   if(evidence.note)out.push("منبع شواهد: "+evidence.note);
  });
  out.push("","━━━━━━━━━━━━━━━━━━","ارزیابی ریسک‌ها");
  let selected=0;
