@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#103d35">
+<meta name="description" content="نمایش محتوای کارگاه تاب‌آوری، مدیریت خشم و جرأت‌ورزی بیمه البرز؛ ویژه نمایش و تسهیل‌گری در کلاس">
+<title>نمایش محتوای کلاس | آکادمی مدیریت بیمه البرز</title>
+<link rel="stylesheet" href="./claims-presentation.css?v=20261107-1">
+<script defer src="./claims-presentation.js?v=20261107-1"></script>
+</head>
+<body>
+<a class="skip-link" href="#slide">رفتن به محتوای نمایش</a>
+<header class="topbar">
+  <div class="identity">
+    <span class="brand-mark" aria-hidden="true">ا</span>
+    <div><b>آکادمی مدیریت بیمه البرز</b><span>نمایش محتوای کلاس · Presentation Mode</span></div>
+  </div>
+  <div class="top-actions">
+    <a class="subtle-btn" href="./claims-workshop-v2.html">خانه دوره</a>
+    <button type="button" id="notes-toggle" class="subtle-btn" aria-pressed="false" title="یادداشت‌ها فقط برای مرور مدرس هستند؛ روی نمایشگر مشترک نیز دیده می‌شوند.">یادداشت مدرس</button>
+    <button type="button" id="fullscreen" class="primary-btn">تمام‌صفحه ⛶</button>
+  </div>
+</header>
+<main class="layout" id="main">
+  <aside class="sidebar" aria-label="راهنمای محتوای دوره">
+    <div class="sidebar-heading"><span class="eyebrow">مسیر آموزش</span><h1>محتوای کلاس</h1><p>یک نمایش منسجم برای هر سه بخش کارگاه</p></div>
+    <nav id="module-nav" class="module-nav" aria-label="انتخاب بخش"></nav>
+    <div class="navigator-heading"><span>فهرست اسلایدها</span><span id="nav-count"></span></div>
+    <nav id="slide-nav" class="slide-nav" aria-label="انتخاب موضوع"></nav>
+    <div class="sidebar-foot"><p>محتوا از منبع آموزشی همین دوره بارگذاری می‌شود و به اطلاعات گروه‌ها یا کدهای ورود دسترسی ندارد.</p></div>
+  </aside>
+  <section class="presentation" aria-label="نمایش اسلاید">
+    <div class="statusline"><div class="trail" id="trail" aria-live="polite">در حال بارگذاری محتوا…</div><span class="source-label" id="source-status">منبع واحد دوره</span></div>
+    <div class="slide-viewport">
+      <article id="slide" class="slide" tabindex="-1" aria-live="polite"><div class="loading">محتوای دوره در حال آماده‌سازی است…</div></article>
+      <section id="instructor-notes" class="notes" hidden aria-label="یادداشت‌های مدرس"></section>
+    </div>
+    <div class="slide-controls">
+      <div class="control-group"><button id="previous" type="button" class="secondary-btn">اسلاید قبل</button><button id="reveal" type="button" class="primary-btn">نمایش مرحله بعد</button><button id="next" type="button" class="secondary-btn">اسلاید بعد</button></div>
+      <div class="counter"><span id="position">۰ از ۰</span><div class="track"><div id="bar"></div></div></div>
+    </div>
+    <p class="keyboard-hint">کلیدها: ← اسلاید بعد · → اسلاید قبل · Space نمایش تحلیل · F تمام‌صفحه</p>
+  </section>
+</main>
+</body>
+</html>
