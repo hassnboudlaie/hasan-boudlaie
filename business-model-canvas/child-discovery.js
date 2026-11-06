@@ -26,7 +26,9 @@ SECTIONS.forEach((section,i)=>{
       label.append(check,elm("span",null,o));group.append(label);
     });
     const custom=elm("label","deep-option"),otherCheck=elm("input");otherCheck.type="checkbox";otherCheck.value="سایر";otherCheck.checked=Array.isArray(prior.choices)&&prior.choices.includes("سایر");
-    custom.append(otherCheck,elm("span",null,"سایر / گزینه اختصاصی من"));group.append(custom);box.append(group);
+    custom.append(otherCheck,elm("span",null,"سایر / گزینه اختصاصی من"));group.append(custom);
+    const unknownLabel=elm("label","deep-option deep-unknown"),unknown=elm("input");unknown.type="checkbox";unknown.value="نیازمند بررسی";unknown.checked=Array.isArray(prior.choices)&&prior.choices.includes("نیازمند بررسی");
+    unknownLabel.append(unknown,elm("span",null,"هنوز نمی‌دانم / نیازمند بررسی"));group.append(unknownLabel);box.append(group);
     const open=elm("details","deep-note");
     const caption=elm("summary",null,"توضیح تکمیلی / مثال و شواهد");open.append(caption);
     open.append(elm("p","deep-open-prompt",openQuestion));
@@ -38,7 +40,12 @@ SECTIONS.forEach((section,i)=>{
       state.answers[key]={choices:[...group.querySelectorAll('input[type="checkbox"]:checked')].map(x=>x.value),note:area.value};
       save();
     };
-    group.addEventListener("change",()=>{if(otherCheck.checked)open.open=true;store();});
+    group.addEventListener("change",(event)=>{
+      if(event.target===unknown&&unknown.checked){group.querySelectorAll('input[type="checkbox"]').forEach(x=>{if(x!==unknown)x.checked=false;});}
+      else if(event.target!==unknown&&event.target.checked)unknown.checked=false;
+      if(otherCheck.checked)open.open=true;
+      store();
+    });
     area.addEventListener("input",store);
     details.append(box);
   });
