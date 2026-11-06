@@ -11,7 +11,7 @@
 </div></details></div>
 </div></header>
 <main class="shell app">
-<section id="special-entry" style="margin:0 0 18px;padding:18px;border-radius:18px;background:#e6f3e8;border:2px solid #87b69a;color:#164b3e"><div style="font-weight:800;font-size:1.08rem">🌱 سرویس اختصاصی: کسب‌وکار فرهنگی کودک</div><p style="margin:6px 0 12px;font-size:.88rem">ویژه محصولات فرهنگی کودک و توانمندسازی والدین؛ مستقل از بوم عمومی. ابتدا ایده را شرح دهید و سپس هر ۹ خانه بوم را تکمیل کنید.</p><a href="./child-culture.html" style="display:block;background:#176047;color:white;border-radius:12px;padding:13px;text-align:center;text-decoration:none;font-weight:800">ورود و شروع فرم اختصاصی ←</a></section><section class="welcome"><div><h1 id="welcomeTitle">مدل کسب‌وکار من</h1><p>به چند سؤال پاسخ بده و بوم اختصاصی خودت را بساز.</p></div><span class="save-label" id="saveStatus" role="status">ذخیره خودکار</span></section>
+<section class="welcome"><div><h1 id="welcomeTitle">مدل کسب‌وکار من</h1><p>به چند سؤال پاسخ بده و بوم اختصاصی خودت را بساز.</p></div><span class="save-label" id="saveStatus" role="status">ذخیره خودکار</span></section>
 <div class="layout"><aside class="sidebar" aria-label="مسیر اصلی طراحی">
 <button class="navitem active" data-page="dashboard" type="button"><span class="ico">⌂</span><span>خانه</span></button>
 <button class="navitem" data-page="wizard" type="button"><span class="ico">▣</span><span>پرسش‌ها</span><span class="nav-progress" id="stepProgress">۰/۹</span></button>
@@ -30,7 +30,11 @@
 <button class="dash-action" data-goto="canvas" type="button"><span class="dash-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="3" width="19" height="18" rx="2"/><path d="M10 3v18m5-18v18M2.5 15h19"/></svg></span><span class="dash-title">بوم کسب‌وکار من</span><small>مشاهده و ویرایش ۹ بخش</small><span class="dash-arrow" aria-hidden="true">←</span></button>
 <button class="dash-action" data-goto="final" type="button"><span class="dash-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M15 3v5h4M9 13h6M9 17h7"/></svg></span><span class="dash-title">پیش‌نویس بوم</span><small>دریافت بوم تکمیل‌شده</small><span class="dash-arrow" aria-hidden="true">←</span></button>
 </div>
-<div style="margin:14px 0"><a href="./child-culture.html" style="display:block;background:#e8f2e9;border:1px solid #bddbc7;padding:17px;border-radius:15px;text-decoration:none;color:#15553f;font-weight:800">🌱 بوم اختصاصی محصولات فرهنگی کودک و توانمندسازی والدین <small style="display:block;font-weight:400">۱۰ سؤال انتخابی و باز، ذخیره خودکار و ارسال پاسخ‌ها در واتساپ ←</small></a></div><div class="dashboard-bottom"><button class="btn subtle" type="button" data-goto="onboard">✎ اطلاعات کسب‌وکار</button><span class="quiet-stat" hidden><span id="dashboardQuestions">۰</span><span id="dashboardEvidence">۰</span></span></div>
+<details class="specialized-models" id="specializedModels">
+<summary><span class="specialized-title"><span class="specialized-icon" aria-hidden="true">▦</span> بوم‌های اختصاصی</span><span class="specialized-summary-sub">مدل‌های موضوعی و اختصاصی برای حوزه‌های مختلف کسب‌وکار</span></summary>
+<div class="specialized-options">
+<a class="specialized-link" href="./child-culture.html"><span aria-hidden="true">🌱</span><span><strong>محصولات فرهنگی کودک و توانمندسازی والدین</strong><small>۹ خانه بوم، ۹۰ پرسش تخصصی، ریسک‌ها و برنامه اقدام</small></span><span class="specialized-chevron" aria-hidden="true">←</span></a>
+</div></details><div class="dashboard-bottom"><button class="btn subtle" type="button" data-goto="onboard">✎ اطلاعات کسب‌وکار</button><span class="quiet-stat" hidden><span id="dashboardQuestions">۰</span><span id="dashboardEvidence">۰</span></span></div>
 </section>
 <section class="page" id="page-onboard"><div class="panel"><div class="section-header"><div><h2>شناخت کسب‌وکار</h2></div></div><div class="formgrid">
 <div class="field"><label for="ownerName">نام تکمیل‌کننده (اختیاری)</label><input id="ownerName" name="ownerName" placeholder="نام یا نام مستعار" maxlength="80"></div>
