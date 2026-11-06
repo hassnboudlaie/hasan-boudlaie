@@ -1,0 +1,119 @@
+/* Alborz session 3, isolated. The other sessions are not modified. */
+(function(){
+"use strict";
+const techniques=[
+["👂","توجه و سکوت هدفمند","اجازه بدهیم مخاطب حرفش را کامل کند؛ بدون قطع‌کردن و عجله برای راه‌حل."],
+["🔁","بازگویی و بازتاب","با جمله‌ای کوتاه نشان دهیم چه فهمیده‌ایم و درستی برداشت را بررسی کنیم."],
+["❓","پرسشگری و روشن‌سازی","با پرسش باز و دقیق، ابهام و فرضیات پنهان را روشن کنیم."],
+["🧩","خلاصه‌سازی","چند موضوع را به یک تصویر روشن از مسئله و اقدام بعدی تبدیل کنیم."],
+["💬","همدلی حرفه‌ای","نگرانی را به رسمیت بشناسیم؛ بی‌آنکه بی‌دلیل قولی بدهیم یا ادعایی را تأیید کنیم."],
+["✅","بازخوردِ فهم","برداشت خود را با طرف مقابل بررسی و سپس پاسخ روشن و متناسب ارائه کنیم."]
+];
+/* role, title, situation, technique, first dialogue, second dialogue, rule, delivery, two takeaways. */
+const raw=[
+["رئیس شعبه همتا","پرونده‌ای که بین دو شعبه مانده","مشتری سازمانی سه روز است از دو شعبه جواب متفاوت می‌گیرد.","بازتاب و تعلیق قضاوت",
+"سلام، مشتری آریا می‌گه هر بار تماس می‌گیره شما دوباره می‌فرستینش سمت ما.|سلام. از طرف ما پرونده کامل بوده؛ بعیده مشکل از اینجا باشه.|من دنبال مقصر نیستم؛ مشتری هنوز یه جواب مشخص نگرفته.|خب ما هم چند بار پیگیری کردیم. همه چیز که دست ما نیست.|می‌خوام بدونم کجای کار گیر کرده.|به‌نظرم موضوع رو بفرستیم منطقه تا تعیین تکلیف کنن.",
+"سلام، مشتری آریا می‌گه هر بار تماس می‌گیره شما دوباره می‌فرستینش سمت ما.|سلام. یعنی نگرانی شما اینه که مشتری از دو شعبه جواب متفاوت می‌شنوه، درسته؟|دقیقاً؛ سه روزه نمی‌دونه از کی پیگیری کنه.|آخرین جوابی که بهش دادین چی بوده؟ من هم ثبت خودمون رو نگاه می‌کنم.|ما گفتیم بررسی نهایی با شعبه شماست، ولی ظاهراً اونجا چیز دیگه‌ای شنیده.|پس اول این دو ثبت رو تطبیق بدیم، بعد یه مسیر واحد برای پاسخ‌گویی مشخص کنیم.",
+"قبل از دفاع از شعبه، دغدغه مشترک را بازتاب دهید؛ بعد درباره آخرین پاسخ ثبت‌شده سؤال کنید.","لحن آرام، مکث پیش از پاسخ؛ بدون تأکید دفاعی روی «ما».","بازتاب مسئله مشترک، دفاع زودهنگام را متوقف می‌کند.","ابهام اطلاعاتی را قبل از ارجاع به مقام بالاتر روشن کنید."],
+["رئیس شعبه همتا","انتقال مشتری سازمانی","پرونده‌های باز یک مشتری بزرگ بین دو شعبه منتقل می‌شود.","خلاصه‌سازی",
+"این انتقال داره جلو می‌ره، ولی مشتری نگران پرونده‌های در جریانه.|نگران نباشین؛ ما اینجا همه خدمات رو انجام می‌دیم.|بحث توانایی شما نیست؛ هنوز معلوم نیست پرونده‌های قبلی رو کی جواب می‌ده.|همه پرونده‌ها توی سامانه مشخصه.|مشخصه، ولی مسئول پاسخ‌گویی معلوم نیست.|این چیزها معمولاً بعد از انتقال حل می‌شه.",
+"این انتقال داره جلو می‌ره، ولی مشتری نگران پرونده‌های در جریانه.|بیشتر نگرانی درباره پرونده‌های بازه یا پاسخ‌گویی بعد از انتقال؟|هر دو؛ مخصوصاً درخواست‌هایی که قبل از انتقال ثبت شدن.|پس سه موضوع داریم: پرونده‌های باز، مسئول پاسخ، اطلاع‌رسانی. چیزی جا نمونده؟|نه؛ مهم‌ترینش اینه که مشتری بدونه از کی باید پیگیری کنه.|پس اول فهرست پرونده‌های باز و مسئول هر مورد رو با هم نهایی کنیم.",
+"سه محور را یک‌جا خلاصه و از طرف مقابل بخواهید اولویت یا موارد جاافتاده را مشخص کند.","شمرده صحبت کنید و بین محورهای جمع‌بندی مکث کوتاه داشته باشید.","خلاصه‌سازی چند نگرانی را به دستورکار مشترک تبدیل می‌کند.","خلاصه مفید باید برای مخاطب قابل تصحیح باشد."],
+["رئیس شعبه همتا","«این پرونده مال کدام شعبه است؟»","دو شعبه درباره مسئولیت رسیدگی و پاسخ‌گویی برداشت متفاوت دارند.","پرسش روشن‌کننده",
+"این پرونده رو شعبه شما باید پیگیری کنه؛ لطفاً مشتری رو دوباره نفرستین سمت ما.|ما طبق روال فرستادیمش برای شما؛ دیگه دست ما نیست.|ولی درخواست اولیه توی شعبه شما ثبت شده.|ثبت اولیه مهم نیست، الان پرونده پیش شماست.|این‌طوری مشتری بلاتکلیف می‌مونه.|خب از ستاد بپرسین، ما که نمی‌تونیم همه‌چیز رو پاسخ بدیم.",
+"این پرونده رو شعبه شما باید پیگیری کنه؛ لطفاً مشتری رو دوباره نفرستین سمت ما.|بذارین یک چیز رو روشن کنیم؛ منظورتون پاسخ به مشتریه یا بررسی فنی پرونده؟|پاسخ به مشتری؛ بررسی فنی مسیر خودش رو داره.|پس روی بررسی فنی اختلاف نداریم. آخرین درخواست مشتری کجا ثبت شده؟|پیش ما، اما مدارک تکمیلی رو به شما داده.|پس بیایید مسئول پاسخ و مسیر بررسی مدارک رو جدا مشخص کنیم.",
+"کلمه‌های مبهم مانند «مسئول» را به وظایف مشخص تبدیل کنید؛ یک سؤال دقیق و بی‌طرفانه بپرسید.","لحن جست‌وجوگر و بدون طعنه؛ جمله طرف مقابل را قطع نکنید.","اختلاف در تعریف مسئولیت، لزوماً اختلاف در نیت نیست.","روشن‌سازی، بحث بر سر برچسب‌ها را به توافق اجرایی تبدیل می‌کند."],
+["رئیس شعبه همتا","آمار متفاوت دو شعبه","دو رئیس شعبه درباره تعداد پرونده‌های معطل‌شده داده‌های متفاوتی دارند.","تفکیک واقعیت از برداشت",
+"توی گزارش ما پنج پرونده معطل از سمت شما داریم.|پنج تا؟ نه، ما فقط دو پرونده باز داریم.|خروجی سامانه جلو منه، پنج تا ثبت شده.|پس گزارش شما اشتباهه.|شاید تعریف پرونده باز تو دو گزارش فرق داشته باشه.|نه، احتمالاً شما نسخه قدیمی رو گرفتین.",
+"توی گزارش ما پنج پرونده معطل از سمت شما داریم.|بذارین مطمئن بشیم یه چیز رو می‌شماریم. منظورتون همه پرونده‌های بازه؟|بله؛ هر موردی که تا پنجشنبه بسته نشده.|ما فقط موارد منتظر اقدام خودمون رو شمردیم. بازه شما هم تا پنجشنبه‌ست؟|دقیقاً؛ از شنبه تا پایان پنجشنبه.|پس اول تعریف شاخص و اون پنج پرونده رو تطبیق بدیم، بعد درباره تأخیر نتیجه بگیریم.",
+"داده، تفسیر، تعریف شاخص و بازه زمانی را از هم تفکیک کنید.","صدای خنثی و تحلیلی؛ از «گزارش شما غلط است» استفاده نکنید.","اعداد متفاوت همیشه به معنای عملکرد متفاوت نیستند.","تعریف مشترک شاخص، پیش‌نیاز قضاوت معتبر است."],
+["رئیس شعبه همتا","تماس ناراحت‌کننده همکار","رئیس شعبه همتا از نامه شکایت رسمی درباره عملکرد تیمش ناراحت شده است.","همدلی و پاسخ سنجیده",
+"راستش از این نامه‌ای که برای منطقه رفته خیلی ناراحتم؛ انگار توضیح ما رو نشنیدن.|خب شکایت بخشی از کاره؛ نباید خیلی شخصی بگیرین.|برای تیم من مسئله کوچیکی نیست.|بالاخره برای همه شعبه‌ها پیش میاد.|مسئله خود شکایت نیست، برداشت نادرست از کار بچه‌هاست.|یه پاسخ مکتوب بدین، حل می‌شه.",
+"راستش از این نامه‌ای که برای منطقه رفته خیلی ناراحتم؛ انگار توضیح ما رو نشنیدن.|به‌نظر میاد بیش از خود نامه، برداشتی که از کار تیمتون شده ناراحتتون کرده. درسته؟|دقیقاً؛ زحمتشون اصلاً دیده نشده.|کدوم بخش توضیحاتتون تو نامه منعکس نشده؟|تاریخ دریافت مدارک رو اصلاً ننوشتن.|پس اول همون بخش رو مستند کنیم؛ بعد ببینیم چه توضیح تکمیلی‌ای باید داده بشه.",
+"احساس همتا را بازتاب دهید، ولی تفسیر او را بی‌بررسی تأیید نکنید.","آرام و همراه، بدون همدردی نمایشی و عجله برای توصیه.","همدلی، معادل موافقت با همه ادعاها نیست.","از بازتاب نگرانی به بررسی موضوع مشخص حرکت کنید."],
+["معاون شعبه","گلوگاه پنهان در صف رسیدگی","معاون معتقد است مرحله کنترل تکراری علت افزایش انتظار مشتریان است.","توجه و سکوت هدفمند",
+"یه نکته درباره صف رسیدگی دارم؛ فکر می‌کنم مشکل از کنترل دوباره‌ست.|باید نیروها رو بهتر تقسیم کنیم؛ همین امروز اجرا کنین.|نه، تعداد نیروها همونه؛ مسئله اینه که...|پس از پشتیبانی کمک بگیرین.|می‌خواستم بگم یک بخش کار داره دوباره انجام می‌شه.|فعلاً برنامه کاهش صف رو آماده کنین.",
+"یه نکته درباره صف رسیدگی دارم؛ فکر می‌کنم مشکل از کنترل دوباره‌ست.|بفرمایین؛ دقیقاً کجای مسیر این اتفاق می‌افته؟|بعد از ثبت اولیه، چند پرونده برای بررسی همون مدرک برمی‌گردن.|یعنی ممکنه مسئله کنترل تکراری باشه، نه کمبود نیرو؛ درست فهمیدم؟|دقیقاً؛ دو نمونه از دیروز هم دارم.|خوبه، همون دو نمونه رو با هم بررسی کنیم و ببینیم کجا کنترل ضروریه.",
+"اجازه دهید معاون روایت را کامل کند؛ فقط یک سؤال دقیق بپرسید و مکث کنید.","نگاه به مخاطب، نه نمایشگر؛ سکوت را با توصیه پر نکنید.","سکوت هدفمند، علت اصلی را آشکار می‌کند.","راه‌حل زودهنگام ممکن است مسئله را پنهان کند."],
+["معاون شعبه","پیشنهاد تازه معاون","معاون یک کنترل کوتاه برای کاهش برگشت پرونده پیشنهاد می‌دهد.","پرسش اکتشافی",
+"برای پرونده‌های پرتکرار، قبل از ارجاع یه کنترل یک‌دقیقه‌ای بذاریم.|قبلاً امتحان کردیم، فقط وقت کارشناسا رو می‌گیره.|این بار قرار نیست همه مدارک رو کنترل کنیم.|الان با این صف، زمان اضافه نداریم.|می‌تونیم فقط روی یک نوع پرونده آزمایش کنیم.|فعلاً همون روال قبلی رو ادامه بدیم.",
+"برای پرونده‌های پرتکرار، قبل از ارجاع یه کنترل یک‌دقیقه‌ای بذاریم.|چه فرقی با کنترل قبلی داره که فکر می‌کنین این بار جواب می‌ده؟|این بار فقط دو نقص پرتکرار رو چک می‌کنیم.|پس هدف کنترل همه مدارک نیست؛ می‌خواین برگشت پرونده کمتر بشه، درسته؟|بله؛ می‌شه فقط روی یک نوع پرونده امتحانش کرد.|خوبه. یک آزمون محدود طراحی کنیم و تعداد برگشت‌ها رو مقایسه کنیم.",
+"پیش از رد پیشنهاد، منطق آن را کشف کنید؛ برداشت را بازگو و امکان آزمون محدود را بسنجید.","لحن کنجکاو، حالت چهره بدون بی‌حوصلگی یا تمسخر.","پرسش خوب، ایده را به فرضیه قابل آزمون تبدیل می‌کند.","شنیدن پیشنهاد، الزاماً به معنی قبول آن نیست."],
+["کارشناس شعبه","اشتباهی که گفتنش سخت است","کارشناس احتمال می‌دهد تاریخ یک مدرک را اشتباه ثبت کرده است.","همدلی و مسئولیت‌پذیری",
+"یه موضوع هست که باید بگم؛ فکر کنم تاریخ یک مدرک رو اشتباه ثبت کردم.|چرا قبل از ثبت، کنترل نکردین؟|اون روز چند پرونده هم‌زمان بود و...|این توجیه نیست؛ باید بیشتر دقت می‌کردین.|می‌دونم، فقط خواستم زودتر بگم.|گزارش بنویسین، بعد بررسی می‌کنیم.",
+"یه موضوع هست که باید بگم؛ فکر کنم تاریخ یک مدرک رو اشتباه ثبت کردم.|خوبه که زود اطلاع دادین. کدوم تاریخ رو می‌گین و الان از چی مطمئنین؟|احتمالاً تاریخ یکی از مدارک یک روز جابه‌جا شده.|پس هنوز قطعی نیست و اثرش رو روی رسیدگی بررسی نکردیم، درسته؟|بله، خواستم قبل از اصلاح با شما چک کنم.|خوبه. اول مدرک و ثبت رو تطبیق بدیم؛ اگر خطا بود، طبق روال اصلاحش کنیم.",
+"گزارش به‌موقع را به رسمیت بشناسید؛ واقعیت و اثر خطا را بی‌سرزنش اولیه بررسی کنید.","لحن جدی، نه تهدیدکننده؛ حالت چهره خنثی.","فضای امن با پاسخ‌گویی و اصلاح خطا سازگار است.","پیش از قضاوت درباره فرد، واقعیت را بررسی کنید."],
+["کارشناس شعبه","«برنامه‌ام مدام عوض می‌شود»","کارشناس فشار کاری دارد اما مشکل احتمالاً تعارض اولویت‌های مدیر و معاون است.","بازگویی و پرسش دقیق",
+"هر روز چند کار فوری جدید میاد؛ واقعاً دیگه نمی‌رسم.|باید برنامه روزانه‌تون رو بهتر تنظیم کنین.|برنامه دارم، ولی وسط روز عوض می‌شه.|همه تو شعبه همین شرایط رو داریم.|دیروز شما یک کار رو فوری گفتین، معاون هم یکی دیگه رو.|باید بتونین بین کارها تعادل برقرار کنین.",
+"هر روز چند کار فوری جدید میاد؛ واقعاً دیگه نمی‌رسم.|یعنی مسئله فقط حجم کار نیست؛ اولویت‌ها هم وسط روز عوض می‌شن؟|دقیقاً؛ گاهی دو کار هم‌زمان می‌شن اولویت اول.|یک نمونه از همین هفته می‌گین تا ببینیم تعارض از کجا شروع شده؟|دیروز شما پرونده آریا رو فوری خواستین، معاون هم پرونده صدرا رو.|متوجه شدم؛ اینجا دو دستور هم‌زمان داشتیم. باید مرجع تعیین اولویت رو روشن کنیم.",
+"بین حجم کار و تعارض اولویت‌ها فرق بگذارید؛ از مخاطب یک نمونه واقعی بخواهید.","لحن غیرنصیحتی و غیردفاعی؛ اجازه تکمیل پاسخ بدهید.","بازگویی دقیق مسئله را قابل بررسی می‌کند.","مدیر باید سهم خودش در تعارض دستورها را ببیند."],
+["مشتری","پس از حادثه، از کجا شروع کنم؟","مراجعه‌کننده بعد از یک حادثه پرهزینه مضطرب است و برخی مدارک را در اختیار ندارد.","بازتاب احساس",
+"از روز حادثه تمرکز ندارم؛ نمی‌دونم از کجا شروع کنم.|اول باید مدارک رو کامل بیارین.|بعضی مدارکم تو ماشین مونده، دسترسی ندارم.|بدون مدارک کامل رسیدگی سخت می‌شه.|منم همین رو می‌گم؛ الان نمی‌تونم همه رو آماده کنم.|لیست رو از همکارم بگیرین و بعد مراجعه کنین.",
+"از روز حادثه تمرکز ندارم؛ نمی‌دونم از کجا شروع کنم.|می‌فهمم که هم خود حادثه و هم پیگیری مدارک براتون سخته؛ درست متوجه شدم؟|بله؛ یه سری مدارکم هم تو ماشین مونده.|الان کدوم مدارک در دسترستونه که از همون‌ها شروع کنیم؟|مدارک هویتی و گزارش اولیه رو دارم.|خوبه. این‌ها رو با کارشناس بررسی کنیم تا معلوم بشه چه مدرک دیگه‌ای لازمه.",
+"نگرانی را بازتاب دهید؛ فقط یک اقدام روشن در حدود اختیار شعبه ارائه کنید.","لحن آرام و جمله‌های کوتاه؛ بدون وعده پرداخت خسارت.","همدلی جایگزین دقت و ضابطه حرفه‌ای نیست.","یک گام روشن بهتر از چند توصیه کلی است."],
+["نماینده بیمه","«همه تمدیدها دیر شده»","نماینده از تأخیر تمدیدهای سازمانی گلایه می‌کند.","پرسش دامنه‌ساز",
+"این هفته همه تمدیدهای ما دیر شده؛ مشتریامون معترضن.|همه که نه؛ چند مورد رو همون روز انجام دادیم.|من پرونده‌های سازمانی رو می‌گم.|اون‌ها طبیعتاً مراحل بیشتری دارن.|ولی قبلاً این‌قدر طول نمی‌کشید.|شاید مدارک رو دیرتر فرستادین.",
+"این هفته همه تمدیدهای ما دیر شده؛ مشتریامون معترضن.|می‌خوام دقیق بفهمم؛ منظورتون کدوم تمدیدهاست؟|پرونده‌های سازمانی، مخصوصاً اول هفته.|کدوم مرحله بیشتر طول کشیده؛ بررسی مدارک یا صدور؟|بین تکمیل مدارک تا اعلام نتیجه بررسی.|پس اون فاصله رو تو چند پرونده مشخص بررسی کنیم تا علت تأخیر روشن بشه.",
+"به‌جای رد واژه «همه»، دامنه زمانی، نوع پرونده و نقطه تأخیر را مشخص کنید.","لحن بی‌طعنه و پرسشی؛ اجازه دهید پاسخ کامل شود.","پرسش دامنه‌ساز تعمیم را به داده قابل بررسی تبدیل می‌کند.","پاسخ دفاعی معمولاً اطلاعات تازه تولید نمی‌کند."],
+["کارشناس ستاد","گزارش عملکرد از ستاد","ستاد از افت شاخص رسیدگی به‌موقع می‌گوید، اما تعریف شاخص معلوم نیست.","روشن‌سازی و بازخورد فهم",
+"طبق گزارش، نرخ رسیدگی به‌موقع شعبه شما افت داشته.|این دوره پرونده‌هامون پیچیده‌تر بوده.|این موضوع تو گزارش توضیح داده نشده.|چون شاخص شما پیچیدگی پرونده رو لحاظ نمی‌کنه.|فعلاً همین گزارش رو داریم.|پس این مقایسه اصلاً منصفانه نیست.",
+"طبق گزارش، نرخ رسیدگی به‌موقع شعبه شما افت داشته.|برای اینکه درست متوجه بشم، شاخص چه پرونده‌هایی رو شامل می‌شه؟|همه مواردی که این دوره موعد رسیدگی داشتن.|پرونده‌های منتظر استعلام هم داخل محاسبه هستن یا جدا شدن؟|توی گزارش فعلی جدا نشدن.|پس اول ترکیب پرونده‌ها و تعریف شاخص رو تطبیق بدیم؛ بعد درباره علت تغییر نظر بدیم.",
+"تعریف شاخص، دامنه و استثناها را بررسی کنید؛ پیش از دفاع از شعبه فهم خود را تأیید کنید.","لحن تحلیلی و مؤدبانه، بدون اعتراض شخصی.","تعریف داده، پیش‌شرط تحلیل معتبر است.","بازخورد فهم اختلاف را به پرسش قابل پاسخ تبدیل می‌کند."]
+];
+const cases=raw.map(x=>({role:x[0],title:x[1],scene:x[2],skill:x[3],before:x[4].split("|"),after:x[5].split("|"),rule:x[6],delivery:x[7],keys:[x[8],x[9]]}));
+const state={current:-1,step:0,max:0}, stages=["اجرای اول","قواعد","اجرای دوم","جمع‌بندی"];
+const digits=n=>String(n).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d]);
+const escapeHtml=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function bubble(lines,role){return '<div class="s3-chat">'+lines.map((line,i)=>'<div class="s3-bubble '+(i%2?"manager":"")+'"><small>'+(i%2?"رئیس شعبه":escapeHtml(role))+'</small><p>'+escapeHtml(line)+'</p></div>').join("")+'</div>'}
+function showStage(){
+ const host=document.getElementById("s3-focus");if(!host)return;if(state.current<0){host.innerHTML="";return;}
+ const c=cases[state.current],s=state.step;
+ const nav='<div class="s3-tabs" role="tablist" aria-label="مراحل کیس">'+stages.map((name,i)=>'<button type="button" data-s3-step="'+i+'" role="tab" aria-selected="'+(i===s)+'" class="'+(i===s?"active":"")+'" '+(i>state.max?"disabled":"")+'>'+(i>state.max?"🔒 ":"")+name+'</button>').join("")+'</div>';
+ let content="";
+ if(s===0)content='<h4>اجرای اول · سه رفت‌وبرگشت</h4>'+bubble(c.before,c.role)+'<p class="s3-question">کدام پاسخ رئیس شعبه مانع شنیدن مسئله واقعی شد؟</p>';
+ if(s===1)content='<h4>قواعد · راهنمای اختصاصی</h4><div class="s3-rule"><b>تکنیک اصلی</b><p>'+escapeHtml(c.rule)+'</p></div><div class="s3-rule"><b>لحن و نشانه‌های غیرکلامی</b><p>'+escapeHtml(c.delivery)+'</p></div><p class="s3-question">این بار همان موقعیت را اجرا کنید؛ متن را حفظ نکنید.</p>';
+ if(s===2)content='<h4>اجرای دوم · سه رفت‌وبرگشت</h4><p class="s3-soft">نمونه مرجع است، نه جمله‌بندی اجباری شرکت‌کنندگان.</p>'+bubble(c.after,c.role)+'<p class="s3-question">چه چیزی در رفتار رئیس شعبه و واکنش طرف مقابل تغییر کرد؟</p>';
+ if(s===3)content='<h4>جمع‌بندی · دو نکته کلیدی</h4><div class="s3-summary">'+c.keys.map((t,i)=>'<div><span>'+digits(i+1)+'</span><p>'+escapeHtml(t)+'</p></div>').join("")+'</div><p class="s3-question">برای Feedback، یک تغییر رفتاری قابل مشاهده را نام ببرید.</p>';
+ const next=s===3?'<button type="button" class="s3-primary" data-s3-nextcase>کیس بعدی ←</button>':'<button type="button" class="s3-primary" data-s3-next>مرحله بعد: '+stages[s+1]+' ←</button>';
+ host.innerHTML='<article class="s3-work"><div class="s3-workhead"><div><small>کیس '+digits(state.current+1)+' از ۱۲ · '+escapeHtml(c.role)+'</small><h3>'+escapeHtml(c.title)+'</h3></div><button type="button" data-s3-close class="s3-close" aria-label="بستن کیس">×</button></div><p class="s3-scene">'+escapeHtml(c.scene)+'</p>'+nav+'<div class="s3-stage" role="tabpanel">'+content+'</div><div class="s3-actions">'+next+'<button type="button" data-s3-close class="s3-secondary">بازگشت به کیس‌ها</button></div></article>';
+}
+function select(n){
+ if(n<0||n>=cases.length)return;state.current=n;state.step=0;state.max=0;
+ document.querySelectorAll(".s3-case").forEach((el,i)=>{el.classList.toggle("selected",i===n);el.setAttribute("aria-expanded",String(i===n))});
+ showStage();document.getElementById("s3-focus")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function close(){
+ state.current=-1;state.step=0;state.max=0;document.querySelectorAll(".s3-case").forEach(el=>{el.classList.remove("selected");el.setAttribute("aria-expanded","false")});showStage();
+}
+const css=[
+".s3-root{background:#f7fafb;min-height:85vh;padding:15px 0 55px;color:#213d4c;line-height:1.9}.s3-root *{box-sizing:border-box}.s3-root button{font:inherit;cursor:pointer}.s3-crumb{font-size:14px;color:#607984;margin:10px 0 16px}.s3-crumb a{color:#147c80}",
+".s3-hero{background:linear-gradient(120deg,#173d5d,#0a6c70);padding:28px;color:white;border-radius:20px;margin-bottom:25px}.s3-hero h1{color:white;font-size:clamp(24px,4vw,34px);line-height:1.5;margin:9px 0}.s3-hero p{font-size:16px;color:#e6f5f4;margin:0 0 13px}.s3-chip{display:inline-block;border:1px solid #ffffff60;border-radius:25px;padding:3px 10px;font-size:13px;margin:3px}",
+".s3-heading{margin-bottom:12px}.s3-heading h2{font-size:25px;margin:0;color:#16445c}.s3-heading p{font-size:14px;color:#6a7e87;margin:0}.s3-techs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:29px}.s3-tech{display:flex;gap:10px;background:white;border:1px solid #dbe6eb;border-radius:14px;padding:14px}.s3-tech-icon{font-size:24px}.s3-tech h3{font-size:17px;color:#165060;margin:0}.s3-tech p{font-size:13px;color:#586f79;margin:4px 0 0}",
+".s3-cases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.s3-case{background:white;border:1px solid #dce6ea;border-radius:13px;display:flex;align-items:center;gap:10px;text-align:right;padding:13px;color:#1d475c}.s3-case:hover,.s3-case:focus-visible,.s3-case.selected{border-color:#158b88;outline:2px solid #158b8833}.s3-number{background:#eaf6f6;border-radius:9px;padding:5px 9px;white-space:nowrap;font-size:12px;color:#176d70}.s3-case-label{flex:1}.s3-case-label strong,.s3-case-label small{display:block}.s3-case-label small{font-size:12px;color:#66808a}.s3-arrow{font-size:23px;color:#168b8b}",
+".s3-focus{scroll-margin-top:88px}.s3-work{background:white;border:1px solid #cfdfe4;box-shadow:0 12px 28px #13374d12;border-radius:16px;padding:22px;margin:18px 0}.s3-workhead{display:flex;justify-content:space-between;gap:12px}.s3-workhead small{font-size:13px;color:#168b8b}.s3-workhead h3{font-size:23px;color:#1d4357;margin:2px 0}.s3-close{background:#eef4f6;border:0;border-radius:10px;min-width:40px;height:40px;font-size:26px!important}.s3-scene{background:#f4f8f9;padding:10px 12px;border-right:3px solid #168b8b;border-radius:9px;color:#3c5868;font-size:15px}",
+".s3-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:17px 0}.s3-tabs button{border:1px solid #d0e0e5;background:white;color:#335e71;border-radius:10px;padding:9px 4px;font-weight:700}.s3-tabs button.active{background:#136f70;color:white;border-color:#136f70}.s3-tabs button:disabled{opacity:.5;cursor:not-allowed}.s3-stage h4{color:#194a5d;font-size:19px;margin:0 0 12px}",
+".s3-chat{display:grid;gap:10px}.s3-bubble{background:#eff5f7;border-radius:13px 13px 4px 13px;padding:10px 14px;max-width:88%}.s3-bubble.manager{margin-right:auto;background:#e5f7ee;border-radius:13px 13px 13px 4px}.s3-bubble small{font-size:12px;color:#607984;font-weight:700}.s3-bubble p{font-size:16px;color:#234351;margin:2px 0 0;line-height:1.9}.s3-question{font-size:14px;color:#315b69;background:#f0f8fa;border-right:3px solid #1c8a93;border-radius:8px;padding:10px;margin:15px 0 0}.s3-rule{background:#f3f8f9;border-radius:10px;padding:12px;margin:10px 0}.s3-rule b{color:#15767a}.s3-rule p{margin:3px 0;font-size:16px}.s3-soft{font-size:13px;color:#71808a}.s3-summary{display:grid;gap:10px}.s3-summary div{background:#ebf7f3;border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px}.s3-summary span{background:#146f70;border-radius:50%;color:white;width:30px;height:30px;display:grid;place-items:center;flex-shrink:0}.s3-summary p{margin:0;font-size:16px}",
+".s3-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.s3-primary{background:#146f70;border:0;border-radius:10px;padding:9px 18px;color:white;font-weight:700}.s3-secondary{background:#f1f6f8;border:1px solid #dce6e8;border-radius:10px;padding:9px 14px;color:#315969}.s3-info{background:white;border:1px solid #dfe9eb;border-radius:14px;padding:18px;margin:26px 0}.s3-info h2{font-size:21px;margin:0;color:#16445c}.s3-info p{font-size:14px;margin:5px 0;color:#546e7a}.s3-foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.s3-foot a{padding:7px 16px;background:white;border-radius:10px;border:1px solid #dce5e9;color:#156c70}",
+"@media(max-width:820px){.s3-techs{grid-template-columns:repeat(2,minmax(0,1fr))}.s3-cases{grid-template-columns:1fr}}@media(max-width:520px){.s3-hero{padding:20px 15px}.s3-techs{grid-template-columns:1fr}.s3-work{padding:13px}.s3-tabs{gap:4px}.s3-tabs button{font-size:13px;padding:8px 2px}.s3-bubble{max-width:95%;padding:9px 11px}.s3-bubble p{font-size:15px}}"
+].join("\n");
+function page(){
+ document.title="جلسه سوم | گوش‌دادن فعال، پرسشگری و همدلی حرفه‌ای";
+ const app=document.getElementById("app");if(!app)return;
+ app.innerHTML=header()+'<main class="s3-root"><div class="wrap"><div class="s3-crumb"><a href="?course=communication">دوره مهارت‌های ارتباطی</a> / جلسه سوم</div>'+
+ '<section class="s3-hero"><span class="s3-chip">جلسه سوم · ۱۲۰ دقیقه</span><h1>گوش‌دادن فعال، پرسشگری و همدلی حرفه‌ای</h1><p>شنیدن مسئله واقعی، تمرین گفت‌وگو و یادگیری از اجرای مجدد</p><span class="s3-chip">۶ تکنیک</span><span class="s3-chip">۱۲ کیس</span><span class="s3-chip">۵ گفت‌وگو با رئیس شعبه همتا</span></section>'+
+ '<section><div class="s3-heading"><h2>شش تکنیک شنود مؤثر</h2><p>مرور سریع و کاربردی · ۱۲ دقیقه</p></div><div class="s3-techs">'+techniques.map(t=>'<article class="s3-tech"><span class="s3-tech-icon">'+t[0]+'</span><div><h3>'+escapeHtml(t[1])+'</h3><p>'+escapeHtml(t[2])+'</p></div></article>').join("")+'</div></section>'+
+ '<section><div class="s3-heading"><h2>آزمایشگاه شنود معاصر</h2><p>۱۲ کیس مستقل؛ هر کیس چهار بخش کلیک‌پذیر دارد: اجرای اول، قواعد، اجرای دوم و جمع‌بندی.</p></div><div class="s3-cases">'+cases.map((c,i)=>'<button type="button" class="s3-case" data-s3-case="'+i+'" aria-expanded="false"><span class="s3-number">کیس '+digits(i+1)+'</span><span class="s3-case-label"><strong>'+escapeHtml(c.title)+'</strong><small>'+escapeHtml(c.role)+' · '+escapeHtml(c.skill)+'</small></span><span class="s3-arrow">←</span></button>').join("")+'</div><div id="s3-focus" class="s3-focus" aria-live="polite"></div></section>'+
+ '<section class="s3-info"><h2>راهنمای اجرای کلاس</h2><p>دو نفر ابتدا گفت‌وگوی اولیه را اجرا می‌کنند. سپس مدرس قواعد اختصاصی را باز می‌کند، اجرای دوم انجام می‌شود و دو نکته کلیدی در جمع‌بندی دیده می‌شود. بازخورد باید بر رفتار قابل مشاهده متمرکز باشد.</p><p>لحن و زبان بدن در این جلسه معیار مشاهده‌اند؛ آموزش مستقل آن‌ها در جلسه چهارم است.</p></section>'+
+ '<nav class="s3-foot"><a href="?m=2">جلسه دوم</a><a href="?course=communication">جلسات دوره</a><a href="?m=4">جلسه چهارم</a></nav></div></main>'+footer();
+}
+function cssOnce(){if(document.getElementById("alborz-s3-style"))return;const st=document.createElement("style");st.id="alborz-s3-style";st.textContent=css;document.head.appendChild(st)}
+window.alborzSession3Page=function(){cssOnce();page()};
+document.addEventListener("click",ev=>{
+ if(!document.querySelector(".s3-root"))return;
+ const c=ev.target.closest("[data-s3-case]");if(c){select(+c.dataset.s3Case);return;}
+ const t=ev.target.closest("[data-s3-step]");if(t){const n=+t.dataset.s3Step;if(n<=state.max){state.step=n;showStage()}return;}
+ if(ev.target.closest("[data-s3-next]")){state.step=Math.min(3,state.step+1);state.max=Math.max(state.max,state.step);showStage();return;}
+ if(ev.target.closest("[data-s3-nextcase]")){if(state.current===11){close();document.querySelector(".s3-cases")?.scrollIntoView({behavior:"smooth"})}else select(state.current+1);return;}
+ if(ev.target.closest("[data-s3-close]")){close();return;}
+});
+})();
