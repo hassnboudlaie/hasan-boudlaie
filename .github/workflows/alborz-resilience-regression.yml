@@ -7,6 +7,10 @@ on:
       - 'alborz-communication-skills/resilience.html'
       - 'alborz-communication-skills/resilience.css'
       - 'alborz-communication-skills/resilience.js'
+      - 'alborz-communication-skills/resilience-game.*'
+      - 'alborz-communication-skills/resilience-live.js'
+      - 'alborz-communication-skills/claims-workshop-v2.html'
+      - 'scripts/alborz-four-hour-qa.cjs'
       - 'scripts/alborz-resilience-browser-qa.mjs'
       - '.github/workflows/alborz-resilience-regression.yml'
   workflow_dispatch:
@@ -23,7 +27,9 @@ jobs:
           node-version: '22'
       - name: Verify JavaScript syntax
         run: |
-          node --check alborz-communication-skills/resilience.js
+          node --check alborz-communication-skills/resilience-game.js
+          node --check alborz-communication-skills/resilience-live.js
+          node --check scripts/alborz-four-hour-qa.cjs
           node --check scripts/alborz-resilience-browser-qa.mjs
       - name: Install browser
         run: |
@@ -31,8 +37,6 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Verify desktop and simulated mobile workshop
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/alborz-resilience-http.log 2>&1 &
-          sleep 2
           node scripts/alborz-resilience-browser-qa.mjs
       - name: Save visual QA screenshots
         if: always()
