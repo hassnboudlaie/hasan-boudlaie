@@ -122,6 +122,68 @@ body.bm-zoom .map-shell .canvas{min-width:1110px}
 @media(max-width:990px){.scroll-hint{display:block}.canvas{min-width:1040px}.detail-columns{grid-template-columns:1fr}.detail-items{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){body{font-size:15px}.topbar{min-height:68px}.brand img{width:41px;height:41px}.brand small{font-size:10px}.home-link{padding:7px 10px;font-size:12px}.hero{padding-top:14px;padding-bottom:78px}.hero-tags{gap:6px}.hero-tags span{font-size:11px}.main{margin-top:-41px}.map-shell{padding:14px;border-radius:19px}.section-top h2{font-size:20px}.map-actions button{font-size:12px;padding:6px 9px}.quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quick button{min-height:95px;padding:10px;gap:9px;border-radius:13px}.quick .ico{width:37px;height:37px;font-size:21px;border-radius:10px}.quick strong{font-size:14px}.quick small{font-size:11px}.quick .arrow{display:none}.detail-items{grid-template-columns:1fr}.detail-hero{padding:19px}.detail-icon{width:54px;height:54px;font-size:28px}.detail-body{padding:18px}.package-grid{grid-template-columns:1fr}.packages{padding:17px}.steps{font-size:11px}.steps span{padding:4px 7px}.canvas-footer{padding:11px}}
 @media print{body{background:#fff}header,.quick,.map-actions,.detail-footer,.instructions,.disclaimer,footer{display:none!important}.main{margin:0;padding:0}.map-shell,.detail-wrap,.packages{box-shadow:none;border-color:#aaa;break-inside:avoid}.canvas-scroll{overflow:visible}.canvas{min-width:0;grid-template-columns:repeat(5,1fr);gap:4px}.canvas-block{min-height:135px}.canvas-block .head{font-size:10px}.canvas-block .inner span{font-size:8px}.canvas-block[data-bmc="value"] .inner span{font-size:9px}.canvas-block .hint{font-size:8px}.detail-wrap{break-before:page}}
+
+/* Exclusive drill-down: selection replaces overview instead of opening underneath. */
+html{scroll-behavior:auto}
+body{font-size:18px;line-height:1.85;background:#f5f7fb}
+.top{background:linear-gradient(115deg,#0b2a4a,#164b76);border-bottom:4px solid #d59a63}
+.topbar{min-height:76px}
+.hero{padding-top:29px;padding-bottom:68px}.hero h1{font-size:clamp(27px,4vw,40px)}.hero p{font-size:17px}
+.main{max-width:1140px}
+.map-shell,.detail-wrap,.packages,.disclaimer{border-radius:22px;border:1px solid #dce6ee;box-shadow:0 14px 40px rgba(15,40,67,.07)}
+.map-shell{padding:clamp(18px,3vw,30px)}
+.section-top h2{font-size:clamp(24px,3vw,32px)}
+.section-top p{font-size:16px}
+.canvas-block{min-height:170px;border-radius:17px}
+.canvas-block .head{min-height:50px;padding:12px;font-size:16px}
+.canvas-block .inner span{font-size:14px;line-height:1.7}
+.canvas-block .hint{font-size:12px}
+.quick{display:none}
+.detail-wrap .detail-item p,.detail-wrap .detail-intro,.detail-wrap .why p{font-size:17px;line-height:1.9}
+body:not(.bm-detail-active) #bm-detail{display:none!important}
+body.bm-detail-active .top .hero,body.bm-detail-active .top:after,
+body.bm-detail-active #overview,body.bm-detail-active .instructions,
+body.bm-detail-active #quick,body.bm-detail-active #reward-strategy,
+body.bm-detail-active .packages,body.bm-detail-active .disclaimer{display:none!important}
+body.bm-detail-active .top{background:#123754}
+body.bm-detail-active .main{margin:0 auto;padding-top:22px}
+body.bm-detail-active #bm-detail{display:block!important;min-height:calc(100dvh - 185px);box-shadow:0 12px 30px rgba(17,50,83,.07)}
+.bm-detail-top{padding:13px 21px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #e2eaf1;color:#60788c;font-size:14px}
+.bm-detail-top button{background:#eaf3fb;color:#124775;border:1px solid #c5daea;min-height:48px;padding:8px 16px;border-radius:13px;font-size:15px;font-weight:900}
+.detail-footer{margin-top:22px}
+button:focus-visible,a:focus-visible{outline:3px solid #d58a44;outline-offset:3px}
+@media(max-width:800px){
+ .topbar{min-height:72px}
+ .hero{padding-top:18px;padding-bottom:53px}
+ .hero h1{font-size:28px}.hero p{font-size:16px}
+ .main{padding:0 13px 55px;margin-top:-27px}
+ .map-shell{padding:18px 14px}
+ .canvas-scroll{display:none!important}
+ .scroll-hint{display:none!important}
+ .quick{display:grid;grid-template-columns:1fr;gap:12px}
+ .quick button{width:100%;min-height:93px;display:flex;gap:14px;align-items:center;text-align:right;border-radius:17px;padding:15px 17px;background:#fff;border:1px solid #d9e5ed;box-shadow:0 7px 19px rgba(22,49,76,.05)}
+ .quick button .ico{flex:0 0 48px;width:48px;height:48px;border-radius:13px;background:#eff5fb;display:grid;place-items:center;font-size:25px}
+ .quick button strong{font-size:19px;line-height:1.55;color:#153f62}
+ .quick button small{font-size:14px;line-height:1.6;color:#62778b}
+ .quick button .arrow{margin-right:auto;font-size:25px;color:#c77e40}
+ .instructions{display:block;margin:22px 3px 11px}
+ .instructions h2{font-size:24px}
+ .instructions p{font-size:15px}
+ .canvas-footer{font-size:14px}
+ .section-top .map-actions{display:none}
+ .detail-wrap{padding:0 0 15px}
+ .bm-detail-top{padding:12px 14px}
+ .bm-detail-top span{display:none}
+ .detail-hero{padding:18px 17px}
+ .detail-hero h2{font-size:27px}
+ .detail-body{padding:14px}
+ .detail-columns{display:block}
+ .detail-item{padding:16px}
+ .detail-footer{padding:10px 14px}
+ body.bm-detail-active .main{padding:14px 12px 60px;margin:0 auto}
+}
+@media(max-width:380px){.quick button strong{font-size:18px}.quick button{padding:13px}.quick button small{font-size:14px}}
+
 </style>
 </head>
 <body>
@@ -141,7 +203,7 @@ body.bm-zoom .map-shell .canvas{min-width:1110px}
 <main class="main">
 <section id="overview" class="map-shell" aria-label="تصویر جامع و تعاملی بوم کسب‌وکار">
 <div class="section-top">
-<div><h2>تصویر جامع بوم کسب‌وکار</h2><p>بازآفرینی تعاملی همان شماتیک مدیریتی؛ با لمس هر بخش، شرح کامل آن را ببینید.</p></div>
+<div><h2>تصویر جامع بوم کسب‌وکار</h2><p>بازآفرینی تعاملی همان شماتیک مدیریتی؛ هر بخش را لمس کنید تا وارد صفحه اختصاصی آن شوید.</p></div>
 <div class="map-actions"><button id="zoomBtn" type="button" aria-pressed="false">⤢ نمای کامل</button><button id="printBtn" type="button">⎙ چاپ / PDF</button></div>
 </div>
 <p class="scroll-hint">← برای مشاهده کامل نمودار روی گوشی، تصویر را به طرفین بکشید یا «نمای کامل» را انتخاب کنید.</p>
@@ -164,7 +226,7 @@ body.bm-zoom .map-shell .canvas{min-width:1110px}
 <div class="mini-foot"><span>هدف سال اول: <b>۱ تا ۲ سازمان قرارداددار</b></span><span>سناریوها: ۲۵ / ۷۰ / ۱۰۰ مدیر · هدف حاشیه سود ناخالص کمتر از ۳۰٪</span></div>
 </div>
 </section>
-<section class="instructions" aria-label="راهنمای انتخاب"><h2>۹ بخش قابل باز شدن</h2><p>هر کارت را لمس کنید تا تحلیل آن بخش، تصمیم‌های ثبت‌شده و نکات اجرایی نمایش داده شود.</p></section>
+<section class="instructions" aria-label="راهنمای انتخاب"><h2>۹ بخش قابل باز شدن</h2><p>هر کارت، یک صفحه مستقل با توضیح و تصمیم‌های آن بخش دارد.</p></section>
 <nav class="quick" id="quick" aria-label="انتخاب بلوک بوم کسب‌وکار">
 <button type="button" data-bmc="segments"><span class="ico">🎯</span><span class="word"><strong>بخش‌های مشتری</strong><small>بازار هدف و خریدار اقتصادی</small></span><span class="arrow">‹</span></button>
 <button type="button" data-bmc="value"><span class="ico">💎</span><span class="word"><strong>ارزش پیشنهادی</strong><small>آموزش، AI و توسعه مستمر</small></span><span class="arrow">‹</span></button>
@@ -176,7 +238,7 @@ body.bm-zoom .map-shell .canvas{min-width:1110px}
 <button type="button" data-bmc="partners"><span class="ico">🤝</span><span class="word"><strong>شرکای کلیدی</strong><small>تیم فنی و تأمین‌کنندگان</small></span><span class="arrow">‹</span></button>
 <button type="button" data-bmc="costs"><span class="ico">📊</span><span class="word"><strong>ساختار هزینه</strong><small>هزینه مستقیم و سرمایه‌گذاری</small></span><span class="arrow">‹</span></button>
 </nav>
-<section class="detail-wrap" id="bm-detail" tabindex="-1" aria-live="polite" aria-label="شرح بلوک انتخاب‌شده">
+<section class="detail-wrap" id="bm-detail" tabindex="-1" aria-live="polite" aria-label="صفحه مستقل شرح بخش انتخاب‌شده"><div class="bm-detail-top"><button type="button" id="goOverviewTop">→ بازگشت به بوم کسب‌وکار</button><span>جزئیات بخش انتخاب‌شده</span></div>
 <div class="detail-hero"><div><span class="detail-badge">شرح بخش انتخاب‌شده</span><h2 id="detailTitle">ارزش پیشنهادی</h2></div><div class="detail-icon" id="detailIcon" aria-hidden="true">💎</div></div>
 <div class="detail-body">
 <p class="detail-intro" id="detailIntro"></p>
@@ -268,18 +330,23 @@ document.querySelectorAll("[data-bmc]").forEach(function(el){var active=el.getAt
 put("detailTitle",b.title);put("detailIcon",b.icon);put("detailIntro",b.intro);put("detailDecision",b.decision);put("detailAction",b.action);put("detailRisk",b.risk);
 var items=document.getElementById("detailItems");items.replaceChildren();
 b.items.forEach(function(x,i){var card=document.createElement("article");card.className="detail-item";var badge=document.createElement("span");badge.className="dot";badge.textContent=String(i+1).replace(/[0-9]/g,function(n){return "۰۱۲۳۴۵۶۷۸۹"[Number(n)]});var h=document.createElement("b");h.textContent=x[0];var p=document.createElement("p");p.textContent=x[1];card.append(badge,h,p);items.appendChild(card)});
-try{history.replaceState(null,"","#"+key)}catch(e){}
-if(scroll){if(document.body.classList.contains("bm-zoom"))toggleZoom(false);document.getElementById("bm-detail").scrollIntoView({behavior:"smooth",block:"start"});}
+if(scroll){if(document.body.classList.contains("bm-zoom"))toggleZoom(false);try{history.pushState(null,"","#"+key)}catch(e){location.hash=key}}
+document.body.classList.add("bm-detail-active");
+if(scroll){window.scrollTo(0,0);document.getElementById("bm-detail").focus({preventScroll:true})}
 }
 function toggleZoom(force){var newValue=typeof force==="boolean"?force:!document.body.classList.contains("bm-zoom");document.body.classList.toggle("bm-zoom",newValue);document.getElementById("zoomBtn").textContent=newValue?"✕ بستن نمای کامل":"⤢ نمای کامل";document.getElementById("zoomBtn").setAttribute("aria-pressed",String(newValue));if(newValue)document.getElementById("zoomBtn").focus();}
 document.addEventListener("click",function(e){var btn=e.target.closest("[data-bmc]");if(btn){render(btn.getAttribute("data-bmc"),true)}});
 document.getElementById("zoomBtn").addEventListener("click",function(){toggleZoom()});
 document.getElementById("printBtn").addEventListener("click",function(){window.print()});
-document.getElementById("goOverview").addEventListener("click",function(){document.getElementById("overview").scrollIntoView({behavior:"smooth"})});
+function showOverview(){document.body.classList.remove("bm-detail-active");try{history.pushState(null,"","#overview")}catch(e){location.hash="overview"}window.scrollTo(0,0);document.getElementById("overview").focus({preventScroll:true})}
+document.getElementById("goOverview").addEventListener("click",showOverview);
+document.getElementById("goOverviewTop").addEventListener("click",showOverview);
 document.getElementById("nextBlock").addEventListener("click",function(){render(order[(order.indexOf(current)+1)%order.length],true)});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("bm-zoom"))toggleZoom(false)});
-window.addEventListener("hashchange",function(){var hash=location.hash.slice(1);if(D[hash]&&hash!==current)render(hash,false)});
-render(D[location.hash.slice(1)]?location.hash.slice(1):"value",false);
+function applyRoute(){var hash=location.hash.slice(1);if(D[hash])render(hash,false);else document.body.classList.remove("bm-detail-active")}
+window.addEventListener("hashchange",applyRoute);
+window.addEventListener("popstate",applyRoute);
+applyRoute();
 })();
 </script>
 </body></html>
