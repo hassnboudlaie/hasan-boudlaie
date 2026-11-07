@@ -27,12 +27,12 @@ const server=http.createServer((req,res)=>{
     const team=String(token).includes('22222222')||String(token).includes('session-2')?2:1;
     result={identity:role==='teacher'?{role:'teacher',team:null,member:null}:{role:'team',team,member:1},session:role==='teacher'?'session-teacher':'session-'+team};
    }else if(action==='teacher'){result={records:records(null)};}
-   else if(action==='read'){result={records:records(req.team),classroom:{phase:get(1,'classroomPhase')?.field_value??0,version:get(1,'classroomPhase')?.version??0}};}
+   else if(action==='read'){result={records:records(req.team),classroom:{phase:get(1,'classroomPhase')?.field_value??0,version:get(1,'classroomPhase')?.version??0,round:get(1,'classroomRound')?.field_value??0}};}
    else if(action==='groupSetup'){
     set(req.team,'groupSize',req.size);set(req.team,'groupReady',req.size>0);result={records:records(req.team)};
    }else if(action==='classroom'){
     if(req.expectedVersion!==(get(1,'classroomPhase')?.version??0)){status=409;result={error:'version conflict'};}
-    else{set(1,'classroomPhase',req.phase);nextCalls++;result={records:[get(1,'classroomPhase')]};}
+    else{const restarting=get(1,'classroomPhase')?.field_value===10&&req.phase===2;set(1,'classroomPhase',req.phase);if(restarting)set(1,'classroomRound',(get(1,'classroomRound')?.field_value??0)+1);nextCalls++;result={records:records(1).filter(x=>x.field_key.startsWith('classroom'))};}
    }else if(action==='write'){
     const conflicts=Object.keys(req.fields).filter(k=>(get(req.team,k)?.version??0)!==req.expected[k]);
     if(conflicts.length){status=409;result={error:'conflict',conflicts};}
@@ -128,6 +128,26 @@ const server=http.createServer((req,res)=>{
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/جمع‌بندی/);
   await teacher.locator('[data-class-next]').click();
   assert.equal(get(1,'classroomPhase').field_value,2,'instructor begins next independent round');
+  assert.equal(get(1,'classroomRound')?.field_value,1,'classroom advances to the second round');
+  await expert1.evaluate(()=>window.AlborzLive.refresh());
+  await expert2.evaluate(()=>window.AlborzLive.refresh());
+  assert.equal(await expert1.locator('[data-class-mission].selected').count(),0,'group 1 must choose again for round 2');
+  assert.equal(await expert2.locator('[data-class-mission].selected').count(),0,'group 2 must choose again for round 2');
+  assert.equal(await teacher.locator('[data-class-next]').isDisabled(),true,'teacher cannot skip unchosen round 2 missions');
+  await expert1.locator('[data-class-mission="1"]').click();
+  await expert1.waitForFunction(()=>document.querySelector('[data-class-mission="1"]')?.classList.contains('selected'));
+  await expert2.locator('[data-class-mission="3"]').click();
+  await expert2.waitForFunction(()=>document.querySelector('[data-class-mission="3"]')?.classList.contains('selected'));
+  await teacher.evaluate(()=>window.AlborzLive.refresh());
+  assert.equal(await teacher.locator('[data-class-next]').isDisabled(),false,'all confirmed groups chose a fresh mission');
+  assert.equal(get(1,'r0initial')?.field_value?.length>0,true,'prior camel decision persisted across rounds');
+  assert.equal(get(1,'missionChoiceRound')?.field_value,1,'round marker saved with group 1 new salmon choice');
+  assert.equal(get(2,'missionChoiceRound')?.field_value,1,'round marker saved with group 2 octopus choice');
+  await teacher.locator('[data-class-next]').click();
+  await expert1.evaluate(()=>window.AlborzLive.refresh());
+  await expert2.evaluate(()=>window.AlborzLive.refresh());
+  assert.match(await expert1.locator('.classroom-story').innerText(),/۴۰ خودرو/,'second round loads salmon scenario for group 1');
+  assert.match(await expert2.locator('.classroom-story').innerText(),/خسارت اموال/,'second round loads octopus scenario for group 2');
   assert(nextCalls>=10,'server-controlled step changes saved across all phones');
   await teacher.screenshot({path:'artifacts/alborz-resilience/classroom-teacher-'+width+'.png',fullPage:true});
   await expert1.screenshot({path:'artifacts/alborz-resilience/classroom-participant-'+width+'.png',fullPage:true});
