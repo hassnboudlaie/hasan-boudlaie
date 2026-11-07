@@ -19,6 +19,27 @@ const models=[
 const missionFlow=['مسئله و هدف','تقسیم نقش‌ها','گفت‌وگو و مهارت‌ها','انتخاب و تصمیم اولیه','اتفاق تازه','اصلاح تصمیم','بازخورد و نتیجه'];
 const flowHeading=(i,n)=>'<h3 class="shared-flow-heading" id="mission-phase-'+i+'-'+n+'"><span>گام '+fa(n+1)+' از ۷</span>'+missionFlow[n]+'</h3>';
 const flowNav=i=>'<nav class="shared-step-nav" aria-label="هفت گام مشترک مدرس و گروه"><strong>مسیر اجرای سناریو · ۷ گام</strong><div>'+missionFlow.map((label,n)=>'<a href="#mission-phase-'+i+'-'+n+'">'+fa(n+1)+'. '+E(label)+'</a>').join('')+'</div><p>مدرس هر گام را اعلام می‌کند؛ اعضای گروه همان بخش را در موبایل دنبال می‌کنند. هر گروه می‌تواند مأموریت خودش را انتخاب کند.</p></nav>';
+
+const missionKey='alborz-simple-phase-'+g+'-'+step;
+let missionPhase=0;
+try {const savedPhase=Number(sessionStorage.getItem(missionKey));if(Number.isInteger(savedPhase)&&savedPhase>=0&&savedPhase<=6)missionPhase=savedPhase;}catch{}
+function savePhase(){try{sessionStorage.setItem(missionKey,String(missionPhase));}catch{}}
+function wizardHeader(i){return '<div class="mission-simple-head"><a href="'+url(g,0)+'" class="btn">← انتخاب راهبرد</a><div><span>گروه '+fa(g)+' · سناریوی '+fa(i+1)+'</span><h1>'+models[i][0]+' '+E(models[i][1])+' · '+E(missions[i].title)+'</h1></div><span id="save-status" class="saved">پاسخ‌ها ابتدا روی همین دستگاه ذخیره می‌شوند</span></div><nav class="mission-simple-progress" aria-label="پیشروی در سناریو"><span id="mission-progress-text"></span><div class="mission-simple-navigation"><button type="button" class="btn" data-mission-prev>گام قبل</button><button type="button" class="btn primary" data-mission-next>گام بعد</button></div></nav><p class="mission-simplicity-note">هر بار فقط یک گام را انجام دهید. برای نمایش پاسخ‌ها به مدرس، «اشتراک با گروه» را بزنید.</p>';}
+function applyMissionFocus(){
+ if(step<3||step>6)return;
+ app.classList.add('mission-simple-app');
+ const heads=[...app.querySelectorAll('h3.shared-flow-heading')];
+ if(!heads.length)return;
+ const available=heads.length-1;
+ missionPhase=Math.min(Math.max(0,missionPhase),available);
+ savePhase();
+ heads.forEach((head,n)=>{const show=n===missionPhase;head.hidden=!show;let node=head.nextElementSibling;while(node&&!node.matches('h3.shared-flow-heading')){node.hidden=!show;node=node.nextElementSibling;}});
+ const p=app.querySelector('#mission-progress-text');
+ if(p)p.innerHTML='<small>گام '+fa(missionPhase+1)+' از ۷</small><strong>'+E(missionFlow[missionPhase])+'</strong>';
+ const prev=app.querySelector('[data-mission-prev]'),next=app.querySelector('[data-mission-next]');
+ if(prev)prev.disabled=missionPhase===0;
+ if(next){next.disabled=missionPhase>=available;next.textContent=missionPhase===available?'پایان این گام':'گام بعد ←';}
+}
 const roles=['کارشناس خسارت','مراجع / نماینده مشتری','سرپرست خسارت','نماینده واحد همکار','مشاهده‌گر و زمان‌بان'];
 const missions=[
 {title:'صفی که ناگهان سه برابر شد',line:'شخص ثالث · اختلال موقت',model:0,brief:'امروز ۳۰ مراجعه به‌جای ۱۰ مراجعه معمول دارید. فرایند رسیدگی معتبر است و سامانه بعد از یک ساعت برمی‌گردد. هدف: تداوم خدمت با دقت، کرامت مراجع و حفظ توان تیم.',info:['پنج پرونده آماده بررسی و هشت پرونده دارای نقص مدرک است؛ کنترل را حذف نکنید.','دو ساعت مرخصی گرفته‌اید؛ پرداخت قطعی نمی‌خواهید، زمان پیگیری روشن می‌خواهید.','اجازه تقسیم کار و نوبت‌بندی دارید، اختیار وعده پرداخت ندارید.','پشتیبانی: مسیر ثبت موقت مصوب وجود دارد؛ ثبت در پیام‌رسان شخصی مجاز نیست.','بررسی کنید اعضای حاضر اطلاعات نقش‌های خود را مطرح کنند؛ وعده، کیفیت و بار کار را ثبت کنید.'],actions:[['تریاژ مدارک و تعیین مسئول صف',2,'صف روشن‌تر می‌شود؛ کنترل پرونده پابرجاست.'],['مسیر ثبت موقت مصوب و تطبیق بعدی',3,'خدمت ادامه دارد؛ مسئول تطبیق پس از وصل باید مشخص شود.'],['تقسیم بار و استراحت نوبتی',2,'ظرفیت انسانی حفظ می‌شود؛ سرعت فوری ممکن است کمتر باشد.'],['توضیح وضعیت و زمان تماس بعدی',1,'ابهام کمتر می‌شود؛ وعده نتیجه ندهید.']],shock:'سامانه برگشته، اما دو پرونده در ثبت موقت ناقص‌اند. یک همکار هم خسته شده؛ بودجه تازه ندارید. چه چیزی را متوقف و چه چیزی را کنترل می‌کنید؟',dialog:['مراجع: من از صبح منتظرم؛ امروز پول واریز می‌شود؟','کارشناس: هنوز نتیجه بررسی روشن نیست. الان مرحله پرونده و زمان پیگیری بعدی را مشخص می‌کنم.','همکار: من مدارک اولیه را دسته‌بندی می‌کنم؛ ثبت‌های موقت بعداً باید تطبیق داده شوند.','سرپرست: مسئول تطبیق را مشخص کنیم؛ کنترل را برای کوتاه‌شدن صف حذف نمی‌کنیم.']},
@@ -73,21 +94,35 @@ function guide(){return panel('راهنمای اجرای مدرس',`<p>قبل ا
   ? '<p><strong>نسخه پشتیبان آفلاین</strong> · امتیازهای این جدول فقط در مرورگر همین دستگاه ذخیره می‌شوند و به داشبورد زنده انتقال خودکار ندارند. پس از اتصال مجدد، امتیازهای نهایی را در داشبورد Live ثبت کنید.</p><p><a class="btn primary" href="?teacher=1">بازگشت به داشبورد زنده مدرس</a></p>'
   : '<p>برای مشاهده مشارکت گروه‌ها و ثبت امتیازهای مشترک، با کد اختصاصی مدرس در بخش «ورود مدرس» وارد شوید. جدول دستی فقط در زمان قطع اینترنت، به‌عنوان نسخه پشتیبان در دسترس است؛ داده‌های آن با سرور Sync نمی‌شوند.</p><p><a class="btn" href="?teacher=1&offline=1">باز کردن نسخه پشتیبان آفلاین</a></p>')+(P.get('offline')==='1'?scoreboard():'')+sources();}
 function scoreboard(){const b=load('alborz-resilience-board-v2');const rows=Array.from({length:10},(_,i)=>{const values=Array.from({length:5},(_,j)=>b[i+'-'+j]);return {i,values,total:values.every(v=>v!==undefined&&v!=='')?values.reduce((a,v)=>a+Number(v),0):null};});const ranks=rows.filter(r=>r.total!==null).sort((a,b)=>b.total-a.total);return panel('جدول رقابت · ورود دستی مدرس',`<p>هر دور از ۱۰؛ مجموع از ۵۰. فقط پس از تأیید شواهد گروه وارد کنید. این فرم پشتیبان آفلاین است: اطلاعات فقط در همین مرورگر ذخیره می‌شود و با داشبورد زنده همگام نیست. پس از بازیابی اتصال، امتیازهای تأییدشده را در داشبورد Live ثبت کنید.</p><div class="table-scroll"><table><thead><tr><th>گروه</th>${['دور ۱','دور ۲','دور ۳','دور ۴','سناریوسازی'].map(x=>`<th>${x}</th>`).join('')}<th>جمع / رتبه</th></tr></thead><tbody>${rows.map(r=>`<tr><th>${fa(r.i+1)}</th>${r.values.map((v,j)=>`<td><input aria-label="گروه ${r.i+1} امتیاز ${j+1}" type="number" min="0" max="10" step="1" style="width:75px" data-board="${r.i}-${j}" value="${E(v??'')}"></td>`).join('')}<td>${r.total===null?'ناقص':fa(r.total)+' / '+fa(1+ranks.filter(x=>x.total>r.total).length)}</td></tr>`).join('')}</tbody></table></div><p id="board-status" role="status"></p>${button('دریافت جدول امتیاز','board-export')}`);}
-function renderContent(){if(P.has('teacher')){app.innerHTML=P.get('offline')==='1'?guide():`<div class="teacher-entry-note"><a class="btn" href="?teacher=1&offline=1">پشتیبان آفلاین امتیازها</a></div>`;return;}if(!g){app.innerHTML=landing();return;}
-const content=[intro,lesson,()=>assessment('pre')+quiz('pre'),()=>round(0),()=>round(1),()=>round(2),()=>round(3),creation,closing,transfer][step]();
-const mission=step>=3&&step<=6;
-const courseNav=`<details class="course-outline"><summary>مشاهده برنامه کامل کارگاه</summary><nav class="game-nav stage-nav" aria-label="مراحل کارگاه">${stages.map((x,i)=>`<a class="btn ${i===step?'primary':''}" ${i===step?'aria-current="step"':''} href="${url(g,i)}">${fa(i+1)}. ${x[0]}</a>`).join('')}</nav></details>`;
-app.innerHTML=`<div class="navline"><a href="resilience.html">همه گروه‌ها</a><b>گروه ${fa(g)}${s.teamname?' · '+E(s.teamname):''}</b><span id="save-status" class="saved">ثبت روی همین دستگاه</span></div>${mission?missionJourneyNav():''}${courseNav}<h1 tabindex="-1">${stages[step][0]} · ${fa(stages[step][1])} دقیقه</h1><div class="no-print">${button('شروع زمان‌سنج','timer',stages[step][1])} ${button('توقف','pause')} <output class="timer" id="timer" aria-label="زمان باقی‌مانده"></output></div>${content}<nav class="game-nav journey-footer">${mission?`<a class="btn primary" href="${url(g,0)}">انتخاب مأموریت دیگر</a>`:`${step?`<a class="btn" href="${url(g,step-1)}">بخش قبل</a>`:''}${step<9?`<a class="btn primary" href="${url(g,step+1)}">بخش بعد</a>`:''}`}${button('دریافت خروجی گروه','export')}</nav>${sources()}`;}
-
+function renderContent(){
+ if(P.has('teacher')){app.innerHTML=P.get('offline')==='1'?guide():'';return;}
+ if(!g){app.innerHTML=landing();return;}
+ if(step>=7){location.replace(url(g,0));return;}
+ const mission=step>=3&&step<=6;
+ if(mission){
+  const i=step-3;
+  app.innerHTML=wizardHeader(i)+round(i)+
+   '<nav class="mission-simple-footer"><a class="btn" href="'+url(g,0)+'">انتخاب مأموریت دیگر</a><button type="button" class="btn" data-action="export">دریافت خروجی گروه</button></nav>';
+  applyMissionFocus();
+  return;
+ }
+ const content=[intro,lesson,()=>assessment('pre')+quiz('pre')][step]();
+ const courseNav='<details class="course-outline"><summary>اطلاعات تکمیلی دوره</summary><nav class="game-nav stage-nav" aria-label="مراحل کارگاه">'+stages.slice(0,7).map((x,i)=>'<a class="btn '+(i===step?'primary':'')+'" href="'+url(g,i)+'">'+fa(i+1)+'. '+E(x[0])+'</a>').join('')+'</nav></details>';
+ app.classList.remove('mission-simple-app');
+ app.innerHTML='<div class="navline"><a href="resilience.html">خانه گروه‌ها</a><b>گروه '+fa(g)+'</b><span id="save-status" class="saved">ذخیره دستگاه</span></div>'+content+'<nav class="game-nav journey-footer"><a class="btn primary" href="'+url(g,0)+'">چهار مأموریت</a></nav>'+courseNav;
+}
 let interval,remaining=0;
 function download(name,data){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'text/plain;charset=utf-8'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 app.addEventListener('input',e=>{const t=e.target;if(t.matches('textarea[data-field]')){s[t.dataset.field]=t.value;save();}});
 app.addEventListener('change',e=>{const t=e.target;if(t.dataset.field){s[t.dataset.field]=t.value;save();if(t.dataset.refresh||t.dataset.field==='seat'){const id=t.dataset.field;render();app.querySelector('[data-field="'+id+'"]')?.focus();}}
 if(t.dataset.pick){const [i,j]=t.dataset.pick.split(':').map(Number),k='r'+i+'pick';let a=Array.isArray(s[k])?[...s[k]]:[];a=t.checked?[...new Set([...a,j])]:a.filter(x=>x!==j);const cost=a.reduce((n,x)=>n+missions[i].actions[x][1],0);if(cost>6){t.checked=false;document.getElementById('budget-'+i).textContent='بودجه کافی نیست؛ ابتدا یک اقدام دیگر را کنار بگذارید.';return;}s[k]=a;save();document.getElementById('cost-'+i).textContent=fa(cost);document.getElementById('budget-'+i).textContent='انتخاب ثبت شد.';if(s['r'+i+'reveal']){const y=scrollY;render();scrollTo(0,y);}}
 if(t.dataset.board){if(t.value!==''&&(!Number.isInteger(Number(t.value))||Number(t.value)<0||Number(t.value)>10)){t.value='';document.getElementById('board-status').textContent='امتیاز باید عدد صحیح بین صفر و ۱۰ باشد؛ مقدار نامعتبر ذخیره نشد.';return;}const b=load('alborz-resilience-board-v2');b[t.dataset.board]=t.value;try{localStorage.setItem('alborz-resilience-board-v2',JSON.stringify(b));render();app.querySelector('[data-board="'+t.dataset.board+'"]')?.focus();}catch{document.getElementById('board-status').textContent='ذخیره ممکن نیست؛ امتیازها را روی کاغذ نگه دارید.';}}});
-app.addEventListener('click',e=>{const t=e.target.closest('[data-action]');if(!t)return;const a=t.dataset.action,v=t.dataset.value;
+app.addEventListener('click',e=>{
+ const prev=e.target.closest('[data-mission-prev]'),next=e.target.closest('[data-mission-next]');
+ if(prev||next){const max=app.querySelectorAll('h3.shared-flow-heading').length-1;missionPhase=Math.min(max,Math.max(0,missionPhase+(next?1:-1)));savePhase();applyMissionFocus();app.querySelector('.mission-simple-progress')?.scrollIntoView({block:'start',behavior:'smooth'});return;}
+ const t=e.target.closest('[data-action]');if(!t)return;const a=t.dataset.action,v=t.dataset.value;
 if(a==='quiz'){const [k,n]=v.split(':');s[k]=Number(n);save();const y=scrollY;render();scrollTo(0,y);}
-if(a==='reveal'){const k='r'+v,picks=s[k+'pick']||[];if(picks.length<2||!(s[k+'initial']||'').trim()){document.getElementById('round-msg-'+v).textContent='ابتدا دست‌کم دو اقدام در محدوده بودجه انتخاب و تصمیم اولیه را ثبت کنید.';return;}s[k+'reveal']=true;save();const y=scrollY;render();scrollTo(0,y);}
+if(a==='reveal'){const k='r'+v,picks=s[k+'pick']||[];if(picks.length<2||!(s[k+'initial']||'').trim()){document.getElementById('round-msg-'+v).textContent='ابتدا دست‌کم دو اقدام در محدوده بودجه انتخاب و تصمیم اولیه را ثبت کنید.';return;}s[k+'reveal']=true;missionPhase=5;savePhase();save();render();app.querySelector('.mission-simple-progress')?.scrollIntoView({block:'start'});}
 if(a==='timer'){clearInterval(interval);remaining=Number(v)*60;const tick=()=>{const el=document.getElementById('timer');if(el)el.textContent=fa(Math.floor(remaining/60))+':'+String(remaining%60).padStart(2,'0');if(remaining<=0){clearInterval(interval);if(el)el.textContent='زمان مرحله تمام شد';}else remaining--;};tick();interval=setInterval(tick,1000);}
 if(a==='pause')clearInterval(interval);
 if(a==='board-export')download('alborz-scores.json',JSON.stringify(load('alborz-resilience-board-v2'),null,2));
