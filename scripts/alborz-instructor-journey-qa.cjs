@@ -34,10 +34,10 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   await page.locator('#live-code').fill('qa-teacher-token');
   await page.locator('#live-join').click();
   await page.locator('.instructor-roadmap').waitFor();
-  assert.equal(await page.locator('details.teacher-mission').count(),4,'four instructor missions');
+  assert.equal(await page.locator('details.teacher-mission').count(),4,'four instructor missions');assert.match(await page.locator('.instructor-roadmap .teacher-hero').innerText(),/انتخاب آزاد/);assert.equal(await page.locator('.facilitator-case-facts').count(),4,'instructor has key data for all four missions');assert.equal(await page.locator('.teacher-case-task').count(),4,'instructor has plain decision prompt for all missions');
   assert.equal(await page.locator('.timeline-item').count(),10,'A-to-Z learning steps');
   assert.equal(await page.locator('.teacher-mission-nav a').count(),4,'direct mission links');
-  assert.match(await page.locator('details.teacher-mission').first().innerText(),/مدیریت خشم و جرأت‌ورزی/);
+  assert.match(await page.locator('details.teacher-mission').first().innerText(),/مدیریت خشم و جرأت‌ورزی/);assert.match(await page.locator('details.teacher-mission').first().innerText(),/هدف تمرین به زبان ساده/);
   await page.locator('details.teacher-mission').last().evaluate(el=>el.open=true);
   assert.match(await page.locator('details.teacher-mission').last().innerText(),/کارت اتفاق/);
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no horizontal instructor overflow '+width);
