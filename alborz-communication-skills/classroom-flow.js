@@ -73,7 +73,7 @@ function teacherStep(){
  const i=reference,n=stage-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],mod=C.models[i];
  const say=[
  '«مسئله را بخوانید. هدف ما این است: '+d.goal+'»',
- '«نقش‌ها را بین افراد حاضر تقسیم کنید. هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
+ '«پنج نقش را متناسب با تعداد افراد تقسیم کنید. اگر شش نفر هستید، نفر ششم به مشاهده‌گر کمک کند؛ هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
  '«گفت‌وگو را یک بار اجرا کنید؛ مشاهده‌گر بازخورد بدهد و گفت‌وگو را بار دوم اصلاح کنید.»',
  '«با شش سکه حداقل دو اقدام انتخاب کنید؛ تصمیم اولیه، دلیل و مسئول را ثبت کنید.»',
  '«اکنون یک اتفاق تازه داریم. ببینید تصمیم قبلی هنوز مناسب است یا نه.»',
@@ -119,7 +119,7 @@ function learnerMission(){
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul><h3>پرسش گروه</h3><p>'+E(d.question)+'</p></div>';
- if(n===1)body='<p class="classroom-prompt">پنج نقش زیر را بین افراد حاضر تقسیم کنید. در گروه‌های کوچک‌تر، یک نفر می‌تواند دو نقش بگیرد.</p><div class="classroom-role-list">'+C.roles.map((r,j)=>'<details><summary>نقش '+fa(j+1)+' · '+E(r)+'</summary><p>'+E(m.info[j])+'</p></details>').join('')+'</div>';
+ if(n===1)body='<p class="classroom-prompt">پنج نقش زیر را بین افراد حاضر تقسیم کنید. در گروه‌های سه یا چهار نفره، بعضی افراد دو نقش می‌گیرند. اگر شش نفر هستید، نفر ششم به مشاهده‌گر برای ثبت شواهد و مدیریت زمان کمک کند.</p><div class="classroom-role-list">'+C.roles.map((r,j)=>'<details><summary>نقش '+fa(j+1)+' · '+E(r)+'</summary><p>'+E(m.info[j])+'</p></details>').join('')+'</div>';
  if(n===2)body='<p class="classroom-prompt">اول گفت‌وگو را اجرا کنید. مشاهده‌گر یک نکته بگوید؛ سپس گفت‌وگو را دوباره انجام دهید.</p><div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div><details class="classroom-reference"><summary>نمونه گفت‌وگو و پرسش مشاهده‌گر</summary>'+m.dialog.map(v=>'<p>'+E(v)+'</p>').join('')+'<p><b>پرسش:</b> '+E(x.check)+'</p><p><b>نمونه بهتر:</b> '+E(x.second)+'</p></details>';
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
  body='<p class="classroom-prompt">با ۶ سکه حداقل دو اقدام انتخاب کنید. یک نفر تصمیم را از طرف گروه ثبت کند.</p><div class="classroom-money">بودجه تصمیم: <strong>۶ سکه</strong></div><div class="classroom-options">'+m.actions.map((a,j)=>'<label><input type="checkbox" data-class-pick="'+j+'" '+(picked.includes(j)?'checked':'')+'><span>'+E(a[0])+'</span><b>'+fa(a[1])+' سکه</b></label>').join('')+'</div><label class="classroom-input"><span>تصمیم و دلیل گروه</span><textarea data-class-answer="initial" rows="3" placeholder="چه اقدام‌هایی را انتخاب کردید؟ چرا؟ مسئول کیست؟">'+E(val(team,prefix+'initial')||'')+'</textarea></label><button class="btn primary" data-class-save="initial">ثبت تصمیم گروه</button>'+(val(team,prefix+'initial')?'<p class="classroom-saved">تصمیم قبلی گروه ثبت شده است ✓</p>':'');}
