@@ -69,3 +69,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .instructor-note{font-size:15px;color:#496255}
 @media(max-width:900px){.mission-map,.teacher-metrics,.teacher-mission-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){body{font-size:17px}.mission-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-tile{padding:12px}.mission-tile h3{font-size:19px}.mission-tile p{font-size:14px}.teacher-timeline,.teacher-action-list,.skill-layers{grid-template-columns:1fr}.teacher-mission{padding:12px}.teacher-mission>summary strong{font-size:19px}.teacher-mission-body h4{font-size:19px}.teacher-mission-nav a{font-size:14px}.teacher-metrics span{font-size:14px}.teacher-tabs{display:grid;grid-template-columns:1fr 1fr}.teacher-tabs button{font-size:14px;padding:8px}.badge-preview{align-items:flex-start}.badge-preview .badge-emblem{font-size:35px}}
+
+/* Evidence-based team achievements after instructor confirmation. */
+.earned-badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}
+.earned-badge{padding:12px 8px;border-radius:13px;border:1px solid #d4ded5;background:#f2f6f3;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+.earned-badge>span{font-size:29px}.earned-badge>b{font-size:14px;color:#3c5248}.earned-badge>small{font-size:12px;color:#52645b;line-height:1.45}
+.earned-badge.earned{border-color:#c39a46;background:linear-gradient(140deg,#ffefc1,#fff8e7);box-shadow:0 3px 15px rgba(141,99,24,.13)}
+.earned-badge.earned>b{color:#80521d}
+@media(max-width:720px){.earned-badges{grid-template-columns:repeat(2,minmax(0,1fr))}}
