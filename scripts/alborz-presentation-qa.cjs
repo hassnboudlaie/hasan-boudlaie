@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await teacherEntry.count(), 1, 'instructor entry matches chosen strategy');
       assert.equal(await expertEntry.count(), 1, 'expert entry matches chosen strategy');
       assert.match(await teacherEntry.innerText(), /سناریوی «.+»/, 'teacher button uses actual scenario title');
-      assert.equal(await expertEntry.getAttribute('href'), './resilience.html?mission=' + animal,
+      assert.equal(await expertEntry.getAttribute('href'), './resilience.html?classroom=1&mission=' + animal,
         'expert preserves chosen scenario through PIN login');
       await modal.locator('[data-close-strategy]').click();
       assert.equal(await modal.isVisible(), false);
@@ -67,15 +67,15 @@ const server = http.createServer((req, res) => {
       const payload = route.request().postDataJSON();
       const body = payload.action === 'login'
         ? {identity:{role:'team',team:7,member:4},session:'mock-session'}
-        : {records:[]};
+        : {records:[],classroom:{phase:0,version:0}};
       await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
     });
-    await page.goto(base + 'resilience.html?mission=camel', {waitUntil:'load'});
+    await page.goto(base + 'resilience.html?classroom=1&mission=camel', {waitUntil:'load'});
     await page.locator('#live-code').fill('12345678');
     await page.locator('#live-join').click();
-    await page.waitForURL('**/resilience.html?group=7&step=3&mission=camel', {timeout: 9000});
+    await page.waitForURL('**/resilience.html?classroom=1&group=7&mission=camel', {timeout: 9000});
     assert.match(await page.locator('h1').innerText(), /شتر/,
-      'expert PIN login routes to selected camel scenario and correct group');
+      'expert PIN identifies its group and member in the guided classroom');
     await page.goto(base + 'claims-workshop-v2.html', {waitUntil:'load'});
     await page.goto(base + 'claims-presentation.html', {waitUntil:'load'});
     await page.locator('#slide h2').waitFor();
