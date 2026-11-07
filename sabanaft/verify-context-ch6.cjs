@@ -12,8 +12,8 @@ new vm.Script(inline[0][1],{filename:'leadership-studio-inline.js'});
 assert.match(course,/text==='context'/,'canonical standalone context route');
 assert.match(course,/contextMap\(\['task','people','team','organization'\]\)/,'all four context levels');
 assert.match(course,/contextReflection/,'context reflection survives restore and export');
-assert.match(course,/\['key','Key Function/,'key function is independently scored');
-assert.match(course,/\['risk','High-Risk Function/,'high-risk function is independently scored');
+assert.match(course,/\['key','جایگاه کلیدی/,'key function is independently scored');
+assert.match(course,/\['risk','نقش پرریسک/,'high-risk function is independently scored');
 assert.match(course,/case 'context':return '<div class=/,'legacy chapter lessons no longer embed duplicate forms');
 assert.doesNotMatch(studio,/state\.context\.dimensions|contextTab|data-dim=|c-horizon/,'studio legacy 1-5 UI and state removed');
 assert.match(studio,/sabanaft_reflective_v2/,'case prompts use canonical context');
@@ -22,5 +22,5 @@ assert.match(shellJS,/if\(r\.page==="context"\)setContext\(\)/,'PWA context rout
 assert.match(shellJS,/u\.hash="context"/,'PWA points at canonical course route');
 assert.match(original,/"dimensions":\[\{"id":"certainty"/,'canonical dimensions present');
 assert.match(read('app/lesson-notes.html'),/chapter6/,'chapter six summary present');
-assert.match(read('app/sw.js'),/shell-v14/,'PWA cache revision');
+assert.match(read('app/sw.js'),/shell-v15/,'PWA cache revision');
 console.log('PASS: one canonical Chapter 6 context workflow; studio legacy removed; chapter lesson links, PWA, reflection and syntax verified.');

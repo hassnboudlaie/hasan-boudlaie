@@ -8,14 +8,14 @@ assert.deepEqual(tiles,['context','lesson/5/mix','lesson/7/perspectives','lesson
 assert.match(home,/class="saba-model-loop"/,'reflection and all four main stages belong to one model container');
 assert.match(home,/<button type="button" class="saba-reflection-band" data-go="studio\/daily"/,'continuous reflection is a primary clickable model element');
 const rail=home.match(/<aside id="modelSideNav"[\s\S]*?<\/aside>/)?.[0]||'';
-assert.deepEqual([...rail.matchAll(/data-go="([^"]+)"/g)].map(m=>m[1]),[...tiles,'studio/daily'],'right rail repeats the four exact model paths and continuous reflection, with no extra model modules');
+assert.deepEqual([...rail.matchAll(/data-model-nav="[^"]+" data-go="([^"]+)"/g)].map(m=>m[1]),[...tiles,'studio/daily'],'right rail repeats the four exact model paths and continuous reflection, with no extra model modules');
 assert.match(home,/id="modelNavToggle"/,'right model drawer toggle on narrow screens');
 assert.match(app,/function setModelNavOpen/,'drawer open/close controls are wired');
 assert.match(app,/function highlightModelNav/,'current book model section is highlighted');
 assert.match(home,/id="futureCoachEntry"/,'case remains accessible as companion utility');
-assert.equal([...home.matchAll(/data-nav="/g)].length,3,'three utility tabs do not reproduce four different primary stages');
-const extra=home.match(/<div class="saba-more-actions">([\s\S]*?)<\/div>/)?.[1]||'';
-assert.ok(!/data-go="context"/.test(extra),'stable context never buried among side resources');
+assert.equal([...home.matchAll(/data-nav="/g)].length,0,'old bottom menu removed');
+assert.doesNotMatch(home,/class="saba-home-more"/,'no duplicate More menu');
+assert.match(home,/class="model-side-extras"/,'secondary tasks live below the approved five model steps');
 assert.match(course,/id="baseline-guidance"/,'baseline is explained as stable team context');
 assert.match(course,/contextQuestions/,'plain-language descriptions of all dimensions');
 assert.match(studio,/function caseContextSelect\(c\)/,'case form links to existing team');
@@ -25,5 +25,5 @@ assert.doesNotMatch(studio,/var central=null;try\{var raw=JSON\.parse/,'case ana
 assert.match(ui,/contextId:currentTeamId\(\)/,'fast case creation links to base team');
 assert.match(coach,/contextId:v.context/,'coach handoff links to selected base team');
 assert.match(app,/function syncCoachTeams/,'PWA coach draws from canonical team list');
-assert.match(r('app/sw.js'),/shell-v14/,'new PWA shell cache version');
+assert.match(r('app/sw.js'),/shell-v15/,'new PWA shell cache version');
 console.log('PASS: book Fig. 5.1 IA, stable baseline, per-case exception separation, single context source, simplified labels, routes and script syntax');

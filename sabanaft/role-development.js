@@ -3,10 +3,10 @@
 (function(){
 'use strict';
 var roles={
- B:{name:'Boss',label:'شفاف‌کردن تصمیم و مسئولیت',question:'آیا معیار، تصمیم، زمان‌بندی و صاحب مسئولیت را روشن کرده‌ام؟',exercise:'در ۹۰ ثانیه تصمیم، انتظار رفتاری، حد اختیار و زمان مرور را با صدای بلند بیان کنید.'},
- C:{name:'Coach',label:'پرسش و مسئولیت‌پذیری',question:'آیا به‌جای جواب فوری، پرسشی باز پرسیده و واقعاً گوش داده‌ام؟',exercise:'سه سؤال باز بپرسید، پاسخ فرد را بازتاب دهید و اجازه دهید اقدام بعدی را خودش پیشنهاد کند.'},
- P:{name:'Partner',label:'هم‌فکری و تصمیم مشترک',question:'آیا دیدگاه طرف مقابل واقعاً در تصمیم اثر داشته است؟',exercise:'در یک اختلاف کاری، دو دیدگاه را خلاصه و یک تصمیم مشترک با مسئول روشن ثبت کنید.'},
- E:{name:'Enabler',label:'رفع مانع و ایجاد ظرفیت',question:'کدام مانع یا کمبود منبع را بدون گرفتن مالکیت کار از فرد برطرف می‌کنم؟',exercise:'یک مانع ساختاری یا دانشی را شناسایی کنید و برای رفع آن یک اقدام کوچک مشخص کنید.'}
+ B:{name:'هدایت‌کننده',label:'شفاف‌کردن تصمیم و مسئولیت',question:'آیا معیار، تصمیم، زمان‌بندی و صاحب مسئولیت را روشن کرده‌ام؟',exercise:'در ۹۰ ثانیه تصمیم، انتظار رفتاری، حد اختیار و زمان مرور را با صدای بلند بیان کنید.'},
+ C:{name:'مربی',label:'پرسش و مسئولیت‌پذیری',question:'آیا به‌جای جواب فوری، پرسشی باز پرسیده و واقعاً گوش داده‌ام؟',exercise:'سه سؤال باز بپرسید، پاسخ فرد را بازتاب دهید و اجازه دهید اقدام بعدی را خودش پیشنهاد کند.'},
+ P:{name:'شریک',label:'هم‌فکری و تصمیم مشترک',question:'آیا دیدگاه طرف مقابل واقعاً در تصمیم اثر داشته است؟',exercise:'در یک اختلاف کاری، دو دیدگاه را خلاصه و یک تصمیم مشترک با مسئول روشن ثبت کنید.'},
+ E:{name:'توانمندساز',label:'رفع مانع و ایجاد ظرفیت',question:'کدام مانع یا کمبود منبع را بدون گرفتن مالکیت کار از فرد برطرف می‌کنم؟',exercise:'یک مانع ساختاری یا دانشی را شناسایی کنید و برای رفع آن یک اقدام کوچک مشخص کنید.'}
 };
 function clean(v,n){return typeof v==='string'?v.trim().slice(0,n||900):'';}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -18,7 +18,7 @@ function restore(s,raw){
   d.focus=roles[x.focus]?x.focus:'';d.caseId=clean(x.caseId,55);
   ['goal','microAction','superiorExpectations','authorityLimit','supportRequest'].forEach(function(k){d[k]=clean(x[k],900);});
   d.due=clean(x.due,20);
-  if(Array.isArray(x.reviews))d.reviews=x.reviews.filter(function(r){return r&&typeof r==='object';}).map(function(r){return {date:clean(r.date,30),caseId:clean(r.caseId,55),action:clean(r.action,800),evidence:clean(r.evidence,800),learning:clean(r.learning,800)};});
+  if(Array.isArray(x.reviews))d.reviews=x.reviews.filter(function(r){return r&&typeof r==='object';}).map(function(r){return {date:clean(r.date,30),createdAt:clean(r.createdAt,50),caseId:clean(r.caseId,55),action:clean(r.action,800),evidence:clean(r.evidence,800),learning:clean(r.learning,800)};});
  }
  s.development=d;
 }
@@ -53,7 +53,7 @@ function page(s){
  field('review-learning','چه آموختم و دفعه بعد چه تغییری می‌دهم؟','','یک تصمیم یا تمرین بعدی')+
  '<button class="btn" type="submit">ثبت مرور واقعی</button></form>'+
  (reviews.length?'<h3>مرورهای ثبت‌شده ('+reviews.length+')</h3><ol>'+reviews.slice(-6).reverse().map(function(r){return '<li><strong>'+esc(r.date)+'</strong> '+(r.caseId&&cases.some(function(c){return c.id===r.caseId;})?'· کیس مرتبط: '+esc(cases.find(function(c){return c.id===r.caseId;}).title||'موقعیت'):'')+' — '+esc(r.action)+'<p class="small">شاهد: '+esc(r.evidence||'ثبت نشده')+' | آموخته: '+esc(r.learning||'ثبت نشده')+'</p></li>';}).join('')+'</ol>':'<p class="note">هنوز هیچ اقدام واقعی ثبت نشده است.</p>')+
- '</section><section class="card" style="margin-top:16px"><h2>۵. همراهی کوچ</h2><p>می‌توانید تمرین را با Role Play موجود انجام دهید یا برای جلسه Human Coaching درخواست بدهید. رزرو خودکار و AI Coach متصل در این نسخه فعال نیستند.</p>'+
+ '</section><section class="card" style="margin-top:16px"><h2>۵. همراهی کوچ</h2><p>می‌توانید تمرین را با تمرین نقش‌آفرینی موجود انجام دهید یا برای جلسه کوچینگ انسانی درخواست بدهید. رزرو خودکار و مربی هوشمند متصل در این نسخه فعال نیستند.</p>'+
  '<a class="btn light" id="dev-human" href="mailto:hasanboudlaie@ut.ac.ir?subject=%D8%AF%D8%B1%D8%AE%D9%88%D8%A7%D8%B3%D8%AA%20%DA%A9%D9%88%DA%86%DB%8C%D9%86%DA%AF%20%D8%B1%D9%87%D8%A8%D8%B1%DB%8C">درخواست جلسه کوچ انسانی (ایمیل) ↗</a>'+
  '<p class="small">این لینک فقط پیش‌نویس ایمیل را باز می‌کند؛ اطلاعات خصوصی برنامه یا کیس به‌طور خودکار ارسال نمی‌شود.</p></section>';
 }
@@ -69,7 +69,7 @@ function handle(e){
  }else{
   var a=clean(document.getElementById('dev-review-action').value,800);
   if(a.length<8){b.toast('برای ثبت مرور، اقدام واقعی انجام‌شده را روشن‌تر بنویسید.');return;}
-  d.reviews.push({date:new Date().toLocaleDateString('fa-IR'),caseId:d.caseId||'',action:a,evidence:clean(document.getElementById('dev-review-evidence').value,800),learning:clean(document.getElementById('dev-review-learning').value,800)});
+  d.reviews.push({date:new Date().toLocaleDateString('fa-IR'),createdAt:new Date().toISOString(),caseId:d.caseId||'',action:a,evidence:clean(document.getElementById('dev-review-evidence').value,800),learning:clean(document.getElementById('dev-review-learning').value,800)});
  }
  s.development=d;
  if(!b.save()){s.development=old;b.toast('ذخیره انجام نشد؛ متن فرم را نگه دارید یا در حافظه دیگری کپی کنید.');return;}
