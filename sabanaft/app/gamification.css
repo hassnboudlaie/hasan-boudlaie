@@ -1,0 +1,37 @@
+/* صبا نفت — پیشرفت و نشان‌ها */
+body .global-score{position:fixed;z-index:50;top:99px;left:7px;right:auto;max-width:calc(100vw - 87px);min-height:41px;padding:7px 11px;border:1px solid #bcd5e9;border-radius:0 13px 13px 0;background:#e9f6ff;color:#173d68;font:900 12px/1.6 Vazirmatn,Tahoma,sans-serif;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 5px 16px #071d3524}
+body.saba-home .global-score{background:#f7feff}
+.global-score:hover{background:#daf0ff}
+.model-side-extras{margin:6px 0 0;padding-top:13px;border-top:1px solid #d7e5f2;display:flex;flex-direction:column;gap:7px}
+.model-side-extras h3{font-size:14px;font-weight:950;color:#315e88;margin:0 0 3px}
+.model-side-extras button,.model-side-extras a{display:flex;align-items:center;justify-content:flex-start;min-height:40px;padding:7px 12px;border:1px solid #e0e9f2;background:#fff;color:#154b76;border-radius:9px;text-align:right;font:850 12px/1.6 Vazirmatn,Tahoma,sans-serif;text-decoration:none;cursor:pointer}
+.model-side-extras button:hover,.model-side-extras a:hover{background:#eaf4ff}
+#homeView .saba-home-achievement{width:min(100%,930px);display:flex;flex-direction:column;align-items:center;gap:4px;margin:0 auto;color:#e7f5ff}
+#homeView .saba-home-achievement button{width:min(100%,500px);min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:11px;border:1px solid #e5c399;border-radius:13px;color:#213d5c;background:#fdf3e6;padding:11px 16px;font:900 14px/1.5 Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+#homeView .saba-home-achievement strong{font-size:12px;color:#a05a19}
+#homeView .saba-home-achievement small{color:#e3effc;font-size:12px;text-align:center}
+.sg-dashboard{margin:12px auto 26px;max-width:960px;color:#183552;direction:rtl;text-align:right}
+.sg-hero{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-radius:19px;padding:17px 19px;background:linear-gradient(115deg,#0b4179,#184e8b);color:#fff}
+.sg-hero>span{font-size:36px;line-height:1}
+.sg-hero>div{flex:1;min-width:180px}.sg-hero h2{color:#fff;font-size:21px;margin:0}.sg-hero p{color:#d8edff;margin:2px 0 0;font-size:12px}
+.sg-hero>strong{font-size:26px;font-weight:950}.sg-hero>strong small{font-size:12px}
+.sg-dashboard h3{font-size:18px;margin:21px 0 10px;color:#183f69}
+.sg-goal{background:#fff8ee;border:1px solid #f1d5b1;border-radius:14px;padding:14px 15px;margin-top:11px}
+.sg-goal-label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;font-weight:850}.sg-track{height:12px;border-radius:10px;background:#e2e9f0;overflow:hidden;margin:10px 0}
+.sg-track i{height:100%;display:block;border-radius:10px;background:linear-gradient(90deg,#2686c3,#f4a448);transition:width .25s}
+.sg-goal>small{color:#7c5636;font-size:12px}
+.sg-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.sg-step{border:1px solid #d4e3ef;background:#fff;border-radius:14px;min-height:126px;padding:12px 13px;display:flex;flex-direction:column;gap:5px}
+.sg-step>span{font-size:25px}.sg-step strong{font-size:13px;color:#16446e}.sg-step b{color:#16618f;font-size:14px}.sg-step small{color:#6d8193;font-size:11px}
+.sg-badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sg-badge{border-radius:14px;border:1px solid #d6e3ed;background:#f7faff;text-align:center;padding:12px;display:flex;align-items:center;justify-content:center;gap:5px;flex-direction:column;min-height:114px}
+.sg-badge>span{font-size:25px}.sg-badge strong{font-size:13px;color:#163f6a}.sg-badge small{font-size:11px;color:#6b7d8b}
+.sg-badge.earned{border-color:#e9ba6d;background:#fff8e8;box-shadow:0 4px 12px #d29c3b12}
+.sg-badge.pending{opacity:.53;filter:grayscale(.85)}
+.sg-summary{background:#edf7fd;border-radius:13px;padding:13px 16px;margin-top:20px}.sg-summary strong{color:#153f67}.sg-summary p{margin:2px 0;font-size:13px;line-height:1.8}
+.sg-privacy{font-size:12px;color:#596f83;line-height:1.9}
+.sg-export{background:#eaf4ff;color:#11476e;border:1px solid #a3c5e3;border-radius:11px;min-height:42px;padding:9px 16px;font:850 13px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.sg-mini{font-size:12px;font-weight:850}
+@media(max-width:720px){body .global-score{top:99px;max-width:calc(100vw - 85px);font-size:11px;padding:6px 8px}.sg-hero{padding:14px}.sg-hero h2{font-size:18px}.sg-hero>strong{font-size:22px}.sg-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.sg-badges{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1460px){body .global-score{right:230px;left:auto;top:100px;border-radius:12px}.model-side-extras{gap:5px}.model-side-extras button,.model-side-extras a{padding:7px 8px;font-size:11px}}
+@media print{.global-score,.sg-export{display:none!important}}
