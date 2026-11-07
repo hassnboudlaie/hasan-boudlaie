@@ -10,12 +10,12 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
  for(const width of [390,1366]){
   const ctx=await browser.newContext({viewport:{width,height:850}}),page=await ctx.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  let gradeRows=[];
+  let gradeRows=[];const groupStages=Array.from({length:4},(_,i)=>({team_no:i+1,field_key:'stage',field_value:i+3,version:1,id:'stage-'+(i+1)}));
   const endpoint='**/functions/v1/alborz-workshop-sync';
   await page.route(endpoint,async route=>{
    const request=route.request().postDataJSON();
    if(request.action==='login')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({identity:{role:'teacher'},session:'mock-protected-session'})});
-   if(request.action==='teacher')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({records:gradeRows})});
+   if(request.action==='teacher')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({records:[...groupStages,...gradeRows]})});
    if(request.action==='grade'){
     const key=Object.keys(request.fields||{})[0],id=request.team+':'+key,old=gradeRows.find(x=>x.id===id);
     if((old?.version??0)!==(request.expected?.[key]??0))return route.fulfill({status:409,contentType:'application/json',body:'{"error":"conflict"}'});
@@ -43,6 +43,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no horizontal instructor overflow '+width);
   await page.locator('[data-teacher-tab="dashboard"]').click();
   assert.equal(await page.locator('.instructor-roadmap').count(),0,'switch to live view');
+  const groups=page.locator('#live-dashboard article.skill');assert.match(await groups.nth(0).innerText(),/شتر/,'group 1 starts Camel');assert.match(await groups.nth(1).innerText(),/ماهی آزاد/,'group 2 starts Salmon');assert.match(await groups.nth(2).innerText(),/آفتاب‌پرست/,'group 3 starts Chameleon');assert.match(await groups.nth(3).innerText(),/اختاپوس/,'group 4 starts Octopus');
   assert.equal(await page.locator('[data-batch-grade-input]').count(),10,'one compact score input per group');
   assert.equal(await page.locator('[data-score-round]').count(),5,'four missions plus scenario tab');
   assert.equal(await page.locator('[data-batch-grade-save]').count(),1,'one batch save control');
