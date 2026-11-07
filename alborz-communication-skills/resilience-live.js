@@ -8,7 +8,7 @@ const shared=/^(?:teamname|stage|r[0-3](?:pick|initial|revision|reveal|score[0-4
 const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fa=x=>Number(x).toLocaleString('fa-IR');
 const sessionKey='alborz-live-v4-session',draftKey='alborz-live-v3-drafts-'+W.group;
-const app=document.getElementById('app');let auth=null,records={},drafts={},timer,busy=false,generation=0,allRows=[],statusText='',statusBad=false,teacherMode='journey';
+const app=document.getElementById('app');let auth=null,records={},drafts={},timer,busy=false,generation=0,allRows=[],statusText='',statusBad=false,teacherMode='journey',gradeRound=0,gradeDrafts={};
 try{drafts=JSON.parse(sessionStorage.getItem(draftKey)||'{}');if(!drafts||typeof drafts!=='object'||Array.isArray(drafts))drafts={};}catch{drafts={};}
 function persistDrafts(){try{sessionStorage.setItem(draftKey,JSON.stringify(drafts));}catch{}}
 function message(text,bad=false){statusText=text;statusBad=bad;const e=document.getElementById('live-status');if(e){e.textContent=text;e.classList.toggle('warning',bad);}}
@@ -37,12 +37,59 @@ async function refresh(){if(!auth||busy||document.hidden)return;const gen=genera
 async function join(code){try{const d=await request({action:'login'},code);const identity=d.identity;if(teacher?identity.role!=='teacher':identity.role!=='team')throw Error('این کد برای این صفحه یا گروه نیست.');auth={...identity,code:d.session||code};generation++;busy=false;try{sessionStorage.setItem(sessionKey,JSON.stringify(auth));if(!teacher&&!localStorage.getItem('alborz-offline-backup-'+W.group))localStorage.setItem('alborz-offline-backup-'+W.group,JSON.stringify(W.read()));}catch{}if(!teacher&&identity.team!==W.group){location.replace('resilience.html?group='+identity.team);return;}mount();await refresh();clearInterval(timer);timer=setInterval(refresh,10000);}catch(e){message(e.message,true);}}
 async function logout(){try{await request({action:'logout'});}catch{}generation++;auth=null;records={};allRows=[];busy=false;clearInterval(timer);try{sessionStorage.removeItem(sessionKey);}catch{}mount();message('اتصال بسته شد؛ پیش‌نویس‌های ذخیره‌نشده در همین تب باقی می‌مانند.');}
 
-function achievedBadges(by){return W.catalog.badgeNames.map((name,i)=>{const grade=by['instructorScore'+i]?.field_value;const score=grade===undefined||grade===null||grade===''?null:Number(grade);const hasEvidence=!!String(by['r'+i+'initial']?.field_value||'').trim()&&!!String(by['r'+i+'revision']?.field_value||'').trim()&&!!String(by['r'+i+'evidence']?.field_value||'').trim();return {name,emoji:W.catalog.models[i][0],earned:score!==null&&Number.isFinite(score)&&score>=7&&hasEvidence,scored:score!==null};});}
-function badgeCards(items){return '<div class="earned-badges">'+items.map(x=>'<div class="earned-badge '+(x.earned?'earned':'pending')+'"><span>'+x.emoji+'</span><b>'+E(x.name)+'</b><small>'+(x.earned?'نشان کسب‌شده':x.scored?'شواهد یا امتیاز نیازمند تکمیل':'در انتظار امتیاز مدرس')+'</small></div>').join('')+'</div>';}
+
+function meaningful(x,min=20){return String(x??'').trim().length>=min;}
+function activityMetrics(by,i){
+ if(i===4){
+  const fields=['createdContext','createdChoice','createdEvent','createdDialogue','createdRevision'];
+  const checks=fields.map((k,j)=>({label:['تعریف موقعیت','تفکیک راهبردها','طراحی اتفاق','گفت‌وگوی نمونه','بازاندیشی و اصلاح'][j],ok:meaningful(by[k]?.field_value)}));
+  return {points:checks.filter(c=>c.ok).length*2,checks,earned:checks.every(c=>c.ok)};
+ }
+ const get=k=>by['r'+i+k]?.field_value;
+ const selected=get('pick'),picks=Array.isArray(selected)?selected:[];
+ const voices=Array.from({length:5},(_,j)=>get('member'+(j+1))).filter(x=>meaningful(x,12)).length;
+ const checks=[
+  {label:'انتخاب حداقل دو اقدام',ok:picks.length>=2},
+  {label:'تصمیم اولیه مستدل',ok:meaningful(get('initial'))},
+  {label:'بازنگری پس از رویداد',ok:get('reveal')===true&&meaningful(get('revision'))},
+  {label:'ثبت شاهد قابل بررسی',ok:meaningful(get('evidence'))},
+  {label:'مشارکت حداقل دو عضو',ok:voices>=2}
+ ];
+ return {points:checks.filter(c=>c.ok).length*2,checks,earned:checks.every(c=>c.ok)};
+}
+function achievedBadges(by){
+ return W.catalog.badgeNames.map((name,i)=>{
+  const m=activityMetrics(by,i),raw=by['instructorScore'+i]?.field_value;
+  const teacherScore=raw===null||raw===undefined||raw===''?null:Number(raw);
+  return {name,emoji:W.catalog.models[i][0],earned:m.earned,points:m.points,checks:m.checks,teacherScore:Number.isFinite(teacherScore)?teacherScore:null};
+ });
+}
+function badgeCards(items){
+ return '<div class="earned-badges">'+items.map(x=>
+  '<div class="earned-badge '+(x.earned?'earned':'pending')+'"><span>'+x.emoji+'</span><b>'+E(x.name)+'</b><small>فعالیت خودکار: '+fa(x.points)+' از ۱۰ · '+(x.earned?'نشان کسب‌شده':'در حال تکمیل')+'</small>'+
+  (x.teacherScore!==null?'<small>ارزیابی کیفی مدرس: '+fa(x.teacherScore)+' از ۱۰</small>':'')+
+  '<details><summary>معیارهای تکمیل</summary>'+x.checks.map(c=>'<p class="small">'+(c.ok?'✓ ':'○ ')+E(c.label)+'</p>').join('')+'</details></div>'
+ ).join('')+'</div>';
+}
+function batchScoreTable(groups){
+ const labels=['مأموریت ۱ · شتر','مأموریت ۲ · ماهی آزاد','مأموریت ۳ · آفتاب‌پرست','مأموریت ۴ · اختاپوس','سناریوسازی'];
+ const unsaved=Object.keys(gradeDrafts).filter(k=>k.endsWith(':'+gradeRound)).length;
+ return '<section class="panel fast-grade-panel"><h3>امتیازدهی سریع گروه‌ها</h3>'+
+ '<p>امتیاز فعالیت و نشان‌ها خودکار محاسبه می‌شوند. ارزیابی کیفی مدرس اختیاری و مستقل است؛ برای ثبت آن فقط یک بار در پایان هر مأموریت اقدام کنید.</p>'+
+ '<div class="fast-grade-rounds" role="group" aria-label="انتخاب مأموریت امتیازدهی">'+labels.map((label,i)=>
+ '<button type="button" class="btn '+(i===gradeRound?'primary':'')+'" data-score-round="'+i+'" aria-pressed="'+(i===gradeRound?'true':'false')+'">'+E(label)+'</button>').join('')+'</div>'+
+ '<div class="table-scroll"><table class="fast-grade-table"><thead><tr><th scope="col">گروه</th><th scope="col">فعالیت خودکار</th><th scope="col">امتیاز اختیاری مدرس /۱۰</th></tr></thead><tbody>'+
+ groups.map(g=>{const by=Object.fromEntries(g.rows.map(r=>[r.field_key,r])),key=g.team+':'+gradeRound,rec=by['instructorScore'+gradeRound],original=rec?.field_value??'',draft=gradeDrafts[key],score=activityMetrics(by,gradeRound);
+ return '<tr><th scope="row">'+fa(g.team)+' · '+E(by.teamname?.field_value||'')+'</th><td>'+fa(score.points)+' / ۱۰'+(score.earned?' ✓':'')+'</td><td>'+
+ '<input type="number" min="0" max="10" step="1" inputmode="numeric" aria-label="امتیاز کیفی گروه '+fa(g.team)+'" data-batch-grade-input="'+key+'" data-version="'+(draft?.version??rec?.version??0)+'" data-original="'+E(original)+'" value="'+E(draft?.value??original)+'"></td></tr>';}).join('')+
+ '</tbody></table></div><p class="small">امتیاز فعالیت، میزان تکمیل مراحل ثبت‌شده را نشان می‌دهد؛ کیفیت علمی تصمیم‌ها باید از روی شواهد و گفت‌وگو قضاوت شود.</p>'+
+ '<p id="pending-grade-count" class="small" role="status">'+fa(unsaved)+' تغییر کیفی ذخیره‌نشده در این مأموریت</p>'+
+ '<button class="btn primary" data-batch-grade-save="1">ثبت یکجای امتیازهای تغییرکرده</button></section>';
+}
 
 function instructorJourney(){const c=W.catalog,milestones=['تشخیص مسئله','توزیع پنج نقش','مذاکره و انتخاب کارت','اجرای گفت‌وگو','اتفاق غیرمنتظره','اصلاح تصمیم','بازخورد و امتیاز'];const e=E;
 return '<section class="instructor-roadmap"><div class="hero teacher-hero"><span>مسیر کامل مدرس · A تا Z</span><h2>چهار مأموریت، پنج نقش، یک تجربه یادگیری منسجم</h2><p>برای اجرای کلاس، از مرحله آغاز به ترتیب تا انتقال به کار حرکت کنید. تمام اطلاعات هر مأموریت، کارت‌ها، نکات گفت‌وگو و معیارهای بازخورد در همین صفحه در دسترس است.</p></div>'+
-'<div class="teacher-metrics"><span>۱۱ ساعت با استراحت</span><span>۱۰ گروه پنج‌نفره</span><span>۴ مأموریت مستقل</span><span>۵۰ امتیاز کل</span></div>'+
+'<div class="teacher-metrics"><span>۱۱ ساعت با استراحت</span><span>۱۰ گروه پنج‌نفره</span><span>۴ مأموریت مستقل</span><span>۴ نشان خودکار + ارزیابی اختیاری</span></div>'+
 '<h3>نقشه کامل اجرا</h3><div class="teacher-timeline">'+c.stages.map((x,i)=>'<div class="timeline-item"><strong>'+fa(i+1)+'. '+e(x[0])+'</strong><span>'+fa(x[1])+' دقیقه</span><p>'+e(x[2])+'</p></div>').join('')+'</div>'+
 '<p class="instructor-note">مجموع مراحل آموزشی ۶۳۵ دقیقه است؛ ۲۵ دقیقه استراحت بین مأموریت‌ها در نظر بگیرید. زمان‌بندی عملی با شرایط کلاس قابل تنظیم است.</p>'+
 '<h3>دسترسی به چهار مأموریت</h3><nav class="teacher-mission-nav">'+c.models.map((m,i)=>'<a href="#instructor-mission-'+i+'">'+m[0]+' '+e(m[1])+'</a>').join('')+'</nav>'+
@@ -54,24 +101,51 @@ c.missions.map((m,i)=>{const x=c.embedded[i],model=c.models[i];return '<details 
 '<h4>۴. گفت‌وگوی شروع</h4><div class="teacher-dialogue">'+m.dialog.map(t=>'<p>'+e(t)+'</p>').join('')+'</div>'+
 '<h4>۵. مدیریت خشم و جرأت‌ورزی</h4><div class="skill-layers"><div><b>تنظیم هیجان</b><p>'+e(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+e(x.assertion)+'</p></div></div><p><b>دور اول:</b> '+e(x.first)+'</p><p><b>پرسش مشاهده‌گر:</b> '+e(x.check)+'</p><p><b>دور دوم:</b> '+e(x.second)+'</p>'+
 '<h4>۶. کارت اتفاق و تغییر تصمیم</h4><div class="twist">'+e(m.shock)+'</div><p><b>چالش تکمیلی:</b> '+e(x.twist)+'</p>'+
-'<h4>۷. تحلیل و امتیاز</h4><ol>'+c.rubric.map(r=>'<li>'+e(r)+' (صفر، یک یا دو)</li>').join('')+'</ol><p>هر معیار با شواهد رفتاری ارزیابی می‌شود. نشان «'+e(c.badgeNames[i])+'» پس از امتیاز نهایی حداقل ۷ از ۱۰ و ثبت تصمیم اصلاح‌شده و شواهد توسط مدرس تأیید می‌شود.</p>'+
+'<h4>۷. تحلیل و امتیاز</h4><ol>'+c.rubric.map(r=>'<li>'+e(r)+' (صفر، یک یا دو)</li>').join('')+'</ol><p>هر معیار با شواهد رفتاری ارزیابی می‌شود. نشان «'+e(c.badgeNames[i])+'» به‌صورت خودکار با تکمیل پنج معیار فعالیت مشترک فعال می‌شود. امتیاز کیفی مدرس مستقل و اختیاری است.</p>'+
 '<div class="teacher-run"><b>ریتم پیشنهادی</b><p>۱۰ دقیقه Briefing · ۱۲ دقیقه تقسیم نقش و خواندن شواهد · ۱۵ دقیقه تصمیم با بودجه · ۲۰ دقیقه دو دور گفت‌وگو · ۸ دقیقه اتفاق جدید · ۱۵ دقیقه تحلیل و بازخورد · '+fa(c.missionTime[i]-80)+' دقیقه جمع‌بندی و ثبت.</p></div></div></details>';}).join('')+
-'<section class="panel"><h3>۸. طراحی سناریو توسط گروه‌ها</h3><p>هر گروه پس از تمرین چهار استراتژی، یک سناریو طراحی و با گروه دیگر مبادله می‌کند. در دور پنجم نقش‌ها یک خانه جابه‌جا می‌شوند تا همه اعضا هر پنج نقش را تجربه کرده باشند.</p><h3>۹. شورای تصمیم</h3><p>گروه‌ها تصمیم اولیه، اتفاق غیرمنتظره، اصلاح تصمیم و شاهد رفتاری خود را ارائه می‌کنند؛ مدرس امتیازهای معتبر را در داشبورد زنده تأیید می‌کند.</p><h3>۱۰. انتقال به کار</h3><p>پس‌سنجی فردی، مرور شواهد، یک اقدام مشخص، زمان اجرا و فرد حامی تعیین می‌شود. این بخش سنجش مستقیم عملکرد شغلی نیست.</p><p><b>نکته ایمنی:</b> فقط از پرونده‌های فرضی استفاده کنید؛ شماره پرونده و اطلاعات محرمانه مشتری نباید وارد سامانه شود.</p></section></section>';
+'<section class="panel"><h3>۸. طراحی سناریو توسط گروه‌ها</h3><p>هر گروه پس از تمرین چهار استراتژی، یک سناریو طراحی و با گروه دیگر مبادله می‌کند. در دور پنجم نقش‌ها یک خانه جابه‌جا می‌شوند تا همه اعضا هر پنج نقش را تجربه کرده باشند.</p><h3>۹. شورای تصمیم</h3><p>گروه‌ها تصمیم اولیه، اتفاق غیرمنتظره، اصلاح تصمیم و شاهد رفتاری خود را ارائه می‌کنند؛ مدرس می‌تواند امتیاز کیفی اختیاری را یکجا در جدول گروه‌ها ثبت کند.</p><h3>۱۰. انتقال به کار</h3><p>پس‌سنجی فردی، مرور شواهد، یک اقدام مشخص، زمان اجرا و فرد حامی تعیین می‌شود. این بخش سنجش مستقیم عملکرد شغلی نیست.</p><p><b>نکته ایمنی:</b> فقط از پرونده‌های فرضی استفاده کنید؛ شماره پرونده و اطلاعات محرمانه مشتری نباید وارد سامانه شود.</p></section></section>';
 }
 
 function showTeacher(){const el=document.getElementById('live-dashboard');if(!el)return;
 for(const b of app.querySelectorAll('[data-teacher-tab]')){const selected=b.dataset.teacherTab===teacherMode;b.classList.toggle('primary',selected);b.setAttribute('aria-pressed',String(selected));}
 if(teacherMode==='journey'){if(!el.querySelector('.instructor-roadmap'))el.innerHTML=instructorJourney();return;}const open=[...el.querySelectorAll('details[open]')].map(x=>x.dataset.team);const focus=document.activeElement;if(el.contains(focus)&&focus.matches('input'))return;
  const groups=Array.from({length:10},(_,i)=>({team:i+1,rows:allRows.filter(r=>r.team_no===i+1)}));
- el.innerHTML=`<p><b>${fa(groups.filter(g=>g.rows.length).length)}</b> گروه دارای ثبت · ${fa(allRows.filter(r=>/^r[0-3]member/.test(r.field_key)&&r.field_value).length)} مشارکت در مأموریت‌ها</p><div class="grid">${groups.map(g=>{const by=Object.fromEntries(g.rows.map(r=>[r.field_key,r]));return `<article class="skill"><h3>گروه ${fa(g.team)} · ${E(by.teamname?.field_value||'')}</h3><p>مرحله اعلام‌شده: ${by.stage?fa(Number(by.stage.field_value)+1):'ثبت نشده'}</p><p>تصمیم اولیه: ${fa([0,1,2,3].filter(i=>by['r'+i+'initial']?.field_value).length)} از ۴ · اصلاح تصمیم: ${fa([0,1,2,3].filter(i=>by['r'+i+'revision']?.field_value).length)} از ۴</p><details data-team="${g.team}" ${open.includes(String(g.team))?'open':''}><summary>مشاهده تصمیم‌ها و مشارکت اعضا</summary>${[0,1,2,3].map(i=>`<h4>مأموریت ${fa(i+1)}</h4>${[1,2,3,4,5].map(j=>`<p><b>عضو ${fa(j)}:</b> ${E(by['r'+i+'member'+j]?.field_value||'—')}</p>`).join('')}<p><b>تصمیم:</b> ${E(by['r'+i+'initial']?.field_value||'—')}</p><p><b>اصلاح:</b> ${E(by['r'+i+'revision']?.field_value||'—')}</p><p><b>شواهد:</b> ${E(by['r'+i+'evidence']?.field_value||'—')}</p>`).join('')}</details><details><summary>امتیازهای تأییدشده مدرس</summary>${[0,1,2,3,4].map(i=>`<label class="field"><span>${i===4?'سناریوسازی':'دور '+fa(i+1)} · از ۱۰</span><input type="number" min="0" max="10" step="1" data-grade="${g.team}:${i}" data-version="${by['instructorScore'+i]?.version??0}" value="${E(by['instructorScore'+i]?.field_value??'')}"></label><button class="btn" data-grade-save="${g.team}:${i}">ثبت امتیاز</button>`).join('')}</details><p><b>مجموع:</b> ${[0,1,2,3,4].every(i=>by['instructorScore'+i])?fa([0,1,2,3,4].reduce((sum,i)=>sum+Number(by['instructorScore'+i].field_value),0))+' از ۵۰':'ارزیابی کامل نشده'}</p>${badgeCards(achievedBadges(by))}</article>`;}).join('')}</div>`;
+ el.innerHTML=`${batchScoreTable(groups)}<p><b>${fa(groups.filter(g=>g.rows.length).length)}</b> گروه دارای ثبت · ${fa(allRows.filter(r=>/^r[0-3]member/.test(r.field_key)&&r.field_value).length)} مشارکت در مأموریت‌ها</p><div class="grid">${groups.map(g=>{const by=Object.fromEntries(g.rows.map(r=>[r.field_key,r]));return `<article class="skill"><h3>گروه ${fa(g.team)} · ${E(by.teamname?.field_value||'')}</h3><p>مرحله اعلام‌شده: ${by.stage?fa(Number(by.stage.field_value)+1):'ثبت نشده'}</p><p>تصمیم اولیه: ${fa([0,1,2,3].filter(i=>by['r'+i+'initial']?.field_value).length)} از ۴ · اصلاح تصمیم: ${fa([0,1,2,3].filter(i=>by['r'+i+'revision']?.field_value).length)} از ۴</p><details data-team="${g.team}" ${open.includes(String(g.team))?'open':''}><summary>مشاهده تصمیم‌ها و مشارکت اعضا</summary>${[0,1,2,3].map(i=>`<h4>مأموریت ${fa(i+1)}</h4>${[1,2,3,4,5].map(j=>`<p><b>عضو ${fa(j)}:</b> ${E(by['r'+i+'member'+j]?.field_value||'—')}</p>`).join('')}<p><b>تصمیم:</b> ${E(by['r'+i+'initial']?.field_value||'—')}</p><p><b>اصلاح:</b> ${E(by['r'+i+'revision']?.field_value||'—')}</p><p><b>شواهد:</b> ${E(by['r'+i+'evidence']?.field_value||'—')}</p>`).join('')}</details><p class="small">امتیازهای کیفی اختیاری این گروه در جدول یکپارچه بالا ثبت می‌شود.</p>${badgeCards(achievedBadges(by))}</article>`;}).join('')}</div>`;
 }
 async function publish(k){if(!auth||teacher)return;const value=drafts[k]?.value??W.read()[k]??'';if(!drafts[k])draft(k,value);const entry={...drafts[k]},gen=generation;try{const d=await request({action:'write',team:auth.team,fields:{[k]:entry.value},expected:{[k]:entry.base}});if(gen!==generation)return;for(const r of d.records)records[r.field_key]=r;if(JSON.stringify(drafts[k]?.value)===JSON.stringify(entry.value))delete drafts[k];else if(drafts[k])drafts[k].base=d.records[0].version;persistDrafts();document.getElementById('conflict-'+k)?.remove();message('با گروه به اشتراک گذاشته شد ✓');await refresh();}catch(e){if(gen!==generation)return;if(e.status===409){await refresh();conflict(k);}else message('ذخیره انجام نشد؛ پیش‌نویس حفظ شد. '+e.message,true);}}
 function conflict(k){let el=document.getElementById('conflict-'+k);if(!el){el=document.createElement('div');el.id='conflict-'+k;el.className='twist';app.querySelector('[data-live-save="'+k+'"]')?.after(el);}el.innerHTML=`<b>تعارض ویرایش؛ متن شما حذف نشده است</b><p>نسخه تازه گروه: <span style="white-space:pre-wrap">${E(records[k]?.field_value??'')}</span></p><p>پیش‌نویس شما: <span style="white-space:pre-wrap">${E(typeof drafts[k]?.value==='string'?drafts[k].value:JSON.stringify(drafts[k]?.value))}</span></p><button class="btn" data-resolve="server:${k}">پذیرش نسخه گروه</button> <button class="btn" data-resolve="draft:${k}">نسخه گروه را دیدم؛ ادامه با پیش‌نویس من</button>`;message('تعارض ویرایش را بررسی کنید؛ هیچ بازنویسی خودکار انجام نشد.',true);}
 window.addEventListener('alborz:render',mount);
-app.addEventListener('input',e=>{const k=e.target.dataset.field||e.target.dataset.memberKey;if(k)draft(k,e.target.value);});
+app.addEventListener('input',e=>{
+ const t=e.target,k=t.dataset.field||t.dataset.memberKey;
+ if(k)draft(k,t.value);
+ if(t.dataset.batchGradeInput){
+  const id=t.dataset.batchGradeInput;
+  if(t.value===t.dataset.original)delete gradeDrafts[id];
+  else gradeDrafts[id]={value:t.value,version:Number(t.dataset.version)||0};
+  const pending=document.getElementById('pending-grade-count');
+  if(pending)pending.textContent=fa(Object.keys(gradeDrafts).filter(x=>x.endsWith(':'+gradeRound)).length)+' تغییر کیفی ذخیره‌نشده در این مأموریت';
+ }
+});
 app.addEventListener('change',e=>{const t=e.target;if(t.dataset.field)draft(t.dataset.field,t.value);if(t.dataset.pick)draft('r'+t.dataset.pick.split(':')[0]+'pick',W.read()['r'+t.dataset.pick.split(':')[0]+'pick']);});
 app.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.teacherTab&&auth?.role==='teacher'){teacherMode=b.dataset.teacherTab;showTeacher();return;}
+ if(b.dataset.scoreRound!==undefined&&auth?.role==='teacher'){gradeRound=Number(b.dataset.scoreRound);showTeacher();return;}
+ if(b.dataset.batchGradeSave&&auth?.role==='teacher'){
+  const pending=Object.entries(gradeDrafts).filter(([key])=>key.endsWith(':'+gradeRound));
+  if(!pending.length){message('در این مأموریت امتیاز تغییری نکرده است.');return;}
+  for(const [key,item] of pending)if(item.value===''||!Number.isInteger(Number(item.value))||Number(item.value)<0||Number(item.value)>10){message('امتیازهای اختیاری باید عدد صحیح صفر تا ۱۰ باشند؛ کادر نامعتبر را اصلاح کنید.',true);return;}
+  b.disabled=true;let saved=0;const failures=[];
+  try{
+   for(const [key,item] of pending){
+    const [team,i]=key.split(':').map(Number);
+    try{await request({action:'grade',team,fields:{['instructorScore'+i]:Number(item.value)},expected:{['instructorScore'+i]:item.version}});delete gradeDrafts[key];saved++;}
+    catch(err){failures.push('گروه '+fa(team)+': '+err.message);}
+   }
+   await refresh();
+   message(failures.length?'امتیاز '+fa(saved)+' گروه ثبت شد؛ '+fa(failures.length)+' ثبت ناموفق. '+failures.join('، '):'امتیازهای کیفی '+fa(saved)+' گروه با موفقیت ثبت شدند.',!!failures.length);
+  }finally{b.disabled=false;}
+  return;
+ }
  if(b.id==='live-join'){b.disabled=true;await join(document.getElementById('live-code').value.trim().replace(/[۰-۹٠-٩]/g,c=>String(c.charCodeAt(0)-(c.charCodeAt(0)>=1776?1776:1632))).toLowerCase());b.disabled=false;}
  if(b.id==='live-logout')logout();
  if(b.id==='live-stage'){draft('stage',W.step);await publish('stage');}

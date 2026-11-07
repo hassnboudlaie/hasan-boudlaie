@@ -77,3 +77,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .earned-badge.earned{border-color:#c39a46;background:linear-gradient(140deg,#ffefc1,#fff8e7);box-shadow:0 3px 15px rgba(141,99,24,.13)}
 .earned-badge.earned>b{color:#80521d}
 @media(max-width:720px){.earned-badges{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Fast scoring: an at-a-glance teacher workspace; no extra per-group navigation. */
+.fast-grade-panel{background:#fbfdfb;border:2px solid #c9e0d4}
+.fast-grade-panel>p{max-width:900px;font-size:16px;color:var(--muted)}
+.fast-grade-rounds{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 17px}
+.fast-grade-rounds .btn{font-size:15px;min-height:42px;padding:7px 13px}
+.fast-grade-table{width:100%;border-collapse:collapse;font-size:16px}
+.fast-grade-table th,.fast-grade-table td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}
+.fast-grade-table thead{background:#e9f2ed}
+.fast-grade-table tbody tr:nth-child(2n){background:#f4f8f5}
+.fast-grade-table input{display:block;width:90px;max-width:100%;height:43px;padding:5px 9px;border:1px solid #a9c7b8;border-radius:10px;background:white;color:var(--text);direction:ltr;text-align:center}
+.earned-badge details{margin-top:6px;font-size:13px}
+.earned-badge details summary{cursor:pointer}
+.earned-badge details p{margin:3px 0;text-align:right}
+.earned-badge small{display:block;line-height:1.6}
+@media(max-width:600px){.fast-grade-rounds{flex-wrap:nowrap;overflow-x:auto}.fast-grade-rounds .btn{white-space:nowrap}.fast-grade-table{min-width:510px}.fast-grade-panel{padding:14px}.fast-grade-table th,.fast-grade-table td{padding:7px}}
