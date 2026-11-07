@@ -5,7 +5,13 @@ const home=r('app/index.html'),course=r('reflective-app.js'),studio=r('leadershi
 for(const [name,script] of [['course',course],['PWA',app],['studio',studio.match(/<script>([\s\S]+?)<\/script>/)?.[1]],['commercial',ui],['coach',coach]]){assert.ok(script,'script '+name+' exists');new vm.Script(script,{filename:name+'.js'});}
 const tiles=[...home.matchAll(/class="saba-home-tile" data-go="([^"]+)"/g)].map(m=>m[1]);
 assert.deepEqual(tiles,['context','lesson/5/mix','lesson/7/perspectives','lesson/8/design'],'only the four components of Trost Fig 5.1 are first-level model actions');
-assert.match(home,/saba-reflection-band/,'reflection is cross-cutting rather than stage two');
+assert.match(home,/class="saba-model-loop"/,'reflection and all four main stages belong to one model container');
+assert.match(home,/<button type="button" class="saba-reflection-band" data-go="studio\/daily"/,'continuous reflection is a primary clickable model element');
+const rail=home.match(/<aside id="modelSideNav"[\s\S]*?<\/aside>/)?.[0]||'';
+assert.deepEqual([...rail.matchAll(/data-go="([^"]+)"/g)].map(m=>m[1]),[...tiles,'studio/daily'],'right rail repeats the four exact model paths and continuous reflection, with no extra model modules');
+assert.match(home,/id="modelNavToggle"/,'right model drawer toggle on narrow screens');
+assert.match(app,/function setModelNavOpen/,'drawer open/close controls are wired');
+assert.match(app,/function highlightModelNav/,'current book model section is highlighted');
 assert.match(home,/id="futureCoachEntry"/,'case remains accessible as companion utility');
 assert.equal([...home.matchAll(/data-nav="/g)].length,3,'three utility tabs do not reproduce four different primary stages');
 const extra=home.match(/<div class="saba-more-actions">([\s\S]*?)<\/div>/)?.[1]||'';
@@ -19,5 +25,5 @@ assert.doesNotMatch(studio,/var central=null;try\{var raw=JSON\.parse/,'case ana
 assert.match(ui,/contextId:currentTeamId\(\)/,'fast case creation links to base team');
 assert.match(coach,/contextId:v.context/,'coach handoff links to selected base team');
 assert.match(app,/function syncCoachTeams/,'PWA coach draws from canonical team list');
-assert.match(r('app/sw.js'),/shell-v13/,'new PWA shell cache version');
+assert.match(r('app/sw.js'),/shell-v14/,'new PWA shell cache version');
 console.log('PASS: book Fig. 5.1 IA, stable baseline, per-case exception separation, single context source, simplified labels, routes and script syntax');

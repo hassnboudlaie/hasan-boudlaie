@@ -58,11 +58,34 @@ var current=sel.dataset.boundToBase==='yes'?sel.value:'',preferred='';try{var d=
 sel.innerHTML=teams.filter(function(c){return /^[-a-z0-9_]{1,40}$/.test(c.id||'')}).map(function(c){return '<option value="'+escapeText(c.id)+'">'+escapeText(c.name||'تیم')+'</option>'}).join('');
 sel.dataset.boundToBase='yes';var valid=function(id){return Array.from(sel.options).some(function(o){return o.value===id})};sel.value=valid(current)?current:valid(preferred)?preferred:valid(raw&&raw.activeContext)?raw.activeContext:(sel.options[0]&&sel.options[0].value||'');
 }
-function render(){var r=route();document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");document.querySelectorAll(".bottom-nav button").forEach(function(b){b.classList.toggle("active",b.dataset.nav===(r.page==="reader"||r.page==="session"?"course":r.page==="studio"?"studio/daily":r.page))});if(r.page==="home")renderHome();if(r.page==="coach")syncCoachTeams();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
+function setModelNavOpen(open,restoreFocus){
+ var button=E("modelNavToggle"),scrim=E("modelNavScrim");
+ document.body.classList.toggle("model-nav-open",!!open);
+ if(button)button.setAttribute("aria-expanded",open?"true":"false");
+ if(scrim)scrim.hidden=!open;
+ if(open){E("modelNavClose").focus();}
+ else if(restoreFocus&&button)button.focus();
+}
+function highlightModelNav(r){
+ var active=r.page==="context"?"context":
+ (r.page==="reader"&&r.s===5&&r.p==="mix")?"idea":
+ (r.page==="reader"&&r.s===7&&r.p==="perspectives")?"relationship":
+ (r.page==="reader"&&r.s===8&&r.p==="design")?"tools":
+ (r.page==="studio"&&r.tab==="daily")?"reflection":"";
+ document.querySelectorAll("[data-model-nav]").forEach(function(button){
+  if(button.dataset.modelNav===active)button.setAttribute("aria-current","page");
+  else button.removeAttribute("aria-current");
+ });
+}
+E("modelNavToggle").addEventListener("click",function(){setModelNavOpen(!document.body.classList.contains("model-nav-open"));});
+E("modelNavClose").addEventListener("click",function(){setModelNavOpen(false,true);});
+E("modelNavScrim").addEventListener("click",function(){setModelNavOpen(false,true);});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("model-nav-open"))setModelNavOpen(false,true);});
+function render(){var r=route();if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);highlightModelNav(r);document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");document.querySelectorAll(".bottom-nav button").forEach(function(b){b.classList.toggle("active",b.dataset.nav===(r.page==="reader"||r.page==="session"?"course":r.page==="studio"?"studio/daily":r.page))});if(r.page==="home")renderHome();if(r.page==="coach")syncCoachTeams();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
 courseFrame.addEventListener("load",function(){courseReady=true;try{courseLast=courseFrame.contentWindow.location.href}catch(e){}injectCourseStyles();E("courseLoader").hidden=true});
 studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=studioFrame.contentWindow.location.href}catch(e){}E("studioLoader").hidden=true});
 document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.nav)})});
-document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.go)})});
+document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);go(b.dataset.go)})});
 E("futureCoachEntry").addEventListener("click",function(){go("coach")});
 E("futureCoachBack").addEventListener("click",function(){go("home")});
 E("resume").addEventListener("click",function(){var l=latest();openLesson(l.s,l.p)});
