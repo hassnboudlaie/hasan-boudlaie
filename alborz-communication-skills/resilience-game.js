@@ -1,6 +1,8 @@
 'use strict';
 (()=>{
 const app=document.getElementById('app'), P=new URLSearchParams(location.search);
+// Previously shared bare entry links now enter the same instructor-led workflow.
+if(!P.has('classroom')&&!P.has('group')&&!P.has('step')&&!P.has('mission')&&!P.has('offline')&&!P.has('legacy')){const p=new URLSearchParams(P);p.set('classroom','1');location.replace('resilience.html?'+p.toString());return;}
 const g=/^(?:[1-9]|10)$/.test(P.get('group'))?Number(P.get('group')):0;
 const step=Math.max(0,Math.min(9,Number(P.get('step'))||0));
 const fa=n=>Number(n).toLocaleString('fa-IR');
