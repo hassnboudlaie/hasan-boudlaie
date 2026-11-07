@@ -36,7 +36,20 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.getByText('نمایش درشت و مرحله‌ای', {exact:false}).count(), 0);
     assert.equal(await page.getByText('Presentation Mode', {exact:false}).count(), 0);
     assert.equal(await page.getByText('برنامه هشت‌ساعته', {exact:true}).count(), 0);
-    assert.equal(await page.getByText('برنامه کامل ۱۱ ساعته', {exact:true}).count(), 1);
+    assert.equal(await page.getByText('کنداکتور برنامه', {exact:true}).count(), 1);
+    assert.equal(await page.locator('.workshop-hero .strategy-card[data-strategy]').count(), 4, 'four clickable animal strategy cards');
+    for (const animal of ['camel', 'salmon', 'chameleon', 'octopus']) {
+      await page.locator('.workshop-hero .strategy-card[data-strategy="' + animal + '"]').click();
+      const modal = page.locator('dialog.alborz-strategy-dialog');
+      assert.equal(await modal.isVisible(), true, 'animal opens its own strategy details');
+      await modal.getByRole('tab', {name:'درس‌نامه'}).click();
+      assert.equal(await modal.getByText('۱. مفهوم و منطق راهبرد').count(), 1, 'numbered lesson opens');
+      await modal.getByRole('tab', {name:'اجرای مأموریت'}).click();
+      assert.equal(await modal.locator('a.sd-action[href*="mission=' + animal + '"]').count(), 1,
+        'instructor mission link targets matching animal strategy');
+      await modal.locator('[data-close-strategy]').click();
+      assert.equal(await modal.isVisible(), false);
+    }
     assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 0);
     assert.equal(await page.locator('.mod-art').count(), 3,'three photographic module cards');
     assert(await page.locator('.mod-art').first().evaluate(img=>img.complete&&img.naturalWidth>0),'module editorial photograph must load');
