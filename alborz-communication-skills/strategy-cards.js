@@ -87,10 +87,13 @@ function lesson(x){
 function mission(x){
  return section('مأموریت '+esc(x.n)+' · '+esc(x.name),'<p><strong>'+esc(x.mission)+'</strong></p><p>'+esc(x.example)+'</p>','sd-soft')
  +section('مسیر اجرای کارگاه','<ol class="sd-list"><li>مسئله و داده‌های پرونده فرضی را بخوانید.</li><li>نقش‌های گروه را تقسیم و تصمیم اولیه را ثبت کنید.</li><li>گفت‌وگو را اجرا کنید و با اتفاق غیرمنتظره روبه‌رو شوید.</li><li>تصمیم را بازنگری کنید؛ مشاهده‌گر شواهد رفتاری را ثبت کند.</li><li>مدرس تحلیل و بازخورد گروه‌ها را تسهیل کند.</li></ol>')
- +section('ورود به محیط عملیاتی مأموریت','<p>ورود مدرس به راهنمای اجرای مأموریت و داشبورد زنده از مسیر امن موجود انجام می‌شود.</p>'
- +'<a class="sd-action" href="./resilience.html?teacher=1&amp;mission='+encodeURIComponent(chosen)+'">ورود مدرس به مأموریت '+esc(x.name)+' ←</a>'
- +'<a class="sd-secondary" href="./resilience.html">ورود شرکت‌کنندگان به کارگاه گروهی</a>'
- +'<p class="sd-small">برای دسترسی مدرس، کد اختصاصی مدرس لازم است. مأموریت‌ها برای گروه‌ها به هر ترتیب قابل انتخاب هستند؛ اطلاعات گروه‌ها و PINها تغییر نمی‌کنند.</p>','sd-gold');
+ +section('ورود به سناریوی «'+esc(x.mission)+'»',
+  '<p>برای اجرای همین سناریو، مطابق نقش خود وارد شوید. هر دو مسیر از سیستم ورود امن فعلی استفاده می‌کنند؛ گروه کارشناسان پس از ورود با PIN اختصاصی به سناریوی انتخاب‌شده هدایت می‌شود.</p>'
+  +'<div class="sd-entry-grid">'
+  +'<a class="sd-entry-card sd-entry-participant" href="./resilience.html?mission='+encodeURIComponent(chosen)+'"><span class="sd-entry-eyebrow">ویژه کارشناسان خسارت</span><strong>ورود کارشناسان به سناریو</strong><span class="sd-entry-scenario">'+esc(x.mission)+'</span><small>ورود با PIN اختصاصی ۸ رقمی · گروه و عضو به‌صورت خودکار مشخص می‌شوند</small></a>'
+  +'<a class="sd-entry-card sd-entry-teacher" href="./resilience.html?teacher=1&amp;mission='+encodeURIComponent(chosen)+'"><span class="sd-entry-eyebrow">ویژه مدرس کارگاه</span><strong>ورود مدرس به سناریوی «'+esc(x.mission)+'»</strong><small>ورود با کد اختصاصی مدرس · راهنمای اجرای همین سناریو و داشبورد زنده</small></a>'
+  +'</div>'
+  +'<p class="sd-small">هر گروه می‌تواند مأموریت‌ها را به ترتیب دلخواه انجام دهد؛ انتخاب این سناریو، دسترسی به سه سناریوی دیگر را محدود نمی‌کند. داده‌ها، PINها و همگام‌سازی گروه‌ها بدون تغییر می‌مانند.</p>','sd-gold');
 }
 function render(){
  const x=strategies[chosen];

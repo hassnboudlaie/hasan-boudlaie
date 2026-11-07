@@ -54,3 +54,16 @@
  .alborz-strategy-dialog .sd-two{grid-template-columns:1fr}
  .alborz-strategy-dialog .sd-section p,.alborz-strategy-dialog .sd-section li{font-size:16px}
 }
+
+/* Mission entry is role-specific and preserves the selected strategy. */
+.alborz-strategy-dialog .sd-entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:17px}
+.alborz-strategy-dialog .sd-entry-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;text-decoration:none;border-radius:17px;padding:20px;border:2px solid #bbd8c7;background:#f1f8f2;color:#113f31;transition:transform .17s,border-color .17s,box-shadow .17s}
+.alborz-strategy-dialog .sd-entry-card:hover{transform:translateY(-3px);border-color:#3c8767;box-shadow:0 8px 22px #00412c22}
+.alborz-strategy-dialog .sd-entry-card:focus-visible{outline:3px solid #d4a340;outline-offset:3px}
+.alborz-strategy-dialog .sd-entry-teacher{background:#f7efe0;border-color:#e7c994;color:#573d1f}
+.alborz-strategy-dialog .sd-entry-teacher:hover{border-color:#b88a43}
+.alborz-strategy-dialog .sd-entry-eyebrow{font-size:14px;font-weight:800;opacity:.85}
+.alborz-strategy-dialog .sd-entry-card strong{font-size:clamp(18px,2.3vw,22px);font-weight:900;line-height:1.7}
+.alborz-strategy-dialog .sd-entry-scenario{font-size:16px;font-weight:800;line-height:1.65}
+.alborz-strategy-dialog .sd-entry-card small{font-size:14px;line-height:1.9;color:inherit;opacity:.85}
+@media(max-width:650px){.alborz-strategy-dialog .sd-entry-grid{grid-template-columns:1fr}.alborz-strategy-dialog .sd-entry-card{padding:17px 19px}.alborz-strategy-dialog .sd-entry-card strong{font-size:20px}}

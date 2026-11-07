@@ -45,14 +45,36 @@ const server = http.createServer((req, res) => {
       await modal.getByRole('tab', {name:'درس‌نامه'}).click();
       assert.equal(await modal.getByText('۱. مفهوم و منطق راهبرد').count(), 1, 'numbered lesson opens');
       await modal.getByRole('tab', {name:'اجرای مأموریت'}).click();
-      assert.equal(await modal.locator('a.sd-action[href*="mission=' + animal + '"]').count(), 1,
-        'instructor mission link targets matching animal strategy');
+      const teacherEntry = modal.locator('a.sd-entry-teacher[href*="teacher=1"][href*="mission=' + animal + '"]');
+      const expertEntry = modal.locator('a.sd-entry-participant[href*="mission=' + animal + '"]');
+      assert.equal(await teacherEntry.count(), 1, 'instructor entry matches chosen strategy');
+      assert.equal(await expertEntry.count(), 1, 'expert entry matches chosen strategy');
+      assert.match(await teacherEntry.innerText(), /سناریوی «.+»/, 'teacher button uses actual scenario title');
+      assert.equal(await expertEntry.getAttribute('href'), './resilience.html?mission=' + animal,
+        'expert preserves chosen scenario through PIN login');
       await modal.locator('[data-close-strategy]').click();
       assert.equal(await modal.isVisible(), false);
     }
     assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 0);
-    assert.equal(await page.locator('.mod-art').count(), 3,'three photographic module cards');
-    assert(await page.locator('.mod-art').first().evaluate(img=>img.complete&&img.naturalWidth>0),'module editorial photograph must load');
+    assert.equal(await page.locator('.mod-art').count(), 0, 'old three-module cards removed from homepage');
+    assert.equal(await page.locator('section.grid3[aria-label="بخش‌های کارگاه"]').count(), 0,
+      'all course entry is through the four strategies');
+    assert.equal(await page.locator('.workshop-hero .strategy-card').count(), 4,
+      'only four strategy cards remain');
+    await page.route('**/functions/v1/alborz-workshop-sync', async route => {
+      const payload = route.request().postDataJSON();
+      const body = payload.action === 'login'
+        ? {identity:{role:'team',team:7,member:4},session:'mock-session'}
+        : {records:[]};
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+    });
+    await page.goto(base + 'resilience.html?mission=camel', {waitUntil:'load'});
+    await page.locator('#live-code').fill('12345678');
+    await page.locator('#live-join').click();
+    await page.waitForURL('**/resilience.html?group=7&step=3&mission=camel', {timeout: 9000});
+    assert.match(await page.locator('h1').innerText(), /شتر/,
+      'expert PIN login routes to selected camel scenario and correct group');
+    await page.goto(base + 'claims-workshop-v2.html', {waitUntil:'load'});
     await page.locator('a[href="./claims-presentation.html"]').click();
     await page.locator('#slide h2').waitFor();
     assert.equal(await page.getByText('مسیر آموزش').count(), 0);
@@ -118,7 +140,7 @@ const server = http.createServer((req, res) => {
     await page.locator('#slide h2').waitFor();
     assert.match(await page.locator('#source-status').innerText(), /نسخه ذخیره‌شده/);
     assert.equal(errors.length, 0, 'no uncaught browser errors: ' + errors.join('; '));
-    console.log('PASS EDITORIAL presentation width=' + width + ' RTL, approved poster/assets, 3 modules, narrative, 4-strategy matrix, deferred answer reasoning, debrief, lecturer notes, offline cache, integration');
+    console.log('PASS 4-STRATEGY ENTRY + EDITORIAL presentation width=' + width + ' RTL, approved poster/assets, 3 modules, narrative, 4-strategy matrix, deferred answer reasoning, debrief, lecturer notes, offline cache, integration');
     await ctx.close();
   }
   await browser.close();
