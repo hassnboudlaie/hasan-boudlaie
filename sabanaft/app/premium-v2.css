@@ -1,0 +1,223 @@
+/* صبا نفت — یکپارچه‌سازی بصری موبایل‌محور | طراحی مرحله‌ای، ویرایش ۱۴۰۵/۰۸/۱۶
+   فقط Presentation / Navigation؛ هیچ داده یا منطق امتیازدهی را تغییر نمی‌دهد. */
+:root{--blue:#1e527c;--deep:#12304e;--orange:#c98242;--ink:#192f47;--muted:#536c80;--bg:#f4f7fa;--line:#dae5ee;--radius:18px;--shadow:0 9px 27px rgba(14,47,76,.06)}
+html{scroll-padding-top:88px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font:18px/1.85 Vazirmatn,Tahoma,sans-serif!important;color:#192f47;background:#f4f7fa}
+button,input,select,textarea{font-family:Vazirmatn,Tahoma,sans-serif!important;font-size:17px}
+button,a{transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #da9b5c!important;outline-offset:3px}
+.app-shell{max-width:1040px;padding:0 clamp(15px,3vw,26px) 65px;min-height:100dvh}
+.topbar,body.saba-home .topbar{position:sticky!important;inset:auto!important;top:0!important;z-index:65!important;display:flex!important;align-items:center;gap:12px;height:auto!important;min-height:78px!important;padding:11px clamp(13px,3vw,24px)!important;margin:0!important;background:rgba(255,255,255,.97)!important;border:0!important;border-bottom:1px solid #dee7ee!important;box-shadow:0 4px 17px rgba(13,43,69,.035)!important;color:#183c5a!important;backdrop-filter:blur(16px)}
+body.saba-home .topbar .brand span{display:block!important}
+.brand,body.saba-home .topbar .brand{display:flex;align-items:center;gap:10px!important;min-width:0;flex:1;justify-content:flex-start}
+.brand img,body.saba-home .topbar .brand img{width:56px!important;height:52px!important;flex:0 0 56px;object-fit:contain!important;padding:4px!important;background:#fff!important;border:1px solid #e7edf2;border-radius:13px;box-shadow:none!important}
+.brand span,body.saba-home .topbar .brand span{border:0!important;padding:0!important;min-width:0}
+.brand strong,body.saba-home .topbar .brand strong{font-size:clamp(17px,2.1vw,21px)!important;line-height:1.6!important;font-weight:900;color:#123550}
+.brand small,body.saba-home .topbar .brand small{font-size:12px!important;letter-spacing:0!important;white-space:normal;line-height:1.5;color:#64798b!important}
+.topbar-actions{display:flex;gap:7px;align-items:center;flex:0 0 auto}
+.model-nav-toggle,body.saba-home .model-nav-toggle{position:static!important;top:auto!important;right:auto!important;left:auto!important;z-index:66;display:flex;align-items:center;justify-content:center;flex-direction:column;flex:0 0 51px;width:51px;min-height:53px;padding:4px!important;border:1px solid #c9dbe9!important;border-radius:14px!important;background:#edf5fb!important;box-shadow:none!important;color:#1c537b!important;font-size:12px!important;font-weight:800;line-height:1.15}
+.model-nav-toggle>span:first-child{font-size:23px;line-height:1.1}
+.global-score,body .global-score,body.saba-home .global-score{position:static!important;top:auto!important;right:auto!important;left:auto!important;z-index:66;min-height:43px;min-width:0;max-width:170px;padding:7px 12px!important;border:1px solid #d8e4ed;border-radius:13px!important;background:#f0f6fb!important;box-shadow:none!important;color:#1a527b;font-size:13px!important;line-height:1.45}
+.global-score span{max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.install,body.saba-home .topbar .install{background:#edf5fb!important;color:#1b5278!important;min-height:42px;border:1px solid #d7e3ee;font-size:14px}
+.model-side-nav{background:#f9fbfe!important;width:min(345px,91vw);padding:22px 19px 30px;gap:15px}
+.model-side-head>span{font-size:23px!important}
+.model-side-head small{font-size:14px!important}
+.model-side-list button{min-height:70px!important;border-radius:15px!important;padding:12px 13px!important;box-shadow:0 4px 10px rgba(26,60,88,.04)!important}
+.model-side-list button>strong{font-size:17px!important;line-height:1.6}
+.model-side-list button>span{width:43px;height:43px;flex:0 0 43px;font-size:22px}
+.model-side-extras{gap:9px;padding-top:17px}
+.model-side-extras h3{font-size:17px!important}
+.model-side-extras button,.model-side-extras a{min-height:53px!important;font-size:16px!important;font-weight:800!important;border-radius:13px!important}
+.model-side-note{font-size:14px!important}
+@media(min-width:1460px){
+ .model-side-nav{width:221px!important;top:89px!important;right:16px!important;height:calc(100dvh - 110px)!important;overflow-y:auto}
+ .model-side-list button{padding:10px!important;min-height:65px!important}
+ .model-side-list button>strong{font-size:15px!important}
+ .model-side-extras button,.model-side-extras a{font-size:14px!important}
+ body.saba-home #homeView .saba-home-content{width:min(100%,980px)!important;margin:0 auto!important}
+ body:not(.saba-home) .app-shell{width:calc(100% - 260px)!important;margin-inline:245px 15px!important;max-width:1040px}
+}
+
+/* New light photographic Home: image is a calm hero, NOT full-page background. */
+body.saba-home{background:#f4f7fa!important;color:#18374f!important}
+body.saba-home .app-shell{background:#f4f7fa!important;max-width:none;width:100%;min-height:100dvh;padding:0}
+body.saba-home #main{min-height:0}
+body.saba-home #homeView.active{min-height:0!important;width:100%;background:#f4f7fa!important;color:#17364f!important;overflow:visible}
+#homeView .saba-home-photo,#homeView .saba-home-scrim{height:245px!important;bottom:auto!important}
+#homeView .saba-home-photo img{height:245px!important;min-height:0;object-position:center 38%!important;filter:brightness(.76) saturate(.8)!important}
+#homeView .saba-home-scrim{background:linear-gradient(270deg,rgba(10,36,61,.88),rgba(12,46,76,.6),rgba(12,39,69,.48))!important}
+body.saba-home #homeView .saba-home-content{min-height:0!important;padding:0 18px 65px!important;max-width:950px;width:100%;margin:0 auto!important;display:flex;flex-direction:column;align-items:stretch!important;justify-content:flex-start!important;gap:15px!important;text-align:right!important}
+body.saba-home #homeView .saba-home-heading{height:229px;display:flex;justify-content:center;flex-direction:column;align-items:flex-start;text-align:right;max-width:none;width:100%;margin:0}
+body.saba-home #homeView .saba-home-overline{color:#d9e9f4!important;font-size:14px!important;letter-spacing:0!important;font-weight:750}
+body.saba-home #homeView .saba-home-heading h1{font-size:clamp(30px,4.2vw,46px)!important;line-height:1.38!important;margin:6px 0!important;color:#fff!important;text-shadow:0 5px 21px rgba(1,18,34,.28)}
+body.saba-home #homeView .saba-home-heading p{font-size:16px!important;color:#eef7ff!important;font-weight:650;line-height:1.75}
+body.saba-home #homeView .saba-model-label{width:100%;max-width:none;margin:2px 0 0!important;color:#183b59!important;font-size:20px!important;font-weight:950;text-shadow:none!important}
+body.saba-home #homeView .saba-model-loop{width:100%!important;max-width:none;margin:0 auto!important;gap:12px!important}
+body.saba-home #homeView .saba-home-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;width:100%;margin:0}
+body.saba-home #homeView .saba-home-tile{display:grid!important;grid-template-columns:55px minmax(0,1fr)!important;grid-template-rows:auto auto;align-content:center;align-items:center;gap:1px 14px;min-height:112px!important;padding:19px 18px!important;text-align:right!important;background:#fff!important;color:#173b5a!important;border:1px solid #dce7ee!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(14,45,72,.055)!important;backdrop-filter:none!important}
+body.saba-home #homeView .saba-home-tile .saba-tile-icon{grid-column:1;grid-row:1 / span 2;display:grid;place-items:center;height:53px!important;width:53px!important;border-radius:15px!important;background:#edf4fa!important;color:#255982!important;font-size:26px!important;font-weight:900!important;border:0!important}
+body.saba-home #homeView .saba-home-tile strong{grid-column:2;grid-row:1;font-size:clamp(18px,2.1vw,21px)!important;line-height:1.5!important;color:#153b59!important;font-weight:950}
+body.saba-home #homeView .saba-home-tile small{grid-column:2;grid-row:2;font-size:14px!important;color:#5b7287!important;letter-spacing:0!important;line-height:1.55!important;display:block!important}
+body.saba-home #homeView .saba-home-tile:hover,body.saba-home #homeView .saba-home-tile:focus-visible{border-color:#a9c8dc!important;box-shadow:0 11px 29px rgba(23,70,110,.10)!important}
+body.saba-home #homeView .saba-reflection-connector{color:#a46d3f!important;font-size:15px!important;min-height:17px!important}
+body.saba-home #homeView .saba-reflection-connector:before,body.saba-home #homeView .saba-reflection-connector:after{background:linear-gradient(90deg,transparent,#d5ad89 55%,transparent)}
+body.saba-home #homeView .saba-reflection-connector span{font-size:14px!important;font-weight:800}
+body.saba-home #homeView button.saba-reflection-band{display:grid!important;grid-template-columns:55px minmax(0,1fr) auto!important;gap:8px 14px;align-items:center;width:100%;min-height:112px!important;margin:0!important;padding:18px 19px!important;border:1px solid #e8d0b8!important;border-right:4px solid #d29258!important;background:#fffaf4!important;color:#17374f!important;border-radius:18px!important;box-shadow:0 8px 22px rgba(35,46,54,.04)!important;backdrop-filter:none!important}
+body.saba-home #homeView .saba-reflection-symbol{grid-row:1 / span 2;grid-column:1;width:53px;height:53px;border:0;border-radius:15px;background:#f8e8d6!important;color:#bd7c43!important;font-size:37px}
+body.saba-home #homeView .saba-reflection-copy{grid-column:2;display:flex;flex-direction:column;gap:0}
+body.saba-home #homeView .saba-reflection-copy strong{font-size:21px!important;color:#183f5e!important;font-weight:950}
+body.saba-home #homeView .saba-reflection-copy small,body.saba-home #homeView .saba-reflection-hint{font-size:14px!important;color:#6d7884!important;line-height:1.55}
+body.saba-home #homeView .saba-reflection-action{grid-column:3;grid-row:1 / span 2;align-self:center;background:#d59b67!important;color:#fff!important;min-height:43px;padding:8px 14px!important;border-radius:12px;font-size:15px!important}
+body.saba-home #homeView .saba-companion-actions{margin:3px 0 0!important;gap:0!important;color:#234865!important}
+body.saba-home #homeView .saba-companion-actions button{width:100%;max-width:none;min-height:58px;font-size:18px!important;border-radius:15px!important;color:#fff!important;background:#1d547e!important;border:1px solid #1d547e!important}
+body.saba-home #homeView .saba-home-achievement{width:100%;margin:0!important;gap:0!important}
+body.saba-home #homeView .saba-home-achievement button{width:100%;max-width:none;min-height:58px;background:#fefefd;color:#244661;border:1px solid #e0e7ed;border-radius:15px;padding:12px 17px;font-size:17px!important}
+body.saba-home #homeView .saba-home-achievement strong{font-size:14px!important;color:#ad7542}
+body.saba-home #homeView .saba-home-achievement small{display:none}
+
+/* Each route is a REAL screen, not a fragment shown under the last selection. */
+body:not(.saba-home) .app-shell{background:#f4f7fa}
+.view.active{animation:premium-appear .2s ease both}
+@keyframes premium-appear{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.page-heading{padding-top:27px;margin-bottom:8px}
+.page-heading h1{font-size:clamp(27px,4vw,36px);line-height:1.48;color:#183d5c}
+.page-heading>p{font-size:17px;line-height:1.85;max-width:800px}
+.eyebrow{font-size:14px;letter-spacing:0}
+.course-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:20px 0}
+.course-card{min-height:212px;box-shadow:0 8px 25px rgba(9,40,68,.05);border:1px solid #d9e5ef;border-radius:18px}
+.course-card>img{height:115px}
+.course-card-body{padding:16px 18px}
+.course-card .eyebrow{font-size:14px}
+.course-card strong{font-size:18px;line-height:1.55}
+.course-card p{font-size:15px;line-height:1.7}
+.course-card-bottom{font-size:14px}
+.lesson-list{grid-template-columns:1fr;gap:12px;margin:18px 0}
+.lesson-card{min-height:98px;padding:17px 18px;border:1px solid #dce7ee;border-radius:17px;box-shadow:0 6px 17px rgba(12,43,70,.04)}
+.lesson-number{width:47px;height:47px;flex-basis:47px;font-size:21px}
+.lesson-text strong{font-size:19px;line-height:1.5}
+.lesson-text small{font-size:14px}
+.lesson-arrow{font-size:23px}
+.session-output{border-radius:17px;font-size:15px}
+.session-output strong{font-size:17px}
+.backlink,.stage-back{font-size:16px;min-height:44px}
+.reader-top{background:#fff;border:1px solid #dce7ee;padding:12px 14px;border-radius:17px;margin-top:20px;gap:11px}
+.round-button{height:49px;width:49px;flex-basis:49px;background:#eef4f9;border:1px solid #d4e4ef}
+.reader-info strong{font-size:19px}
+.reader-info small{font-size:14px}
+.lesson-switch{margin:12px 0;border-radius:14px;background:#fff;border:1px solid #e0e9f0;padding:9px 14px}
+.lesson-switch>summary{font-size:16px;font-weight:850;color:#245d88;cursor:pointer;min-height:36px}
+.chips{padding-top:12px}
+.chip{font-size:15px;min-height:46px;padding:10px 14px}
+.frame-container{border:1px solid #e0e8f0;border-radius:17px;box-shadow:0 8px 28px rgba(15,48,75,.055)}
+.reader-frame,.studio-frame{width:100%;min-height:470px}
+.reader-actions .outline{font-size:15px;min-height:49px}
+.studio-full{font-size:14px}
+.fineprint,.muted{font-size:14px;line-height:1.8}
+#coachView label,#coachView p{font-size:17px}
+#coachView textarea,#coachView select{font-size:17px;min-height:54px}
+#coachView button{min-height:49px}
+#coachView .cj-card{border-radius:18px}
+.passport-banner{padding:23px 26px;border-radius:20px}
+.passport-banner strong{font-size:22px}
+.passport-banner p{font-size:15px}
+#passportView .sg-hero h2{font-size:24px}
+#passportView .sg-step{min-height:145px;padding:15px}
+#passportView .sg-step strong,#passportView .sg-badge strong{font-size:16px}
+#passportView .sg-step small,#passportView .sg-badge small{font-size:14px}
+#passportView .sg-badge{min-height:135px}
+
+/* Model stage landing screens: clear progressive hierarchy. */
+#stageView{padding:24px 0 58px}
+.stage-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stage-back{background:#fff;color:#1d517a;border:1px solid #cbdde9;border-radius:13px;padding:8px 14px;min-height:48px;font-size:16px;font-weight:900}
+.stage-index{font-size:14px;color:#647c90}
+.stage-heading{display:flex;align-items:center;gap:20px;margin:20px 0 18px;background:linear-gradient(113deg,#173e60,#2a618a);color:#fff;padding:25px 27px;border-radius:21px}
+.stage-heading .stage-symbol{flex:0 0 69px;width:69px;height:69px;display:grid;place-items:center;border-radius:19px;background:rgba(255,255,255,.14);font-size:36px;font-weight:950}
+.stage-heading h1{font-size:clamp(25px,3.5vw,35px);line-height:1.5;color:#fff}
+.stage-heading p{font-size:17px;color:#e8f2fb;line-height:1.85;margin-top:3px}
+.stage-progress{border:1px solid #e6d8c4;background:#fffaf2;border-radius:14px;padding:15px 18px;font-size:16px;color:#725634;font-weight:750}
+.stage-section-title{margin:24px 0 12px;font-size:24px;color:#234965}
+.stage-action-list{display:grid;grid-template-columns:1fr;gap:12px}
+.stage-action{display:flex;align-items:center;gap:15px;width:100%;background:#fff;border:1px solid #dce6ef;border-radius:18px;padding:18px 20px;text-align:right;min-height:102px;box-shadow:0 7px 21px rgba(19,55,87,.045)}
+.stage-action-num{display:grid;place-items:center;flex:0 0 52px;height:52px;border-radius:16px;background:#eef5fb;color:#225982;font-size:23px;font-weight:950}
+.stage-action-copy{display:flex;flex-direction:column;flex:1;gap:3px}
+.stage-action-copy strong{font-size:20px;color:#1a4667;line-height:1.5}
+.stage-action-copy small{font-size:15px;color:#61788a;line-height:1.8}
+.stage-action-arrow{font-size:26px;color:#c0824a}
+.stage-action:hover{border-color:#9fc6df;background:#fcfdff}
+.stage-note{font-size:14px;color:#677f90;line-height:1.8;margin:19px 5px}
+
+@media(max-width:700px){
+ body{font-size:18px!important}
+ .app-shell{padding:0 13px 55px}
+ .topbar,body.saba-home .topbar{min-height:76px!important;gap:9px;padding:10px 11px!important}
+ .brand,body.saba-home .topbar .brand{gap:7px!important}
+ .brand img,body.saba-home .topbar .brand img{width:50px!important;height:48px!important;flex-basis:50px}
+ .brand strong,body.saba-home .topbar .brand strong{font-size:16px!important}
+ .brand small,body.saba-home .topbar .brand small{font-size:11px!important;line-height:1.45}
+ .model-nav-toggle{width:48px;flex-basis:48px;min-height:51px}
+ .global-score,body .global-score{min-height:42px;max-width:84px;padding:5px 8px!important;font-size:13px!important}
+ .global-score span{max-width:56px}
+ .install{max-width:85px;padding:7px!important}
+ body.saba-home #homeView .saba-home-content{padding:0 15px 45px!important;gap:12px!important}
+ #homeView .saba-home-photo,#homeView .saba-home-scrim{height:211px!important}
+ #homeView .saba-home-photo img{height:211px!important}
+ body.saba-home #homeView .saba-home-heading{height:197px!important}
+ body.saba-home #homeView .saba-home-heading h1{font-size:31px!important}
+ body.saba-home #homeView .saba-home-overline{font-size:13px!important}
+ body.saba-home #homeView .saba-home-heading p{font-size:15px!important}
+ body.saba-home #homeView .saba-model-label{font-size:19px!important}
+ body.saba-home #homeView .saba-home-grid{grid-template-columns:1fr!important;gap:10px!important}
+ body.saba-home #homeView .saba-home-tile{min-height:94px!important;padding:14px 15px!important;grid-template-columns:53px minmax(0,1fr)!important}
+ body.saba-home #homeView .saba-home-tile strong{font-size:19px!important}
+ body.saba-home #homeView .saba-home-tile small{font-size:14px!important}
+ body.saba-home #homeView .saba-reflection-connector span{font-size:13px!important}
+ body.saba-home #homeView button.saba-reflection-band{min-height:97px!important;grid-template-columns:53px minmax(0,1fr) 43px!important;gap:9px;padding:13px 14px!important}
+ body.saba-home #homeView .saba-reflection-copy strong{font-size:19px!important}
+ body.saba-home #homeView .saba-reflection-copy small,body.saba-home #homeView .saba-reflection-hint{font-size:13px!important}
+ body.saba-home #homeView .saba-reflection-action{width:41px;padding:6px!important;min-height:42px;font-size:0!important}
+ body.saba-home #homeView .saba-reflection-action:before{content:"←";font-size:22px}
+ body.saba-home #homeView .saba-companion-actions button{font-size:17px!important;min-height:54px}
+ body.saba-home #homeView .saba-home-achievement button{min-height:54px;font-size:15px!important}
+ body.saba-home #homeView .saba-home-achievement strong{font-size:13px!important}
+ .page-heading{padding-top:22px}.page-heading h1{font-size:28px}
+ .page-heading>p{font-size:16px}
+ .course-grid{grid-template-columns:1fr!important;gap:12px}
+ .course-card{min-height:140px;display:grid;grid-template-columns:112px minmax(0,1fr);align-items:stretch}
+ .course-card>img{width:112px;height:100%;min-height:140px;object-fit:cover}
+ .course-card-body{padding:13px 15px}
+ .course-card strong{font-size:17px}
+ .course-card p{font-size:14px;line-height:1.55;margin:2px 0 7px}
+ .course-card-bottom{font-size:13px}
+ .lesson-card{min-height:94px;padding:13px 14px}
+ .lesson-text strong{font-size:18px}
+ .lesson-text small{font-size:14px}
+ .reader-top{padding:10px;margin:17px 0 10px}
+ .reader-info strong{font-size:17px}
+ .reader-info small{font-size:13px}
+ .reader-actions{flex-wrap:wrap}
+ .reader-actions .outline{min-height:46px;font-size:14px}
+ .reader-actions #externalLesson{display:none}
+ .fineprint{font-size:13px}
+ .stage-heading{padding:20px 17px;gap:12px;margin:14px 0}
+ .stage-heading .stage-symbol{flex-basis:56px;width:56px;height:56px;font-size:30px}
+ .stage-heading h1{font-size:26px}
+ .stage-heading p{font-size:16px}
+ .stage-action{min-height:100px;padding:16px 14px;gap:12px}
+ .stage-action-num{flex-basis:48px;height:48px;font-size:22px}
+ .stage-action-copy strong{font-size:19px}
+ .stage-action-copy small{font-size:15px}
+ #passportView .sg-steps{grid-template-columns:1fr 1fr}
+ #passportView .sg-badges{grid-template-columns:1fr 1fr}
+}
+@media(max-width:370px){
+ .brand strong{font-size:15px!important}.brand img{width:42px!important;height:43px!important;flex-basis:42px!important}
+ .brand small{font-size:10px!important}
+ .topbar{gap:6px!important}
+ .model-nav-toggle{flex-basis:43px!important;width:43px!important}
+ body.saba-home #homeView .saba-home-tile strong{font-size:18px!important}
+ body.saba-home #homeView .saba-home-tile small{font-size:13px!important}
+ #passportView .sg-steps,#passportView .sg-badges{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.view.active{animation:none!important}}
