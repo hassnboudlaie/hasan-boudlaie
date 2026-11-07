@@ -74,7 +74,7 @@
   // Shared asset family: approved resilience poster + existing Session 2 editorial photographs.
   // These are visual aids, not evidence photographs of actual insurance claimants.
   const art={
-    resilience:'assets/claims-resilience-approved-20261106.png',
+    resilience:'assets/session2-welcome-hq.webp',
     anger:'assets/session2-facial-expression-hq.webp',
     assertiveness:'assets/session2-body-language-hq.webp',
     capstone:'assets/session2-hero-hq.webp',
@@ -313,7 +313,7 @@
       '<div class="stage-indicator">'+E(stageLabel)+'</div>'+
       '<h2>'+E(s.title)+'</h2><p class="lead">'+E(s.lead)+'</p></div>'+
       media(s.module,s.kind==='case'||s.kind==='capstone'?'conversation':s.kind,
-        s.module==='resilience'&&s.kind==='intro'?'پوستر مصوب دوره تاب‌آوری بیمه البرز':'تصویر مفهومی از مجموعه بصری آکادمی')+'</div>'+
+        s.module==='resilience'&&s.kind==='intro'?'تصویر حرفه‌ای آموزش تاب‌آوری':'تصویر آموزشی آکادمی')+'</div>'+
       '<div class="slide-content"><div class="stage-content">'+(revealed === 0 ? s.body : s.stages[revealed-1])+'</div></div>'+
       '';
     $('instructor-notes').hidden=!showNotes;
