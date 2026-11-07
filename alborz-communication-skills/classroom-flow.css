@@ -110,3 +110,11 @@
 .classroom-login .btn{font-size:20px;min-height:54px;margin-top:12px}
 @media(max-width:970px){.classroom-strategy-grid,.classroom-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.classroom-team-row{grid-template-columns:minmax(0,1fr) 130px;gap:10px}.classroom-team-row .btn{grid-column:2}}
 @media(max-width:680px){.classroom-top{padding:17px;flex-direction:column;align-items:stretch;gap:10px}.classroom-top h1{font-size:24px}.class-stage-marker{text-align:right;min-width:0}.classroom-controls{padding:10px;gap:7px}.classroom-controls-note{font-size:12px}.classroom-controls .btn{font-size:14px;padding:8px 9px;min-height:47px}.classroom-content{padding:18px 15px;border-radius:19px}.classroom-strategy-grid,.classroom-choice-grid,.classroom-choice-roster,.classroom-duo{grid-template-columns:1fr}.classroom-team-row{grid-template-columns:1fr 120px;padding:13px}.classroom-team-row>div{grid-column:1/-1}.classroom-team-row .btn{grid-column:2}.classroom-section-title h2{font-size:27px}.classroom-section-title>p,.classroom-story p{font-size:17px}.classroom-duo p{font-size:18px}.classroom-team-row h3{font-size:20px}.classroom-welcome>div{min-width:100px}.classroom-member-dots span{font-size:12px}}
+
+/* Four approved workshop animal images: visual cues, not personality labels. */
+.classroom-strategy-grid article::before{content:"";display:block;height:138px;border-radius:13px;margin:0 0 8px;background-color:#ddebe8;background-image:url('./assets/claims-resilience-approved-20261106.png');background-repeat:no-repeat;background-size:420% auto;background-position-y:48%;box-shadow:inset 0 0 0 1px #c2d8d3}
+.classroom-strategy-grid article:nth-child(1)::before{background-position-x:5.4%}
+.classroom-strategy-grid article:nth-child(2)::before{background-position-x:35.2%}
+.classroom-strategy-grid article:nth-child(3)::before{background-position-x:64.1%}
+.classroom-strategy-grid article:nth-child(4)::before{background-position-x:97.6%}
+@media(max-width:680px){.classroom-strategy-grid article::before{height:165px}}
