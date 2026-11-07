@@ -104,6 +104,7 @@ E("bookmarkList").addEventListener("click",function(e){var b=e.target.closest("[
 E("openPortfolio").addEventListener("click",function(){window.open(new URL("index.html#portfolio",base).href,"_blank","noopener,noreferrer")});
 E("changeContext").addEventListener("click",function(){go("course");window.open(new URL("index.html#home",base).href,"_blank","noopener,noreferrer")});
 window.addEventListener("hashchange",render);window.addEventListener("popstate",render);
+window.addEventListener("storage",function(ev){if(!["sabanaft_reflective_v2","sabanaft_leadership_studio_v1"].includes(ev.key))return;var g=globalThis.SabaGamification?.collect();if(g&&E("globalScore"))E("globalScore").innerHTML="⭐ <span>"+fa(g.annualScore)+" امتیاز · "+escapeText(g.level)+"</span>";if(route().page==="passport")renderPassport();if(route().page==="home")renderHome();});
 var deferred=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;E("install").hidden=false});
 E("install").addEventListener("click",async function(){if(!deferred){notice("در مرورگر خود گزینه افزودن به صفحه اصلی را انتخاب کنید.");return}deferred.prompt();await deferred.userChoice;deferred=null;E("install").hidden=true});
 render();
