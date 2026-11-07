@@ -45,7 +45,15 @@ function applyRows(rows){records=Object.fromEntries(rows.map(r=>[r.field_key,r])
 }W.merge(merge);
  if(redraw&&!Object.keys(drafts).length&&!app.querySelector('textarea:focus'))W.render();else{decorate();showMembers();}
 }
-async function refresh(force=false){if(!auth||busy||(!force&&document.hidden))return;const gen=generation;busy=true;try{const d=await request({action:teacher?'teacher':'read',...(teacher?{}:{team:auth.team})});if(gen!==generation||!auth)return;if(classroom){
+async function refresh(force=false){
+ if(!auth||(!force&&document.hidden))return;
+ // A deliberate classroom refresh must never be silently discarded behind another poll.
+ if(busy){
+  if(!force)return;
+  for(let attempt=0;busy&&attempt<160;attempt++)await new Promise(resolve=>setTimeout(resolve,100));
+  if(busy||!auth)return;
+ }
+ const gen=generation;busy=true;try{const d=await request({action:teacher?'teacher':'read',...(teacher?{}:{team:auth.team})});if(gen!==generation||!auth)return;if(classroom){
   if(teacher)allRows=d.records;else records=Object.fromEntries(d.records.map(r=>[r.field_key,r]));
   window.dispatchEvent(new CustomEvent('alborz:classroom-data',{detail:{identity:{role:auth.role,team:auth.team,member:auth.member},records:d.records,classroom:d.classroom||null}}));
  }else if(teacher){allRows=d.records;showTeacher();}else applyRows(d.records);message('متصل · آخرین دریافت '+new Date().toLocaleTimeString('fa-IR')+(Object.keys(drafts).length?' · '+fa(Object.keys(drafts).length)+' تغییر هنوز اشتراک‌گذاری نشده':''));}catch(e){if(gen!==generation)return;message((e.status===401?'کد منقضی یا لغو شده؛ دوباره وارد شوید.':'ارتباط قطع است؛ پیش‌نویس شما حفظ شده است. ')+e.message,true);}finally{if(gen===generation)busy=false;}}
