@@ -591,6 +591,18 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 .claims-approved-poster{display:block;width:100%;height:auto;border-radius:16px}
 .simple-academy .academy-course-resilience{padding:14px;min-width:0}
 .simple-academy .direct-entry:focus-visible{outline:3px solid #b18b36;outline-offset:4px}
+
+/* Professional photography replaces legacy cartoon poster only on the claims course card. */
+.claims-photo-cover{position:relative;overflow:hidden;border-radius:15px;background:#0d4437;min-height:310px}
+.claims-photo-cover img{display:block;width:100%;height:310px;object-fit:cover;object-position:center}
+.claims-photo-cover:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,39,33,.96) 0%,rgba(3,39,33,.18) 72%)}
+.claims-cover-copy{position:absolute;inset:auto 24px 20px;z-index:1;color:#fff}
+.claims-cover-copy span{font-size:14px;font-weight:700;color:#f0f8f2}
+.claims-cover-copy h2{color:#fff;font-size:clamp(24px,3vw,33px);margin:8px 0}
+.claims-cover-copy p{font-size:16px;color:#f2fff7;margin:0}
+.academy-course-resilience{background:#fff}
+.academy-course-resilience .academy-course-cta{margin-top:13px}
+@media(max-width:690px){.claims-photo-cover,.claims-photo-cover img{min-height:230px;height:230px}.claims-cover-copy{inset:auto 16px 12px}}
 </style>
 <script src="session3-listening-lab.js?v=20261106-r5-audit"></script>
 </head>
@@ -627,7 +639,7 @@ function home(){
  document.title="آکادمی مدیریت و یادگیری بیمه البرز";
  document.getElementById("app").innerHTML=header()+
  '<main class="simple-academy"><div class="wrap"><h1>انتخاب دوره</h1><div class="academy-courses">'+
- '<article class="academy-course-card academy-course-resilience"><img class="claims-approved-poster" src="assets/claims-resilience-approved-20261106.png" width="1024" height="1536" alt="پوستر کارگاه آموزشی استراتژی‌های تاب‌آوری فردی در دوران پرتلاطم؛ بیمه البرز" fetchpriority="high"><a class="academy-course-cta direct-entry" href="claims-workshop-v2.html">ورود به کارگاه کارشناسان خسارت</a></article>'+
+ '<article class="academy-course-card academy-course-resilience"><div class="claims-photo-cover"><img src="assets/session2-hero-hq.webp" alt="محیط حرفه‌ای کارگاه کارشناسان خسارت" fetchpriority="high"><div class="claims-cover-copy"><span>کارگاه مهارت‌های حرفه‌ای · ۱۱ ساعت</span><h2>تاب‌آوری در دوران پرتلاطم</h2><p>شتر · ماهی آزاد · آفتاب‌پرست · اختاپوس</p></div></div><a class="academy-course-cta direct-entry" href="claims-workshop-v2.html">ورود به کارگاه کارشناسان خسارت</a></article>'+
  '<article class="academy-course-card academy-course-communication"><h2>مهارت‌های ارتباطات اثربخش</h2><a class="academy-course-cta direct-entry" href="?course=communication">ورود به دوره مهارت‌های ارتباطی</a></article>'+
  '</div></div></main>';
 }
