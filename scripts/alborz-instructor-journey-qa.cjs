@@ -27,16 +27,31 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
    return route.fulfill({status:403,contentType:'application/json',body:'{"error":"denied"}'});
   });
   const base='http://127.0.0.1:4181/alborz-communication-skills/';
-  await page.goto(base+'resilience.html?teacher=1',{waitUntil:'load'});
+  await page.goto(base+'resilience.html?group=1&step=3',{waitUntil:'load'});
+  const participantSteps=(await page.locator('.shared-step-nav a').allTextContents()).map(t=>t.trim());
+  assert.equal(participantSteps.length,7,'participants get seven shared phases');
+  const participantGoal=await page.locator('.case-goal').innerText();
+  await page.goto(base+'resilience.html?teacher=1&mission=camel',{waitUntil:'load'});
   assert.equal(await page.locator('#live-code').count(),1,'instructor must authenticate');
   assert.equal(await page.locator('.instructor-roadmap').count(),0,'full instructor guide should not appear before login');
   assert.equal(await page.locator('[data-board]').count(),0,'offline scorecard not shown in live mode');
   await page.locator('#live-code').fill('qa-teacher-token');
   await page.locator('#live-join').click();
   await page.locator('.instructor-roadmap').waitFor();
-  assert.equal(await page.locator('details.teacher-mission').count(),4,'four instructor missions');assert.match(await page.locator('.instructor-roadmap .teacher-hero').innerText(),/انتخاب آزاد/);assert.equal(await page.locator('.facilitator-case-facts').count(),4,'instructor has key data for all four missions');assert.equal(await page.locator('.teacher-case-task').count(),4,'instructor has plain decision prompt for all missions');
+  assert.equal(await page.locator('details.teacher-mission').count(),4,'four instructor missions');assert.match(await page.locator('.instructor-roadmap .teacher-hero').innerText(),/هفت گام مشترک/);assert.equal(await page.locator('.facilitator-case-facts').count(),4,'instructor has key data for all four missions');assert(await page.locator('.teacher-case-task').count()>=4,'instructor has plain decision prompt for all missions');
   assert.equal(await page.locator('.timeline-item').count(),10,'A-to-Z learning steps');
   assert.equal(await page.locator('.teacher-mission-nav a').count(),4,'direct mission links');
+  const instructorSteps=(await page.locator('details.teacher-mission').first().locator('.shared-step-nav a').allTextContents()).map(t=>t.trim());
+  assert.deepEqual(instructorSteps,participantSteps,'instructor and experts share the exact seven stage labels and order');
+  assert.equal(await page.locator('details.teacher-mission').first().locator('.teacher-phase').count(),7,'all seven instructor phases shown');
+  assert.match(await page.locator('#instructor-phase-0-0').innerText(),/هدف تمرین/);
+  assert.match(await page.locator('#instructor-phase-0-0').innerText(),/شلوغی|خدمت|خطا/);
+  assert.match(participantGoal,/خدمت|خطا/,'matching mission goal in group page');
+  assert.equal(await page.locator('#teacher-journey-live .teacher-live-group').count(),10,'teacher sees ten groups inside scenario guide');
+  assert.match(await page.locator('.teacher-live-summary').innerText(),/صفی که ناگهان سه برابر شد/,'teacher monitors the selected mission');
+  await page.locator('#teacher-journey-live .teacher-live-group').first().evaluate(el=>el.open=true);
+  assert.match(await page.locator('#teacher-journey-live .teacher-live-group').first().innerText(),/تصمیم اولیه/);
+
   assert.match(await page.locator('details.teacher-mission').first().innerText(),/مدیریت خشم و جرأت‌ورزی/);assert.match(await page.locator('details.teacher-mission').first().innerText(),/هدف تمرین به زبان ساده/);
   await page.locator('details.teacher-mission').last().evaluate(el=>el.open=true);
   assert.match(await page.locator('details.teacher-mission').last().innerText(),/کارت اتفاق/);
@@ -62,7 +77,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   assert.equal(await page.locator('details.teacher-mission').count(),4,'guide remains accessible after dashboard');
   await page.screenshot({path:'artifacts/alborz-resilience/instructor-journey-'+width+'.png',fullPage:true});
   assert.deepEqual(errors,[],'browser errors at '+width);
-  console.log('PASS instructor A-to-Z '+width+'px: protected login, four missions, embedded skills, ten-row batch grading and persistence, badges, RTL');
+  console.log('PASS instructor + participant shared seven-step workshop '+width+'px: protected login, mission-matched content and live group tracking, grading and persistence, RTL');
   await ctx.close();
  }
  await browser.close();server.close();
