@@ -88,8 +88,8 @@ document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("
 document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);go(b.dataset.go)})});
 E("futureCoachEntry").addEventListener("click",function(){go("coach")});
 E("futureCoachBack").addEventListener("click",function(){go("home")});
-E("resume").addEventListener("click",function(){var l=latest();openLesson(l.s,l.p)});
-E("openRoles").addEventListener("click",function(){openLesson(4,"roles")});
+
+
 E("courseGrid").addEventListener("click",function(e){var a=e.target.closest("[data-session]");if(a)go("session/"+a.dataset.session)});
 E("sessionBack").addEventListener("click",function(){go("course")});
 E("lessonList").addEventListener("click",function(e){var b=e.target.closest("[data-lesson]"),r=route();if(b&&r.page==="session")openLesson(r.s,b.dataset.lesson)});
