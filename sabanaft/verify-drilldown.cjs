@@ -21,7 +21,7 @@ assert.equal(w.location.hash,'#/lesson/5/mix');
 assert.ok(d.querySelector('#readerView.active'),'lesson occupies an independent reader screen');
 assert.ok(!d.querySelector('#stageView.active'),'stage is replaced by reader');
 assert.ok(d.querySelector('.lesson-switch:not([open])'),'switching to another section is optional and collapsed');
-d.querySelector('#readerBack').click();assert.equal(w.location.hash,'#/session/5','reader back returns to the session');
+d.querySelector('#readerBack').click();assert.equal(w.location.hash,'#/stage/idea','reader back returns to the originating model stage');
 d.querySelector('[data-go="stage/reflection"]').click();w.dispatchEvent(new w.HashChangeEvent('hashchange'));
 assert.ok(d.querySelector('#stageActionList [data-go-stage="studio/daily"]'));
 d.querySelector('#stageBack').click();assert.equal(w.location.hash,'#/home');
