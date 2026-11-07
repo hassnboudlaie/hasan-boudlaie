@@ -174,3 +174,23 @@ header a:focus-visible,header button:focus-visible{outline-color:#76f0e1}
 .simple-live-list p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.8}
 .simple-teacher-footer{font-size:14px;color:#527078;padding:5px 2px}
 @media(max-width:740px){.simple-animal-selector{grid-template-columns:repeat(2,minmax(0,1fr))}.simple-two-actions,.simple-role-list,.simple-skill-pair{grid-template-columns:1fr}.mission-simple-progress .mission-simple-navigation{width:100%;justify-content:stretch}.mission-simple-progress .mission-simple-navigation .btn{flex:1}.simple-teacher-stepbar .btn{flex:1}.mission-simple-head{padding:15px}.simple-case-header,.simple-now{padding:17px}.simple-two-actions article{padding:16px}.simple-workshop-title h2{font-size:27px}}
+
+/* Keep synchronized login and step-specific fields unobtrusive. */
+#app.mission-simple-app #live-panel.live-authenticated{padding:9px 15px;margin:0 0 12px;background:#edf6f4;border:1px solid #d1e5e1;box-shadow:none}
+#app.mission-simple-app #live-panel.live-authenticated .navline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0}
+#app.mission-simple-app #live-panel.live-authenticated .navline h2{font-size:17px;margin:0;color:#13545e}
+#app.mission-simple-app #live-panel.live-authenticated .navline .btn{min-height:36px;padding:5px 10px;font-size:13px}
+#app.mission-simple-app #live-panel.live-authenticated>p.small{margin:0;font-size:13px;color:#43616b}
+#app.mission-simple-app #live-panel.live-authenticated #live-status{font-size:13px;margin:0 0 4px}
+#app.mission-simple-app #live-stage{display:inline-flex;margin:8px 0;min-height:42px;font-size:15px}
+#app.mission-simple-app #live-members{margin:12px 0}
+#app.mission-simple-app #live-members>details{background:#f9fcfd;border:1px solid #d0e3e4;border-radius:14px;padding:12px 15px}
+#app.mission-simple-app #live-members>details>summary{font-size:17px;font-weight:800;color:#0c5e69}
+#app.mission-simple-app [hidden]{display:none!important}
+.simple-entry-landing{max-width:720px;margin:28px auto;padding:24px 29px;border:1px solid #d3e2e3;background:#fff;border-radius:20px;text-align:center}
+.simple-entry-landing>span{color:#187173;font-weight:850;font-size:15px}
+.simple-entry-landing h1{font-size:clamp(25px,3.5vw,33px);margin:11px 0;color:#104556}
+.simple-entry-landing p{font-size:17px;line-height:1.9;color:#385c67}
+.simple-entry-target{background:#eaf6f1;padding:12px;border-radius:13px}
+.simple-entry-target strong{display:block;color:#0e5561}
+@media(max-width:650px){.simple-entry-landing{margin:10px auto;padding:18px}#app.mission-simple-app #live-panel.live-authenticated{padding:8px 11px}}
