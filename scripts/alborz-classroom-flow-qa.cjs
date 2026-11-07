@@ -129,6 +129,8 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-next]').click();
   assert.equal(get(1,'classroomPhase').field_value,2,'instructor begins next independent round');
   assert.equal(get(1,'classroomRound')?.field_value,1,'classroom advances to the second round');
+  await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('دور ۲') &&
+    document.querySelector('.class-stage-marker')?.textContent.includes('انتخاب مأموریت'));
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   await expert2.evaluate(()=>window.AlborzLive.refresh());
   assert.equal(await expert1.locator('[data-class-mission].selected').count(),0,'group 1 must choose again for round 2');
