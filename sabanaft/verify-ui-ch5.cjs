@@ -31,7 +31,7 @@ assert.ok(doc.querySelector('#modelSideNav a[href="./business-model.html"]'),'BM
 assert.ok(doc.querySelector('#modelSideNav a[href="./lesson-notes.html"]'),'lesson notes accessible from single model drawer');
 assert.ok(home.querySelector('[data-go="passport"]'),'progress stays accessible');
 assert.ok(home.querySelector('#homeScoreMini'),'home progress tied to annual score');
-assert.ok(cards[1].dataset.go==='lesson/5/mix','idea of leadership remains directly accessible');
+assert.ok(cards[1].dataset.go==='stage/idea','idea of leadership remains directly accessible');
 assert.equal(doc.querySelector('.bottom-nav'),null,'old bottom menu deleted');
 const css=read('app/ch5-product-shell.css');
 assert.match(css,/#homeView \.saba-home-photo img/);
