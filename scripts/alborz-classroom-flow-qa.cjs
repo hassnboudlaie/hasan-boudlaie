@@ -106,7 +106,7 @@ const server=http.createServer((req,res)=>{
   await expert1.waitForFunction(()=>document.querySelector('.classroom-saved')?.textContent.includes('ثبت شده'));
   assert.match(get(1,'r0initial').field_value,/ثبت موقت/,'decision saved under group and mission');
   await teacher.evaluate(()=>window.AlborzLive.refresh());
-  await teacher.locator('.classroom-monitor summary').click();
+  await teacher.locator('.classroom-monitor > summary').click();
   await teacher.locator('.classroom-monitor-list details').first().evaluate(el=>el.open=true);
   assert.match(await teacher.locator('.classroom-monitor').innerText(),/ثبت موقت/,'instructor sees shared decision');
   await teacher.locator('[data-class-next]').click();
