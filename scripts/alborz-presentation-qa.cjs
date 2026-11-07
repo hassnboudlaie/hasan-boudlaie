@@ -30,8 +30,19 @@ const server = http.createServer((req, res) => {
     await page.goto(base + 'claims-workshop-v2.html', {waitUntil: 'load'});
     assert.equal(await page.locator('a[href="./claims-presentation.html"]').count(), 1,
       'course homepage links to presentation');
+    assert.match(await page.locator('.workshop-hero h1').innerText(), /تلاطم.*راهبرد/s);
+    assert.equal(await page.locator('.strategy-strip span').count(), 4);
+    assert.equal(await page.getByText('راهنمای کوتاه کلاس').count(), 0);
+    assert.equal(await page.getByText('نمایش درشت و مرحله‌ای', {exact:false}).count(), 0);
+    assert.equal(await page.getByText('Presentation Mode', {exact:false}).count(), 0);
+    assert.equal(await page.getByText('برنامه هشت‌ساعته', {exact:true}).count(), 1);
+    assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 1);
     await page.locator('a[href="./claims-presentation.html"]').click();
     await page.locator('#slide h2').waitFor();
+    assert.equal(await page.getByText('مسیر آموزش').count(), 0);
+    assert.equal(await page.getByText('یک نمایش منسجم برای هر سه بخش کارگاه').count(), 0);
+    assert.equal(await page.getByText('Instructor Presentation').count(), 0);
+    assert.equal(await page.locator('#source-status').isVisible(), false, 'no normal online status badge');
     assert.match(await page.locator('#trail').innerText(), /تاب‌آوری/);
     assert.match(await page.locator('#slide h2').innerText(), /اگر فردا/);
     assert.equal(await page.locator('#slide .slide-media img').count(), 1, 'visual storytelling should include a verified art asset');
