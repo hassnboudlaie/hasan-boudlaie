@@ -250,3 +250,6 @@ body{font-family:"AlborzVazir",Vazirmatn,Tahoma,Arial,sans-serif;background:line
  .module-nav button{min-width:120px;font-size:12px}
  .slide-nav button{font-size:13px}
 }
+
+/* Normal online source requires no visible implementation-status label. */
+.source-label:empty{display:none}
