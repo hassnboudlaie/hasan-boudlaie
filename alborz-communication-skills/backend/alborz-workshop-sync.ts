@@ -142,6 +142,7 @@ Deno.serve(async req=>{
     const state=Object.fromEntries((run||[]).map(x=>[x.field_key,x.field_value]));
     const round=Number(state.classroomRound??0),phase=Number(state.classroomPhase??0);
     if(phase!==2||fields.missionChoiceRound!==round||fields['missionRound'+round]!==fields.missionChoice)return respond({error:'فقط در مرحله انتخاب و برای دور جاری می‌توان مأموریت تعیین کرد'},409,origin);
+    if(entries.length!==3||entries.some(([key])=>!['missionChoice','missionChoiceRound','missionRound'+round].includes(key)))return respond({error:'فقط مأموریت همان دور قابل ثبت است'},400,origin);
     const earlier=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionRound0,missionRound1,missionRound2,missionRound3)&select=field_key,field_value');
     if((earlier||[]).some(x=>Number(x.field_key.slice(-1))<round&&x.field_value===fields.missionChoice))return respond({error:'این مأموریت در دور قبلی اجرا شده است؛ یکی از راهبردهای دیگر را انتخاب کنید'},409,origin);
    }
