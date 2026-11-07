@@ -1,7 +1,7 @@
 name: Alborz Claims Resilience - Group Learning QA
 on:
   push:
-    branches: [main, feat/alborz-resilience-claims-20261102, 'fix/alborz-*', 'feat/alborz-classroom-*', 'feat/alborz-presentation-*']
+    branches: [main, feat/alborz-resilience-claims-20261102, 'fix/alborz-*', 'feat/alborz-classroom-*', 'feat/alborz-presentation-*', 'feat/alborz-complete-*']
     paths:
       - 'alborz-communication-skills/index.html'
       - 'alborz-communication-skills/resilience.html'
@@ -13,6 +13,7 @@ on:
       - 'alborz-communication-skills/claims-presentation.*'
       - 'scripts/alborz-presentation-qa.cjs'
       - 'scripts/alborz-four-hour-qa.cjs'
+      - 'scripts/alborz-instructor-journey-qa.cjs'
       - 'scripts/alborz-resilience-browser-qa.mjs'
       - '.github/workflows/alborz-resilience-regression.yml'
   workflow_dispatch:
@@ -32,6 +33,7 @@ jobs:
           node --check alborz-communication-skills/resilience-game.js
           node --check alborz-communication-skills/resilience-live.js
           node --check scripts/alborz-four-hour-qa.cjs
+          node --check scripts/alborz-instructor-journey-qa.cjs
           node --check alborz-communication-skills/claims-presentation.js
           node --check scripts/alborz-presentation-qa.cjs
           node --check scripts/alborz-resilience-browser-qa.mjs
@@ -43,6 +45,7 @@ jobs:
         run: |
           node scripts/alborz-resilience-browser-qa.mjs
           node scripts/alborz-presentation-qa.cjs
+          node scripts/alborz-instructor-journey-qa.cjs
       - name: Save visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
