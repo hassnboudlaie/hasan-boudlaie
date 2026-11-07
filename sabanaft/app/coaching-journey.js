@@ -41,7 +41,7 @@ function advice(v){
  'اگر یک همکار از زاویه دیگری نگاه کند، چه فرضی ممکن است تغییر کند؟'
  ];
  if(v.extras&&v.extras.length)q.push('کدام‌یک از چالش‌های همزمان علت اصلی است و کدام‌یک فقط پیامد آن؟ چه شواهدی دارید؟');
- var warn='<div class="cj-result-disclaimer"><strong>محدوده راهنما:</strong> این پاسخ از یک چارچوب آموزشی ثابت ساخته شده و تحلیل AI نیست. انتخاب نقش «درست قطعی» وجود ندارد و مسئولیت تصمیم با مدیر است.</div>';
+ var warn='<div class="cj-result-disclaimer"><strong>محدوده راهنما:</strong> این پاسخ از یک چارچوب آموزشی ثابت ساخته شده و تحلیل هوش مصنوعی نیست. انتخاب نقش «درست قطعی» وجود ندارد و مسئولیت تصمیم با مدیر است.</div>';
  return '<div class="cj-answer-head"><span>راهنمای اولیه آماده شد</span><h2>از تشخیص مسئله تا اقدام</h2><p>'+esc(pre)+'</p></div>'+
  '<div class="cj-answer-block"><h3>۱. پرسش‌های شفاف‌سازی</h3>'+(v.extras&&v.extras.length?'<p>چالش‌های همزمان ثبت‌شده به انتخاب شما: '+esc(v.extras.map(function(x){return issueNames[x];}).join('، '))+'. این فهرست تشخیص خودکار هوش مصنوعی نیست.</p>':'')+'<ol>'+q.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ol></div>'+
  '<div class="cj-answer-block"><h3>۲. '+(issues[v.issue]&&!v.extras.length?'دو گزینه رفتاری قابل دفاع':'نقش‌های قابل بررسی در این مسئله')+'</h3><div class="cj-roles">'+selectedRoles.map(function(r){return '<article><strong>'+esc(r.name)+' — '+esc(r.label)+'</strong><p>'+esc(r.appropriate)+'</p><blockquote>'+esc(r.sample)+'</blockquote><small>نقطه احتیاط: '+esc(r.risk)+'</small></article>';}).join('')+'</div><p>این گزینه‌ها، پاسخ قطعی نیستند. بافت ممکن است انتخاب یا ترکیب متفاوتی را توجیه کند.</p></div>'+
@@ -62,7 +62,7 @@ function handoff(){
 }
 function makePrompt(){
  var v=values();if(v.text.length<12){status('برای ساخت پرسش ابتدا یک مسئله کوتاه بنویسید.');return;}
- var msg='برای بازاندیشی رهبری بر اساس کتاب The Reflective Leader نوشته Armin Trost، درباره این موقعیت فرضی و بدون داده محرمانه کمک کن. نقش‌های Boss, Coach, Partner و Enabler را بی‌طرفانه بررسی کن. اول ۴ سؤال شفاف‌کننده بپرس، سپس دو گزینه قابل دفاع با trade-off و جمله نمونه گفت‌وگو پیشنهاد بده؛ نقش قطعی تعیین نکن. اختیار قانونی، HSE، HR و شواهد را بررسی کن. برنامه اقدام قابل مشاهده و نحوه مرور نتیجه را هم پیشنهاد بده.\nبافت: '+teamLabel(v.context)+'\nفوریت: '+(v.urgency==='normal'?'عادی':v.urgency==='urgent'?'زمان‌دار':'حساس')+'\nچالش‌های همزمان به انتخاب من: '+v.extras.map(function(x){return issueNames[x];}).join('، ')+'\nموضوع: '+v.text;
+ var msg='برای بازاندیشی رهبری بر اساس کتاب رهبر بازتابی نوشته آرمین تروست، درباره این موقعیت فرضی و بدون داده محرمانه کمک کن. نقش‌های هدایت‌کننده، مربی، شریک و توانمندساز را بی‌طرفانه بررسی کن. اول ۴ سؤال شفاف‌کننده بپرس، سپس دو گزینه قابل دفاع با محدودیت و مزیت و جمله نمونه گفت‌وگو پیشنهاد بده؛ نقش قطعی تعیین نکن. اختیار قانونی، HSE، HR و شواهد را بررسی کن. برنامه اقدام قابل مشاهده و نحوه مرور نتیجه را هم پیشنهاد بده.\nبافت: '+teamLabel(v.context)+'\nفوریت: '+(v.urgency==='normal'?'عادی':v.urgency==='urgent'?'زمان‌دار':'حساس')+'\nچالش‌های همزمان به انتخاب من: '+v.extras.map(function(x){return issueNames[x];}).join('، ')+'\nموضوع: '+v.text;
  // The user explicitly triggers copying, not transmission.
  var b=byId('cj-copy-ai');
  if(navigator.clipboard&&navigator.clipboard.writeText){
