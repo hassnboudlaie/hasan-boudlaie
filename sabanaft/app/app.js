@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var D=window.SABA_REFLECTIVE,parts=D&&D.sessions,base=new URL("../",location.href);
-var E=function(id){return document.getElementById(id)},courseFrame=E("courseFrame"),studioFrame=E("studioFrame");
+var E=function(id){return document.getElementById(id)},courseFrame=E("courseFrame"),studioFrame=E("studioFrame"),contextFrame=E("contextFrame");
 if(!parts||parts.length!==9){document.querySelector("main").textContent="محتوای اصلی دوره بارگذاری نشد. اتصال اینترنت را بررسی و صفحه را به‌روزرسانی کنید.";return}
 var pics=["sabanaft-niayesh.webp","sabanaft-meeting.jpg","sabanaft-site.webp","sabanaft-farmanieh.webp"];
 var storeKey="sabanaft_reflective_app_shell_v1",progressKey="sabanaft_reflective_v2",memory={last:{s:1,p:parts[0].sections[0].id},bookmarks:[]};
@@ -12,7 +12,7 @@ function escapeText(v){return String(v==null?"":v).replace(/[&<>"']/g,function(x
 function notice(s){var e=E("toast");e.textContent=s;e.classList.add("visible");clearTimeout(notice.t);notice.t=setTimeout(function(){e.classList.remove("visible")},2400)}
 function session(n){return parts.find(function(s){return s.id===Number(n)})}
 function section(n,p){var s=session(n);return s&&s.sections.find(function(x){return x.id===p})}
-function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action|development|mix|insights|review|portfolio)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport","coach"].includes(a[0])?a[0]:"home"}}
+function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action|development|mix|insights|review|portfolio)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport","coach","context"].includes(a[0])?a[0]:"home"}}
 function go(x){if(location.hash==="#/"+x){render();return}location.hash="/"+x}
 function openLesson(n,p){go("lesson/"+n+"/"+p)}
 function latest(){var r=memory.last;return section(r.s,r.p)?r:{s:1,p:parts[0].sections[0].id}}
@@ -24,6 +24,16 @@ function renderCourse(){var state=courseState(),out=parts.map(function(s){var c=
 function renderSession(n){var s=session(n),state=courseState();E("sessionKicker").textContent="SESSION "+String(n).padStart(2,"0")+" · "+fa(s.sections.length)+" بخش";E("sessionTitle").textContent="جلسه "+fa(n)+" · "+s.title;E("sessionSubtitle").textContent=s.subtitle;E("sessionOutput").textContent=s.output;E("lessonList").innerHTML=s.sections.map(function(x,i){var d=state.done.has(doneKey(n,x.id));return '<button type="button" class="lesson-card" data-lesson="'+escapeText(x.id)+'"><span class="lesson-number">'+fa(i+1)+'</span><span class="lesson-text"><strong>'+escapeText(x.title)+'</strong><small>'+(d?'✓ مرورشده':'ورود به درس و تمرین')+'</small></span><span class="lesson-arrow" aria-hidden="true">←</span></button>'}).join("")}
 function contentUrl(s,p){var u=new URL("index.html",base);u.hash="s/"+s+"/"+p;return u}
 function studioUrl(tab){var u=new URL("leadership-studio.html",base);u.hash=tab;return u}
+var contextLast="";
+function setContext(){var u=new URL("index.html",base);u.hash="context";if(contextLast!==u.href){contextLast=u.href;E("contextLoader").hidden=false;contextFrame.src=u.href}}
+contextFrame.addEventListener("load",function(){
+ E("contextLoader").hidden=true;
+ try{var doc=contextFrame.contentDocument;if(!doc)return;
+ var style=doc.getElementById("saba-context-embedded");if(!style){style=doc.createElement("style");style.id="saba-context-embedded";
+ style.textContent='html,body{background:#fff!important}body{font-size:16px!important;line-height:1.9!important}.site-header,.site-footer,.sidebar,.mobile-menu,.scrim,.skip-link{display:none!important}.layout,.layout.with-sidebar{display:block!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:none!important}#main{width:100%!important;max-width:none!important;margin:0!important;padding:12px 16px 40px!important;min-width:0!important}.page-header h1{font-size:27px!important}.practice-tool{padding:16px!important}@media(max-width:650px){#main{padding:8px!important}.practice-tool{padding:12px!important}}';
+ doc.head.appendChild(style)}
+ }catch(e){}
+});
 var courseLast="",studioLast="",courseReady=false,studioReady=false;
 function injectCourseStyles(){
  try{
@@ -43,7 +53,7 @@ function readerControls(s,p){var ses=session(s),idx=ses.sections.findIndex(funct
 function renderReader(s,p){memory.last={s:s,p:p};save();readerControls(s,p);setCourse(s,p)}
 function setStudio(tab){var u=studioUrl(tab);E("externalStudio").href=u.href;try{if(studioReady){var here=new URL(studioFrame.contentWindow.location.href);if(here.href===u.href)return;if(here.pathname===u.pathname){studioFrame.contentWindow.location.replace(u.href);return}}}catch(e){}if(studioLast!==u.href){studioLast=u.href;studioReady=false;E("studioLoader").hidden=false;studioFrame.src=u.href}}
 function renderPassport(){var st=courseState(),all=parts.reduce(function(n,s){return n+count(s,st)},0),pct=Math.round(all/47*100);E("contextName").textContent=st.name;E("passportSummary").textContent=fa(all)+" بخش تکمیل‌شده از ۴۷ بخش";E("progressPct").textContent=fa(pct)+"٪";E("progressRing").style.setProperty("--pct",pct+"%");var items=memory.bookmarks.map(function(k){var m=/^s([1-9])-(.+)$/.exec(k);if(!m||!section(Number(m[1]),m[2]))return "";return '<button type="button" class="saved-item" data-s="'+m[1]+'" data-p="'+escapeText(m[2])+'"><span><strong>☆ '+escapeText(section(Number(m[1]),m[2]).title)+'</strong><small>جلسه '+fa(m[1])+'</small></span><span>←</span></button>'}).filter(Boolean);E("bookmarkList").innerHTML=items.length?items.join(""):'<div class="blank">هنوز درسی نشان نشده است. در صفحه درس، علامت ☆ را بزنید.</div>'}
-function render(){var r=route();document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");document.querySelectorAll(".bottom-nav button").forEach(function(b){b.classList.toggle("active",b.dataset.nav===(r.page==="reader"||r.page==="session"?"course":r.page==="studio"?(r.tab==="mix"?"studio/mix":"studio/daily"):r.page))});if(r.page==="home")renderHome();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
+function render(){var r=route();document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");document.querySelectorAll(".bottom-nav button").forEach(function(b){b.classList.toggle("active",b.dataset.nav===(r.page==="reader"||r.page==="session"?"course":r.page==="studio"?(r.tab==="mix"?"studio/mix":"studio/daily"):r.page))});if(r.page==="home")renderHome();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
 courseFrame.addEventListener("load",function(){courseReady=true;try{courseLast=courseFrame.contentWindow.location.href}catch(e){}injectCourseStyles();E("courseLoader").hidden=true});
 studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=studioFrame.contentWindow.location.href}catch(e){}E("studioLoader").hidden=true});
 document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.nav)})});
@@ -60,6 +70,7 @@ E("lessonChips").addEventListener("click",function(e){var b=e.target.closest("[d
 E("bookmark").addEventListener("click",function(){var r=route();if(r.page!=="reader")return;var k=doneKey(r.s,r.p),i=memory.bookmarks.indexOf(k);if(i>=0)memory.bookmarks.splice(i,1);else memory.bookmarks.push(k);save();readerControls(r.s,r.p);notice(i<0?"برای مرور بعدی نشان شد.":"نشان درس برداشته شد.")});
 ["previousLesson","nextLesson"].forEach(function(id){E(id).addEventListener("click",function(){var r=route(),s=session(r.s);if(!s||r.page!=="reader")return;var i=s.sections.findIndex(function(x){return x.id===r.p})+(id==="nextLesson"?1:-1);if(i>=0&&i<s.sections.length)openLesson(r.s,s.sections[i].id)})});
 E("studioBack").addEventListener("click",function(){go("home")});
+E("contextBack").addEventListener("click",function(){go("home")});
 E("bookmarkList").addEventListener("click",function(e){var b=e.target.closest("[data-s]");if(b)openLesson(Number(b.dataset.s),b.dataset.p)});
 E("openPortfolio").addEventListener("click",function(){window.open(new URL("index.html#portfolio",base).href,"_blank","noopener,noreferrer")});
 E("changeContext").addEventListener("click",function(){go("course");window.open(new URL("index.html#home",base).href,"_blank","noopener,noreferrer")});
