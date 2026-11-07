@@ -138,7 +138,7 @@ function render(force=false){
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
  needsRefresh=false;lastFingerprint=signature;
- const ahead=stage===10?2:stage+1,readyTeams=groups().filter(confirmed(t=>t)).length;
+ const ahead=stage===10?2:stage+1;
  const countConfirmed=groups().filter(confirmed).length;
  const allReadyHaveMission=groups().filter(confirmed).every(t=>groupChoice(t)!==null);
  const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission));
