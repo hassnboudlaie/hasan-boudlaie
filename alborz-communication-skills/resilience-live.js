@@ -45,7 +45,7 @@ function applyRows(rows){records=Object.fromEntries(rows.map(r=>[r.field_key,r])
 }W.merge(merge);
  if(redraw&&!Object.keys(drafts).length&&!app.querySelector('textarea:focus'))W.render();else{decorate();showMembers();}
 }
-async function refresh(){if(!auth||busy||document.hidden)return;const gen=generation;busy=true;try{const d=await request({action:teacher?'teacher':'read',...(teacher?{}:{team:auth.team})});if(gen!==generation||!auth)return;if(classroom){
+async function refresh(force=false){if(!auth||busy||(!force&&document.hidden))return;const gen=generation;busy=true;try{const d=await request({action:teacher?'teacher':'read',...(teacher?{}:{team:auth.team})});if(gen!==generation||!auth)return;if(classroom){
   if(teacher)allRows=d.records;else records=Object.fromEntries(d.records.map(r=>[r.field_key,r]));
   window.dispatchEvent(new CustomEvent('alborz:classroom-data',{detail:{identity:{role:auth.role,team:auth.team,member:auth.member},records:d.records,classroom:d.classroom||null}}));
  }else if(teacher){allRows=d.records;showTeacher();}else applyRows(d.records);message('متصل · آخرین دریافت '+new Date().toLocaleTimeString('fa-IR')+(Object.keys(drafts).length?' · '+fa(Object.keys(drafts).length)+' تغییر هنوز اشتراک‌گذاری نشده':''));}catch(e){if(gen!==generation)return;message((e.status===401?'کد منقضی یا لغو شده؛ دوباره وارد شوید.':'ارتباط قطع است؛ پیش‌نویس شما حفظ شده است. ')+e.message,true);}finally{if(gen===generation)busy=false;}}
@@ -237,6 +237,6 @@ app.addEventListener('click',async e=>{
 });
 window.addEventListener('beforeunload',e=>{if(Object.keys(drafts).length){e.preventDefault();e.returnValue='';}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
-window.AlborzLive={identity:()=>auth?{role:auth.role,team:auth.team,member:auth.member}:null,request:body=>request(body),refresh:()=>refresh(),isClassroom:classroom};
+window.AlborzLive={identity:()=>auth?{role:auth.role,team:auth.team,member:auth.member}:null,request:body=>request(body),refresh:()=>refresh(true),isClassroom:classroom};
 mount();try{const cached=JSON.parse(sessionStorage.getItem(sessionKey)||'null');if(cached?.code&&(teacher?cached.role==='teacher':cached.role==='team'))join(cached.code);}catch{}
 })();
