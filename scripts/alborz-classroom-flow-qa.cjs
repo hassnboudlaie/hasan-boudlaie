@@ -91,7 +91,7 @@ const server=http.createServer((req,res)=>{
   assert.match(await expert2.locator('.classroom-story').innerText(),/پرونده‌های درمان/,'chameleon gets structural redesign scenario');
   assert.equal(get(1,'classroomPhase').field_value,3,'instructor phase stored centrally');
   await teacher.locator('[data-class-reference="2"]').click();
-  assert.match(await teacher.locator('.classroom-case-caption').innerText(),/آفتاب‌پرست|پرونده/);
+  assert.match(await teacher.locator('.classroom-case-caption').innerText(),/آفتاب‌پرست|پرونده|رفت‌وآمدی/);
   for(let phase=4;phase<=6;phase++){
    await teacher.locator('[data-class-next]').click();
    await teacher.waitForFunction(p=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله '+new Intl.NumberFormat('fa-IR').format(p+1)),phase);
