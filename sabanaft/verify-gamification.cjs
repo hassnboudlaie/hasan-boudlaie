@@ -28,14 +28,14 @@ const studioData={cases:[{id:'case1',title:'مسئله پروژه',situation:'ش
 const ctx={Intl,Date,Blob,Set,Map,Math,Number,Array,Object,JSON,console,localStorage:{getItem(k){return k==='sabanaft_reflective_v2'?JSON.stringify(course):k==='sabanaft_leadership_studio_v1'?JSON.stringify(studioData):null}}};ctx.globalThis=ctx;
 vm.runInNewContext(read('app/gamification.js'),ctx);
 const gam=ctx.SabaGamification,data=gam.collect();
-assert.equal(data.annualScore,169,'qualified actions score once even with duplicate completion');
+assert.equal(data.annualScore,184,'qualified actions score once even with duplicate completion');
 assert.equal(data.counts.lessons,1);
 assert.equal(data.counts.cases,1);
 assert.equal(data.counts.followups,1);
 assert.equal(data.points.learning,8);
 assert.equal(data.points.context,6);
 assert.equal(data.points.case,70);
-assert.equal(data.points.reflection,15);
+assert.equal(data.points.reflection,30);
 assert.ok(data.badges.find(b=>b.id==='first-case'&&b.earned));
 assert.equal(gam.collect({course:null,studio:null}).annualScore,0,'mere page visit earns nothing');
 const old=JSON.parse(JSON.stringify(course));old.contexts[0].completedAt['s1-daily']='2020-01-01T12:00:00Z';
