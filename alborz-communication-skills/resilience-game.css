@@ -94,3 +94,39 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .earned-badge details p{margin:3px 0;text-align:right}
 .earned-badge small{display:block;line-height:1.6}
 @media(max-width:600px){.fast-grade-rounds{flex-wrap:nowrap;overflow-x:auto}.fast-grade-rounds .btn{white-space:nowrap}.fast-grade-table{min-width:510px}.fast-grade-panel{padding:14px}.fast-grade-table th,.fast-grade-table td{padding:7px}}
+
+/* Independent mission choice and plain-language case design */
+.course-outline{margin:12px 0 18px;padding:9px 14px;background:#f3f8f4;border-color:#c6dad0}
+.course-outline>summary{font-size:15px;color:#35594c;font-weight:700}
+.course-outline .stage-nav{margin:12px 0 4px}
+.choice-lead{font-size:19px;line-height:1.75;color:#183f32;margin:0 0 18px}
+.mission-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:16px 0}
+.mission-pick-card{display:flex;align-items:center;gap:14px;text-decoration:none;min-width:0;background:#f5faf6;border:1.5px solid #aecdbb;border-radius:17px;padding:18px 16px;color:#123d31;transition:border-color .15s,transform .15s,box-shadow .15s}
+.mission-pick-card:hover{border-color:#11664f;transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,69,50,.11)}
+.mission-pick-card:focus-visible{outline:3px solid #bc8b35;outline-offset:4px}
+.mission-pick-emoji{flex:0 0 auto;font-size:37px;line-height:1.2}
+.mission-pick-info{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+.mission-pick-info strong{font-size:23px;color:#0b4a39}
+.mission-pick-info small{font-size:15px;line-height:1.6;color:#35564a}
+.mission-pick-info em{font-size:13px;font-style:normal;color:#1c654e;font-weight:700}
+.mission-pick-cta{flex:0 0 auto;align-self:center;white-space:nowrap;border-radius:10px;background:#075544;color:#fff;padding:8px 12px;font-size:14px;font-weight:800}
+.mission-link small{line-height:1.35;text-wrap:balance}
+.case-summary{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:20px 0}
+.case-summary>div{border:1px solid #cadfd1;border-radius:15px;background:#fff;padding:16px 19px}
+.case-summary h3{font-size:20px;color:#0c4a3a;margin:0 0 7px}
+.case-summary p{font-size:18px;line-height:1.85;margin:0}
+.case-summary .case-goal{grid-column:1/-1;background:#eaf4eb;border-right:5px solid #12745a}
+.case-summary .case-goal b{font-size:18px;color:#074734}
+.case-summary .case-situation{grid-column:1/-1;background:#f9fbf9}
+.case-summary .case-facts{background:#f3f8fa}
+.case-summary .case-task{background:#fff8eb;border-color:#ecd3a2}
+.case-summary .case-task b{font-size:16px;color:#554322}
+.case-summary ul{font-size:17px;line-height:1.9;margin:5px 0 0;padding:0 24px 0 0}
+.case-summary li{margin-bottom:8px}
+.case-summary .case-notice{grid-column:1/-1;font-size:13px;color:#4b6056;margin:0 3px}
+.teacher-case-task{background:#fff8e9;border:1px solid #edd7b0;padding:13px 16px;border-radius:14px}
+.teacher-case-task p{margin:7px 0}
+.facilitator-case-facts{line-height:1.9}
+.facilitator-case-facts li{margin-bottom:7px}
+@media(max-width:850px){.mission-picker{grid-template-columns:1fr}.mission-pick-cta{font-size:13px}}
+@media(max-width:720px){.case-summary{grid-template-columns:1fr}.case-summary>div{grid-column:1/-1}.case-summary p{font-size:17px}.case-summary h3{font-size:19px}.case-summary ul{font-size:16px}.mission-pick-card{padding:13px;gap:10px}.mission-pick-emoji{font-size:31px}.mission-pick-info strong{font-size:20px}.mission-pick-info small{font-size:14px}.choice-lead{font-size:17px}}
