@@ -9,11 +9,15 @@ on:
       - 'alborz-communication-skills/resilience.js'
       - 'alborz-communication-skills/resilience-game.*'
       - 'alborz-communication-skills/resilience-live.js'
+      - 'alborz-communication-skills/classroom-flow.*'
+      - 'alborz-communication-skills/strategy-cards.js'
+      - 'alborz-communication-skills/backend/alborz-workshop-sync.ts'
       - 'alborz-communication-skills/claims-workshop-v2.html'
       - 'alborz-communication-skills/claims-presentation.*'
       - 'scripts/alborz-presentation-qa.cjs'
       - 'scripts/alborz-four-hour-qa.cjs'
       - 'scripts/alborz-instructor-journey-qa.cjs'
+      - 'scripts/alborz-classroom-flow-qa.cjs'
       - 'scripts/alborz-resilience-browser-qa.mjs'
       - '.github/workflows/alborz-resilience-regression.yml'
   workflow_dispatch:
@@ -32,8 +36,10 @@ jobs:
         run: |
           node --check alborz-communication-skills/resilience-game.js
           node --check alborz-communication-skills/resilience-live.js
+          node --check alborz-communication-skills/classroom-flow.js
           node --check scripts/alborz-four-hour-qa.cjs
           node --check scripts/alborz-instructor-journey-qa.cjs
+          node --check scripts/alborz-classroom-flow-qa.cjs
           node --check alborz-communication-skills/claims-presentation.js
           node --check scripts/alborz-presentation-qa.cjs
           node --check scripts/alborz-resilience-browser-qa.mjs
@@ -46,6 +52,7 @@ jobs:
           node scripts/alborz-resilience-browser-qa.mjs
           node scripts/alborz-presentation-qa.cjs
           node scripts/alborz-instructor-journey-qa.cjs
+          node scripts/alborz-classroom-flow-qa.cjs
       - name: Save visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
