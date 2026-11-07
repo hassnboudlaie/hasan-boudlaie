@@ -13,6 +13,7 @@ function notice(s){var e=E("toast");e.textContent=s;e.classList.add("visible");c
 function session(n){return parts.find(function(s){return s.id===Number(n)})}
 function section(n,p){var s=session(n);return s&&s.sections.find(function(x){return x.id===p})}
 function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="stage"&&["idea","relationship","tools","reflection"].includes(a[1]))return{page:"stage",stage:a[1]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action|development|mix|insights|review|portfolio)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport","coach","context"].includes(a[0])?a[0]:"home"}}
+var lastStage=null;
 function go(x){if(location.hash==="#/"+x){render();return}location.hash="/"+x}
 function openLesson(n,p){go("lesson/"+n+"/"+p)}
 function latest(){var r=memory.last;return section(r.s,r.p)?r:{s:1,p:parts[0].sections[0].id}}
@@ -139,9 +140,9 @@ E("futureCoachBack").addEventListener("click",function(){go("home")});
 E("courseGrid").addEventListener("click",function(e){var a=e.target.closest("[data-session]");if(a)go("session/"+a.dataset.session)});
 E("sessionBack").addEventListener("click",function(){go("course")});
 E("stageBack").addEventListener("click",function(){go("home")});
-E("stageActionList").addEventListener("click",function(e){var b=e.target.closest("[data-go-stage]");if(b)go(b.dataset.goStage)});
+E("stageActionList").addEventListener("click",function(e){var b=e.target.closest("[data-go-stage]");if(b){lastStage=route().stage;go(b.dataset.goStage)}});
 E("lessonList").addEventListener("click",function(e){var b=e.target.closest("[data-lesson]"),r=route();if(b&&r.page==="session")openLesson(r.s,b.dataset.lesson)});
-E("readerBack").addEventListener("click",function(){var r=route();if(r.page==="reader")go("session/"+r.s)});
+E("readerBack").addEventListener("click",function(){var r=route();if(r.page==="reader")go(lastStage?"stage/"+lastStage:"session/"+r.s)});
 E("lessonChips").addEventListener("click",function(e){var b=e.target.closest("[data-part]"),r=route();if(b&&r.page==="reader")openLesson(r.s,b.dataset.part)});
 E("bookmark").addEventListener("click",function(){var r=route();if(r.page!=="reader")return;var k=doneKey(r.s,r.p),i=memory.bookmarks.indexOf(k);if(i>=0)memory.bookmarks.splice(i,1);else memory.bookmarks.push(k);save();readerControls(r.s,r.p);notice(i<0?"برای مرور بعدی نشان شد.":"نشان درس برداشته شد.")});
 ["previousLesson","nextLesson"].forEach(function(id){E(id).addEventListener("click",function(){var r=route(),s=session(r.s);if(!s||r.page!=="reader")return;var i=s.sections.findIndex(function(x){return x.id===r.p})+(id==="nextLesson"?1:-1);if(i>=0&&i<s.sections.length)openLesson(r.s,s.sections[i].id)})});
