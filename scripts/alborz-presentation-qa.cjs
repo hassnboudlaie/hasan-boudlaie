@@ -74,7 +74,7 @@ const server = http.createServer((req, res) => {
     await page.locator('#live-code').fill('12345678');
     await page.locator('#live-join').click();
     await page.waitForURL('**/resilience.html?classroom=1&group=7&mission=camel', {timeout: 9000});
-    assert.match(await page.locator('h1').innerText(), /شتر/,
+    assert.match(await page.locator('.classroom-welcome').innerText(), /۷[\s\S]*۴/,
       'expert PIN identifies its group and member in the guided classroom');
     await page.goto(base + 'claims-workshop-v2.html', {waitUntil:'load'});
     await page.goto(base + 'claims-presentation.html', {waitUntil:'load'});
