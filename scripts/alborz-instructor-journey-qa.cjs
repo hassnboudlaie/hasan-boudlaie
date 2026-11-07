@@ -10,11 +10,19 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
  for(const width of [390,1366]){
   const ctx=await browser.newContext({viewport:{width,height:850}}),page=await ctx.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
+  let gradeRows=[];
   const endpoint='**/functions/v1/alborz-workshop-sync';
   await page.route(endpoint,async route=>{
    const request=route.request().postDataJSON();
    if(request.action==='login')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({identity:{role:'teacher'},session:'mock-protected-session'})});
-   if(request.action==='teacher')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({records:[]})});
+   if(request.action==='teacher')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({records:gradeRows})});
+   if(request.action==='grade'){
+    const key=Object.keys(request.fields||{})[0],id=request.team+':'+key,old=gradeRows.find(x=>x.id===id);
+    if((old?.version??0)!==(request.expected?.[key]??0))return route.fulfill({status:409,contentType:'application/json',body:'{"error":"conflict"}'});
+    const record={id,team_no:request.team,field_key:key,field_value:request.fields[key],version:(old?.version??0)+1};
+    gradeRows=gradeRows.filter(x=>x.id!==id).concat(record);
+    return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({records:[record]})});
+   }
    if(request.action==='logout')return route.fulfill({status:200,contentType:'application/json',body:'{}'});
    return route.fulfill({status:403,contentType:'application/json',body:'{"error":"denied"}'});
   });
@@ -35,12 +43,25 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no horizontal instructor overflow '+width);
   await page.locator('[data-teacher-tab="dashboard"]').click();
   assert.equal(await page.locator('.instructor-roadmap').count(),0,'switch to live view');
-  assert.equal(await page.locator('[data-grade]').count(),50,'ten groups times five graded rounds');
+  assert.equal(await page.locator('[data-batch-grade-input]').count(),10,'one compact score input per group');
+  assert.equal(await page.locator('[data-score-round]').count(),5,'four missions plus scenario tab');
+  assert.equal(await page.locator('[data-batch-grade-save]').count(),1,'one batch save control');
+  await page.locator('[data-batch-grade-input="1:0"]').fill('7');
+  await page.locator('[data-batch-grade-input="2:0"]').fill('6');
+  await page.locator('[data-batch-grade-save]').click();
+  await page.waitForFunction(()=>document.querySelector('#live-status')?.textContent.includes('موفقیت'));
+  assert.equal(gradeRows.length,2,'two authorized grade writes');
+  assert.deepEqual(gradeRows.map(x=>x.field_value).sort(),[6,7],'grade values persisted in mocked server');
+  await page.locator('[data-score-round="1"]').click();
+  assert.equal(await page.locator('[data-batch-grade-input="1:1"]').count(),1,'mission-specific group score');
+  await page.locator('[data-score-round="0"]').click();
+  assert.equal(await page.locator('[data-batch-grade-input="1:0"]').inputValue(),'7','first score survives mission switching');
+  assert.equal(await page.locator('[data-batch-grade-input="2:0"]').inputValue(),'6','second score survives mission switching');
   await page.locator('[data-teacher-tab="journey"]').click();
   assert.equal(await page.locator('details.teacher-mission').count(),4,'guide remains accessible after dashboard');
   await page.screenshot({path:'artifacts/alborz-resilience/instructor-journey-'+width+'.png',fullPage:true});
   assert.deepEqual(errors,[],'browser errors at '+width);
-  console.log('PASS instructor A-to-Z '+width+'px: protected login, four missions, embedded skills, live dashboard, badges, RTL');
+  console.log('PASS instructor A-to-Z '+width+'px: protected login, four missions, embedded skills, ten-row batch grading and persistence, badges, RTL');
   await ctx.close();
  }
  await browser.close();server.close();
