@@ -16,7 +16,7 @@ assert.match(shell,/class="model-side-extras"/,'approved model drawer contains s
 assert.equal([...shell.matchAll(/data-model-nav="/g)].length,5,'five leadership model elements');
 assert.match(shell,/id="gamificationDashboard"/,'achievement dashboard mounted');
 assert.match(shell,/gamification.js/,'scoring module linked');
-assert.match(read('app/sw.js'),/shell-v15/,'offline assets refreshed');
+assert.match(read('app/sw.js'),/shell-v16/,'offline assets refreshed');
 assert.match(read('reflective-app.js'),/completedAt/,'real dates attached to learning');
 assert.match(studio,/c\.decisionAt=/,'decision timestamps');
 assert.match(studio,/c\.actionAt=/,'action timestamps');

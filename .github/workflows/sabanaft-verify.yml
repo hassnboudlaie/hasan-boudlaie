@@ -30,6 +30,7 @@ jobs:
           node --check sabanaft/reflective-app.js
           node --check sabanaft/app/app.js
           node --check sabanaft/verify-context-ch6.cjs
+          node --check sabanaft/verify-drilldown.cjs
           node --check sabanaft/role-development.js
           node --check sabanaft/guided-reflection.js
           node --check sabanaft/app/coaching-journey.js
@@ -48,5 +49,7 @@ jobs:
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-chapters.cjs
       - name: Private impact export regression
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-impact.cjs
+      - name: Premium visual drilldown and back-navigation
+        run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-drilldown.cjs
       - name: Chapter 1–5 visual dashboard and navigation
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-ui-ch5.cjs

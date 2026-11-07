@@ -32,6 +32,39 @@ body .studio-workbar{position:sticky;top:0;z-index:8;display:flex;align-items:ce
 body .source-foot,.book-source,.coverage{display:none!important}
 @media(max-width:650px){body .main{padding:0 9px!important}.studio-workbar{gap:5px!important;padding:8px!important}.studio-workbar button,.studio-workbar a{font-size:12px;padding:6px 8px}.pane{padding-top:0!important}}
 </style>
+<style id="studio-premium">
+ body{background:#f4f7fa;color:#1b3a54;font:18px/1.85 Vazirmatn,Tahoma,sans-serif}
+ .main{padding:16px clamp(13px,2.6vw,25px) 50px!important}
+ .pane{max-width:1000px!important}
+ .studio-tools{background:#fff;border:1px solid #dce7ef;border-radius:15px;padding:9px 14px;margin:6px 0 17px}
+ .studio-tools>summary{cursor:pointer;font-size:17px;font-weight:900;color:#22577e;min-height:42px;display:list-item;align-content:center}
+ .studio-workbar{box-shadow:none!important;margin:9px 0 0!important;padding:7px!important}
+ .studio-workbar button,.studio-workbar a{font-size:16px!important;min-height:47px!important;padding:7px 13px!important}
+ h1,.page-title{font-size:clamp(27px,3.8vw,35px)!important;line-height:1.5!important}
+ h2{font-size:clamp(22px,3vw,27px)!important}
+ h3{font-size:20px!important}
+ .hero{padding:clamp(21px,4vw,35px)!important;background:linear-gradient(115deg,#133b5d,#235f88)!important;border-radius:20px!important}
+ .hero h1{color:white!important}
+ .hero p{font-size:17px!important}
+ .card{padding:clamp(16px,2.5vw,22px)!important;border:1px solid #dce6ee;border-radius:18px!important;box-shadow:0 8px 22px rgba(10,39,65,.05)}
+ p,.intro,.card>p{font-size:17px;line-height:1.9}
+ .field label{font-size:17px!important;font-weight:850!important}
+ input,select,textarea{font-size:17px!important;min-height:50px!important;border-radius:13px!important}
+ button,.btn{font-size:17px!important;min-height:46px!important}
+ .metric strong{font-size:28px}
+ .small,.muted,.kicker{font-size:14px!important}
+ @media(max-width:700px){
+  body{font-size:17px}
+  .main{padding:8px 11px 45px!important}
+  .studio-tools{padding:8px 12px}
+  .studio-workbar{display:grid!important;grid-template-columns:1fr 1fr}
+  .studio-workbar button,.studio-workbar a{font-size:15px!important;min-height:46px}
+  .hero h1{font-size:27px!important}
+  .form-grid{grid-template-columns:1fr!important}
+  .card{padding:16px!important}
+  .grid{gap:12px!important}
+ }
+ </style>
 </head>
 <body>
 <div class="app">
@@ -39,13 +72,13 @@ body .source-foot,.book-source,.coverage{display:none!important}
 <div class="main">
 <div class="pane">
   <div class="top"><span class="eyebrow">فضای بازاندیشی مدیران صبا نفت</span><div class="top-actions"><span class="status" id="storage-status">ذخیره محلی روی همین دستگاه</span></div></div>
-<nav class="studio-workbar" aria-label="ابزارهای کاری، جدا از مدل رهبری">
+<details class="studio-tools"><summary>ابزارهای همین بخش</summary><nav class="studio-workbar" aria-label="ابزارهای کاری، جدا از مدل رهبری">
  <button type="button" data-go="home">＋ مسئله جدید</button>
  <button type="button" data-go="cases">▤ کیس‌های من</button>
  <button type="button" data-go="daily">↻ بازاندیشی</button>
  <button type="button" data-go="development">✦ تمرین و رشد</button>
  <a href="./app/#/passport" target="_top">🏆 پیشرفت من</a>
-</nav>
+</nav></details>
   <main id="view" tabindex="-1"></main>
 
 </div></div></div>

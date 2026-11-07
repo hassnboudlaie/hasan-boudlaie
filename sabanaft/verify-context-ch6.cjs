@@ -10,7 +10,8 @@ const inline=[...studio.matchAll(/<script>([\s\S]*?)<\/script>/g)];
 assert.equal(inline.length,1,'one inline studio script expected');
 new vm.Script(inline[0][1],{filename:'leadership-studio-inline.js'});
 assert.match(course,/text==='context'/,'canonical standalone context route');
-assert.match(course,/contextMap\(\['task','people','team','organization'\]\)/,'all four context levels');
+assert.match(course,/contextMap\(\[route\.group\]\)/,'each context group is a separate routed screen');
+assert.match(course,/context-stage-card/,'four context group cards visible before forms');
 assert.match(course,/contextReflection/,'context reflection survives restore and export');
 assert.match(course,/\['key','جایگاه کلیدی/,'key function is independently scored');
 assert.match(course,/\['risk','نقش پرریسک/,'high-risk function is independently scored');
@@ -22,5 +23,5 @@ assert.match(shellJS,/if\(r\.page==="context"\)setContext\(\)/,'PWA context rout
 assert.match(shellJS,/u\.hash="context"/,'PWA points at canonical course route');
 assert.match(original,/"dimensions":\[\{"id":"certainty"/,'canonical dimensions present');
 assert.match(read('app/lesson-notes.html'),/chapter6/,'chapter six summary present');
-assert.match(read('app/sw.js'),/shell-v15/,'PWA cache revision');
+assert.match(read('app/sw.js'),/shell-v16/,'PWA cache revision');
 console.log('PASS: one canonical Chapter 6 context workflow; studio legacy removed; chapter lesson links, PWA, reflection and syntax verified.');

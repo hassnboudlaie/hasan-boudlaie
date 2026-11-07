@@ -26,6 +26,7 @@ jobs:
           node --check sabanaft/app/app.js
           node --check sabanaft/commercial-ux.js
           node --check sabanaft/verify-context-ch6.cjs
+          node --check sabanaft/verify-drilldown.cjs
           node --check sabanaft/assessment-upgrade.js
           node --check sabanaft/practice-kits.js
           node --check sabanaft/app/coaching-journey.js
@@ -40,4 +41,5 @@ jobs:
           node sabanaft/verify-context-ch6.cjs
           node sabanaft/verify-model-ia.cjs
           node sabanaft/verify-gamification.cjs
+          node sabanaft/verify-drilldown.cjs
           node sabanaft/verify-coaching.cjs

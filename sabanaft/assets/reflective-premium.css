@@ -1,0 +1,65 @@
+/* صبانفت ـ صفحات مستقل ارزیابی و خوانایی کاربردی */
+:root{--ink:#193850;--muted:#526b80;--bg:#f4f7fa;--line:#dbe6ed;--soft:#eef5fa;--orange:#c78b54}
+html{scroll-behavior:auto}
+body{font-family:Vazirmatn,Tahoma,sans-serif;font-size:18px;line-height:1.85;background:#f4f7fa;color:#1d394e}
+h1{font-size:clamp(28px,4.5vw,38px);line-height:1.5}
+h2{font-size:clamp(22px,3vw,28px);line-height:1.55}
+p{line-height:1.9}
+button,input,textarea,select{font-family:Vazirmatn,Tahoma,sans-serif;font-size:17px}
+button,.btn{min-height:48px}
+input,textarea,select{min-height:50px;line-height:1.8}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #d7a06a;outline-offset:3px}
+#main{width:min(100%,970px);margin:0 auto;padding-bottom:55px}
+.page-header{padding:5px 0 16px}
+.page-header h1{font-size:clamp(27px,4vw,36px)}
+.page-header .lead{font-size:17px;line-height:1.9}
+.context-page-heading{margin-bottom:7px}
+.context-picker{background:#fff;border:1px solid #dae6ee;box-shadow:0 8px 23px rgba(10,42,69,.04);padding:19px;border-radius:18px;margin:12px 0}
+.context-picker>label{font-size:18px;font-weight:900;color:#1a496a}
+.context-picker select{border-radius:13px;font-size:17px}
+.context-picker>p{font-size:14px;line-height:1.7;color:#687b89}
+.context-overview{padding:15px 18px;background:#edf5fa;border:1px solid #d8e8f2;border-radius:14px;color:#1d4c71;margin:15px 0}
+.context-overview strong{font-size:17px}.context-overview span{font-size:14px}
+.context-stage-list{display:grid;grid-template-columns:1fr;gap:13px;margin:21px 0}
+.context-stage-card{min-height:101px;display:flex;align-items:center;gap:15px;text-decoration:none;background:#fff;color:#1d3c55;border:1px solid #dce7ee;border-radius:18px;padding:17px 19px;box-shadow:0 8px 20px rgba(16,53,80,.05);transition:border-color .2s,transform .2s}
+.context-stage-card:hover{border-color:#99bfd5;transform:translateY(-2px)}
+.context-stage-num{flex:0 0 54px;width:54px;height:54px;border-radius:17px;display:grid;place-items:center;background:#eaf3f9;color:#1e587d;font-size:24px;font-weight:950}
+.context-stage-copy{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+.context-stage-copy strong{font-size:20px;line-height:1.55;color:#163d5d}
+.context-stage-copy small{font-size:15px;color:#647a8c;line-height:1.65}
+.context-stage-copy em{font-style:normal;color:#b17849;font-size:14px;font-weight:850}
+.context-stage-arrow{font-size:26px;color:#b98659}
+.context-return{display:inline-flex;align-items:center;background:#fff;border:1px solid #cddfeb;color:#1f567c;padding:9px 16px;border-radius:13px;min-height:48px;text-decoration:none;font-size:16px;font-weight:900;margin:7px 0}
+.context-reflect-entry{width:100%;display:flex;align-items:center;justify-content:center;font-size:18px!important;font-weight:900;background:#1e547a!important;color:#fff!important;min-height:58px;border-radius:14px;text-decoration:none;margin:10px 0 18px}
+.context-stage-footer{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}
+.context-drilldown{padding:20px!important}
+.context-drilldown .context-group{margin:0!important;border:0!important;box-shadow:none!important;padding:0!important}
+.context-drilldown .context-group>summary{display:none!important}
+.context-drilldown .context-group .dimension{background:#fff;border:1px solid #dae5ed;border-radius:17px;margin:14px 0;padding:20px!important}
+.context-drilldown .dimension h3{font-size:21px;color:#184262;line-height:1.55}
+.context-drilldown .dimension p{font-size:17px;line-height:1.9}
+.context-drilldown .extremes{font-size:14px;line-height:1.8}
+.context-drilldown .point-inputs{gap:13px}
+.context-drilldown .point-inputs label{font-size:17px;font-weight:800}
+.context-drilldown input,.context-drilldown textarea,.context-drilldown select{font-size:17px;min-height:49px;border-radius:13px}
+.context-reflect .field label{font-size:18px}
+.context-reflect textarea{min-height:115px}
+.context-comparison{border-radius:16px;padding:18px}
+.method-note{font-size:14px!important;line-height:1.85!important}
+@media(max-width:700px){
+ body{font-size:18px}
+ #main{padding:11px 12px 48px}
+ .page-header .lead{font-size:16px}
+ .context-stage-list{gap:11px}
+ .context-stage-card{padding:14px;min-height:98px;gap:12px}
+ .context-stage-num{width:49px;flex-basis:49px;height:49px;font-size:22px}
+ .context-stage-copy strong{font-size:19px}
+ .context-stage-copy small{font-size:14px}
+ .context-picker{padding:15px}
+ .context-drilldown{padding:12px!important}
+ .context-drilldown .context-group .dimension{padding:15px!important}
+ .context-drilldown .extremes{font-size:13px}
+ .context-drilldown .point-inputs{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+ .context-drilldown .point-inputs select{width:100%;min-width:0}
+}
+@media(max-width:380px){.context-stage-card{gap:9px;padding:12px}.context-stage-copy strong{font-size:18px}.context-stage-copy small{font-size:14px}}
