@@ -17,6 +17,9 @@ function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.f
 function val(team,key){return rec(team,key)?.field_value;}
 function version(team,key){return rec(team,key)?.version??0;}
 function groupChoice(team){const v=val(team,'missionChoice');return Number(val(team,'missionChoiceRound')??-1)===classroomRound&&Number.isInteger(v)&&v>=0&&v<=3?v:null;}
+function usedMissions(team){return Array.from({length:classroomRound},(_,i)=>val(team,'missionRound'+i)).filter(Number.isInteger);}
+function stepReady(team){return val(team,'classStepReady')===classroomRound+':'+stage;}
+function readiness(){const active=groups().filter(confirmed),ready=active.filter(stepReady),waiting=active.filter(t=>!stepReady(t));return {active,ready,waiting};}
 function size(team){const v=val(team,'groupSize');return [3,4,5,6].includes(v)?v:0;}
 function confirmed(team){return val(team,'groupReady')===true;}
 function checkin(team,j){return val(team,'checkin'+j)===true;}
@@ -56,9 +59,9 @@ function missionRoster(){
  return '<div class="classroom-choice-roster">'+list.map(t=>'<div><strong>گروه '+fa(t)+'</strong><span>'+(groupChoice(t)===null?'مأموریت انتخاب نشده':animals[groupChoice(t)]+' '+labels[groupChoice(t)])+'</span></div>').join('')+'</div>';
 }
 function chooseMission(){
- const t=identity.team,selected=groupChoice(t);
+ const t=identity.team,selected=groupChoice(t),used=usedMissions(t);
  return simpleTitle('مرحله انتخاب · دور '+fa(classroomRound+1),'مأموریت گروه را انتخاب کنید','هر دور، یک مأموریت تازه انتخاب کنید. پاسخ‌های دورهای قبل محفوظ می‌مانند و اعضای گروه همین مأموریت را با هم انجام می‌دهند.')+
- '<div class="classroom-choice-grid">'+C.models.map((m,i)=>'<button class="'+(selected===i?'selected':'')+'" type="button" data-class-mission="'+i+'"><b>'+m[0]+' '+E(m[1])+'</b><small>'+E(C.missions[i].title)+'</small><span>'+(selected===i?'انتخاب گروه ✓':(requested===i?'پیشنهاد ورود شما':'انتخاب این مأموریت'))+'</span></button>').join('')+'</div>'+
+ '<div class="classroom-choice-grid">'+C.models.map((m,i)=>'<button class="'+(selected===i?'selected':'')+'" type="button" data-class-mission="'+i+'" '+(used.includes(i)?'disabled aria-disabled="true"':'')+'><b>'+m[0]+' '+E(m[1])+'</b><small>'+E(C.missions[i].title)+'</small><span>'+(used.includes(i)?'در دور قبل انجام شد ✓':selected===i?'انتخاب گروه ✓':requested===i?'پیشنهاد ورود شما':'انتخاب این مأموریت')+'</span></button>').join('')+'</div>'+
  '<p class="classroom-wait">'+(selected===null?'هنوز مأموریتی برای گروه ثبت نشده است.':'مأموریت «'+labels[selected]+'» ثبت شد. اکنون منتظر شروع سناریو از سوی مدرس بمانید.')+'</p>';
 }
 function missionTeacherChoice(){
@@ -70,7 +73,7 @@ function teacherStep(){
  const i=reference,n=stage-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],mod=C.models[i];
  const say=[
  '«مسئله را بخوانید. هدف ما این است: '+d.goal+'»',
- '«نقش‌ها را بین افراد حاضر تقسیم کنید. هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
+ '«پنج نقش را متناسب با تعداد افراد تقسیم کنید. اگر شش نفر هستید، نفر ششم به مشاهده‌گر کمک کند؛ هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
  '«گفت‌وگو را یک بار اجرا کنید؛ مشاهده‌گر بازخورد بدهد و گفت‌وگو را بار دوم اصلاح کنید.»',
  '«با شش سکه حداقل دو اقدام انتخاب کنید؛ تصمیم اولیه، دلیل و مسئول را ثبت کنید.»',
  '«اکنون یک اتفاق تازه داریم. ببینید تصمیم قبلی هنوز مناسب است یا نه.»',
@@ -116,14 +119,14 @@ function learnerMission(){
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul><h3>پرسش گروه</h3><p>'+E(d.question)+'</p></div>';
- if(n===1)body='<p class="classroom-prompt">پنج نقش زیر را بین افراد حاضر تقسیم کنید. در گروه‌های کوچک‌تر، یک نفر می‌تواند دو نقش بگیرد.</p><div class="classroom-role-list">'+C.roles.map((r,j)=>'<details><summary>نقش '+fa(j+1)+' · '+E(r)+'</summary><p>'+E(m.info[j])+'</p></details>').join('')+'</div>';
+ if(n===1)body='<p class="classroom-prompt">پنج نقش زیر را بین افراد حاضر تقسیم کنید. در گروه‌های سه یا چهار نفره، بعضی افراد دو نقش می‌گیرند. اگر شش نفر هستید، نفر ششم به مشاهده‌گر برای ثبت شواهد و مدیریت زمان کمک کند.</p><div class="classroom-role-list">'+C.roles.map((r,j)=>'<details><summary>نقش '+fa(j+1)+' · '+E(r)+'</summary><p>'+E(m.info[j])+'</p></details>').join('')+'</div>';
  if(n===2)body='<p class="classroom-prompt">اول گفت‌وگو را اجرا کنید. مشاهده‌گر یک نکته بگوید؛ سپس گفت‌وگو را دوباره انجام دهید.</p><div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div><details class="classroom-reference"><summary>نمونه گفت‌وگو و پرسش مشاهده‌گر</summary>'+m.dialog.map(v=>'<p>'+E(v)+'</p>').join('')+'<p><b>پرسش:</b> '+E(x.check)+'</p><p><b>نمونه بهتر:</b> '+E(x.second)+'</p></details>';
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
  body='<p class="classroom-prompt">با ۶ سکه حداقل دو اقدام انتخاب کنید. یک نفر تصمیم را از طرف گروه ثبت کند.</p><div class="classroom-money">بودجه تصمیم: <strong>۶ سکه</strong></div><div class="classroom-options">'+m.actions.map((a,j)=>'<label><input type="checkbox" data-class-pick="'+j+'" '+(picked.includes(j)?'checked':'')+'><span>'+E(a[0])+'</span><b>'+fa(a[1])+' سکه</b></label>').join('')+'</div><label class="classroom-input"><span>تصمیم و دلیل گروه</span><textarea data-class-answer="initial" rows="3" placeholder="چه اقدام‌هایی را انتخاب کردید؟ چرا؟ مسئول کیست؟">'+E(val(team,prefix+'initial')||'')+'</textarea></label><button class="btn primary" data-class-save="initial">ثبت تصمیم گروه</button>'+(val(team,prefix+'initial')?'<p class="classroom-saved">تصمیم قبلی گروه ثبت شده است ✓</p>':'');}
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
  if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">یک مثال از رفتار یا جمله قابل مشاهده در اجرای گروه را ثبت کنید.</p><label class="classroom-input"><span>شاهد من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="مثلاً چه جمله‌ای باعث شد گفت‌وگو بهتر پیش برود؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت مشاهده من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
- return title+body+'<p class="classroom-wait">این گام مشترک است. وقتی مدرس گام بعدی را فعال کند، صفحه خودکار به‌روز می‌شود؛ به قسمت‌های دیگر نروید.</p>';
+ return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team)?'disabled':'')+'>'+(stepReady(team)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
 }
 function ending(){
  const ready=groups().filter(confirmed).length;
@@ -141,9 +144,11 @@ function render(force=false){
  const ahead=stage===10?2:stage+1;
  const countConfirmed=groups().filter(confirmed).length;
  const allReadyHaveMission=groups().filter(confirmed).every(t=>groupChoice(t)!==null);
- const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage===10&&classroomRound>=3);
+ const stepProgress=readiness();
+ const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage>=3&&stage<=9&&stepProgress.waiting.length>0||stage===10&&classroomRound>=3);
+ const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'تغییر مرحله روی موبایل گروه‌ها حدود ۱۰ ثانیه زمان می‌برد.';
  const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow()+'</header>';
- const controls=teacher?'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">مرحله روی موبایل گروه‌ها هم تغییر می‌کند (حدود ۱۰ ثانیه).</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?(classroomRound>=3?'چهار دور کامل شد':'شروع دور بعد'):'گام بعد')+'</button></nav>':'';
+ const controls=teacher?'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?(classroomRound>=3?'چهار دور کامل شد':'شروع دور بعد'):'گام بعد')+'</button></nav>':'';
  let content;
  if(stage===0)content=teacher?rosterTeacher():checkinParticipant();
  else if(!teacher&&!confirmed(identity.team))content=simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و اعلام تعداد افراد، مدرس گروه را فعال می‌کند. سپس همین صفحه به‌طور خودکار وارد گام جاری می‌شود.')+personDots(identity.team);
@@ -151,7 +156,8 @@ function render(force=false){
  else if(stage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(stage<=9)content=teacher?teacherStep():learnerMission();
  else content=ending();
- root.innerHTML='<div class="classroom-layout">'+header+controls+messageBox()+'<main class="classroom-content">'+content+'</main>'+(teacher?'<p class="classroom-footer">هدایت مراحل با مدرس است. اعضا صرفاً حضور و تصمیم‌های گروه را ثبت می‌کنند.</p>':'')+'</div>';
+ const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. کدهای ورود و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
+ root.innerHTML='<div class="classroom-layout">'+header+controls+messageBox()+'<main class="classroom-content">'+content+'</main>'+resetPanel+'</div>';
 }
 async function execute(task){
  if(busy)return;busy=true;
@@ -172,7 +178,23 @@ root.addEventListener('click',event=>{
    if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو با PIN حضورش را ثبت کند.',true);
    execute(()=>L.request({action:'groupSetup',team,size}));return;
  }
- if(btn.dataset.classMission){const choice=Number(btn.dataset.classMission);if(choice<0||choice>3)return;execute(()=>saveFields({missionChoice:choice,missionChoiceRound:classroomRound}));return;}
+ if(btn.dataset.classMission){const choice=Number(btn.dataset.classMission);if(choice<0||choice>3||usedMissions(identity.team).includes(choice))return alertUser('این مأموریت قبلاً اجرا شده؛ لطفاً یک راهبرد دیگر انتخاب کنید.',true);execute(()=>saveFields({missionChoice:choice,missionChoiceRound:classroomRound,['missionRound'+classroomRound]:choice}));return;}
+ if(btn.hasAttribute('data-class-ready')){
+  if(identity.role!=='team'||stage<3||stage>9)return;
+  const chosen=groupChoice(identity.team),prefix='r'+chosen;
+  if(chosen===null)return alertUser('ابتدا مأموریت گروه را انتخاب کنید.',true);
+  if(stage===6&&!String(val(identity.team,prefix+'initial')||'').trim())return alertUser('ابتدا تصمیم اولیه گروه را ثبت کنید.',true);
+  if(stage===8&&!String(val(identity.team,prefix+'revision')||'').trim())return alertUser('ابتدا تصمیم اصلاح‌شده گروه را ثبت کنید.',true);
+  if(stage===9&&!Array.from({length:5},(_,i)=>val(identity.team,prefix+'member'+(i+1))).some(v=>String(v||'').trim()))return alertUser('ابتدا یک شاهد رفتاری از گروه ثبت کنید.',true);
+  execute(()=>saveFields({classStepReady:classroomRound+':'+stage}));return;
+ }
+ if(btn.hasAttribute('data-class-reset')){
+  if(identity.role!=='teacher')return;
+  const word=window.prompt('برای پاک‌کردن داده‌های کارگاه و بازگشت به مرحله اول، عبارت «شروع تازه» را وارد کنید:');
+  if(word!=='شروع تازه')return;
+  if(!window.confirm('تمام حضورها، انتخاب مأموریت‌ها و پاسخ‌های فعلی این کارگاه حذف می‌شوند. PINها باقی می‌مانند. مطمئن هستید؟'))return;
+  execute(()=>L.request({action:'resetClassroom',confirm:'RESET_ALBORZ_WORKSHOP'}));return;
+ }
  if(btn.dataset.classReference){reference=Number(btn.dataset.classReference);lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-prev')||btn.hasAttribute('data-class-next')){
   const next=btn.hasAttribute('data-class-next'),phase=next?(stage===10?2:stage+1):stage-1;

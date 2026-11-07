@@ -2,7 +2,7 @@
 const endpoint = Deno.env.get('SUPABASE_URL') || '';
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const origins = new Set(['https://hassnboudlaie.github.io']);
-const fieldPattern = /^(?:teamname|stage|checkin[1-5]|missionChoice|missionChoiceRound|r[0-3](?:pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
+const fieldPattern = /^(?:teamname|stage|checkin[1-5]|missionChoice|missionChoiceRound|missionRound[0-3]|classStepReady|r[0-3](?:pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
 const headers = (origin) => ({'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':origins.has(origin)?origin:'https://hassnboudlaie.github.io','access-control-allow-headers':'content-type','access-control-allow-methods':'POST, OPTIONS','vary':'Origin','x-content-type-options':'nosniff'});
 const respond = (data,status,origin) => new Response(JSON.stringify(data),{status,headers:headers(origin)});
 async function hash(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');}
@@ -16,7 +16,8 @@ function valid(k,v){
  if(!fieldPattern.test(k))return false;
  if(k==='stage')return Number.isInteger(v)&&v>=0&&v<=8;
  if(k==='missionChoice')return Number.isInteger(v)&&v>=0&&v<=3;
- if(k==='missionChoiceRound')return Number.isInteger(v)&&v>=0&&v<=3;
+ if(k==='missionChoiceRound'||/^missionRound[0-3]$/.test(k))return Number.isInteger(v)&&v>=0&&v<=3;
+ if(k==='classStepReady')return typeof v==='string'&&/^[0-3]:[3-9]$/.test(v);
  if(/^checkin[1-5]$/.test(k))return typeof v==='boolean';
  if(/^r[0-3]pick$/.test(k))return Array.isArray(v)&&v.length<=4&&new Set(v).size===v.length&&v.every(i=>Number.isInteger(i)&&i>=0&&i<=3);
  if(/^r[0-3]reveal$/.test(k))return typeof v==='boolean';
@@ -87,10 +88,27 @@ Deno.serve(async req=>{
    const restart=currentPhase===10&&next===2;
    if(Math.abs(next-currentPhase)>1&&!restart)return respond({error:'هر بار فقط یک گام کلاس را تغییر دهید'},400,origin);
    if(restart&&round>=3)return respond({error:'چهار دور مأموریت کامل شده‌اند؛ کارگاه را جمع‌بندی کنید'},400,origin);
+   // Server-side gate: a screen is never advanced before its confirmed groups finish.
+   if(next===currentPhase+1){
+    const snapshot=await db('alborz_team_fields?field_key=in.(groupReady,missionChoice,missionChoiceRound,classStepReady)&select=team_no,field_key,field_value&limit=100');
+    const grouped=new Map();
+    for(const row of snapshot||[]){const v=grouped.get(row.team_no)||{};v[row.field_key]=row.field_value;grouped.set(row.team_no,v);}
+    const active=[...grouped.entries()].filter(([,v])=>v.groupReady===true);
+    if(currentPhase===0&&active.length===0)return respond({error:'ابتدا دست‌کم یک گروه را تأیید کنید'},409,origin);
+    if(currentPhase===2&&(!active.length||active.some(([,v])=>v.missionChoiceRound!==round||!Number.isInteger(v.missionChoice))))return respond({error:'منتظر انتخاب مأموریت همه گروه‌های فعال بمانید'},409,origin);
+    if(currentPhase>=3&&currentPhase<=9&&active.some(([,v])=>v.classStepReady!==round+':'+currentPhase))return respond({error:'برخی گروه‌ها هنوز پایان این گام را اعلام نکرده‌اند'},409,origin);
+   }
    const fields=restart?{classroomPhase:next,classroomRound:round+1}:{classroomPhase:next};
    const result=await teacherWrite(1,fields,body.expectedVersion);
    if(!result.ok)return respond({error:'گام کلاس در دستگاه دیگری تغییر کرده است. دوباره بررسی کنید.'},409,origin);
    return respond({ok:true,records:result.records},200,origin);
+  }
+  if(body.action==='resetClassroom'){
+   if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
+   if(body.confirm!=='RESET_ALBORZ_WORKSHOP')return respond({error:'تأیید شروع دوباره نامعتبر است'},400,origin);
+   // Clear ONLY workshop progress. Participant PINs, sessions and any other app remain intact.
+   await db('alborz_team_fields?team_no=gte.1&team_no=lte.10',undefined,'DELETE');
+   return respond({ok:true,reset:true},200,origin);
   }
   if(body.action==='groupSetup'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
@@ -118,10 +136,29 @@ Deno.serve(async req=>{
    if(!fields||Array.isArray(fields)||typeof fields!=='object'||!expected||Array.isArray(expected)||typeof expected!=='object')return respond({error:'اطلاعات یا نسخه پایه نامعتبر است'},400,origin);
    const entries=Object.entries(fields);
    if(entries.length<1||entries.length>12||entries.some(([k,v])=>body.action==='grade'?!/^instructorScore[0-4]$/.test(k)||!Number.isInteger(v)||v<0||v>10:!valid(k,v)))return respond({error:'فیلد یا مقدار نامعتبر است'},400,origin);
-   if(body.action==='write'&&('missionChoice' in fields||'missionChoiceRound' in fields)){
+   if(body.action==='write'&&('missionChoice' in fields||'missionChoiceRound' in fields||Object.keys(fields).some(k=>/^missionRound[0-3]$/.test(k)))){
     if(!('missionChoice' in fields&&'missionChoiceRound' in fields))return respond({error:'انتخاب راهبرد و شماره دور باید با هم ثبت شوند'},400,origin);
-    const row=(await db('alborz_team_fields?team_no=eq.1&field_key=eq.classroomRound&select=field_value&limit=1'))?.[0];
-    if(fields.missionChoiceRound!==Number(row?.field_value??0))return respond({error:'دور انتخاب مأموریت تغییر کرده؛ صفحه را تازه‌سازی کنید'},409,origin);
+    const run=(await db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomRound,classroomPhase)&select=field_key,field_value'));
+    const state=Object.fromEntries((run||[]).map(x=>[x.field_key,x.field_value]));
+    const round=Number(state.classroomRound??0),phase=Number(state.classroomPhase??0);
+    if(phase!==2||fields.missionChoiceRound!==round||fields['missionRound'+round]!==fields.missionChoice)return respond({error:'فقط در مرحله انتخاب و برای دور جاری می‌توان مأموریت تعیین کرد'},409,origin);
+    if(entries.length!==3||entries.some(([key])=>!['missionChoice','missionChoiceRound','missionRound'+round].includes(key)))return respond({error:'فقط مأموریت همان دور قابل ثبت است'},400,origin);
+    const earlier=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionRound0,missionRound1,missionRound2,missionRound3)&select=field_key,field_value');
+    if((earlier||[]).some(x=>Number(x.field_key.slice(-1))<round&&x.field_value===fields.missionChoice))return respond({error:'این مأموریت در دور قبلی اجرا شده است؛ یکی از راهبردهای دیگر را انتخاب کنید'},409,origin);
+   }
+   if(body.action==='write'&&'classStepReady' in fields){
+    if(entries.length!==1)return respond({error:'اعلام پایان گام را جدا ثبت کنید'},400,origin);
+    const stateRows=await db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomRound,classroomPhase)&select=field_key,field_value');
+    const state=Object.fromEntries((stateRows||[]).map(x=>[x.field_key,x.field_value]));
+    const phase=Number(state.classroomPhase??0),round=Number(state.classroomRound??0);
+    if(phase<3||phase>9||fields.classStepReady!==round+':'+phase)return respond({error:'گام کلاس تغییر کرده؛ صفحه را به‌روزرسانی کنید'},409,origin);
+    const mineRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(groupReady,missionChoice,missionChoiceRound,r0initial,r1initial,r2initial,r3initial,r0revision,r1revision,r2revision,r3revision,r0member1,r0member2,r0member3,r0member4,r0member5,r1member1,r1member2,r1member3,r1member4,r1member5,r2member1,r2member2,r2member3,r2member4,r2member5,r3member1,r3member2,r3member3,r3member4,r3member5)&select=field_key,field_value&limit=40');
+    const mine=Object.fromEntries((mineRows||[]).map(x=>[x.field_key,x.field_value]));
+    if(mine.groupReady!==true||mine.missionChoiceRound!==round||!Number.isInteger(mine.missionChoice))return respond({error:'ابتدا گروه و مأموریت این دور را تأیید کنید'},409,origin);
+    const prefix='r'+mine.missionChoice;
+    if(phase===6&&!(typeof mine[prefix+'initial']==='string'&&mine[prefix+'initial'].trim().length>=10))return respond({error:'ابتدا تصمیم اولیه گروه را ثبت کنید'},409,origin);
+    if(phase===8&&!(typeof mine[prefix+'revision']==='string'&&mine[prefix+'revision'].trim().length>=10))return respond({error:'ابتدا تصمیم اصلاح‌شده را ثبت کنید'},409,origin);
+    if(phase===9&&!Array.from({length:5},(_,i)=>mine[prefix+'member'+(i+1)]).some(v=>typeof v==='string'&&v.trim().length>=10))return respond({error:'ابتدا یک شاهد رفتاری از گروه ثبت کنید'},409,origin);
    }
    for(const [k] of entries){
     const member=k.match(/^r[0-3]member([1-5])$/);

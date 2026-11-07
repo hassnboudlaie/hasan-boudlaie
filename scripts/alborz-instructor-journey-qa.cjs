@@ -17,7 +17,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
    const body=data.action==='login'?{identity:{role:'teacher'},session:'mock-session'}:data.action==='teacher'?{records:teacherRows}:{records:[]};
    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
   });
-  await page.goto(base+'resilience.html?group=1&step=3',{waitUntil:'load'});
+  await page.goto(base+'resilience.html?group=1&step=3&legacy=1',{waitUntil:'load'});
   const labels=await page.evaluate(()=>window.AlborzWorkshop.catalog.missionFlow);
   assert.equal(labels.length,7,'same seven-stage curriculum for both roles');
   assert.equal(await page.locator('.mission-simple-progress').count(),1,'participant has one compact stepper');
@@ -31,7 +31,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   assert.match(await page.locator('#mission-progress-text').innerText(),/مسئله و هدف/);
   const goal=await page.locator('.case-goal').innerText();
   assert.match(goal,/خدمت|خطا/);
-  await page.goto(base+'resilience.html?teacher=1&mission=camel',{waitUntil:'load'});
+  await page.goto(base+'resilience.html?teacher=1&mission=camel&legacy=1',{waitUntil:'load'});
   assert.equal(await page.locator('#live-code').count(),1,'instructor PIN login is required');
   assert.equal(await page.locator('.simple-teacher-workspace').count(),0,'teaching content protected before login');
   assert.equal(await page.getByText('پشتیبان آفلاین امتیازها').count(),0,'unused offline shortcut removed');
