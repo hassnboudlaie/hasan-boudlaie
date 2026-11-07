@@ -51,6 +51,8 @@ const server=http.createServer((req,res)=>{
    await route.fulfill({status,contentType:'application/json',body:JSON.stringify(result)});
   });
   const markReady=async()=>{
+    const currentPhase=get(1,'classroomPhase')?.field_value??0;
+    await teacher.waitForFunction(phase=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله '+new Intl.NumberFormat('fa-IR').format(phase+1)),currentPhase);
     assert.equal(await teacher.locator('[data-class-next]').isDisabled(),true,'instructor waits until active groups complete this step');
     await expert1.locator('[data-class-ready]').click();
     await expert1.locator('[data-class-ready]:disabled').waitFor();
