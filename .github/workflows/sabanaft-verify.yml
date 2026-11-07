@@ -40,6 +40,8 @@ jobs:
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-coaching.cjs
       - name: Chapter 6 single-context regression
         run: node sabanaft/verify-context-ch6.cjs
+      - name: Chapter 5 model architecture and case context
+        run: node sabanaft/verify-model-ia.cjs
       - name: Chapters 1–5 regression
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-chapters.cjs
       - name: Private impact export regression
