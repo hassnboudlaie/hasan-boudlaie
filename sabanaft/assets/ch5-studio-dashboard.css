@@ -76,3 +76,5 @@ body{background:var(--paper);color:var(--ink)}
  .mobile-bottom-nav button{min-width:0}
 }
 @media(prefers-reduced-motion:reduce){#view .ch5-studio-shortcut{transition:none}}
+
+.ed-model-link{text-align:center;margin:12px auto}.ed-model-link a{display:inline-flex;min-height:42px;align-items:center;justify-content:center;padding:8px 16px;text-decoration:none;background:#eef5ff;color:#064587;border:1px solid #c9daec;border-radius:12px;font-weight:850}

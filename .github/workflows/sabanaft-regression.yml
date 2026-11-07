@@ -38,4 +38,5 @@ jobs:
         run: |
           node sabanaft/verify-reflective.cjs
           node sabanaft/verify-context-ch6.cjs
+          node sabanaft/verify-model-ia.cjs
           node sabanaft/verify-coaching.cjs

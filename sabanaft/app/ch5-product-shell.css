@@ -224,3 +224,39 @@ body.saba-home .bottom-nav button[aria-current=page]{
  #homeView .saba-home-tile,#homeView .saba-home-more>summary{transition:none}
  #homeView .saba-home-tile:hover{transform:none}
 }
+
+/* Fig 5.1 information architecture — book's four components, reflection across all. */
+#homeView .saba-model-label{width:min(100%,900px);margin:0 auto -9px;text-align:right;color:#dcefff;font-size:12px;font-weight:800;letter-spacing:.01em;text-shadow:0 2px 5px #091f36}
+#homeView .saba-home-tile{position:relative;min-height:157px}
+#homeView .saba-home-tile .saba-tile-icon{font-family:Vazirmatn,Tahoma,sans-serif;font-size:28px;font-weight:900}
+#homeView .saba-home-tile strong{font-size:clamp(15px,1.4vw,18px)}
+#homeView .saba-reflection-band{width:min(100%,900px);margin:-6px auto 0;padding:12px 15px;display:flex;align-items:center;gap:11px;border:1px solid rgba(255,255,255,.35);border-radius:16px;background:rgba(9,35,58,.64);color:#fff;backdrop-filter:blur(13px)}
+#homeView .saba-reflection-band>span:first-child{font-size:27px;line-height:1}
+#homeView .saba-reflection-band>span:nth-child(2){flex:1;display:flex;flex-direction:column;gap:1px}
+#homeView .saba-reflection-band strong{font-size:14px;font-weight:900}
+#homeView .saba-reflection-band small{font-size:11px;color:#d1e1ef}
+#homeView .saba-reflection-band button{color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:9px 12px;min-height:40px;font-size:12px;font-weight:800;white-space:nowrap}
+#homeView .saba-companion-actions{display:flex;align-items:center;justify-content:center;gap:12px;margin:-5px auto 0;color:#e5f2ff;font-size:11px}
+#homeView .saba-companion-actions button{border:1px solid rgba(255,255,255,.82);background:#fff;color:#06366b;border-radius:12px;min-height:45px;padding:9px 19px;font-weight:900;font-size:13px}
+#homeView .saba-companion-actions button:hover{background:#e7f3ff}
+#homeView .saba-home-more{margin-top:-10px}
+body .bottom-nav button{width:33.333%;max-width:33.333%;min-width:0}
+body.saba-home .bottom-nav button{width:33.333%;max-width:33.333%}
+@media(max-width:720px){
+ #homeView .saba-home-content{gap:16px;padding-top:92px;padding-bottom:106px}
+ #homeView .saba-home-tile{min-height:120px;padding:11px 7px}
+ #homeView .saba-home-tile .saba-tile-icon{width:43px;height:43px;font-size:23px}
+ #homeView .saba-home-tile strong{font-size:15px}
+ #homeView .saba-home-tile small{font-size:8px;letter-spacing:0}
+ #homeView .saba-model-label{font-size:11px;margin-bottom:-7px}
+ #homeView .saba-reflection-band{padding:9px 10px;gap:8px}
+ #homeView .saba-reflection-band small{font-size:10px}
+ #homeView .saba-reflection-band button{padding:8px;font-size:11px}
+ #homeView .saba-companion-actions{flex-direction:column;gap:5px;text-align:center}
+ #homeView .saba-companion-actions button{width:100%;max-width:340px}
+}
+@media(max-height:720px) and (max-width:720px){
+ #homeView .saba-home-content{gap:12px;padding-top:83px;padding-bottom:100px}
+ #homeView .saba-home-tile{min-height:110px}
+ #homeView .saba-home-tile small{display:block;font-size:8px}
+}

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="./app.css?v=2">
 <link rel="stylesheet" href="./visual-upgrade-20261102.css?v=1">
 <link rel="stylesheet" href="./coaching-journey.css?v=1">
-<link rel="stylesheet" href="./ch5-product-shell.css?v=2">
+<link rel="stylesheet" href="./ch5-product-shell.css?v=3">
 <title>رهبری بازتابی من | صبا نفت</title>
 
 
@@ -30,21 +30,23 @@
    <h1>رهبری بازتابی من</h1>
    <p>از مسئله واقعی تا تصمیم بهتر</p>
   </header>
-  <nav class="saba-home-grid" aria-label="چهار مسیر اصلی">
-   <button type="button" class="saba-home-tile" id="futureCoachEntry" aria-label="طرح مسئله مدیریتی"><span class="saba-tile-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/></svg></span><strong>مسئله من</strong><small lang="en" dir="ltr">MY CASE</small></button>
-   <button type="button" class="saba-home-tile" data-go="studio/daily" aria-label="ورود به بازاندیشی من"><span class="saba-tile-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.35-5.65"/><path d="M20 4v5.7h-5.7"/><path d="M9 12h6M12 9v6"/></svg></span><strong>بازاندیشی</strong><small lang="en" dir="ltr">MY REFLECTION</small></button>
-   <button type="button" class="saba-home-tile" data-go="studio/mix" aria-label="ورود به هویت و ایده رهبری من"><span class="saba-tile-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.8 8.2-2.3 5.3-5.3 2.3 2.3-5.3 5.3-2.3z"/></svg></span><strong>هویت رهبری</strong><small lang="en" dir="ltr">MY IDENTITY</small></button>
-   <button type="button" class="saba-home-tile" data-go="studio/development" aria-label="ورود به برنامه رشد و توسعه رهبری"><span class="saba-tile-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16M6.5 15.7l4.1-4.1 3.15 2.15L18 7"/><path d="M15 7h3v3"/></svg></span><strong>رشد من</strong><small lang="en" dir="ltr">MY DEVELOPMENT</small></button>
+  <div class="saba-model-label">مدل رهبری بازتابی · بر اساس شکل ۵.۱ کتاب</div>
+  <nav class="saba-home-grid" aria-label="چهار جزء مدل اصلی رهبری آرمین تروست">
+   <button type="button" class="saba-home-tile" data-go="context" aria-label="گام یک: شناخت بافت رهبری"><span class="saba-tile-icon" aria-hidden="true">۱</span><strong>بافت رهبری</strong><small lang="en" dir="ltr">LEADERSHIP CONTEXT</small></button>
+   <button type="button" class="saba-home-tile" data-go="lesson/5/mix" aria-label="گام دو: تعریف ایده رهبری"><span class="saba-tile-icon" aria-hidden="true">۲</span><strong>ایده رهبری من</strong><small lang="en" dir="ltr">IDEA OF LEADERSHIP</small></button>
+   <button type="button" class="saba-home-tile" data-go="lesson/7/perspectives" aria-label="گام سه: رابطه رهبر و کارکنان"><span class="saba-tile-icon" aria-hidden="true">۳</span><strong>رابطه با کارکنان</strong><small lang="en" dir="ltr">LEADER–EMPLOYEE</small></button>
+   <button type="button" class="saba-home-tile" data-go="lesson/8/design" aria-label="گام چهار: ابزارهای رهبری"><span class="saba-tile-icon" aria-hidden="true">۴</span><strong>ابزارهای رهبری</strong><small lang="en" dir="ltr">LEADERSHIP TOOLS</small></button>
   </nav>
+  <div class="saba-reflection-band"><span aria-hidden="true">↻</span><span><strong>بازاندیشی مستمر</strong><small>در همه چهار مرحله همراه شماست</small></span><button type="button" data-go="studio/daily">بازاندیشی من ←</button></div>
+  <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ طرح مسئله واقعی</button><span>مسئله را با توجه به بافت پایه تیم بررسی کنید.</span></div>
   <details class="ch5-resources saba-home-more">
-   <summary aria-label="نمایش سایر بخش‌های اپلیکیشن"><span class="saba-more-mark" aria-hidden="true">＋</span> منابع و بیشتر</summary>
+   <summary aria-label="نمایش سایر بخش‌های اپلیکیشن"><span class="saba-more-mark" aria-hidden="true">＋</span> آموزش و امکانات جانبی</summary>
    <div class="ch5-resource-body saba-more-panel">
     <div class="saba-more-actions">
      <button type="button" data-go="course">جلسات آموزشی</button>
      <a href="./lesson-notes.html">درسنامه شش فصل</a>
-     <button type="button" data-go="context">بافت رهبری من · فصل ۶</button>
-     <button type="button" data-go="passport">پیشرفت من</button>
-     <a href="./business-model.html">بوم کسب‌وکار</a>
+          <button type="button" data-go="passport">پیشرفت من</button>
+     <a href="./business-model.html">بوم کسب‌وکار · ابزار مستقل</a>
     </div>
     <button type="button" id="resume" class="saba-resume"><span>ادامه آخرین درس</span><strong id="resumeTitle">جلسه اول</strong><span aria-hidden="true">←</span></button>
     <div class="saba-home-hidden-progress" aria-label="آمار یادگیری"><span>۹ جلسه · ۴۷ بخش · <b id="homeCompleted">۰</b> بخش تکمیل‌شده</span><button type="button" id="openRoles">مرور چهار نقش رهبری</button></div>
@@ -86,7 +88,7 @@
   <button type="button" id="futureCoachBack" class="backlink">→ بازگشت به خانه</button>
   <span class="eyebrow">میز رهبری من</span>
   <h1>مسئله را مطرح کنید؛ گزینه‌های تصمیم را بررسی کنید.</h1>
-  <p>از یک موقعیت کاری فرضی و بدون اطلاعات محرمانه شروع کنید. راهنمای اولیه در همین اپ ارائه می‌شود؛ AI Coach واقعی به اتصال امن مجزا نیاز دارد.</p>
+  <p>از یک مسئله واقعی اما بدون اطلاعات محرمانه شروع کنید. ابتدا تیم مربوطه را انتخاب کنید؛ این مسئله، ارزیابی پایه تیم را تغییر نمی‌دهد. راهنمای اولیه در همین اپ ارائه می‌شود؛ AI Coach واقعی به اتصال امن مجزا نیاز دارد.</p>
  </div>
  <div class="cj-layout">
   <div class="cj-main">
@@ -95,7 +97,7 @@
     <label for="cj-situation">چه اتفاقی افتاده و تصمیم شما درباره چیست؟</label>
     <textarea id="cj-situation" maxlength="2200" rows="5" placeholder="مثلاً یکی از سرپرستان پروژه می‌گوید اولویت کارها روشن نیست و واحدهای مختلف از او درخواست متفاوت دارند."></textarea>
     <div class="cj-fields">
-     <label for="cj-context">بافت کاری<select id="cj-context"><option value="project">پروژه و عملیات</option><option value="team">سرپرستی و تیم</option><option value="headquarters">ستاد و بین‌واحدی</option></select></label>
+     <label for="cj-context">تیم مربوط به این مسئله<select id="cj-context"><option value="project">پروژه و عملیات</option><option value="team">سرپرستی و تیم</option><option value="headquarters">ستاد و بین‌واحدی</option></select></label>
      <label for="cj-urgency">فوریت<select id="cj-urgency"><option value="normal">غیرفوری</option><option value="urgent">فوری و زمان‌دار</option><option value="sensitive">دارای ریسک ایمنی/حقوقی/منابع انسانی</option></select></label>
      <label for="cj-choice">نوع چالش (اختیاری)<select id="cj-choice"><option value="unknown">مطمئن نیستم / سایر موارد</option><option value="clarity">ابهام در تصمیم یا مسئولیت</option><option value="capability">کمبود مهارت یا حمایت</option><option value="conflict">تعارض دیدگاه و هماهنگی</option><option value="performance">اختلال در عملکرد یا پیگیری</option></select></label>
     </div>
@@ -159,11 +161,10 @@
 </section>
 </main>
 </div>
-<nav class="bottom-nav" aria-label="ناوبری اصلی">
- <button type="button" data-nav="home"><span aria-hidden="true">⌂</span><small>خانه</small></button>
- <button type="button" data-nav="coach"><span aria-hidden="true">✦</span><small>مسئله من</small></button>
+<nav class="bottom-nav" aria-label="دسترسی سریع؛ مستقل از چهار مرحله مدل کتاب">
+ <button type="button" data-nav="home"><span aria-hidden="true">⌂</span><small>خانه مدل</small></button>
+ <button type="button" data-nav="coach"><span aria-hidden="true">◇</span><small>مسئله من</small></button>
  <button type="button" data-nav="studio/daily"><span aria-hidden="true">◷</span><small>بازاندیشی</small></button>
- <button type="button" data-nav="studio/mix"><span aria-hidden="true">◎</span><small>هویت من</small></button>
 </nav>
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 <script src="../reflective-content.js"></script>

@@ -19,9 +19,10 @@ var issues={
  performance:{lesson:'8/performance',first:'C',second:'B',look:'معیار عملکرد، شواهد رفتار، توانایی، انگیزه و مجوز عمل'}
 };
 var labels={project:'پروژه و عملیات',team:'سرپرستی و تیم',headquarters:'ستاد و بین‌واحدی'};
+function teamLabel(id){try{var o=JSON.parse(localStorage.getItem('sabanaft_reflective_v2')||'null');var c=o&&Array.isArray(o.contexts)?o.contexts.find(function(x){return x.id===id;}):null;if(c)return String(c.name||'تیم').slice(0,80);}catch(e){}return labels[id]||'تیم انتخاب‌شده';}
 var issueNames={clarity:'ابهام مسئولیت',capability:'کمبود مهارت یا حمایت',conflict:'اختلاف‌نظر و هماهنگی',performance:'عملکرد و پیگیری'};
 var draft={text:'',context:'project',urgency:'normal',issue:'unknown',extras:[]};
-try{var p=JSON.parse(localStorage.getItem(DRAFT)||'null');if(p&&typeof p==='object'){draft.text=String(p.text||'').slice(0,2200);if(labels[p.context])draft.context=p.context;if(issues[p.issue]||p.issue==='unknown')draft.issue=p.issue;if(['normal','urgent','sensitive'].includes(p.urgency))draft.urgency=p.urgency;if(Array.isArray(p.extras))draft.extras=p.extras.filter(function(x){return !!issues[x];}).slice(0,4);}}catch(e){}
+try{var p=JSON.parse(localStorage.getItem(DRAFT)||'null');if(p&&typeof p==='object'){draft.text=String(p.text||'').slice(0,2200);if(typeof p.context==='string'&&/^[-a-z0-9_]{1,40}$/.test(p.context))draft.context=p.context;if(issues[p.issue]||p.issue==='unknown')draft.issue=p.issue;if(['normal','urgent','sensitive'].includes(p.urgency))draft.urgency=p.urgency;if(Array.isArray(p.extras))draft.extras=p.extras.filter(function(x){return !!issues[x];}).slice(0,4);}}catch(e){}
 function values(){var main=byId('cj-choice').value;return {text:byId('cj-situation').value.trim().slice(0,2200),context:byId('cj-context').value,urgency:byId('cj-urgency').value,issue:main,extras:Array.from(document.querySelectorAll('[data-cj-secondary]:checked')).map(function(x){return x.value;}).filter(function(x){return !!issues[x]&&x!==main;})};}
 function persist(){try{localStorage.setItem(DRAFT,JSON.stringify(values()));}catch(e){}}
 function status(s){var el=byId('cj-output');el.hidden=false;el.textContent=s;}
@@ -32,7 +33,7 @@ function advice(v){
  var selectedRoles=Array.from(new Set(ids)).map(function(x){return roles[x];}).filter(Boolean);
  var sensitive=v.urgency==='sensitive',urgent=v.urgency==='urgent';
  var pre=sensitive?'این موضوع دارای ریسک حساس است. پیش از هر تصمیم، مسیرهای رسمی ایمنی، حقوقی یا منابع انسانی، اختیارات و الزامات سازمان را رعایت کنید؛ این راهنما جایگزین تصمیم مسئول مجاز نیست.':urgent?'فوریت را از فشار لحظه‌ای جدا کنید؛ مشخص کنید تا چه زمانی باید درباره چه چیزی تصمیم گرفته شود.':'ابتدا فرض‌ها و شواهد را روشن کنید؛ لازم نیست فوراً یک نقش را قطعی انتخاب کنید.';
- var context= v.context==='project'?'وابستگی‌های اجرا، پیمانکاران و تحویل کار':v.context==='team'?'توان تیم، اختیار سرپرست و تعهد افراد':'هماهنگی بین‌واحدی، پاسخ‌گویی و مسیر تصویب';
+ var context='شرایط معمول تیم «'+teamLabel(v.context)+'» و تفاوت احتمالی این مسئله با آن شرایط';
  var q=[
  'دقیقاً چه تصمیمی لازم است و چه کسی اختیار آن را دارد؟',
  'کدام بخش از روایت شما شاهد واقعی است و کدام بخش هنوز یک فرض است؟',
@@ -54,14 +55,14 @@ function generate(){
 function handoff(){
  var v=values();if(v.text.length<12){status('ابتدا مسئله را در یک جمله توضیح دهید، سپس آن را در استودیو ادامه دهید.');return;}
  persist();
- try{localStorage.setItem(KEY,JSON.stringify({schema:1,text:v.text,context:v.context,issue:v.issue,extras:v.extras,createdAt:new Date().toISOString()}));}
+ try{localStorage.setItem(KEY,JSON.stringify({schema:1,text:v.text,context:v.context,contextId:v.context,issue:v.issue,extras:v.extras,createdAt:new Date().toISOString()}));}
  catch(e){status('ذخیره مرورگر در دسترس نیست. متن را کپی کنید و در استودیو وارد کنید.');return;}
  // The studio consumes this one-time handoff without changing the existing case schema.
  location.hash='/studio/home';
 }
 function makePrompt(){
  var v=values();if(v.text.length<12){status('برای ساخت پرسش ابتدا یک مسئله کوتاه بنویسید.');return;}
- var msg='برای بازاندیشی رهبری بر اساس کتاب The Reflective Leader نوشته Armin Trost، درباره این موقعیت فرضی و بدون داده محرمانه کمک کن. نقش‌های Boss, Coach, Partner و Enabler را بی‌طرفانه بررسی کن. اول ۴ سؤال شفاف‌کننده بپرس، سپس دو گزینه قابل دفاع با trade-off و جمله نمونه گفت‌وگو پیشنهاد بده؛ نقش قطعی تعیین نکن. اختیار قانونی، HSE، HR و شواهد را بررسی کن. برنامه اقدام قابل مشاهده و نحوه مرور نتیجه را هم پیشنهاد بده.\nبافت: '+(labels[v.context]||'')+'\nفوریت: '+(v.urgency==='normal'?'عادی':v.urgency==='urgent'?'زمان‌دار':'حساس')+'\nچالش‌های همزمان به انتخاب من: '+v.extras.map(function(x){return issueNames[x];}).join('، ')+'\nموضوع: '+v.text;
+ var msg='برای بازاندیشی رهبری بر اساس کتاب The Reflective Leader نوشته Armin Trost، درباره این موقعیت فرضی و بدون داده محرمانه کمک کن. نقش‌های Boss, Coach, Partner و Enabler را بی‌طرفانه بررسی کن. اول ۴ سؤال شفاف‌کننده بپرس، سپس دو گزینه قابل دفاع با trade-off و جمله نمونه گفت‌وگو پیشنهاد بده؛ نقش قطعی تعیین نکن. اختیار قانونی، HSE، HR و شواهد را بررسی کن. برنامه اقدام قابل مشاهده و نحوه مرور نتیجه را هم پیشنهاد بده.\nبافت: '+teamLabel(v.context)+'\nفوریت: '+(v.urgency==='normal'?'عادی':v.urgency==='urgent'?'زمان‌دار':'حساس')+'\nچالش‌های همزمان به انتخاب من: '+v.extras.map(function(x){return issueNames[x];}).join('، ')+'\nموضوع: '+v.text;
  // The user explicitly triggers copying, not transmission.
  var b=byId('cj-copy-ai');
  if(navigator.clipboard&&navigator.clipboard.writeText){
@@ -74,7 +75,7 @@ function fallbackCopy(s){
  t.remove();
 }
 function humanLink(){
- var v=values(),body='سلام و احترام\nبرای یک جلسه کوچینگ/منتورینگ رهبری درخواست دارم.\nموضوع کلی: '+(labels[v.context]||'رهبری')+'\nترجیح می‌دهم زمان مناسب و نحوه برگزاری جلسه را هماهنگ کنیم.';
+ var v=values(),body='سلام و احترام\nبرای یک جلسه کوچینگ/منتورینگ رهبری درخواست دارم.\nموضوع کلی: '+teamLabel(v.context)+'\nترجیح می‌دهم زمان مناسب و نحوه برگزاری جلسه را هماهنگ کنیم.';
  if(byId('cj-share-summary').checked&&v.text){body+='\n\nخلاصه‌ای که خودم انتخاب کرده‌ام به اشتراک بگذارم:\n'+v.text.slice(0,400);}
  byId('cj-book-human').href='mailto:hasanboudlaie@ut.ac.ir?subject='+encodeURIComponent('درخواست جلسه کوچینگ و منتورینگ رهبری صبا نفت')+'&body='+encodeURIComponent(body);
 }
