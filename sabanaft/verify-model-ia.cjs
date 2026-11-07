@@ -8,7 +8,7 @@ assert.deepEqual(tiles,['context','lesson/5/mix','lesson/7/perspectives','lesson
 assert.match(home,/class="saba-model-loop"/,'reflection and all four main stages belong to one model container');
 assert.match(home,/<button type="button" class="saba-reflection-band" data-go="studio\/daily"/,'continuous reflection is a primary clickable model element');
 const rail=home.match(/<aside id="modelSideNav"[\s\S]*?<\/aside>/)?.[0]||'';
-assert.deepEqual([...rail.matchAll(/data-go="([^"]+)"/g)].map(m=>m[1]),[...tiles,'studio/daily'],'right rail repeats the four exact model paths and continuous reflection, with no extra model modules');
+assert.deepEqual([...rail.matchAll(/data-model-nav="[^"]+" data-go="([^"]+)"/g)].map(m=>m[1]),[...tiles,'studio/daily'],'right rail repeats the four exact model paths and continuous reflection, with no extra model modules');
 assert.match(home,/id="modelNavToggle"/,'right model drawer toggle on narrow screens');
 assert.match(app,/function setModelNavOpen/,'drawer open/close controls are wired');
 assert.match(app,/function highlightModelNav/,'current book model section is highlighted');
