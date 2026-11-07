@@ -39,4 +39,5 @@ jobs:
           node sabanaft/verify-reflective.cjs
           node sabanaft/verify-context-ch6.cjs
           node sabanaft/verify-model-ia.cjs
+          node sabanaft/verify-gamification.cjs
           node sabanaft/verify-coaching.cjs
