@@ -12,25 +12,27 @@
 <link rel="stylesheet" href="./coaching-journey.css?v=1">
 <link rel="stylesheet" href="./ch5-product-shell.css?v=4">
 <link rel="stylesheet" href="./gamification.css?v=1">
+<link rel="stylesheet" href="./premium-v2.css?v=1">
 <title>رهبری بازتابی من | صبا نفت</title>
 
 
 </head>
 <body><div class="app-shell">
 <header class="topbar">
-<a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="../assets/sabanaft-logo.svg" alt="لوگوی رسمی شرکت صبا نفت"><span><strong>رهبری بازتابی من</strong><small>سامانه توسعه رهبری</small></span></a>
-<button type="button" id="install" class="install" hidden>نصب اپ <span aria-hidden="true">＋</span></button>
-</header>
 <button type="button" id="modelNavToggle" class="model-nav-toggle" aria-controls="modelSideNav" aria-expanded="false" aria-label="بازکردن فهرست مدل رهبری"><span aria-hidden="true">☰</span><span>مدل</span></button>
+<a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="../assets/sabanaft-logo.svg" alt="لوگوی رسمی شرکت صبا نفت"><span><strong>رهبری بازتابی من</strong><small>سامانه توسعه رهبری</small></span></a>
+<div class="topbar-actions"><button type="button" id="globalScore" class="global-score" aria-label="دیدن سطح پیشرفت و نشان‌ها" data-go="passport">⭐ <span>امتیاز من</span></button><button type="button" id="install" class="install" hidden>نصب اپ <span aria-hidden="true">＋</span></button></div>
+</header>
+
 <button type="button" id="modelNavScrim" class="model-nav-scrim" aria-label="بستن فهرست مدل رهبری" hidden></button>
 <aside id="modelSideNav" class="model-side-nav" aria-label="مسیر مدل رهبری؛ منوی راست">
  <header class="model-side-head"><span>مدل رهبری</span><small>پنج بخش اصلی مسیر رهبری</small><button type="button" id="modelNavClose" aria-label="بستن فهرست مدل">×</button></header>
  <nav class="model-side-list" aria-label="چهار جزء مدل و بازاندیشی مستمر">
   <button type="button" data-model-nav="context" data-go="context"><span>۱</span><strong>بافت رهبری</strong></button>
-  <button type="button" data-model-nav="idea" data-go="lesson/5/mix"><span>۲</span><strong>ایده رهبری من</strong></button>
-  <button type="button" data-model-nav="relationship" data-go="lesson/7/perspectives"><span>۳</span><strong>رابطه با کارکنان</strong></button>
-  <button type="button" data-model-nav="tools" data-go="lesson/8/design"><span>۴</span><strong>ابزارهای رهبری</strong></button>
-  <button type="button" class="model-side-reflection" data-model-nav="reflection" data-go="studio/daily"><span>↻</span><strong>بازاندیشی مستمر</strong></button>
+  <button type="button" data-model-nav="idea" data-go="stage/idea"><span>۲</span><strong>ایده رهبری من</strong></button>
+  <button type="button" data-model-nav="relationship" data-go="stage/relationship"><span>۳</span><strong>رابطه با کارکنان</strong></button>
+  <button type="button" data-model-nav="tools" data-go="stage/tools"><span>۴</span><strong>ابزارهای رهبری</strong></button>
+  <button type="button" class="model-side-reflection" data-model-nav="reflection" data-go="stage/reflection"><span>↻</span><strong>بازاندیشی مستمر</strong></button>
  </nav>
  <div class="model-side-extras"><h3>کارهای من</h3>
   <button type="button" data-go="studio/home">✎ مسئله جدید</button>
@@ -42,7 +44,7 @@
   </div>
   <p class="model-side-note">بازاندیشی در همه بخش‌ها جریان دارد. امتیاز با ثبت فعالیت واقعی تعلق می‌گیرد.</p>
 </aside>
-<button type="button" id="globalScore" class="global-score" aria-label="دیدن سطح پیشرفت و نشان‌ها" data-go="passport">⭐ <span>امتیاز من</span></button>
+
 <main id="main">
 <section id="homeView" class="view" aria-label="خانه رهبری بازتابی صبا نفت">
  <div class="saba-home-photo" aria-hidden="true"><img src="../assets/sabanaft-meeting.jpg" alt="" fetchpriority="high" decoding="async"></div>
@@ -51,30 +53,38 @@
   <header class="saba-home-heading">
    <span class="saba-home-overline">سامانه رهبری بازتابی صبا نفت</span>
    <h1>رهبری بازتابی من</h1>
-   <p>از مسئله واقعی تا تصمیم بهتر</p>
+   <p>مدل رهبری، تمرین واقعی و رشد مرحله‌به‌مرحله</p>
   </header>
-  <div class="saba-model-label">مدل رهبری بازتابی · بر اساس شکل ۵.۱ کتاب</div>
+  <div class="saba-model-label">پنج بخش مدل رهبری</div>
   <section class="saba-model-loop" aria-label="چهار جزء مدل رهبری و بازاندیشی مستمر">
    <nav class="saba-home-grid" aria-label="چهار جزء مدل اصلی رهبری آرمین تروست">
    <button type="button" class="saba-home-tile" data-go="context" aria-label="گام یک: شناخت بافت رهبری"><span class="saba-tile-icon" aria-hidden="true">۱</span><strong>بافت رهبری</strong><small>شناخت شرایط معمول تیم</small></button>
-   <button type="button" class="saba-home-tile" data-go="lesson/5/mix" aria-label="گام دو: تعریف ایده رهبری"><span class="saba-tile-icon" aria-hidden="true">۲</span><strong>ایده رهبری من</strong><small>تعریف نقش و رویکرد من</small></button>
-   <button type="button" class="saba-home-tile" data-go="lesson/7/perspectives" aria-label="گام سه: رابطه رهبر و کارکنان"><span class="saba-tile-icon" aria-hidden="true">۳</span><strong>رابطه با کارکنان</strong><small>گفت‌وگو و انتظارات دوطرفه</small></button>
-   <button type="button" class="saba-home-tile" data-go="lesson/8/design" aria-label="گام چهار: ابزارهای رهبری"><span class="saba-tile-icon" aria-hidden="true">۴</span><strong>ابزارهای رهبری</strong><small>راهکارهای متناسب با تیم</small></button>
+   <button type="button" class="saba-home-tile" data-go="stage/idea" aria-label="گام دو: تعریف ایده رهبری"><span class="saba-tile-icon" aria-hidden="true">۲</span><strong>ایده رهبری من</strong><small>تعریف نقش و رویکرد من</small></button>
+   <button type="button" class="saba-home-tile" data-go="stage/relationship" aria-label="گام سه: رابطه رهبر و کارکنان"><span class="saba-tile-icon" aria-hidden="true">۳</span><strong>رابطه با کارکنان</strong><small>گفت‌وگو و انتظارات دوطرفه</small></button>
+   <button type="button" class="saba-home-tile" data-go="stage/tools" aria-label="گام چهار: ابزارهای رهبری"><span class="saba-tile-icon" aria-hidden="true">۴</span><strong>ابزارهای رهبری</strong><small>راهکارهای متناسب با تیم</small></button>
   </nav>
-  <div class="saba-reflection-connector" aria-hidden="true">↻ <span>مرور تجربه و بازگشت به مدل</span></div>
-  <button type="button" class="saba-reflection-band" data-go="studio/daily" aria-label="بازاندیشی مستمر؛ تمرین بازاندیشی در تمام مراحل مدل">
+  <div class="saba-reflection-connector" aria-hidden="true"><span>بازاندیشی در تمام مراحل ادامه دارد</span></div>
+  <button type="button" class="saba-reflection-band" data-go="stage/reflection" aria-label="بازاندیشی مستمر؛ تمرین بازاندیشی در تمام مراحل مدل">
     <span class="saba-reflection-symbol" aria-hidden="true">↻</span>
-    <span class="saba-reflection-copy"><strong>بازاندیشی مستمر</strong><small>یادگیری از تجربه و اقدام</small><span class="saba-reflection-hint">تجربه را مرور کنید؛ برداشت و رفتار بعدی را بهتر کنید.</span></span>
-    <span class="saba-reflection-action" aria-hidden="true">شروع تمرین ←</span>
+    <span class="saba-reflection-copy"><strong>بازاندیشی مستمر</strong><small>یادگیری از تجربه و اقدام</small><span class="saba-reflection-hint">یادگیری از تجربه و بهبود تصمیم بعدی</span></span>
+    <span class="saba-reflection-action" aria-hidden="true">ورود ←</span>
   </button>
   </section>
-  <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ طرح مسئله واقعی</button><span>مسئله را با توجه به بافت پایه تیم بررسی کنید.</span></div>
+  <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ ثبت یک مسئله جدید</button></div>
   <div class="saba-home-achievement">
     <button type="button" data-go="passport" aria-label="مشاهده امتیازها، سطح و نشان‌ها"><span id="homeScoreMini">⭐ پیشرفت من</span><strong>مشاهده نشان‌ها ←</strong></button>
-    <small>با تکمیل تمرین، ثبت کیس و پیگیری نتیجه امتیاز بگیرید.</small>
+    
   </div>
-  <p class="saba-home-disclaimer">نسخه آزمایشی · ذخیره روی همین دستگاه · بدون اتصال AI</p>
+  
  </div>
+</section>
+<section id="stageView" class="view" aria-label="مرحله انتخاب‌شده از مدل رهبری">
+ <div class="stage-top"><button type="button" id="stageBack" class="stage-back">→ بازگشت به مدل</button><span class="stage-index" id="stageKicker">مرحله مدل</span></div>
+ <header class="stage-heading"><span class="stage-symbol" id="stageSymbol" aria-hidden="true">۲</span><div><h1 id="stageTitle">ایده رهبری من</h1><p id="stageLead">مسیر تمرین و یادگیری</p></div></header>
+ <div class="stage-progress" id="stageProgress">با انجام فعالیت‌ها امتیاز و نشان بگیرید.</div>
+ <h2 class="stage-section-title">از کجا شروع کنم؟</h2>
+ <nav id="stageActionList" class="stage-action-list" aria-label="انتخاب فعالیت در این مرحله"></nav>
+ <p class="stage-note">هر فعالیت در صفحه جداگانه باز می‌شود؛ برای بازگشت از دکمه «بازگشت» استفاده کنید.</p>
 </section>
 <section id="courseView" class="view" aria-label="جلسات دوره">
  <div class="page-heading"><span class="eyebrow">جلسات آموزشی</span><h1>مسیر رهبری بازتابی</h1><p>۹ جلسه و ۴۷ بخش واقعی؛ ترتیب مشاهده آزاد است. هر جلسه را انتخاب کنید.</p></div>
@@ -88,7 +98,7 @@
 </section>
 <section id="readerView" class="view" aria-label="مطالعه و تمرین">
   <div class="reader-top"><button type="button" id="readerBack" class="round-button" aria-label="بازگشت به بخش‌های جلسه">→</button><div class="reader-info"><strong id="readerTitle">درس</strong><small id="readerSession"></small></div><button type="button" id="bookmark" class="round-button" aria-label="نشان کردن درس">☆</button></div>
-  <nav id="lessonChips" class="chips" aria-label="جابجایی آزاد بین بخش‌های این جلسه"></nav>
+  <details class="lesson-switch"><summary>مشاهده دیگر بخش‌های این جلسه</summary><nav id="lessonChips" class="chips" aria-label="انتخاب بخش دیگری از همین جلسه"></nav></details>
   <div class="frame-container"><div class="loader" id="courseLoader">در حال بارگذاری محتوای اصلی دوره…</div><iframe id="courseFrame" class="reader-frame" title="محتوای کامل دوره رهبری بازتابی صبا نفت" loading="eager"></iframe></div>
   <div class="reader-actions"><button type="button" id="previousLesson" class="outline">→ قبلی</button><a id="externalLesson" class="outline" target="_blank" rel="noopener noreferrer">بازکردن تمام‌صفحه ↗</a><button type="button" id="nextLesson" class="outline filled">بعدی ←</button></div>
   <p class="fineprint">یادداشت‌ها، تمرین‌ها و تکمیل‌کردن بخش‌ها در همان محتوای اصلی دوره ثبت می‌شوند. صرفِ باز کردن درس به معنی تکمیل آن نیست.</p>
@@ -186,7 +196,7 @@
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 <script src="../reflective-content.js"></script>
 <script src="./gamification.js?v=1"></script>
-<script src="./app.js?v=4"></script>
+<script src="./app.js?v=5"></script>
 <script src="./coaching-journey.js?v=1"></script>
 <script src="./ai-connector.js?v=1"></script>
 </body></html>
