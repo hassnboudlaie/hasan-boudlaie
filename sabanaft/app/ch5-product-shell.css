@@ -260,3 +260,81 @@ body.saba-home .bottom-nav button{width:33.333%;max-width:33.333%}
  #homeView .saba-home-tile{min-height:110px}
  #homeView .saba-home-tile small{display:block;font-size:8px}
 }
+
+/* Fig. 5.1: Continuous Reflection is an equal-weight, full-width model element, not a small sub-link. */
+#homeView .saba-model-loop{width:min(100%,930px);margin:0 auto;display:flex;flex-direction:column;gap:8px;position:relative}
+#homeView .saba-model-loop .saba-home-grid{width:100%}
+#homeView .saba-reflection-connector{display:flex;align-items:center;justify-content:center;gap:10px;min-height:28px;color:#ffddbd;font-size:21px;font-weight:900;line-height:1}
+#homeView .saba-reflection-connector:before,#homeView .saba-reflection-connector:after{content:"";display:block;height:2px;max-width:260px;flex:1;background:linear-gradient(90deg,transparent,#ffca91 50%,transparent)}
+#homeView .saba-reflection-connector span{font-size:12px}
+#homeView button.saba-reflection-band{
+ all:unset;box-sizing:border-box;cursor:pointer;
+ width:100%;min-height:148px;margin:0;padding:20px 26px;
+ display:grid;grid-template-columns:70px minmax(0,1fr) auto;align-items:center;gap:19px;
+ text-align:right;direction:rtl;font-family:Vazirmatn,Tahoma,sans-serif;
+ border-radius:22px;border:2px solid rgba(255,203,133,.88);
+ background:linear-gradient(110deg,rgba(34,84,138,.94),rgba(6,43,90,.93) 55%,rgba(12,42,73,.94));
+ box-shadow:0 13px 33px rgba(0,10,25,.31),inset 0 1px 0 rgba(255,255,255,.22);
+ color:#fff;backdrop-filter:blur(15px);
+}
+#homeView button.saba-reflection-band:hover{background:linear-gradient(105deg,rgba(41,99,160,.98),rgba(12,55,111,.97))}
+#homeView button.saba-reflection-band:focus-visible{outline:3px solid #ffcf96;outline-offset:4px}
+#homeView .saba-reflection-symbol{display:grid;place-items:center;font:800 48px/1 Arial,sans-serif;width:70px;height:70px;border-radius:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.27);color:#ffdeae}
+#homeView .saba-reflection-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+#homeView .saba-reflection-copy strong{font-size:clamp(20px,2vw,24px);font-weight:950;line-height:1.5;color:white}
+#homeView .saba-reflection-copy small{font-size:11px;letter-spacing:.03em;color:#ffdaad;font-weight:750}
+#homeView .saba-reflection-hint{font-size:13px;line-height:1.7;color:#ecf4ff}
+#homeView .saba-reflection-action{display:inline-flex;justify-content:center;align-items:center;white-space:nowrap;color:#173956;background:#ffead1;border-radius:12px;min-height:44px;padding:8px 14px;font-size:13px;font-weight:900}
+@media(max-width:720px){
+ #homeView .saba-home-content{gap:10px;padding-top:78px;padding-bottom:100px}
+ #homeView .saba-model-loop{gap:7px}
+ #homeView .saba-model-loop .saba-home-tile{min-height:111px}
+ #homeView .saba-reflection-connector{min-height:23px;font-size:18px;gap:6px}
+ #homeView .saba-reflection-connector span{font-size:10px}
+ #homeView button.saba-reflection-band{grid-template-columns:50px minmax(0,1fr);gap:6px 11px;padding:14px 16px;min-height:127px;border-radius:19px}
+ #homeView .saba-reflection-symbol{width:50px;height:50px;font-size:35px;border-radius:14px;grid-row:1 / span 2}
+ #homeView .saba-reflection-copy strong{font-size:19px;line-height:1.4}
+ #homeView .saba-reflection-copy small{font-size:10px}
+ #homeView .saba-reflection-hint{font-size:11px;line-height:1.45}
+ #homeView .saba-reflection-action{grid-column:2;justify-self:start;padding:5px 12px;min-height:32px;font-size:11px;border-radius:9px}
+}
+@media(max-height:720px) and (max-width:720px){
+ #homeView .saba-home-content{gap:8px;padding-top:72px;padding-bottom:100px}
+ #homeView button.saba-reflection-band{min-height:118px;padding:10px 14px}
+ #homeView .saba-reflection-hint{font-size:10px}
+}
+
+/* A single book-aligned navigation on the RIGHT side of every app page.
+   Desktop: visible side rail; phones/tablets: discoverable RTL drawer. */
+.model-nav-toggle{position:fixed;z-index:90;right:0;top:105px;display:flex;flex-direction:column;gap:1px;justify-content:center;align-items:center;width:47px;min-height:72px;border:1px solid #b2cfe8;border-right:0;border-radius:12px 0 0 12px;background:#e9f4ff;color:#10436f;box-shadow:0 5px 20px #0e2d4a30;font:900 11px/1.5 Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.model-nav-toggle>span:first-child{font:700 22px/1 Arial,sans-serif}
+.model-nav-toggle:focus-visible,.model-side-nav button:focus-visible{outline:3px solid #f5a64b;outline-offset:2px}
+.model-nav-scrim{position:fixed;inset:0;z-index:98;border:0;background:rgba(8,24,43,.56);cursor:pointer}
+.model-nav-scrim[hidden]{display:none!important}
+.model-side-nav{position:fixed;z-index:100;top:0;bottom:0;right:0;width:min(320px,86vw);height:100dvh;overflow-y:auto;display:flex;flex-direction:column;gap:17px;padding:19px 17px 23px;border-left:1px solid #cadaeb;box-shadow:-15px 0 40px rgba(9,32,58,.2);background:#f9fcff;color:#163657;transform:translateX(105%);visibility:hidden;transition:transform .2s ease,visibility .2s ease;direction:rtl}
+body.model-nav-open .model-side-nav{transform:translateX(0);visibility:visible}
+.model-side-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 8px;align-items:center}
+.model-side-head>span{font-size:20px;font-weight:950}
+.model-side-head small{color:#647991;font-size:12px;grid-column:1}
+.model-side-head>button{grid-column:2;grid-row:1 / span 2;font-size:28px;line-height:1;width:42px;height:42px;border-radius:12px;border:1px solid #cadaeb;background:#edf4fc;color:#123e69;cursor:pointer}
+.model-side-list{display:flex;flex-direction:column;gap:9px}
+.model-side-list button{width:100%;min-height:62px;display:flex;align-items:center;gap:11px;padding:10px 12px;background:#fff;color:#153a61;border:1px solid #d9e6f2;border-radius:13px;font:inherit;text-align:right;cursor:pointer;box-shadow:0 3px 10px rgba(5,35,73,.04)}
+.model-side-list button>span{display:grid;place-items:center;flex:0 0 37px;height:37px;border-radius:11px;background:#e9f3ff;color:#144a83;font-weight:950;font-size:19px}
+.model-side-list button>strong{font-size:14px;font-weight:900}
+.model-side-list button[aria-current="page"]{border-color:#317cb8;background:#e7f4ff}
+.model-side-list .model-side-reflection{margin-top:8px;border:2px solid #e5a258;background:linear-gradient(110deg,#fff5e8,#f5faff)}
+.model-side-list .model-side-reflection>span{background:#dce9f8;color:#ae6416;font-size:26px}
+.model-side-note{margin:0;font-size:12px;line-height:1.8;color:#576b82}
+@media(min-width:1460px){
+ .model-side-nav{visibility:visible;transform:none;top:99px;bottom:20px;right:12px;height:calc(100dvh - 118px);width:197px;border-radius:18px;padding:15px 10px;box-shadow:0 9px 29px rgba(9,32,58,.12)}
+ .model-side-head>span{font-size:17px}
+ .model-side-head>button{display:none}
+ .model-side-list button{padding:9px 7px;min-height:62px;gap:7px}
+ .model-side-list button>span{flex-basis:34px;height:34px;font-size:17px}
+ .model-side-list button>strong{font-size:12px}
+ .model-side-note{font-size:11px}
+ .model-nav-toggle,.model-nav-scrim{display:none!important}
+ body.saba-home #homeView .saba-home-content{width:calc(100% - 236px);margin-right:214px;margin-left:0;max-width:1120px}
+ body:not(.saba-home) .app-shell{max-width:none;width:calc(100% - 220px);margin-left:0;margin-right:220px}
+}
+@media(prefers-reduced-motion:reduce){.model-side-nav{transition:none}}
