@@ -118,6 +118,11 @@ Deno.serve(async req=>{
    if(!fields||Array.isArray(fields)||typeof fields!=='object'||!expected||Array.isArray(expected)||typeof expected!=='object')return respond({error:'اطلاعات یا نسخه پایه نامعتبر است'},400,origin);
    const entries=Object.entries(fields);
    if(entries.length<1||entries.length>12||entries.some(([k,v])=>body.action==='grade'?!/^instructorScore[0-4]$/.test(k)||!Number.isInteger(v)||v<0||v>10:!valid(k,v)))return respond({error:'فیلد یا مقدار نامعتبر است'},400,origin);
+   if(body.action==='write'&&('missionChoice' in fields||'missionChoiceRound' in fields)){
+    if(!('missionChoice' in fields&&'missionChoiceRound' in fields))return respond({error:'انتخاب راهبرد و شماره دور باید با هم ثبت شوند'},400,origin);
+    const row=(await db('alborz_team_fields?team_no=eq.1&field_key=eq.classroomRound&select=field_value&limit=1'))?.[0];
+    if(fields.missionChoiceRound!==Number(row?.field_value??0))return respond({error:'دور انتخاب مأموریت تغییر کرده؛ صفحه را تازه‌سازی کنید'},409,origin);
+   }
    for(const [k] of entries){
     const member=k.match(/^r[0-3]member([1-5])$/);
     if(member&&Number(member[1])!==identity.member)return respond({error:'فقط نظر عضو خود را ویرایش کنید'},403,origin);
