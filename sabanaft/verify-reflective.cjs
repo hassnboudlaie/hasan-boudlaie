@@ -77,7 +77,7 @@ async function run(){
  for(const item of C){
   equal(new Set(item.options.map(o=>o.role)).size,4,'all role options distinct');check(!('correct' in item),'cases have no normative answer');
   go('s/9/cases/'+item.id);equal($$('.case-options .option').length,4,'four case choices');
-  for(const o of item.options){click('[data-case-choice="'+o.role+'"]');equal(ctx().cases[item.id].choice,o.role,'case saved');check($('#caseFeedback').textContent.includes(D.roles.find(r=>r.id===o.role).en),'feedback identifies chosen role');check(!$('#caseFeedback').textContent.includes('نمره'),'no case score')}
+  for(const o of item.options){click('[data-case-choice="'+o.role+'"]');equal(ctx().cases[item.id].choice,o.role,'case saved');check($('#caseFeedback').textContent.includes(D.roles.find(r=>r.id===o.role).fa),'feedback identifies chosen role');check(!$('#caseFeedback').textContent.includes('نمره'),'no case score')}
  }
  const item=C[0];go('s/9/cases/'+item.id);input('[data-case-note=reason]','دلیل بافتی من');input('[data-case-note=alternative]','گزینه دیگر معقول');input('[data-case-note=condition]','شرط تغییر من');
  go('s/9/review');equal($$('.count-grid b').reduce((n,e)=>n+Number(e.textContent.replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c))),0),15,'case frequencies sum to answered cases');
