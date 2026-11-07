@@ -195,12 +195,9 @@ const server=http.createServer((req,res)=>{
   await teacher.screenshot({path:'artifacts/alborz-resilience/classroom-teacher-'+width+'.png',fullPage:true});
   await expert1.screenshot({path:'artifacts/alborz-resilience/classroom-participant-'+width+'.png',fullPage:true});
   for(const p of [teacher,expert1,expert2])assert(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),'no horizontal overflow '+width);
-  await teacher.goto(base+'resilience.html?classroom=1&teacher=1');
-  await teacher.locator('#live-code').fill('aaaaaaaaaaaaaaaaaaaaaaaa');
-  await teacher.locator('#live-join').click();
   await teacher.locator('.classroom-reset > summary').click();
-  teacher.once('dialog',dialog=>dialog.accept('شروع تازه'));
-  teacher.once('dialog',dialog=>dialog.accept());
+  let prompts=0;
+  teacher.on('dialog',async dialog=>{prompts++;await dialog.accept(prompts===1?'شروع تازه':undefined);});
   await teacher.locator('[data-class-reset]').click();
   await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله ۱'));
   assert.equal(data.size,0,'reset clears only workshop data and returns to team formation');
