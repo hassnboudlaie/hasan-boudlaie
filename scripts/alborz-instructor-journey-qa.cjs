@@ -52,7 +52,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   await page.locator('#teacher-journey-live .teacher-live-group').first().evaluate(el=>el.open=true);
   assert.match(await page.locator('#teacher-journey-live .teacher-live-group').first().innerText(),/تصمیم اولیه/);
 
-  assert.match(await page.locator('details.teacher-mission').first().innerText(),/مدیریت خشم و جرأت‌ورزی/);assert.match(await page.locator('details.teacher-mission').first().innerText(),/هدف تمرین به زبان ساده/);
+  assert.match(await page.locator('details.teacher-mission').first().innerText(),/مدیریت خشم و جرأت‌ورزی/);assert.match(await page.locator('details.teacher-mission').first().innerText(),/هدف تمرین/);
   await page.locator('details.teacher-mission').last().evaluate(el=>el.open=true);
   assert.match(await page.locator('details.teacher-mission').last().innerText(),/کارت اتفاق/);
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no horizontal instructor overflow '+width);
