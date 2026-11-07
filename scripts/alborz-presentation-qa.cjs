@@ -35,8 +35,11 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.getByText('راهنمای کوتاه کلاس').count(), 0);
     assert.equal(await page.getByText('نمایش درشت و مرحله‌ای', {exact:false}).count(), 0);
     assert.equal(await page.getByText('Presentation Mode', {exact:false}).count(), 0);
-    assert.equal(await page.getByText('برنامه هشت‌ساعته', {exact:true}).count(), 1);
-    assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 1);
+    assert.equal(await page.getByText('برنامه هشت‌ساعته', {exact:true}).count(), 0);
+    assert.equal(await page.getByText('برنامه کامل ۱۱ ساعته', {exact:true}).count(), 1);
+    assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 0);
+    assert.equal(await page.locator('.mod-art').count(), 3,'three photographic module cards');
+    assert(await page.locator('.mod-art').first().evaluate(img=>img.complete&&img.naturalWidth>0),'module editorial photograph must load');
     await page.locator('a[href="./claims-presentation.html"]').click();
     await page.locator('#slide h2').waitFor();
     assert.equal(await page.getByText('مسیر آموزش').count(), 0);
