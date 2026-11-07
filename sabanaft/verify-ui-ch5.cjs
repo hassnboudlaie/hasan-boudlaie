@@ -28,10 +28,10 @@ assert.ok(cards[0].dataset.go==='context','chapter 6 context is the FIRST primar
 assert.ok(home.querySelector('button.saba-reflection-band[data-go="studio/daily"]'),'reflection is an equally prominent clickable model element');
 assert.equal(doc.querySelectorAll('.model-side-list [data-go]').length,5,'right-side rail repeats four stages and reflection');
 assert.ok(doc.querySelector('#modelSideNav a[href="./business-model.html"]'),'BMC accessible in approved right drawer');
-assert.ok(home.querySelector('a[href="./lesson-notes.html"]'),'lesson notes still accessible');
+assert.ok(doc.querySelector('#modelSideNav a[href="./lesson-notes.html"]'),'lesson notes accessible from single model drawer');
 assert.ok(home.querySelector('[data-go="passport"]'),'progress stays accessible');
 assert.ok(home.querySelector('#homeScoreMini'),'home progress tied to annual score');
-assert.ok(home.querySelector('#openRoles'),'four leadership roles lesson still available');
+assert.ok(cards[1].dataset.go==='lesson/5/mix','idea of leadership remains directly accessible');
 assert.equal(doc.querySelector('.bottom-nav'),null,'old bottom menu deleted');
 const css=read('app/ch5-product-shell.css');
 assert.match(css,/#homeView \.saba-home-photo img/);
