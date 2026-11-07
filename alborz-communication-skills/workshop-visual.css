@@ -1,0 +1,62 @@
+/* Workshop visual theme — isolated to the two resilience entry pages. */
+:root{--deep:#075d86;--deep2:#083859;--bg:#eef5fc;--card:#fff;--line:#c4d9e9;--text:#112e49;--muted:#456078;--gold:#b57820;--shadow:0 10px 30px rgba(12,57,95,.08)}
+body{font-family:AlborzVazir,Vazirmatn,Tahoma,sans-serif;background:radial-gradient(ellipse at 90% 0,#dcefff,transparent 60%),var(--bg);color:var(--text);font-size:19px;line-height:1.9}
+h1,h2,h3,h4{letter-spacing:0;line-height:1.55;text-wrap:balance;font-weight:800}
+header{background:linear-gradient(110deg,#07345d,#075689);box-shadow:0 5px 20px #07345d22}
+header .wrap{min-height:84px}header .brand{font-size:22px}header .small{color:#deefff;font-size:14px}
+header .btn,header button{background:#ffffff18;color:#fff;border-color:#ffffff60}
+main{padding-top:30px}
+.hero,.workshop-hero{background:radial-gradient(ellipse at 5% 0,#087e9a,transparent 65%),linear-gradient(120deg,#07345d,#075b93);border:1px solid #337ea8;border-radius:28px;box-shadow:0 18px 38px #0a477e24}
+.hero h1,.workshop-hero h1{font-size:clamp(30px,4.2vw,48px);font-weight:900;line-height:1.55}
+.hero p,.workshop-hero p{color:#f0f8ff}
+.workshop-hero .hero-kicker,.journey-hero span,.strategy-strip span{background:#ffffff14;border-color:#ffffff50;color:#fff}
+.panel,.mod-card,.mission-tile,.case-card,.teams a,.mission-pick-card{border-color:var(--line);box-shadow:var(--shadow);border-radius:22px}
+.panel{padding:26px;margin-block:22px}
+.panel h2,.panel h3,.mod-copy strong,.mission-tile h3,.mission-pick-info strong,.case-summary h3,.teacher-mission>summary strong{color:#0b4168}
+.mod-card,.mission-tile,.mission-pick-card{background:linear-gradient(155deg,#fff,#edf6ff)}
+.mod-copy p,.mission-tile p,.mission-pick-info small,.mission-link small,.choice-lead{color:var(--muted)}
+.mod-card:hover,.mission-pick-card:hover,.teams a:hover{border-color:#00888e;box-shadow:0 14px 32px #0a537e1f}
+.mod-copy{padding:21px}.mod-copy strong{font-size:27px}.mod-copy p{font-size:18px}.mod-art{height:184px}
+.btn,.tab{border-color:#bad3e5;color:var(--deep2);border-radius:15px;min-height:50px}
+.btn.primary,.tab.active,.stage-nav .btn.primary,.mission-link.active,.rating button.active,.mission-pick-cta{background:linear-gradient(110deg,#007f83,#075d86);border-color:#087b87;color:white;box-shadow:0 5px 14px #007f831c}
+.btn.ghost{background:#e7f1fa}
+.mission-link.active small{color:#fff}
+.tag,.eyebrow,.skill,.likert,.scale-note,.legend,.course-outline,.scenario-brief,.teacher-metrics span,.decision-flow span,.mission-topline .tag{background:#eaf3fb;border-color:#c3d9e9;color:#254f70}
+.choice.selected{background:#e3f6f7;border-color:#087e87}
+.mission-link,.teams a,.teacher-mission-nav a{color:#164b70;border-color:#c1d9ea}
+.skill-layers>div,.embedded-skills,.dialogue-text,.line,.role{background:#f0f6fc;border-color:#c1d8e9}
+.skill-layers b,.skill-layers p,.dialogue-text,.case-summary .case-goal b,.embedded-skills h3{color:#234d6d}
+.case-summary .case-goal{background:#eaf6fa;border-color:#07838c}
+.case-summary .case-situation{background:#f5f9fd}
+.resource-meter{background:#0b466c}
+input,textarea,select{border-color:#a9c5da;color:#173c5a;background:#fff;accent-color:#087f88}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #00868d;outline-offset:4px}
+header a:focus-visible,header button:focus-visible{outline-color:#76f0e1}
+.mission-tile small,.mission-pick-info em,.course-outline>summary{color:#315f7b}
+.earned-badge{background:#edf4fb;border-color:#c6dbea}
+.earned-badge>b,.earned-badge>small{color:#405b70}
+.earned-badge.earned{background:linear-gradient(135deg,#fff0be,#fffaf0);border-color:#c8983e}
+.earned-badge.earned>b{color:#795019}
+.fast-grade-table thead,.schedule th{background:#e7f1fa;color:#173f61}
+.fast-grade-table tbody tr:nth-child(2n){background:#f2f7fc}
+.footer,.saved{color:var(--muted)}
+@media(max-width:720px){
+ body{font-size:18px;line-height:1.9}main{padding:20px 14px 60px}
+ header .wrap{padding:12px 14px;gap:10px;flex-wrap:wrap}header .brand{font-size:18px;max-width:none}header .small{font-size:12px}
+ .hero,.workshop-hero{padding:28px 21px;border-radius:24px}.hero h1,.workshop-hero h1{font-size:30px}.hero p,.workshop-hero p{font-size:18px}
+ .grid3{grid-template-columns:1fr;gap:14px}
+ .mod-card{display:grid;grid-template-columns:100px minmax(0,1fr);text-align:right;min-height:126px}
+ .mod-art{width:100%;height:100%;min-height:126px;object-fit:cover}.mod-copy{padding:16px}
+ .mod-copy strong{font-size:23px}.mod-copy p{font-size:16px}
+ .panel{padding:21px 18px;border-radius:21px}.panel h2{font-size:25px}.panel h3{font-size:22px}
+ .strategy-strip span{font-size:14px;padding:9px;line-height:1.7}
+ .home-secondary{grid-template-columns:1fr}.home-secondary .btn,.home-secondary a.btn{font-size:16px}
+ .mission-tile p{font-size:16px}.mission-tile h3{font-size:22px}.mission-pick-info small{font-size:16px}
+ .mission-pick-card{flex-wrap:wrap;padding:17px}.mission-pick-info{flex-basis:calc(100% - 55px)}
+ .mission-pick-cta{margin-inline-start:auto;font-size:15px}
+ .game-nav .btn,.stage-nav .btn{font-size:16px;min-height:48px}
+ .rating button{min-width:42px;min-height:46px}
+ .earned-badge>b{font-size:16px}.earned-badge>small{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media print{body{background:white;color:#111}.hero,.workshop-hero{background:white;color:#111;box-shadow:none}.hero p,.workshop-hero p{color:#111}.panel{box-shadow:none}}
