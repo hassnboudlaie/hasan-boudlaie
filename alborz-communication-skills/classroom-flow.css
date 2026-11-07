@@ -118,3 +118,18 @@
 .classroom-strategy-grid article:nth-child(3)::before{background-position-x:64.1%}
 .classroom-strategy-grid article:nth-child(4)::before{background-position-x:97.6%}
 @media(max-width:680px){.classroom-strategy-grid article::before{height:165px}}
+
+/* Final readiness step: one clear confirmation, no secondary dashboards. */
+.classroom-ready-action{margin:22px 0 12px;padding:18px 20px;border:1px solid #b6d5c4;border-radius:17px;background:#eff9f3;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.classroom-ready-action .btn{font-size:19px;min-height:52px;padding:12px 21px;flex:0 0 auto}
+.classroom-ready-action p{font-size:15px;line-height:1.8;color:#355d51;flex:1 1 220px;margin:0}
+.classroom-ready-action [disabled]{background:#e0f2e8;color:#0a6545;border-color:#98c6b0;opacity:1;cursor:default}
+.classroom-choice-grid button[disabled]{opacity:.6;background:#edf1f2;border-color:#d1d9db;cursor:not-allowed;transform:none}
+.classroom-choice-grid button[disabled] span{color:#5a6a72}
+.classroom-controls:has([data-class-next]:disabled) .classroom-controls-note{color:#78551c;font-weight:750}
+.classroom-reset{margin-top:14px;padding:11px 17px;border:1px solid #d7e3e6;border-radius:13px;background:#f8fbfc}
+.classroom-reset>summary{font-size:15px;color:#4b6671;font-weight:750;cursor:pointer}
+.classroom-reset>p{font-size:15px;line-height:1.85;color:#526c79}
+.classroom-reset .btn{background:#fff;color:#873b36;border:1px solid #ccaba7}
+.classroom-reset .btn:hover{background:#fff1ef}
+@media(max-width:650px){.classroom-ready-action{padding:14px;display:block}.classroom-ready-action .btn{width:100%;font-size:18px}.classroom-ready-action p{margin-top:10px}.classroom-controls-note{line-height:1.6}}
