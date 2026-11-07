@@ -115,7 +115,7 @@ header a:focus-visible,header button:focus-visible{outline-color:#76f0e1}
 .mission-simple-progress button:disabled,.simple-teacher-stepbar button:disabled{opacity:.36;cursor:not-allowed}
 .mission-simplicity-note{font-size:15px;color:#486778;margin:3px 8px 14px}
 .mission-simple-app > section.panel{margin:12px 0 14px;padding:clamp(15px,3vw,28px)}
-.mission-simple-app > section.panel > h2:first-child,.mission-simple-app .mission-topline,.mission-simple-app .shared-step-nav,.mission-simple-app .resource-meter{display:none!important}
+.mission-simple-app > section.panel > h2:first-child,.mission-simple-app .mission-topline,.mission-simple-app .shared-step-nav{display:none!important}
 .mission-simple-app .shared-flow-heading{margin:0 0 16px;font-size:clamp(21px,3vw,29px);background:#eef6f4}
 .mission-simple-app .case-summary{margin-top:8px}
 .mission-simple-footer{display:flex;gap:10px;justify-content:flex-start;flex-wrap:wrap;padding:9px 4px 24px}
@@ -194,3 +194,6 @@ header a:focus-visible,header button:focus-visible{outline-color:#76f0e1}
 .simple-entry-target{background:#eaf6f1;padding:12px;border-radius:13px}
 .simple-entry-target strong{display:block;color:#0e5561}
 @media(max-width:650px){.simple-entry-landing{margin:10px auto;padding:18px}#app.mission-simple-app #live-panel.live-authenticated{padding:8px 11px}}
+
+.mission-simple-app .resource-meter{display:block;margin:6px 0 17px;font-size:17px;padding:15px 18px;border-radius:13px;background:#11516d;color:#fff}
+.mission-simple-app .resource-meter strong{font-size:21px;color:#ffe1a0}
