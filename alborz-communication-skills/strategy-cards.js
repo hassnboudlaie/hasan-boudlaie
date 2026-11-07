@@ -1,0 +1,125 @@
+
+/* Curated from the workshop's resilience-game.js handout and mission cases.
+   These are organizational strategies translated into claims-workshop practice,
+   not psychological personality types. */
+(function(){
+'use strict';
+const strategies={
+ camel:{
+  n:'۰۱',name:'شتر',en:'Core Resilience',label:'حفظ هسته و تقویت تاب‌آوری',
+  subtitle:'روش اصلی درست کار می‌کند؛ ظرفیت تحمل، بازیابی و تداوم خدمت را تقویت می‌کنیم.',
+  traits:['حفظ فرایند معتبر','تقسیم بار و اولویت‌بندی','آمادگی برای اختلال موقت'],
+  condition:'وقتی منشأ آشوب موقتی است و روش رسیدگی همچنان معتبر و قابل اتکاست، نیاز اصلی حفظ کیفیت و بازیابی ظرفیت است؛ نه طراحی دوباره مدل کار.',
+  application:'در واحد خسارت، پرونده‌ها را بر اساس فوریت و کامل‌بودن مدارک دسته‌بندی می‌کنیم، جانشین مشخص می‌کنیم و از مسیر ثبت موقت مصوب استفاده می‌کنیم؛ کنترل‌های قانونی را حذف نمی‌کنیم.',
+  example:'بعد از تعطیلات، تعداد مراجعه‌کنندگان ناگهان سه برابر شده است. سامانه نیز یک ساعت مختل می‌شود. تیم باید نوبت‌بندی، ثبت موقت مجاز و اطلاع‌رسانی دقیق را هماهنگ کند.',
+  lesson1:'هسته خدمت یعنی آن بخش از مدل عملیاتی که برای ایجاد ارزش به مشتری به کار می‌رود. در راهبرد شتر، این هسته حفظ می‌شود و توان پاسخ‌گویی به شوک تقویت می‌شود.',
+  lesson2:'پروتکل پشتیبان، اولویت‌بندی پرونده‌ها، مدیریت خستگی و تعیین زمان بازبینی از ابزارهای این راهبرد هستند. هدف حفظ کیفیت در فشار است، نه صرفاً افزایش سرعت.',
+  boundary:'تحمل فرسودگی، پنهان‌کردن خطا یا اصرار بر روالی که دیگر کارآمد نیست، تاب‌آوری نیست.',
+  question:'چه شواهدی نشان می‌دهد مشکل امروز فقط افزایش فشار است، نه ناکارآمدی خودِ روش رسیدگی؟',
+  mission:'صفی که ناگهان سه برابر شد'
+ },
+ salmon:{
+  n:'۰۲',name:'ماهی آزاد',en:'Corporate Innovation',label:'نوآوری بیرون از هسته',
+  subtitle:'هسته فعالیت حفظ می‌شود، اما یک خدمت یا مدل کسب‌وکار متمایز در کنار آن آزمایش می‌کنیم.',
+  traits:['تداوم کار اصلی','طراحی ارزش پیشنهادی تازه','آزمایش کوچک و مجوزدار'],
+  condition:'وقتی فعالیت جاری قابل‌اتکاست ولی نیاز یا فرصت جدیدی در بازار پدید آمده که با یک خدمت یا مدل کسب‌وکار مستقل پاسخ بهتری می‌گیرد.',
+  application:'تیم خسارت، بدون اختلال در رسیدگی روزانه، می‌تواند نیاز مشتریان ناوگان به خدمت مستقل پایش و پیشگیری از خسارت را به مدیریت پیشنهاد کند؛ مدل درآمدی و امکان‌پذیری باید بررسی شود.',
+  example:'مشتریان ناوگان خواهان کاهش توقف خودرو هستند. گروه باید برای خدمت پیشگیری و پایش ریسک، مشتری هدف، ارزش پیشنهادی، فرضیه درآمد و طرح پایلوت تعریف کند؛ هنوز مجوز اجرا صادر نشده است.',
+  lesson1:'Corporate Innovation افزودن هر ابزار کوچک به کار فعلی نیست؛ به معنای ساخت یا آزمون یک ارزش پیشنهادی متمایز، در کنار هسته موجود است.',
+  lesson2:'با مسئله مشتری شروع کنید، فرضیه‌های ارزش و درآمد را روشن کنید و یک آزمایش محدود و کم‌ریسک با معیار توقف و مجوز لازم طراحی کنید.',
+  boundary:'افزودن پیامک، فرم یا یک فعالیت جانبی به فرایند موجود، به‌تنهایی ایجاد کسب‌وکار تازه محسوب نمی‌شود.',
+  question:'این ایده دقیقاً چه ارزش تازه‌ای می‌آفریند و چه شواهدی می‌تواند فرضیه ما را رد کند؟',
+  mission:'فرصتی بیرون از رسیدگی خسارت'
+ },
+ chameleon:{
+  n:'۰۳',name:'آفتاب‌پرست',en:'Core Transformation',label:'دگرگونی در هسته فعالیت',
+  subtitle:'وقتی روش اصلی دیگر پاسخ‌گو نیست، خودِ فرایند ایجاد ارزش را بازطراحی می‌کنیم.',
+  traits:['تشخیص مسئله ساختاری','بازطراحی گردش‌کار','تعریف نقش و کنترل تازه'],
+  condition:'وقتی مشکل با افزایش نیرو، صبوری بیشتر یا یک راه‌حل موقت برطرف نمی‌شود و خودِ شیوه اصلی خدمت نیازمند تغییر است.',
+  application:'در خسارت درمان، می‌توان مسیر اصلی رسیدگی را از رفت‌وآمدهای مکرر و بررسی‌های جزیره‌ای به تریاژ استاندارد، ارجاع روشن و فرایند دیجیتالِ کنترل‌شده بازطراحی کرد.',
+  example:'مراجع بارها بین واحدها برای تکمیل مدارک و تأییدات جابه‌جا می‌شود. گروه باید قبل و بعد فرایند، نقش هر واحد، نقاط کنترل و معیار کیفیت را طراحی کند.',
+  lesson1:'Core Transformation یعنی تغییر معنادار در مدل عملیاتی اصلی، نه تغییر آرایش ظاهری فرم‌ها یا جابه‌جایی ساده کارها.',
+  lesson2:'نقاط گلوگاهی و دوباره‌کاری را شناسایی کنید؛ سپس گردش‌کار مطلوب، مسئول تصمیم، مهارت‌ها و کنترل‌های جدید را همراه با برنامه مدیریت تغییر تعریف کنید.',
+  boundary:'تغییر رنگ فرم، یک دستورالعمل یا جابه‌جایی یک کارشناس، تحول هسته‌ای محسوب نمی‌شود.',
+  question:'کدام بخش از روش فعلی باید واقعاً تغییر کند تا مسئله به‌صورت پایدار حل شود؟',
+  mission:'رفت‌وآمدی که پایان ندارد'
+ },
+ octopus:{
+  n:'۰۴',name:'اختاپوس',en:'Corporate Transformation',label:'تحول هسته همراه با نوآوری جدید',
+  subtitle:'هم فعالیت اصلی را بازطراحی می‌کنیم و هم یک کسب‌وکار یا خدمت مستقل جدید می‌سازیم.',
+  traits:['تحول هم‌زمان دو جریان','هماهنگی منابع و اختیارات','مدیریت وابستگی‌ها'],
+  condition:'وقتی برای پاسخ آینده هم تغییر مدل عملیاتی اصلی لازم است و هم ساخت ارزش پیشنهادی تازه بیرون از هسته.',
+  application:'در بیمه اموال، ممکن است بازطراحی کامل رسیدگی دیجیتال همراه با راه‌اندازی خدمت مستقل پایش و پیشگیری ریسک مطرح شود؛ هر مسیر مالک، بودجه و شاخص جدا می‌خواهد.',
+  example:'شرکت هم با صف و دوباره‌کاری خسارت مواجه است و هم فرصتی برای خدمت جدید پایش ریسک دارد، ولی ظرفیت کارشناسان محدود است. گروه باید دو جریان تغییر را اولویت‌بندی و هماهنگ کند.',
+  lesson1:'Corporate Transformation ترکیب دو تغییر واقعی است: تحول هسته فعلی و ایجاد کسب‌وکار یا خدمت جدید در کنار آن؛ صرف زیادبودن تعداد کارها کافی نیست.',
+  lesson2:'مالک و منابع هر جریان را مشخص کنید، وابستگی‌ها و ریسک فشار بر تیم را بسنجید و اجرای مرحله‌ای با نقاط تصمیم مدیریتی طراحی کنید.',
+  boundary:'چندوظیفگی، فعالیت‌های پراکنده یا تغییرات نمایشی به‌معنای راهبرد اختاپوس نیست؛ اجرای آن به اختیار و ظرفیت سازمانی نیاز دارد.',
+  question:'چه چیزی را باید هم‌زمان تغییر دهیم و کدام فعالیت باید به دلیل کمبود ظرفیت فعلاً متوقف شود؟',
+  mission:'دو تغییر، یک ظرفیت محدود'
+ }
+};
+const keys=['camel','salmon','chameleon','octopus'];
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dlg=document.createElement('dialog');
+dlg.className='alborz-strategy-dialog';
+dlg.setAttribute('aria-label','معرفی و درس‌نامه راهبرد تاب‌آوری');
+dlg.innerHTML='<div class="sd-wrap"><div class="sd-bar"><span class="sd-kicker">آکادمی مدیریت بیمه البرز · راهبردهای تاب‌آوری</span><button class="sd-close" type="button" data-close-strategy aria-label="بستن و بازگشت به چهار راهبرد">×</button></div><div id="sd-heading"></div><nav class="sd-tabs" role="tablist" aria-label="بخش‌های راهبرد"><button type="button" class="sd-tab" role="tab" data-detail-tab="overview">معرفی و کاربرد</button><button type="button" class="sd-tab" role="tab" data-detail-tab="lesson">درس‌نامه</button><button type="button" class="sd-tab" role="tab" data-detail-tab="mission">اجرای مأموریت</button></nav><div id="sd-content" role="tabpanel"></div></div>';
+document.body.append(dlg);
+let chosen='camel',tab='overview',origin=null;
+const section=(title,body,extra='')=>'<section class="sd-section '+extra+'"><h3>'+title+'</h3>'+body+'</section>';
+function overview(x){
+ return section('راهبرد در یک نگاه','<p>'+esc(x.subtitle)+'</p><div class="sd-pill-row">'+x.traits.map(y=>'<span class="sd-pill">'+esc(y)+'</span>').join('')+'</div>','sd-soft')
+ +section('چه زمانی این راهبرد مناسب است؟','<p>'+esc(x.condition)+'</p>')
+ +section('کاربرد برای کارشناس خسارت','<p>'+esc(x.application)+'</p>','sd-gold')
+ +section('یک موقعیت واقعی‌نما از محیط بیمه','<p>'+esc(x.example)+'</p>')
+ +'<button class="sd-action" type="button" data-detail-tab="lesson">مطالعه درس‌نامه این راهبرد ←</button>';
+}
+function lesson(x){
+ return '<p class="sd-label">درس‌نامه تخصصی · یادگیری مرحله‌به‌مرحله</p>'
+ +section('۱. مفهوم و منطق راهبرد','<p>'+esc(x.lesson1)+'</p>','sd-soft')
+ +section('۲. چگونه آن را به کار بگیریم؟','<p>'+esc(x.lesson2)+'</p>')
+ +section('۳. مثال در بیمه و واحد خسارت','<p>'+esc(x.example)+'</p>','sd-gold')
+ +section('۴. مرز و خطای رایج','<p><strong>توجه:</strong> '+esc(x.boundary)+'</p>')
+ +section('پرسش تأملی برای بحث گروهی','<p><strong>'+esc(x.question)+'</strong></p>','sd-soft')
+ +'<p class="sd-small">مبنای علمی: چهار راهبرد سازمانی Kurt Verweire برای مواجهه با آشوب؛ مثال‌ها اقتباس آموزشی برای صنعت بیمه‌اند، نه تشخیص تیپ شخصیتی افراد.</p>'
+ +'<button type="button" class="sd-action" data-detail-tab="mission">رفتن به مأموریت مرتبط ←</button>';
+}
+function mission(x){
+ return section('مأموریت '+esc(x.n)+' · '+esc(x.name),'<p><strong>'+esc(x.mission)+'</strong></p><p>'+esc(x.example)+'</p>','sd-soft')
+ +section('مسیر اجرای کارگاه','<ol class="sd-list"><li>مسئله و داده‌های پرونده فرضی را بخوانید.</li><li>نقش‌های گروه را تقسیم و تصمیم اولیه را ثبت کنید.</li><li>گفت‌وگو را اجرا کنید و با اتفاق غیرمنتظره روبه‌رو شوید.</li><li>تصمیم را بازنگری کنید؛ مشاهده‌گر شواهد رفتاری را ثبت کند.</li><li>مدرس تحلیل و بازخورد گروه‌ها را تسهیل کند.</li></ol>')
+ +section('ورود به محیط عملیاتی مأموریت','<p>ورود مدرس به راهنمای اجرای مأموریت و داشبورد زنده از مسیر امن موجود انجام می‌شود.</p>'
+ +'<a class="sd-action" href="./resilience.html?teacher=1&amp;mission='+encodeURIComponent(chosen)+'">ورود مدرس به مأموریت '+esc(x.name)+' ←</a>'
+ +'<a class="sd-secondary" href="./resilience.html">ورود شرکت‌کنندگان به کارگاه گروهی</a>'
+ +'<p class="sd-small">برای دسترسی مدرس، کد اختصاصی مدرس لازم است. مأموریت‌ها برای گروه‌ها به هر ترتیب قابل انتخاب هستند؛ اطلاعات گروه‌ها و PINها تغییر نمی‌کنند.</p>','sd-gold');
+}
+function render(){
+ const x=strategies[chosen];
+ document.getElementById('sd-heading').innerHTML='<div class="sd-heading"><div class="sd-photo strategy-'+chosen+'" role="img" aria-label="تصویر '+esc(x.name)+' از پوستر مصوب کارگاه"></div><div><span class="sd-kicker">راهبرد '+esc(x.n)+'</span><h2>'+esc(x.name)+'</h2><span class="sd-title">'+esc(x.label)+'</span><p class="sd-english" dir="ltr">'+esc(x.en)+'</p><p class="sd-sentence">'+esc(x.subtitle)+'</p></div></div>';
+ dlg.querySelectorAll('.sd-tab').forEach(b=>{const active=b.dataset.detailTab===tab;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});
+ document.getElementById('sd-content').innerHTML=tab==='lesson'?lesson(x):tab==='mission'?mission(x):overview(x);
+ dlg.scrollTop=0;
+}
+function open(id,target){
+ if(!strategies[id])return;
+ chosen=id;tab=target||'overview';origin=document.activeElement;
+ render();
+ if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');
+ dlg.querySelector('.sd-close').focus();
+}
+document.addEventListener('click',e=>{
+ const card=e.target.closest('.workshop-hero .strategy-card[data-strategy]');
+ if(card){open(card.dataset.strategy);return;}
+});
+document.addEventListener('keydown',e=>{
+ const card=e.target.closest('.workshop-hero .strategy-card[data-strategy]');
+ if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();open(card.dataset.strategy);}
+});
+dlg.addEventListener('click',e=>{
+ const close=e.target.closest('[data-close-strategy]');
+ if(close){dlg.close();return;}
+ const b=e.target.closest('[data-detail-tab]');
+ if(b){tab=b.dataset.detailTab;render();dlg.querySelector('.sd-tab[data-detail-tab="'+tab+'"]')?.focus();}
+ if(e.target===dlg)dlg.close();
+});
+dlg.addEventListener('close',()=>{if(origin&&origin.isConnected)origin.focus();});
+})();
