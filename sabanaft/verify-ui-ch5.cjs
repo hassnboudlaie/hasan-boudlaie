@@ -44,7 +44,7 @@ assert.ok(doc.querySelector('link[href*="ch5-product-shell.css?v=2"]'),'new visu
 assert.match(read('assets/ch5-studio-dashboard.css'),/\.ch5-studio-shortcuts/);
 assert.match(read('leadership-studio.html'),/ch5-studio-dashboard.css/);
 const sw=read('app/sw.js');
-assert.match(sw,/sabanaft-reflective-pwa-shell-v11/);
+assert.match(sw,/sabanaft-reflective-pwa-shell-v12/);
 assert.ok(sw.includes('./ch5-product-shell.css'),'redesigned Home stylesheet cached offline');
 w.eval(read('reflective-content.js'));
 w.eval(read('app/app.js'));
