@@ -18,7 +18,7 @@ function restore(s,raw){
   d.focus=roles[x.focus]?x.focus:'';d.caseId=clean(x.caseId,55);
   ['goal','microAction','superiorExpectations','authorityLimit','supportRequest'].forEach(function(k){d[k]=clean(x[k],900);});
   d.due=clean(x.due,20);
-  if(Array.isArray(x.reviews))d.reviews=x.reviews.filter(function(r){return r&&typeof r==='object';}).map(function(r){return {date:clean(r.date,30),caseId:clean(r.caseId,55),action:clean(r.action,800),evidence:clean(r.evidence,800),learning:clean(r.learning,800)};});
+  if(Array.isArray(x.reviews))d.reviews=x.reviews.filter(function(r){return r&&typeof r==='object';}).map(function(r){return {date:clean(r.date,30),createdAt:clean(r.createdAt,50),caseId:clean(r.caseId,55),action:clean(r.action,800),evidence:clean(r.evidence,800),learning:clean(r.learning,800)};});
  }
  s.development=d;
 }
@@ -69,7 +69,7 @@ function handle(e){
  }else{
   var a=clean(document.getElementById('dev-review-action').value,800);
   if(a.length<8){b.toast('برای ثبت مرور، اقدام واقعی انجام‌شده را روشن‌تر بنویسید.');return;}
-  d.reviews.push({date:new Date().toLocaleDateString('fa-IR'),caseId:d.caseId||'',action:a,evidence:clean(document.getElementById('dev-review-evidence').value,800),learning:clean(document.getElementById('dev-review-learning').value,800)});
+  d.reviews.push({date:new Date().toLocaleDateString('fa-IR'),createdAt:new Date().toISOString(),caseId:d.caseId||'',action:a,evidence:clean(document.getElementById('dev-review-evidence').value,800),learning:clean(document.getElementById('dev-review-learning').value,800)});
  }
  s.development=d;
  if(!b.save()){s.development=old;b.toast('ذخیره انجام نشد؛ متن فرم را نگه دارید یا در حافظه دیگری کپی کنید.');return;}
