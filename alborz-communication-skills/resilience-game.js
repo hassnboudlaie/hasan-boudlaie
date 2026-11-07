@@ -2,7 +2,7 @@
 (()=>{
 const app=document.getElementById('app'), P=new URLSearchParams(location.search);
 // Previously shared bare entry links now enter the same instructor-led workflow.
-if(!P.has('classroom')&&!P.has('group')&&!P.has('step')&&!P.has('offline')&&!P.has('legacy')){const p=new URLSearchParams(P);p.set('classroom','1');location.replace('resilience.html?'+p.toString());return;}
+if(!P.has('classroom')&&!P.has('offline')&&!P.has('legacy')){const p=new URLSearchParams(P);p.delete('step');p.set('classroom','1');location.replace('resilience.html?'+p.toString());return;}
 const g=/^(?:[1-9]|10)$/.test(P.get('group'))?Number(P.get('group')):0;
 const step=Math.max(0,Math.min(9,Number(P.get('step'))||0));
 const fa=n=>Number(n).toLocaleString('fa-IR');
@@ -11,7 +11,7 @@ const key='alborz-resilience-game-v2-'+g;
 function load(k){try{const x=JSON.parse(localStorage.getItem(k)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{};}catch{return {};}}
 let s=load(key), failed=false;
 function save(){try{localStorage.setItem(key,JSON.stringify(s));failed=false;}catch{failed=true;}const el=document.getElementById('save-status');if(el)el.textContent=failed?'ذخیره در مرورگر ممکن نیست؛ خروجی را دریافت کنید.':'روی همین دستگاه ذخیره شد ✓';}
-const url=(n,t=0)=>'resilience.html?group='+n+'&step='+t;
+const url=(n,t=0)=>'resilience.html?group='+n+'&step='+t+(P.has('legacy')?'&legacy=1':'');
 const stages=[['ورود، ثبت حضور و تأیید گروه‌ها',15,'گروه‌های حاضر و مسیر مشترک مدرس'],['معرفی چهار راهبرد',35,'نمونه‌های کوتاه بیمه‌ای و تمایز راهبردها'],['انتخاب مأموریت گروه‌ها',15,'هر گروه راهبرد مستقل خود را انتخاب می‌کند'],['دور اول مأموریت',85,'هفت گام اجرا و بازخورد'],['دور دوم مأموریت',85,'انتخاب تازه و هفت گام'],['دور سوم مأموریت',85,'انتخاب تازه و هفت گام'],['دور چهارم مأموریت',85,'انتخاب آخرین راهبرد و جمع‌بندی'],['انتقال به کار',45,'بازخورد گروه‌ها و اقدام قابل اجرا'],['استراحت‌های بین دورها',30,'دو استراحت ۱۵ دقیقه‌ای']];
 const models=[
 ['🐪','شتر','حفظ هسته','بدون کسب‌وکار جدید','تاب‌آوری هسته','مدل اصلی معتبر است؛ آمادگی و بازیابی را تقویت می‌کنیم.','در ازدحام موقت خسارت، نوبت‌بندی، جانشین و کنترل مدارک را تقویت کنید.','تحمل فرسودگی یا نادیده‌گرفتن اختلال ماندگار، تاب‌آوری نیست.','فهرست کارهای ضروری، مسیر جایگزین مجاز و زمان بازبینی بسازید.'],
