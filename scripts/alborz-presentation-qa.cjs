@@ -28,8 +28,8 @@ const server = http.createServer((req, res) => {
     const page = await ctx.newPage(), errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(base + 'claims-workshop-v2.html', {waitUntil: 'load'});
-    assert.equal(await page.locator('a[href="./claims-presentation.html"]').count(), 1,
-      'course homepage links to presentation');
+    assert.equal(await page.locator('a[href="./claims-presentation.html"]').count(), 0,
+      'retired classroom presentation entry is not visible on the homepage');
     assert.match(await page.locator('.workshop-hero h1').innerText(), /تلاطم.*راهبرد/s);
     assert.equal(await page.locator('.strategy-strip span').count(), 4);
     assert.equal(await page.getByText('راهنمای کوتاه کلاس').count(), 0);
@@ -56,6 +56,8 @@ const server = http.createServer((req, res) => {
       assert.equal(await modal.isVisible(), false);
     }
     assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 0);
+    assert.equal(await page.locator('.home-actions a[href*="claims-presentation"]').count(), 0,
+      'weak presentation feature no longer competes with the four strategies');
     assert.equal(await page.locator('.mod-art').count(), 0, 'old three-module cards removed from homepage');
     assert.equal(await page.locator('section.grid3[aria-label="بخش‌های کارگاه"]').count(), 0,
       'all course entry is through the four strategies');
@@ -75,7 +77,7 @@ const server = http.createServer((req, res) => {
     assert.match(await page.locator('h1').innerText(), /شتر/,
       'expert PIN login routes to selected camel scenario and correct group');
     await page.goto(base + 'claims-workshop-v2.html', {waitUntil:'load'});
-    await page.locator('a[href="./claims-presentation.html"]').click();
+    await page.goto(base + 'claims-presentation.html', {waitUntil:'load'});
     await page.locator('#slide h2').waitFor();
     assert.equal(await page.getByText('مسیر آموزش').count(), 0);
     assert.equal(await page.getByText('یک نمایش منسجم برای هر سه بخش کارگاه').count(), 0);
