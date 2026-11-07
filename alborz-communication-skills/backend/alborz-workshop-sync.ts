@@ -2,7 +2,7 @@
 const endpoint = Deno.env.get('SUPABASE_URL') || '';
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const origins = new Set(['https://hassnboudlaie.github.io']);
-const fieldPattern = /^(?:teamname|stage|checkin[1-5]|missionChoice|r[0-3](?:pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
+const fieldPattern = /^(?:teamname|stage|checkin[1-5]|missionChoice|missionChoiceRound|r[0-3](?:pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
 const headers = (origin) => ({'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':origins.has(origin)?origin:'https://hassnboudlaie.github.io','access-control-allow-headers':'content-type','access-control-allow-methods':'POST, OPTIONS','vary':'Origin','x-content-type-options':'nosniff'});
 const respond = (data,status,origin) => new Response(JSON.stringify(data),{status,headers:headers(origin)});
 async function hash(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');}
@@ -16,6 +16,7 @@ function valid(k,v){
  if(!fieldPattern.test(k))return false;
  if(k==='stage')return Number.isInteger(v)&&v>=0&&v<=8;
  if(k==='missionChoice')return Number.isInteger(v)&&v>=0&&v<=3;
+ if(k==='missionChoiceRound')return Number.isInteger(v)&&v>=0&&v<=3;
  if(/^checkin[1-5]$/.test(k))return typeof v==='boolean';
  if(/^r[0-3]pick$/.test(k))return Array.isArray(v)&&v.length<=4&&new Set(v).size===v.length&&v.every(i=>Number.isInteger(i)&&i>=0&&i<=3);
  if(/^r[0-3]reveal$/.test(k))return typeof v==='boolean';
@@ -80,10 +81,14 @@ Deno.serve(async req=>{
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    const next=body.phase;
    if(!Number.isInteger(next)||next<0||next>10||!Number.isInteger(body.expectedVersion)||body.expectedVersion<0)return respond({error:'گام یا نسخه کلاس نامعتبر است'},400,origin);
-   const current=(await db('alborz_team_fields?team_no=eq.1&field_key=eq.classroomPhase&select=version,field_value&limit=1'))?.[0];
-   const currentPhase=Number(current?.field_value??0);
-   if(Math.abs(next-currentPhase)>1&&!(currentPhase===10&&next===2))return respond({error:'هر بار فقط یک گام کلاس را تغییر دهید'},400,origin);
-   const result=await teacherWrite(1,{classroomPhase:next},body.expectedVersion);
+   const currentRows=await db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomPhase,classroomRound)&select=field_key,version,field_value');
+   const by=Object.fromEntries((currentRows||[]).map(row=>[row.field_key,row]));
+   const currentPhase=Number(by.classroomPhase?.field_value??0),round=Number(by.classroomRound?.field_value??0);
+   const restart=currentPhase===10&&next===2;
+   if(Math.abs(next-currentPhase)>1&&!restart)return respond({error:'هر بار فقط یک گام کلاس را تغییر دهید'},400,origin);
+   if(restart&&round>=3)return respond({error:'چهار دور مأموریت کامل شده‌اند؛ کارگاه را جمع‌بندی کنید'},400,origin);
+   const fields=restart?{classroomPhase:next,classroomRound:round+1}:{classroomPhase:next};
+   const result=await teacherWrite(1,fields,body.expectedVersion);
    if(!result.ok)return respond({error:'گام کلاس در دستگاه دیگری تغییر کرده است. دوباره بررسی کنید.'},409,origin);
    return respond({ok:true,records:result.records},200,origin);
   }
@@ -103,9 +108,10 @@ Deno.serve(async req=>{
   if(body.action==='read'){
    const [records,current]=(await Promise.all([
     db('alborz_team_fields?team_no=eq.'+team+'&select='+cols+'&order=field_key.asc&limit=150'),
-    db('alborz_team_fields?team_no=eq.1&field_key=eq.classroomPhase&select=field_value,version&limit=1')
+    db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomPhase,classroomRound)&select=field_key,field_value,version')
    ]));
-   return respond({ok:true,identity,records,classroom:{phase:Number(current?.[0]?.field_value??0),version:current?.[0]?.version??0}},200,origin);
+   const by=Object.fromEntries((current||[]).map(x=>[x.field_key,x]));
+   return respond({ok:true,identity,records,classroom:{phase:Number(by.classroomPhase?.field_value??0),version:by.classroomPhase?.version??0,round:Number(by.classroomRound?.field_value??0)}},200,origin);
   }
   if(body.action==='write'||body.action==='grade'){
    const fields=body.fields,expected=body.expected;
