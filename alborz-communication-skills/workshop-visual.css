@@ -60,3 +60,41 @@ header a:focus-visible,header button:focus-visible{outline-color:#76f0e1}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 @media print{body{background:white;color:#111}.hero,.workshop-hero{background:white;color:#111;box-shadow:none}.hero p,.workshop-hero p{color:#111}.panel{box-shadow:none}}
+
+/* Instructor and participant share exactly the same seven narrative stages. */
+.shared-step-nav{background:linear-gradient(120deg,#103f53,#135d64);border:1px solid #347f82;border-radius:20px;padding:20px 23px;color:#fff;margin:20px 0}
+.shared-step-nav>strong{display:block;font-size:clamp(19px,2.4vw,25px);line-height:1.5;margin-bottom:12px;color:#fff}
+.shared-step-nav>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.shared-step-nav a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:50px;padding:10px 8px;border:1px solid #77bbc0;border-radius:12px;text-decoration:none;background:#e6f4f1;color:#154d57;font-size:15px;font-weight:850;line-height:1.5}
+.shared-step-nav a:hover,.shared-step-nav a:focus-visible{background:#fff3d1;border-color:#ebcd8d;color:#5c4724}
+.shared-step-nav p{margin:13px 0 0;font-size:15px;line-height:1.9;color:#e8f5f3}
+.shared-flow-heading{scroll-margin-top:100px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-right:5px solid #097d83;background:linear-gradient(90deg,#eff8f7,#e4f4f0);border-radius:14px;padding:14px 18px;font-size:clamp(22px,2.6vw,28px);color:#0a4255;margin:26px 0 13px;line-height:1.5}
+.shared-flow-heading span{font-size:14px;font-weight:900;color:#fff;background:#117a7b;border-radius:999px;padding:5px 12px;white-space:nowrap}
+.shared-flow-hint{font-size:18px;line-height:1.9;color:#2d5361;background:#f2f8fa;padding:10px 16px;border-radius:11px;border:1px solid #d8e8ee}
+.teacher-phase{padding:5px 2px 20px;border-bottom:1px solid #d5e4e8;scroll-margin-top:90px}
+.teacher-phase p,.teacher-phase li{line-height:1.9}
+.teacher-phase .teacher-case-task p{font-size:18px}
+.teacher-phase .teacher-main-aim{border-right:5px solid #12918a;padding:18px}
+.teacher-phase .teacher-main-aim b{font-size:20px}
+.teacher-phase .teacher-main-aim p{font-size:19px}
+.teacher-live-section{border:2px solid #9acac9;background:#f7fcfd;border-radius:19px;padding:19px 22px;margin:15px 0 25px}
+.teacher-live-section>h3{font-size:clamp(22px,2.8vw,28px);margin:2px 0 8px;color:#0b5360}
+.teacher-live-section>p{font-size:16px;line-height:1.85;color:#45677a;margin:0 0 15px}
+.teacher-live-summary{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 16px}
+.teacher-live-summary strong{flex:1 1 100%;font-size:20px;color:#0b4b60;line-height:1.55}
+.teacher-live-summary span{background:#e0f0ee;border:1px solid #b2d8d6;border-radius:12px;padding:7px 10px;font-size:15px;font-weight:750;color:#25575d}
+.teacher-live-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.teacher-live-group{border:1px solid #c5d8dc;border-radius:13px;background:#fff;padding:9px 13px;min-width:0}
+.teacher-live-group>summary{display:grid;grid-template-columns:1fr auto;column-gap:9px;cursor:pointer;align-items:center;list-style:none}
+.teacher-live-group>summary::-webkit-details-marker{display:none}
+.teacher-live-group>summary b{font-size:18px;color:#114958}
+.teacher-live-group>summary span{font-size:13px;background:#e9f2f6;padding:4px 8px;border-radius:8px;color:#366271}
+.teacher-live-group>summary small{grid-column:1/-1;font-size:13px;line-height:1.8;color:#456675}
+.teacher-live-answers{border-top:1px solid #dce8e7;margin-top:10px;padding-top:10px}
+.teacher-live-answers p{font-size:15px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
+.instructor-schedule{background:#f0f6f8;border:1px solid #c6dbe1;border-radius:14px;padding:14px 18px;margin-top:24px}
+.instructor-schedule>summary{font-size:19px;font-weight:800;cursor:pointer;color:#174c62}
+.instructor-roadmap .teacher-mission>summary{cursor:pointer}
+.instructor-roadmap .teacher-mission-nav a[aria-current=true]{background:#0b6473;color:#fff;border-color:#0b6473}
+@media(max-width:830px){.shared-step-nav>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.shared-step-nav{padding:15px}.shared-step-nav>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.shared-step-nav a{font-size:14px;min-height:48px;padding:9px 6px}.shared-flow-heading{padding:12px;font-size:22px;gap:7px}.teacher-live-section{padding:15px}.teacher-live-grid{grid-template-columns:1fr}.teacher-live-summary strong{font-size:18px}.teacher-mission-body{margin-top:14px}}
