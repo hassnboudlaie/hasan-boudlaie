@@ -146,6 +146,7 @@ function render(force=false){
  const controls=teacher?'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">مرحله روی موبایل گروه‌ها هم تغییر می‌کند (حدود ۱۰ ثانیه).</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+'>'+(stage===10?'شروع دور بعد':'گام بعد')+'</button></nav>':'';
  let content;
  if(stage===0)content=teacher?rosterTeacher():checkinParticipant();
+ else if(!teacher&&!confirmed(identity.team))content=simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و اعلام تعداد افراد، مدرس گروه را فعال می‌کند. سپس همین صفحه به‌طور خودکار وارد گام جاری می‌شود.')+personDots(identity.team);
  else if(stage===1)content=strategyIntro(teacher);
  else if(stage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(stage<=9)content=teacher?teacherStep():learnerMission();
