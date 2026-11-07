@@ -22,7 +22,8 @@ assert.ok(home.querySelector('[data-go="studio/mix"]'),'identity destination ret
 assert.ok(home.querySelector('[data-go="studio/development"]'),'development destination retained');
 assert.ok(home.querySelector('details.saba-home-more'),'learning resources available but collapsed');
 assert.equal(home.querySelector('details.saba-home-more').open,false,'resources are not expanded by default');
-assert.equal(home.querySelectorAll('.saba-more-actions > *').length,4,'all secondary resources preserved');
+assert.equal(home.querySelectorAll('.saba-more-actions > *').length,5,'all secondary resources preserved including chapter 6');
+assert.ok(home.querySelector('[data-go="context"]'),'chapter 6 uses the canonical context route');
 assert.ok(home.querySelector('a[href="./business-model.html"]'),'BMC still accessible');
 assert.ok(home.querySelector('a[href="./lesson-notes.html"]'),'lesson notes still accessible');
 assert.ok(home.querySelector('#resume'),'last lesson continuation available');
@@ -43,7 +44,7 @@ assert.ok(doc.querySelector('link[href*="ch5-product-shell.css?v=2"]'),'new visu
 assert.match(read('assets/ch5-studio-dashboard.css'),/\.ch5-studio-shortcuts/);
 assert.match(read('leadership-studio.html'),/ch5-studio-dashboard.css/);
 const sw=read('app/sw.js');
-assert.match(sw,/sabanaft-reflective-pwa-shell-v11/);
+assert.match(sw,/sabanaft-reflective-pwa-shell-v12/);
 assert.ok(sw.includes('./ch5-product-shell.css'),'redesigned Home stylesheet cached offline');
 w.eval(read('reflective-content.js'));
 w.eval(read('app/app.js'));

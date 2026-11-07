@@ -26,3 +26,7 @@
 .future-coach-feature small{font-weight:800;color:#98633d;background:#fff2e6;border-radius:40px;padding:3px 10px}
 .future-coach-notice{border:1px solid #d7e0ec;border-radius:14px;background:#eff3f9;color:#526681;padding:15px 19px;margin-top:17px;font-size:13px;line-height:1.9}
 @media(max-width:700px){.future-coach-entry{padding:13px;gap:9px}.future-coach-symbol{width:42px;height:42px;flex-basis:42px;font-size:23px}.future-coach-entry-text strong{font-size:15px}.future-coach-entry-text small{font-size:11px}.future-coach-pill{padding:3px 9px;font-size:10px}.future-coach-arrow{font-size:15px}.future-coach-hero{grid-template-columns:1fr}.future-coach-hero img{height:135px;grid-row:1}.future-coach-hero-text{padding:20px}.future-coach-hero h2{font-size:20px}.future-coach-grid{grid-template-columns:1fr}.future-coach-feature{padding:16px}}
+
+/* Chapter 6 canonical context view inside the PWA */
+.context-frame{height:calc(100dvh - 240px);min-height:600px;background:#fff}
+@media(max-width:650px){.context-frame{height:calc(100dvh - 170px);min-height:540px}}

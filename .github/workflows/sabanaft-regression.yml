@@ -23,6 +23,9 @@ jobs:
       - name: Check scripts
         run: |
           node --check sabanaft/reflective-app.js
+          node --check sabanaft/app/app.js
+          node --check sabanaft/commercial-ux.js
+          node --check sabanaft/verify-context-ch6.cjs
           node --check sabanaft/assessment-upgrade.js
           node --check sabanaft/practice-kits.js
           node --check sabanaft/app/coaching-journey.js
@@ -34,4 +37,5 @@ jobs:
           NODE_PATH: /tmp/saba-ci/node_modules
         run: |
           node sabanaft/verify-reflective.cjs
+          node sabanaft/verify-context-ch6.cjs
           node sabanaft/verify-coaching.cjs

@@ -38,7 +38,9 @@ function focus(s){
 }
 function home(s){
  var f=focus(s),p=s.profile||{},name=clean((p.name||'').trim().split(/\s+/)[0],45);
- var draft=s.quickDraft||'',dimensions=Object.values((s.context&&s.context.dimensions)||{}).filter(function(x){return x&&x.value;}).length;
+ var draft=s.quickDraft||'',dimensions=0;
+ try{var raw=JSON.parse(localStorage.getItem('sabanaft_reflective_v2')||'null'),c=raw&&Array.isArray(raw.contexts)?raw.contexts.find(function(x){return x.id===raw.activeContext})||raw.contexts[0]:null;
+ dimensions=globalThis.SABA_REFLECTIVE.dimensions.filter(function(d){var x=c&&c.dimensions&&c.dimensions[d.id];return !!x&&(d.id==='relevance'?['keyNow','keyFuture','riskNow','riskFuture'].some(function(k){return x[k]!==null&&x[k]!==undefined}):x.now!==null&&x.now!==undefined||x.future!==null&&x.future!==undefined)}).length;}catch(e){}
  var todayCount=s.daily&&Array.isArray(s.daily.items)?s.daily.items.length:0;
  var c=f&&f.c,kind=f&&f.kind,actionable=c&&(kind==='attention'||kind==='progress')&&!!c.action;
  var actionText=c?(kind==='reviewed'?'دیدن یادگیری':actionable?'مرور نتیجه':'ادامه تصمیم'):'شناخت رهبری من';

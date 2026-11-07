@@ -27,6 +27,9 @@ jobs:
         run: npm install --prefix /tmp/saba-test-deps --no-save --no-package-lock --ignore-scripts jsdom@26
       - name: Static syntax verification
         run: |
+          node --check sabanaft/reflective-app.js
+          node --check sabanaft/app/app.js
+          node --check sabanaft/verify-context-ch6.cjs
           node --check sabanaft/role-development.js
           node --check sabanaft/guided-reflection.js
           node --check sabanaft/app/coaching-journey.js
@@ -35,6 +38,8 @@ jobs:
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-reflective.cjs
       - name: Case & coaching regression
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-coaching.cjs
+      - name: Chapter 6 single-context regression
+        run: node sabanaft/verify-context-ch6.cjs
       - name: Chapters 1–5 regression
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-chapters.cjs
       - name: Private impact export regression

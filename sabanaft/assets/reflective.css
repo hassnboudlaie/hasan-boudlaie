@@ -15,3 +15,13 @@
 @media print{@page{size:A4;margin:16mm}body{background:white;color:#172648;font-size:12pt;line-height:1.8}.site-header,.site-footer,.sidebar,.mobile-menu,.scrim,.no-print,.skip-link,.legacy{display:none!important}.layout,.layout.with-sidebar{display:block;max-width:none;padding:0}.portfolio-section{border:0;border-top:1px solid #aaa;border-radius:0;padding:12px 0;margin:15px 0;break-inside:auto}.portfolio-section h2{font-size:19pt}.portfolio-section dt,.portfolio-section dd{font-size:12pt}.table-scroll{overflow:visible}.portfolio-section .table-scroll table{min-width:0;font-size:10pt}.portfolio-section .table-scroll td,.portfolio-section .table-scroll th{font-size:10pt;padding:7px;min-width:0;overflow-wrap:anywhere}.page-header h1{font-size:24pt}.table-scroll tr{break-inside:avoid}.count-grid{grid-template-columns:repeat(4,1fr)}.method-note{font-size:11pt}.btn{display:none!important}a{color:inherit;text-decoration:none}}
 
 .lesson-photo{margin:25px 0;background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden}.lesson-photo img{display:block;width:100%;height:auto;max-height:380px;object-fit:cover}.lesson-photo figcaption{padding:12px 18px;font-size:15px;line-height:1.9;color:var(--muted)}
+
+/* Single source of truth: Chapter 6 full context assessment */
+.context-overview{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;margin:14px 0;border-radius:14px;background:#edf5fb;color:#173e60}
+.context-comparison{margin-top:23px;padding:18px;border:1px solid #dce6ef;border-radius:16px;background:#fafcff}
+.context-comparison h2{margin:0 0 5px;font-size:20px}
+.context-gap-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:9px 3px;border-bottom:1px solid #e1e8ef}
+.context-gap-row strong{font-size:14px}.context-gap-row span{direction:ltr;unicode-bidi:isolate;font-weight:700}
+.context-gap-row small{color:#526577}.relevance-facet{padding:13px;border:1px solid #d7e7f1;border-radius:12px;margin:10px 0;background:#f7fbfe}
+.relevance-facet h4{margin:0 0 10px;font-size:15px}.context-reflect .field{margin:12px 0}
+@media(max-width:650px){.context-overview,.context-gap-row{align-items:flex-start}.context-comparison{padding:12px}}
