@@ -90,8 +90,8 @@ function mission(x){
  +section('ورود به سناریوی «'+esc(x.mission)+'»',
   '<p>برای اجرای همین سناریو، مطابق نقش خود وارد شوید. هر دو مسیر از سیستم ورود امن فعلی استفاده می‌کنند؛ گروه کارشناسان پس از ورود با PIN اختصاصی به سناریوی انتخاب‌شده هدایت می‌شود.</p>'
   +'<div class="sd-entry-grid">'
-  +'<a class="sd-entry-card sd-entry-participant" href="./resilience.html?mission='+encodeURIComponent(chosen)+'"><span class="sd-entry-eyebrow">ویژه کارشناسان خسارت</span><strong>ورود کارشناسان به سناریو</strong><span class="sd-entry-scenario">'+esc(x.mission)+'</span><small>ورود با PIN اختصاصی ۸ رقمی · گروه و عضو به‌صورت خودکار مشخص می‌شوند</small></a>'
-  +'<a class="sd-entry-card sd-entry-teacher" href="./resilience.html?teacher=1&amp;mission='+encodeURIComponent(chosen)+'"><span class="sd-entry-eyebrow">ویژه مدرس کارگاه</span><strong>ورود مدرس به سناریوی «'+esc(x.mission)+'»</strong><small>ورود با کد اختصاصی مدرس · راهنمای اجرای همین سناریو و داشبورد زنده</small></a>'
+  +'<a class="sd-entry-card sd-entry-participant" href="./resilience.html?classroom=1&amp;mission='+encodeURIComponent(chosen)+'"><span class="sd-entry-eyebrow">ویژه کارشناسان خسارت</span><strong>ورود کارشناسان به سناریو</strong><span class="sd-entry-scenario">'+esc(x.mission)+'</span><small>ورود با PIN اختصاصی ۸ رقمی · گروه و عضو به‌صورت خودکار مشخص می‌شوند</small></a>'
+  +'<a class="sd-entry-card sd-entry-teacher" href="./resilience.html?classroom=1&amp;teacher=1&amp;mission='+encodeURIComponent(chosen)+'"><span class="sd-entry-eyebrow">ویژه مدرس کارگاه</span><strong>ورود مدرس به سناریوی «'+esc(x.mission)+'»</strong><small>ورود با کد اختصاصی مدرس · راهنمای اجرای همین سناریو و داشبورد زنده</small></a>'
   +'</div>'
   +'<p class="sd-small">هر گروه می‌تواند مأموریت‌ها را به ترتیب دلخواه انجام دهد؛ انتخاب این سناریو، دسترسی به سه سناریوی دیگر را محدود نمی‌کند. داده‌ها، PINها و همگام‌سازی گروه‌ها بدون تغییر می‌مانند.</p>','sd-gold');
 }
