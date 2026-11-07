@@ -82,7 +82,7 @@ Deno.serve(async req=>{
    if(!Number.isInteger(next)||next<0||next>10||!Number.isInteger(body.expectedVersion)||body.expectedVersion<0)return respond({error:'گام یا نسخه کلاس نامعتبر است'},400,origin);
    const current=(await db('alborz_team_fields?team_no=eq.1&field_key=eq.classroomPhase&select=version,field_value&limit=1'))?.[0];
    const currentPhase=Number(current?.field_value??0);
-   if(Math.abs(next-currentPhase)>1)return respond({error:'هر بار فقط یک گام کلاس را تغییر دهید'},400,origin);
+   if(Math.abs(next-currentPhase)>1&&!(currentPhase===10&&next===2))return respond({error:'هر بار فقط یک گام کلاس را تغییر دهید'},400,origin);
    const result=await teacherWrite(1,{classroomPhase:next},body.expectedVersion);
    if(!result.ok)return respond({error:'گام کلاس در دستگاه دیگری تغییر کرده است. دوباره بررسی کنید.'},409,origin);
    return respond({ok:true,records:result.records},200,origin);
