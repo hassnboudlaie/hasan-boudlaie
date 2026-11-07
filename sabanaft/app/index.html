@@ -20,6 +20,19 @@
 <a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="../assets/sabanaft-logo.svg" alt="لوگوی رسمی شرکت صبا نفت"><span><strong>رهبری بازتابی من</strong><small>SABA NAFT · LEADERSHIP</small></span></a>
 <button type="button" id="install" class="install" hidden>نصب اپ <span aria-hidden="true">＋</span></button>
 </header>
+<button type="button" id="modelNavToggle" class="model-nav-toggle" aria-controls="modelSideNav" aria-expanded="false" aria-label="بازکردن فهرست مدل رهبری"><span aria-hidden="true">☰</span><span>مدل</span></button>
+<button type="button" id="modelNavScrim" class="model-nav-scrim" aria-label="بستن فهرست مدل رهبری" hidden></button>
+<aside id="modelSideNav" class="model-side-nav" aria-label="مسیر مدل رهبری؛ منوی راست">
+ <header class="model-side-head"><span>مدل رهبری</span><small>شکل ۵.۱ کتاب تروست</small><button type="button" id="modelNavClose" aria-label="بستن فهرست مدل">×</button></header>
+ <nav class="model-side-list" aria-label="چهار جزء مدل و بازاندیشی مستمر">
+  <button type="button" data-model-nav="context" data-go="context"><span>۱</span><strong>بافت رهبری</strong></button>
+  <button type="button" data-model-nav="idea" data-go="lesson/5/mix"><span>۲</span><strong>ایده رهبری من</strong></button>
+  <button type="button" data-model-nav="relationship" data-go="lesson/7/perspectives"><span>۳</span><strong>رابطه با کارکنان</strong></button>
+  <button type="button" data-model-nav="tools" data-go="lesson/8/design"><span>۴</span><strong>ابزارهای رهبری</strong></button>
+  <button type="button" class="model-side-reflection" data-model-nav="reflection" data-go="studio/daily"><span>↻</span><strong>بازاندیشی مستمر</strong></button>
+ </nav>
+ <p class="model-side-note">بازاندیشی در هر چهار بخش جریان دارد.</p>
+</aside>
 <main id="main">
 <section id="homeView" class="view" aria-label="خانه رهبری بازتابی صبا نفت">
  <div class="saba-home-photo" aria-hidden="true"><img src="../assets/sabanaft-meeting.jpg" alt="" fetchpriority="high" decoding="async"></div>
@@ -31,19 +44,19 @@
    <p>از مسئله واقعی تا تصمیم بهتر</p>
   </header>
   <div class="saba-model-label">مدل رهبری بازتابی · بر اساس شکل ۵.۱ کتاب</div>
-  <section class="saba-model-loop" aria-label="چهار جزء مدل رهبری و چرخه بازاندیشی مستمر">
-   <div class="saba-reflection-band" role="group" aria-label="بازاندیشی مستمر در تمام مراحل مدل">
-    <span class="saba-reflection-symbol" aria-hidden="true">↻</span>
-    <span class="saba-reflection-copy"><strong>بازاندیشی مستمر</strong><small lang="en" dir="ltr">CONTINUOUS REFLECTION</small><span class="saba-reflection-hint">در هر مرحله، تجربه را مرور کنید و تصمیم بعدی را بهبود دهید.</span></span>
-    <button type="button" data-go="studio/daily">تمرین بازاندیشی ←</button>
-   </div>
-   <div class="saba-reflection-connector" aria-hidden="true"><span></span></div>
+  <section class="saba-model-loop" aria-label="چهار جزء مدل رهبری و بازاندیشی مستمر">
    <nav class="saba-home-grid" aria-label="چهار جزء مدل اصلی رهبری آرمین تروست">
    <button type="button" class="saba-home-tile" data-go="context" aria-label="گام یک: شناخت بافت رهبری"><span class="saba-tile-icon" aria-hidden="true">۱</span><strong>بافت رهبری</strong><small lang="en" dir="ltr">LEADERSHIP CONTEXT</small></button>
    <button type="button" class="saba-home-tile" data-go="lesson/5/mix" aria-label="گام دو: تعریف ایده رهبری"><span class="saba-tile-icon" aria-hidden="true">۲</span><strong>ایده رهبری من</strong><small lang="en" dir="ltr">IDEA OF LEADERSHIP</small></button>
    <button type="button" class="saba-home-tile" data-go="lesson/7/perspectives" aria-label="گام سه: رابطه رهبر و کارکنان"><span class="saba-tile-icon" aria-hidden="true">۳</span><strong>رابطه با کارکنان</strong><small lang="en" dir="ltr">LEADER–EMPLOYEE</small></button>
    <button type="button" class="saba-home-tile" data-go="lesson/8/design" aria-label="گام چهار: ابزارهای رهبری"><span class="saba-tile-icon" aria-hidden="true">۴</span><strong>ابزارهای رهبری</strong><small lang="en" dir="ltr">LEADERSHIP TOOLS</small></button>
   </nav>
+  <div class="saba-reflection-connector" aria-hidden="true">↻ <span>مرور تجربه و بازگشت به مدل</span></div>
+  <button type="button" class="saba-reflection-band" data-go="studio/daily" aria-label="بازاندیشی مستمر؛ تمرین بازاندیشی در تمام مراحل مدل">
+    <span class="saba-reflection-symbol" aria-hidden="true">↻</span>
+    <span class="saba-reflection-copy"><strong>بازاندیشی مستمر</strong><small lang="en" dir="ltr">CONTINUOUS REFLECTION</small><span class="saba-reflection-hint">تجربه را مرور کنید؛ برداشت و رفتار بعدی را بهتر کنید.</span></span>
+    <span class="saba-reflection-action" aria-hidden="true">شروع تمرین ←</span>
+  </button>
   </section>
   <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ طرح مسئله واقعی</button><span>مسئله را با توجه به بافت پایه تیم بررسی کنید.</span></div>
   <details class="ch5-resources saba-home-more">
