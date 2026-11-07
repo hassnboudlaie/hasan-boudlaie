@@ -42,8 +42,10 @@ const server=require('node:http').createServer((req,res)=>{
   assert.match(await p.locator('#mission-progress-text').innerText(),/گفت‌وگو و مهارت‌ها/);
   await p.locator('[data-mission-next]').click();
   assert.match(await p.locator('#mission-progress-text').innerText(),/انتخاب و تصمیم اولیه/);
+  assert.equal(await p.locator('.resource-meter').isVisible(),true,'the budget meter appears only at decision stage');
   await p.locator('[data-pick="0:0"]').check();
   await p.locator('[data-pick="0:1"]').check();
+  assert.match(await p.locator('.resource-meter').innerText(),/مصرف: ۵|مصرف: ۵/,'budget meter updates with chosen actions');
   await p.locator('[data-field="r0initial"]').fill('فرایند معتبر را حفظ می‌کنیم، نوبت‌بندی داریم و مسئول پیگیری تعیین می‌کنیم.');
   await p.locator('[data-mission-next]').click();
   assert.match(await p.locator('#mission-progress-text').innerText(),/اتفاق تازه/);
