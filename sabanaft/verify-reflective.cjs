@@ -55,7 +55,7 @@ async function run(){
  input('#sectionNote','یادداشت اختصاصی ستاد');click('[data-complete]');equal(ctx().completed.length,1,'explicit completion');
  input('[data-context-select]','project','change');equal($('#sectionNote').value,'','notes isolated by context');equal(ctx().completed.length,0,'completion isolated');
  input('#sectionNote','یادداشت پروژه');input('[data-context-select]','hq','change');equal($('#sectionNote').value,'یادداشت اختصاصی ستاد','prior note restored');
- go('s/2/map');equal($$$('.dimension').length,0,'old lesson context input removed');check($('[data-route="context"]'),'lesson links to one assessment');
+ go('s/2/map');equal($$('.dimension').length,0,'old lesson context input removed');check($('[data-route="context"]'),'lesson links to one assessment');
  go('context');equal($$('.dimension').length,0,'context opens group selection, not a giant inline form');equal($$('.context-stage-card').length,4,'four distinct context group screens');
  go('context/group/task');equal($$('.dimension').length,3,'task dimensions appear only after navigating into the group');
  for(const el of $$('[data-dimension][data-time=now], [data-dimension][data-time=future]'))equal(el.value,'','context starts unrated');
@@ -71,7 +71,7 @@ async function run(){
  input('[data-context-reflection="insight"]','فرضیه قابل بازنگری');
  input('[data-context-reflection="action"]','گفت‌وگوی بعدی با تیم');
  equal(ctx().contextReflection.insight,'فرضیه قابل بازنگری','reflection saved');
- go('s/3/map');equal($$$('.dimension').length,0,'second lesson does not duplicate assessment');check($('[data-route="context"]'),'second lesson links to canonical assessment');
+ go('s/3/map');equal($$('.dimension').length,0,'second lesson does not duplicate assessment');check($('[data-route="context"]'),'second lesson links to canonical assessment');
  go('context');equal($('.context-overview')!==null,true,'single context overview');go('context/group/task');equal($('#horizon').value,'پایان مرحله فعلی','shared horizon');
  go('s/5/mix');for(const[r,v]of Object.entries({B:4,C:3,P:2,E:1}))input('#mix-appropriate-'+r,String(v));
  equal(api.roleTotals(ctx().mix.appropriate).sum,10,'ten point mix');check($('#mix-total-appropriate').textContent.includes('آماده'),'valid mix status');
