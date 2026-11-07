@@ -98,3 +98,99 @@ header a:focus-visible,header button:focus-visible{outline-color:#76f0e1}
 .instructor-roadmap .teacher-mission-nav a[aria-current=true]{background:#0b6473;color:#fff;border-color:#0b6473}
 @media(max-width:830px){.shared-step-nav>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.shared-step-nav{padding:15px}.shared-step-nav>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.shared-step-nav a{font-size:14px;min-height:48px;padding:9px 6px}.shared-flow-heading{padding:12px;font-size:22px;gap:7px}.teacher-live-section{padding:15px}.teacher-live-grid{grid-template-columns:1fr}.teacher-live-summary strong{font-size:18px}.teacher-mission-body{margin-top:14px}}
+
+/* 2026-11-07: minimalist, single-step workshop for both roles. */
+#app.mission-simple-app [hidden]{display:none!important}
+.mission-simple-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border:1px solid #cddfe5;background:#fff;border-radius:20px;padding:18px 23px;margin:6px 0 12px}
+.mission-simple-head>div{flex:1 1 320px}
+.mission-simple-head>div>span{display:block;color:#0e6c72;font-size:15px;font-weight:800}
+.mission-simple-head h1{font-size:clamp(25px,3vw,35px);line-height:1.5;color:#0b3e55;margin:4px 0}
+.mission-simple-head .saved{font-size:13px}
+.mission-simple-progress,.simple-teacher-stepbar{display:flex;align-items:center;flex-wrap:wrap;gap:15px;background:linear-gradient(115deg,#e4f4f1,#f1f9f6);border:1px solid #b9d7cf;border-radius:18px;padding:16px 19px;margin:12px 0}
+.mission-simple-progress>span,.simple-teacher-stepbar>div{flex:1 1 190px;display:flex;flex-direction:column;gap:3px}
+.mission-simple-progress small,.simple-teacher-stepbar span{color:#376e70;font-weight:800;font-size:14px}
+.mission-simple-progress strong,.simple-teacher-stepbar strong{font-weight:900;color:#0e4154;font-size:clamp(21px,3vw,29px)}
+.mission-simple-progress .mission-simple-navigation{display:flex;gap:9px}
+.mission-simple-progress .btn,.simple-teacher-stepbar .btn{min-width:115px;min-height:48px}
+.mission-simple-progress button:disabled,.simple-teacher-stepbar button:disabled{opacity:.36;cursor:not-allowed}
+.mission-simplicity-note{font-size:15px;color:#486778;margin:3px 8px 14px}
+.mission-simple-app > section.panel{margin:12px 0 14px;padding:clamp(15px,3vw,28px)}
+.mission-simple-app > section.panel > h2:first-child,.mission-simple-app .mission-topline,.mission-simple-app .shared-step-nav,.mission-simple-app .resource-meter{display:none!important}
+.mission-simple-app .shared-flow-heading{margin:0 0 16px;font-size:clamp(21px,3vw,29px);background:#eef6f4}
+.mission-simple-app .case-summary{margin-top:8px}
+.mission-simple-footer{display:flex;gap:10px;justify-content:flex-start;flex-wrap:wrap;padding:9px 4px 24px}
+.mission-simple-footer .btn{background:#fff;color:#285a69;border-color:#c5d8df}
+.simple-teacher-workspace{max-width:1040px;margin:0 auto}
+.simple-workshop-title{padding:10px 4px 18px}
+.simple-workshop-title>span{color:#267080;font-weight:800;font-size:15px}
+.simple-workshop-title h2{font-size:clamp(26px,3.6vw,38px);line-height:1.55;color:#093f58;margin:4px 0}
+.simple-workshop-title p{font-size:16px;color:#4b6a78;margin:4px 0}
+.simple-animal-selector{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:3px 0 18px}
+.simple-animal-selector button{padding:14px 8px;border-radius:14px;background:#fff;border:1.5px solid #c6dce1;color:#164d60;font-size:clamp(16px,2.3vw,20px);font-weight:850;cursor:pointer;min-height:60px}
+.simple-animal-selector button.selected{background:linear-gradient(110deg,#126476,#116e6c);border-color:#126476;color:#fff}
+.simple-animal-selector button:focus-visible{outline:3px solid #e8b45e;outline-offset:3px}
+.simple-case-header{padding:21px 25px;background:#fff;border-radius:19px;border:1px solid #c9dfe1}
+.simple-case-header small{font-size:14px;font-weight:800;color:#147d77}
+.simple-case-header h2{font-size:clamp(25px,3.2vw,33px);line-height:1.5;margin:3px 0;color:#0f4259}
+.simple-case-header p{font-size:17px;line-height:1.8;color:#345b67;margin:0}
+.simple-now{border:1px solid #c9dedf;background:#fff;border-radius:23px;padding:clamp(18px,3vw,30px);box-shadow:0 9px 27px #0d4c5810;margin:12px 0}
+.simple-now>h3{font-size:clamp(24px,3.3vw,30px);line-height:1.5;color:#0e4b56;margin:1px 0 22px}
+.simple-two-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.simple-two-actions article{border-radius:17px;padding:20px 22px}
+.simple-say{background:#e6f5ef;border:1px solid #b9dacc}
+.simple-do{background:#eef5fd;border:1px solid #ccdaed}
+.simple-two-actions span{display:block;font-weight:900;font-size:18px;color:#105c62}
+.simple-two-actions p{font-size:clamp(17px,2.2vw,20px);line-height:1.9;margin:9px 0 0;color:#1f4757}
+.simple-stage-body{border-top:1px solid #d9e7e7;margin-top:20px;padding-top:18px}
+.simple-stage-body h3{font-size:22px;color:#164c5b}
+.simple-stage-body p,.simple-stage-body li{font-size:17px;line-height:1.9}
+.simple-facts{padding-right:24px}
+.simple-facts li{padding:3px 0}
+.simple-story{border-right:4px solid #1f827d;padding:2px 18px}
+.teacher-reference{margin-top:15px;border:1px solid #d2e3e5;border-radius:13px;padding:12px 15px;background:#f8fbfc}
+.teacher-reference>summary{cursor:pointer;color:#125a6e;font-weight:850;font-size:17px}
+.teacher-reference>div{padding:10px 5px 2px}
+.simple-role-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.simple-role-list>div{padding:12px;border-radius:11px;background:#fff;border:1px solid #d8e6e8}
+.simple-role-list p{margin:4px 0}
+.simple-skill-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.simple-skill-pair>div{border-radius:13px;background:#f0f8f8;padding:14px;border:1px solid #d8e9e8}
+.simple-skill-pair b{font-size:18px;color:#125d62}
+.simple-option-list>p{border-bottom:1px solid #e0e9e9;padding:10px 0;margin:0}
+.simple-option-list span{display:block;color:#526b71;font-size:15px}
+.simple-event{border:1px solid #ebcf9a;background:#fff6e9;border-radius:15px;padding:19px 22px}
+.simple-event strong{color:#845723;font-size:18px}
+.simple-event p{font-size:20px;line-height:1.8;margin-bottom:2px}
+.simple-challenge{font-size:22px!important;font-weight:800;color:#0d585d}
+.simple-recap{background:#eef7f5;border-radius:16px;padding:15px 20px}
+.simple-recap strong{font-size:20px;color:#165f65}
+.simple-live-box{margin:16px 0;border:1px solid #ccdfe0;background:#f9fcfc;border-radius:16px;padding:14px 19px}
+.simple-live-box>summary{cursor:pointer;color:#155d64;font-size:19px;font-weight:850}
+.simple-live-empty{margin-top:14px;padding:19px;border:1px dashed #b9d6d7;border-radius:13px;background:#fff;font-size:16px;color:#526976}
+.simple-live-count{margin:9px 0;color:#285d61;font-weight:800}
+.simple-live-list{display:grid;gap:8px;margin-top:12px}
+.simple-live-list>details{background:#fff;border:1px solid #d6e4e4;border-radius:12px;padding:12px 15px}
+.simple-live-list summary{font-size:17px;color:#174d63;cursor:pointer;font-weight:800}
+.simple-live-list p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.8}
+.simple-teacher-footer{font-size:14px;color:#527078;padding:5px 2px}
+@media(max-width:740px){.simple-animal-selector{grid-template-columns:repeat(2,minmax(0,1fr))}.simple-two-actions,.simple-role-list,.simple-skill-pair{grid-template-columns:1fr}.mission-simple-progress .mission-simple-navigation{width:100%;justify-content:stretch}.mission-simple-progress .mission-simple-navigation .btn{flex:1}.simple-teacher-stepbar .btn{flex:1}.mission-simple-head{padding:15px}.simple-case-header,.simple-now{padding:17px}.simple-two-actions article{padding:16px}.simple-workshop-title h2{font-size:27px}}
+
+/* Keep synchronized login and step-specific fields unobtrusive. */
+#app.mission-simple-app #live-panel.live-authenticated{padding:9px 15px;margin:0 0 12px;background:#edf6f4;border:1px solid #d1e5e1;box-shadow:none}
+#app.mission-simple-app #live-panel.live-authenticated .navline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0}
+#app.mission-simple-app #live-panel.live-authenticated .navline h2{font-size:17px;margin:0;color:#13545e}
+#app.mission-simple-app #live-panel.live-authenticated .navline .btn{min-height:36px;padding:5px 10px;font-size:13px}
+#app.mission-simple-app #live-panel.live-authenticated>p.small{margin:0;font-size:13px;color:#43616b}
+#app.mission-simple-app #live-panel.live-authenticated #live-status{font-size:13px;margin:0 0 4px}
+#app.mission-simple-app #live-stage{display:inline-flex;margin:8px 0;min-height:42px;font-size:15px}
+#app.mission-simple-app #live-members{margin:12px 0}
+#app.mission-simple-app #live-members>details{background:#f9fcfd;border:1px solid #d0e3e4;border-radius:14px;padding:12px 15px}
+#app.mission-simple-app #live-members>details>summary{font-size:17px;font-weight:800;color:#0c5e69}
+#app.mission-simple-app [hidden]{display:none!important}
+.simple-entry-landing{max-width:720px;margin:28px auto;padding:24px 29px;border:1px solid #d3e2e3;background:#fff;border-radius:20px;text-align:center}
+.simple-entry-landing>span{color:#187173;font-weight:850;font-size:15px}
+.simple-entry-landing h1{font-size:clamp(25px,3.5vw,33px);margin:11px 0;color:#104556}
+.simple-entry-landing p{font-size:17px;line-height:1.9;color:#385c67}
+.simple-entry-target{background:#eaf6f1;padding:12px;border-radius:13px}
+.simple-entry-target strong{display:block;color:#0e5561}
+@media(max-width:650px){.simple-entry-landing{margin:10px auto;padding:18px}#app.mission-simple-app #live-panel.live-authenticated{padding:8px 11px}}

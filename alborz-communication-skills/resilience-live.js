@@ -9,14 +9,14 @@ const shared=/^(?:teamname|stage|r[0-3](?:pick|initial|revision|reveal|score[0-4
 const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fa=x=>Number(x).toLocaleString('fa-IR');
 const sessionKey='alborz-live-v4-session',draftKey='alborz-live-v3-drafts-'+W.group;
-const app=document.getElementById('app');let auth=null,records={},drafts={},timer,busy=false,generation=0,allRows=[],statusText='',statusBad=false,teacherMode='journey',gradeRound=0,gradeDrafts={},monitorMission=requestedMission>=0?requestedMission:0;
+const app=document.getElementById('app');let auth=null,records={},drafts={},timer,busy=false,generation=0,allRows=[],statusText='',statusBad=false,teacherMode='journey',gradeRound=0,gradeDrafts={},monitorMission=requestedMission>=0?requestedMission:0,teacherPhase=0;
 try{drafts=JSON.parse(sessionStorage.getItem(draftKey)||'{}');if(!drafts||typeof drafts!=='object'||Array.isArray(drafts))drafts={};}catch{drafts={};}
 function persistDrafts(){try{sessionStorage.setItem(draftKey,JSON.stringify(drafts));}catch{}}
 function message(text,bad=false){statusText=text;statusBad=bad;const e=document.getElementById('live-status');if(e){e.textContent=text;e.classList.toggle('warning',bad);}}
 async function request(body,code=auth?.code){const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);try{const r=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...body,code}),signal:controller.signal,cache:'no-store'});const d=await r.json();if(!r.ok){const e=Error(d.error||'خطای ارتباط');e.status=r.status;throw e;}return d;}finally{clearTimeout(timeout);}}
 function panel(){let el=document.getElementById('live-panel');if(!el){el=document.createElement('section');el.id='live-panel';el.className='panel';app.prepend(el);}return el;}
-function mount(){const el=panel();if(!auth){el.innerHTML=`<h2>${teacher?'ورود مدرس':'ورود شرکت‌کننده'}</h2><p>${teacher?'برای دیدن راهنمای کامل چهار مأموریت و پیشرفت گروه‌ها، کد اختصاصی مدرس را وارد کنید.':'با کد شخصی خود وصل شوید؛ شماره گروه و عضو از کد شما مشخص می‌شود.'}</p><label class="field"><span>کد اختصاصی</span><input id="live-code" type="password" autocomplete="off" maxlength="${teacher?24:8}" inputmode="${teacher?'text':'numeric'}" dir="ltr" placeholder="${teacher?'کد اختصاصی مدرس':'کد ۸ رقمی'}"></label><button class="btn primary" id="live-join">اتصال</button><p id="live-status" role="status"></p><p class="small">مطالب و تمرین آفلاین همچنان قابل استفاده‌اند. پس از اتصال، پاسخ‌های مشترک سرور نمایش داده می‌شوند؛ خودارزیابی و برنامه اقدام فردی همگام نمی‌شوند.</p>`;}else{el.innerHTML=`<div class="navline"><h2>${teacher?'داشبورد زنده مدرس':'گروه '+fa(auth.team)+' · عضو '+fa(auth.member)}</h2><button class="btn" id="live-logout">خروج از اتصال</button></div><p id="live-status" role="status"></p><p class="small">دریافت خودکار حدود هر ۱۰ ثانیه؛ نشست ورود تا ۱۲ ساعت و فقط در همین تب معتبر است. ذخیره مشترک با دکمه «اشتراک با گروه» انجام می‌شود.</p>${teacher?'<nav class="teacher-tabs" aria-label="بخش‌های مدرس"><button class="btn" data-teacher-tab="journey">راهنمای کامل A تا Z</button><button class="btn" data-teacher-tab="dashboard">داشبورد زنده و ارزیابی</button></nav><div id="live-dashboard"></div>':'<button class="btn" id="live-stage">'+(W.step>=3&&W.step<=6?'اعلام شروع مأموریت '+fa(W.step-2)+' به مدرس':'اعلام حضور در بخش '+fa(W.step+1))+'</button><div id="live-members"></div><div id="live-achievements"></div>'}`;
- if(teacher){for(const section of [...app.querySelectorAll('section.panel')])if(section!==el&&section.querySelector('h2')?.textContent.includes('جدول رقابت'))section.remove();showTeacher();}else decorate();}
+function mount(){const el=panel();el.classList.toggle('live-authenticated',!!auth);if(!auth){el.innerHTML=`<h2>${teacher?'ورود مدرس':'ورود شرکت‌کننده'}</h2><p>${teacher?'برای دیدن راهنمای کامل چهار مأموریت و پیشرفت گروه‌ها، کد اختصاصی مدرس را وارد کنید.':'با کد شخصی خود وصل شوید؛ شماره گروه و عضو از کد شما مشخص می‌شود.'}</p><label class="field"><span>کد اختصاصی</span><input id="live-code" type="password" autocomplete="off" maxlength="${teacher?24:8}" inputmode="${teacher?'text':'numeric'}" dir="ltr" placeholder="${teacher?'کد اختصاصی مدرس':'کد ۸ رقمی'}"></label><button class="btn primary" id="live-join">اتصال</button><p id="live-status" role="status"></p><p class="small">پس از ورود، مدرس مراحل اجرا و پاسخ‌های گروه‌ها را می‌بیند؛ کارشناسان با PIN به گروه خود وصل می‌شوند.</p>`;}else{el.innerHTML=`<div class="navline"><h2>${teacher?'داشبورد زنده مدرس':'گروه '+fa(auth.team)+' · عضو '+fa(auth.member)}</h2><button class="btn" id="live-logout">خروج از اتصال</button></div><p id="live-status" role="status"></p><p class="small">برای دیده‌شدن پاسخ در پنل مدرس، کارشناسان «اشتراک با گروه» را می‌زنند. دریافت پاسخ‌ها خودکار است.</p>${teacher?'<div id="live-dashboard"></div>':'<button class="btn" id="live-stage">'+(W.step>=3&&W.step<=6?'اعلام شروع مأموریت '+fa(W.step-2)+' به مدرس':'اعلام حضور در بخش '+fa(W.step+1))+'</button><div id="live-members"></div>'}`;
+ if(teacher){for(const section of [...app.querySelectorAll('section.panel')])if(section!==el&&section.querySelector('h2')?.textContent.includes('جدول رقابت'))section.remove();showTeacher();}else{decorate();if(W.step>=3&&W.step<=6){const phase=W.currentPhase?.()??0;const stage=app.querySelector('#live-stage'),members=app.querySelector('#live-members');if(stage)stage.hidden=phase!==0;if(members)members.hidden=phase!==6;}}}
  message(statusText,statusBad);
 }
 function draft(k,value){if(!auth||teacher||!shared.test(k))return;drafts[k]={value,base:drafts[k]?.base??records[k]?.version??0};persistDrafts();}
@@ -25,9 +25,9 @@ function decorate(){if(!auth||teacher)return;
  for(const i of [0,1,2,3]){if(!app.querySelector('[data-pick="'+i+':0"]'))continue;const k='r'+i+'pick';if(!app.querySelector('[data-live-save="'+k+'"]')){const b=document.createElement('button');b.className='btn';b.dataset.liveSave=k;b.textContent='اشتراک انتخاب کارت‌ها';app.querySelector('[data-pick="'+i+':3"]').closest('label').after(b);}const r='r'+i+'reveal';if(W.read()[r]&&!app.querySelector('[data-live-save="'+r+'"]')){const b=document.createElement('button');b.className='btn';b.dataset.liveSave=r;b.textContent='اشتراک بازشدن رویداد';app.querySelector('[data-action="reveal"][data-value="'+i+'"]').after(b);}}
  showMembers();
 }
-function showMembers(){const el=document.getElementById('live-members');if(!el||!auth)return;const badges=document.getElementById('live-achievements');if(badges)badges.innerHTML='<h3>نشان‌های مأموریت‌ها</h3>'+badgeCards(achievedBadges(records));const rounds=W.step>=3&&W.step<=6?[W.step-3]:[];
+function showMembers(){const el=document.getElementById('live-members');if(!el||!auth)return;const rounds=W.step>=3&&W.step<=6?[W.step-3]:[];
  // Do not rebuild the member textarea while it is being edited.
- for(const i of rounds){let box=document.getElementById('live-round-'+i);if(!box){box=document.createElement('details');box.id='live-round-'+i;box.open=true;const k='r'+i+'member'+auth.member;box.innerHTML=`<summary>مشارکت اعضا · مأموریت ${fa(i+1)}</summary><label class="field"><span>نظر من · عضو ${fa(auth.member)}</span><textarea data-member-key="${k}" maxlength="2500">${E(drafts[k]?.value??records[k]?.field_value??'')}</textarea></label><button class="btn" data-live-save="${k}">اشتراک با گروه</button><div class="member-list"></div>`;el.append(box);}box.querySelector('.member-list').innerHTML=Array.from({length:5},(_,j)=>`<p><b>عضو ${fa(j+1)}:</b> <span style="white-space:pre-wrap">${E(records['r'+i+'member'+(j+1)]?.field_value||'هنوز نظری ثبت نشده')}</span></p>`).join('');const input=box.querySelector('textarea');if(document.activeElement!==input&&!drafts[input.dataset.memberKey])input.value=records[input.dataset.memberKey]?.field_value||'';}
+ for(const i of rounds){let box=document.getElementById('live-round-'+i);if(!box){box=document.createElement('details');box.id='live-round-'+i;box.open=false;const k='r'+i+'member'+auth.member;box.innerHTML=`<summary>مشارکت اعضا · مأموریت ${fa(i+1)}</summary><label class="field"><span>نظر من · عضو ${fa(auth.member)}</span><textarea data-member-key="${k}" maxlength="2500">${E(drafts[k]?.value??records[k]?.field_value??'')}</textarea></label><button class="btn" data-live-save="${k}">اشتراک با گروه</button><div class="member-list"></div>`;el.append(box);}box.querySelector('.member-list').innerHTML=Array.from({length:5},(_,j)=>`<p><b>عضو ${fa(j+1)}:</b> <span style="white-space:pre-wrap">${E(records['r'+i+'member'+(j+1)]?.field_value||'هنوز نظری ثبت نشده')}</span></p>`).join('');const input=box.querySelector('textarea');if(document.activeElement!==input&&!drafts[input.dataset.memberKey])input.value=records[input.dataset.memberKey]?.field_value||'';}
 }
 function applyRows(rows){records=Object.fromEntries(rows.map(r=>[r.field_key,r]));const merge={};let redraw=false;for(const r of rows){const k=r.field_key;if(!shared.test(k)||drafts[k])continue;const input=app.querySelector('[data-field="'+k+'"]');if(input===document.activeElement)continue;merge[k]=r.field_value;if(input)input.value=r.field_value;
  if(/^r[0-3](pick|reveal)$/.test(k)&&JSON.stringify(W.read()[k])!==JSON.stringify(r.field_value))redraw=true;
@@ -88,53 +88,88 @@ function batchScoreTable(groups){
  '<button class="btn primary" data-batch-grade-save="1">ثبت یکجای امتیازهای تغییرکرده</button></section>';
 }
 
-function instructorJourney(){
- const c=W.catalog,e=E,phases=c.missionFlow,chosen=monitorMission>=0?monitorMission:0;
- const head=(i,n)=>'<section class="teacher-phase" id="instructor-phase-'+i+'-'+n+'"><h3 class="shared-flow-heading"><span>گام '+fa(n+1)+' از ۷</span>'+e(phases[n])+'</h3>';
- const nav=i=>'<nav class="shared-step-nav" aria-label="مسیر مشترک هفت‌گامی"><strong>این مراحل با صفحه موبایل کارشناسان یکسان است</strong><div>'+phases.map((p,n)=>'<a href="#instructor-phase-'+i+'-'+n+'">'+fa(n+1)+'. '+e(p)+'</a>').join('')+'</div><p>گام فعلی را اعلام کنید. اعضا همان عنوان را روی موبایل انتخاب و پس از تصمیم‌گیری، نتیجه را با گروه به اشتراک بگذارند.</p></nav>';
- const cards=c.missions.map((m,i)=>{
-  const model=c.models[i],x=c.embedded[i],caseData=c.cases[i];
-  return '<details class="teacher-mission" data-mission="'+i+'" id="instructor-mission-'+i+'" '+(i===chosen?'open':'')+'><summary><span class="teacher-animal">'+model[0]+'</span><span><strong>'+e(model[1])+' · '+e(m.title)+'</strong><small>سناریوی '+fa(i+1)+' · '+fa(c.missionTime[i])+' دقیقه</small></span></summary>'+
-  '<div class="teacher-mission-body">'+nav(i)+
-  head(i,0)+'<div class="teacher-main-aim"><b>هدف تمرین</b><p>'+e(caseData.goal)+'</p></div><h4>چه اتفاقی افتاده؟</h4><p>'+e(caseData.situation)+'</p><h4>اطلاعات مشترک گروه و مدرس</h4><ul class="facilitator-case-facts">'+caseData.facts.map(f=>'<li>'+e(f)+'</li>').join('')+'</ul><div class="teacher-case-task"><b>خروجی مورد انتظار از گروه</b><p>'+e(caseData.task)+'</p><p><b>پرسش چالشی:</b> '+e(caseData.question)+'</p></div><details><summary>نکته تخصصی برای مدرس</summary><p>'+e(model[4])+'؛ '+e(model[5])+'</p><p><b>مرز راهبرد:</b> '+e(model[7])+'</p></details></section>'+
-  head(i,1)+'<p>پنج نقش را بین افراد حاضر تقسیم کنید. هر فرد فقط اطلاعات نقش خود را برای گروه بیان کند؛ سایر اعضا باید گوش بدهند و پرسش بپرسند.</p><div class="roles">'+c.roles.map((r,j)=>'<article class="role"><b>عضو '+fa((j+i)%5+1)+' · '+e(r)+'</b><p>'+e(m.info[j])+'</p></article>').join('')+'</div></section>'+
-  head(i,2)+'<p>دو دور گفت‌وگو اجرا می‌شود. دور اول را مشاهده کنید؛ سپس با بازخورد، دور دوم را اصلاح کنید.</p><div class="teacher-dialogue">'+m.dialog.map(t=>'<p>'+e(t)+'</p>').join('')+'</div><h4>مدیریت خشم و جرأت‌ورزی در همین سناریو</h4><div class="skill-layers"><div><b>تنظیم هیجان</b><p>'+e(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+e(x.assertion)+'</p></div></div><p><b>دور اول:</b> '+e(x.first)+'</p><p><b>پرسش مشاهده‌گر:</b> '+e(x.check)+'</p><p><b>دور دوم:</b> '+e(x.second)+'</p></section>'+
-  head(i,3)+'<p>هر گروه با ۶ سکه، دست‌کم دو اقدام انتخاب کند؛ سپس تصمیم اولیه، دلیل و مسئول اجرا را در موبایل ثبت و با گروه به اشتراک بگذارد.</p><div class="teacher-action-list">'+m.actions.map(a=>'<div><b>'+e(a[0])+'</b> · '+fa(a[1])+' سکه<p>'+e(a[2])+'</p></div>').join('')+'</div><p class="teacher-run"><b>در نمای زنده بالا:</b> پس از اشتراک‌گذاری، تصمیم اولیه هر گروه را می‌بینید.</p></section>'+
-  head(i,4)+'<p>اکنون اعلام کنید: «تصمیم اولیه را نهایی کنید و اتفاق تازه را باز کنید.» گروه‌ها رویداد را روی موبایل خود آشکار می‌کنند؛ بازکردن این بخش در پنل مدرس به‌تنهایی، صفحه موبایل آن‌ها را تغییر نمی‌دهد.</p><div class="twist"><h4>کارت اتفاق</h4><p>'+e(m.shock)+'</p></div><p><b>چالش تکمیلی:</b> '+e(x.twist)+'</p></section>'+
-  head(i,5)+'<p>از هر گروه بخواهید بگوید چه چیزی تغییر کرد، چه اطلاعاتی را جدی گرفت و چه تصمیمی را اصلاح می‌کند؛ گروه پاسخ اصلاح‌شده را روی موبایل ثبت و به اشتراک می‌گذارد.</p><div class="teacher-case-task"><b>پرسش راهنما</b><p>'+e(caseData.question)+'</p></div></section>'+
-  head(i,6)+'<p>مشاهده‌گر شواهد رفتار هر عضو را ثبت می‌کند. مدرس کیفیت تصمیم‌ها را با مثال و شاهد بازخورد می‌دهد و در صورت نیاز، ارزیابی اختیاری را از داشبورد کامل وارد می‌کند.</p><ol>'+c.rubric.map(r=>'<li>'+e(r)+' (صفر، یک یا دو)</li>').join('')+'</ol><p>نشان «'+e(c.badgeNames[i])+'» با تکمیل پنج فعالیت مشترک فعال می‌شود؛ امتیاز کیفی مدرس مستقل است.</p><div class="teacher-run"><b>ریتم پیشنهادی</b><p>۱۰ دقیقه معرفی · ۱۲ دقیقه تقسیم نقش · ۲۰ دقیقه دو دور گفت‌وگو · ۱۵ دقیقه انتخاب و تصمیم · ۸ دقیقه اتفاق تازه · ۱۵ دقیقه اصلاح و تحلیل · '+fa(c.missionTime[i]-80)+' دقیقه بازخورد و ثبت.</p></div></section></div></details>';
- }).join('');
- return '<section class="instructor-roadmap"><div class="hero teacher-hero"><span>مسیر هدایت مدرس · هم‌مسیر با کارشناسان</span><h2>یک سناریو، هفت گام مشترک</h2><p>همین هفت گام در موبایل کارشناسان وجود دارد. تو هر گام را در کلاس اعلام می‌کنی؛ گروه‌ها اجرا و پاسخشان را اشتراک‌گذاری می‌کنند؛ اینجا نتیجه را می‌بینی.</p></div>'+
- '<div class="teacher-metrics"><span>۷ گام مشترک</span><span>۱۰ گروه</span><span>۴ سناریوی انتخابی</span><span>نتایج زنده گروه‌ها</span></div>'+
- '<h3>انتخاب سناریوی کلاس</h3><nav class="teacher-mission-nav">'+c.models.map((m,i)=>'<a href="#instructor-mission-'+i+'" data-watch-mission="'+i+'" '+(i===chosen?'aria-current="true"':'')+'>'+m[0]+' '+e(m[1])+'</a>').join('')+'</nav>'+
- '<section class="teacher-live-section"><h3>نمای زنده گروه‌ها · همین سناریو</h3><p>برای دیدن پاسخ‌ها، گروه باید «اشتراک با گروه» را بزند. دریافت اطلاعات حدود هر ۱۰ ثانیه انجام می‌شود. انتخاب سناریو در پنل مدرس، صفحه موبایل گروه‌ها را خودکار عوض نمی‌کند.</p><div id="teacher-journey-live" aria-live="polite"></div><button type="button" class="btn" data-teacher-tab="dashboard">داشبورد کامل گروه‌ها و امتیازدهی</button></section>'+
- cards+
- '<details class="instructor-schedule"><summary>برنامه کامل کارگاه (اختیاری)</summary><div class="teacher-timeline">'+c.stages.map((x,i)=>'<div class="timeline-item"><strong>'+fa(i+1)+'. '+e(x[0])+'</strong><span>'+fa(x[1])+' دقیقه</span><p>'+e(x[2])+'</p></div>').join('')+'</div><p class="instructor-note">زمان‌بندی پیشنهادی قابل تنظیم است. اجرای مراحل و انتخاب ترتیب مأموریت‌ها برای گروه‌ها مستقل است.</p></details><p class="instructor-note">از اطلاعات فرضی استفاده کنید؛ داده واقعی مشتری یا پرونده محرمانه وارد نکنید.</p></section>';
-}
 
+function instructorJourney(){
+ const c=W.catalog,i=monitorMission,n=teacherPhase,m=c.missions[i],caseData=c.cases[i],x=c.embedded[i],model=c.models[i],E2=E;
+ const stageTitle=c.missionFlow[n];
+ const facts='<ul class="simple-facts">'+caseData.facts.map(v=>'<li>'+E2(v)+'</li>').join('')+'</ul>';
+ const soft=(title,body)=>'<details class="teacher-reference"><summary>'+title+'</summary><div>'+body+'</div></details>';
+ const steps=[
+ {
+ lead:'سناریو را بخوانید، مسئله را روشن کنید.',
+ say:'«هدف امروز این است: '+caseData.goal+'» سپس بپرسید: '+caseData.question,
+ ask:'اطلاعات سناریو را بخوانند و هر گروه، مسئله اصلی را در یک جمله بیان کند.',
+ body:'<section class="simple-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E2(caseData.situation)+'</p><h3>اطلاعات لازم</h3>'+facts+'</section>'
+ },
+ {
+ lead:'از گروه‌ها بخواهید نقش‌ها را تقسیم کنند.',
+ say:'«هر نفر یکی از نقش‌ها را بگیرد و اطلاعات مخصوص نقش خودش را بخواند. اگر گروه کمتر از پنج نفر است، بعضی نقش‌ها مشترک باشند.»',
+ ask:'نقش‌ها را تقسیم و اطلاعات مورد نیاز برای تصمیم را بین اعضا مطرح کنند.',
+ body:soft('پنج نقش و اطلاعات هر نفر','<div class="simple-role-list">'+c.roles.map((r,j)=>'<div><strong>'+E2(r)+'</strong><p>'+E2(m.info[j])+'</p></div>').join('')+'</div>')
+ },
+ {
+ lead:'گفت‌وگو را در دو دور اجرا کنید.',
+ say:'«دور اول را اجرا کنید. مشاهده‌گر فقط جملات و رفتارهای قابل مشاهده را یادداشت کند. حالا یک بازخورد کوتاه و دور دوم.»',
+ ask:'با مدیریت هیجان و جرأت‌ورزی، گفت‌وگو را دوباره و حرفه‌ای‌تر اجرا کنند.',
+ body:'<div class="simple-skill-pair"><div><b>مدیریت خشم</b><p>'+E2(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E2(x.assertion)+'</p></div></div>'+
+ soft('نمونه گفت‌وگو و بازخورد','<p>'+m.dialog.map(v=>E2(v)).join('</p><p>')+'</p><p><b>بازخورد دور اول:</b> '+E2(x.first)+'</p><p><b>سؤال مشاهده‌گر:</b> '+E2(x.check)+'</p><p><b>دور دوم:</b> '+E2(x.second)+'</p>')
+ },
+ {
+ lead:'از گروه‌ها یک تصمیم روشن بخواهید.',
+ say:'«با بودجه شش سکه حداقل دو اقدام انتخاب کنید؛ تصمیم را با یک دلیل و مسئول اجرا ثبت و با گروه اشتراک‌گذاری کنید.»',
+ ask:'دو اقدام انتخاب کنند، بودجه را رعایت کنند، سپس تصمیم اولیه را بنویسند و دکمه «اشتراک با گروه» را بزنند.',
+ body:soft('کارت‌های اقدام و پیامد آن‌ها','<div class="simple-option-list">'+m.actions.map(a=>'<p><b>'+E2(a[0])+' · '+fa(a[1])+' سکه</b><span>'+E2(a[2])+'</span></p>').join('')+'</div>')
+ },
+ {
+ lead:'اتفاق غیرمنتظره را اعلام کنید.',
+ say:'«حالا اطلاعات تازه‌ای به پرونده اضافه شده است. ببینیم آیا تصمیم قبلی هنوز جواب می‌دهد.»',
+ ask:'در موبایل روی «ثبت تصمیم و آشکارسازی اتفاق» بزنند؛ پیش از آن تصمیم اولیه باید ثبت شده باشد.',
+ body:'<div class="simple-event"><strong>اتفاق تازه</strong><p>'+E2(m.shock)+'</p></div><p><b>پرسش مکمل:</b> '+E2(x.twist)+'</p>'
+ },
+ {
+ lead:'تصمیم اصلاح‌شده را دریافت کنید.',
+ say:'«با این اطلاعات تازه، دقیقاً چه چیزی را تغییر می‌دهید؟ چرا؟»',
+ ask:'تصمیم جدید و دلیل تغییر را بنویسند و با گروه اشتراک‌گذاری کنند.',
+ body:'<p class="simple-challenge">'+E2(caseData.question)+'</p>'
+ },
+ {
+ lead:'از تجربه گروه‌ها جمع‌بندی کنید.',
+ say:'«یک تصمیم خوب و یک نکته قابل بهبود را با شاهد مشخص بیان کنید.»',
+ ask:'مشاهده‌گر یک رفتار یا جمله قابل مشاهده را ثبت و با گروه به اشتراک بگذارد.',
+ body:'<div class="simple-recap"><strong>سه سؤال برای بازخورد</strong><ol><li>کدام شاهد، تصمیم شما را تغییر داد؟</li><li>چه چیزی به مشتری و کیفیت رسیدگی کمک کرد؟</li><li>در محیط واقعی کار، یک اقدام قابل اجرا چیست؟</li></ol></div>'+
+ soft('معیارهای تخصصی برای مدرس (اختیاری)','<ol>'+c.rubric.map(r=>'<li>'+E2(r)+'</li>').join('')+'</ol>')
+ }
+ ];
+ const item=steps[n];
+ return '<section class="simple-teacher-workspace"><div class="simple-workshop-title"><span>پنل اجرای مدرس</span><h2>فقط یک سناریو؛ یک گام در هر لحظه</h2><p>راهبرد را انتخاب کنید، گام را اعلام کنید و نتیجه گروه‌ها را ببینید.</p></div>'+
+ '<nav class="simple-animal-selector" aria-label="انتخاب راهبرد">'+c.models.map((a,j)=>'<button type="button" class="'+(j===i?'selected':'')+'" data-teacher-mission="'+j+'" aria-pressed="'+String(j===i)+'">'+a[0]+' '+E2(a[1])+'</button>').join('')+'</nav>'+
+ '<header class="simple-case-header"><small>سناریوی '+fa(i+1)+'</small><h2>'+E2(m.title)+'</h2><p>'+E2(caseData.goal)+'</p></header>'+
+ '<nav class="simple-teacher-stepbar" aria-label="پیشروی مدرس"><div><span>گام '+fa(n+1)+' از ۷</span><strong>'+E2(stageTitle)+'</strong></div><button type="button" class="btn" data-teacher-prev '+(n===0?'disabled':'')+'>گام قبل</button><button type="button" class="btn primary" data-teacher-next '+(n===6?'disabled':'')+'>گام بعد</button></nav>'+
+ '<section class="simple-now"><h3>'+E2(item.lead)+'</h3><div class="simple-two-actions"><article class="simple-say"><span>🎙️ مدرس چه بگوید؟</span><p>'+E2(item.say)+'</p></article><article class="simple-do"><span>📱 کارشناسان چه کنند؟</span><p>'+E2(item.ask)+'</p></article></div><div class="simple-stage-body">'+item.body+'</div></section>'+
+ '<details class="simple-live-box" '+(n===3||n===5||n===6?'open':'')+'><summary>مشاهده پاسخ گروه‌ها در این سناریو</summary><div id="teacher-journey-live"></div></details>'+
+ '<p class="simple-teacher-footer">مرحله‌های مدرس و کارشناسان عنوان یکسان دارند. حرکت در صفحه مدرس، صفحه موبایل گروه‌ها را خودکار تغییر نمی‌دهد.</p></section>';
+}
 function refreshTeacherJourneyProgress(){
  const host=document.getElementById('teacher-journey-live');if(!host||!auth||!teacher)return;
- const idx=monitorMission,prefix='r'+idx,mission=W.catalog.missions[idx],model=W.catalog.models[idx];
+ const i=monitorMission,prefix='r'+i;
  const open=new Set([...host.querySelectorAll('details[open]')].map(d=>d.dataset.team));
- const groups=Array.from({length:10},(_,i)=>{
-  const team=i+1,rows=allRows.filter(r=>r.team_no===team),by=Object.fromEntries(rows.map(r=>[r.field_key,r]));
-  const active=Number(by.stage?.field_value)===idx+3;
-  const initial=String(by[prefix+'initial']?.field_value||'').trim(),revision=String(by[prefix+'revision']?.field_value||'').trim(),evidence=String(by[prefix+'evidence']?.field_value||'').trim();
-  const revealed=by[prefix+'reveal']?.field_value===true;
-  const members=Array.from({length:5},(_,j)=>String(by[prefix+'member'+(j+1)]?.field_value||'').trim()).filter(Boolean).length;
-  return {team,active,initial,revision,evidence,revealed,members};
- });
- const active=groups.filter(g=>g.active).length,initials=groups.filter(g=>g.initial).length,revised=groups.filter(g=>g.revision).length;
- host.innerHTML='<div class="teacher-live-summary"><strong>'+model[0]+' '+E(model[1])+' · '+E(mission.title)+'</strong><span>'+fa(active)+' گروه با شروع اعلام‌شده</span><span>'+fa(initials)+' تصمیم اولیه ثبت‌شده</span><span>'+fa(revised)+' تصمیم اصلاح‌شده</span></div>'+
- '<div class="teacher-live-grid">'+groups.map(g=>'<details class="teacher-live-group" data-team="'+g.team+'" '+(open.has(String(g.team))?'open':'')+'><summary><b>گروه '+fa(g.team)+'</b><span>'+(g.active?'در این سناریو':'شروع اعلام نشده')+'</span><small>'+[g.initial?'✓ تصمیم اولیه':'○ تصمیم اولیه',g.revealed?'✓ اتفاق':'○ اتفاق',g.revision?'✓ اصلاح':'○ اصلاح',g.evidence?'✓ شواهد':'○ شواهد'].join(' · ')+'</small></summary>'+
- '<div class="teacher-live-answers"><p><b>تصمیم اولیه:</b> '+E(g.initial||'هنوز به اشتراک گذاشته نشده')+'</p><p><b>تصمیم اصلاح‌شده:</b> '+E(g.revision||'هنوز به اشتراک گذاشته نشده')+'</p><p><b>شواهد مشاهده‌گر:</b> '+E(g.evidence||'هنوز به اشتراک گذاشته نشده')+'</p><p>ثبت مشارکت اعضا: '+fa(g.members)+' نفر</p></div></details>').join('')+'</div>';
+ const relevant=Array.from({length:10},(_,j)=>{
+  const team=j+1,fields=Object.fromEntries(allRows.filter(r=>r.team_no===team).map(r=>[r.field_key,r.field_value]));
+  const initial=String(fields[prefix+'initial']||'').trim(),revision=String(fields[prefix+'revision']||'').trim(),evidence=String(fields[prefix+'evidence']||'').trim();
+  const stage=Number(fields.stage)===i+3;
+  const revealed=fields[prefix+'reveal']===true;
+  const members=Array.from({length:5},(_,k)=>String(fields[prefix+'member'+(k+1)]||'').trim()).filter(Boolean).length;
+  return {team,initial,revision,evidence,stage,revealed,members};
+ }).filter(g=>g.stage||g.initial||g.revision||g.evidence||g.revealed||g.members);
+ if(!relevant.length){host.innerHTML='<div class="simple-live-empty">هنوز گروهی در این سناریو پاسخی به اشتراک نگذاشته است. با شروع اجرا، پاسخ‌ها همین‌جا ظاهر می‌شوند.</div>';return;}
+ host.innerHTML='<p class="simple-live-count">'+fa(relevant.length)+' گروه دارای فعالیت ثبت‌شده</p><div class="simple-live-list">'+relevant.map(g=>
+ '<details data-team="'+g.team+'" '+(open.has(String(g.team))?'open':'')+'><summary>گروه '+fa(g.team)+' · '+(g.revision?'تصمیم اصلاح‌شده ثبت شد':g.initial?'تصمیم اولیه ثبت شد':g.stage?'در حال اجرا':'مشارکت ثبت‌شده')+'</summary>'+
+ '<p><b>تصمیم اولیه:</b> '+E(g.initial||'هنوز اشتراک‌گذاری نشده')+'</p><p><b>تصمیم اصلاح‌شده:</b> '+E(g.revision||'هنوز اشتراک‌گذاری نشده')+'</p><p><b>شواهد مشاهده‌گر:</b> '+E(g.evidence||'هنوز اشتراک‌گذاری نشده')+'</p></details>').join('')+'</div>';
 }
-
-function showTeacher(){const el=document.getElementById('live-dashboard');if(!el)return;
-for(const b of app.querySelectorAll('[data-teacher-tab]')){const selected=b.dataset.teacherTab===teacherMode;b.classList.toggle('primary',selected);b.setAttribute('aria-pressed',String(selected));}
-if(teacherMode==='journey'){if(!el.querySelector('.instructor-roadmap'))el.innerHTML=instructorJourney();refreshTeacherJourneyProgress();if(requestedMission>=0){const target=el.querySelector('#instructor-mission-'+requestedMission);if(target&&!target.dataset.highlighted){target.dataset.highlighted='1';requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));}}return;}const open=[...el.querySelectorAll('details[open]')].map(x=>x.dataset.team);const focus=document.activeElement;if(el.contains(focus)&&focus.matches('input'))return;
- const groups=Array.from({length:10},(_,i)=>({team:i+1,rows:allRows.filter(r=>r.team_no===i+1)}));
- el.innerHTML=`${batchScoreTable(groups)}<p><b>${fa(groups.filter(g=>g.rows.length).length)}</b> گروه دارای ثبت · ${fa(allRows.filter(r=>/^r[0-3]member/.test(r.field_key)&&r.field_value).length)} مشارکت در مأموریت‌ها</p><div class="grid">${groups.map(g=>{const by=Object.fromEntries(g.rows.map(r=>[r.field_key,r]));const stage=Number(by.stage?.field_value),stageLabel=Number.isInteger(stage)&&stage>=3&&stage<=6?W.catalog.models[stage-3][0]+' '+W.catalog.models[stage-3][1]:by.stage?'بخش '+fa(stage+1):'هنوز اعلام نشده';return `<article class="skill"><h3>گروه ${fa(g.team)} · ${E(by.teamname?.field_value||'')}</h3><p><b>انتخاب فعلی گروه:</b> ${E(stageLabel)}</p><p>تصمیم اولیه: ${fa([0,1,2,3].filter(i=>by['r'+i+'initial']?.field_value).length)} از ۴ · اصلاح تصمیم: ${fa([0,1,2,3].filter(i=>by['r'+i+'revision']?.field_value).length)} از ۴</p><details data-team="${g.team}" ${open.includes(String(g.team))?'open':''}><summary>مشاهده تصمیم‌ها و مشارکت اعضا</summary>${[0,1,2,3].map(i=>`<h4>مأموریت ${fa(i+1)}</h4>${[1,2,3,4,5].map(j=>`<p><b>عضو ${fa(j)}:</b> ${E(by['r'+i+'member'+j]?.field_value||'—')}</p>`).join('')}<p><b>تصمیم:</b> ${E(by['r'+i+'initial']?.field_value||'—')}</p><p><b>اصلاح:</b> ${E(by['r'+i+'revision']?.field_value||'—')}</p><p><b>شواهد:</b> ${E(by['r'+i+'evidence']?.field_value||'—')}</p>`).join('')}</details><p class="small">امتیازهای کیفی اختیاری این گروه در جدول یکپارچه بالا ثبت می‌شود.</p>${badgeCards(achievedBadges(by))}</article>`;}).join('')}</div>`;
+function showTeacher(force=false){
+ const el=document.getElementById('live-dashboard');if(!el)return;
+ if(force||!el.querySelector('.simple-teacher-workspace'))el.innerHTML=instructorJourney();
+ refreshTeacherJourneyProgress();
 }
 async function publish(k){if(!auth||teacher)return;const value=drafts[k]?.value??W.read()[k]??'';if(!drafts[k])draft(k,value);const entry={...drafts[k]},gen=generation;try{const d=await request({action:'write',team:auth.team,fields:{[k]:entry.value},expected:{[k]:entry.base}});if(gen!==generation)return;for(const r of d.records)records[r.field_key]=r;if(JSON.stringify(drafts[k]?.value)===JSON.stringify(entry.value))delete drafts[k];else if(drafts[k])drafts[k].base=d.records[0].version;persistDrafts();document.getElementById('conflict-'+k)?.remove();message('با گروه به اشتراک گذاشته شد ✓');await refresh();}catch(e){if(gen!==generation)return;if(e.status===409){await refresh();conflict(k);}else message('ذخیره انجام نشد؛ پیش‌نویس حفظ شد. '+e.message,true);}}
 function conflict(k){let el=document.getElementById('conflict-'+k);if(!el){el=document.createElement('div');el.id='conflict-'+k;el.className='twist';app.querySelector('[data-live-save="'+k+'"]')?.after(el);}el.innerHTML=`<b>تعارض ویرایش؛ متن شما حذف نشده است</b><p>نسخه تازه گروه: <span style="white-space:pre-wrap">${E(records[k]?.field_value??'')}</span></p><p>پیش‌نویس شما: <span style="white-space:pre-wrap">${E(typeof drafts[k]?.value==='string'?drafts[k].value:JSON.stringify(drafts[k]?.value))}</span></p><button class="btn" data-resolve="server:${k}">پذیرش نسخه گروه</button> <button class="btn" data-resolve="draft:${k}">نسخه گروه را دیدم؛ ادامه با پیش‌نویس من</button>`;message('تعارض ویرایش را بررسی کنید؛ هیچ بازنویسی خودکار انجام نشد.',true);}
@@ -151,8 +186,11 @@ app.addEventListener('input',e=>{
  }
 });
 app.addEventListener('change',e=>{const t=e.target;if(t.dataset.field)draft(t.dataset.field,t.value);if(t.dataset.pick)draft('r'+t.dataset.pick.split(':')[0]+'pick',W.read()['r'+t.dataset.pick.split(':')[0]+'pick']);});
-app.addEventListener('click',async e=>{const nav=e.target.closest('[data-watch-mission]');
- if(nav&&auth?.role==='teacher'){monitorMission=Number(nav.dataset.watchMission);refreshTeacherJourneyProgress();const selected=app.querySelector('#instructor-mission-'+monitorMission);if(selected)selected.open=true;app.querySelectorAll('[data-watch-mission]').forEach(a=>a.setAttribute('aria-current',String(Number(a.dataset.watchMission)===monitorMission)));}
+app.addEventListener('click',async e=>{
+ const mission=e.target.closest('[data-teacher-mission]');
+ if(mission&&auth?.role==='teacher'){monitorMission=Number(mission.dataset.teacherMission);teacherPhase=0;showTeacher(true);return;}
+ const previous=e.target.closest('[data-teacher-prev]'),next=e.target.closest('[data-teacher-next]');
+ if((previous||next)&&auth?.role==='teacher'){teacherPhase=Math.max(0,Math.min(6,teacherPhase+(next?1:-1)));showTeacher(true);app.querySelector('.simple-teacher-stepbar')?.scrollIntoView({block:'start'});return;}
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.teacherTab&&auth?.role==='teacher'){teacherMode=b.dataset.teacherTab;showTeacher();return;}
  if(b.dataset.scoreRound!==undefined&&auth?.role==='teacher'){gradeRound=Number(b.dataset.scoreRound);showTeacher();return;}
