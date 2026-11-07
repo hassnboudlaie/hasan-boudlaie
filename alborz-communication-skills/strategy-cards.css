@@ -1,0 +1,56 @@
+
+/* Alborz interactive strategy layer. Scoped; no changes to login, groups or other apps. */
+.workshop-hero .strategy-card{cursor:pointer;position:relative;text-align:right;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.workshop-hero .strategy-card:hover{transform:translateY(-5px);box-shadow:0 17px 35px #00291b45;border-color:#b48a47}
+.workshop-hero .strategy-card:focus-visible{outline:4px solid #e2b65d;outline-offset:4px}
+.workshop-hero .strategy-card::after{content:"مشاهده راهبرد، درس‌نامه و مأموریت  ←";display:block;margin:auto 14px 15px;padding:12px 14px;border-radius:12px;background:#e7f2ec;color:#104d3e;font-weight:800;font-size:15px;text-align:center;line-height:1.6}
+.workshop-hero .strategy-head{justify-content:center;text-align:center}
+.workshop-hero .strategy-head h2{width:100%;text-align:center}
+.workshop-hero .strategy-footnote{text-align:center;margin:18px auto 0}
+.alborz-strategy-dialog{position:fixed;inset:0;margin:auto;width:min(880px,calc(100vw - 28px));max-height:min(90dvh,950px);padding:0;border:1px solid #b6cfc3;border-radius:23px;box-shadow:0 28px 90px #001f1b85;background:#fffefa;color:#173f34;overflow:auto;direction:rtl}
+.alborz-strategy-dialog::backdrop{background:#061b18cc;backdrop-filter:blur(5px)}
+.alborz-strategy-dialog .sd-wrap{padding:24px 30px 30px}
+.alborz-strategy-dialog .sd-bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.alborz-strategy-dialog .sd-kicker{font-size:14px;font-weight:800;color:#537b6b}
+.alborz-strategy-dialog .sd-close{appearance:none;border:1px solid #d2dfd6;border-radius:50%;background:#edf3ee;color:#183f33;width:43px;height:43px;font-size:28px;line-height:1;cursor:pointer}
+.alborz-strategy-dialog .sd-heading{display:grid;grid-template-columns:minmax(140px,220px) 1fr;gap:26px;align-items:center;margin:16px 0 22px}
+.alborz-strategy-dialog .sd-photo{width:100%;aspect-ratio:1.2;background-image:url('./assets/claims-resilience-approved-20261106.png');background-size:420% auto;background-position-y:48%;background-color:#e8efe8;background-repeat:no-repeat;border-radius:17px;box-shadow:0 9px 25px #001c1426}
+.alborz-strategy-dialog .sd-photo.strategy-camel{background-position-x:5.4%}
+.alborz-strategy-dialog .sd-photo.strategy-salmon{background-position-x:35.2%}
+.alborz-strategy-dialog .sd-photo.strategy-chameleon{background-position-x:64.1%}
+.alborz-strategy-dialog .sd-photo.strategy-octopus{background-position-x:97.6%}
+.alborz-strategy-dialog h2{color:#083f32;font-size:clamp(29px,4vw,42px);margin:7px 0 6px;line-height:1.35}
+.alborz-strategy-dialog h3{font-size:clamp(20px,2.6vw,24px);margin:0 0 10px;line-height:1.5;color:#0b513c}
+.alborz-strategy-dialog .sd-title{display:inline-block;color:#865a23;font-weight:900;font-size:19px}
+.alborz-strategy-dialog .sd-english{font-size:14px;color:#47695b;font-weight:700;margin:7px 0}
+.alborz-strategy-dialog .sd-sentence{font-size:17px;color:#234e40;line-height:1.85}
+.alborz-strategy-dialog .sd-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:7px;background:#eff4ef;border-radius:15px;margin:6px 0 20px}
+.alborz-strategy-dialog .sd-tab{font:inherit;font-size:16px;font-weight:800;cursor:pointer;border:0;border-radius:10px;padding:12px 8px;background:transparent;color:#3f6456;line-height:1.5}
+.alborz-strategy-dialog .sd-tab[aria-selected="true"]{background:#145640;color:white;box-shadow:0 4px 10px #00321c21}
+.alborz-strategy-dialog .sd-tab:focus-visible,.alborz-strategy-dialog a:focus-visible,.alborz-strategy-dialog .sd-close:focus-visible{outline:3px solid #d4a340;outline-offset:3px}
+.alborz-strategy-dialog .sd-section{border:1px solid #e3e9e1;border-radius:16px;padding:19px 21px;margin:0 0 13px;background:#fff}
+.alborz-strategy-dialog .sd-section p,.alborz-strategy-dialog .sd-section li{font-size:16px;line-height:1.95;margin:0 0 7px}
+.alborz-strategy-dialog .sd-soft{background:#f0f6f0;border-color:#cbded1}
+.alborz-strategy-dialog .sd-gold{background:#fff8e8;border-color:#edd8ac}
+.alborz-strategy-dialog .sd-label{color:#875c20;font-size:14px;font-weight:850;display:block;margin-bottom:8px}
+.alborz-strategy-dialog .sd-pill-row{display:flex;flex-wrap:wrap;gap:9px;padding-top:8px}
+.alborz-strategy-dialog .sd-pill{border-radius:999px;background:#e2efe8;border:1px solid #b9d5c3;color:#19523f;padding:6px 12px;font-size:15px;font-weight:750}
+.alborz-strategy-dialog .sd-two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.alborz-strategy-dialog .sd-list{margin:7px 0;padding-right:25px}
+.alborz-strategy-dialog .sd-list li{padding-right:3px;margin-bottom:7px}
+.alborz-strategy-dialog .sd-action{display:inline-block;text-decoration:none;border-radius:13px;padding:13px 20px;background:#135640;color:#fff;font-size:17px;font-weight:800;margin-top:8px;line-height:1.6}
+.alborz-strategy-dialog .sd-action:hover{background:#0a4030}
+.alborz-strategy-dialog .sd-secondary{display:inline-block;margin:10px 10px 0 0;color:#124a3a;text-decoration:underline;text-underline-offset:4px;font-size:15px;font-weight:750}
+.alborz-strategy-dialog .sd-small{color:#567166;font-size:14px;line-height:1.9}
+@media(max-width:650px){
+ .alborz-strategy-dialog{width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0}
+ .alborz-strategy-dialog .sd-wrap{padding:14px 16px 28px}
+ .alborz-strategy-dialog .sd-heading{grid-template-columns:105px minmax(0,1fr);gap:14px;margin:14px 0 16px}
+ .alborz-strategy-dialog h2{font-size:28px}
+ .alborz-strategy-dialog .sd-title{font-size:17px}
+ .alborz-strategy-dialog .sd-sentence{font-size:15px}
+ .alborz-strategy-dialog .sd-tab{font-size:14px;padding:12px 3px}
+ .alborz-strategy-dialog .sd-section{padding:16px 17px}
+ .alborz-strategy-dialog .sd-two{grid-template-columns:1fr}
+ .alborz-strategy-dialog .sd-section p,.alborz-strategy-dialog .sd-section li{font-size:16px}
+}
