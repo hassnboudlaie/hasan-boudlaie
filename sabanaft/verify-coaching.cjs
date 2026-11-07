@@ -28,8 +28,8 @@ async function run(){
  $('cj-guide').click();
  assert.equal($('cj-output').hidden,false,'case guide visible');
  assert.match($('cj-output').textContent,/دو گزینه رفتاری قابل دفاع/);
- assert.match($('cj-output').textContent,/Partner/);
- assert.match($('cj-output').textContent,/Boss/);
+ assert.match($('cj-output').textContent,/شریک/);
+ assert.match($('cj-output').textContent,/هدایت‌کننده/);
  const human=$('cj-book-human'),mailEvt=new w.MouseEvent('click',{bubbles:true,cancelable:true});
  human.dispatchEvent(mailEvt);assert.ok(!decodeURIComponent(human.href).includes('سرپرست پروژه از اختلاف'),'human coach email never auto-shares case');
  $('cj-share-summary').checked=true;
