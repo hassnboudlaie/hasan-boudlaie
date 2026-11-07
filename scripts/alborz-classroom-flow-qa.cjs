@@ -110,7 +110,7 @@ const server=http.createServer((req,res)=>{
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   await expert2.evaluate(()=>window.AlborzLive.refresh());
   assert.match(await expert1.locator('.classroom-story').innerText(),/۳۰ نفر/,'camel gets temporary crowd scenario');
-  assert.match(await expert2.locator('.classroom-story').innerText(),/پرونده‌های درمان/,'chameleon gets structural redesign scenario');
+  assert.match(await expert2.locator('.classroom-story').innerText(),/مدل فعلی خسارت درمان|مدل خدمت/,'chameleon explicitly transforms the core service model');
   assert.equal(get(1,'classroomPhase').field_value,3,'instructor phase stored centrally');
   await teacher.locator('[data-class-reference="2"]').click();
   assert.match(await teacher.locator('.classroom-case-caption').innerText(),/آفتاب‌پرست|پرونده|رفت‌وآمدی/);
