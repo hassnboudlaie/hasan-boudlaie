@@ -12,7 +12,7 @@ function escapeText(v){return String(v==null?"":v).replace(/[&<>"']/g,function(x
 function notice(s){var e=E("toast");e.textContent=s;e.classList.add("visible");clearTimeout(notice.t);notice.t=setTimeout(function(){e.classList.remove("visible")},2400)}
 function session(n){return parts.find(function(s){return s.id===Number(n)})}
 function section(n,p){var s=session(n);return s&&s.sections.find(function(x){return x.id===p})}
-function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action|development|mix|insights|review|portfolio)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport","coach","context"].includes(a[0])?a[0]:"home"}}
+function route(){var a=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),s=Number(a[1]);if(a[0]==="session"&&session(s))return{page:"session",s:s};if(a[0]==="lesson"&&section(s,a[2]))return{page:"reader",s:s,p:a[2]};if(a[0]==="stage"&&["idea","relationship","tools","reflection"].includes(a[1]))return{page:"stage",stage:a[1]};if(a[0]==="studio")return{page:"studio",tab:/^(home|cases|daily|roleplay|coach|insights|profile|context|roles|action|development|mix|insights|review|portfolio)$/.test(a[1]||"")?a[1]:"daily"};return{page:["home","course","passport","coach","context"].includes(a[0])?a[0]:"home"}}
 function go(x){if(location.hash==="#/"+x){render();return}location.hash="/"+x}
 function openLesson(n,p){go("lesson/"+n+"/"+p)}
 function latest(){var r=memory.last;return section(r.s,r.p)?r:{s:1,p:parts[0].sections[0].id}}
@@ -20,14 +20,60 @@ function courseState(){try{var o=JSON.parse(localStorage.getItem(progressKey)||"
 function doneKey(s,p){return "s"+s+"-"+p}
 function count(s,state){return s.sections.filter(function(x){return state.done.has(doneKey(s.id,x.id))}).length}
 function renderHome(){var el=E("homeScoreMini"),d=globalThis.SabaGamification?.collect();if(el&&d)el.textContent="⭐ "+fa(d.annualScore)+" امتیاز · سطح "+d.level;}
+const stageInfo={
+ idea:{number:'۲',title:'ایده رهبری من',intro:'نقش‌های خود را متناسب با شرایط تیم تعریف کنید.',actions:[
+ ['lesson/5/context-situation','بافت و موقعیت من','تفاوت شرایط معمول تیم و وضعیت خاص را روشن کنید.','۱'],
+ ['lesson/5/mix','ترکیب نقش‌های من','برای چهار نقش رهبری، ترکیبی آگاهانه بسازید.','۲'],
+ ['lesson/5/output','بیانیه رهبری من','ایده رهبری خود را به زبان ساده بنویسید.','۳']]},
+ relationship:{number:'۳',title:'رابطه با کارکنان',intro:'برداشت شما از رابطه و تجربه واقعی کارکنان را کنار هم بگذارید.',actions:[
+ ['lesson/7/perspectives','دیدگاه‌های متفاوت','برداشت مدیر و کارکنان را مقایسه کنید.','۱'],
+ ['lesson/7/upward','رابطه با مدیر بالادست','انتظارات و حد اختیار را روشن کنید.','۲'],
+ ['lesson/7/peer','گفت‌وگو و بازخورد','با یک همکار، برداشت‌های خود را بررسی کنید.','۳']]},
+ tools:{number:'۴',title:'ابزارهای رهبری',intro:'برای شرایط واقعی تیم، روش و ابزار مناسب انتخاب کنید.',actions:[
+ ['lesson/8/benefit','ابتدا مسئله و فایده','روشن کنید ابزار برای حل چه مسئله‌ای است.','۱'],
+ ['lesson/8/design','طراحی ابزار خودم','یک روش ساده و قابل‌اجرا طراحی کنید.','۲'],
+ ['lesson/8/output','آزمایش و یادگیری','ابزار را اجرا کنید و نتیجه را مرور کنید.','۳']]},
+ reflection:{number:'↻',title:'بازاندیشی مستمر',intro:'از تجربه واقعی یاد بگیرید و رفتار بعدی را بهتر کنید.',actions:[
+ ['studio/daily','بازاندیشی روزانه','یک اتفاق، رفتار خود و آموخته‌تان را ثبت کنید.','۱'],
+ ['studio/cases','مرور کیس‌های من','تصمیم‌های قبلی و نتیجه آن‌ها را بررسی کنید.','۲'],
+ ['lesson/7/peer','بازاندیشی با همکار','از دیدگاه یک همکار برای اصلاح برداشت خود استفاده کنید.','۳']]}
+};
+function renderStage(key){
+ var d=stageInfo[key];if(!d)return;
+ E("stageKicker").textContent="مسیر رهبری";
+ E("stageSymbol").textContent=d.number;
+ E("stageTitle").textContent=d.title;
+ E("stageLead").textContent=d.intro;
+ var gam=globalThis.SabaGamification?.collect(),point=gam?.steps?.find(x=>x.id===key);
+ E("stageProgress").textContent=point?fa(point.points)+" امتیاز از فعالیت‌های این بخش ثبت کرده‌اید.":"با ثبت فعالیت‌ها و پیگیری نتیجه، امتیاز و نشان بگیرید.";
+ E("stageActionList").innerHTML=d.actions.map(function(a){return '<button type="button" class="stage-action" data-go-stage="'+escapeText(a[0])+'"><span class="stage-action-num">'+escapeText(a[3])+'</span><span class="stage-action-copy"><strong>'+escapeText(a[1])+'</strong><small>'+escapeText(a[2])+'</small></span><span class="stage-action-arrow" aria-hidden="true">←</span></button>'}).join("");
+}
 function renderCourse(){var state=courseState(),out=parts.map(function(s){var c=count(s,state),pic=pics[(s.id-1)%pics.length];return '<button class="course-card" type="button" data-session="'+s.id+'"><img src="../assets/'+pic+'" alt="" loading="lazy"><span class="course-card-body"><span class="eyebrow">جلسه '+fa(s.id)+'</span><strong>جلسه '+fa(s.id)+' · '+escapeText(s.title)+'</strong><p>'+escapeText(s.subtitle)+'</p><span class="course-card-bottom"><span>'+fa(s.sections.length)+' بخش</span><span>'+fa(c)+' مرورشده</span></span><span class="track"><span style="width:'+(100*c/s.sections.length)+'%"></span></span></span></button>'}).join("");E("courseGrid").innerHTML=out}
 function renderSession(n){var s=session(n),state=courseState();E("sessionKicker").textContent="جلسه "+fa(n)+" · "+fa(s.sections.length)+" بخش";E("sessionTitle").textContent="جلسه "+fa(n)+" · "+s.title;E("sessionSubtitle").textContent=s.subtitle;E("sessionOutput").textContent=s.output;E("lessonList").innerHTML=s.sections.map(function(x,i){var d=state.done.has(doneKey(n,x.id));return '<button type="button" class="lesson-card" data-lesson="'+escapeText(x.id)+'"><span class="lesson-number">'+fa(i+1)+'</span><span class="lesson-text"><strong>'+escapeText(x.title)+'</strong><small>'+(d?'✓ مرورشده':'ورود به درس و تمرین')+'</small></span><span class="lesson-arrow" aria-hidden="true">←</span></button>'}).join("")}
 function contentUrl(s,p){var u=new URL("index.html",base);u.hash="s/"+s+"/"+p;return u}
 function studioUrl(tab){var u=new URL("leadership-studio.html",base);u.hash=tab;return u}
+
+/* Keep a single page scroll, never a small scrolling document nested inside another. */
+function sizeEmbedded(frame,kind){
+ var doc;try{doc=frame.contentDocument;if(!doc||!doc.body)return}catch(e){return}
+ var style=doc.getElementById("saba-embed-premium");
+ if(!style){style=doc.createElement("style");style.id="saba-embed-premium";
+ style.textContent='html,body{min-height:0!important;height:auto!important;overflow:visible!important;scroll-behavior:auto!important}body{font-size:18px!important;line-height:1.85!important;color:#19364f!important;background:#fff!important}.app,.layout,#main,.main,.pane{min-height:0!important;height:auto!important;max-width:none!important}h1{font-size:clamp(27px,5vw,35px)!important;line-height:1.5!important}h2{font-size:clamp(22px,4vw,27px)!important;line-height:1.55!important}h3{font-size:20px!important}p,.dimension>p,.lesson-block p,.role-card p{font-size:17px!important;line-height:1.9!important}label,summary{font-size:17px!important;font-weight:700!important}input,textarea,select,button,.btn{font-size:17px!important;min-height:48px!important;border-radius:13px!important}small,.muted,.method-note,.field-hint{font-size:14px!important;line-height:1.8!important}.dimension,.card,.practice-tool,.lesson-block,.note-panel{border-radius:16px!important;border-color:#dce7f0!important}.studio-workbar{position:relative!important;top:auto!important}.site-header,.site-footer,.sidebar,.mobile-menu,.scrim,.skip-link{display:none!important}@media(max-width:700px){#main,.main,.pane{padding:12px 12px 38px!important}h1{font-size:28px!important}.context-group{margin:0!important}.point-inputs{gap:12px!important}input,textarea,select{font-size:17px!important}}';
+ doc.head.appendChild(style)}
+ if(kind==="studio"){doc.body.classList.add("saba-embedded-studio");if(!doc.getElementById("saba-embed-studio-style")){var st=doc.createElement("style");st.id="saba-embed-studio-style";st.textContent='body.saba-embedded-studio .top{display:none!important}body.saba-embedded-studio .main{padding-top:8px!important}body.saba-embedded-studio .studio-workbar{margin:7px 0 15px!important}';doc.head.appendChild(st)}}
+ var update=function(){try{var h=Math.ceil(doc.body.scrollHeight||0)+28;if(h>200&&h<28000)frame.style.height=Math.max(460,h)+"px"}catch(e){}};
+ update();
+ if(frame.__sabaObserver)try{frame.__sabaObserver.disconnect()}catch(e){}
+ if(window.ResizeObserver){frame.__sabaObserver=new ResizeObserver(update);frame.__sabaObserver.observe(doc.body)}
+ doc.addEventListener("input",update);
+ doc.addEventListener("click",function(){window.requestAnimationFrame(update)});
+ window.requestAnimationFrame(update);
+}
 var contextLast="";
 function setContext(){var u=new URL("index.html",base);u.hash="context";if(contextLast!==u.href){contextLast=u.href;E("contextLoader").hidden=false;contextFrame.src=u.href}}
 contextFrame.addEventListener("load",function(){
  E("contextLoader").hidden=true;
+ sizeEmbedded(contextFrame,"context");
  try{var doc=contextFrame.contentDocument;if(!doc)return;
  var style=doc.getElementById("saba-context-embedded");if(!style){style=doc.createElement("style");style.id="saba-context-embedded";
  style.textContent='html,body{background:#fff!important}body{font-size:16px!important;line-height:1.9!important}.site-header,.site-footer,.sidebar,.mobile-menu,.scrim,.skip-link{display:none!important}.layout,.layout.with-sidebar{display:block!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:none!important}#main{width:100%!important;max-width:none!important;margin:0!important;padding:12px 16px 40px!important;min-width:0!important}.page-header h1{font-size:27px!important}.practice-tool{padding:16px!important}@media(max-width:650px){#main{padding:8px!important}.practice-tool{padding:12px!important}}';
@@ -67,7 +113,7 @@ function setModelNavOpen(open,restoreFocus){
  else if(restoreFocus&&button)button.focus();
 }
 function highlightModelNav(r){
- var active=r.page==="context"?"context":
+ var active=r.page==="context"?"context":r.page==="stage"?r.stage:
  (r.page==="reader"&&r.s===5&&r.p==="mix")?"idea":
  (r.page==="reader"&&r.s===7&&r.p==="perspectives")?"relationship":
  (r.page==="reader"&&r.s===8&&r.p==="design")?"tools":
@@ -81,9 +127,9 @@ E("modelNavToggle").addEventListener("click",function(){setModelNavOpen(!documen
 E("modelNavClose").addEventListener("click",function(){setModelNavOpen(false,true);});
 E("modelNavScrim").addEventListener("click",function(){setModelNavOpen(false,true);});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("model-nav-open"))setModelNavOpen(false,true);});
-function render(){var r=route();var gam=globalThis.SabaGamification?.collect();if(E("globalScore")&&gam)E("globalScore").innerHTML="⭐ <span>"+fa(gam.annualScore)+" امتیاز · "+escapeText(gam.level)+"</span>";if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);highlightModelNav(r);document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");if(r.page==="home")renderHome();if(r.page==="coach")syncCoachTeams();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
-courseFrame.addEventListener("load",function(){courseReady=true;try{courseLast=courseFrame.contentWindow.location.href}catch(e){}injectCourseStyles();E("courseLoader").hidden=true});
-studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=studioFrame.contentWindow.location.href}catch(e){}E("studioLoader").hidden=true});
+function render(){var r=route();var gam=globalThis.SabaGamification?.collect();if(E("globalScore")&&gam)E("globalScore").innerHTML="⭐ <span>"+fa(gam.annualScore)+" امتیاز · "+escapeText(gam.level)+"</span>";if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);highlightModelNav(r);document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");if(r.page==="home")renderHome();if(r.page==="stage")renderStage(r.stage);if(r.page==="coach")syncCoachTeams();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
+courseFrame.addEventListener("load",function(){courseReady=true;try{courseLast=courseFrame.contentWindow.location.href}catch(e){}injectCourseStyles();E("courseLoader").hidden=true;sizeEmbedded(courseFrame,"course")});
+studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=studioFrame.contentWindow.location.href}catch(e){}E("studioLoader").hidden=true;sizeEmbedded(studioFrame,"studio")});
 document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.nav)})});
 document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);go(b.dataset.go)})});
 E("futureCoachEntry").addEventListener("click",function(){go("coach")});
@@ -92,6 +138,8 @@ E("futureCoachBack").addEventListener("click",function(){go("home")});
 
 E("courseGrid").addEventListener("click",function(e){var a=e.target.closest("[data-session]");if(a)go("session/"+a.dataset.session)});
 E("sessionBack").addEventListener("click",function(){go("course")});
+E("stageBack").addEventListener("click",function(){go("home")});
+E("stageActionList").addEventListener("click",function(e){var b=e.target.closest("[data-go-stage]");if(b)go(b.dataset.goStage)});
 E("lessonList").addEventListener("click",function(e){var b=e.target.closest("[data-lesson]"),r=route();if(b&&r.page==="session")openLesson(r.s,b.dataset.lesson)});
 E("readerBack").addEventListener("click",function(){var r=route();if(r.page==="reader")go("session/"+r.s)});
 E("lessonChips").addEventListener("click",function(e){var b=e.target.closest("[data-part]"),r=route();if(b&&r.page==="reader")openLesson(r.s,b.dataset.part)});
