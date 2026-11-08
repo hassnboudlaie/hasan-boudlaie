@@ -21,7 +21,8 @@ for(let i=0;i<12;i++){
    const lines=c[index].split("|");assert.equal(lines.length,6,"Six alternated speaker turns per pass");
    for(const line of lines) assert(line.trim().length>=18,"Substantive complete utterance");
  }
- for(const index of [2,3,6,7,8,9]) assert(c[index].trim().length>=15,"Role-specific scenario guidance");
+ for(const index of [2,6,7,8,9]) assert(c[index].trim().length>=15,"Role-specific scenario guidance");
+ assert(c[3].trim().length>=6,"Skill name");
  assert(b.manager&&b.partner,"Both persona briefs");
  assert(b.manager.name&&b.manager.goal&&b.manager.act&&b.partner.name&&b.partner.goal&&b.partner.act,"Role actions");
  assert(Array.isArray(b.rules)&&b.rules.length>=2,"Per-case instructor rules");
