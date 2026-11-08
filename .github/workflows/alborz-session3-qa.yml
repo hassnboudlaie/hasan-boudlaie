@@ -1,0 +1,26 @@
+name: Alborz Session 3 Content QA
+on:
+  push:
+    paths:
+      - 'alborz-communication-skills/session3-listening-lab.js'
+      - 'alborz-communication-skills/index.html'
+      - 'scripts/verify-alborz-session3.cjs'
+      - '.github/workflows/alborz-session3-qa.yml'
+  pull_request:
+    paths:
+      - 'alborz-communication-skills/session3-listening-lab.js'
+      - 'alborz-communication-skills/index.html'
+      - 'scripts/verify-alborz-session3.cjs'
+      - '.github/workflows/alborz-session3-qa.yml'
+jobs:
+  static-session3-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse isolated session 3 JavaScript
+        run: node --check alborz-communication-skills/session3-listening-lab.js
+      - name: Verify scenario library and instructor steps
+        run: node scripts/verify-alborz-session3.cjs
