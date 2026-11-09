@@ -41,7 +41,6 @@ Deno.serve(async req=>{
   if(!body||Array.isArray(body)||typeof body!=='object')return respond({error:'Invalid request'},400,origin);
   const normalizeDigits=s=>s.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632));
   const token=typeof body.code==='string'?normalizeDigits(body.code.trim().toLowerCase()):'';
-  const instructorProof=typeof body.instructorProof==='string'?body.instructorProof.trim().toLowerCase():'';
   const ip=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'unknown';
   const ipHash=await hash(ip);
   if(!await db('rpc/alborz_rate_limit',{p_bucket:'ip:'+ipHash,p_limit:1200}))return respond({error:'کمی بعد دوباره تلاش کنید'},429,origin);
@@ -49,26 +48,24 @@ Deno.serve(async req=>{
   if(/^\d{10}$/.test(token)){
    if(body.action!=='login')return respond({error:'ابتدا وارد شوید'},401,origin);
    if(!validNational(token))return respond({error:'کد ملی معتبر نیست؛ عدد ده‌رقمی را بررسی کنید.'},400,origin);
-   if(instructorProof){
-    // National ID is an identity label, never a standalone instructor credential.
-    if(!/^[a-f0-9]{24}$/.test(instructorProof))return respond({error:'کد تأیید مدرس نامعتبر است'},401,origin);
-    if(!await gate('instructor-ip:'+ipHash,12,900)||!await gate('instructor-global',60,86400))return respond({error:'تلاش‌های ورود مدرس زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
-    const proofDigest=await hash(instructorProof);
-    const proof=(await db('alborz_access_keys?secret_hash=eq.'+proofDigest+'&access_role=eq.teacher&select=access_role,expires_at,revoked&limit=1'))?.[0];
-    if(!proof||proof.revoked||Date.parse(proof.expires_at)<=Date.now())return respond({error:'اطلاعات ورود مدرس معتبر نیست'},401,origin);
-    const authorized=await db('rpc/alborz_claim_instructor_national',{p_national:token});
-    if(authorized!==true)return respond({error:'این کد ملی برای مدرس ثبت نشده است'},403,origin);
+   // The private bcrypt instructor record determines role; no second login code is required.
+   const isInstructor=await db('rpc/alborz_verify_instructor_national',{p_national:token});
+   if(isInstructor===true){
+    if(!await gate('instructor-ip:'+ipHash,12,900)||!await gate('instructor-global',60,86400))
+     return respond({error:'تلاش‌های ورود مدرس زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
     session=randomSession();digest=await hash(session);
     const expiresAt=new Date(Date.now()+12*3600000).toISOString();
     await db('alborz_access_keys',{secret_hash:digest,access_role:'teacher',team_no:null,member_no:null,expires_at:expiresAt,revoked:false});
     permission={access_role:'teacher',team_no:null,member_no:null,expires_at:expiresAt,revoked:false};
    }else{
-    const existingInstructor=await db('rpc/alborz_verify_instructor_national',{p_national:token});
-    if(existingInstructor===true)return respond({error:'برای ورود مدرس، صفحه مخصوص مدرس و کد تأیید را باز کنید.'},403,origin);
-    if(!await gate('national-ip:'+ipHash,60,900)||!await gate('national-global',200,86400))return respond({error:'تلاش‌های ورود زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
+    // Attempting the instructor screen with a participant ID never occupies a seat.
+    if(body.instructorView===true)return respond({error:'این کد ملی برای مدرس تعریف نشده است.'},403,origin);
+    if(!await gate('national-ip:'+ipHash,60,900)||!await gate('national-global',200,86400))
+     return respond({error:'تلاش‌های ورود زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
     digest=await nationalHash(token);
     const seats=await db('rpc/alborz_enroll_national',{p_digest:digest});
-    if(!Array.isArray(seats)||seats.length!==1||!Number.isInteger(seats[0].team_no)||!Number.isInteger(seats[0].member_no))throw Error('National registration failed');
+    if(!Array.isArray(seats)||seats.length!==1||!Number.isInteger(seats[0].team_no)||!Number.isInteger(seats[0].member_no))
+     throw Error('National registration failed');
     session=randomSession();
     const expiresAt=new Date(Date.now()+12*3600000).toISOString();
     await db('alborz_national_sessions',{digest:await hash(session),national_digest:digest,expires_at:expiresAt});
