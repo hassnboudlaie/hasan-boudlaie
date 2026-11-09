@@ -55,7 +55,8 @@ Deno.serve(async req=>{
      return respond({error:'تلاش‌های ورود مدرس زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
     session=randomSession();digest=await hash(session);
     const expiresAt=new Date(Date.now()+12*3600000).toISOString();
-    await db('alborz_access_keys',{secret_hash:digest,access_role:'teacher',team_no:null,member_no:null,expires_at:expiresAt,revoked:false});
+    const rotated=await db('rpc/alborz_rotate_teacher_session',{p_digest:digest,p_expires_at:expiresAt});
+    if(rotated!==true)throw Error('Instructor session could not be rotated');
     permission={access_role:'teacher',team_no:null,member_no:null,expires_at:expiresAt,revoked:false};
    }else{
     // Attempting the instructor screen with a participant ID never occupies a seat.

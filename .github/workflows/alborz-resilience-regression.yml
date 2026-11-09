@@ -19,6 +19,8 @@ on:
       - 'scripts/alborz-instructor-journey-qa.cjs'
       - 'scripts/alborz-classroom-flow-qa.cjs'
       - 'scripts/alborz-national-id-api-qa.py'
+      - 'scripts/alborz-teacher-session-rotation-qa.cjs'
+      - 'alborz-backend/teacher-session-rotation.sql'
       - 'alborz-backend/index.ts'
       - 'scripts/alborz-resilience-browser-qa.mjs'
       - '.github/workflows/alborz-resilience-regression.yml'
@@ -42,9 +44,12 @@ jobs:
           node --check scripts/alborz-four-hour-qa.cjs
           node --check scripts/alborz-instructor-journey-qa.cjs
           node --check scripts/alborz-classroom-flow-qa.cjs
+          node --check scripts/alborz-teacher-session-rotation-qa.cjs
           node --check alborz-communication-skills/claims-presentation.js
           node --check scripts/alborz-presentation-qa.cjs
           node --check scripts/alborz-resilience-browser-qa.mjs
+      - name: Check teacher session rotation contract
+        run: node scripts/alborz-teacher-session-rotation-qa.cjs
       - name: Check national-ID API without creating participant accounts
         run: python3 scripts/alborz-national-id-api-qa.py
       - name: Install browser
