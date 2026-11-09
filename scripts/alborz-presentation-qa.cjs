@@ -37,30 +37,21 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.getByText('Presentation Mode', {exact:false}).count(), 0);
     assert.equal(await page.getByText('برنامه هشت‌ساعته', {exact:true}).count(), 0);
     assert.equal(await page.getByText('کنداکتور برنامه', {exact:true}).count(), 1);
-    assert.equal(await page.locator('.workshop-hero .strategy-card[data-strategy]').count(), 4, 'four clickable animal strategy cards');
-    for (const animal of ['camel', 'salmon', 'chameleon', 'octopus']) {
-      await page.locator('.workshop-hero .strategy-card[data-strategy="' + animal + '"]').click();
-      const modal = page.locator('dialog.alborz-strategy-dialog');
-      assert.equal(await modal.isVisible(), true, 'animal opens its own strategy details');
-      await modal.getByRole('tab', {name:'درس‌نامه'}).click();
-      assert.equal(await modal.getByText('۱. مفهوم و منطق راهبرد').count(), 1, 'numbered lesson opens');
-      await modal.getByRole('tab', {name:'اجرای مأموریت'}).click();
-      const teacherEntry = modal.locator('a.sd-entry-teacher[href*="teacher=1"][href*="mission=' + animal + '"]');
-      const expertEntry = modal.locator('a.sd-entry-participant[href*="mission=' + animal + '"]');
-      assert.equal(await teacherEntry.count(), 1, 'instructor entry matches chosen strategy');
-      assert.equal(await expertEntry.count(), 1, 'expert entry matches chosen strategy');
-      assert.match(await teacherEntry.innerText(), /سناریوی «.+»/, 'teacher button uses actual scenario title');
-      assert.equal(await expertEntry.getAttribute('href'), './resilience.html?classroom=1&mission=' + animal,
-        'expert preserves chosen scenario through PIN login');
-      await modal.locator('[data-close-strategy]').click();
-      assert.equal(await modal.isVisible(), false);
-    }
+    assert.equal(await page.locator('.workshop-hero .strategy-card').count(), 4, 'four informational strategies remain visible');
+    assert.equal(await page.locator('.workshop-hero .strategy-card[role="button"],.workshop-hero .strategy-card[data-strategy],dialog.alborz-strategy-dialog').count(), 0,
+      'removed duplicate clickable lesson and mission route from the homepage');
+    await page.getByRole('button', {name:'کنداکتور برنامه'}).click();
+    assert.match(await page.locator('.panel h2').first().innerText(), /کنداکتور کارگاه/);
+    assert.equal(await page.locator('.role-entry-link').count(), 2, 'guided workshop has separate instructor and expert entrances');
+    assert.equal(await page.locator('.role-entry-link[href="./resilience.html?classroom=1"]').count(), 1, 'one expert route');
+    assert.equal(await page.locator('.role-entry-link[href*="teacher=1"]').count(), 1, 'one instructor route');
+    await page.locator('#homeBtn').click();
     assert.equal(await page.getByText('سناریوی پایانی مشترک', {exact:true}).count(), 0);
     assert.equal(await page.locator('.home-actions a[href*="claims-presentation"]').count(), 0,
       'weak presentation feature no longer competes with the four strategies');
     assert.equal(await page.locator('.mod-art').count(), 0, 'old three-module cards removed from homepage');
     assert.equal(await page.locator('section.grid3[aria-label="بخش‌های کارگاه"]').count(), 0,
-      'all course entry is through the four strategies');
+      'home has no competing module entry');
     assert.equal(await page.locator('.workshop-hero .strategy-card').count(), 4,
       'only four strategy cards remain');
     await page.route('**/functions/v1/alborz-workshop-sync', async route => {
