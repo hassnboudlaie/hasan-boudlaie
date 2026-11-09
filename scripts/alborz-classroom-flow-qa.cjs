@@ -178,6 +178,7 @@ const server=http.createServer((req,res)=>{
    await expert1.waitForFunction(j=>document.querySelector('[data-class-rubric="'+j+'"]')?.value==='2',j);
   }
   assert.equal(get(1,'r0score0')?.field_value,'2','observer score shared with instructor backend');
+  await expert1.waitForFunction(()=>document.querySelector('.mastery-score')?.textContent.includes('۱۰ از ۱۰'),null,{timeout:12000});
   assert.match(await expert1.locator('.mastery-score').innerText(),/۱۰ از ۱۰/,'sum of five team criteria reported');
   await expert1.locator('[data-class-answer="evidence"]').fill('مشاهده شد که کارشناس زمان پیگیری روشن اعلام کرد.');
   await expert1.locator('[data-class-save="evidence"]').click();
