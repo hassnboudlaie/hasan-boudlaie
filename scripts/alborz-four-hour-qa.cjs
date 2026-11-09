@@ -106,7 +106,7 @@ const server=require('node:http').createServer((req,res)=>{
   assert.equal(await p.locator('.twist').count(),1,'scenario surprise present');
   await p.locator('[data-field="r0revision"]').fill('پس از شوک، اولویت پرونده‌ها را تغییر می‌دهیم اما کنترل مدارک حفظ می‌شود.');
   await p.locator('[data-mission-next]').click();
-  assert.match(await p.locator('#mission-progress-text').innerText(),/بازخورد و نتیجه/);
+  assert.match(await p.locator('#mission-progress-text').innerText(),/نتیجه و اقدام عملی/);
   assert.equal(await p.locator('h3.shared-flow-heading:visible').count(),1,'still only one visible phase after reveal');
   const promise=p.waitForEvent('download');await p.locator('[data-action="export"]').first().click();
   assert.equal((await promise).suggestedFilename(),'alborz-group-1.txt');
