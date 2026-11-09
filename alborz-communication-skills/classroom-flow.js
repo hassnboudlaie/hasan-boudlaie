@@ -12,7 +12,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false;
+let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -139,6 +139,7 @@ function missionRoster(){
 }
 function chooseMission(){
  const team=identity.team,selected=groupChoice(team);
+ if(selected!==null){consensusDraft=null;consensusAgreed=false;}
  return simpleTitle('مرحله انتخاب مأموریت','انتخاب مأموریت با توافق اعضای گروه','چهار مأموریت باز هستند؛ گروه شما یکی را انتخاب می‌کند. ابتدا گفت‌وگو کنید، بعد فقط یک نفر به نمایندگی ثبت نهایی کند.')+
  consensusProcess()+missionCards('group',team)+
  (selected!==null?
@@ -244,6 +245,7 @@ function ending(){
 }
 
 function render(force=false){
+ if(classroomRound!==consensusRound){consensusRound=classroomRound;consensusDraft=null;consensusAgreed=false;previewDraft=null;}
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
