@@ -24,7 +24,7 @@ const server=http.createServer((req,res)=>{
    let result,status=200;
    if(action==='login'){
     const role=String(token).includes('teacher')||String(token)==='aaaaaaaaaaaaaaaaaaaaaaaa'?'teacher':'team';
-    const team=String(token).includes('22222222')||String(token).includes('session-2')?2:1;
+    const team=String(token).includes('9876543210')||String(token).includes('session-2')?2:1;
     result={identity:role==='teacher'?{role:'teacher',team:null,member:null}:{role:'team',team,member:1},session:role==='teacher'?'session-teacher':'session-'+team};
    }else if(action==='teacher'){result={records:records(null)};}
    else if(action==='read'){result={records:records(req.team),classroom:{phase:get(1,'classroomPhase')?.field_value??0,version:get(1,'classroomPhase')?.version??0,round:get(1,'classroomRound')?.field_value??0}};}
@@ -71,12 +71,12 @@ const server=http.createServer((req,res)=>{
   await enter(teacher,'resilience.html?classroom=1&teacher=1&mission=camel','aaaaaaaaaaaaaaaaaaaaaaaa');
   await teacher.locator('.classroom-team-row').first().waitFor();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'instructor starts with team formation');
-  await enter(expert1,'resilience.html?classroom=1&mission=camel','11111111');
+  await enter(expert1,'resilience.html?classroom=1&mission=camel','1234567891');
   await expert1.waitForURL('**/resilience.html?classroom=1&group=1&mission=camel');
   await expert1.locator('[data-class-checkin]').click();
   await expert1.locator('[data-class-checkin]:disabled').waitFor();
   assert.equal(get(1,'checkin1')?.field_value,true,'member 1 checked into group 1');
-  await enter(expert2,'resilience.html?classroom=1&mission=chameleon','22222222');
+  await enter(expert2,'resilience.html?classroom=1&mission=chameleon','9876543210');
   await expert2.waitForURL('**/resilience.html?classroom=1&group=2&mission=chameleon');
   await expert2.locator('[data-class-checkin]').click();
   await expert2.locator('[data-class-checkin]:disabled').waitFor();
@@ -205,7 +205,7 @@ const server=http.createServer((req,res)=>{
   assert.equal(data.size,0,'reset clears only workshop data and returns to team formation');
   assert.equal(await teacher.locator('#live-join').count(),0,'instructor remains authenticated after resetting only workshop data');
   assert.deepEqual(errors,[],'no browser exceptions in coordinated classroom');
-  console.log('PASS guided classroom '+width+'px: roster 3/6, PIN mapping, teacher progress, independent groups, decision & feedback sync, new round');
+  console.log('PASS guided classroom '+width+'px: roster 3/6, national-code group mapping, teacher progress, independent groups, decision & feedback sync, new round');
   await ctx.close();
  }
  await browser.close();server.close();
