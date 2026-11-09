@@ -168,6 +168,8 @@ const server=http.createServer((req,res)=>{
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/جمع‌بندی/);
   assert.equal(get(1,'classroomPhase').field_value,10,'one independent group mission completes first two-hour module');
+  await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله ۱۱'));
+
   assert.equal(await teacher.locator('[data-class-next]').isDisabled(),true,'teacher stops after one guided mission');
   assert.match(await teacher.locator('[data-class-next]').innerText(),/بخش تاب‌آوری کامل شد/,'no forced second mission round');
   assert(nextCalls>=10,'server-controlled step changes saved across all phones');
