@@ -99,6 +99,7 @@ let appState={page:'home',module:null,tab:'intro',caseId:null,quiz:{},obs:{},evi
 try{const s=JSON.parse(localStorage.getItem(STORE)||'{}');appState={...appState,assessment:s.assessment||{},quiz:s.quiz||{},obs:s.obs||{},evidence:s.evidence||{},team:s.team||1}}catch(e){}
 function persist(){try{localStorage.setItem(STORE,JSON.stringify({assessment:appState.assessment,quiz:appState.quiz,obs:appState.obs,evidence:appState.evidence,team:appState.team}))}catch(e){}}
 const E=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fa=n=>Number(n).toLocaleString('fa-IR');
 function go(page,extra={}){if(page==='module'&&extra.module==='resilience'&&extra.tab==='intro'){location.href='./resilience.html';return;}Object.assign(appState,{page},extra);render();window.scrollTo({top:0,behavior:'instant'})}
 function mod(){return DATA.modules.find(x=>x.id===appState.module)}
 function btn(label,fn,cls=''){return `<button class="btn ${cls}" onclick="${fn}">${E(label)}</button>`}
