@@ -144,10 +144,22 @@ function teacherStep(){
 function monitorAllGroups(){
  const list=groups().filter(t=>confirmed(t)||attendance(t)||groupChoice(t)!==null);
  if(!list.length)return '<p class="classroom-empty">هنوز گروهی فعالیتی ثبت نکرده است.</p>';
- return '<div class="classroom-monitor-list">'+list.map(t=>{const i=groupChoice(t),p=i===null?'':String(i);
- const initial=i===null?'':val(t,'r'+p+'initial'),revision=i===null?'':val(t,'r'+p+'revision');
- return '<details><summary><strong>گروه '+fa(t)+'</strong><span>'+(i===null?'بدون مأموریت':animals[i]+' '+labels[i])+'</span><small>'+(initial?'تصمیم اول ✓':'تصمیم اول ○')+' · '+(revision?'اصلاح ✓':'اصلاح ○')+'</small></summary><p><b>تصمیم اولیه:</b> '+formatText(initial)+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(revision)+'</p></details>';}).join('')+'</div>';
+ return '<div class="classroom-monitor-list">'+list.map(t=>{
+  const i=groupChoice(t),p=i===null?'':String(i),prefix='r'+p;
+  const initial=i===null?'':val(t,prefix+'initial'),revision=i===null?'':val(t,prefix+'revision');
+  const scores=i===null?[]:Array.from({length:5},(_,j)=>val(t,prefix+'score'+j));
+  const complete=scores.length===5&&scores.every(v=>['0','1','2'].includes(v));
+  const score=complete?scores.reduce((n,v)=>n+Number(v),0):null;
+  const voices=i===null?[]:Array.from({length:5},(_,j)=>val(t,prefix+'member'+(j+1))).filter(v=>typeof v==='string'&&v.trim());
+  const rubric=i===null?[]:C.mastery[i].observer;
+  return '<details><summary><strong>گروه '+fa(t)+'</strong><span>'+(i===null?'بدون مأموریت':animals[i]+' '+labels[i])+'</span><small>'+(initial?'تصمیم اول ✓':'تصمیم اول ○')+' · '+(revision?'اصلاح ✓':'اصلاح ○')+' · '+(complete?'بازخورد '+fa(score)+'/۱۰':'بازخورد در انتظار')+'</small></summary>'+
+  '<p><b>تصمیم اولیه:</b> '+formatText(initial)+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(revision)+'</p>'+
+  (complete?'<p><b>ارزیابی رفتاری گروه:</b> '+fa(score)+' از ۱۰ · صرفاً برای یادگیری، نه ارزیابی فردی</p><ol>'+rubric.map((r,j)=>'<li>'+E(r.criterion)+': '+fa(Number(scores[j]))+' از ۲</li>').join('')+'</ol>':'<p>پنج معیار اختصاصی مشاهده‌گر هنوز کامل نشده‌اند.</p>')+
+  '<p><b>شواهد رفتاری ثبت‌شده:</b> '+fa(voices.length)+' عضو</p>'+
+  (voices.length?'<ul>'+voices.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul>':'')+'</details>';
+ }).join('')+'</div>';
 }
+
 function learnerMission(){
  const team=identity.team,i=groupChoice(team);
  if(i===null)return simpleTitle('یک انتخاب باقی مانده','گروه هنوز مأموریت ندارد','هم‌اکنون یکی از چهار مأموریت را انتخاب کنید تا به گام جاری کلاس برسید.')+chooseMission();
