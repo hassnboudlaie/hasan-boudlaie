@@ -18,6 +18,8 @@ on:
       - 'scripts/alborz-four-hour-qa.cjs'
       - 'scripts/alborz-instructor-journey-qa.cjs'
       - 'scripts/alborz-classroom-flow-qa.cjs'
+      - 'scripts/alborz-national-id-api-qa.py'
+      - 'alborz-backend/index.ts'
       - 'scripts/alborz-resilience-browser-qa.mjs'
       - '.github/workflows/alborz-resilience-regression.yml'
   workflow_dispatch:
@@ -43,6 +45,8 @@ jobs:
           node --check alborz-communication-skills/claims-presentation.js
           node --check scripts/alborz-presentation-qa.cjs
           node --check scripts/alborz-resilience-browser-qa.mjs
+      - name: Check national-ID API without creating participant accounts
+        run: python3 scripts/alborz-national-id-api-qa.py
       - name: Install browser
         run: |
           npm install --no-save playwright@1.56.1
