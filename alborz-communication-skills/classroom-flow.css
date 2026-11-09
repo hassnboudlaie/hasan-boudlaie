@@ -133,3 +133,28 @@
 .classroom-reset .btn{background:#fff;color:#873b36;border:1px solid #ccaba7}
 .classroom-reset .btn:hover{background:#fff1ef}
 @media(max-width:650px){.classroom-ready-action{padding:14px;display:block}.classroom-ready-action .btn{width:100%;font-size:18px}.classroom-ready-action p{margin-top:10px}.classroom-controls-note{line-height:1.6}}
+
+
+/* One shared clickable eleven-step roadmap; visible first for teacher and participants. */
+.classroom-map{padding:clamp(14px,3vw,28px);border:1px solid #c9dde2;border-radius:21px;background:linear-gradient(140deg,#f9fcfc,#f0f7f4)}
+.classroom-map-intro>span{display:block;color:#28715f;font-size:15px;font-weight:850}
+.classroom-map-intro h2{font-size:clamp(26px,3.8vw,35px);line-height:1.45;color:#104f55;margin:7px 0}
+.classroom-map-intro p{font-size:clamp(16px,1.8vw,19px);line-height:1.9;color:#335d65;margin:0 0 16px}
+.classroom-map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.classroom-map-card{border:1.5px solid #c8dce0;border-radius:16px;background:#fff;color:#173d49;display:flex;gap:13px;align-items:center;text-align:right;min-height:92px;padding:13px 16px;cursor:pointer;line-height:1.55}
+.classroom-map-card:hover,.classroom-map-card:focus-visible{border-color:#0e8571;outline-offset:2px}
+.classroom-map-card.active{background:#e7f6ef;border-color:#108068;box-shadow:0 0 0 2px #10907422}
+.classroom-map-card.complete{background:#f4f9f7;border-color:#abd3c3}
+.classroom-map-num{display:grid;place-items:center;width:44px;height:44px;flex:0 0 44px;background:#e2f0f1;border-radius:13px;font-weight:900;font-size:23px}
+.classroom-map-card.active .classroom-map-num{background:#0b6959;color:#fff}
+.classroom-map-details{min-width:0;display:flex;flex-direction:column;gap:3px}
+.classroom-map-details strong{font-size:clamp(16px,2vw,20px);font-weight:850;line-height:1.5}
+.classroom-map-details small{font-size:14px;color:#326b65;font-weight:800}
+.classroom-map-details em{font-size:13px;color:#50666a;font-style:normal}
+.classroom-map-preview{background:#fff8eb;border:1px solid #e8cd9f;border-radius:15px;padding:16px 18px;margin-top:15px}
+.classroom-map-preview h3{font-size:19px;color:#74511c;margin:0 0 6px}
+.classroom-map-preview p{font-size:16px;line-height:1.9;margin:0}
+.classroom-map-return{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:#f4faf8;border:1px solid #cfdfd9;border-radius:15px;padding:11px 15px;margin:12px 0}
+.classroom-map-return>span{font-size:17px;font-weight:800;color:#155a51}
+.classroom-map-return .btn{min-height:44px}
+@media(max-width:700px){.classroom-map{padding:15px}.classroom-map-grid{grid-template-columns:1fr;gap:9px}.classroom-map-card{padding:12px 13px;min-height:78px}.classroom-map-num{width:39px;height:39px;flex-basis:39px;font-size:20px}.classroom-map-details em{font-size:13px}}
