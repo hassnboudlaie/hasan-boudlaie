@@ -233,3 +233,32 @@
  .mastery-lesson summary,.mastery-person summary,.mastery-scene summary{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){.mastery-answer{transition:none}}
+
+
+/* Instructor preview, one-time assessment, and ten-question resilience exam */
+.classroom-preview-banner{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:17px 20px;margin:12px 0 18px;border:2px solid #54849a;border-radius:17px;background:#eff7fa;line-height:1.85}
+.classroom-preview-banner strong{font-size:19px;color:#074963}
+.classroom-preview-banner span{flex:1;min-width:200px;font-size:16px;color:#3a5c6b}
+.one-time-assessment .one-assessment-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.one-assessment-items label{display:flex;flex-direction:column;gap:10px;border:1px solid #d2e4e4;background:#fff;border-radius:14px;padding:15px}
+.one-assessment-items strong{font-size:17px;font-weight:700;line-height:1.9}
+.one-assessment-items select{min-height:48px;max-width:100%;border:1px solid #afc9d1;background:#fff;border-radius:11px;padding:8px 12px;font-size:17px}
+.mastery-one-status,.professional-progress{font-size:17px;font-weight:800;color:#0c5e57;padding:12px 15px;background:#ecf7f1;border-radius:12px}
+.professional-question{margin:18px 0;padding:19px;border:1px solid #bdd5d8;border-radius:18px;background:#fff}
+.professional-question h4{font-size:20px;line-height:1.8;color:#093f56;margin:0 0 13px}
+.professional-facts{padding:14px 20px;background:#f3f7f8;border-radius:13px;margin:12px 0}
+.professional-facts strong{font-size:18px;color:#305665}
+.professional-facts ul{padding:0 26px 0 8px;margin:7px 0}
+.professional-facts li{font-size:17px;line-height:1.9;margin:6px 0}
+.professional-explanation:not(:empty){border-right:4px solid #2e8670;background:#edf7f1;border-radius:12px;padding:15px 17px;margin:15px 0}
+.professional-explanation strong{font-size:18px;color:#125d4c}
+.professional-explanation p{font-size:16px;line-height:1.95;margin:8px 0}
+.mastery-final-analysis{background:#eaf5f1;border-right:4px solid #1e7d65;border-radius:15px;margin-top:20px;padding:17px 22px}
+.mastery-final-analysis h4{font-size:22px;margin:0 0 8px;color:#0c5748}
+.mastery-final-analysis p{font-size:18px;line-height:2;margin:0;color:#1b4d3e}
+.classroom-stage-progress{margin:8px 0 20px;padding:10px 15px;background:#f0f7f9;border-radius:13px;font-size:16px;display:flex;align-items:center;gap:13px}
+.classroom-stage-progress meter{flex:1;height:13px;accent-color:#167e6d}
+.classroom-completion-badge{padding:17px 21px;background:linear-gradient(135deg,#f2faec,#dcefdc);border:1px solid #b8d5b9;border-radius:16px;margin:17px 0}
+.classroom-completion-badge h3{font-size:23px;line-height:1.7;color:#235d38;margin:0}
+.classroom-completion-badge p{font-size:17px;line-height:1.9;margin:6px 0}
+@media(max-width:760px){.one-time-assessment .one-assessment-items{grid-template-columns:1fr}.professional-question{padding:14px}.professional-question h4{font-size:19px}.professional-facts{padding:12px}.classroom-preview-banner{flex-direction:column;align-items:stretch}.classroom-preview-banner span{min-width:0}}
