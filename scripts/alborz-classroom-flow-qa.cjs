@@ -72,6 +72,18 @@ const server=http.createServer((req,res)=>{
   await enter(teacher,'resilience.html?classroom=1&teacher=1&mission=camel',String(0).repeat(10));
   await teacher.locator('.classroom-team-row').first().waitFor();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'instructor starts with team formation');
+  await teacher.locator('[data-class-overview]').click();
+  assert.equal(await teacher.locator('[data-class-open]').count(),11,'all eleven stage cards visible to instructor');
+  await teacher.locator('[data-class-open="10"]').click();
+  assert.match(await teacher.locator('.classroom-preview-banner').innerText(),/پیش‌نمایش مستقل گام ۱۱/);
+  assert.equal(await teacher.locator('[data-class-next]').count(),0,'preview has no live advance button');
+  assert.equal(get(1,'classroomPhase'),undefined,'preview did not mutate live phase');
+  await teacher.locator('[data-class-overview]').click();
+  await teacher.locator('[data-class-open="1"]').click();
+  assert.equal(await teacher.locator('.professional-question').count(),10,'future quiz review before formation');
+  await teacher.locator('[data-class-return-live]').click();
+  assert.equal(await teacher.locator('.classroom-team-row').count(),10,'teacher returns to active formation');
+
   await enter(expert1,'resilience.html?classroom=1&mission=camel','0001000012');
   await expert1.waitForURL('**/resilience.html?classroom=1&group=1&mission=camel');
   await expert1.locator('[data-class-checkin]').click();
@@ -97,10 +109,12 @@ const server=http.createServer((req,res)=>{
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/چهار راهبرد/,'participants see same class phase');
   assert.equal(await expert1.locator('.mastery-lesson').count(),4,'all four extended strategy lessons exist in the live learning path');
-  await expert1.locator('.mastery-lesson').nth(1).evaluate(el=>el.open=true);
-  await expert1.locator('[data-class-quiz="1"][data-class-quiz-option="0"]').click();
-  assert.equal(await expert1.locator('[data-master-feedback="1"] p').count(),3,'three individualized explanations after a diagnostic choice');
-  assert.match(await expert1.locator('[data-master-feedback="1"]').innerText(),/کسب‌وکار مستقل|کسب‌وکار تازه/,'corporate innovation is not a simple SMS tweak');
+  assert.equal(await expert1.locator('.professional-question').count(),10,'ten professional questions');
+  assert.equal(await expert1.locator('select[data-class-single-assessment]').count(),6,'single six-item assessment');
+  await expert1.locator('select[data-class-single-assessment="0"]').selectOption('3');
+  await expert1.locator('[data-professional-answer="0"][data-professional-option="1"]').click();
+  assert.equal(await expert1.locator('[data-professional-explanation="0"] p').count(),3,'separate rationales for all options');
+  assert.equal(await expert1.locator('[data-class-quiz]').count(),0,'obsolete mini quizzes removed');
 
   await teacher.locator('[data-class-next]').click();
   await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('انتخاب مأموریت'));
@@ -133,9 +147,10 @@ const server=http.createServer((req,res)=>{
     assert.match(await expert1.locator('.mastery-person').first().innerText(),/هدف من|نگرانی من|لحن و رفتار/);
    }
    if(phase===5){
-    assert.equal(await expert1.locator('.mastery-scene').count(),3,'initial, revised and analyzed conversations are separate');
-    assert(await expert1.locator('.mastery-turn').count()>=16,'two full multi-person dialogues with at least sixteen turns');
-    assert.equal(await expert1.locator('.mastery-analysis article').count(),3,'three teachable skill moments per scenario');
+    assert.equal(await expert1.locator('.mastery-scene').count(),0,'two-round structure removed');
+    assert(await expert1.locator('.mastery-turn').count()>=8,'one complete scenario dialogue');
+    assert.equal(await expert1.locator('.mastery-final-analysis').count(),1,'single final analysis');
+    assert.equal(await expert1.locator('.mastery-observer').count(),0,'observer checklist removed');
    }
   }
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/انتخاب و تصمیم اولیه/);
@@ -173,19 +188,12 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-next]').click();
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   await expert2.evaluate(()=>window.AlborzLive.refresh());
-  assert.equal(await expert1.locator('select[data-class-rubric]').count(),5,'five evidence-anchored team observer ratings');
-  for(let j=0;j<5;j++){
-   await expert1.locator('[data-class-rubric="'+j+'"]').selectOption('2');
-   await expert1.waitForFunction(j=>document.querySelector('[data-class-rubric="'+j+'"]')?.value==='2',j);
-  }
-  assert.equal(get(1,'r0score0')?.field_value,'2','observer score shared with instructor backend');
-  await expert1.waitForFunction(()=>document.querySelector('.mastery-score')?.textContent.includes('۱۰ از ۱۰'),null,{timeout:12000});
-  assert.match(await expert1.locator('.mastery-score').innerText(),/۱۰ از ۱۰/,'sum of five team criteria reported');
-  await expert1.locator('[data-class-answer="evidence"]').fill('مشاهده شد که کارشناس زمان پیگیری روشن اعلام کرد.');
+  assert.equal(await expert1.locator('select[data-class-rubric]').count(),0,'observer checklist removed');
+  await expert1.locator('[data-class-answer="evidence"]').fill('گروه نتیجه گرفت اطلاع‌رسانی روشن و ثبت مجاز را حفظ کند.');
   await expert1.locator('[data-class-save="evidence"]').click();
   await expert1.waitForFunction(()=>document.querySelector('.classroom-input textarea')?.value?.length>0);
-  assert.match(get(1,'r0member1').field_value,/مشاهده شد/);
-  await expert2.locator('[data-class-answer="evidence"]').fill('مشاهده شد که همکار معیار پرونده کامل را به‌وضوح توضیح داد.');
+  assert.match(get(1,'r0member1').field_value,/گروه نتیجه گرفت/);
+  await expert2.locator('[data-class-answer="evidence"]').fill('گروه نتیجه گرفت مالک پرونده و معیار مشترک را تعیین کند.');
   await expert2.locator('[data-class-save="evidence"]').click();
   await expert2.waitForFunction(()=>document.querySelector('[data-class-answer="evidence"]')?.value?.length>0);
   await markReady();
