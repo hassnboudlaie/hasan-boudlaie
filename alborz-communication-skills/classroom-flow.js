@@ -12,14 +12,14 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0;
+let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
 function version(team,key){return rec(team,key)?.version??0;}
 function groupChoice(team){const v=val(team,'missionChoice');return Number(val(team,'missionChoiceRound')??-1)===classroomRound&&Number.isInteger(v)&&v>=0&&v<=3?v:null;}
 function usedMissions(team){return Array.from({length:classroomRound},(_,i)=>val(team,'missionRound'+i)).filter(Number.isInteger);}
-function stepReady(team){return val(team,'classStepReady')===classroomRound+':'+stage;}
+function stepReady(team,phase=stage){return val(team,'classStepReady')===classroomRound+':'+phase;}
 function readiness(){const active=groups().filter(confirmed),ready=active.filter(stepReady),waiting=active.filter(t=>!stepReady(t));return {active,ready,waiting};}
 function size(team){const v=val(team,'groupSize');return [3,4,5].includes(v)?v:0;}
 function confirmed(team){return val(team,'groupReady')===true;}
@@ -53,16 +53,16 @@ function masteryTalk(i){
 const singleAnswers=Object.create(null);
 function assessmentKey(){return 'alborz-reflection-once-v1-'+(identity?.role==='team'?'group'+identity.team+'member'+identity.member:'instructor');}
 function assessmentValues(){try{return JSON.parse(sessionStorage.getItem(assessmentKey())||'{}')}catch{return {}}}
-function oneTimeAssessment(){
+function oneTimeAssessment(neutral=false){
  const labels=['در فشار، قبل از واکنش مسئله را دقیق تشخیص می‌دهم.','وعده خارج از اختیار نمی‌دهم و زمان پیگیری روشن ارائه می‌کنم.','اختلال موقت را از نقص ساختاری روش کار تمیز می‌دهم.','در پیشنهاد خدمت جدید، مجوز و فرضیه پرداخت را بررسی می‌کنم.','هنگام محدودیت منابع، اولویت را شفاف و قابل دفاع بیان می‌کنم.','پس از اتفاق غیرمنتظره، تصمیمم را بر اساس شاهد تازه اصلاح می‌کنم.'];
- const saved=assessmentValues(),count=labels.filter((_,i)=>Number(saved[i])>=1).length;
+ const saved=neutral?{}:assessmentValues(),count=labels.filter((_,i)=>Number(saved[i])>=1).length;
  return '<section class="mastery-lessons one-time-assessment"><h3>خودارزیابی من · فقط یک نوبت</h3><p>برای هر گزاره، رفتارتان در محیط کار را ارزیابی کنید. این یک ابزار یادگیری شخصی است؛ قبل/بعد و رتبه‌بندی افراد نداریم. پاسخ‌ها فقط روی همین دستگاه نگهداری می‌شوند.</p><div class="one-assessment-items">'+labels.map((q,i)=>'<label><strong>'+fa(i+1)+'. '+E(q)+'</strong><select data-class-single-assessment="'+i+'"><option value="">انتخاب کنید</option>'+[1,2,3,4].map(v=>'<option value="'+v+'" '+(Number(saved[i])===v?'selected':'')+'>'+fa(v)+' · '+['به‌ندرت','گاهی','اغلب','تقریباً همیشه'][v-1]+'</option>').join('')+'</select></label>').join('')+'</div><p class="mastery-one-status" role="status">'+(count===6?'هر شش گزاره ثبت شد. این ارزیابی یک‌نوبتی است.':'پاسخ ثبت‌شده: '+fa(count)+' از ۶')+'</p></section>';
 }
 const professionalAnswers=Object.create(null);
 function testKey(){return 'alborz-professional-ten-v1-'+(identity?.role==='team'?'group'+identity.team+'member'+identity.member:'instructor');}
 function testAnswers(){try{return JSON.parse(sessionStorage.getItem(testKey())||'{}')}catch{return {}}}
-function professionalTest(){
- const saved=testAnswers(),done=Object.keys(saved).filter(k=>C.professionalQuiz[Number(k)]).length;
+function professionalTest(neutral=false){
+ const saved=neutral?{}:testAnswers(),done=Object.keys(saved).filter(k=>C.professionalQuiz[Number(k)]).length;
  return '<section class="mastery-lessons professional-ten"><h3>آزمون حرفه‌ای · ۱۰ موقعیت تصمیم‌گیری</h3><p>هر سؤال چند مفروض مشخص دارد. یک تصمیم مناسب‌تر انتخاب کنید؛ سپس تحلیل مستقل تمام سه گزینه نمایش داده می‌شود. پاسخ را می‌توانید بازبینی کنید.</p><p class="professional-progress">پاسخ‌داده‌شده: '+fa(done)+' از ۱۰</p>'+
  C.professionalQuiz.map((q,i)=>'<article class="professional-question" data-professional-question="'+i+'"><h4>سؤال '+fa(i+1)+' · '+E(q.stem)+'</h4><div class="professional-facts"><strong>مفروضات مسئله</strong><ul>'+q.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul></div><div class="professional-options">'+q.options.map((o,j)=>'<button type="button" class="mastery-answer '+(saved[i]===j?'is-selected':'')+'" data-professional-answer="'+i+'" data-professional-option="'+j+'" aria-pressed="'+(saved[i]===j?'true':'false')+'">'+fa(j+1)+'. '+E(o.t)+'</button>').join('')+'</div><div class="professional-explanation" data-professional-explanation="'+i+'" aria-live="polite">'+(saved[i]!==undefined?professionalExplanation(i,saved[i]):'')+'</div></article>').join('')+'</section>';
 }
@@ -94,8 +94,8 @@ function rosterTeacher(){
  '<div class="classroom-team-list">'+groups().map(t=>{const n=size(t),c=attendance(t);return '<article class="classroom-team-row"><div><h3>گروه '+fa(t)+(confirmed(t)?'<small class="class-ready">آماده ✓</small>':'')+'</h3><p>'+fa(c)+' حضور ثبت‌شده · ظرفیت گروه: '+(n?fa(n):'هنوز مشخص نشده')+'</p>'+personDots(t)+'</div><label>ظرفیت گروه<select data-class-team-size="'+t+'"><option value="0" '+(!n&&!c?'selected':'')+'>فعال نیست</option>'+[3,4,5].map(v=>'<option value="'+v+'" '+(v===n||!n&&c>0&&v===Math.min(5,Math.max(3,c))?'selected':'')+'>'+fa(v)+' نفر</option>').join('')+'</select></label><button type="button" class="btn '+(confirmed(t)?'':'primary')+'" data-class-confirm="'+t+'">'+(confirmed(t)?'ثبت دوباره':'تأیید گروه')+'</button></article>';}).join('')+'</div>'+
  '<p class="classroom-footnote">برای هر گروه پنج جایگاه ثبت‌نام وجود دارد؛ مدرس می‌تواند با توجه به تعداد حاضران، گروه‌های سه تا پنج نفره را تأیید کند. ورود تکراری با همان کد ملی، همان گروه و همان شماره عضو را باز می‌کند.</p>';
 }
-function checkinParticipant(){
- const t=identity.team,m=identity.member,count=attendance(t),done=checkin(t,m);
+function checkinParticipant(t=identity.team,m=identity.member){
+ const count=attendance(t),done=checkin(t,m);
  return simpleTitle('مرحله ۱','گروه شما مشخص شد','نام گروه و شماره عضو هنگام ورود با کد ملی تعیین شده‌اند؛ لازم نیست گروه را دستی انتخاب کنی.')+
  '<div class="classroom-welcome"><div><small>شماره گروه</small><strong>'+fa(t)+'</strong></div><div><small>شماره عضو</small><strong>'+fa(m)+'</strong></div></div>'+
  '<div class="classroom-checkin"><h3>حضور خود را تأیید کن</h3><p>'+(done?'حضور تو ثبت شده است.':'پس از ورود، روی دکمه تأیید حضور بزن.')+'</p><button class="btn primary" data-class-checkin '+(done?'disabled':'')+'>'+(done?'حضور من ثبت شد ✓':'حضورم را تأیید می‌کنم')+'</button></div>'+
@@ -104,9 +104,9 @@ function checkinParticipant(){
 function strategyCards(){
  return '<div class="classroom-strategy-grid">'+C.models.map((m,i)=>'<article><span>'+m[0]+'</span><h3>'+E(m[1])+'</h3><strong>'+E(m[4])+'</strong><p>'+E(m[5])+'</p></article>').join('')+'</div>';
 }
-function strategyIntro(teacher){
+function strategyIntro(teacher,neutral=false){
  return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','این‌ها چهار انتخاب راهبردی‌اند؛ تیپ شخصیتی یا برچسب کارکنان نیستند.')+
- strategyCards()+masteryLessons()+oneTimeAssessment()+professionalTest()+
+ strategyCards()+masteryLessons()+oneTimeAssessment(neutral)+professionalTest(neutral)+
  '<p class="classroom-wait">'+(teacher?'چهار راهبرد، خودارزیابی یک‌نوبتی و آزمون ده‌سؤالی را مرور کن؛ سپس انتخاب مأموریت را آغاز کن.':'راهبردها، خودارزیابی یک‌نوبتی و ده سؤال حرفه‌ای را مرور کنید؛ سپس گروه خود مأموریتش را انتخاب می‌کند.')+'</p>';
 }
 function consensusProcess(){
@@ -137,9 +137,9 @@ function missionRoster(){
    (canReopen?'<button type="button" class="classroom-reopen-mission" data-class-reopen-mission="'+t+'">اصلاح انتخاب</button>':'')+'</div>';
  }).join('')+'</div>';
 }
-function chooseMission(){
- const team=identity.team,selected=groupChoice(team);
- if(selected!==null){consensusDraft=null;consensusAgreed=false;}
+function chooseMission(team=identity.team){
+ const selected=groupChoice(team);
+ if(selected!==null&&identity?.role==='team'){consensusDraft=null;consensusAgreed=false;}
  return simpleTitle('مرحله انتخاب مأموریت','انتخاب مأموریت با توافق اعضای گروه','چهار مأموریت باز هستند؛ گروه شما یکی را انتخاب می‌کند. ابتدا گفت‌وگو کنید، بعد فقط یک نفر به نمایندگی ثبت نهایی کند.')+
  consensusProcess()+missionCards('group',team)+
  (selected!==null?
@@ -212,10 +212,10 @@ function monitorAllGroups(){
   '<ul>'+results.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></details>';
  }).join('')+'</div>';
 }
-function learnerMission(){
- const team=identity.team,i=groupChoice(team);
- if(i===null)return simpleTitle('یک انتخاب باقی مانده','گروه هنوز مأموریت ندارد','هم‌اکنون یکی از چهار مأموریت را انتخاب کنید تا به گام جاری کلاس برسید.')+chooseMission();
- const n=stage-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],prefix='r'+i,member=identity.member;
+function learnerMission(team=identity.team,member=identity.member,phase=stage,sampleMission=null){
+ const i=groupChoice(team)??sampleMission;
+ if(i===null)return simpleTitle('یک انتخاب باقی مانده','گروه هنوز مأموریت ندارد','هم‌اکنون یکی از چهار مأموریت را انتخاب کنید تا به گام جاری کلاس برسید.')+chooseMission(team);
+ const n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],prefix='r'+i;
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul><h3>پرسش گروه</h3><p>'+E(d.question)+'</p></div>';
@@ -226,7 +226,7 @@ function learnerMission(){
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
  if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">نتیجه تیم و یک اقدام واقعی برای محیط خسارت را کوتاه بنویسید.</p><label class="classroom-input"><span>نتیجه و اقدام من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="از این مأموریت چه نتیجه‌ای گرفتید؟ فردا چه اقدامی انجام می‌دهید؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت نتیجه من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
- return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team)?'disabled':'')+'>'+(stepReady(team)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
+ return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team,phase)?'disabled':'')+'>'+(stepReady(team,phase)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
 }
 function missionMilestones(team){
  const i=groupChoice(team);
@@ -239,9 +239,44 @@ function missionBadge(team){
  if(i===null||!flags.every(Boolean))return '';
  return '<section class="classroom-completion-badge"><h3>🏅 نشان گروه · '+animals[i]+' '+labels[i]+'</h3><p>مأموریت انتخاب و انجام شد؛ تصمیم اولیه، اصلاح تصمیم و نتیجه کاربردی ثبت شده‌اند. این نشان برای تکمیل مسیر یادگیری است، نه رتبه‌بندی کارکنان.</p></section>';
 }
-function ending(){
+function ending(team=identity.team,asParticipant=false){
  return simpleTitle('جمع‌بندی','از این مأموریت چه یاد گرفتیم؟','گروه‌ها تجربه، تصمیم و نکته قابل انتقال به محیط خسارت را با هم مرور می‌کنند.')+
- (identity.role==='teacher'?'<p class="classroom-prompt">نتیجه هر گروه و یک اقدام عملی برای کار روزمره را جمع‌بندی کن.</p>'+monitorAllGroups():'<p class="classroom-prompt">یک نتیجه و یک اقدام قابل اجرا برای محیط خسارت با خود ببرید. ادامه دوره در بخش مستقل مدیریت خشم است.</p>'+missionBadge(identity.team));
+ (identity.role==='teacher'&&!asParticipant?'<p class="classroom-prompt">نتیجه هر گروه و یک اقدام عملی برای کار روزمره را جمع‌بندی کن.</p>'+monitorAllGroups():'<p class="classroom-prompt">یک نتیجه و یک اقدام قابل اجرا برای محیط خسارت با خود ببرید. ادامه دوره در بخش مستقل مدیریت خشم است.</p>'+missionBadge(team));
+}
+
+function projectedParticipantContent(team,member,phase,sample){
+ if(phase===0)return checkinParticipant(team,member);
+ if(!confirmed(team)&&!sample)return simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و تعیین ظرفیت گروه، مدرس گروه را فعال می‌کند.')+personDots(team);
+ if(phase===1)return strategyIntro(false,true);
+ if(phase===2)return chooseMission(team);
+ if(phase<=9)return learnerMission(team,member,phase,sample?reference:null);
+ return ending(team,true);
+}
+function projectorPanel(phase){
+ const team=projectedTeam,member=projectedMember,realChoice=groupChoice(team),hasGroup=confirmed(team);
+ const sampleAvailable=!hasGroup&&phase>=1||realChoice===null&&phase>=3&&phase<=10;
+ const useSample=projectionSample&&sampleAvailable;
+ const selectedChoice=realChoice===null&&useSample?reference:realChoice;
+ const missionName=selectedChoice===null?'هنوز ثبت نشده':animals[selectedChoice]+' '+labels[selectedChoice];
+ const options=groups().map(t=>{
+  const chosen=groupChoice(t),people=attendance(t),ready=confirmed(t),label=chosen===null?'انتخاب نشده':animals[chosen]+' '+labels[chosen];
+  return '<button type="button" class="classroom-projector-team '+(t===team?'selected':'')+'" data-class-projection-team="'+t+'" aria-pressed="'+(t===team?'true':'false')+'"><strong>گروه '+fa(t)+'</strong><span>'+E(label)+'</span><small>'+fa(people)+' حضور · '+(ready?'تأیید شده':'در انتظار تأیید')+'</small></button>';
+ }).join('');
+ const members=Array.from({length:5},(_,j)=>'<button type="button" class="'+(member===j+1?'selected':'')+'" data-class-projection-member="'+(j+1)+'" aria-pressed="'+(member===j+1?'true':'false')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':'')+'</button>').join('');
+ const mustSample=realChoice===null&&!useSample&&phase>=3&&phase<=10;
+ let content=projectedParticipantContent(team,member,phase,useSample);
+ const scope=phase===1?'شش گزاره خودارزیابی و ده سؤال فردی فقط روی دستگاه هر کارشناس ذخیره می‌شوند؛ پاسخ‌های شخصی در پنل مدرس قابل مشاهده نیستند.':'محتوای صفحه و پاسخ‌های ثبت‌شده این گروه از اطلاعات مشترک کلاس نمایش داده می‌شوند. انتخاب‌های موقت و متن تایپ‌شده‌ای که هنوز ذخیره نشده‌اند روی دستگاه اعضا باقی می‌مانند.';
+ const bodyLabel=mustSample?'این گروه هنوز مأموریت ثبت نکرده است؛ نمای واقعی عضو در این گام، انتظار برای انتخاب مأموریت است.':'این بخش با استفاده از محتوای مشترک نمایش کارشناسان ساخته شده است.';
+ const ready=phase===stage&&phase>=3&&phase<=9?(stepReady(team)?'این گام را انجام داده‌اند ✓':'هنوز تکمیل گام را اعلام نکرده‌اند'):'مرحله واقعی کلاس: '+fa(stage+1)+' از ۱۱';
+ return '<section class="classroom-projector" aria-label="صفحه کارشناسان برای نمایش روی پرده">'+
+ '<div class="classroom-projector-head"><div><span>نمایش قابل‌اشتراک روی پرده · فقط خواندنی</span><h2>صفحه گروه '+fa(team)+' · گام '+fa(phase+1)+' از ۱۱</h2><p>مأموریت: <strong>'+E(missionName)+'</strong> · '+ready+'</p></div><span class="classroom-projector-status">'+(useSample?'نمونه فرضی · نه داده واقعی':hasGroup?'اطلاعات واقعی گروه':'گروه هنوز تأیید نشده')+'</span></div>'+
+ '<div class="classroom-projector-team-grid" aria-label="انتخاب گروه برای مشاهده">'+options+'</div>'+
+ '<div class="classroom-projector-member-picker"><span>نمای کدام عضو؟</span>'+members+'</div>'+
+ '<div class="classroom-projector-note"><strong>اطلاع مهم:</strong> '+E(scope)+'</div>'+
+ (sampleAvailable?'<div class="classroom-projector-demo-controls"><button type="button" class="btn" data-class-projection-sample>'+ (useSample?'بازگشت به وضعیت واقعی گروه':'نمایش نمونه آموزشی بدون ثبت مأموریت')+'</button>'+ (useSample?'<div class="classroom-teacher-switch">'+C.models.map((m,i)=>'<button type="button" class="'+(reference===i?'selected':'')+'" data-class-reference="'+i+'">'+m[0]+' '+E(m[1])+'</button>').join('')+'</div>':'')+'</div>':'')+
+ '<p class="classroom-projector-label">'+E(bodyLabel)+'</p>'+
+ '<div class="classroom-projection-body">'+content+'</div>'+
+ '<p class="classroom-projector-footer">این نما فقط برای مشاهده و پاسخ به پرسش‌هاست؛ نمی‌توان از آن حضور، انتخاب، آزمون یا تصمیم گروه را تغییر داد.</p></section>';
 }
 
 function render(force=false){
@@ -250,7 +285,7 @@ function render(force=false){
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
  const displayStage=teacher&&previewStep!==null?previewStep:stage,previewActive=teacher&&previewStep!==null;
- const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
+ const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
  needsRefresh=false;lastFingerprint=signature;
@@ -264,7 +299,8 @@ function render(force=false){
  '<div class="classroom-stage-progress" role="status"><span>پیشرفت کلاس: '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
  const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '';
  let content;
- if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
+ if(teacher&&projectionMode)content=projectorPanel(displayStage);
+ else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
  else if(!teacher&&!confirmed(identity.team))content=simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و اعلام تعداد افراد، مدرس گروه را فعال می‌کند. سپس همین صفحه به‌طور خودکار وارد گام جاری می‌شود.')+personDots(identity.team);
  else if(displayStage===1)content=strategyIntro(teacher);
  else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
@@ -272,8 +308,10 @@ function render(force=false){
  else content=ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
  const inStep=openStep===displayStage;
+ const viewSwitch=teacher&&inStep?'<nav class="classroom-view-switch" aria-label="نمای مخصوص مدرس یا گروه"><button type="button" class="'+(!projectionMode?'selected':'')+'" data-class-view="teacher" aria-pressed="'+(!projectionMode?'true':'false')+'">راهنمای مدرس</button><button type="button" class="'+(projectionMode?'selected':'')+'" data-class-view="participant" aria-pressed="'+(projectionMode?'true':'false')+'">نمایش صفحه گروه روی پرده</button></nav>':'';
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
- root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
+ root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
+ if(teacher&&projectionMode&&inStep)root.querySelectorAll('.classroom-projection-body input,.classroom-projection-body textarea,.classroom-projection-body select,.classroom-projection-body button').forEach(el=>{el.disabled=true;el.setAttribute('aria-disabled','true');});
 }
 async function execute(task){
  if(busy)return;busy=true;
@@ -306,6 +344,11 @@ root.addEventListener('change',event=>{
 });
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
+ if(btn.closest('.classroom-projection-body'))return;
+ if(btn.hasAttribute('data-class-view')){if(identity?.role!=='teacher')return;projectionMode=btn.dataset.classView==='participant';lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-projection-team')){if(identity?.role!=='teacher')return;const team=Number(btn.dataset.classProjectionTeam);if(!Number.isInteger(team)||team<1||team>10)return;projectedTeam=team;projectedMember=1;projectionSample=false;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-projection-member')){if(identity?.role!=='teacher')return;const member=Number(btn.dataset.classProjectionMember);if(!Number.isInteger(member)||member<1||member>5)return;projectedMember=member;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-projection-sample')){if(identity?.role!=='teacher')return;projectionSample=!projectionSample;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-professional-answer')){
   const i=Number(btn.dataset.professionalAnswer),j=Number(btn.dataset.professionalOption);
   if(!Number.isInteger(i)||i<0||i>9||!Number.isInteger(j)||j<0||j>2||!C.professionalQuiz[i])return;
