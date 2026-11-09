@@ -18,7 +18,11 @@ function panel(){let el=document.getElementById('live-panel');if(!el){el=documen
 function mount(){const el=panel();el.classList.toggle('live-authenticated',!!auth);
  if(classroom){
   if(!auth){
-   el.innerHTML='<div class="classroom-login"><h2>'+(teacher?'ورود مدرس':'ورود کارشناسان به کارگاه')+'</h2><p>'+(teacher?'کد مدرس را وارد کنید تا هدایت مرحله‌به‌مرحله کلاس فعال شود.':'کد ملی ده‌رقمی را وارد کنید؛ گروه و شماره عضو در اولین ورود خودکار تعیین می‌شود.')+'</p><label class="field"><span>'+(teacher?'کد اختصاصی مدرس':'کد ملی')+'</span><input id="live-code" type="'+(teacher?'password':'text')+'" autocomplete="off" maxlength="'+(teacher?24:10)+'" inputmode="'+(teacher?'text':'numeric')+'" dir="ltr" placeholder="'+(teacher?'کد مدرس':'کد ملی ۱۰ رقمی')+'"></label><button class="btn primary" id="live-join">ورود به کارگاه</button><p id="live-status" role="status"></p></div>';
+   el.innerHTML='<div class="classroom-login"><h2>'+(teacher?'ورود مدرس':'ورود کارشناسان به کارگاه')+'</h2>'+
+   '<p>'+(teacher?'کد ملی خودتان و کد تأیید امنیتی مدرس را وارد کنید؛ کد ملی به‌تنهایی دسترسی مدیریتی نمی‌دهد.':'کد ملی ده‌رقمی را وارد کنید؛ گروه و شماره عضو در اولین ورود خودکار تعیین می‌شود.')+'</p>'+
+   '<label class="field"><span>'+(teacher?'کد ملی مدرس':'کد ملی')+'</span><input id="live-code" type="text" inputmode="numeric" maxlength="10" autocomplete="off" dir="ltr" placeholder="کد ملی ۱۰ رقمی"></label>'+
+   (teacher?'<label class="field"><span>کد تأیید امنیتی مدرس</span><input id="live-instructor-proof" type="password" maxlength="24" autocomplete="off" dir="ltr" placeholder="کد اختصاصی مدرس"></label>':'')+
+   '<button class="btn primary" id="live-join">ورود به کارگاه</button><p id="live-status" role="status"></p></div>';
   }else{
    el.innerHTML='<div class="classroom-auth-line"><span>'+ (teacher?'🎓 مدرس · کنترل مراحل کلاس':'✅ گروه '+fa(auth.team)+' · عضو '+fa(auth.member))+'</span><button type="button" class="btn" id="live-logout">خروج</button></div><p id="live-status" class="classroom-connect-status" role="status"></p>';
   }
@@ -26,7 +30,12 @@ function mount(){const el=panel();el.classList.toggle('live-authenticated',!!aut
   window.dispatchEvent(new CustomEvent('alborz:classroom-auth',{detail:{connected:!!auth,identity:auth?{role:auth.role,team:auth.team,member:auth.member}:null}}));
   return;
  }
-if(!auth){el.innerHTML=`<h2>${teacher?'ورود مدرس':'ورود شرکت‌کننده'}</h2><p>${teacher?'برای دیدن راهنمای کامل چهار مأموریت و پیشرفت گروه‌ها، کد اختصاصی مدرس را وارد کنید.':'با کد ملی خود وصل شوید؛ گروه و شماره عضو در اولین ورود مشخص می‌شود.'}</p><label class="field"><span>${teacher?'کد اختصاصی مدرس':'کد ملی'}</span><input id="live-code" type="${teacher?'password':'text'}" autocomplete="off" maxlength="${teacher?24:10}" inputmode="${teacher?'text':'numeric'}" dir="ltr" placeholder="${teacher?'کد اختصاصی مدرس':'کد ملی ۱۰ رقمی'}"></label><button class="btn primary" id="live-join">اتصال</button><p id="live-status" role="status"></p><p class="small">پس از ورود، مدرس مراحل اجرا و پاسخ‌های گروه‌ها را می‌بیند؛ کارشناسان با کد ملی به گروه اختصاص‌یافته خود وصل می‌شوند.</p>`;}else{el.innerHTML=`<div class="navline"><h2>${teacher?'داشبورد زنده مدرس':'گروه '+fa(auth.team)+' · عضو '+fa(auth.member)}</h2><button class="btn" id="live-logout">خروج از اتصال</button></div><p id="live-status" role="status"></p><p class="small">برای دیده‌شدن پاسخ در پنل مدرس، کارشناسان «اشتراک با گروه» را می‌زنند. دریافت پاسخ‌ها خودکار است.</p>${teacher?'<div id="live-dashboard"></div>':'<button class="btn" id="live-stage">'+(W.step>=3&&W.step<=6?'اعلام شروع مأموریت '+fa(W.step-2)+' به مدرس':'اعلام حضور در بخش '+fa(W.step+1))+'</button><div id="live-members"></div>'}`;
+if(!auth){
+ el.innerHTML='<h2>'+(teacher?'ورود مدرس':'ورود شرکت‌کننده')+'</h2><p>'+(teacher?'برای ورود مدرس کد ملی خودتان و کد تأیید را وارد کنید.':'با کد ملی خود وارد شوید؛ گروه شما هنگام ورود مشخص می‌شود.')+'</p>'+
+ '<label class="field"><span>'+(teacher?'کد ملی مدرس':'کد ملی')+'</span><input id="live-code" type="text" inputmode="numeric" maxlength="10" autocomplete="off" dir="ltr" placeholder="کد ملی ۱۰ رقمی"></label>'+
+ (teacher?'<label class="field"><span>کد تأیید امنیتی مدرس</span><input id="live-instructor-proof" type="password" maxlength="24" autocomplete="off" dir="ltr" placeholder="کد اختصاصی مدرس"></label>':'')+
+ '<button class="btn primary" id="live-join">اتصال</button><p id="live-status" role="status"></p>';
+}else{el.innerHTML=`<div class="navline"><h2>${teacher?'داشبورد زنده مدرس':'گروه '+fa(auth.team)+' · عضو '+fa(auth.member)}</h2><button class="btn" id="live-logout">خروج از اتصال</button></div><p id="live-status" role="status"></p><p class="small">برای دیده‌شدن پاسخ در پنل مدرس، کارشناسان «اشتراک با گروه» را می‌زنند. دریافت پاسخ‌ها خودکار است.</p>${teacher?'<div id="live-dashboard"></div>':'<button class="btn" id="live-stage">'+(W.step>=3&&W.step<=6?'اعلام شروع مأموریت '+fa(W.step-2)+' به مدرس':'اعلام حضور در بخش '+fa(W.step+1))+'</button><div id="live-members"></div>'}`;
  if(teacher){for(const section of [...app.querySelectorAll('section.panel')])if(section!==el&&section.querySelector('h2')?.textContent.includes('جدول رقابت'))section.remove();showTeacher();}else{decorate();if(W.step>=3&&W.step<=6){const phase=W.currentPhase?.()??0;const stage=app.querySelector('#live-stage'),members=app.querySelector('#live-members');if(stage)stage.hidden=phase!==0;if(members)members.hidden=phase!==6;}}}
  message(statusText,statusBad);
 }
@@ -57,7 +66,7 @@ async function refresh(force=false){
   if(teacher)allRows=d.records;else records=Object.fromEntries(d.records.map(r=>[r.field_key,r]));
   window.dispatchEvent(new CustomEvent('alborz:classroom-data',{detail:{identity:{role:auth.role,team:auth.team,member:auth.member},records:d.records,classroom:d.classroom||null}}));
  }else if(teacher){allRows=d.records;showTeacher();}else applyRows(d.records);message('متصل · آخرین دریافت '+new Date().toLocaleTimeString('fa-IR')+(Object.keys(drafts).length?' · '+fa(Object.keys(drafts).length)+' تغییر هنوز اشتراک‌گذاری نشده':''));}catch(e){if(gen!==generation)return;message((e.status===401?'کد منقضی یا لغو شده؛ دوباره وارد شوید.':'ارتباط قطع است؛ پیش‌نویس شما حفظ شده است. ')+e.message,true);}finally{if(gen===generation)busy=false;}}
-async function join(code){try{const d=await request({action:'login'},code);const identity=d.identity;if(teacher?identity.role!=='teacher':identity.role!=='team')throw Error('این کد برای این صفحه یا گروه نیست.');auth={...identity,code:d.session||code};generation++;busy=false;try{sessionStorage.setItem(sessionKey,JSON.stringify(auth));if(!teacher&&!localStorage.getItem('alborz-offline-backup-'+W.group))localStorage.setItem('alborz-offline-backup-'+W.group,JSON.stringify(W.read()));}catch{}if(!teacher&&identity.team!==W.group){
+async function join(code,instructorProof=''){try{const payload={action:'login'};if(teacher&&/^\d{10}$/.test(code))payload.instructorProof=instructorProof;const d=await request(payload,code);const identity=d.identity;if(teacher?identity.role!=='teacher':identity.role!=='team')throw Error('این کد برای این صفحه یا گروه نیست.');auth={...identity,code:d.session||code};generation++;busy=false;try{sessionStorage.setItem(sessionKey,JSON.stringify(auth));if(!teacher&&!localStorage.getItem('alborz-offline-backup-'+W.group))localStorage.setItem('alborz-offline-backup-'+W.group,JSON.stringify(W.read()));}catch{}if(!teacher&&identity.team!==W.group){
  const missionQuery=requestedMission>=0?'&mission='+encodeURIComponent(params.get('mission')):'';
  location.replace(classroom?'resilience.html?classroom=1&group='+identity.team+missionQuery:'resilience.html?group='+identity.team+'&step='+(requestedMission>=0?requestedMission+3:0)+missionQuery);return;
 }mount();await refresh();clearInterval(timer);timer=setInterval(refresh,10000);}catch(e){message(e.message,true);}}
@@ -235,7 +244,7 @@ app.addEventListener('click',async e=>{
   }finally{b.disabled=false;}
   return;
  }
- if(b.id==='live-join'){b.disabled=true;await join(document.getElementById('live-code').value.trim().replace(/[۰-۹٠-٩]/g,c=>String(c.charCodeAt(0)-(c.charCodeAt(0)>=1776?1776:1632))).toLowerCase());b.disabled=false;}
+ if(b.id==='live-join'){b.disabled=true;await join(document.getElementById('live-code').value.trim().replace(/[۰-۹٠-٩]/g,c=>String(c.charCodeAt(0)-(c.charCodeAt(0)>=1776?1776:1632))).toLowerCase(),document.getElementById('live-instructor-proof')?.value?.trim()||'');b.disabled=false;}
  if(b.id==='live-logout')logout();
  if(b.id==='live-stage'){draft('stage',W.step);await publish('stage');}
  if(b.dataset.action==='reveal'&&auth){const k='r'+b.dataset.value+'reveal';if(W.read()[k])draft(k,true);decorate();}
