@@ -138,6 +138,18 @@ Deno.serve(async req=>{
    await db('alborz_team_fields?team_no=gte.1&team_no=lte.10',undefined,'DELETE');
    return respond({ok:true,reset:true},200,origin);
   }
+  // A group's consensus is final for this round; only its instructor may reopen it.
+  if(body.action==='reopenMission'){
+    if(identity.role!=='teacher')return respond({error:'فقط مدرس می‌تواند انتخاب گروه را باز کند'},403,origin);
+    const team=body.team;
+    if(!Number.isInteger(team)||team<1||team>10)return respond({error:'گروه نامعتبر است'},400,origin);
+    const stateRows=await db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomPhase,classroomRound)&select=field_key,field_value');
+    const state=Object.fromEntries((stateRows||[]).map(row=>[row.field_key,row.field_value]));
+    const phase=Number(state.classroomPhase??0),round=Number(state.classroomRound??0);
+    if(phase!==2||round<0||round>3)return respond({error:'اصلاح انتخاب فقط در گام سوم همان دور مجاز است'},409,origin);
+    await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionChoice,missionChoiceRound,missionRound'+round+')',undefined,'DELETE');
+    return respond({ok:true,reopened:true,team},200,origin);
+  }
   if(body.action==='groupSetup'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    const team=body.team,size=body.size;
@@ -173,6 +185,11 @@ Deno.serve(async req=>{
     const round=Number(state.classroomRound??0),phase=Number(state.classroomPhase??0);
     if(phase!==2||fields.missionChoiceRound!==round||fields['missionRound'+round]!==fields.missionChoice)return respond({error:'فقط در مرحله انتخاب و برای دور جاری می‌توان مأموریت تعیین کرد'},409,origin);
     if(entries.length!==3||entries.some(([key])=>!['missionChoice','missionChoiceRound','missionRound'+round].includes(key)))return respond({error:'فقط مأموریت همان دور قابل ثبت است'},400,origin);
+    const currentChoiceRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionChoice,missionChoiceRound,groupReady)&select=field_key,field_value');
+    const currentChoice=Object.fromEntries((currentChoiceRows||[]).map(row=>[row.field_key,row.field_value]));
+    if(currentChoice.groupReady!==true)return respond({error:'ابتدا مدرس باید گروه را تأیید کند'},409,origin);
+    if(currentChoice.missionChoiceRound===round&&Number.isInteger(currentChoice.missionChoice))
+      return respond({error:'انتخاب نهایی این گروه قبلاً ثبت شده است؛ برای اصلاح از مدرس بخواهید آن را باز کند.'},409,origin);
     const earlier=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionRound0,missionRound1,missionRound2,missionRound3)&select=field_key,field_value');
     if((earlier||[]).some(x=>Number(x.field_key.slice(-1))<round&&x.field_value===fields.missionChoice))return respond({error:'این مأموریت در دور قبلی اجرا شده است؛ یکی از راهبردهای دیگر را انتخاب کنید'},409,origin);
    }
