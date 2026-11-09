@@ -46,17 +46,17 @@ function simpleTitle(kicker,title,description){return '<div class="classroom-sec
 function personDots(team){return '<div class="classroom-member-dots">'+Array.from({length:5},(_,j)=>'<span class="'+(checkin(team,j+1)?'has-arrived':'')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':' ○')+'</span>').join('')+'</div>';}
 function rosterTeacher(){
  const ready=groups().filter(confirmed).length,attending=groups().reduce((n,t)=>n+attendance(t),0);
- return simpleTitle('مرحله شروع','گروه‌ها را آماده کنیم','کارشناسان با PIN وارد می‌شوند و حضور خود را ثبت می‌کنند. تعداد افراد حاضر را مشخص و هر گروه را تأیید کن.')+
- '<div class="classroom-stats"><span>'+fa(ready)+' گروه تأیید‌شده</span><span>'+fa(attending)+' عضو با PIN حاضر</span></div>'+
- '<div class="classroom-team-list">'+groups().map(t=>{const n=size(t),c=attendance(t);return '<article class="classroom-team-row"><div><h3>گروه '+fa(t)+(confirmed(t)?'<small class="class-ready">آماده ✓</small>':'')+'</h3><p>'+fa(c)+' حضور با PIN ثبت‌شده · تعداد اعلامی: '+(n?fa(n):'هنوز مشخص نشده')+'</p>'+personDots(t)+'</div><label>تعداد حاضر<select data-class-team-size="'+t+'"><option value="0" '+(!n?'selected':'')+'>فعال نیست</option>'+[3,4,5,6].map(v=>'<option value="'+v+'" '+(v===n?'selected':'')+'>'+fa(v)+' نفر</option>').join('')+'</select></label><button type="button" class="btn '+(confirmed(t)?'':'primary')+'" data-class-confirm="'+t+'">'+(confirmed(t)?'ثبت دوباره':'تأیید گروه')+'</button></article>';}).join('')+'</div>'+
- '<p class="classroom-footnote">اگر شش نفر در یک گروه هستند، تعداد حضور می‌تواند ۶ ثبت شود؛ اما کدهای فعلی حداکثر برای پنج عضو هر گروه صادر شده‌اند. نفر ششم می‌تواند در اجرای حضوری با دستگاه مشترک مشارکت کند؛ PIN ششمِ اختصاصی ایجاد نشده است.</p>';
+ return simpleTitle('مرحله شروع','گروه‌ها را آماده کنیم','کارشناسان با کد ملی وارد می‌شوند و به‌صورت خودکار در گروه‌های پنج‌نفره قرار می‌گیرند. پس از ثبت حضور، هر گروه را تأیید کن.')+
+ '<div class="classroom-stats"><span>'+fa(ready)+' گروه تأیید‌شده</span><span>'+fa(attending)+' عضو حاضر</span></div>'+
+ '<div class="classroom-team-list">'+groups().map(t=>{const n=size(t),c=attendance(t);return '<article class="classroom-team-row"><div><h3>گروه '+fa(t)+(confirmed(t)?'<small class="class-ready">آماده ✓</small>':'')+'</h3><p>'+fa(c)+' حضور ثبت‌شده · ظرفیت گروه: '+(n?fa(n):'هنوز مشخص نشده')+'</p>'+personDots(t)+'</div><label>ظرفیت گروه<select data-class-team-size="'+t+'"><option value="0" '+(!n&&!c?'selected':'')+'>فعال نیست</option>'+[5].map(v=>'<option value="'+v+'" '+(v===n||!n&&c>0?'selected':'')+'>'+fa(v)+' نفر</option>').join('')+'</select></label><button type="button" class="btn '+(confirmed(t)?'':'primary')+'" data-class-confirm="'+t+'">'+(confirmed(t)?'ثبت دوباره':'تأیید گروه')+'</button></article>';}).join('')+'</div>'+
+ '<p class="classroom-footnote">هر گروه پنج جایگاه اختصاصی دارد. ورود تکراری با همان کد ملی، همان گروه و همان شماره عضو را باز می‌کند.</p>';
 }
 function checkinParticipant(){
  const t=identity.team,m=identity.member,count=attendance(t),done=checkin(t,m);
- return simpleTitle('مرحله ۱','گروه شما مشخص شد','نام گروه و شماره عضو از روی PIN تعیین شده‌اند؛ لازم نیست گروه را دستی انتخاب کنی.')+
+ return simpleTitle('مرحله ۱','گروه شما مشخص شد','نام گروه و شماره عضو هنگام ورود با کد ملی تعیین شده‌اند؛ لازم نیست گروه را دستی انتخاب کنی.')+
  '<div class="classroom-welcome"><div><small>شماره گروه</small><strong>'+fa(t)+'</strong></div><div><small>شماره عضو</small><strong>'+fa(m)+'</strong></div></div>'+
  '<div class="classroom-checkin"><h3>حضور خود را تأیید کن</h3><p>'+(done?'حضور تو ثبت شده است.':'پس از ورود، روی دکمه تأیید حضور بزن.')+'</p><button class="btn primary" data-class-checkin '+(done?'disabled':'')+'>'+(done?'حضور من ثبت شد ✓':'حضورم را تأیید می‌کنم')+'</button></div>'+
- personDots(t)+'<p class="classroom-wait">'+fa(count)+' عضو با PIN حضورشان را ثبت کرده‌اند. '+(confirmed(t)?'مدرس این گروه را تأیید کرده است.':'منتظر تأیید تشکیل گروه توسط مدرس بمانید.')+'</p>';
+ personDots(t)+'<p class="classroom-wait">'+fa(count)+' عضو حضورشان را ثبت کرده‌اند. '+(confirmed(t)?'مدرس این گروه را تأیید کرده است.':'منتظر تأیید تشکیل گروه توسط مدرس بمانید.')+'</p>';
 }
 function strategyCards(){
  return '<div class="classroom-strategy-grid">'+C.models.map((m,i)=>'<article><span>'+m[0]+'</span><h3>'+E(m[1])+'</h3><strong>'+E(m[4])+'</strong><p>'+E(m[5])+'</p></article>').join('')+'</div>';
@@ -147,7 +147,7 @@ function ending(){
 }
 function render(force=false){
  if(!root)return;
- if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد اختصاصی وارد کارگاه شوید.</p>';lastFingerprint='';return;}
+ if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی (کارشناسان) یا کد اختصاصی مدرس وارد کارگاه شوید.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
  const signature=String(stage)+'/'+String(classroomRound)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
  if(!force&&signature===lastFingerprint)return;
@@ -168,7 +168,7 @@ function render(force=false){
  else if(stage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(stage<=9)content=teacher?teacherStep():learnerMission();
  else content=ending();
- const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. کدهای ورود و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
+ const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
  const inStep=openStep===stage;
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(stage+1)+' از ۱۱ · '+E(names[stage])+'</span></nav>':'';
  root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
@@ -190,8 +190,8 @@ root.addEventListener('click',event=>{
  if(btn.hasAttribute('data-class-open')){const n=Number(btn.dataset.classOpen);if(!Number.isInteger(n)||n<0||n>10)return;if(n===stage){openStep=stage;previewStep=null;}else{previewStep=n;openStep=null;}lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-checkin')){const key='checkin'+identity.member;execute(()=>saveFields({[key]:true}));return;}
  if(btn.dataset.classConfirm){const team=Number(btn.dataset.classConfirm),node=root.querySelector('[data-class-team-size="'+team+'"]'),size=Number(node?.value||0);
-   if(![0,3,4,5,6].includes(size))return alertUser('تعداد حاضر باید ۳ تا ۶ یا غیرفعال باشد.',true);
-   if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو با PIN حضورش را ثبت کند.',true);
+   if(![0,5].includes(size))return alertUser('ظرفیت هر گروه ۵ نفر است؛ برای غیرفعال‌کردن گروه عدد صفر را انتخاب کنید.',true);
+   if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو حضورش را ثبت کند.',true);
    execute(()=>L.request({action:'groupSetup',team,size}));return;
  }
  if(btn.dataset.classMission){const choice=Number(btn.dataset.classMission);if(choice<0||choice>3||usedMissions(identity.team).includes(choice))return alertUser('این مأموریت قبلاً اجرا شده؛ لطفاً یک راهبرد دیگر انتخاب کنید.',true);execute(()=>saveFields({missionChoice:choice,missionChoiceRound:classroomRound,['missionRound'+classroomRound]:choice}));return;}
@@ -208,7 +208,7 @@ root.addEventListener('click',event=>{
   if(identity.role!=='teacher')return;
   const word=window.prompt('برای پاک‌کردن داده‌های کارگاه و بازگشت به مرحله اول، عبارت «شروع تازه» را وارد کنید:');
   if(word!=='شروع تازه')return;
-  if(!window.confirm('تمام حضورها، انتخاب مأموریت‌ها و پاسخ‌های فعلی این کارگاه حذف می‌شوند. PINها باقی می‌مانند. مطمئن هستید؟'))return;
+  if(!window.confirm('تمام حضورها، انتخاب مأموریت‌ها و پاسخ‌های فعلی این کارگاه حذف می‌شوند. عضویت افراد با کد ملی حفظ می‌شود. مطمئن هستید؟'))return;
   execute(()=>L.request({action:'resetClassroom',confirm:'RESET_ALBORZ_WORKSHOP'}));return;
  }
  if(btn.dataset.classReference){reference=Number(btn.dataset.classReference);lastFingerprint='';render(true);return;}
