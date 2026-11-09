@@ -7,43 +7,38 @@ const moduleSource=fs.readFileSync(require('node:path').join(root,'alborz-commun
 const modelSource=fs.readFileSync(require('node:path').join(root,'alborz-communication-skills/resilience-game.js'),'utf8');
 function section(source,a,b){const x=source.indexOf(a),y=source.indexOf(b,x+a.length);assert(x>=0&&y>x,'content markers must exist');return source.slice(x+a.length,y).trim().replace(/;\\s*$/,'');}
 const courseData=JSON.parse(section(moduleSource,'const DATA=',';\nconst STORE='));
-const packs=JSON.parse(section(modelSource,'const mastery=',';\nconst rubric='));
+const packs=JSON.parse(section(modelSource,'const mastery=',';\nconst professionalQuiz='));
+const quizBank=JSON.parse(section(modelSource,'const professionalQuiz=',';\nconst rubric='));
+assert.equal(quizBank.length,10,'exactly ten professional resilience questions');
+assert(quizBank.every(q=>q.facts.length>=2&&q.options.length===3&&q.options.filter(o=>o.correct).length===1),'each question has case premises and one preferred option');
 assert.equal(packs.length,4,'four complete strategy mastery packs');
 const expected=['شتر','ماهی آزاد','آفتاب‌پرست','اختاپوس'];
 for(let i=0;i<packs.length;i++){
  const m=packs[i];
  assert.equal(m.people.length,5,expected[i]+' has five named, purpose-driven actors');
  assert(m.people.every(p=>p.name&&p.role&&p.goal&&p.concern&&p.style&&p.cue),'each actor has goal, concern and voice');
- assert(m.before.length>=8&&m.after.length>=8,'two complete dialogues have eight or more turns');
- assert(m.before.concat(m.after).every(t=>Number.isInteger(t.p)&&t.p>=0&&t.p<5&&t.t.length>15),'all turns belong to real actors');
+ assert(m.after.length>=8,'one fully developed live dialogue per strategy');
+ assert(m.after.every(t=>Number.isInteger(t.p)&&t.p>=0&&t.p<5&&t.t.length>15),'all turns have named actors');
  assert.equal(new Set(m.after.map(t=>t.p)).size,5,'all five roles contribute to improved dialogue');
- assert(m.moments.length>=3&&m.moments.every(x=>x.why&&x.weak&&x.better),'observable skill moments explain change');
- assert.equal(m.observer.length,5,'mission-specific five-item observer rubric');
- assert(m.observer.every(x=>x.criterion&&x.evidence&&x.risk),'rubric has evidence anchor and risk');
  assert(m.lesson.definition&&m.lesson.boundary&&m.lesson.condition&&m.lesson.actions.length===3&&m.lesson.takeaway,'scientifically bounded teachable lesson');
- assert.equal(m.quickCheck.options.length,3,'each strategy has a formative three-option diagnostic');
- assert.equal(m.quickCheck.options.filter(o=>o.correct).length,1,'only one preferred option');
- assert(m.quickCheck.options.every(o=>o.why.length>20),'independent reasoning for every answer');
 }
 assert.equal(courseData.modules.length,3,'three independent course pillars');
 const allCases=courseData.modules.flatMap(x=>x.cases);
 assert.equal(allCases.length,12);
 for(const c of allCases){
  assert.equal(c.roles.length,5,'five role descriptions for '+c.id);
- assert(c.dialogue.length>=5&&c.dialogueAfter.length>=8,'two read-aloud dialogue rounds for '+c.id);
- assert(c.executionGuide.first&&c.executionGuide.second&&c.executionGuide.feedback,'two-round facilitation prompts for '+c.id);
- assert(c.observerCues.length>=3,'case-specific observer criteria for '+c.id);
+ assert(c.dialogueAfter.length>=8,'one full natural dialogue for '+c.id);
+ assert(c.analysis&&c.analysis.length>=70,'single final analysis for '+c.id);
  assert.equal(c.options.filter(x=>x[2]).length,1,'one better decision for '+c.id);
 }
 assert(/خدمت مستقل|کسب‌وکار تازه/.test(courseData.modules[0].cases[1].context),'salmon must create a separate business');
 assert(/خدمت مستقل|کسب‌وکار تازه/.test(courseData.modules[0].cases[3].context),'octopus must add an independent business');
-assert(/مدل درآمدی جداگانه/.test(courseData.quizzes.resilience[1].q),'salmon item must assess separate revenue model');
-assert(/مدل درآمدی مستقل/.test(courseData.quizzes.resilience[3].q),'octopus item must assess dual transformation');
+assert(courseData.quizzes.resilience.some(q=>/مدل درآمد|خدمت مستقل/.test(q.q)),'resilience tests cover a separate business model');
 for(const [key,qs] of Object.entries(courseData.quizzes)){
- assert.equal(qs.length,4,key+' includes four decisions');
- for(const q of qs){assert.equal(q.a.length,3);assert(q.a.every(x=>x[1].length>17),'every option has independent reasoning');}
+ assert.equal(qs.length,10,key+' includes ten scenario questions');
+ for(const q of qs){assert.equal(q.a.length,3);assert(q.a.every(x=>x[1].length>25),'each option has an explicit explanation');}
 }
-console.log('PASS content-contract: 4 rigorous strategy lessons, 20 named roles, eight complete live dialogues, 12 revised case dialogues, 20 rubric indicators and independently reasoned decisions');
+console.log('PASS content-contract: 4 strategy lessons, 20 characters, 4 complete live dialogs, 12 single-case dialogs, 10 questions per module, option-level reasoning and final analyses');
 const server=require('node:http').createServer((req,res)=>{
  const target=require('node:path').resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));
  if(!target.startsWith(root+'/')){res.writeHead(403);res.end();return;}
@@ -63,11 +58,11 @@ const server=require('node:http').createServer((req,res)=>{
   assert.equal(await p.locator('.module-path-card').count(),3,'three independent clickable course pillars');
   await p.locator('.module-path-card').nth(1).click();
   assert.match(await p.locator('.panel.intro h1').innerText(),/مدیریت خشم/,'anger content reachable');
-  assert.equal(await p.locator('.tabs button').count(),6,'anger shows learning, assessment, cases, quiz, role-play and observer');
+  assert.equal(await p.locator('.tabs button').count(),5,'observer tab removed; five instructional tabs remain');
   await p.getByRole('button',{name:'آزمون'}).click();
-  assert.equal(await p.locator('[id^="q-"]').count(),4,'anger decision quiz has four questions');
+  assert.equal(await p.locator('[id^="q-"]').count(),10,'anger decision quiz contains ten questions');
   await p.locator('#q-0 button.choice').first().click();
-  assert.equal(await p.locator('#q-0 .feedback').count(),3,'each anger option has an independent rationale');
+  assert.equal(await p.locator('#q-0 .professional-explanation p').count(),3,'each anger option has an independent rationale');
   await p.getByRole('button',{name:'خانه · سه بخش آموزشی'}).click();
   await p.locator('.module-path-card').nth(2).click();
   assert.match(await p.locator('.panel.intro h1').innerText(),/جرأت‌ورزی/,'assertiveness content reachable');
