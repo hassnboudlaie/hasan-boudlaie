@@ -6,7 +6,7 @@ if(params.get('classroom')!=='1')return;
 const W=window.AlborzWorkshop,L=window.AlborzLive,root=document.getElementById('classroom-screen');
 if(!W||!L||!root)return;
 const C=W.catalog,labels=['شتر','ماهی آزاد','آفتاب‌پرست','اختاپوس'],animals=['🐪','🐟','🦎','🐙'];
-const names=['تشکیل و تأیید گروه‌ها','معرفی چهار راهبرد','انتخاب مأموریت',...C.missionFlow,'جمع‌بندی و انتخاب دور بعد'];
+const names=['تشکیل و تأیید گروه‌ها','معرفی چهار راهبرد','انتخاب مأموریت',...C.missionFlow,'جمع‌بندی و انتقال به کار'];
 const keys=['camel','salmon','chameleon','octopus'];
 const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fa=n=>Number(n).toLocaleString('fa-IR');
@@ -28,7 +28,7 @@ function groups(){return Array.from({length:10},(_,i)=>i+1);}
 function clearNotice(){notice='';}
 function alertUser(text,error=false){notice=text;let el=root.querySelector('#classroom-feedback');if(el){el.textContent=text;el.classList.toggle('is-error',error);}else render(true);}
 function className(){return identity?.role==='teacher'?'مدرس کارگاه':'گروه '+fa(identity?.team||0)+' · عضو '+fa(identity?.member||0);}
-function lessonRow(){return '<div class="class-stage-marker"><span>دور '+fa(classroomRound+1)+' از ۴ · مرحله '+fa(stage+1)+' از ۱۱</span><strong>'+E(names[stage])+'</strong></div>';}
+function lessonRow(){return '<div class="class-stage-marker"><span>مرحله '+fa(stage+1)+' از ۱۱</span><strong>'+E(names[stage])+'</strong></div>';}
 function stepMap(){
  const teacher=identity?.role==='teacher';
  const cards=names.map((name,i)=>{
@@ -38,8 +38,8 @@ function stepMap(){
   return '<button type="button" class="classroom-map-card '+state+'" data-class-open="'+i+'" '+(i===stage?'aria-current="step" ':'')+'aria-label="گام '+fa(i+1)+'، '+E(name)+'، '+status+'"><span class="classroom-map-num">'+fa(i+1)+'</span><span class="classroom-map-details"><strong>'+E(name)+'</strong><small>'+status+'</small><em>'+action+'</em></span></button>';
  }).join('');
  const intro=teacher?'ابتدا نقشه کامل را مرور کنید. گام فعال را باز کنید؛ پس از تکمیل و تأیید گروه‌ها، با «گام بعد» مسیر کلاس را جلو ببرید.':'همه گام‌ها را از ابتدا می‌بینید. گام فعال را باز کنید و همراه با مدرس پیش بروید؛ گام‌های بعدی با هدایت مدرس فعال می‌شوند.';
- const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً در دور جاری طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'این گام هنوز فعال نشده است. پس از تکمیل گام‌های قبلی و اعلام مدرس، می‌توانید فعالیت آن را باز کنید.')+'</p></div>';
- return '<section class="classroom-map"><div class="classroom-map-intro"><span>نقشه جامع کارگاه · دور '+fa(classroomRound+1)+' از ۴</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
+ const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'این گام هنوز فعال نشده است. پس از تکمیل گام‌های قبلی و اعلام مدرس، می‌توانید فعالیت آن را باز کنید.')+'</p></div>';
+ return '<section class="classroom-map"><div class="classroom-map-intro"><span>مسیر مشترک تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
 }
 function messageBox(){return '<p id="classroom-feedback" class="classroom-feedback" role="status">'+E(notice)+'</p>';}
 function simpleTitle(kicker,title,description){return '<div class="classroom-section-title"><span>'+E(kicker)+'</span><h2>'+E(title)+'</h2>'+(description?'<p>'+E(description)+'</p>':'')+'</div>';}
@@ -72,13 +72,13 @@ function missionRoster(){
 }
 function chooseMission(){
  const t=identity.team,selected=groupChoice(t),used=usedMissions(t);
- return simpleTitle('مرحله انتخاب · دور '+fa(classroomRound+1),'مأموریت گروه را انتخاب کنید','هر دور، یک مأموریت تازه انتخاب کنید. پاسخ‌های دورهای قبل محفوظ می‌مانند و اعضای گروه همین مأموریت را با هم انجام می‌دهند.')+
+ return simpleTitle('مرحله انتخاب مأموریت','مأموریت گروه را انتخاب کنید','هر گروه می‌تواند یکی از چهار مأموریت را مستقل از انتخاب گروه‌های دیگر بردارد. همه اعضای گروه روی همان مأموریت کار می‌کنند.')+
  '<div class="classroom-choice-grid">'+C.models.map((m,i)=>'<button class="'+(selected===i?'selected':'')+'" type="button" data-class-mission="'+i+'" '+(used.includes(i)?'disabled aria-disabled="true"':'')+'><b>'+m[0]+' '+E(m[1])+'</b><small>'+E(C.missions[i].title)+'</small><span>'+(used.includes(i)?'در دور قبل انجام شد ✓':selected===i?'انتخاب گروه ✓':requested===i?'پیشنهاد ورود شما':'انتخاب این مأموریت')+'</span></button>').join('')+'</div>'+
  '<p class="classroom-wait">'+(selected===null?'هنوز مأموریتی برای گروه ثبت نشده است.':'مأموریت «'+labels[selected]+'» ثبت شد. اکنون منتظر شروع سناریو از سوی مدرس بمانید.')+'</p>';
 }
 function missionTeacherChoice(){
  const ready=groups().filter(confirmed),pending=ready.filter(t=>groupChoice(t)===null);
- return simpleTitle('انتخاب مأموریت · دور '+fa(classroomRound+1),'گروه‌ها مأموریت این دور را انتخاب می‌کنند','هر گروه باید برای این دور انتخاب تازه ثبت کند؛ پاسخ‌های دور قبلی حفظ شده‌اند و تو همچنان هفت گام مشترک را هدایت می‌کنی.')+
+ return simpleTitle('انتخاب مأموریت گروه‌ها','گروه‌ها مأموریت این دور را انتخاب می‌کنند','هر گروه مأموریت دلخواه خودش را انتخاب می‌کند؛ همه گروه‌ها هفت گام مشترک را با هدایت مدرس پیش می‌برند.')+
  missionRoster()+'<p class="classroom-wait">'+(pending.length?'هنوز '+fa(pending.length)+' گروه تأیید‌شده مأموریت انتخاب نکرده‌اند.':'گروه‌های تأیید‌شده آماده ورود به سناریو هستند.')+'</p>';
 }
 function teacherStep(){
@@ -141,10 +141,10 @@ function learnerMission(){
  return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team)?'disabled':'')+'>'+(stepReady(team)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
 }
 function ending(){
- const ready=groups().filter(confirmed).length;
  return simpleTitle('جمع‌بندی','از این مأموریت چه یاد گرفتیم؟','گروه‌ها تجربه، تصمیم و نکته قابل انتقال به محیط خسارت را با هم مرور می‌کنند.')+
- (identity.role==='teacher'?'<p class="classroom-prompt">از گروه‌ها بخواه یک تصمیم درست و یک اصلاح مهم را با شاهد توضیح دهند. '+(classroomRound>=3?'چهار دور کامل شده است؛ کارگاه را با یک اقدام قابل اجرا جمع‌بندی کنید.':'برای دور بعد، انتخاب مأموریت جدید فعال می‌شود و پاسخ‌های قبلی حفظ می‌شوند.')+'</p>'+monitorAllGroups():'<p class="classroom-prompt">هر نفر یک اقدام کوچک برای بهبود کار روزمره خود مشخص کند. در انتظار اعلام دور بعد از سوی مدرس بمانید.</p>');
+ (identity.role==='teacher'?'<p class="classroom-prompt">از گروه‌ها بخواه یک تصمیم درست و یک اصلاح مهم را با شاهد توضیح دهند؛ سپس هر نفر یک اقدام کوچک برای کار روزمره مشخص کند.</p>'+monitorAllGroups():'<p class="classroom-prompt">هر نفر یک اقدام کوچک برای بهبود کار روزمره مشخص کند. ادامه دوره در بخش مستقل مدیریت خشم است.</p>');
 }
+
 function render(force=false){
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی (کارشناسان) یا کد اختصاصی مدرس وارد کارگاه شوید.</p>';lastFingerprint='';return;}
@@ -157,10 +157,10 @@ function render(force=false){
  const countConfirmed=groups().filter(confirmed).length;
  const allReadyHaveMission=groups().filter(confirmed).every(t=>groupChoice(t)!==null);
  const stepProgress=readiness();
- const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage>=3&&stage<=9&&stepProgress.waiting.length>0||stage===10&&classroomRound>=3);
+ const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage>=3&&stage<=9&&stepProgress.waiting.length>0||stage===10);
  const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'تغییر مرحله روی موبایل گروه‌ها حدود ۱۰ ثانیه زمان می‌برد.';
  const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow()+'</header>';
- const controls=teacher?'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?(classroomRound>=3?'چهار دور کامل شد':'شروع دور بعد'):'گام بعد')+'</button></nav>':'';
+ const controls=teacher?'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>':'';
  let content;
  if(stage===0)content=teacher?rosterTeacher():checkinParticipant();
  else if(!teacher&&!confirmed(identity.team))content=simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و اعلام تعداد افراد، مدرس گروه را فعال می‌کند. سپس همین صفحه به‌طور خودکار وارد گام جاری می‌شود.')+personDots(identity.team);
@@ -190,7 +190,7 @@ root.addEventListener('click',event=>{
  if(btn.hasAttribute('data-class-open')){const n=Number(btn.dataset.classOpen);if(!Number.isInteger(n)||n<0||n>10)return;if(n===stage){openStep=stage;previewStep=null;}else{previewStep=n;openStep=null;}lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-checkin')){const key='checkin'+identity.member;execute(()=>saveFields({[key]:true}));return;}
  if(btn.dataset.classConfirm){const team=Number(btn.dataset.classConfirm),node=root.querySelector('[data-class-team-size="'+team+'"]'),size=Number(node?.value||0);
-   if(![0,5].includes(size))return alertUser('ظرفیت هر گروه ۵ نفر است؛ برای غیرفعال‌کردن گروه عدد صفر را انتخاب کنید.',true);
+   if(![0,3,4,5].includes(size))return alertUser('برای گروه فعال ۳، ۴ یا ۵ نفر انتخاب کنید؛ عدد صفر گروه را غیرفعال می‌کند.',true);
    if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو حضورش را ثبت کند.',true);
    execute(()=>L.request({action:'groupSetup',team,size}));return;
  }
