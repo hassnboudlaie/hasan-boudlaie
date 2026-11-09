@@ -124,8 +124,8 @@ Deno.serve(async req=>{
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    const team=body.team,size=body.size;
    if(!Number.isInteger(team)||team<1||team>10||![0,3,4,5].includes(size))return respond({error:'گروه یا شمار اعضا نامعتبر است'},400,origin);
-   const assigned=(await db('alborz_national_members?team_no=eq.'+team+'&select=member_no'))?.length||0;
-   if(size<assigned)return respond({error:'این گروه '+assigned+' عضو ثبت‌شده دارد؛ ظرفیت را کمتر از تعداد اعضا تعیین نکنید.'},409,origin);
+   const checked=(await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(checkin1,checkin2,checkin3,checkin4,checkin5)&select=field_value'))?.filter(r=>r.field_value===true).length||0;
+   if(size<checked)return respond({error:'این گروه '+checked+' عضو حاضر دارد؛ ظرفیت را کمتر از تعداد حاضران تعیین نکنید.'},409,origin);
    const result=await teacherWrite(team,{groupSize:size,groupReady:size>0});
    if(!result.ok)return respond({error:'اطلاعات گروه تغییر کرده است؛ دوباره تلاش کنید'},409,origin);
    return respond({ok:true,records:result.records},200,origin);
