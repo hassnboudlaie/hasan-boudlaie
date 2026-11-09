@@ -262,3 +262,50 @@
 .classroom-completion-badge h3{font-size:23px;line-height:1.7;color:#235d38;margin:0}
 .classroom-completion-badge p{font-size:17px;line-height:1.9;margin:6px 0}
 @media(max-width:760px){.one-time-assessment .one-assessment-items{grid-template-columns:1fr}.professional-question{padding:14px}.professional-question h4{font-size:19px}.professional-facts{padding:12px}.classroom-preview-banner{flex-direction:column;align-items:stretch}.classroom-preview-banner span{min-width:0}}
+
+
+/* Claims resilience stage 3: readable, low-friction team consensus and zero-data instructor demo. */
+.classroom-consensus-process{margin:18px 0;border:1.5px solid #b9d8d7;border-radius:19px;padding:19px 21px;background:linear-gradient(145deg,#f0f9f8,#f9fcfd)}
+.classroom-consensus-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:13px}
+.classroom-consensus-heading strong{font-size:clamp(21px,2.8vw,25px);line-height:1.6;color:#075b5d}
+.classroom-consensus-heading>span{background:#def1e8;color:#0b644c;padding:7px 13px;border-radius:40px;font-size:17px;font-weight:850;white-space:nowrap}
+.classroom-consensus-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.classroom-consensus-steps p{padding:13px 15px;background:white;border:1px solid #d0e5e8;border-radius:13px;margin:0;line-height:1.85}
+.classroom-consensus-steps b,.classroom-consensus-steps span{display:block}
+.classroom-consensus-steps b{color:#0b5365;font-size:18px;margin-bottom:6px}
+.classroom-consensus-steps span{font-size:17px;color:#425e68}
+.classroom-consensus-note{font-size:16px;line-height:1.85;color:#3d636c;margin:12px 0 0}
+.classroom-consensus-submit,.classroom-choice-confirmed,.classroom-demo-selection{border:1.5px solid #bcd9e2;border-radius:17px;padding:20px;background:#f5fafc;margin:18px 0}
+.classroom-consensus-submit>p{font-size:18px;line-height:1.9;margin:0 0 12px}
+.classroom-consensus-check{display:flex;align-items:flex-start;gap:13px;background:#fff;border:1px solid #bdd7dc;border-radius:14px;padding:14px 17px;margin:13px 0;cursor:pointer;line-height:1.85;font-size:18px;color:#1c4c5b}
+.classroom-consensus-check input{height:23px;width:23px;flex:0 0 23px;margin-top:5px;accent-color:#10856a}
+.classroom-consensus-submit>.btn{font-size:19px;min-height:55px}
+.classroom-consensus-submit>.btn:disabled{opacity:.5;cursor:not-allowed}
+.classroom-choice-confirmed{background:#eaf8f0;border-color:#9bcfbb}
+.classroom-choice-confirmed strong{font-size:22px;color:#0b6a50}
+.classroom-choice-confirmed p{font-size:18px;line-height:1.9;margin:10px 0 0}
+.classroom-live-roster{background:#f7fafc;border:1px solid #ccdde5;border-radius:17px;padding:17px 20px;margin:17px 0}
+.classroom-live-roster h3{font-size:21px;color:#114c60;margin:0 0 10px}
+.classroom-teacher-demo{padding:20px;border:2px dashed #a9c7d2;background:#fff;border-radius:20px;margin:24px 0}
+.classroom-teacher-demo-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.classroom-teacher-demo-head strong{font-size:23px;color:#0a5469}
+.classroom-teacher-demo-head>span{font-size:15px;color:#5b6671;border:1px solid #c7d2da;border-radius:30px;padding:5px 10px}
+.classroom-teacher-demo>p{font-size:17px;line-height:1.95}
+.classroom-demo-selection{background:#fffdf3;border-color:#decfae;font-size:18px;line-height:1.9}
+.classroom-demo-selection p{margin:7px 0}
+.classroom-demo-selection strong{font-size:20px}
+.classroom-demo-selection .btn{opacity:.65;min-height:45px}
+.classroom-choice-roster>div{flex-wrap:wrap}
+.classroom-reopen-mission{background:#fff;border:1px solid #bdd5df;padding:7px 10px;min-height:43px;border-radius:10px;color:#3e5767;font-size:15px;cursor:pointer}
+.classroom-reopen-mission:hover,.classroom-reopen-mission:focus-visible{border-color:#0b7881}
+.classroom-choice-grid button:disabled{cursor:default;transform:none;opacity:.77}
+.classroom-choice-grid button.selected:disabled{opacity:1}
+@media(max-width:760px){
+ .classroom-consensus-steps{grid-template-columns:minmax(0,1fr)}
+ .classroom-consensus-process,.classroom-teacher-demo{padding:16px}
+ .classroom-consensus-check{font-size:17px;padding:12px}
+ .classroom-consensus-heading strong{font-size:21px}
+ .classroom-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .classroom-choice-grid b{font-size:21px}
+}
+@media(max-width:470px){.classroom-choice-grid{grid-template-columns:minmax(0,1fr)}}
