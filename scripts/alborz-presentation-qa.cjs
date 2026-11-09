@@ -38,10 +38,11 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.getByText('برنامه هشت‌ساعته', {exact:true}).count(), 0);
     assert.equal(await page.getByText('کنداکتور برنامه', {exact:true}).count(), 1);
     assert.equal(await page.locator('.workshop-hero .strategy-card').count(), 4, 'four informational strategies remain visible');
+    assert.equal(await page.locator('.module-path-card').count(), 3, 'independent resilience, anger and assertiveness entries are visible');
     assert.equal(await page.locator('.workshop-hero .strategy-card[role="button"],.workshop-hero .strategy-card[data-strategy],dialog.alborz-strategy-dialog').count(), 0,
       'removed duplicate clickable lesson and mission route from the homepage');
     await page.getByRole('button', {name:'کنداکتور برنامه'}).click();
-    assert.match(await page.locator('.panel h2').first().innerText(), /کنداکتور کارگاه/);
+    assert.match(await page.locator('.panel h2').first().innerText(), /کنداکتور دو روزه/);
     assert.equal(await page.locator('.role-entry-link').count(), 2, 'guided workshop has separate instructor and expert entrances');
     assert.equal(await page.locator('.role-entry-link[href="./resilience.html?classroom=1"]').count(), 1, 'one expert route');
     assert.equal(await page.locator('.role-entry-link[href*="teacher=1"]').count(), 1, 'one instructor route');
