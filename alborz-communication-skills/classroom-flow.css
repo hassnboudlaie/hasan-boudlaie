@@ -158,3 +158,78 @@
 .classroom-map-return>span{font-size:17px;font-weight:800;color:#155a51}
 .classroom-map-return .btn{min-height:44px}
 @media(max-width:700px){.classroom-map{padding:15px}.classroom-map-grid{grid-template-columns:1fr;gap:9px}.classroom-map-card{padding:12px 13px;min-height:78px}.classroom-map-num{width:39px;height:39px;flex-basis:39px;font-size:20px}.classroom-map-details em{font-size:13px}}
+
+
+/* Teaching content quality 2026-11-09: accessible bilingual-free RTL dialogue and assessment components.
+   Scoped strictly to Alborz claims-resilience guided classroom. */
+.mastery-lessons,.mastery-roles,.mastery-dialogues,.mastery-observer{margin:20px 0;padding:clamp(16px,3vw,25px);border:1px solid #cbdde4;border-radius:22px;background:linear-gradient(145deg,#fff,#f7fbfc);box-shadow:0 7px 26px rgba(8,55,80,.045)}
+.mastery-lessons h3,.mastery-roles h3,.mastery-dialogues h3,.mastery-observer h3{font-size:clamp(23px,2.6vw,29px);line-height:1.55;color:#063c57;margin:3px 0 9px}
+.mastery-lessons p,.mastery-roles p,.mastery-dialogues p,.mastery-observer p,.mastery-lessons li,.mastery-observer li{font-size:17px;line-height:1.95}
+.mastery-matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.mastery-matrix>div{padding:15px 17px;border:1px solid #c8dedc;border-radius:15px;background:#eef8f4;display:flex;flex-direction:column;gap:5px}
+.mastery-matrix strong{font-size:21px;color:#0c5848}
+.mastery-matrix span{font-size:16px;line-height:1.8}
+.mastery-lesson,.mastery-person,.mastery-scene,.mastery-analysis,.mastery-debrief{background:#fff;border:1px solid #c9dce3;border-radius:15px;margin:12px 0;overflow:hidden}
+.mastery-lesson summary,.mastery-person summary,.mastery-scene summary,.mastery-debrief summary{cursor:pointer;padding:14px 17px;font-size:19px;font-weight:800;color:#0b506a;line-height:1.7;min-height:52px}
+.mastery-lesson[open] summary,.mastery-scene[open] summary{background:#e8f4f7}
+.mastery-lesson-body,.mastery-person-body{padding:10px 19px 19px}
+.mastery-lesson-body>p{margin:11px 0}
+.mastery-list-head{font-size:18px;color:#0b574c}
+.mastery-lesson-body ol{padding:0 23px 0 0}
+.mastery-question{padding:10px 14px;background:#eef5ff;border-right:4px solid #227f9d;border-radius:9px}
+.mastery-takeaway{padding:10px 14px;background:#edf7ee;border-radius:11px;font-weight:700}
+.mastery-source,.mastery-tip{padding:12px 15px;border-radius:12px;background:#f1f6f9;color:#375568;font-size:16px!important;line-height:1.9}
+.mastery-microquiz{border-top:1px solid #cbdfe4;margin:17px 0 0;padding-top:13px}
+.mastery-microquiz h4{font-size:20px;color:#0d4e64;margin:6px 0}
+.mastery-answer{display:block;width:100%;text-align:right;background:#fff;border:1.5px solid #bdcfda;color:#1a3d51;border-radius:13px;margin:8px 0;padding:12px 14px;line-height:1.8;font-size:17px;cursor:pointer;min-height:52px}
+.mastery-answer:hover,.mastery-answer:focus-visible,.mastery-answer.is-selected{border-color:#0d6682;background:#e8f4fb}
+.mastery-quiz-feedback:not(:empty){background:#eff8f4;border-right:4px solid #147f6a;border-radius:12px;padding:13px 16px;margin-top:12px}
+.mastery-quiz-feedback strong{font-size:18px;color:#0c5d4d}.mastery-quiz-feedback p{margin:5px 0!important;font-size:16px!important}
+.mastery-person-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mastery-person{margin:0}
+.mastery-person summary{display:flex;align-items:center;gap:12px}
+.mastery-person summary span:last-child{display:flex;flex-direction:column}
+.mastery-person summary strong{font-size:20px}
+.mastery-person summary small{font-size:15px;font-weight:500;color:#526d79}
+.mastery-person-num{display:grid;place-items:center;background:#dceff4;color:#07516c;width:40px;height:40px;border-radius:13px;flex-shrink:0}
+.mastery-person-body{border-top:1px solid #d6e5e8}
+.mastery-person-body p{margin:7px 0!important}
+.mastery-person-cue{background:#f0f7ef;padding:10px;border-radius:11px}
+.mastery-dialogue{padding:14px;display:flex;flex-direction:column;gap:12px}
+.mastery-turn{border:1px solid #c7dfe1;border-radius:16px;background:#eef8f5;padding:13px 16px;max-width:min(96%,850px)}
+.mastery-turn:nth-child(even){margin-right:auto;background:#edf3fb;border-color:#d0ddf1}
+.mastery-turn.mastery-speaker-2,.mastery-turn.mastery-speaker-3{background:#f4f1fc;border-color:#ded4f4}
+.mastery-turn.mastery-speaker-4{background:#fff6e8;border-color:#f0dfbc}
+.mastery-speaker{display:flex;align-items:center;gap:10px}
+.mastery-speaker>div{display:flex;flex-direction:column;flex:1}
+.mastery-speaker strong{font-size:17px;color:#093e5b}
+.mastery-speaker small{font-size:14px;color:#4a6778}
+.mastery-speaker em{font-style:normal;color:#496c7d;font-size:14px}
+.mastery-speaker-avatar{display:grid;place-items:center;min-width:39px;height:39px;border-radius:50%;background:#dceae8;font-size:20px;font-weight:800;color:#1e5562}
+.mastery-turn p{font-size:18px!important;line-height:1.85!important;color:#143c51!important;margin:9px 0 0!important}
+.mastery-analysis article{padding:10px 18px;border-bottom:1px solid #e1eaec}
+.mastery-analysis article:last-child{border:0}
+.mastery-analysis h4{font-size:18px;color:#0a5872;line-height:1.7;margin:7px 0}
+.mastery-analysis p{font-size:16px!important;margin:6px 0!important}
+.mastery-rubric{display:flex;flex-direction:column;gap:11px}
+.mastery-rubric>article{display:flex;justify-content:space-between;align-items:start;gap:16px;background:#fff;border:1px solid #d0e0e6;border-radius:14px;padding:15px}
+.mastery-rubric>article>div{flex:1;min-width:0}
+.mastery-rubric strong{color:#084d68;font-size:19px;line-height:1.7}
+.mastery-rubric p{margin:5px 0!important;font-size:16px!important}
+.mastery-rubric .mastery-risk{color:#8c4e2b!important}
+.mastery-rubric label{display:flex;flex-direction:column;min-width:122px;gap:7px;font-size:15px;font-weight:800;color:#345463}
+.mastery-rubric select{border:1px solid #b6cdd5;border-radius:11px;background:#fff;min-height:46px;padding:7px 10px;font-size:17px}
+.mastery-score{background:#eaf6ee;border-right:4px solid #20785a;border-radius:11px;padding:12px 16px;font-weight:800}
+.mastery-debrief ol{padding:11px 37px 19px 14px;margin:0}
+.mastery-debrief li{padding:6px}
+@media(max-width:760px){
+ .mastery-matrix,.mastery-person-grid{grid-template-columns:minmax(0,1fr)}
+ .mastery-lessons,.mastery-roles,.mastery-dialogues,.mastery-observer{padding:15px;margin:15px 0;border-radius:17px}
+ .mastery-turn{max-width:100%;padding:12px}
+ .mastery-turn p{font-size:18px!important}
+ .mastery-rubric>article{flex-direction:column;gap:10px}
+ .mastery-rubric label{width:100%;flex-direction:row;align-items:center;justify-content:space-between}
+ .mastery-rubric select{min-width:140px}
+ .mastery-lesson summary,.mastery-person summary,.mastery-scene summary{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){.mastery-answer{transition:none}}

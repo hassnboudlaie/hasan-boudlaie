@@ -95,6 +95,12 @@ const server=http.createServer((req,res)=>{
   await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('معرفی چهار راهبرد'));
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/چهار راهبرد/,'participants see same class phase');
+  assert.equal(await expert1.locator('.mastery-lesson').count(),4,'all four extended strategy lessons exist in the live learning path');
+  await expert1.locator('.mastery-lesson').nth(1).evaluate(el=>el.open=true);
+  await expert1.locator('[data-class-quiz="1"][data-class-quiz-option="0"]').click();
+  assert.equal(await expert1.locator('[data-master-feedback="1"] p').count(),3,'three individualized explanations after a diagnostic choice');
+  assert.match(await expert1.locator('[data-master-feedback="1"]').innerText(),/کسب‌وکار مستقل|کسب‌وکار تازه/,'corporate innovation is not a simple SMS tweak');
+
   await teacher.locator('[data-class-next]').click();
   await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('انتخاب مأموریت'));
   await expert1.evaluate(()=>window.AlborzLive.refresh());
@@ -120,6 +126,16 @@ const server=http.createServer((req,res)=>{
    await teacher.waitForFunction(p=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله '+new Intl.NumberFormat('fa-IR').format(p+1)),phase);
    await expert1.evaluate(()=>window.AlborzLive.refresh());
    await expert2.evaluate(()=>window.AlborzLive.refresh());
+   if(phase===4){
+    assert.equal(await expert1.locator('.mastery-person').count(),5,'five named, goal-based role cards are present in the live scenario');
+    await expert1.locator('.mastery-person').first().evaluate(el=>el.open=true);
+    assert.match(await expert1.locator('.mastery-person').first().innerText(),/هدف من|نگرانی من|لحن و رفتار/);
+   }
+   if(phase===5){
+    assert.equal(await expert1.locator('.mastery-scene').count(),3,'initial, revised and analyzed conversations are separate');
+    assert(await expert1.locator('.mastery-turn').count()>=16,'two full multi-person dialogues with at least sixteen turns');
+    assert.equal(await expert1.locator('.mastery-analysis article').count(),3,'three teachable skill moments per scenario');
+   }
   }
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/انتخاب و تصمیم اولیه/);
   await expert1.locator('[data-class-pick="0"]').check();
@@ -156,6 +172,14 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-next]').click();
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   await expert2.evaluate(()=>window.AlborzLive.refresh());
+  assert.equal(await expert1.locator('select[data-class-rubric]').count(),5,'five evidence-anchored team observer ratings');
+  for(let j=0;j<5;j++){
+   await expert1.locator('[data-class-rubric="'+j+'"]').selectOption('2');
+   await expert1.waitForFunction(j=>document.querySelector('[data-class-rubric="'+j+'"]')?.value==='2',j);
+  }
+  assert.equal(get(1,'r0score0')?.field_value,'2','observer score shared with instructor backend');
+  await expert1.waitForFunction(()=>document.querySelector('.mastery-score')?.textContent.includes('۱۰ از ۱۰'),null,{timeout:12000});
+  assert.match(await expert1.locator('.mastery-score').innerText(),/۱۰ از ۱۰/,'sum of five team criteria reported');
   await expert1.locator('[data-class-answer="evidence"]').fill('مشاهده شد که کارشناس زمان پیگیری روشن اعلام کرد.');
   await expert1.locator('[data-class-save="evidence"]').click();
   await expert1.waitForFunction(()=>document.querySelector('.classroom-input textarea')?.value?.length>0);
