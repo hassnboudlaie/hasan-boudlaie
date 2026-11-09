@@ -30,27 +30,46 @@ function clearNotice(){notice='';}
 function alertUser(text,error=false){notice=text;let el=root.querySelector('#classroom-feedback');if(el){el.textContent=text;el.classList.toggle('is-error',error);}else render(true);}
 function className(){return identity?.role==='teacher'?'مدرس کارگاه':'گروه '+fa(identity?.team||0)+' · عضو '+fa(identity?.member||0);}
 function masteryLessons(){
- return '<section class="mastery-lessons" aria-labelledby="mastery-lessons-title"><h3 id="mastery-lessons-title">راهنمای انتخاب چهار راهبرد</h3><p>فقط به دو پرسش پاسخ بدهید: آیا روش اصلی خدمت باید تغییر کند؟ آیا قرار است کسب‌وکار تازه و مستقلی شکل بگیرد؟ این چهار حیوان تیپ شخصیتی نیستند.</p><div class="mastery-matrix"><div><strong>🐪 شتر</strong><span>هسته حفظ می‌شود؛ کسب‌وکار تازه نداریم.</span></div><div><strong>🐟 ماهی آزاد</strong><span>هسته حفظ می‌شود؛ کسب‌وکار تازه می‌سازیم.</span></div><div><strong>🦎 آفتاب‌پرست</strong><span>هسته تغییر می‌کند؛ کسب‌وکار تازه نداریم.</span></div><div><strong>🐙 اختاپوس</strong><span>هسته تغییر می‌کند؛ کسب‌وکار تازه هم می‌سازیم.</span></div></div>'+
- C.mastery.map((v,i)=>'<details class="mastery-lesson"><summary>'+C.models[i][0]+' '+E(C.models[i][1])+' · توضیح، مثال و آزمون کوتاه</summary><div class="mastery-lesson-body"><p><strong>به زبان ساده:</strong> '+E(v.lesson.definition)+'</p><p><strong>کِی مناسب است؟</strong> '+E(v.lesson.condition)+'</p><p><strong>مرز با بقیه:</strong> '+E(v.lesson.boundary)+'</p><p><strong>اشتباه رایج:</strong> '+E(v.lesson.error)+'</p><strong class="mastery-list-head">سه حرکت کاربردی در خسارت</strong><ol>'+v.lesson.actions.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol><p class="mastery-question"><strong>پرسش تشخیصی:</strong> '+E(v.lesson.question)+'</p><p class="mastery-takeaway">'+E(v.lesson.takeaway)+'</p><div class="mastery-microquiz"><h4>خودت را بسنج</h4><p>'+E(v.quickCheck.q)+'</p>'+v.quickCheck.options.map((o,j)=>'<button type="button" class="mastery-answer" data-class-quiz="'+i+'" data-class-quiz-option="'+j+'">'+fa(j+1)+'. '+E(o.text)+'</button>').join('')+'<div class="mastery-quiz-feedback" data-master-feedback="'+i+'" role="status" aria-live="polite"></div></div></div></details>').join('')+
- '<p class="mastery-source">این یک اقتباس آموزشی از چهار راهبرد سازمانی Kurt Verweire است؛ ابزار تشخیص شخصیت یا دستور رسمی رسیدگی خسارت نیست.</p></section>';
+ return '<section class="mastery-lessons"><h3>چهار راهبرد تاب‌آوری</h3><p>برای انتخاب درست، دو پرسش را با شواهد پاسخ دهید: آیا هسته خدمت باید تغییر کند؟ آیا کسب‌وکار مستقلی خارج از هسته مطرح است؟ این‌ها تیپ شخصیتی نیستند.</p><div class="mastery-matrix">'+
+ C.mastery.map((m,i)=>'<div><strong>'+C.models[i][0]+' '+E(C.models[i][1])+'</strong><span>'+E(m.lesson.core)+'</span></div>').join('')+'</div>'+
+ C.mastery.map((m,i)=>'<details class="mastery-lesson"><summary>'+C.models[i][0]+' '+E(C.models[i][1])+' · توضیح و مثال</summary><div class="mastery-lesson-body"><p><strong>معنای ساده:</strong> '+E(m.lesson.definition)+'</p><p><strong>شرایط کاربرد:</strong> '+E(m.lesson.condition)+'</p><p><strong>مرز با راهبردهای دیگر:</strong> '+E(m.lesson.boundary)+'</p><p><strong>اشتباه رایج:</strong> '+E(m.lesson.error)+'</p><p><strong>کاربرد در بیمه:</strong> '+E(C.models[i][6])+'</p><strong>سه اقدام مناسب</strong><ol>'+m.lesson.actions.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol><p class="mastery-takeaway">'+E(m.lesson.takeaway)+'</p></div></details>').join('')+
+ '<p class="mastery-source">اقتباس از چهار راهبرد سازمانی Kurt Verweire؛ این چارچوب آزمون شخصیت نیست.</p></section>';
 }
-
 function masteryRoles(i){
  const m=C.mastery[i],info=C.missions[i].info;
  return '<section class="mastery-roles"><h3>پنج شخصیت این مأموریت</h3><p>هر نفر فقط اطلاعات شخصیت خودش را بخواند و با همان نگرانی و هدف وارد گفت‌وگو شود. در گروه سه یا چهار‌نفره می‌توانید دو نقش بگیرید؛ مشاهده‌گر هم در تحلیل پایانی صحبت می‌کند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>راهنمای شروع:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">نقش را طبیعی اجرا کنید؛ لازم نیست دیالوگ را از حفظ بگویید. اسم‌ها فرضی‌اند و اطلاعات واقعی مراجعان نباید وارد تمرین شود.</p></section>';
 }
 
 function masteryTalk(i){
- const m=C.mastery[i];
- function turnList(lines){return '<div class="mastery-dialogue">'+lines.map((x,n)=>'<article class="mastery-turn mastery-speaker-'+x.p+'"><div class="mastery-speaker"><span class="mastery-speaker-avatar">'+E(m.people[x.p].name.charAt(0))+'</span><div><strong>'+E(m.people[x.p].name)+'</strong><small>'+E(m.people[x.p].role)+'</small></div><em>'+fa(n+1)+'</em></div><p>'+E(x.t)+'</p></article>').join('')+'</div>';}
- return '<section class="mastery-dialogues"><h3>گفت‌وگوی نمونه؛ دو اجرای متفاوت</h3><p>ابتدا نقش‌ها را بدون حفظ‌کردن متن اجرا کنید. گفت‌وگوی اول نشان می‌دهد کجا ممکن است کار از مسیر حرفه‌ای خارج شود. پس از بازخورد مشاهده‌گر، گفت‌وگوی دوم را باز کنید و همان موقعیت را بهتر پیش ببرید.</p><details class="mastery-scene"><summary>🎭 اجرای اول · گفت‌وگوی نیازمند اصلاح ('+fa(m.before.length)+' نوبت)</summary>'+turnList(m.before)+'</details><details class="mastery-scene"><summary>✨ اجرای دوم · گفت‌وگوی اصلاح‌شده ('+fa(m.after.length)+' نوبت)</summary>'+turnList(m.after)+'</details><details class="mastery-scene mastery-analysis"><summary>🔍 لحظه‌های مهارتی · چرا این بار بهتر شد؟</summary>'+m.moments.map((x,j)=>'<article><h4>لحظه '+fa(j+1)+' · '+E(x.line)+'</h4><p><b>چرا مهم است؟</b> '+E(x.why)+'</p><p><b>نگوییم:</b> '+E(x.weak)+'</p><p><b>بهتر است:</b> '+E(x.better)+'</p></article>').join('')+'</details><p class="mastery-tip">مشاهده‌گر در پایان فقط به رفتارهای قابل مشاهده بازخورد بدهد: جمله دقیق، اثر آن و پیشنهاد یک تغییر کوچک.</p></section>';
+ const m=C.mastery[i],lines=m.after;
+ const summary=[
+ 'در شتر، تیم روش معتبر رسیدگی را حفظ می‌کند و به جای قول پرداخت یا حذف کنترل، تقسیم کار، ثبت مصوب و زمان پیگیری را روشن می‌سازد. این راهبرد به معنی تحمل فرسودگی نیست.',
+ 'در ماهی آزاد، گفت‌وگو از استقبال شفاهی به ارزش پیشنهادی، تمایل واقعی به پرداخت و آزمون کسب‌وکار مستقل می‌رسد. هسته رسیدگی خسارت ثابت می‌ماند و هیچ قرارداد بی‌مجوزی وعده داده نمی‌شود.',
+ 'در آفتاب‌پرست، مسئله از سرزنش مالی و پذیرش به بازطراحی مالکیت پرونده و معیار تحویل منتقل می‌شود. تغییر هسته زمانی واقعی است که رفت‌وآمد، خطا و کیفیت قبل و بعد سنجیده شوند.',
+ 'در اختاپوس، دو جریان متمایز روشن می‌شوند: تحول مدل اصلی رسیدگی و کسب‌وکار جدید پایش ریسک. محدودیت نیرو و بودجه، ترتیب شروع و شرط توقف را تعیین می‌کند، نه فشار بیشتر بر کارکنان.'
+ ][i];
+ return '<section class="mastery-dialogues"><h3>گفت‌وگوی نمونه · '+E(C.models[i][1])+'</h3><div class="mastery-dialogue">'+lines.map((x,n)=>'<article class="mastery-turn mastery-speaker-'+x.p+'"><div class="mastery-speaker"><span class="mastery-speaker-avatar">'+E(m.people[x.p].name.charAt(0))+'</span><div><strong>'+E(m.people[x.p].name)+'</strong><small>'+E(m.people[x.p].role)+'</small></div><em>'+fa(n+1)+'</em></div><p>'+E(x.t)+'</p></article>').join('')+'</div><section class="mastery-final-analysis"><h4>تحلیل پایانی</h4><p>'+E(summary)+'</p></section></section>';
 }
-
-function masteryObserver(i,teacher=false){
- const m=C.mastery[i],team=identity?.team,prefix='r'+i;
- const vals=m.observer.map((_,j)=>val(team,prefix+'score'+j));
- const ready=vals.every(v=>['0','1','2'].includes(v)),total=ready?vals.reduce((n,v)=>n+Number(v),0):null;
- return '<section class="mastery-observer"><h3>چک‌لیست مشاهده‌گر · مخصوص '+E(C.models[i][1])+'</h3><p>برای هر معیار، شواهد گفت‌وگو را پیدا کنید. صفر یعنی دیده نشد؛ یک یعنی ناقص بود؛ دو یعنی کامل و با شاهد مشخص انجام شد. این امتیاز فقط برای بازخورد آموزشی گروه است، نه ارزیابی عملکرد فردی.</p><div class="mastery-rubric">'+m.observer.map((x,j)=>'<article><div><strong>'+fa(j+1)+'. '+E(x.criterion)+'</strong><p><b>شاهد قابل مشاهده:</b> '+E(x.evidence)+'</p><p class="mastery-risk"><b>مراقب باشیم:</b> '+E(x.risk)+'</p></div>'+(!teacher?'<label>امتیاز گروه<select data-class-rubric="'+j+'" data-class-rubric-mission="'+i+'" aria-label="امتیاز معیار '+fa(j+1)+'"><option value="" '+(!['0','1','2'].includes(vals[j])?'selected':'')+'>ثبت نشده</option>'+[0,1,2].map(v=>'<option value="'+v+'" '+(String(vals[j])===String(v)?'selected':'')+'>'+fa(v)+' از ۲</option>').join('')+'</select></label>':'')+'</article>').join('')+'</div>'+(!teacher?'<p class="mastery-score">'+(ready?'امتیاز مبتنی بر شواهد گروه: '+fa(total)+' از ۱۰':'برای جمع‌بندی، پنج معیار را ارزیابی کنید.')+'</p>':'')+'<details class="mastery-debrief"><summary>پرسش‌های تحلیل جمعی و انتقال به کار</summary><ol>'+m.debrief.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol></details></section>';
+const singleAnswers=Object.create(null);
+function assessmentKey(){return 'alborz-reflection-once-v1-'+(identity?.role==='team'?'group'+identity.team+'member'+identity.member:'instructor');}
+function assessmentValues(){try{return JSON.parse(sessionStorage.getItem(assessmentKey())||'{}')}catch{return {}}}
+function oneTimeAssessment(){
+ const labels=['در فشار، قبل از واکنش مسئله را دقیق تشخیص می‌دهم.','وعده خارج از اختیار نمی‌دهم و زمان پیگیری روشن ارائه می‌کنم.','اختلال موقت را از نقص ساختاری روش کار تمیز می‌دهم.','در پیشنهاد خدمت جدید، مجوز و فرضیه پرداخت را بررسی می‌کنم.','هنگام محدودیت منابع، اولویت را شفاف و قابل دفاع بیان می‌کنم.','پس از اتفاق غیرمنتظره، تصمیمم را بر اساس شاهد تازه اصلاح می‌کنم.'];
+ const saved=assessmentValues(),count=labels.filter((_,i)=>Number(saved[i])>=1).length;
+ return '<section class="mastery-lessons one-time-assessment"><h3>خودارزیابی من · فقط یک نوبت</h3><p>برای هر گزاره، رفتارتان در محیط کار را ارزیابی کنید. این یک ابزار یادگیری شخصی است؛ قبل/بعد و رتبه‌بندی افراد نداریم. پاسخ‌ها فقط روی همین دستگاه نگهداری می‌شوند.</p><div class="one-assessment-items">'+labels.map((q,i)=>'<label><strong>'+fa(i+1)+'. '+E(q)+'</strong><select data-class-single-assessment="'+i+'"><option value="">انتخاب کنید</option>'+[1,2,3,4].map(v=>'<option value="'+v+'" '+(Number(saved[i])===v?'selected':'')+'>'+fa(v)+' · '+['به‌ندرت','گاهی','اغلب','تقریباً همیشه'][v-1]+'</option>').join('')+'</select></label>').join('')+'</div><p class="mastery-one-status" role="status">'+(count===6?'هر شش گزاره ثبت شد. این ارزیابی یک‌نوبتی است.':'پاسخ ثبت‌شده: '+fa(count)+' از ۶')+'</p></section>';
+}
+const professionalAnswers=Object.create(null);
+function testKey(){return 'alborz-professional-ten-v1-'+(identity?.role==='team'?'group'+identity.team+'member'+identity.member:'instructor');}
+function testAnswers(){try{return JSON.parse(sessionStorage.getItem(testKey())||'{}')}catch{return {}}}
+function professionalTest(){
+ const saved=testAnswers(),done=Object.keys(saved).filter(k=>C.professionalQuiz[Number(k)]).length;
+ return '<section class="mastery-lessons professional-ten"><h3>آزمون حرفه‌ای · ۱۰ موقعیت تصمیم‌گیری</h3><p>هر سؤال چند مفروض مشخص دارد. یک تصمیم مناسب‌تر انتخاب کنید؛ سپس تحلیل مستقل تمام سه گزینه نمایش داده می‌شود. پاسخ را می‌توانید بازبینی کنید.</p><p class="professional-progress">پاسخ‌داده‌شده: '+fa(done)+' از ۱۰</p>'+
+ C.professionalQuiz.map((q,i)=>'<article class="professional-question" data-professional-question="'+i+'"><h4>سؤال '+fa(i+1)+' · '+E(q.stem)+'</h4><div class="professional-facts"><strong>مفروضات مسئله</strong><ul>'+q.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul></div><div class="professional-options">'+q.options.map((o,j)=>'<button type="button" class="mastery-answer '+(saved[i]===j?'is-selected':'')+'" data-professional-answer="'+i+'" data-professional-option="'+j+'" aria-pressed="'+(saved[i]===j?'true':'false')+'">'+fa(j+1)+'. '+E(o.t)+'</button>').join('')+'</div><div class="professional-explanation" data-professional-explanation="'+i+'" aria-live="polite">'+(saved[i]!==undefined?professionalExplanation(i,saved[i]):'')+'</div></article>').join('')+'</section>';
+}
+function professionalExplanation(i,chosen){
+ const q=C.professionalQuiz[i],good=q.options[chosen]?.correct;
+ return '<strong>'+(good?'✓ تصمیم مناسب‌تر را انتخاب کردید.':'این گزینه با تمام شواهد سازگار نیست؛ تحلیل تصمیم را بخوانید.')+'</strong>'+
+ q.options.map((o,j)=>'<p><b>گزینه '+fa(j+1)+(o.correct?' · مناسب‌تر':'')+':</b> '+E(o.why)+'</p>').join('');
 }
 function lessonRow(phase=stage){return '<div class="class-stage-marker"><span>مرحله '+fa(phase+1)+' از ۱۱</span><strong>'+E(names[phase])+'</strong></div>';}
 function stepMap(){
@@ -87,8 +106,8 @@ function strategyCards(){
 }
 function strategyIntro(teacher){
  return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','این‌ها چهار انتخاب راهبردی‌اند؛ تیپ شخصیتی یا برچسب کارکنان نیستند.')+
- strategyCards()+masteryLessons()+
- '<p class="classroom-wait">'+(teacher?'چهار تعریف را با مثال مرور کن؛ برای هر راهبرد یک سؤال کوتاه بپرس، سپس به انتخاب مأموریت برو.':'راهکارها و سؤال‌های کوتاه را مرور کنید؛ هر گروه در گام بعد یکی از چهار مأموریت را انتخاب می‌کند.')+'</p>';
+ strategyCards()+masteryLessons()+oneTimeAssessment()+professionalTest()+
+ '<p class="classroom-wait">'+(teacher?'چهار راهبرد، خودارزیابی یک‌نوبتی و آزمون ده‌سؤالی را مرور کن؛ سپس انتخاب مأموریت را آغاز کن.':'راهبردها، خودارزیابی یک‌نوبتی و ده سؤال حرفه‌ای را مرور کنید؛ سپس گروه خود مأموریتش را انتخاب می‌کند.')+'</p>';
 }
 function missionRoster(){
  const list=groups().filter(t=>confirmed(t)||attendance(t)||groupChoice(t)!==null);
@@ -234,6 +253,17 @@ async function drainRubricQueue(){
  }finally{rubricPump=false;if(rubricQueue.size&&!busy)drainRubricQueue();}
 }
 root.addEventListener('change',event=>{
+ const field=event.target.closest('select[data-class-single-assessment]');
+ if(!field||!identity)return;
+ const id=Number(field.dataset.classSingleAssessment),v=Number(field.value);
+ if(!Number.isInteger(id)||id<0||id>5)return;
+ const saved=assessmentValues();
+ if(field.value===''||v<1||v>4)delete saved[id];else saved[id]=v;
+ try{sessionStorage.setItem(assessmentKey(),JSON.stringify(saved))}catch{}
+ const status=root.querySelector('.mastery-one-status');
+ if(status){const n=Object.keys(saved).length;status.textContent=n===6?'هر شش گزاره ثبت شد. این ارزیابی یک‌نوبتی است.':'پاسخ ثبت‌شده: '+fa(n)+' از ۶';}
+});
+root.addEventListener('change',event=>{
  const select=event.target.closest('select[data-class-rubric]');
  if(!select||!identity||identity.role!=='team')return;
  const i=Number(select.dataset.classRubricMission),j=Number(select.dataset.classRubric),value=select.value;
@@ -244,6 +274,16 @@ root.addEventListener('change',event=>{
 });
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
+ if(btn.hasAttribute('data-professional-answer')){
+  const i=Number(btn.dataset.professionalAnswer),j=Number(btn.dataset.professionalOption);
+  if(!Number.isInteger(i)||i<0||i>9||!Number.isInteger(j)||j<0||j>2||!C.professionalQuiz[i])return;
+  const saved=testAnswers();saved[i]=j;try{sessionStorage.setItem(testKey(),JSON.stringify(saved))}catch{}
+  const card=btn.closest('[data-professional-question]');
+  card?.querySelectorAll('[data-professional-option]').forEach(x=>{const selected=x===btn;x.classList.toggle('is-selected',selected);x.setAttribute('aria-pressed',String(selected));});
+  const explanation=card?.querySelector('[data-professional-explanation]');if(explanation)explanation.innerHTML=professionalExplanation(i,j);
+  const prog=root.querySelector('.professional-progress');if(prog)prog.textContent='پاسخ‌داده‌شده: '+fa(Object.keys(saved).length)+' از ۱۰';
+  return;
+ }
  if(btn.hasAttribute('data-class-quiz')){
   const i=Number(btn.dataset.classQuiz),j=Number(btn.dataset.classQuizOption);
   if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>2||!(stage===1||identity?.role==='teacher'&&previewStep===1))return;
