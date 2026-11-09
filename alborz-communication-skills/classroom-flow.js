@@ -254,7 +254,8 @@ function projectedParticipantContent(team,member,phase,sample){
 }
 function projectorPanel(phase){
  const team=projectedTeam,member=projectedMember,realChoice=groupChoice(team),hasGroup=confirmed(team);
- const useSample=projectionSample&&(realChoice===null||!hasGroup),isDemo=useSample||!hasGroup&&phase===0;
+ const sampleAvailable=!hasGroup&&phase>=1||realChoice===null&&phase>=3&&phase<=10;
+ const useSample=projectionSample&&sampleAvailable;
  const selectedChoice=realChoice===null&&useSample?reference:realChoice;
  const missionName=selectedChoice===null?'هنوز ثبت نشده':animals[selectedChoice]+' '+labels[selectedChoice];
  const options=groups().map(t=>{
@@ -272,7 +273,7 @@ function projectorPanel(phase){
  '<div class="classroom-projector-team-grid" aria-label="انتخاب گروه برای مشاهده">'+options+'</div>'+
  '<div class="classroom-projector-member-picker"><span>نمای کدام عضو؟</span>'+members+'</div>'+
  '<div class="classroom-projector-note"><strong>اطلاع مهم:</strong> '+E(scope)+'</div>'+
- (realChoice===null&&phase>=3&&phase<=10?'<div class="classroom-projector-demo-controls"><button type="button" class="btn" data-class-projection-sample>'+ (useSample?'بازگشت به وضعیت واقعی گروه':'نمایش نمونه آموزشی بدون ثبت مأموریت')+'</button>'+ (useSample?'<div class="classroom-teacher-switch">'+C.models.map((m,i)=>'<button type="button" class="'+(reference===i?'selected':'')+'" data-class-reference="'+i+'">'+m[0]+' '+E(m[1])+'</button>').join('')+'</div>':'')+'</div>':'')+
+ (sampleAvailable?'<div class="classroom-projector-demo-controls"><button type="button" class="btn" data-class-projection-sample>'+ (useSample?'بازگشت به وضعیت واقعی گروه':'نمایش نمونه آموزشی بدون ثبت مأموریت')+'</button>'+ (useSample?'<div class="classroom-teacher-switch">'+C.models.map((m,i)=>'<button type="button" class="'+(reference===i?'selected':'')+'" data-class-reference="'+i+'">'+m[0]+' '+E(m[1])+'</button>').join('')+'</div>':'')+'</div>':'')+
  '<p class="classroom-projector-label">'+E(bodyLabel)+'</p>'+
  '<div class="classroom-projection-body">'+content+'</div>'+
  '<p class="classroom-projector-footer">این نما فقط برای مشاهده و پاسخ به پرسش‌هاست؛ نمی‌توان از آن حضور، انتخاب، آزمون یا تصمیم گروه را تغییر داد.</p></section>';
