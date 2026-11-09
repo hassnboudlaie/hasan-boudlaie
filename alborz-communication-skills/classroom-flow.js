@@ -28,6 +28,29 @@ function groups(){return Array.from({length:10},(_,i)=>i+1);}
 function clearNotice(){notice='';}
 function alertUser(text,error=false){notice=text;let el=root.querySelector('#classroom-feedback');if(el){el.textContent=text;el.classList.toggle('is-error',error);}else render(true);}
 function className(){return identity?.role==='teacher'?'مدرس کارگاه':'گروه '+fa(identity?.team||0)+' · عضو '+fa(identity?.member||0);}
+function masteryLessons(){
+ return '<section class="mastery-lessons" aria-labelledby="mastery-lessons-title"><h3 id="mastery-lessons-title">راهنمای انتخاب چهار راهبرد</h3><p>فقط به دو پرسش پاسخ بدهید: آیا روش اصلی خدمت باید تغییر کند؟ آیا قرار است کسب‌وکار تازه و مستقلی شکل بگیرد؟ این چهار حیوان تیپ شخصیتی نیستند.</p><div class="mastery-matrix"><div><strong>🐪 شتر</strong><span>هسته حفظ می‌شود؛ کسب‌وکار تازه نداریم.</span></div><div><strong>🐟 ماهی آزاد</strong><span>هسته حفظ می‌شود؛ کسب‌وکار تازه می‌سازیم.</span></div><div><strong>🦎 آفتاب‌پرست</strong><span>هسته تغییر می‌کند؛ کسب‌وکار تازه نداریم.</span></div><div><strong>🐙 اختاپوس</strong><span>هسته تغییر می‌کند؛ کسب‌وکار تازه هم می‌سازیم.</span></div></div>'+
+ C.mastery.map((v,i)=>'<details class="mastery-lesson"><summary>'+C.models[i][0]+' '+E(C.models[i][1])+' · توضیح، مثال و آزمون کوتاه</summary><div class="mastery-lesson-body"><p><strong>به زبان ساده:</strong> '+E(v.lesson.definition)+'</p><p><strong>کِی مناسب است؟</strong> '+E(v.lesson.condition)+'</p><p><strong>مرز با بقیه:</strong> '+E(v.lesson.boundary)+'</p><p><strong>اشتباه رایج:</strong> '+E(v.lesson.error)+'</p><strong class="mastery-list-head">سه حرکت کاربردی در خسارت</strong><ol>'+v.lesson.actions.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol><p class="mastery-question"><strong>پرسش تشخیصی:</strong> '+E(v.lesson.question)+'</p><p class="mastery-takeaway">'+E(v.lesson.takeaway)+'</p><div class="mastery-microquiz"><h4>خودت را بسنج</h4><p>'+E(v.quickCheck.q)+'</p>'+v.quickCheck.options.map((o,j)=>'<button type="button" class="mastery-answer" data-class-quiz="'+i+'" data-class-quiz-option="'+j+'">'+fa(j+1)+'. '+E(o.text)+'</button>').join('')+'<div class="mastery-quiz-feedback" data-master-feedback="'+i+'" role="status" aria-live="polite"></div></div></div></details>').join('')+
+ '<p class="mastery-source">این یک اقتباس آموزشی از چهار راهبرد سازمانی Kurt Verweire است؛ ابزار تشخیص شخصیت یا دستور رسمی رسیدگی خسارت نیست.</p></section>';
+}
+
+function masteryRoles(i){
+ const m=C.mastery[i],info=C.missions[i].info;
+ return '<section class="mastery-roles"><h3>پنج شخصیت این مأموریت</h3><p>هر نفر فقط اطلاعات شخصیت خودش را بخواند و با همان نگرانی و هدف وارد گفت‌وگو شود. در گروه سه یا چهار‌نفره می‌توانید دو نقش بگیرید؛ مشاهده‌گر هم در تحلیل پایانی صحبت می‌کند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>راهنمای شروع:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">نقش را طبیعی اجرا کنید؛ لازم نیست دیالوگ را از حفظ بگویید. اسم‌ها فرضی‌اند و اطلاعات واقعی مراجعان نباید وارد تمرین شود.</p></section>';
+}
+
+function masteryTalk(i){
+ const m=C.mastery[i];
+ function turnList(lines){return '<div class="mastery-dialogue">'+lines.map((x,n)=>'<article class="mastery-turn mastery-speaker-'+x.p+'"><div class="mastery-speaker"><span class="mastery-speaker-avatar">'+E(m.people[x.p].name.charAt(0))+'</span><div><strong>'+E(m.people[x.p].name)+'</strong><small>'+E(m.people[x.p].role)+'</small></div><em>'+fa(n+1)+'</em></div><p>'+E(x.t)+'</p></article>').join('')+'</div>';}
+ return '<section class="mastery-dialogues"><h3>گفت‌وگوی نمونه؛ دو اجرای متفاوت</h3><p>ابتدا نقش‌ها را بدون حفظ‌کردن متن اجرا کنید. گفت‌وگوی اول نشان می‌دهد کجا ممکن است کار از مسیر حرفه‌ای خارج شود. پس از بازخورد مشاهده‌گر، گفت‌وگوی دوم را باز کنید و همان موقعیت را بهتر پیش ببرید.</p><details class="mastery-scene"><summary>🎭 اجرای اول · گفت‌وگوی نیازمند اصلاح ('+fa(m.before.length)+' نوبت)</summary>'+turnList(m.before)+'</details><details class="mastery-scene"><summary>✨ اجرای دوم · گفت‌وگوی اصلاح‌شده ('+fa(m.after.length)+' نوبت)</summary>'+turnList(m.after)+'</details><details class="mastery-scene mastery-analysis"><summary>🔍 لحظه‌های مهارتی · چرا این بار بهتر شد؟</summary>'+m.moments.map((x,j)=>'<article><h4>لحظه '+fa(j+1)+' · '+E(x.line)+'</h4><p><b>چرا مهم است؟</b> '+E(x.why)+'</p><p><b>نگوییم:</b> '+E(x.weak)+'</p><p><b>بهتر است:</b> '+E(x.better)+'</p></article>').join('')+'</details><p class="mastery-tip">مشاهده‌گر در پایان فقط به رفتارهای قابل مشاهده بازخورد بدهد: جمله دقیق، اثر آن و پیشنهاد یک تغییر کوچک.</p></section>';
+}
+
+function masteryObserver(i,teacher=false){
+ const m=C.mastery[i],team=identity?.team,prefix='r'+i;
+ const vals=m.observer.map((_,j)=>val(team,prefix+'score'+j));
+ const ready=vals.every(v=>['0','1','2'].includes(v)),total=ready?vals.reduce((n,v)=>n+Number(v),0):null;
+ return '<section class="mastery-observer"><h3>چک‌لیست مشاهده‌گر · مخصوص '+E(C.models[i][1])+'</h3><p>برای هر معیار، شواهد گفت‌وگو را پیدا کنید. صفر یعنی دیده نشد؛ یک یعنی ناقص بود؛ دو یعنی کامل و با شاهد مشخص انجام شد. این امتیاز فقط برای بازخورد آموزشی گروه است، نه ارزیابی عملکرد فردی.</p><div class="mastery-rubric">'+m.observer.map((x,j)=>'<article><div><strong>'+fa(j+1)+'. '+E(x.criterion)+'</strong><p><b>شاهد قابل مشاهده:</b> '+E(x.evidence)+'</p><p class="mastery-risk"><b>مراقب باشیم:</b> '+E(x.risk)+'</p></div>'+(!teacher?'<label>امتیاز گروه<select data-class-rubric="'+j+'" data-class-rubric-mission="'+i+'" aria-label="امتیاز معیار '+fa(j+1)+'"><option value="" '+(!['0','1','2'].includes(vals[j])?'selected':'')+'>ثبت نشده</option>'+[0,1,2].map(v=>'<option value="'+v+'" '+(String(vals[j])===String(v)?'selected':'')+'>'+fa(v)+' از ۲</option>').join('')+'</select></label>':'')+'</article>').join('')+'</div>'+(!teacher?'<p class="mastery-score">'+(ready?'امتیاز مبتنی بر شواهد گروه: '+fa(total)+' از ۱۰':'برای جمع‌بندی، پنج معیار را ارزیابی کنید.')+'</p>':'')+'<details class="mastery-debrief"><summary>پرسش‌های تحلیل جمعی و انتقال به کار</summary><ol>'+m.debrief.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol></details></section>';
+}
 function lessonRow(){return '<div class="class-stage-marker"><span>مرحله '+fa(stage+1)+' از ۱۱</span><strong>'+E(names[stage])+'</strong></div>';}
 function stepMap(){
  const teacher=identity?.role==='teacher';
@@ -62,8 +85,9 @@ function strategyCards(){
  return '<div class="classroom-strategy-grid">'+C.models.map((m,i)=>'<article><span>'+m[0]+'</span><h3>'+E(m[1])+'</h3><strong>'+E(m[4])+'</strong><p>'+E(m[5])+'</p></article>').join('')+'</div>';
 }
 function strategyIntro(teacher){
- return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','این‌ها تیپ شخصیتی نیستند؛ چهار انتخاب راهبردی برای موقعیت‌های متفاوت‌اند.')+
- strategyCards()+'<p class="classroom-wait">'+(teacher?'چهار راهبرد را توضیح بده، سپس با دکمه «گام بعد» وارد انتخاب مأموریت شو.':'چهار راهبرد را همراه با توضیحات مدرس مرور کنید؛ انتخاب مأموریت در گام بعد انجام می‌شود.')+'</p>';
+ return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','این‌ها چهار انتخاب راهبردی‌اند؛ تیپ شخصیتی یا برچسب کارکنان نیستند.')+
+ strategyCards()+masteryLessons()+
+ '<p class="classroom-wait">'+(teacher?'چهار تعریف را با مثال مرور کن؛ برای هر راهبرد یک سؤال کوتاه بپرس، سپس به انتخاب مأموریت برو.':'راهکارها و سؤال‌های کوتاه را مرور کنید؛ هر گروه در گام بعد یکی از چهار مأموریت را انتخاب می‌کند.')+'</p>';
 }
 function missionRoster(){
  const list=groups().filter(t=>confirmed(t)||attendance(t)||groupChoice(t)!==null);
@@ -103,12 +127,12 @@ function teacherStep(){
  ][n];
  const bodies=[
  '<div class="classroom-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>اطلاعاتی که گروه هم می‌بیند</h3><ul>'+d.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul><h3>پرسش چالشی</h3><p>'+E(d.question)+'</p></div>',
- '<details class="classroom-reference"><summary>پنج نقش و اطلاعات اختصاصی</summary>'+C.roles.map((r,j)=>'<p><b>'+E(r)+':</b> '+E(m.info[j])+'</p>').join('')+'</details>',
- '<div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div><details class="classroom-reference"><summary>نمونه گفت‌وگو و بازخورد</summary>'+m.dialog.map(v=>'<p>'+E(v)+'</p>').join('')+'<p><b>سؤال مشاهده‌گر:</b> '+E(x.check)+'</p><p><b>اجرای اصلاح‌شده:</b> '+E(x.second)+'</p></details>',
+ masteryRoles(i),
+ '<div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div>'+masteryTalk(i),
  '<details class="classroom-reference"><summary>کارت‌های تصمیم و پیامدها</summary>'+m.actions.map(a=>'<p><strong>'+E(a[0])+' · '+fa(a[1])+' سکه</strong> — '+E(a[2])+'</p>').join('')+'</details>',
  '<div class="classroom-event"><h3>اتفاق تازه</h3><p>'+E(m.shock)+'</p></div>',
  '<p class="classroom-prompt">'+E(d.question)+'</p>',
- '<div class="classroom-duo"><div><b>بازتاب تصمیم</b><p>کدام شاهد باعث تغییر تصمیم گروه شد؟</p></div><div><b>کاربرد شغلی</b><p>فردا در واحد خسارت، چه اقدامی قابل اجراست؟</p></div></div>'
+ masteryObserver(i,true)
  ][n];
  return '<div class="classroom-teacher-scene">'+simpleTitle('هدایت سناریو','گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],'نمونه توضیح از سناریوی '+labels[i]+'؛ گروه‌های دیگر می‌توانند سناریوی متفاوتی داشته باشند.')+
  '<div class="classroom-teacher-switch">'+C.models.map((v,j)=>'<button type="button" class="'+(j===i?'selected':'')+'" data-class-reference="'+j+'">'+v[0]+' '+E(v[1])+'</button>').join('')+'</div>'+
@@ -131,13 +155,13 @@ function learnerMission(){
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul><h3>پرسش گروه</h3><p>'+E(d.question)+'</p></div>';
- if(n===1)body='<p class="classroom-prompt">پنج نقش زیر را بین افراد حاضر تقسیم کنید. در گروه‌های سه یا چهار نفره، بعضی افراد دو نقش می‌گیرند. اگر شش نفر هستید، نفر ششم به مشاهده‌گر برای ثبت شواهد و مدیریت زمان کمک کند.</p><div class="classroom-role-list">'+C.roles.map((r,j)=>'<details><summary>نقش '+fa(j+1)+' · '+E(r)+'</summary><p>'+E(m.info[j])+'</p></details>').join('')+'</div>';
- if(n===2)body='<p class="classroom-prompt">اول گفت‌وگو را اجرا کنید. مشاهده‌گر یک نکته بگوید؛ سپس گفت‌وگو را دوباره انجام دهید.</p><div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div><details class="classroom-reference"><summary>نمونه گفت‌وگو و پرسش مشاهده‌گر</summary>'+m.dialog.map(v=>'<p>'+E(v)+'</p>').join('')+'<p><b>پرسش:</b> '+E(x.check)+'</p><p><b>نمونه بهتر:</b> '+E(x.second)+'</p></details>';
+ if(n===1)body=masteryRoles(i);
+ if(n===2)body='<div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div>'+masteryTalk(i);
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
  body='<p class="classroom-prompt">با ۶ سکه حداقل دو اقدام انتخاب کنید. یک نفر تصمیم را از طرف گروه ثبت کند.</p><div class="classroom-money">بودجه تصمیم: <strong>۶ سکه</strong></div><div class="classroom-options">'+m.actions.map((a,j)=>'<label><input type="checkbox" data-class-pick="'+j+'" '+(picked.includes(j)?'checked':'')+'><span>'+E(a[0])+'</span><b>'+fa(a[1])+' سکه</b></label>').join('')+'</div><label class="classroom-input"><span>تصمیم و دلیل گروه</span><textarea data-class-answer="initial" rows="3" placeholder="چه اقدام‌هایی را انتخاب کردید؟ چرا؟ مسئول کیست؟">'+E(val(team,prefix+'initial')||'')+'</textarea></label><button class="btn primary" data-class-save="initial">ثبت تصمیم گروه</button>'+(val(team,prefix+'initial')?'<p class="classroom-saved">تصمیم قبلی گروه ثبت شده است ✓</p>':'');}
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
- if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">یک مثال از رفتار یا جمله قابل مشاهده در اجرای گروه را ثبت کنید.</p><label class="classroom-input"><span>شاهد من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="مثلاً چه جمله‌ای باعث شد گفت‌وگو بهتر پیش برود؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت مشاهده من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
+ if(n===6){const k=prefix+'member'+member;body=masteryObserver(i)+'<p class="classroom-prompt">یک مثال از رفتار یا جمله قابل مشاهده در اجرای گروه را ثبت کنید.</p><label class="classroom-input"><span>شاهد من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="مثلاً چه جمله‌ای باعث شد گفت‌وگو بهتر پیش برود؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت مشاهده من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
  return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team)?'disabled':'')+'>'+(stepReady(team)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
 }
 function ending(){
@@ -184,8 +208,26 @@ async function saveFields(fields){
  const expected=Object.fromEntries(Object.keys(fields).map(k=>[k,version(team,k)]));
  await L.request({action:'write',team,fields,expected});
 }
+root.addEventListener('change',event=>{
+ const select=event.target.closest('select[data-class-rubric]');
+ if(!select||!identity||identity.role!=='team'||busy)return;
+ const i=Number(select.dataset.classRubricMission),j=Number(select.dataset.classRubric),value=select.value;
+ if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>4||!['0','1','2'].includes(value))return;
+ if(groupChoice(identity.team)!==i||stage!==9)return;
+ execute(()=>saveFields({['r'+i+'score'+j]:value}));
+});
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
+ if(btn.hasAttribute('data-class-quiz')){
+  const i=Number(btn.dataset.classQuiz),j=Number(btn.dataset.classQuizOption);
+  if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>2||stage!==1)return;
+  const question=C.mastery[i].quickCheck,wrap=btn.closest('.mastery-microquiz');
+  if(!wrap)return;
+  wrap.querySelectorAll('[data-class-quiz-option]').forEach(b=>{b.classList.toggle('is-selected',b===btn);b.setAttribute('aria-pressed',b===btn?'true':'false');});
+  const feedback=wrap.querySelector('[data-master-feedback="'+i+'"]');
+  if(feedback)feedback.innerHTML='<strong>'+(question.options[j].correct?'درست انتخاب کردی ✓':'این گزینه دقیق نیست؛ دلیل هر سه را ببین:')+'</strong>'+question.options.map((o,k)=>'<p><b>گزینه '+fa(k+1)+':</b> '+E(o.why)+'</p>').join('');
+  return;
+ }
  if(btn.hasAttribute('data-class-overview')){openStep=null;previewStep=null;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-open')){const n=Number(btn.dataset.classOpen);if(!Number.isInteger(n)||n<0||n>10)return;if(n===stage){openStep=stage;previewStep=null;}else{previewStep=n;openStep=null;}lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-checkin')){const key='checkin'+identity.member;execute(()=>saveFields({[key]:true}));return;}
