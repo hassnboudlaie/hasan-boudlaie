@@ -309,3 +309,42 @@
  .classroom-choice-grid b{font-size:21px}
 }
 @media(max-width:470px){.classroom-choice-grid{grid-template-columns:minmax(0,1fr)}}
+
+
+/* Instructor-only classroom projection: large read-aloud typography, shared group data, and no student writes. */
+.classroom-view-switch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 12px;padding:9px;background:#e9f3f5;border:1px solid #c3d9df;border-radius:17px}
+.classroom-view-switch button{border:1px solid transparent;background:transparent;color:#315d6b;border-radius:12px;font-size:19px;font-weight:850;min-height:54px;padding:10px 17px;cursor:pointer}
+.classroom-view-switch button.selected{background:#fff;color:#075974;border-color:#91c8d6;box-shadow:0 3px 14px #13516a14}
+.classroom-view-switch button:hover,.classroom-view-switch button:focus-visible{outline-offset:3px;border-color:#0b8990}
+.classroom-projector{background:#fff;border:1.5px solid #bad5dc;border-radius:21px;padding:clamp(15px,3vw,28px);margin:15px 0;box-shadow:0 9px 30px #12475d0c}
+.classroom-projector-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;border-bottom:1px solid #d2e5e7;padding-bottom:13px}
+.classroom-projector-head>div{flex:1}
+.classroom-projector-head span:first-child{display:block;font-size:16px;font-weight:800;color:#29727a}
+.classroom-projector-head h2{font-size:clamp(26px,3.6vw,36px);color:#073e57;line-height:1.5;margin:7px 0}
+.classroom-projector-head p{font-size:19px;line-height:1.9;color:#3a5969;margin:0}
+.classroom-projector-status{display:inline-block;background:#e4f3e9;padding:8px 13px;border-radius:25px;color:#206147;font-size:15px!important;font-weight:800}
+.classroom-projector-team-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:18px 0}
+.classroom-projector-team{border:1.5px solid #c5d8dc;border-radius:14px;background:#f5f9fa;color:#1e5361;display:flex;align-items:stretch;flex-direction:column;gap:4px;padding:11px;min-height:105px;text-align:right;cursor:pointer;line-height:1.45}
+.classroom-projector-team.selected{border-color:#0e8a78;background:#e6f6f0;box-shadow:0 0 0 2px #087e6240}
+.classroom-projector-team strong{font-size:19px;color:#0b4e61}
+.classroom-projector-team span{font-size:16px;color:#225e6f;font-weight:800}
+.classroom-projector-team small{font-size:14px;color:#60727a;line-height:1.7}
+.classroom-projector-member-picker{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:13px 0;border-top:1px solid #d3e4e8;border-bottom:1px solid #d3e4e8}
+.classroom-projector-member-picker>span{font-size:17px;font-weight:800;color:#295765;padding-left:7px}
+.classroom-projector-member-picker button{border:1px solid #bad3dc;border-radius:12px;min-height:46px;padding:8px 13px;font-size:17px;color:#215a65;background:#fff;cursor:pointer}
+.classroom-projector-member-picker button.selected{background:#0b6881;color:#fff;border-color:#0b6881}
+.classroom-projector-note{font-size:16px;line-height:1.95;margin:18px 0;padding:12px 16px;background:#f2f7f9;border-radius:12px;color:#375967}
+.classroom-projector-demo-controls{margin:13px 0;padding:11px;border:1px dashed #bdd2da;border-radius:14px}
+.classroom-projector-demo-controls>.btn{font-size:17px}
+.classroom-projector-demo-controls .classroom-teacher-switch{margin:12px 0 0}
+.classroom-projector-label{font-size:16px;line-height:1.8;margin:16px 0 8px;color:#466472}
+.classroom-projection-body{margin:13px 0 20px;padding:clamp(10px,2vw,22px);border:2px solid #d4e6ea;border-radius:19px;background:linear-gradient(145deg,#fff,#f8fbfc)}
+.classroom-projection-body .classroom-section-title h2{font-size:clamp(27px,3.7vw,38px)}
+.classroom-projection-body .classroom-story p,.classroom-projection-body .classroom-story li,.classroom-projection-body .classroom-event p,.classroom-projection-body .classroom-prompt{font-size:clamp(18px,2.25vw,23px);line-height:1.95}
+.classroom-projection-body button:disabled,.classroom-projection-body select:disabled,.classroom-projection-body input:disabled,.classroom-projection-body textarea:disabled{opacity:1;cursor:default}
+.classroom-projection-body textarea:disabled{background:#fbfdfe;color:#254a59;-webkit-text-fill-color:#254a59}
+.classroom-projection-body input[type="checkbox"]:disabled{accent-color:#16826e}
+.classroom-projector-footer{background:#eaf6f2;color:#1b6854;border-radius:12px;padding:13px 16px;font-size:16px;line-height:1.9}
+@media (max-width:1080px){.classroom-projector-team-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:700px){.classroom-projector-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.classroom-view-switch button{flex:1;font-size:16px}.classroom-projector{padding:13px}.classroom-projection-body{padding:10px}.classroom-projector-head h2{font-size:25px}.classroom-projector-member-picker button{font-size:15px;padding:7px 10px}}
+@media (max-width:390px){.classroom-projector-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.classroom-projector-team{min-height:110px;padding:9px}.classroom-projector-team strong{font-size:17px}.classroom-projector-team span{font-size:14px}}
