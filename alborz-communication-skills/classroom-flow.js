@@ -12,7 +12,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null;
+let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -109,21 +109,60 @@ function strategyIntro(teacher){
  strategyCards()+masteryLessons()+oneTimeAssessment()+professionalTest()+
  '<p class="classroom-wait">'+(teacher?'چهار راهبرد، خودارزیابی یک‌نوبتی و آزمون ده‌سؤالی را مرور کن؛ سپس انتخاب مأموریت را آغاز کن.':'راهبردها، خودارزیابی یک‌نوبتی و ده سؤال حرفه‌ای را مرور کنید؛ سپس گروه خود مأموریتش را انتخاب می‌کند.')+'</p>';
 }
+function consensusProcess(){
+ return '<section class="classroom-consensus-process"><div class="classroom-consensus-heading"><strong>🤝 انتخاب مأموریت با اجماع گروهی</strong><span>⏱️ ۲ دقیقه گفت‌وگو</span></div>'+
+ '<div class="classroom-consensus-steps"><p><b>۱. گفت‌وگو کنید</b><span>هر نفر خیلی کوتاه بگوید کدام راهبرد برای تمرین گروه مناسب‌تر است و چرا.</span></p>'+
+ '<p><b>۲. به توافق برسید</b><span>فقط یک مأموریت را انتخاب کنید؛ لازم نیست همه گروه‌ها راهبرد یکسان داشته باشند.</span></p>'+
+ '<p><b>۳. یک نفر ثبت کند</b><span>نماینده گروه گزینه توافق‌شده را انتخاب و ثبت نهایی می‌کند.</span></p></div>'+
+ '<p class="classroom-consensus-note">زمان گفت‌وگو پیشنهادی است. نیازی به رأی‌گیری یا ثبت پاسخ تک‌تک افراد نیست.</p></section>';
+}
+function missionCards(mode,team=0){
+ const used=mode==='group'?usedMissions(team):[];
+ const saved=mode==='group'?groupChoice(team):null;
+ const choice=mode==='preview'?previewDraft:saved!==null?saved:consensusDraft;
+ const locked=mode==='group'&&saved!==null;
+ const attr=mode==='preview'?'data-class-preview-mission':'data-class-mission';
+ return '<div class="classroom-choice-grid" aria-label="چهار مأموریت تاب‌آوری">'+C.models.map((m,i)=>
+  '<button type="button" class="'+(choice===i?'selected':'')+'" '+attr+'="'+i+'" '+(locked||used.includes(i)?'disabled aria-disabled="true"':'')+
+  ' aria-pressed="'+(choice===i?'true':'false')+'"><b>'+m[0]+' '+E(m[1])+'</b><small>'+E(C.missions[i].title)+'</small><span>'+
+  (used.includes(i)?'در دور قبل انجام شده':locked&&saved===i?'✓ انتخاب نهایی گروه':locked?'مأموریت دیگری ثبت شده':choice===i?'✓ انتخاب موقت؛ هنوز ثبت نشده':'برای بررسی انتخاب کنید')+
+  '</span></button>').join('')+'</div>';
+}
 function missionRoster(){
  const list=groups().filter(t=>confirmed(t)||attendance(t)||groupChoice(t)!==null);
- if(!list.length)return '<p class="classroom-empty">هنوز گروهی تشکیل نشده است.</p>';
- return '<div class="classroom-choice-roster">'+list.map(t=>'<div><strong>گروه '+fa(t)+'</strong><span>'+(groupChoice(t)===null?'مأموریت انتخاب نشده':animals[groupChoice(t)]+' '+labels[groupChoice(t)])+'</span></div>').join('')+'</div>';
+ if(!list.length)return '<p class="classroom-empty">هنوز گروهی تشکیل یا تأیید نشده است. پیش‌نمایش پایین صرفاً آموزشی است و داده‌ای ثبت نمی‌کند.</p>';
+ return '<div class="classroom-choice-roster">'+list.map(t=>{
+  const mission=groupChoice(t),canReopen=identity?.role==='teacher'&&stage===2&&previewStep===null&&mission!==null;
+  return '<div><strong>گروه '+fa(t)+'</strong><span>'+(mission===null?'منتظر انتخاب و ثبت نماینده':animals[mission]+' '+labels[mission])+'</span>'+
+   (canReopen?'<button type="button" class="classroom-reopen-mission" data-class-reopen-mission="'+t+'">اصلاح انتخاب</button>':'')+'</div>';
+ }).join('')+'</div>';
 }
 function chooseMission(){
- const t=identity.team,selected=groupChoice(t),used=usedMissions(t);
- return simpleTitle('مرحله انتخاب مأموریت','مأموریت گروه را انتخاب کنید','هر گروه می‌تواند یکی از چهار مأموریت را مستقل از انتخاب گروه‌های دیگر بردارد. همه اعضای گروه روی همان مأموریت کار می‌کنند.')+
- '<div class="classroom-choice-grid">'+C.models.map((m,i)=>'<button class="'+(selected===i?'selected':'')+'" type="button" data-class-mission="'+i+'" '+(used.includes(i)?'disabled aria-disabled="true"':'')+'><b>'+m[0]+' '+E(m[1])+'</b><small>'+E(C.missions[i].title)+'</small><span>'+(used.includes(i)?'در دور قبل انجام شد ✓':selected===i?'انتخاب گروه ✓':requested===i?'پیشنهاد ورود شما':'انتخاب این مأموریت')+'</span></button>').join('')+'</div>'+
- '<p class="classroom-wait">'+(selected===null?'هنوز مأموریتی برای گروه ثبت نشده است.':'مأموریت «'+labels[selected]+'» ثبت شد. اکنون منتظر شروع سناریو از سوی مدرس بمانید.')+'</p>';
+ const team=identity.team,selected=groupChoice(team);
+ if(selected!==null){consensusDraft=null;consensusAgreed=false;}
+ return simpleTitle('مرحله انتخاب مأموریت','انتخاب مأموریت با توافق اعضای گروه','چهار مأموریت باز هستند؛ گروه شما یکی را انتخاب می‌کند. ابتدا گفت‌وگو کنید، بعد فقط یک نفر به نمایندگی ثبت نهایی کند.')+
+ consensusProcess()+missionCards('group',team)+
+ (selected!==null?
+  '<section class="classroom-choice-confirmed" role="status"><strong>✅ مأموریت گروه ثبت شد: '+animals[selected]+' '+labels[selected]+'</strong><p>این انتخاب برای اعضای گروه یکسان است. اکنون منتظر شروع سناریو از سوی مدرس بمانید. برای اصلاح انتخاب با مدرس هماهنگ کنید.</p></section>':
+  '<section class="classroom-consensus-submit"><p>'+(consensusDraft===null?'ابتدا مأموریت توافق‌شده را از چهار گزینه بالا انتخاب کنید.':'انتخاب موقت: <strong>'+animals[consensusDraft]+' '+labels[consensusDraft]+'</strong>')+'</p>'+
+  '<label class="classroom-consensus-check"><input type="checkbox" data-class-consensus-check '+(consensusAgreed?'checked':'')+'><span>به نمایندگی از اعضای گروه تأیید می‌کنم که درباره این مأموریت گفت‌وگو کرده و به توافق رسیده‌ایم.</span></label>'+
+  '<button type="button" class="btn primary" data-class-confirm-mission '+(consensusDraft===null||!consensusAgreed?'disabled':'')+'>ثبت نهایی مأموریت گروه</button>'+
+  '<p class="classroom-consensus-note">با ثبت نهایی، مأموریت این دور قفل می‌شود؛ اگر اشتباهی رخ دهد، مدرس می‌تواند انتخاب گروه را باز کند.</p></section>');
 }
 function missionTeacherChoice(){
- const ready=groups().filter(confirmed),pending=ready.filter(t=>groupChoice(t)===null);
- return simpleTitle('انتخاب مأموریت گروه‌ها','گروه‌ها مأموریت این دور را انتخاب می‌کنند','هر گروه مأموریت دلخواه خودش را انتخاب می‌کند؛ همه گروه‌ها هفت گام مشترک را با هدایت مدرس پیش می‌برند.')+
- missionRoster()+'<p class="classroom-wait">'+(pending.length?'هنوز '+fa(pending.length)+' گروه تأیید‌شده مأموریت انتخاب نکرده‌اند.':'گروه‌های تأیید‌شده آماده ورود به سناریو هستند.')+'</p>';
+ const ready=groups().filter(confirmed),pending=ready.filter(t=>groupChoice(t)===null),saved=ready.filter(t=>groupChoice(t)!==null);
+ const status=!ready.length?'در حال حاضر گروه تأییدشده‌ای وجود ندارد؛ این پیش‌نمایش مستقل از تشکیل گروه قابل بررسی است.':pending.length?
+  'از '+fa(ready.length)+' گروه تأییدشده، '+fa(saved.length)+' گروه انتخاب نهایی را ثبت کرده و '+fa(pending.length)+' گروه هنوز در حال گفت‌وگو یا انتخاب هستند.':
+  'هر '+fa(ready.length)+' گروه تأییدشده انتخاب نهایی خود را ثبت کرده‌اند و آماده ورود به سناریو هستند.';
+ return simpleTitle('انتخاب مأموریت گروه‌ها','هر گروه با توافق اعضا مأموریتش را انتخاب می‌کند','دو دقیقه گفت‌وگوی گروهی؛ سپس یک نماینده انتخاب توافق‌شده را ثبت می‌کند. گروه‌ها می‌توانند مأموریت یکسان یا متفاوت انتخاب کنند.')+
+ '<section class="classroom-live-roster"><h3>وضعیت واقعی گروه‌ها</h3>'+missionRoster()+'<p class="classroom-wait">'+status+'</p></section>'+
+ '<section class="classroom-teacher-demo"><div class="classroom-teacher-demo-head"><strong>👁️ پیش‌نمایش تعاملی تجربه کارشناس</strong><span>فقط نمایش · بدون ثبت اطلاعات</span></div>'+
+ '<p>برای بررسی طراحی و محتوای گام سوم، یکی از چهار کارت زیر را انتخاب کنید. این انتخاب نمونه است و روی هیچ گروهی تأثیر ندارد.</p>'+
+ consensusProcess()+missionCards('preview')+
+ '<div class="classroom-demo-selection" role="status">'+(previewDraft===null?
+  'یک کارت را انتخاب کنید تا مرحله تأیید نماینده را ببینید.':
+  '<strong>انتخاب نمونه: '+animals[previewDraft]+' '+labels[previewDraft]+'</strong><p>پس از دو دقیقه گفت‌وگوی اعضا، نماینده گروه همین مأموریت را انتخاب و با تأیید اجماع، دکمه «ثبت نهایی مأموریت گروه» را می‌زند. در این پیش‌نمایش، دکمه ثبت عمداً غیرفعال است.</p><button class="btn" type="button" disabled>ثبت نهایی مأموریت گروه · فقط نمونه</button>')+
+ '</div></section>';
 }
 function teacherStep(phase=stage){
  const i=reference,n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],mod=C.models[i];
@@ -206,6 +245,7 @@ function ending(){
 }
 
 function render(force=false){
+ if(classroomRound!==consensusRound){consensusRound=classroomRound;consensusDraft=null;consensusAgreed=false;previewDraft=null;}
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
@@ -257,6 +297,13 @@ root.addEventListener('change',event=>{
  const status=root.querySelector('.mastery-one-status');
  if(status){const n=Object.keys(saved).length;status.textContent=n===6?'هر شش گزاره ثبت شد. این ارزیابی یک‌نوبتی است.':'پاسخ ثبت‌شده: '+fa(n)+' از ۶';}
 });
+root.addEventListener('change',event=>{
+ const box=event.target.closest('[data-class-consensus-check]');
+ if(!box||identity?.role!=='team'||stage!==2||groupChoice(identity.team)!==null)return;
+ consensusAgreed=box.checked;
+ const submit=root.querySelector('[data-class-confirm-mission]');
+ if(submit)submit.disabled=!consensusAgreed||consensusDraft===null;
+});
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.hasAttribute('data-professional-answer')){
@@ -289,7 +336,31 @@ root.addEventListener('click',event=>{
    if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو حضورش را ثبت کند.',true);
    execute(()=>L.request({action:'groupSetup',team,size}));return;
  }
- if(btn.dataset.classMission){const choice=Number(btn.dataset.classMission);if(choice<0||choice>3||usedMissions(identity.team).includes(choice))return alertUser('این مأموریت قبلاً اجرا شده؛ لطفاً یک راهبرد دیگر انتخاب کنید.',true);execute(()=>saveFields({missionChoice:choice,missionChoiceRound:classroomRound,['missionRound'+classroomRound]:choice}));return;}
+ if(btn.hasAttribute('data-class-preview-mission')){
+  if(identity?.role!=='teacher'||(previewStep!==2&&stage!==2))return;
+  const choice=Number(btn.dataset.classPreviewMission);if(!Number.isInteger(choice)||choice<0||choice>3)return;
+  previewDraft=choice;lastFingerprint='';render(true);return;
+ }
+ if(btn.hasAttribute('data-class-mission')){
+  if(identity?.role!=='team'||stage!==2||groupChoice(identity.team)!==null)return;
+  const choice=Number(btn.dataset.classMission);
+  if(!Number.isInteger(choice)||choice<0||choice>3||usedMissions(identity.team).includes(choice))return alertUser('این مأموریت در دور قبلی اجرا شده؛ یک راهبرد دیگر انتخاب کنید.',true);
+  consensusDraft=choice;consensusAgreed=false;lastFingerprint='';render(true);return;
+ }
+ if(btn.hasAttribute('data-class-confirm-mission')){
+  if(identity?.role!=='team'||stage!==2||!confirmed(identity.team)||groupChoice(identity.team)!==null)return;
+  if(consensusDraft===null||!consensusAgreed||usedMissions(identity.team).includes(consensusDraft))return alertUser('ابتدا با گروه به توافق برسید و انتخاب نهایی را تأیید کنید.',true);
+  const choice=consensusDraft;
+  execute(()=>saveFields({missionChoice:choice,missionChoiceRound:classroomRound,['missionRound'+classroomRound]:choice}));
+  return;
+ }
+ if(btn.hasAttribute('data-class-reopen-mission')){
+  if(identity?.role!=='teacher'||previewStep!==null||stage!==2)return;
+  const team=Number(btn.dataset.classReopenMission);if(!Number.isInteger(team)||team<1||team>10||groupChoice(team)===null)return;
+  if(!window.confirm('انتخاب مأموریت گروه '+fa(team)+' باز شود؟ فقط مأموریت همین دور حذف می‌شود و نماینده گروه می‌تواند دوباره ثبت کند.'))return;
+  execute(()=>L.request({action:'reopenMission',team}));
+  return;
+ }
  if(btn.hasAttribute('data-class-ready')){
   if(identity.role!=='team'||stage<3||stage>9)return;
   const chosen=groupChoice(identity.team),prefix='r'+chosen;

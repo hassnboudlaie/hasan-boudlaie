@@ -36,12 +36,18 @@ const server=http.createServer((req,res)=>{
     const wait=old>=3&&old<=9&&req.phase===old+1&&active.some(team=>get(team,'classStepReady')?.field_value!==round+':'+old);
     if(req.expectedVersion!==(get(1,'classroomPhase')?.version??0)||wait){status=409;result={error:wait?'waiting for group readiness':'version conflict'};}
     else{const restarting=old===10&&req.phase===2;set(1,'classroomPhase',req.phase);if(restarting)set(1,'classroomRound',round+1);nextCalls++;result={records:records(1).filter(x=>x.field_key.startsWith('classroom'))};}
+   }else if(action==='reopenMission'){
+    const round=get(1,'classroomRound')?.field_value??0,phase=get(1,'classroomPhase')?.field_value??0;
+    if(phase!==2){status=409;result={error:'reopening is limited to the choice stage'};}
+    else{for(const key of ['missionChoice','missionChoiceRound','missionRound'+round])data.delete(req.team+':'+key);
+     result={ok:true,reopened:true,team:req.team};}
    }else if(action==='write'){
     const fields=req.fields,round=get(1,'classroomRound')?.field_value??0,previous=Array.from({length:round},(_,i)=>get(req.team,'missionRound'+i)?.field_value);
     const repeated='missionChoice' in fields&&previous.includes(fields.missionChoice);
+    const locked='missionChoice' in fields&&get(req.team,'missionChoiceRound')?.field_value===round&&Number.isInteger(get(req.team,'missionChoice')?.field_value);
     const invalidReady='classStepReady' in fields&&fields.classStepReady!==round+':'+(get(1,'classroomPhase')?.field_value??0);
     const conflicts=Object.keys(fields).filter(k=>(get(req.team,k)?.version??0)!==req.expected[k]);
-    if(repeated||invalidReady||conflicts.length){status=409;result={error:repeated?'repeated mission':invalidReady?'wrong step':'conflict',conflicts};}
+    if(repeated||locked||invalidReady||conflicts.length){status=409;result={error:locked?'mission already finalized':repeated?'repeated mission':invalidReady?'wrong step':'conflict',conflicts};}
     else{const rs=Object.entries(fields).map(([k,v])=>set(req.team,k,v));result={records:rs};}
    }else if(action==='resetClassroom'){
     if(req.confirm!=='RESET_ALBORZ_WORKSHOP'){status=400;result={error:'reset confirmation required'};}
@@ -81,6 +87,15 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-overview]').click();
   await teacher.locator('[data-class-open="1"]').click();
   assert.equal(await teacher.locator('.professional-question').count(),10,'future quiz review before formation');
+  await teacher.locator('[data-class-overview]').click();
+  await teacher.locator('[data-class-open="2"]').click();
+  assert.match(await teacher.locator('.classroom-preview-banner').innerText(),/پیش‌نمایش مستقل گام ۳/);
+  assert.equal(await teacher.locator('[data-class-preview-mission]').count(),4,'teacher preview renders four missions without enrolled groups');
+  assert.match(await teacher.locator('.classroom-live-roster').innerText(),/گروه تأییدشده‌ای|گروهی تشکیل یا تأیید نشده/);
+  assert.equal(await teacher.locator('[data-class-next]').count(),0,'teacher preview does not advance the live stage');
+  await teacher.locator('[data-class-preview-mission="3"]').click();
+  assert.match(await teacher.locator('.classroom-demo-selection').innerText(),/اختاپوس/);
+  assert.equal(get(1,'missionChoice'),undefined,'preview does not create a team mission');
   await teacher.locator('[data-class-return-live]').click();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'teacher returns to active formation');
 
@@ -120,12 +135,34 @@ const server=http.createServer((req,res)=>{
   await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('انتخاب مأموریت'));
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   await expert2.evaluate(()=>window.AlborzLive.refresh());
+  assert.match(await expert1.locator('.classroom-consensus-process').innerText(),/۲ دقیقه گفت‌وگو/);
   await expert1.locator('[data-class-mission="0"]').click();
-  await expert1.waitForFunction(()=>document.querySelector('[data-class-mission="0"]')?.classList.contains('selected'));
+  assert.equal(get(1,'missionChoice'),undefined,'card selection alone cannot commit a mission');
+  assert.equal(await expert1.locator('[data-class-confirm-mission]').isDisabled(),true,'representative must attest group consensus');
+  await expert1.locator('[data-class-consensus-check]').check();
+  await expert1.locator('[data-class-confirm-mission]').click();
+  await expert1.waitForFunction(()=>document.querySelector('.classroom-choice-confirmed')?.textContent.includes('شتر'));
   await expert2.locator('[data-class-mission="2"]').click();
-  await expert2.waitForFunction(()=>document.querySelector('[data-class-mission="2"]')?.classList.contains('selected'));
-  assert.equal(get(1,'missionChoice').field_value,0,'group 1 independently chose camel');
-  assert.equal(get(2,'missionChoice').field_value,2,'group 2 independently chose chameleon');
+  assert.equal(get(2,'missionChoice'),undefined,'group two has not committed');
+  await expert2.locator('[data-class-consensus-check]').check();
+  await expert2.locator('[data-class-confirm-mission]').click();
+  await expert2.waitForFunction(()=>document.querySelector('.classroom-choice-confirmed')?.textContent.includes('آفتاب‌پرست'));
+  assert.equal(get(1,'missionChoice').field_value,0,'group 1 representative confirmed camel');
+  assert.equal(get(2,'missionChoice').field_value,2,'group 2 representative confirmed chameleon independently');
+  assert.equal(await expert1.locator('[data-class-mission="1"]').isDisabled(),true,'finalized choice locked on member screens');
+  await teacher.evaluate(()=>window.AlborzLive.refresh());
+  assert.equal(await teacher.locator('[data-class-reopen-mission]').count(),2,'teacher can correct a mistaken group choice');
+  teacher.once('dialog',dialog=>dialog.accept());
+  await teacher.locator('[data-class-reopen-mission="1"]').click();
+  await teacher.waitForFunction(()=>document.querySelector('.classroom-choice-roster')?.textContent.includes('منتظر انتخاب'));
+  assert.equal(get(1,'missionChoice'),undefined,'teacher can reopen this round');
+  assert.equal(get(2,'missionChoice').field_value,2,'other groups remain unchanged');
+  await expert1.evaluate(()=>window.AlborzLive.refresh());
+  await expert1.locator('[data-class-mission="0"]').click();
+  await expert1.locator('[data-class-consensus-check]').check();
+  await expert1.locator('[data-class-confirm-mission]').click();
+  await expert1.waitForFunction(()=>document.querySelector('.classroom-choice-confirmed')?.textContent.includes('شتر'));
+  assert.equal(get(1,'missionChoice').field_value,0,'reopened mission can be finalized again');
   await teacher.evaluate(()=>window.AlborzLive.refresh());
   await teacher.locator('[data-class-next]').click();
   await expert1.evaluate(()=>window.AlborzLive.refresh());
