@@ -19,7 +19,7 @@ function val(team,key){return rec(team,key)?.field_value;}
 function version(team,key){return rec(team,key)?.version??0;}
 function groupChoice(team){const v=val(team,'missionChoice');return Number(val(team,'missionChoiceRound')??-1)===classroomRound&&Number.isInteger(v)&&v>=0&&v<=3?v:null;}
 function usedMissions(team){return Array.from({length:classroomRound},(_,i)=>val(team,'missionRound'+i)).filter(Number.isInteger);}
-function stepReady(team){return val(team,'classStepReady')===classroomRound+':'+stage;}
+function stepReady(team,phase=stage){return val(team,'classStepReady')===classroomRound+':'+phase;}
 function readiness(){const active=groups().filter(confirmed),ready=active.filter(stepReady),waiting=active.filter(t=>!stepReady(t));return {active,ready,waiting};}
 function size(team){const v=val(team,'groupSize');return [3,4,5].includes(v)?v:0;}
 function confirmed(team){return val(team,'groupReady')===true;}
@@ -214,7 +214,7 @@ function monitorAllGroups(){
 }
 function learnerMission(team=identity.team,member=identity.member,phase=stage,sampleMission=null){
  const i=groupChoice(team)??sampleMission;
- if(i===null)return simpleTitle('یک انتخاب باقی مانده','گروه هنوز مأموریت ندارد','هم‌اکنون یکی از چهار مأموریت را انتخاب کنید تا به گام جاری کلاس برسید.')+chooseMission();
+ if(i===null)return simpleTitle('یک انتخاب باقی مانده','گروه هنوز مأموریت ندارد','هم‌اکنون یکی از چهار مأموریت را انتخاب کنید تا به گام جاری کلاس برسید.')+chooseMission(team);
  const n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],prefix='r'+i;
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
@@ -226,7 +226,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
  if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">نتیجه تیم و یک اقدام واقعی برای محیط خسارت را کوتاه بنویسید.</p><label class="classroom-input"><span>نتیجه و اقدام من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="از این مأموریت چه نتیجه‌ای گرفتید؟ فردا چه اقدامی انجام می‌دهید؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت نتیجه من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
- return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team)?'disabled':'')+'>'+(stepReady(team)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
+ return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team,phase)?'disabled':'')+'>'+(stepReady(team,phase)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
 }
 function missionMilestones(team){
  const i=groupChoice(team);
