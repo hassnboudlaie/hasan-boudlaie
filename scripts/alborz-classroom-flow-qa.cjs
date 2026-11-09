@@ -36,12 +36,18 @@ const server=http.createServer((req,res)=>{
     const wait=old>=3&&old<=9&&req.phase===old+1&&active.some(team=>get(team,'classStepReady')?.field_value!==round+':'+old);
     if(req.expectedVersion!==(get(1,'classroomPhase')?.version??0)||wait){status=409;result={error:wait?'waiting for group readiness':'version conflict'};}
     else{const restarting=old===10&&req.phase===2;set(1,'classroomPhase',req.phase);if(restarting)set(1,'classroomRound',round+1);nextCalls++;result={records:records(1).filter(x=>x.field_key.startsWith('classroom'))};}
+   }else if(action==='reopenMission'){
+    const round=get(1,'classroomRound')?.field_value??0,phase=get(1,'classroomPhase')?.field_value??0;
+    if(phase!==2){status=409;result={error:'reopening is limited to the choice stage'};}
+    else{for(const key of ['missionChoice','missionChoiceRound','missionRound'+round])data.delete(req.team+':'+key);
+     result={ok:true,reopened:true,team:req.team};}
    }else if(action==='write'){
     const fields=req.fields,round=get(1,'classroomRound')?.field_value??0,previous=Array.from({length:round},(_,i)=>get(req.team,'missionRound'+i)?.field_value);
     const repeated='missionChoice' in fields&&previous.includes(fields.missionChoice);
+    const locked='missionChoice' in fields&&get(req.team,'missionChoiceRound')?.field_value===round&&Number.isInteger(get(req.team,'missionChoice')?.field_value);
     const invalidReady='classStepReady' in fields&&fields.classStepReady!==round+':'+(get(1,'classroomPhase')?.field_value??0);
     const conflicts=Object.keys(fields).filter(k=>(get(req.team,k)?.version??0)!==req.expected[k]);
-    if(repeated||invalidReady||conflicts.length){status=409;result={error:repeated?'repeated mission':invalidReady?'wrong step':'conflict',conflicts};}
+    if(repeated||locked||invalidReady||conflicts.length){status=409;result={error:locked?'mission already finalized':repeated?'repeated mission':invalidReady?'wrong step':'conflict',conflicts};}
     else{const rs=Object.entries(fields).map(([k,v])=>set(req.team,k,v));result={records:rs};}
    }else if(action==='resetClassroom'){
     if(req.confirm!=='RESET_ALBORZ_WORKSHOP'){status=400;result={error:'reset confirmation required'};}
