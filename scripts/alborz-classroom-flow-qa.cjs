@@ -23,7 +23,7 @@ const server=http.createServer((req,res)=>{
    const req=route.request().postDataJSON(),action=req.action,token=req.code||'';
    let result,status=200;
    if(action==='login'){
-    const role=req.instructorProof?'teacher':'team';
+    const role=req.instructorView===true?'teacher':'team';
     const team=String(token).includes('0002000024')||String(token).includes('session-2')?2:1;
     result={identity:role==='teacher'?{role:'teacher',team:null,member:null}:{role:'team',team,member:1},session:role==='teacher'?'session-teacher':'session-'+team};
    }else if(action==='teacher'){result={records:records(null)};}
@@ -66,15 +66,10 @@ const server=http.createServer((req,res)=>{
   const enter=async(page,url,code)=>{
    await page.goto(base+url,{waitUntil:'load'});
    await page.locator('#live-code').fill(code);
-   if(url.includes('teacher=1'))await page.locator('#live-instructor-proof').fill('a'.repeat(24));
+   if(url.includes('teacher=1'))assert.equal(await page.locator('#live-instructor-proof').count(),0,'teacher login uses national ID only');
    await page.locator('#live-join').click();
   };
-  await teacher.goto(base+'resilience.html?classroom=1&teacher=1&mission=camel',{waitUntil:'load'});
-  await teacher.locator('#live-code').fill(String(0).repeat(10));
-  await teacher.locator('#live-join').click();
-  assert.match(await teacher.locator('#live-status').innerText(),/کد تأیید امنیتی/,'missing instructor proof is rejected locally');
-  assert.equal(await teacher.locator('.classroom-team-row').count(),0,'missing proof never creates instructor or participant session');
-  await enter(teacher,'resilience.html?classroom=1&teacher=1&mission=camel',String(0).repeat(10));
+  await enter(teacher,'resilience.html?classroom=1&teacher=1&mission=camel','0000000019');
   await teacher.locator('.classroom-team-row').first().waitFor();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'instructor starts with team formation');
   await teacher.locator('[data-class-overview]').click();
