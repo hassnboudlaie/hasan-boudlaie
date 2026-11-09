@@ -52,16 +52,16 @@ function masteryObserver(i,teacher=false){
  const ready=vals.every(v=>['0','1','2'].includes(v)),total=ready?vals.reduce((n,v)=>n+Number(v),0):null;
  return '<section class="mastery-observer"><h3>چک‌لیست مشاهده‌گر · مخصوص '+E(C.models[i][1])+'</h3><p>برای هر معیار، شواهد گفت‌وگو را پیدا کنید. صفر یعنی دیده نشد؛ یک یعنی ناقص بود؛ دو یعنی کامل و با شاهد مشخص انجام شد. این امتیاز فقط برای بازخورد آموزشی گروه است، نه ارزیابی عملکرد فردی.</p><div class="mastery-rubric">'+m.observer.map((x,j)=>'<article><div><strong>'+fa(j+1)+'. '+E(x.criterion)+'</strong><p><b>شاهد قابل مشاهده:</b> '+E(x.evidence)+'</p><p class="mastery-risk"><b>مراقب باشیم:</b> '+E(x.risk)+'</p></div>'+(!teacher?'<label>امتیاز گروه<select data-class-rubric="'+j+'" data-class-rubric-mission="'+i+'" aria-label="امتیاز معیار '+fa(j+1)+'"><option value="" '+(!['0','1','2'].includes(vals[j])?'selected':'')+'>ثبت نشده</option>'+[0,1,2].map(v=>'<option value="'+v+'" '+(String(vals[j])===String(v)?'selected':'')+'>'+fa(v)+' از ۲</option>').join('')+'</select></label>':'')+'</article>').join('')+'</div>'+(!teacher?'<p class="mastery-score">'+(ready?'امتیاز مبتنی بر شواهد گروه: '+fa(total)+' از ۱۰':'برای جمع‌بندی، پنج معیار را ارزیابی کنید.')+'</p>':'')+'<details class="mastery-debrief"><summary>پرسش‌های تحلیل جمعی و انتقال به کار</summary><ol>'+m.debrief.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol></details></section>';
 }
-function lessonRow(){return '<div class="class-stage-marker"><span>مرحله '+fa(stage+1)+' از ۱۱</span><strong>'+E(names[stage])+'</strong></div>';}
+function lessonRow(phase=stage){return '<div class="class-stage-marker"><span>مرحله '+fa(phase+1)+' از ۱۱</span><strong>'+E(names[phase])+'</strong></div>';}
 function stepMap(){
  const teacher=identity?.role==='teacher';
  const cards=names.map((name,i)=>{
   const state=i<stage?'complete':i===stage?'active':'upcoming';
   const status=i<stage?'✓ انجام‌شده':i===stage?'● گام فعال':'○ گام بعدی';
-  const action=i===stage?'باز کردن فعالیت این گام':i<stage?'مرور عنوان گام':'مشاهده جایگاه گام';
+  const action=teacher?'باز کردن مستقل؛ بدون تغییر مرحله کلاس':i===stage?'باز کردن فعالیت این گام':i<stage?'مرور عنوان گام':'مشاهده جایگاه گام';
   return '<button type="button" class="classroom-map-card '+state+'" data-class-open="'+i+'" '+(i===stage?'aria-current="step" ':'')+'aria-label="گام '+fa(i+1)+'، '+E(name)+'، '+status+'"><span class="classroom-map-num">'+fa(i+1)+'</span><span class="classroom-map-details"><strong>'+E(name)+'</strong><small>'+status+'</small><em>'+action+'</em></span></button>';
  }).join('');
- const intro=teacher?'ابتدا نقشه کامل را مرور کنید. گام فعال را باز کنید؛ پس از تکمیل و تأیید گروه‌ها، با «گام بعد» مسیر کلاس را جلو ببرید.':'همه گام‌ها را از ابتدا می‌بینید. گام فعال را باز کنید و همراه با مدرس پیش بروید؛ گام‌های بعدی با هدایت مدرس فعال می‌شوند.';
+ const intro=teacher?'برای ممیزی محتوا می‌توانید هر ۱۱ گام را مستقل باز کنید؛ در حالت پیش‌نمایش، مرحله گروه‌ها و پاسخ‌های آن‌ها تغییر نمی‌کند.':'همه گام‌ها را از ابتدا می‌بینید. گام فعال را باز کنید و همراه با مدرس پیش بروید؛ گام‌های بعدی با هدایت مدرس فعال می‌شوند.';
  const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'این گام هنوز فعال نشده است. پس از تکمیل گام‌های قبلی و اعلام مدرس، می‌توانید فعالیت آن را باز کنید.')+'</p></div>';
  return '<section class="classroom-map"><div class="classroom-map-intro"><span>مسیر مشترک تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
 }
@@ -106,8 +106,8 @@ function missionTeacherChoice(){
  return simpleTitle('انتخاب مأموریت گروه‌ها','گروه‌ها مأموریت این دور را انتخاب می‌کنند','هر گروه مأموریت دلخواه خودش را انتخاب می‌کند؛ همه گروه‌ها هفت گام مشترک را با هدایت مدرس پیش می‌برند.')+
  missionRoster()+'<p class="classroom-wait">'+(pending.length?'هنوز '+fa(pending.length)+' گروه تأیید‌شده مأموریت انتخاب نکرده‌اند.':'گروه‌های تأیید‌شده آماده ورود به سناریو هستند.')+'</p>';
 }
-function teacherStep(){
- const i=reference,n=stage-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],mod=C.models[i];
+function teacherStep(phase=stage){
+ const i=reference,n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],mod=C.models[i];
  const say=[
  '«مسئله را بخوانید. هدف ما این است: '+d.goal+'»',
  '«پنج نقش را متناسب با تعداد افراد تقسیم کنید. در گروه‌های سه یا چهار‌نفره، بعضی نفرات دو نقش می‌گیرند؛ هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
@@ -186,7 +186,8 @@ function render(force=false){
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی (کارشناسان) یا کد اختصاصی مدرس وارد کارگاه شوید.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
- const signature=String(stage)+'/'+String(classroomRound)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
+ const displayStage=teacher&&previewStep!==null?previewStep:stage,previewActive=teacher&&previewStep!==null;
+ const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
  needsRefresh=false;lastFingerprint=signature;
@@ -196,18 +197,18 @@ function render(force=false){
  const stepProgress=readiness();
  const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage>=3&&stage<=9&&stepProgress.waiting.length>0||stage===10);
  const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'تغییر مرحله روی موبایل گروه‌ها حدود ۱۰ ثانیه زمان می‌برد.';
- const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow()+'</header>';
- const controls=teacher?'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>':'';
+ const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow(displayStage)+'</header>';
+ const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '';
  let content;
- if(stage===0)content=teacher?rosterTeacher():checkinParticipant();
+ if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
  else if(!teacher&&!confirmed(identity.team))content=simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و اعلام تعداد افراد، مدرس گروه را فعال می‌کند. سپس همین صفحه به‌طور خودکار وارد گام جاری می‌شود.')+personDots(identity.team);
- else if(stage===1)content=strategyIntro(teacher);
- else if(stage===2)content=teacher?missionTeacherChoice():chooseMission();
- else if(stage<=9)content=teacher?teacherStep():learnerMission();
+ else if(displayStage===1)content=strategyIntro(teacher);
+ else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
+ else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
  else content=ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
- const inStep=openStep===stage;
- const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(stage+1)+' از ۱۱ · '+E(names[stage])+'</span></nav>':'';
+ const inStep=openStep===displayStage;
+ const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
  root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
 }
 async function execute(task){
@@ -245,7 +246,7 @@ root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.hasAttribute('data-class-quiz')){
   const i=Number(btn.dataset.classQuiz),j=Number(btn.dataset.classQuizOption);
-  if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>2||stage!==1)return;
+  if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>2||!(stage===1||identity?.role==='teacher'&&previewStep===1))return;
   const question=C.mastery[i].quickCheck,wrap=btn.closest('.mastery-microquiz');
   if(!wrap)return;
   wrap.querySelectorAll('[data-class-quiz-option]').forEach(b=>{b.classList.toggle('is-selected',b===btn);b.setAttribute('aria-pressed',b===btn?'true':'false');});
@@ -253,9 +254,11 @@ root.addEventListener('click',event=>{
   if(feedback)feedback.innerHTML='<strong>'+(question.options[j].correct?'درست انتخاب کردی ✓':'این گزینه دقیق نیست؛ دلیل هر سه را ببین:')+'</strong>'+question.options.map((o,k)=>'<p><b>گزینه '+fa(k+1)+':</b> '+E(o.why)+'</p>').join('');
   return;
  }
+ if(btn.hasAttribute('data-class-return-live')){previewStep=null;openStep=stage;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-overview')){openStep=null;previewStep=null;lastFingerprint='';render(true);return;}
- if(btn.hasAttribute('data-class-open')){const n=Number(btn.dataset.classOpen);if(!Number.isInteger(n)||n<0||n>10)return;if(n===stage){openStep=stage;previewStep=null;}else{previewStep=n;openStep=null;}lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-open')){const n=Number(btn.dataset.classOpen);if(!Number.isInteger(n)||n<0||n>10)return;if(identity?.role==='teacher'){previewStep=n===stage?null:n;openStep=n;}else if(n===stage){openStep=stage;previewStep=null;}else{previewStep=n;openStep=null;}lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-checkin')){const key='checkin'+identity.member;execute(()=>saveFields({[key]:true}));return;}
+ if(identity?.role==='teacher'&&previewStep!==null&&(btn.dataset.classConfirm||btn.hasAttribute('data-class-reset')))return alertUser('این بخش در حالت پیش‌نمایش است؛ برای عملیات به گام فعال برگردید.',true);
  if(btn.dataset.classConfirm){const team=Number(btn.dataset.classConfirm),node=root.querySelector('[data-class-team-size="'+team+'"]'),size=Number(node?.value||0);
    if(![0,3,4,5].includes(size))return alertUser('برای گروه فعال ۳، ۴ یا ۵ نفر انتخاب کنید؛ عدد صفر گروه را غیرفعال می‌کند.',true);
    if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو حضورش را ثبت کند.',true);
