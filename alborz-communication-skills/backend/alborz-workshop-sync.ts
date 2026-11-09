@@ -108,8 +108,8 @@ Deno.serve(async req=>{
   if(body.action==='resetClassroom'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    if(body.confirm!=='RESET_ALBORZ_WORKSHOP')return respond({error:'تأیید شروع دوباره نامعتبر است'},400,origin);
-   // Clear ONLY workshop progress. National assignments and instructor access stay intact.
-   await db('alborz_team_fields?team_no=gte.1&team_no=lte.10',undefined,'DELETE');
+   // Atomic fresh start: clear workshop fields and arrival registrations; preserve instructor access.
+   await db('rpc/alborz_reset_arrival_workshop',{});
    return respond({ok:true,reset:true},200,origin);
   }
   if(body.action==='groupSetup'){
