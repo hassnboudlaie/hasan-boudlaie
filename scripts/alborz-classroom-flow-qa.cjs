@@ -87,6 +87,15 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-overview]').click();
   await teacher.locator('[data-class-open="1"]').click();
   assert.equal(await teacher.locator('.professional-question').count(),10,'future quiz review before formation');
+  await teacher.locator('[data-class-overview]').click();
+  await teacher.locator('[data-class-open="2"]').click();
+  assert.match(await teacher.locator('.classroom-preview-banner').innerText(),/پیش‌نمایش مستقل گام ۳/);
+  assert.equal(await teacher.locator('[data-class-preview-mission]').count(),4,'teacher preview renders four missions without enrolled groups');
+  assert.match(await teacher.locator('.classroom-live-roster').innerText(),/گروه تأییدشده‌ای|گروهی تشکیل یا تأیید نشده/);
+  assert.equal(await teacher.locator('[data-class-next]').count(),0,'teacher preview does not advance the live stage');
+  await teacher.locator('[data-class-preview-mission="3"]').click();
+  assert.match(await teacher.locator('.classroom-demo-selection').innerText(),/اختاپوس/);
+  assert.equal(get(1,'missionChoice'),undefined,'preview does not create a team mission');
   await teacher.locator('[data-class-return-live]').click();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'teacher returns to active formation');
 
