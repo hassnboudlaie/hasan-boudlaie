@@ -6,10 +6,15 @@ const fieldPattern = /^(?:teamname|stage|checkin[1-5]|missionChoice|missionChoic
 const headers = (origin) => ({'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':origins.has(origin)?origin:'https://hassnboudlaie.github.io','access-control-allow-headers':'content-type','access-control-allow-methods':'POST, OPTIONS','vary':'Origin','x-content-type-options':'nosniff'});
 const respond = (data,status,origin) => new Response(JSON.stringify(data),{status,headers:headers(origin)});
 async function hash(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');}
-async function db(path,body,method){const r=await fetch(endpoint+'/rest/v1/'+path,{method:method||(body===undefined?'GET':'POST'),headers:{apikey:serviceKey,authorization:'Bearer '+serviceKey,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error('Database '+r.status);const text=await r.text();return text?JSON.parse(text):null;}
-// Domain-separated HMAC pepper stays in server environment, never in the database.
-// Rotating SUPABASE_SERVICE_ROLE_KEY requires reissuing PINs.
-async function pinHash(pin){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(serviceKey),{name:'HMAC',hash:'SHA-256'},false,['sign']);return Array.from(new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode('alborz-pin-v1:'+pin))),v=>v.toString(16).padStart(2,'0')).join('');}
+async function db(path,body,method){const r=await fetch(endpoint+'/rest/v1/'+path,{method:method||(body===undefined?'GET':'POST'),headers:{apikey:serviceKey,authorization:'Bearer '+serviceKey,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(8000)});if(!r.ok){const error=await r.text();if(error.includes('CAPACITY_REACHED'))throw Error('CAPACITY_REACHED');throw Error('Database '+r.status);}const text=await r.text();return text?JSON.parse(text):null;}
+// National IDs are never persisted in plaintext; the backend uses a domain-separated HMAC.
+// Rotating the service key requires a controlled identity-mapping migration.
+async function nationalHash(nationalId){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(serviceKey),{name:'HMAC',hash:'SHA-256'},false,['sign']);return Array.from(new Uint8Array(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode('alborz-national-v1:'+nationalId))),v=>v.toString(16).padStart(2,'0')).join('');}
+function validNational(id){
+ if(!/^\d{10}$/.test(id)||/^(\d)\1{9}$/.test(id))return false;
+ const sum=Array.from(id.slice(0,9),(d,i)=>Number(d)*(10-i)).reduce((a,b)=>a+b,0),rem=sum%11;
+ return Number(id[9])===(rem<2?rem:11-rem);
+}
 const randomSession=()=>Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('');
 async function gate(bucket,limit,seconds){return db('rpc/alborz_login_gate',{p_bucket:bucket,p_limit:limit,p_seconds:seconds});}
 function valid(k,v){
@@ -34,35 +39,40 @@ Deno.serve(async req=>{
  try{
   const raw=await limitedBody(req);let body;try{body=JSON.parse(raw);}catch{return respond({error:'Invalid JSON'},400,origin);}
   if(!body||Array.isArray(body)||typeof body!=='object')return respond({error:'Invalid request'},400,origin);
-  const token=typeof body.code==='string'?body.code.trim().toLowerCase():'';
+  const normalizeDigits=s=>s.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632));
+  const token=typeof body.code==='string'?normalizeDigits(body.code.trim().toLowerCase()):'';
   const ip=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'unknown';
   const ipHash=await hash(ip);
   if(!await db('rpc/alborz_rate_limit',{p_bucket:'ip:'+ipHash,p_limit:1200}))return respond({error:'کمی بعد دوباره تلاش کنید'},429,origin);
   let permission,digest,session;
-  if(/^\d{8}$/.test(token)){
-   // PINs only authenticate once. Polling always uses a random 256-bit session.
+  if(/^\d{10}$/.test(token)){
    if(body.action!=='login')return respond({error:'ابتدا وارد شوید'},401,origin);
-   // Shared classroom NAT allows 50 logins. Global budget also bounds distributed guessing.
-   if(!await gate('pin-ip:'+ipHash,60,900)||!await gate('pin-global',200,86400))return respond({error:'تلاش‌های ورود زیاد شده است؛ بعداً تلاش کنید یا به مدرس اطلاع دهید.'},429,origin);
-   digest=await pinHash(token);
-   permission=(await db('alborz_pin_keys?digest=eq.'+digest+'&select=*&limit=1'))?.[0];
-   if(permission&&!permission.revoked&&Date.parse(permission.expires_at)>Date.now()){
-    session=randomSession();
-    await db('alborz_pin_sessions',{digest:await hash(session),pin_digest:digest,expires_at:new Date(Math.min(Date.now()+12*3600000,Date.parse(permission.expires_at))).toISOString()});
-    permission.access_role='team';
-   }else permission=null;
+   if(!validNational(token))return respond({error:'کد ملی معتبر نیست؛ عدد ده‌رقمی را بررسی کنید.'},400,origin);
+   // A workshop with 50 seats needs a bounded, IP and global enrollment rate.
+   if(!await gate('national-ip:'+ipHash,60,900)||!await gate('national-global',200,86400))return respond({error:'تلاش‌های ورود زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
+   digest=await nationalHash(token);
+   const seats=await db('rpc/alborz_enroll_national',{p_digest:digest});
+   if(!Array.isArray(seats)||seats.length!==1||!Number.isInteger(seats[0].team_no)||!Number.isInteger(seats[0].member_no))throw Error('National registration failed');
+   session=randomSession();
+   const expiresAt=new Date(Date.now()+12*3600000).toISOString();
+   await db('alborz_national_sessions',{digest:await hash(session),national_digest:digest,expires_at:expiresAt});
+   permission={access_role:'team',team_no:seats[0].team_no,member_no:seats[0].member_no,expires_at:expiresAt,revoked:false};
   }else if(/^[a-f0-9]{64}$/.test(token)){
    digest=await hash(token);
-   const row=(await db('alborz_pin_sessions?digest=eq.'+digest+'&select=expires_at,alborz_pin_keys(*)&limit=1'))?.[0];
-   if(row&&Date.parse(row.expires_at)>Date.now())permission={...row.alborz_pin_keys,access_role:'team'};
+   const row=(await db('alborz_national_sessions?digest=eq.'+digest+'&select=expires_at,alborz_national_members(team_no,member_no)&limit=1'))?.[0];
+   if(row&&Date.parse(row.expires_at)>Date.now()&&row.alborz_national_members){
+    permission={access_role:'team',team_no:row.alborz_national_members.team_no,member_no:row.alborz_national_members.member_no,expires_at:row.expires_at,revoked:false};
+   }
   }else if(/^[a-f0-9]{24}$/.test(token)){
    digest=await hash(token);
-   permission=(await db('alborz_access_keys?secret_hash=eq.'+digest+'&select=access_role,team_no,member_no,expires_at,revoked&limit=1'))?.[0];
+   const row=(await db('alborz_access_keys?secret_hash=eq.'+digest+'&select=access_role,team_no,member_no,expires_at,revoked&limit=1'))?.[0];
+   // Legacy participant codes cannot authenticate. The instructor still needs a secret.
+   permission=row?.access_role==='teacher'?row:null;
   }
   if(!permission||permission.revoked||Date.parse(permission.expires_at)<=Date.now()||(permission.access_role==='team'&&!permission.member_no))return respond({error:'کد درست نیست یا اعتبار آن تمام شده است.'},401,origin);
   if(!await db('rpc/alborz_rate_limit',{p_bucket:'key:'+digest,p_limit:120}))return respond({error:'تعداد درخواست زیاد است؛ کمی صبر کنید'},429,origin);
   const identity={role:permission.access_role,team:permission.team_no,member:permission.member_no};
-  if(body.action==='logout'&&/^[a-f0-9]{64}$/.test(token)){await db('alborz_pin_sessions?digest=eq.'+digest,undefined,'DELETE');return respond({ok:true},200,origin);}
+  if(body.action==='logout'&&/^[a-f0-9]{64}$/.test(token)){await db('alborz_national_sessions?digest=eq.'+digest,undefined,'DELETE');return respond({ok:true},200,origin);}
   if(body.action==='login')return respond({ok:true,identity,...(session?{session}:{})},200,origin);
   const cols='team_no,field_key,field_value,editor_label,updated_at,version';
   if(body.action==='teacher'){
@@ -106,14 +116,16 @@ Deno.serve(async req=>{
   if(body.action==='resetClassroom'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    if(body.confirm!=='RESET_ALBORZ_WORKSHOP')return respond({error:'تأیید شروع دوباره نامعتبر است'},400,origin);
-   // Clear ONLY workshop progress. Participant PINs, sessions and any other app remain intact.
+   // Clear ONLY workshop progress. National-ID registrations and instructor access remain intact; other apps are not touched.
    await db('alborz_team_fields?team_no=gte.1&team_no=lte.10',undefined,'DELETE');
    return respond({ok:true,reset:true},200,origin);
   }
   if(body.action==='groupSetup'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    const team=body.team,size=body.size;
-   if(!Number.isInteger(team)||team<1||team>10||![0,3,4,5,6].includes(size))return respond({error:'گروه یا شمار اعضا نامعتبر است'},400,origin);
+   if(!Number.isInteger(team)||team<1||team>10||![0,3,4,5].includes(size))return respond({error:'گروه یا شمار اعضا نامعتبر است'},400,origin);
+   const assigned=(await db('alborz_national_members?team_no=eq.'+team+'&select=member_no'))?.length||0;
+   if(size<assigned)return respond({error:'این گروه '+assigned+' عضو ثبت‌شده دارد؛ ظرفیت را کمتر از تعداد اعضا تعیین نکنید.'},409,origin);
    const result=await teacherWrite(team,{groupSize:size,groupReady:size>0});
    if(!result.ok)return respond({error:'اطلاعات گروه تغییر کرده است؛ دوباره تلاش کنید'},409,origin);
    return respond({ok:true,records:result.records},200,origin);
@@ -172,5 +184,5 @@ Deno.serve(async req=>{
    return respond(result,200,origin);
   }
   return respond({error:'عملیات نامعتبر است'},400,origin);
- }catch(e){if(e.message==='TOO_LARGE')return respond({error:'Request too large'},413,origin);console.error('Alborz request failed');return respond({error:'خطای موقت؛ متن شما حفظ شده است'},503,origin);}
+ }catch(e){if(e.message==='CAPACITY_REACHED')return respond({error:'ظرفیت ۵۰ نفر کارگاه تکمیل شده است؛ با مدرس هماهنگ کنید.'},409,origin);if(e.message==='TOO_LARGE')return respond({error:'Request too large'},413,origin);console.error('Alborz request failed');return respond({error:'خطای موقت؛ متن شما حفظ شده است'},503,origin);}
 });
