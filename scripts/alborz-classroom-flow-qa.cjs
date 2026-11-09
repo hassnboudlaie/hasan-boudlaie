@@ -69,6 +69,11 @@ const server=http.createServer((req,res)=>{
    if(url.includes('teacher=1'))await page.locator('#live-instructor-proof').fill('a'.repeat(24));
    await page.locator('#live-join').click();
   };
+  await teacher.goto(base+'resilience.html?classroom=1&teacher=1&mission=camel',{waitUntil:'load'});
+  await teacher.locator('#live-code').fill(String(0).repeat(10));
+  await teacher.locator('#live-join').click();
+  assert.match(await teacher.locator('#live-status').innerText(),/کد تأیید امنیتی/,'missing instructor proof is rejected locally');
+  assert.equal(await teacher.locator('.classroom-team-row').count(),0,'missing proof never creates instructor or participant session');
   await enter(teacher,'resilience.html?classroom=1&teacher=1&mission=camel',String(0).repeat(10));
   await teacher.locator('.classroom-team-row').first().waitFor();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'instructor starts with team formation');

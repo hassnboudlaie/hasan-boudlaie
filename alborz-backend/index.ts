@@ -49,7 +49,7 @@ Deno.serve(async req=>{
   if(/^\d{10}$/.test(token)){
    if(body.action!=='login')return respond({error:'ابتدا وارد شوید'},401,origin);
    if(!validNational(token))return respond({error:'کد ملی معتبر نیست؛ عدد ده‌رقمی را بررسی کنید.'},400,origin);
-   if(instructorProof){
+   if(Object.prototype.hasOwnProperty.call(body,'instructorProof')){
     // National ID is an identity label, never a standalone instructor credential.
     if(!/^[a-f0-9]{24}$/.test(instructorProof))return respond({error:'کد تأیید مدرس نامعتبر است'},401,origin);
     if(!await gate('instructor-ip:'+ipHash,12,900)||!await gate('instructor-global',60,86400))return respond({error:'تلاش‌های ورود مدرس زیاد شده است؛ کمی بعد دوباره تلاش کنید.'},429,origin);
