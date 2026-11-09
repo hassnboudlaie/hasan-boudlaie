@@ -72,7 +72,7 @@ function landing(){
  const labels=['شتر','ماهی آزاد','آفتاب‌پرست','اختاپوس'];
  const chosen=['camel','salmon','chameleon','octopus'].indexOf(P.get('mission'));
  return '<section class="simple-entry-landing"><span>آکادمی مدیریت و یادگیری بیمه البرز</span><h1>ورود کارشناسان خسارت</h1>'+
- '<p>کد اختصاصی هشت‌رقمی خود را در کادر بالای صفحه وارد کنید. گروه و شماره عضویت شما خودکار شناسایی می‌شود.</p>'+
+ '<p>کد ملی ده‌رقمی خود را هنگام ورود وارد کنید. گروه و شماره عضویت شما خودکار تعیین می‌شود و در ورودهای بعدی حفظ خواهد شد.</p>'+
  (chosen>=0?'<p class="simple-entry-target">سناریوی انتخابی: <strong>'+E(labels[chosen])+' · '+E(missions[chosen].title)+'</strong></p>':
  '<p>پس از ورود، چهار مأموریت را می‌توانید به ترتیب دلخواه انتخاب کنید.</p>')+
  '<a class="btn" href="claims-workshop-v2.html">← بازگشت به چهار راهبرد</a></section>';
