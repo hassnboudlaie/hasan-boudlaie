@@ -167,32 +167,9 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-next]').click();
   await expert1.evaluate(()=>window.AlborzLive.refresh());
   assert.match(await expert1.locator('.classroom-section-title').innerText(),/جمع‌بندی/);
-  await teacher.locator('[data-class-next]').click();
-  assert.equal(get(1,'classroomPhase').field_value,2,'instructor begins next independent round');
-  assert.equal(get(1,'classroomRound')?.field_value,1,'classroom advances to the second round');
-  await teacher.waitForFunction(()=>document.querySelector('.class-stage-marker')?.textContent.includes('دور ۲') &&
-    document.querySelector('.class-stage-marker')?.textContent.includes('انتخاب مأموریت'));
-  await expert1.evaluate(()=>window.AlborzLive.refresh());
-  await expert2.evaluate(()=>window.AlborzLive.refresh());
-  assert.equal(await expert1.locator('[data-class-mission].selected').count(),0,'group 1 must choose again for round 2');
-  assert.equal(await expert2.locator('[data-class-mission].selected').count(),0,'group 2 must choose again for round 2');
-  assert.equal(await expert1.locator('[data-class-mission="0"]').isDisabled(),true,'completed camel mission cannot repeat');
-  assert.equal(await expert2.locator('[data-class-mission="2"]').isDisabled(),true,'completed chameleon mission cannot repeat');
-  assert.equal(await teacher.locator('[data-class-next]').isDisabled(),true,'teacher cannot skip unchosen round 2 missions');
-  await expert1.locator('[data-class-mission="1"]').click();
-  await expert1.waitForFunction(()=>document.querySelector('[data-class-mission="1"]')?.classList.contains('selected'));
-  await expert2.locator('[data-class-mission="3"]').click();
-  await expert2.waitForFunction(()=>document.querySelector('[data-class-mission="3"]')?.classList.contains('selected'));
-  await teacher.evaluate(()=>window.AlborzLive.refresh());
-  assert.equal(await teacher.locator('[data-class-next]').isDisabled(),false,'all confirmed groups chose a fresh mission');
-  assert.equal(get(1,'r0initial')?.field_value?.length>0,true,'prior camel decision persisted across rounds');
-  assert.equal(get(1,'missionChoiceRound')?.field_value,1,'round marker saved with group 1 new salmon choice');
-  assert.equal(get(2,'missionChoiceRound')?.field_value,1,'round marker saved with group 2 octopus choice');
-  await teacher.locator('[data-class-next]').click();
-  await expert1.evaluate(()=>window.AlborzLive.refresh());
-  await expert2.evaluate(()=>window.AlborzLive.refresh());
-  assert.match(await expert1.locator('.classroom-story').innerText(),/۴۰ خودرو/,'second round loads salmon scenario for group 1');
-  assert.match(await expert2.locator('.classroom-story').innerText(),/خسارت اموال/,'second round loads octopus scenario for group 2');
+  assert.equal(get(1,'classroomPhase').field_value,10,'one independent group mission completes first two-hour module');
+  assert.equal(await teacher.locator('[data-class-next]').isDisabled(),true,'teacher stops after one guided mission');
+  assert.match(await teacher.locator('[data-class-next]').innerText(),/بخش تاب‌آوری کامل شد/,'no forced second mission round');
   assert(nextCalls>=10,'server-controlled step changes saved across all phones');
   await teacher.screenshot({path:'artifacts/alborz-resilience/classroom-teacher-'+width+'.png',fullPage:true});
   await expert1.screenshot({path:'artifacts/alborz-resilience/classroom-participant-'+width+'.png',fullPage:true});
@@ -205,7 +182,7 @@ const server=http.createServer((req,res)=>{
   assert.equal(data.size,0,'reset clears only workshop data and returns to team formation');
   assert.equal(await teacher.locator('#live-join').count(),0,'instructor remains authenticated after resetting only workshop data');
   assert.deepEqual(errors,[],'no browser exceptions in coordinated classroom');
-  console.log('PASS guided classroom '+width+'px: roster 3/4, national-ID group mapping, teacher progress, independent groups, decision & feedback sync, new round');
+  console.log('PASS guided classroom '+width+'px: roster 3/4, national-ID group mapping, teacher progress, independent groups, decision & feedback sync, one clear mission round');
   await ctx.close();
  }
  await browser.close();server.close();
