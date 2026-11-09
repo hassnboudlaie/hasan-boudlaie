@@ -208,7 +208,7 @@ root.addEventListener('click',event=>{
   if(identity.role!=='teacher')return;
   const word=window.prompt('برای پاک‌کردن داده‌های کارگاه و بازگشت به مرحله اول، عبارت «شروع تازه» را وارد کنید:');
   if(word!=='شروع تازه')return;
-  if(!window.confirm('تمام حضورها، انتخاب مأموریت‌ها و پاسخ‌های فعلی این کارگاه حذف می‌شوند. ثبت‌نام اعضا و دسترسی مدرس باقی می‌مانند. مطمئن هستید؟'))return;
+  if(!window.confirm('تمام حضورها، انتخاب مأموریت‌ها و پاسخ‌های فعلی این کارگاه حذف می‌شوند. ثبت‌نام کدهای ملی نیز پاک می‌شود؛ کارشناسان باید دوباره وارد شوند. دسترسی مدرس حفظ می‌شود. مطمئن هستید؟'))return;
   execute(()=>L.request({action:'resetClassroom',confirm:'RESET_ALBORZ_WORKSHOP'}));return;
  }
  if(btn.dataset.classReference){reference=Number(btn.dataset.classReference);lastFingerprint='';render(true);return;}
