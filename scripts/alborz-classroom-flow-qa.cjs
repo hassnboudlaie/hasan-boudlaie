@@ -78,6 +78,18 @@ const server=http.createServer((req,res)=>{
   await enter(teacher,'resilience.html?classroom=1&teacher=1&mission=camel','0000000019');
   await teacher.locator('.classroom-team-row').first().waitFor();
   assert.equal(await teacher.locator('.classroom-team-row').count(),10,'instructor starts with team formation');
+  await teacher.locator('[data-class-view="participant"]').click();
+  assert.equal(await teacher.locator('[data-class-projection-team]').count(),10,'teacher can switch among all ten teams');
+  assert.match(await teacher.locator('.classroom-projection-body').innerText(),/گروه شما مشخص شد/);
+  assert.equal(await teacher.locator('.classroom-projection-body [data-class-checkin]').isDisabled(),true,'teacher cannot mark attendance through projected screen');
+  await teacher.locator('[data-class-projection-team="2"]').click();
+  assert.match(await teacher.locator('.classroom-projector-head').innerText(),/گروه ۲/);
+  await teacher.locator('[data-class-projection-member="2"]').click();
+  assert.match(await teacher.locator('.classroom-projection-body').innerText(),/شماره عضو|عضو/);
+  assert.equal(get(2,'checkin2'),undefined,'projection does not mutate group check-in');
+  await teacher.locator('[data-class-view="teacher"]').click();
+  assert.equal(await teacher.locator('.classroom-team-row').count(),10,'teacher can return to group formation');
+
   await teacher.locator('[data-class-overview]').click();
   assert.equal(await teacher.locator('[data-class-open]').count(),11,'all eleven stage cards visible to instructor');
   await teacher.locator('[data-class-open="10"]').click();
