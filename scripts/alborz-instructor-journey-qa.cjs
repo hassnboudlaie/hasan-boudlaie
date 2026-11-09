@@ -32,7 +32,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   const goal=await page.locator('.case-goal').innerText();
   assert.match(goal,/خدمت|خطا/);
   await page.goto(base+'resilience.html?teacher=1&mission=camel&legacy=1',{waitUntil:'load'});
-  assert.equal(await page.locator('#live-code').count(),1,'instructor PIN login is required');
+  assert.equal(await page.locator('#live-code').count(),1,'instructor access remains separate and required');
   assert.equal(await page.locator('.simple-teacher-workspace').count(),0,'teaching content protected before login');
   assert.equal(await page.getByText('پشتیبان آفلاین امتیازها').count(),0,'unused offline shortcut removed');
   await page.locator('#live-code').fill('test-teacher-code');
