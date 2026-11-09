@@ -13,6 +13,7 @@ const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
 let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null;
+const rubricQueue=new Map();let rubricPump=false;
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
 function version(team,key){return rec(team,key)?.version??0;}
@@ -213,20 +214,32 @@ async function execute(task){
  if(busy)return;busy=true;
  try{await task();clearNotice();await L.refresh();lastFingerprint='';render(true);}
  catch(e){alertUser(e.message||'خطای ارتباط؛ دوباره تلاش کنید',true);}
- finally{busy=false;}
+ finally{busy=false;if(rubricQueue.size&&!rubricPump)drainRubricQueue();}
 }
 async function saveFields(fields){
  const team=identity.team;
  const expected=Object.fromEntries(Object.keys(fields).map(k=>[k,version(team,k)]));
  await L.request({action:'write',team,fields,expected});
 }
+async function drainRubricQueue(){
+ if(rubricPump||busy||!rubricQueue.size)return;
+ rubricPump=true;
+ try{
+  while(rubricQueue.size){
+   const [key,value]=rubricQueue.entries().next().value;
+   rubricQueue.delete(key);
+   await execute(()=>saveFields({[key]:value}));
+  }
+ }finally{rubricPump=false;if(rubricQueue.size&&!busy)drainRubricQueue();}
+}
 root.addEventListener('change',event=>{
  const select=event.target.closest('select[data-class-rubric]');
- if(!select||!identity||identity.role!=='team'||busy)return;
+ if(!select||!identity||identity.role!=='team')return;
  const i=Number(select.dataset.classRubricMission),j=Number(select.dataset.classRubric),value=select.value;
  if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>4||!['0','1','2'].includes(value))return;
  if(groupChoice(identity.team)!==i||stage!==9)return;
- execute(()=>saveFields({['r'+i+'score'+j]:value}));
+ rubricQueue.set('r'+i+'score'+j,value);
+ drainRubricQueue();
 });
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
