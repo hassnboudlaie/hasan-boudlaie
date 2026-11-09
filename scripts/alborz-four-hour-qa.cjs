@@ -26,7 +26,7 @@ const server=require('node:http').createServer((req,res)=>{
   assert.equal(await p.locator('.role-entry-link[href*="teacher=1"]').count(),1,'instructor entry uses guided classroom');
   await p.goto(base+'resilience.html?mission=salmon',{waitUntil:'load'});
   await p.waitForURL('**/resilience.html?mission=salmon&classroom=1');
-  assert.equal(await p.locator('#live-code').count(),1,'PIN-first participant landing');
+  assert.equal(await p.locator('#live-code').count(),1,'national-ID-first participant landing');
   assert.equal(await p.locator('.teams a').count(),0,'manual ten-group selection removed');
   await p.goto(base+'resilience.html?group=1&step=0&legacy=1',{waitUntil:'load'});
   assert.equal(await p.locator('.mission-pick-card').count(),4,'groups may start any scenario');
@@ -71,7 +71,7 @@ const server=require('node:http').createServer((req,res)=>{
   assert.equal(await p.locator('[data-board],a[href*="offline=1"]').count(),0,'no offline scorecard shortcut');
   await p.screenshot({path:'artifacts/alborz-resilience/minimal-four-strategies-'+width+'.png',fullPage:true});
   assert.deepEqual(errors,[],'no uncaught errors');
-  console.log('PASS minimal group workshop '+width+'px: PIN-first, four free scenarios, single-step activity, role play, budget, reveal, export, local isolation');
+  console.log('PASS minimal group workshop '+width+'px: national-ID entry, four free scenarios, single-step activity, role play, budget, reveal, export, local isolation');
   await ctx.close();
  }
  await browser.close();server.close();
