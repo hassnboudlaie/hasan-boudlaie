@@ -13,7 +13,7 @@ const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
 let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null;
-const rubricQueue=new Map();let rubricPump=false;
+
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
 function version(team,key){return rec(team,key)?.version??0;}
@@ -37,7 +37,7 @@ function masteryLessons(){
 }
 function masteryRoles(i){
  const m=C.mastery[i],info=C.missions[i].info;
- return '<section class="mastery-roles"><h3>پنج شخصیت این مأموریت</h3><p>هر نفر فقط اطلاعات شخصیت خودش را بخواند و با همان نگرانی و هدف وارد گفت‌وگو شود. در گروه سه یا چهار‌نفره می‌توانید دو نقش بگیرید؛ مشاهده‌گر هم در تحلیل پایانی صحبت می‌کند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>راهنمای شروع:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">نقش را طبیعی اجرا کنید؛ لازم نیست دیالوگ را از حفظ بگویید. اسم‌ها فرضی‌اند و اطلاعات واقعی مراجعان نباید وارد تمرین شود.</p></section>';
+ return '<section class="mastery-roles"><h3>پنج کاراکتر این مأموریت</h3><p>هر نفر اطلاعات نقش خودش را بخواند و با هدف و نگرانی همان شخصیت در گفت‌وگو حضور پیدا کند. در گروه سه یا چهار‌نفره، بعضی افراد دو نقش می‌گیرند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>پاسخ احتمالی:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">نقش را طبیعی اجرا کنید؛ لازم نیست دیالوگ را از حفظ بگویید. اسم‌ها فرضی‌اند و اطلاعات واقعی مراجعان نباید وارد تمرین شود.</p></section>';
 }
 
 function masteryTalk(i){
@@ -130,29 +130,29 @@ function teacherStep(phase=stage){
  const say=[
  '«مسئله را بخوانید. هدف ما این است: '+d.goal+'»',
  '«پنج نقش را متناسب با تعداد افراد تقسیم کنید. در گروه‌های سه یا چهار‌نفره، بعضی نفرات دو نقش می‌گیرند؛ هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
- '«گفت‌وگو را یک بار اجرا کنید؛ مشاهده‌گر بازخورد بدهد و گفت‌وگو را بار دوم اصلاح کنید.»',
+ '«گفت‌وگوی نمونه را یک بار با حضور شخصیت‌ها اجرا کنید؛ در پایان تحلیل راهبردی همان گفت‌وگو را بخوانید.»',
  '«با شش سکه حداقل دو اقدام انتخاب کنید؛ تصمیم اولیه، دلیل و مسئول را ثبت کنید.»',
  '«اکنون یک اتفاق تازه داریم. ببینید تصمیم قبلی هنوز مناسب است یا نه.»',
  '«با توجه به اطلاعات تازه، چه چیزی را در تصمیم اصلاح می‌کنید و چرا؟»',
- '«هر گروه یک تصمیم قابل دفاع و یک نکته بهبود را با شواهد واقعی گفت‌وگو ارائه کند.»'
+ '«هر گروه نتیجه نهایی و یک اقدام واقعی برای واحد خسارت را با دلیل کوتاه ثبت کند.»'
  ][n];
  const ask=[
  'موقعیت و سه داده اصلی را بخوانند و مسئله را در یک جمله بیان کنند.',
  'نقش‌ها را تقسیم کنند و هر فرد اطلاعات اختصاصی نقش خود را مطرح کند.',
- 'دو دور Role Play اجرا کنند؛ مشاهده‌گر رفتار و جمله‌های واقعی را یادداشت کند.',
+ 'یک گفت‌وگوی کامل اجرا و تحلیل نهایی راهبرد را مرور کنند.',
  'دو یا چند اقدام در سقف ۶ سکه انتخاب و تصمیم اولیه را با گروه به اشتراک بگذارند.',
  'اتفاق تازه را بخوانند و درباره تأثیر آن بر تصمیم گفت‌وگو کنند.',
  'تصمیم اصلاح‌شده و دلیل آن را ثبت و به اشتراک بگذارند.',
- 'یک شاهد رفتاری ثبت کنند و نتیجه را برای جمع‌بندی کلاسی آماده کنند.'
+ 'نتیجه مأموریت و یک اقدام قابل اجرا را ثبت کنند.'
  ][n];
  const bodies=[
  '<div class="classroom-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>اطلاعاتی که گروه هم می‌بیند</h3><ul>'+d.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul><h3>پرسش چالشی</h3><p>'+E(d.question)+'</p></div>',
  masteryRoles(i),
- '<div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div>'+masteryTalk(i),
+ masteryTalk(i),
  '<details class="classroom-reference"><summary>کارت‌های تصمیم و پیامدها</summary>'+m.actions.map(a=>'<p><strong>'+E(a[0])+' · '+fa(a[1])+' سکه</strong> — '+E(a[2])+'</p>').join('')+'</details>',
  '<div class="classroom-event"><h3>اتفاق تازه</h3><p>'+E(m.shock)+'</p></div>',
  '<p class="classroom-prompt">'+E(d.question)+'</p>',
- masteryObserver(i,true)
+ '<p class="classroom-prompt">هر گروه نتیجه و یک اقدام قابل اجرا در خسارت را با دلیل کوتاه بیان می‌کند.</p>'+monitorAllGroups()
  ][n];
  return '<div class="classroom-teacher-scene">'+simpleTitle('هدایت سناریو','گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],'نمونه توضیح از سناریوی '+labels[i]+'؛ گروه‌های دیگر می‌توانند سناریوی متفاوتی داشته باشند.')+
  '<div class="classroom-teacher-switch">'+C.models.map((v,j)=>'<button type="button" class="'+(j===i?'selected':'')+'" data-class-reference="'+j+'">'+v[0]+' '+E(v[1])+'</button>').join('')+'</div>'+
@@ -165,21 +165,14 @@ function monitorAllGroups(){
  const list=groups().filter(t=>confirmed(t)||attendance(t)||groupChoice(t)!==null);
  if(!list.length)return '<p class="classroom-empty">هنوز گروهی فعالیتی ثبت نکرده است.</p>';
  return '<div class="classroom-monitor-list">'+list.map(t=>{
-  const i=groupChoice(t),p=i===null?'':String(i),prefix='r'+p;
+  const i=groupChoice(t),prefix='r'+i;
   const initial=i===null?'':val(t,prefix+'initial'),revision=i===null?'':val(t,prefix+'revision');
-  const scores=i===null?[]:Array.from({length:5},(_,j)=>val(t,prefix+'score'+j));
-  const complete=scores.length===5&&scores.every(v=>['0','1','2'].includes(v));
-  const score=complete?scores.reduce((n,v)=>n+Number(v),0):null;
-  const voices=i===null?[]:Array.from({length:5},(_,j)=>val(t,prefix+'member'+(j+1))).filter(v=>typeof v==='string'&&v.trim());
-  const rubric=i===null?[]:C.mastery[i].observer;
-  return '<details><summary><strong>گروه '+fa(t)+'</strong><span>'+(i===null?'بدون مأموریت':animals[i]+' '+labels[i])+'</span><small>'+(initial?'تصمیم اول ✓':'تصمیم اول ○')+' · '+(revision?'اصلاح ✓':'اصلاح ○')+' · '+(complete?'بازخورد '+fa(score)+'/۱۰':'بازخورد در انتظار')+'</small></summary>'+
+  const results=i===null?[]:Array.from({length:5},(_,j)=>val(t,prefix+'member'+(j+1))).filter(v=>typeof v==='string'&&v.trim());
+  return '<details><summary><strong>گروه '+fa(t)+'</strong><span>'+(i===null?'مأموریت انتخاب نشده':animals[i]+' '+labels[i])+'</span><small>'+(initial?'تصمیم اول ✓':'تصمیم اول ○')+' · '+(revision?'اصلاح ✓':'اصلاح ○')+' · '+fa(results.length)+' نتیجه ثبت‌شده</small></summary>'+
   '<p><b>تصمیم اولیه:</b> '+formatText(initial)+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(revision)+'</p>'+
-  (complete?'<p><b>ارزیابی رفتاری گروه:</b> '+fa(score)+' از ۱۰ · صرفاً برای یادگیری، نه ارزیابی فردی</p><ol>'+rubric.map((r,j)=>'<li>'+E(r.criterion)+': '+fa(Number(scores[j]))+' از ۲</li>').join('')+'</ol>':'<p>پنج معیار اختصاصی مشاهده‌گر هنوز کامل نشده‌اند.</p>')+
-  '<p><b>شواهد رفتاری ثبت‌شده:</b> '+fa(voices.length)+' عضو</p>'+
-  (voices.length?'<ul>'+voices.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul>':'')+'</details>';
+  '<ul>'+results.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></details>';
  }).join('')+'</div>';
 }
-
 function learnerMission(){
  const team=identity.team,i=groupChoice(team);
  if(i===null)return simpleTitle('یک انتخاب باقی مانده','گروه هنوز مأموریت ندارد','هم‌اکنون یکی از چهار مأموریت را انتخاب کنید تا به گام جاری کلاس برسید.')+chooseMission();
@@ -188,12 +181,12 @@ function learnerMission(){
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul><h3>پرسش گروه</h3><p>'+E(d.question)+'</p></div>';
  if(n===1)body=masteryRoles(i);
- if(n===2)body='<div class="classroom-duo"><div><b>مدیریت هیجان</b><p>'+E(x.anger)+'</p></div><div><b>جرأت‌ورزی</b><p>'+E(x.assertion)+'</p></div></div>'+masteryTalk(i);
+ if(n===2)body=masteryTalk(i);
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
  body='<p class="classroom-prompt">با ۶ سکه حداقل دو اقدام انتخاب کنید. یک نفر تصمیم را از طرف گروه ثبت کند.</p><div class="classroom-money">بودجه تصمیم: <strong>۶ سکه</strong></div><div class="classroom-options">'+m.actions.map((a,j)=>'<label><input type="checkbox" data-class-pick="'+j+'" '+(picked.includes(j)?'checked':'')+'><span>'+E(a[0])+'</span><b>'+fa(a[1])+' سکه</b></label>').join('')+'</div><label class="classroom-input"><span>تصمیم و دلیل گروه</span><textarea data-class-answer="initial" rows="3" placeholder="چه اقدام‌هایی را انتخاب کردید؟ چرا؟ مسئول کیست؟">'+E(val(team,prefix+'initial')||'')+'</textarea></label><button class="btn primary" data-class-save="initial">ثبت تصمیم گروه</button>'+(val(team,prefix+'initial')?'<p class="classroom-saved">تصمیم قبلی گروه ثبت شده است ✓</p>':'');}
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
- if(n===6){const k=prefix+'member'+member;body=masteryObserver(i)+'<p class="classroom-prompt">یک مثال از رفتار یا جمله قابل مشاهده در اجرای گروه را ثبت کنید.</p><label class="classroom-input"><span>شاهد من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="مثلاً چه جمله‌ای باعث شد گفت‌وگو بهتر پیش برود؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت مشاهده من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
+ if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">نتیجه تیم و یک اقدام واقعی برای محیط خسارت را کوتاه بنویسید.</p><label class="classroom-input"><span>نتیجه و اقدام من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="از این مأموریت چه نتیجه‌ای گرفتید؟ فردا چه اقدامی انجام می‌دهید؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت نتیجه من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
  return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team)?'disabled':'')+'>'+(stepReady(team)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
 }
 function ending(){
@@ -234,23 +227,12 @@ async function execute(task){
  if(busy)return;busy=true;
  try{await task();clearNotice();await L.refresh();lastFingerprint='';render(true);}
  catch(e){alertUser(e.message||'خطای ارتباط؛ دوباره تلاش کنید',true);}
- finally{busy=false;if(rubricQueue.size&&!rubricPump)drainRubricQueue();}
+ finally{busy=false;}
 }
 async function saveFields(fields){
  const team=identity.team;
  const expected=Object.fromEntries(Object.keys(fields).map(k=>[k,version(team,k)]));
  await L.request({action:'write',team,fields,expected});
-}
-async function drainRubricQueue(){
- if(rubricPump||busy||!rubricQueue.size)return;
- rubricPump=true;
- try{
-  while(rubricQueue.size){
-   const [key,value]=rubricQueue.entries().next().value;
-   rubricQueue.delete(key);
-   await execute(()=>saveFields({[key]:value}));
-  }
- }finally{rubricPump=false;if(rubricQueue.size&&!busy)drainRubricQueue();}
 }
 root.addEventListener('change',event=>{
  const field=event.target.closest('select[data-class-single-assessment]');
@@ -262,15 +244,6 @@ root.addEventListener('change',event=>{
  try{sessionStorage.setItem(assessmentKey(),JSON.stringify(saved))}catch{}
  const status=root.querySelector('.mastery-one-status');
  if(status){const n=Object.keys(saved).length;status.textContent=n===6?'هر شش گزاره ثبت شد. این ارزیابی یک‌نوبتی است.':'پاسخ ثبت‌شده: '+fa(n)+' از ۶';}
-});
-root.addEventListener('change',event=>{
- const select=event.target.closest('select[data-class-rubric]');
- if(!select||!identity||identity.role!=='team')return;
- const i=Number(select.dataset.classRubricMission),j=Number(select.dataset.classRubric),value=select.value;
- if(!Number.isInteger(i)||i<0||i>3||!Number.isInteger(j)||j<0||j>4||!['0','1','2'].includes(value))return;
- if(groupChoice(identity.team)!==i||stage!==9)return;
- rubricQueue.set('r'+i+'score'+j,value);
- drainRubricQueue();
 });
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
@@ -311,7 +284,7 @@ root.addEventListener('click',event=>{
   if(chosen===null)return alertUser('ابتدا مأموریت گروه را انتخاب کنید.',true);
   if(stage===6&&!String(val(identity.team,prefix+'initial')||'').trim())return alertUser('ابتدا تصمیم اولیه گروه را ثبت کنید.',true);
   if(stage===8&&!String(val(identity.team,prefix+'revision')||'').trim())return alertUser('ابتدا تصمیم اصلاح‌شده گروه را ثبت کنید.',true);
-  if(stage===9&&!Array.from({length:5},(_,i)=>val(identity.team,prefix+'member'+(i+1))).some(v=>String(v||'').trim()))return alertUser('ابتدا یک شاهد رفتاری از گروه ثبت کنید.',true);
+  if(stage===9&&!Array.from({length:5},(_,i)=>val(identity.team,prefix+'member'+(i+1))).some(v=>String(v||'').trim()))return alertUser('ابتدا نتیجه یا اقدام گروه را ثبت کنید.',true);
   execute(()=>saveFields({classStepReady:classroomRound+':'+stage}));return;
  }
  if(btn.hasAttribute('data-class-reset')){
