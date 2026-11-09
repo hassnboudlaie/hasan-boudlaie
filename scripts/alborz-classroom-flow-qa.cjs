@@ -99,6 +99,15 @@ const server=http.createServer((req,res)=>{
   await teacher.locator('[data-class-overview]').click();
   await teacher.locator('[data-class-open="1"]').click();
   assert.equal(await teacher.locator('.professional-question').count(),10,'future quiz review before formation');
+  await teacher.locator('[data-class-view="participant"]').click();
+  assert.match(await teacher.locator('.classroom-projection-body').innerText(),/در انتظار تأیید گروه/,'unformed team sees accurate waiting page');
+  await teacher.locator('[data-class-projection-sample]').click();
+  assert.equal(await teacher.locator('.classroom-projection-body .professional-question').count(),10,'instructor can project all ten questions in independent sample');
+  assert.equal(await teacher.locator('.classroom-projection-body select[data-class-single-assessment]').count(),6,'instructor sees the neutral personal assessment without copying anyone answers');
+  assert.equal(await teacher.locator('.classroom-projection-body [data-professional-answer]').first().isDisabled(),true,'projected individual test cannot be submitted');
+  assert.match(await teacher.locator('.classroom-projection-body .professional-progress').innerText(),/۰ از ۱۰/,'individual results are never inferred from instructor device');
+  await teacher.locator('[data-class-view="teacher"]').click();
+
   await teacher.locator('[data-class-overview]').click();
   await teacher.locator('[data-class-open="2"]').click();
   assert.match(await teacher.locator('.classroom-preview-banner').innerText(),/پیش‌نمایش مستقل گام ۳/);
