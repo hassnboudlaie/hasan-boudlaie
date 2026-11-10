@@ -66,8 +66,8 @@ const server=require('node:http').createServer((req,res)=>{
   assert.equal(await p.locator('#q-0 .professional-explanation p').count(),3,'each anger option has an independent rationale');
   await p.getByRole('button',{name:'خانه · سه بخش آموزشی'}).click();
   await p.locator('.module-path-card').nth(2).click();
-  assert.match(await p.locator('.panel.intro h1').innerText(),/جرأت‌ورزی/,'assertiveness content reachable');
-  await p.getByRole('button',{name:'خانه · سه بخش آموزشی'}).click();
+  assert.match(await p.locator('.asv5-hero h1').innerText(),/جرأت‌ورزی/,'standalone assertiveness lesson reachable');
+  await p.getByRole('button',{name:'⌂ خانه کارگاه'}).click();
   assert.equal(await p.locator('a[href*="claims-presentation.html"]').count(),0,'poor presentation shortcut hidden');
   await p.getByRole('button',{name:'کنداکتور برنامه'}).click();
   assert.match(await p.locator('.panel h2').first().innerText(),/کنداکتور دو روزه/,'conductor opens the eight-hour schedule');
