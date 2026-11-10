@@ -1,0 +1,38 @@
+/* Alborz teacher-only timer | fixed & independent of course steps */
+.alborz-facilitator-timer{position:fixed;top:83px;left:max(12px,env(safe-area-inset-left));z-index:2147482000;direction:rtl;font-family:inherit;color:#12384f;max-width:calc(100vw - 20px)}
+.alborz-facilitator-timer *{box-sizing:border-box}
+.alborz-facilitator-timer button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+.alborz-facilitator-timer button:focus-visible,.alborz-facilitator-timer input:focus-visible{outline:3px solid #db8f16;outline-offset:3px}
+.alborz-facilitator-timer .timer-launch{display:flex;align-items:center;justify-content:center;gap:9px;border:2px solid #9fced0;border-radius:50px;background:#063d55;color:white;min-height:53px;padding:8px 15px;box-shadow:0 8px 24px #092d4180}
+.alborz-facilitator-timer .timer-launch strong{font-size:17px;color:white}
+.alborz-facilitator-timer .timer-launch-icon{font-size:20px}
+.alborz-facilitator-timer [data-timer-readout]{font-family:ui-monospace,Consolas,monospace;font-weight:950;font-variant-numeric:tabular-nums}
+.alborz-facilitator-timer .timer-launch [data-timer-readout]{font-size:22px;letter-spacing:.5px}
+.alborz-facilitator-timer .timer-panel{position:relative;margin-top:9px;width:min(470px,calc(100vw - 22px));max-height:calc(100dvh - 100px);overflow:auto;border:2px solid #79bdc5;border-radius:23px;background:#fff;box-shadow:0 20px 65px #07273c80;padding:20px;direction:rtl;text-align:right;color:#133748}
+.alborz-facilitator-timer [hidden]{display:none!important}
+.alborz-facilitator-timer .timer-head{display:flex;justify-content:space-between;align-items:start;gap:10px}
+.alborz-facilitator-timer .timer-head small{display:block;color:#286a7b;font-weight:750;font-size:14px;line-height:1.6}
+.alborz-facilitator-timer .timer-head h2{font-size:clamp(21px,2.4vw,26px);color:#063b55;margin:3px 0 4px;line-height:1.5}
+.alborz-facilitator-timer .timer-close{border:1px solid #aacbd4;border-radius:12px;background:#eef5f7;color:#12465a;font-size:31px;min-width:45px;min-height:45px;line-height:1}
+.alborz-facilitator-timer .timer-instruction{font-size:17px;line-height:1.75;margin:8px 0 14px;color:#315163}
+.alborz-facilitator-timer .timer-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.alborz-facilitator-timer .timer-presets button{background:#e5f3f5;border:1.5px solid #b8d6db;color:#0c5268;border-radius:11px;min-height:48px;font-size:16px;font-weight:800}
+.alborz-facilitator-timer .timer-presets button[aria-pressed="true"]{color:white;background:#087c79;border-color:#087c79}
+.alborz-facilitator-timer .timer-custom{display:flex;gap:7px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.alborz-facilitator-timer .timer-custom label{font-size:16px;font-weight:800;flex:1}
+.alborz-facilitator-timer .timer-custom input{height:46px;width:77px;border:1.5px solid #87b1bd;border-radius:9px;font-size:19px;text-align:center;color:#143c52;background:#fff}
+.alborz-facilitator-timer .timer-custom button{min-height:46px;background:#edf4f7;color:#0a5970;border:1.5px solid #aacbd4;border-radius:9px;padding:5px 11px;font-size:16px;font-weight:750}
+.alborz-facilitator-timer .timer-clock{background:linear-gradient(135deg,#083e53,#145f72);border-radius:22px;margin:15px 0 12px;color:white;text-align:center;padding:19px 10px 15px}
+.alborz-facilitator-timer .timer-clock [data-timer-readout]{display:block;direction:ltr;font-size:clamp(65px,11vw,108px);letter-spacing:1px;line-height:1.18;color:#fff}
+.alborz-facilitator-timer .timer-clock small{display:block;color:#e7f6f6;font-size:18px;font-weight:800;margin-top:7px;line-height:1.6}
+.alborz-facilitator-timer progress{width:100%;height:12px;accent-color:#087c79}
+.alborz-facilitator-timer #alborz-timer-done{background:#fff0e1;color:#793515;padding:10px 13px;border-radius:12px;font-weight:900;font-size:19px;line-height:1.65}
+.alborz-facilitator-timer .timer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.alborz-facilitator-timer .timer-actions button{border-radius:12px;border:1.5px solid #b2cad1;padding:10px 12px;min-height:52px;background:#eaf3f5;color:#14566b;font-size:17px;font-weight:800;flex:1}
+.alborz-facilitator-timer .timer-actions .timer-primary{background:#087c79;color:#fff;border-color:#087c79;flex:1.7}
+.alborz-facilitator-timer .timer-note{font-size:14px;color:#466573;line-height:1.75;margin:13px 0 0}
+.alborz-facilitator-timer.timer-finished .timer-launch,.alborz-facilitator-timer.timer-finished .timer-clock{background:#a63f17;border-color:#b75c31}
+.alborz-facilitator-timer.timer-finished .timer-clock{animation:alborz-timer-pulse 1s 3}
+@keyframes alborz-timer-pulse{0%,100%{filter:none}50%{filter:brightness(1.35)}}
+@media(max-width:600px){.alborz-facilitator-timer{top:70px;left:8px}.alborz-facilitator-timer .timer-panel{padding:14px;max-height:calc(100dvh - 83px)}.alborz-facilitator-timer .timer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.alborz-facilitator-timer .timer-clock [data-timer-readout]{font-size:70px}}
+@media(prefers-reduced-motion:reduce){.alborz-facilitator-timer *{animation:none!important;transition:none!important}}
