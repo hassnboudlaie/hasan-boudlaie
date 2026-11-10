@@ -183,11 +183,11 @@ Deno.serve(async req=>{
     const run=(await db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomRound,classroomPhase)&select=field_key,field_value'));
     const state=Object.fromEntries((run||[]).map(x=>[x.field_key,x.field_value]));
     const round=Number(state.classroomRound??0),phase=Number(state.classroomPhase??0);
-    if(phase!==2||fields.missionChoiceRound!==round||fields['missionRound'+round]!==fields.missionChoice)return respond({error:'فقط در مرحله انتخاب و برای دور جاری می‌توان مأموریت تعیین کرد'},409,origin);
+    if(phase>2||fields.missionChoiceRound!==round||fields['missionRound'+round]!==fields.missionChoice)return respond({error:'فقط در مرحله انتخاب و برای دور جاری می‌توان مأموریت تعیین کرد'},409,origin);
     if(entries.length!==3||entries.some(([key])=>!['missionChoice','missionChoiceRound','missionRound'+round].includes(key)))return respond({error:'فقط مأموریت همان دور قابل ثبت است'},400,origin);
     const currentChoiceRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionChoice,missionChoiceRound,groupReady)&select=field_key,field_value');
     const currentChoice=Object.fromEntries((currentChoiceRows||[]).map(row=>[row.field_key,row.field_value]));
-    if(currentChoice.groupReady!==true)return respond({error:'ابتدا مدرس باید گروه را تأیید کند'},409,origin);
+    // Mission selection is independent of instructor group approval.
     if(currentChoice.missionChoiceRound===round&&Number.isInteger(currentChoice.missionChoice))
       return respond({error:'انتخاب نهایی این گروه قبلاً ثبت شده است؛ برای اصلاح از مدرس بخواهید آن را باز کند.'},409,origin);
     const earlier=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionRound0,missionRound1,missionRound2,missionRound3)&select=field_key,field_value');
