@@ -144,7 +144,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,earlyMissionOpen=false,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
+let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -264,9 +264,6 @@ function checkinParticipant(t=identity.team,m=identity.member){
  '<div class="classroom-checkin"><h3>حضور خود را تأیید کن</h3><p>'+(done?'حضور تو ثبت شده است.':'پس از ورود، روی دکمه تأیید حضور بزن.')+'</p><button class="btn primary" data-class-checkin '+(done?'disabled':'')+'>'+(done?'حضور من ثبت شد ✓':'حضورم را تأیید می‌کنم')+'</button></div>'+
  personDots(t)+'<p class="classroom-wait">'+fa(count)+' نفر حضورشان را ثبت کرده‌اند. با دکمه «گام بعد» ادامه دهید.</p>';
 }
-function strategyCards(){
- return '<div class="classroom-strategy-grid">'+C.models.map((m,i)=>'<article><span>'+m[0]+'</span><h3>'+E(m[1])+'</h3><strong>'+E(m[4])+'</strong><p>'+E(m[5])+'</p></article>').join('')+'</div>';
-}
 function strategyIntro(teacher,neutral=false){
  return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','برای تشخیص راهبرد مناسب، ابتدا دو سؤال زیر را مرور کنید.')+
  '<figure class="classroom-hero-figure"><img loading="lazy" src="assets/claims-resilience-approved-20261106.png" alt="پوستر رسمی کارگاه تاب‌آوری کارشناسان خسارت بیمه البرز"><figcaption>چهار راهبرد برای تصمیم‌گیری در موقعیت‌های دشوار</figcaption></figure>'+
@@ -303,7 +300,6 @@ function missionRoster(){
    (canReopen?'<button type="button" class="classroom-reopen-mission" data-class-reopen-mission="'+t+'">اصلاح انتخاب</button>':'')+'</div>';
  }).join('')+'</div>';
 }
-function missionShortcut(){return '<section class="classroom-mission-shortcut"><p><strong>گام سوم برای همه باز است.</strong> بدون تأیید مدرس می‌توانید مأموریت گروه خود را انتخاب و ثبت کنید.</p><button type="button" class="btn primary" data-class-open-mission>ورود به گام سوم · انتخاب مأموریت</button></section>';}
 function chooseMission(team=identity.team){
  const selected=groupChoice(team);
  if(selected!==null&&identity?.role==='team'){consensusDraft=null;consensusAgreed=false;}
@@ -451,7 +447,7 @@ function render(force=false){
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
- const displayStage=teacher?(previewStep!==null?previewStep:stage):(earlyMissionOpen&&stage<2?2:stage),previewActive=teacher&&previewStep!==null;
+ const displayStage=teacher&&previewStep!==null?previewStep:stage,previewActive=teacher&&previewStep!==null;
  const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
@@ -467,13 +463,13 @@ function render(force=false){
  const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">مراحل گروه مستقل هستند؛ تأیید مدرس لازم نیست</span>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
- else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant()+missionShortcut();
- else if(displayStage===1)content=teacher?strategyIntro(true):missionShortcut()+strategyIntro(false);
- else if(displayStage===2)content=teacher?missionTeacherChoice():(stage<2?'<button type="button" class="btn" data-class-back-current>بازگشت به گام جاری</button>':'')+chooseMission();
+ else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
+ else if(displayStage===1)content=strategyIntro(teacher);
+ else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
  else content=ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
- const inStep=openStep===displayStage||(!teacher&&displayStage===2&&stage<2);
+ const inStep=openStep===displayStage;
  const viewSwitch=teacher&&inStep?'<nav class="classroom-view-switch" aria-label="نمای مخصوص مدرس یا گروه"><button type="button" class="'+(!projectionMode?'selected':'')+'" data-class-view="teacher" aria-pressed="'+(!projectionMode?'true':'false')+'">راهنمای مدرس</button><button type="button" class="'+(projectionMode?'selected':'')+'" data-class-view="participant" aria-pressed="'+(projectionMode?'true':'false')+'">نمایش صفحه گروه روی پرده</button></nav>':'';
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
  root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
@@ -512,7 +508,7 @@ root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
  if(btn.hasAttribute('data-team-prev')||btn.hasAttribute('data-team-next')){
-  if(identity?.role!=='team'||earlyMissionOpen)return;
+  if(identity?.role!=='team')return;
   const delta=btn.hasAttribute('data-team-next')?1:-1, next=Math.max(0,Math.min(10,stage+delta));
   if(delta>0&&stage===0&&!checkin(identity.team,identity.member))return alertUser('ابتدا حضور خود را ثبت کنید.',true);
   if(delta>0&&stage===2&&groupChoice(identity.team)===null)return alertUser('ابتدا مأموریت گروه را ثبت کنید.',true);
@@ -528,8 +524,6 @@ root.addEventListener('click',event=>{
   if(!window.confirm('مأموریت فعلی ثبت شده است. آیا دور بعد را با انتخاب یک مأموریت دیگر شروع می‌کنید؟'))return;
   execute(()=>saveFields({teamRound:classroomRound+1,teamPhase:2}));return;
  }
- if(btn.hasAttribute('data-class-open-mission')){if(identity?.role!=='team'||stage>=2)return;earlyMissionOpen=true;openStep=2;lastFingerprint='';render(true);return;}
- if(btn.hasAttribute('data-class-back-current')){if(identity?.role!=='team'||stage>=2)return;earlyMissionOpen=false;openStep=stage;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-view')){if(identity?.role!=='teacher')return;projectionMode=btn.dataset.classView==='participant';lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-team')){if(identity?.role!=='teacher')return;const team=Number(btn.dataset.classProjectionTeam);if(!Number.isInteger(team)||team<1||team>10)return;projectedTeam=team;projectedMember=1;projectionSample=false;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-member')){if(identity?.role!=='teacher')return;const member=Number(btn.dataset.classProjectionMember);if(!Number.isInteger(member)||member<1||member>5)return;projectedMember=member;lastFingerprint='';render(true);return;}
@@ -627,7 +621,6 @@ root.addEventListener('click',event=>{
   execute(()=>saveFields(fields));return;
  }
 });
-root.addEventListener('change',event=>{if(event.target.matches('[data-class-team-size]')){const row=event.target.closest('.classroom-team-row'),button=row?.querySelector('[data-class-confirm]');if(button)button.textContent='ثبت و تأیید';}});
 root.addEventListener('focusout',()=>{if(needsRefresh)setTimeout(()=>{if(!root.contains(document.activeElement))render(true);},0);});
 window.addEventListener('alborz:classroom-auth',event=>{identity=event.detail.identity;openStep=stage;previewStep=null;lastFingerprint='';render(true);});
 window.addEventListener('alborz:classroom-data',event=>{
