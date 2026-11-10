@@ -49,9 +49,15 @@ const server=http.createServer((req,res)=>{
    await p1.locator('[data-team-next]').click();
    await p1.locator('.classroom-strategy-comparison').waitFor();
    assert.equal(await p1.locator('.contrast-item').count(),4,'each strategy has a contrast card');
+   assert.equal(await p1.locator('.classroom-strategy-grid').count(),0,'old duplicate strategy card grid removed');
+   assert.equal(await p1.locator('.mastery-matrix').count(),0,'old repeated matrix removed');
+   assert.equal(await p1.locator('.classroom-expandable').count(),3,'scientific lesson, personal assessment and quiz remain available in expandable sections');
+   assert.equal(await p1.locator('.classroom-expandable').first().getAttribute('open'),null,'optional detail stays closed by default');
    assert.equal(await p1.locator('.classroom-hero-figure img').count(),1,'approved image displayed');
    await p1.locator('[data-team-next]').click();
    await p1.locator('[data-class-mission="0"]').waitFor();
+   assert.equal(await p1.locator('.classroom-strategy-comparison').count(),0,'mission choice does not repeat whole framework');
+   assert.equal(await p1.locator('[data-class-mission]').count(),4,'exactly four animal scenarios remain');
    await p1.locator('[data-class-mission="0"]').click();
    await p1.locator('[data-class-consensus-check]').check();
    await p1.locator('[data-class-confirm-mission]').click();
@@ -65,6 +71,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(await p1.locator('.classroom-personal-lens').getAttribute('open'),'','case guide opens without cluttering default view');
    await p1.waitForFunction(()=>{const img=document.querySelector('.classroom-case-image');return img&&img.complete&&img.naturalWidth>0;},{},{timeout:12000});
    assert.equal(await p1.locator('.classroom-case-image').count(),1,'original claims illustration loads');
+   assert.equal(await p1.locator('.classroom-personal-lens').count(),1,'only one personal resilience guide is shown');
    assert.equal(data.get('1:teamPhase')?.field_value,3,'group advances itself to scenario');
    assert.equal(data.get('2:teamPhase'),undefined,'second group remains independent');
    await p2.locator('[data-class-checkin]').click();
@@ -84,6 +91,7 @@ const server=http.createServer((req,res)=>{
       await p1.locator('[data-team-next]').click();
       await p1.waitForFunction(v=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله '+new Intl.NumberFormat('fa-IR').format(v+1)),st+1);
       if(st===3)assert.equal(await p1.locator('.mastery-person').count(),5,'five role cards for scenario');
+      if(st===3)assert.equal(await p1.locator('.classroom-case-image').count(),0,'image is not repeated on role assignment screen');
       if(st===4){assert.equal(await p1.locator('.mastery-turn.effective').count(),12,'twelve natural dialogue turns');assert.equal(await p1.locator('.mastery-weak-dialog').count(),1,'before/after dialogue available');assert.equal(await p1.locator('.mastery-final-analysis li').count()>=8,true,'observer checklist plus debrief');}
    }
    assert.equal(data.get('1:teamPhase')?.field_value,10,'all eleven steps traversed without teacher');
