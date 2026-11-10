@@ -244,7 +244,7 @@ function stepMap(){
  }).join('');
  const intro=teacher?'برای ممیزی محتوا می‌توانید هر ۱۱ گام را مستقل باز کنید؛ در حالت پیش‌نمایش، مرحله گروه‌ها و پاسخ‌های آن‌ها تغییر نمی‌کند.':'هر گروه مستقل پیش می‌رود. بعد از انجام فعالیت و ثبت نتیجه، روی «گام بعد» بزنید؛ تأیید مدرس لازم نیست.';
  const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'پس از تکمیل فعالیت قبلی، با دکمه «گام بعد» وارد این مرحله شوید.')+'</p></div>';
- return '<section class="classroom-map"><div class="classroom-map-intro"><span>مسیر مشترک تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
+ return '<section class="classroom-map"><div class="classroom-map-intro"><span>نقشه مراحل تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
 }
 function messageBox(){return '<p id="classroom-feedback" class="classroom-feedback" role="status">'+E(notice)+'</p>';}
 function simpleTitle(kicker,title,description){return '<div class="classroom-section-title"><span>'+E(kicker)+'</span><h2>'+E(title)+'</h2>'+(description?'<p>'+E(description)+'</p>':'')+'</div>';}
@@ -451,12 +451,8 @@ function render(force=false){
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
  needsRefresh=false;lastFingerprint=signature;
- const ahead=stage===10?2:stage+1;
- const countConfirmed=groups().filter(confirmed).length;
- const allReadyHaveMission=groups().filter(confirmed).every(t=>groupChoice(t)!==null);
- const stepProgress=readiness();
  const nextDisabled=teacher&&stage===10;
- const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'گروه‌ها مستقل پیش می‌روند و هر مرحله را خودشان باز می‌کنند.';
+ const guideNote='نمای مدرس · هر گروه بدون تأیید، مسیر و تصمیم‌های خود را ثبت می‌کند.';
  const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow(displayStage)+'</header>'+
  '<div class="classroom-stage-progress" role="status"><span>'+(teacher?'مسیر مدرس':'پیشرفت گروه')+': '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
  const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">مراحل گروه مستقل هستند؛ تأیید مدرس لازم نیست</span>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
