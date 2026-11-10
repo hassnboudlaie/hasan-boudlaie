@@ -164,7 +164,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
+let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,earlyMissionOpen=false,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -289,6 +289,7 @@ function missionRoster(){
    (canReopen?'<button type="button" class="classroom-reopen-mission" data-class-reopen-mission="'+t+'">اصلاح انتخاب</button>':'')+'</div>';
  }).join('')+'</div>';
 }
+function missionShortcut(){return '<section class="classroom-mission-shortcut"><p><strong>گام سوم برای همه باز است.</strong> بدون تأیید مدرس می‌توانید مأموریت گروه خود را انتخاب و ثبت کنید.</p><button type="button" class="btn primary" data-class-open-mission>ورود به گام سوم · انتخاب مأموریت</button></section>';}
 function chooseMission(team=identity.team){
  const selected=groupChoice(team);
  if(selected!==null&&identity?.role==='team'){consensusDraft=null;consensusAgreed=false;}
@@ -436,7 +437,7 @@ function render(force=false){
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
- const displayStage=teacher?(previewStep!==null?previewStep:stage):Math.max(stage,2),previewActive=teacher&&previewStep!==null;
+ const displayStage=teacher?(previewStep!==null?previewStep:stage):(earlyMissionOpen&&stage<2?2:stage),previewActive=teacher&&previewStep!==null;
  const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
@@ -452,10 +453,10 @@ function render(force=false){
  const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '';
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
- else if(displayStage===0)content=teacher?rosterTeacher():chooseMission();
+ else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant()+missionShortcut();
  else if(!teacher&&!confirmed(identity.team)&&displayStage>2)content=simpleTitle('در انتظار فعال‌سازی گروه','برای ادامه فعالیت گروهی با مدرس هماهنگ کنید','انتخاب مأموریت در گام سوم بدون تأیید مدرس در دسترس است.')+personDots(identity.team);
- else if(displayStage===1)content=strategyIntro(teacher);
- else if(displayStage===2)content=teacher?missionTeacherChoice():(stage===0?checkinParticipant():'')+chooseMission();
+ else if(displayStage===1)content=teacher?strategyIntro(true):missionShortcut()+strategyIntro(false);
+ else if(displayStage===2)content=teacher?missionTeacherChoice():(stage<2?'<button type="button" class="btn" data-class-back-current>بازگشت به گام جاری</button>':'')+chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
  else content=ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
@@ -497,6 +498,8 @@ root.addEventListener('change',event=>{
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
+ if(btn.hasAttribute('data-class-open-mission')){if(identity?.role!=='team'||stage>=2)return;earlyMissionOpen=true;openStep=2;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-back-current')){if(identity?.role!=='team'||stage>=2)return;earlyMissionOpen=false;openStep=stage;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-view')){if(identity?.role!=='teacher')return;projectionMode=btn.dataset.classView==='participant';lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-team')){if(identity?.role!=='teacher')return;const team=Number(btn.dataset.classProjectionTeam);if(!Number.isInteger(team)||team<1||team>10)return;projectedTeam=team;projectedMember=1;projectionSample=false;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-member')){if(identity?.role!=='teacher')return;const member=Number(btn.dataset.classProjectionMember);if(!Number.isInteger(member)||member<1||member>5)return;projectedMember=member;lastFingerprint='';render(true);return;}
