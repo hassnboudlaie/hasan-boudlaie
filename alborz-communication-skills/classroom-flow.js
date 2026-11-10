@@ -452,7 +452,7 @@ function render(force=false){
  const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '';
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
- else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
+ else if(displayStage===0)content=teacher?rosterTeacher():chooseMission();
  else if(!teacher&&!confirmed(identity.team)&&displayStage>2)content=simpleTitle('در انتظار فعال‌سازی گروه','برای ادامه فعالیت گروهی با مدرس هماهنگ کنید','انتخاب مأموریت در گام سوم بدون تأیید مدرس در دسترس است.')+personDots(identity.team);
  else if(displayStage===1)content=strategyIntro(teacher);
  else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
