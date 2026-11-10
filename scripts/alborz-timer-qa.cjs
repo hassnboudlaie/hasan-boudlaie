@@ -31,6 +31,7 @@ const server=http.createServer((req,res)=>{
       await page.locator('#live-join').click();
       await page.locator('#alborz-facilitator-timer .timer-launch').waitFor({timeout:15000});
       assert.equal(await page.locator('#alborz-facilitator-timer').count(),1);
+      assert.equal(await page.locator('[data-class-team-size],[data-class-confirm]').count(),0,'legacy manual group approval controls removed from teacher view');
       const identities=await page.evaluate(()=>({
         names:window.AlborzWorkshop.catalog.models.map(x=>x[1]),
         lengths:window.AlborzWorkshop.catalog.mastery.map(x=>x.after.length),
