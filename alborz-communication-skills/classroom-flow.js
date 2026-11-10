@@ -459,7 +459,7 @@ function render(force=false){
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
  else content=ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
- const inStep=openStep===displayStage;
+ const inStep=openStep===displayStage||(!teacher&&displayStage===2&&stage<2);
  const viewSwitch=teacher&&inStep?'<nav class="classroom-view-switch" aria-label="نمای مخصوص مدرس یا گروه"><button type="button" class="'+(!projectionMode?'selected':'')+'" data-class-view="teacher" aria-pressed="'+(!projectionMode?'true':'false')+'">راهنمای مدرس</button><button type="button" class="'+(projectionMode?'selected':'')+'" data-class-view="participant" aria-pressed="'+(projectionMode?'true':'false')+'">نمایش صفحه گروه روی پرده</button></nav>':'';
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
  root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
