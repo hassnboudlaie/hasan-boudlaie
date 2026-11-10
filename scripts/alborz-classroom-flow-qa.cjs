@@ -192,7 +192,7 @@ const server=http.createServer((req,res)=>{
   assert.match(await expert2.locator('.classroom-story').innerText(),/خسارت بدنه[\s\S]*بدون یادداشت یکپارچه/,'chameleon targets the individual claim-adjuster workflow rather than an organizational service model');
   assert.equal(get(1,'classroomPhase').field_value,3,'instructor phase stored centrally');
   await teacher.locator('[data-class-reference="2"]').click();
-  assert.match(await teacher.locator('.classroom-case-caption').innerText(),/آفتاب‌پرست|پرونده|رفت‌وآمدی/);
+  assert.match(await teacher.locator('.classroom-case-caption').innerText(),/روش قدیمی دیگر جواب نمی‌دهد|آفتاب‌پرست/,'instructor previews the renamed individual chameleon scenario');
   for(let phase=4;phase<=6;phase++){
    await markReady();
    await teacher.locator('[data-class-next]').click();
