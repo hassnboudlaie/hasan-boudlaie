@@ -170,6 +170,16 @@ function strategyContrast(compact=false){
  ];
  return '<section class="classroom-strategy-comparison"><h3>چهار راهبرد؛ چهار تصمیم متفاوت</h3><p>دو سؤال بپرسید: آیا روش فعلی رسیدگی جواب می‌دهد؟ آیا در کنار آن یک مسیر مستقل برای یادگیری و رشد حرفه‌ای ایجاد می‌کنم؟</p><div class="classroom-contrast-grid">'+comparisons.map((r,i)=>'<article class="contrast-item contrast-'+i+'"><div class="contrast-head"><span role="img" aria-label="'+E(r[1])+'">'+r[0]+'</span><h4>'+r[1]+'</h4></div><p><b>رسیدگی فعلی:</b> '+r[2]+'</p><p><b>مسیر یادگیری مستقل:</b> '+r[3]+'</p><p class="contrast-example"><b>نمونه خسارت:</b> '+r[4]+'</p></article>').join('')+'</div>'+(compact?'':'<p class="contrast-note">این استعاره‌ها از یک چارچوب راهبردی سازمانی برای بحث آموزشی اقتباس شده‌اند؛ آزمون شخصیت یا تشخیص روان‌شناختی نیستند.</p>')+'</section>';
 }
+function personalResilienceLens(i){
+ const lesson=C.mastery[i].lesson;
+ const parts=[
+  ['فشار شغلیِ این سناریو',lesson.condition],
+  ['راهبرد رفتاری در اختیار کارشناس',lesson.core],
+  ['مرز حرفه‌ای که نباید نقض شود',lesson.error],
+  ['بازیابی انرژی بعد از موقعیت دشوار',lesson.takeaway]
+ ];
+ return '<details class="classroom-personal-lens"><summary>راهنمای چهارمرحله‌ای تاب‌آوری فردی · باز کنید</summary><ol>'+parts.map(([label,value])=>'<li><strong>'+E(label)+'</strong><p>'+E(value)+'</p></li>').join('')+'</ol></details>';
+}
 function caseIllustration(i){
  const icons=['🚗','🏥','🏚️','🏢'],areas=['بدنه و شخص ثالث','درمان و مراکز طرف قرارداد','خسارت اموال و نشت آب','اموال و مشتریان حقوقی طرف قرارداد'];
  return '<div class="classroom-case-art case-art-'+i+'"><img class="classroom-case-image" loading="lazy" src="assets/claims-'+['camel','salmon','chameleon','octopus'][i]+'.svg?v=20261111-individual5" alt="تصویر آموزشی سناریوی '+E(areas[i])+'"><div><strong>'+icons[i]+' '+E(C.models[i][1])+'</strong><p>'+E(areas[i])+'</p></div></div>';
@@ -373,7 +383,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  const n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],prefix='r'+i;
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
- if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></div>'+individualDiscussion(i);
+ if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></div>'+personalResilienceLens(i)+individualDiscussion(i);
  if(n===1)body=masteryRoles(i);
  if(n===2)body=masteryTalk(i);
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
