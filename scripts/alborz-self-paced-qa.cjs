@@ -59,6 +59,10 @@ const server=http.createServer((req,res)=>{
    assert.equal(data.get('1:missionChoice')?.field_value,0,'group one chooses camel without instructor');
    await p1.locator('[data-team-next]').click();
    await p1.locator('.classroom-story').waitFor();
+   assert.equal(await p1.locator('.classroom-personal-lens').count(),1,'one compact personal resilience guide per case');
+   assert.equal(await p1.locator('.classroom-personal-lens li').count(),4,'standard 4 elements: stressor, action, professional boundary, recovery');
+   await p1.locator('.classroom-personal-lens summary').click();
+   assert.equal(await p1.locator('.classroom-personal-lens').getAttribute('open'),'','case guide opens without cluttering default view');
    await p1.waitForFunction(()=>{const img=document.querySelector('.classroom-case-image');return img&&img.complete&&img.naturalWidth>0;},{},{timeout:12000});
    assert.equal(await p1.locator('.classroom-case-image').count(),1,'original claims illustration loads');
    assert.equal(data.get('1:teamPhase')?.field_value,3,'group advances itself to scenario');
