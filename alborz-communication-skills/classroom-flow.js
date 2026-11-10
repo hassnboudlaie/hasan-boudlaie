@@ -206,14 +206,22 @@ function masteryRoles(i){
 }
 
 function masteryTalk(i){
- const m=C.mastery[i],lines=m.after;
+ const m=C.mastery[i];
  const summary=[
- 'شتر: ازدحام موقت خسارت بدنه و شخص ثالث مدیریت شد؛ روال اصلی درست ماند و تیم با تقسیم بار، کنترل مدارک و مکث کوتاه به خدمت ادامه داد.',
- 'ماهی آزاد: رسیدگی عادی ناوگان سالم ماند؛ در کنار آن یک خدمت مستقل برای پیشگیری و کاهش توقف خودرو صرفاً در قالب فرضیه تجاری آزموده شد.',
- 'آفتاب‌پرست: رفت‌وبرگشت خسارت درمان با بازطراحی مسیر اصلی، فهرست واحد مدارک و مسئول پیگیری اصلاح شد؛ هیچ خدمت تازه‌ای ساخته نشد.',
- 'اختاپوس: برای خسارت اموال، هم روش بازدید و ارزیابی تغییر کرد و هم یک خدمت مستقل پیشگیری ریسک طراحی شد؛ دو جریان و دو مالک روشن بودند.'
+ 'شتر: فشار موقتِ مراجعه در خسارت بدنه و شخص ثالث افزایش یافت؛ روش رسیدگی صحیح ماند و تیم با اولویت‌بندی، کنترل مدارک، تقسیم بار و بازیابی انرژی خدمت را حفظ کرد.',
+ 'ماهی آزاد: خدمت خسارت ناوگان به روش معمول ادامه پیدا کرد؛ در کنار آن یک خدمت پیشگیری مستقل با مشتری و مدل درآمد جداگانه، فقط به‌صورت فرضیه قابل‌آزمون بررسی شد.',
+ 'آفتاب‌پرست: در خسارت درمان، مشکل تکراریِ برگشت مدارک با تغییر مالک پرونده و مسیر تحویل میان ارزیابی و مالی اصلاح شد؛ خدمت تازه‌ای ساخته نشد.',
+ 'اختاپوس: در خسارت اموال، دو تغییر مستقل انجام شد: اصلاح روال بازدید و ارزیابی، و آزمون خدمت جداگانه پیشگیری ریسک؛ هر مسیر مالک، منابع و معیار خودش را داشت.'
  ][i];
- return '<section class="mastery-dialogues"><h3>گفت‌وگوی نمونه · '+E(C.models[i][1])+'</h3><div class="mastery-dialogue">'+lines.map((x,n)=>'<article class="mastery-turn mastery-speaker-'+x.p+'"><div class="mastery-speaker"><span class="mastery-speaker-avatar">'+E(m.people[x.p].name.charAt(0))+'</span><div><strong>'+E(m.people[x.p].name)+'</strong><small>'+E(m.people[x.p].role)+'</small></div><em>'+fa(n+1)+'</em></div><p>'+E(x.t)+'</p></article>').join('')+'</div><section class="mastery-final-analysis"><h4>تحلیل پایانی</h4><p>'+E(summary)+'</p></section></section>';
+ const line=(x,n,mode)=>'<article class="mastery-turn mastery-speaker-'+x.p+' '+mode+'"><div class="mastery-speaker"><span class="mastery-speaker-avatar">'+E(m.people[x.p].name.charAt(0))+'</span><div><strong>'+E(m.people[x.p].name)+'</strong><small>'+E(m.people[x.p].role)+'</small></div><em>'+fa(n+1)+'</em></div><p>'+E(x.t)+'</p></article>';
+ return '<section class="mastery-dialogues"><h3>گفت‌وگوی نمونه · '+E(C.models[i][1])+'</h3>'+
+ '<p>ابتدا یک اجرای سه‌تاپنج‌دقیقه‌ای داشته باشید؛ بعد نمونه زیر را بخوانید و تفاوت جمله‌ها را پیدا کنید.</p>'+
+ '<details class="mastery-weak-dialog"><summary>گفت‌وگوی غیرمؤثر · تشخیص خطاها</summary><div class="mastery-dialogue">'+m.before.map((x,n)=>line(x,n,'weak')).join('')+'</div></details>'+
+ '<h4 class="mastery-effective-heading">گفت‌وگوی حرفه‌ای · قابل بلندخوانی در کلاس</h4><div class="mastery-dialogue">'+m.after.map((x,n)=>line(x,n,'effective')).join('')+'</div>'+
+ '<section class="mastery-final-analysis"><h4>تحلیل پایانی</h4><p>'+E(summary)+'</p><h4>چک‌لیست مشاهده و بازخورد</h4>'+
+ '<ul>'+m.observer.map(o=>'<li><b>'+E(o.criterion)+'</b><p>'+E(o.evidence)+'</p></li>').join('')+'</ul>'+
+ '<h4>سه سؤال برای گفت‌وگوی جمعی</h4><ol>'+m.debrief.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol>'+
+ '<p><b>اجرای دوباره:</b> نقش‌ها را عوض کنید و این بار یک جمله قابل مشاهده را بهتر اجرا کنید.</p></section></section>';
 }
 const singleAnswers=Object.create(null);
 function assessmentKey(){return 'alborz-reflection-once-v1-'+(identity?.role==='team'?'group'+identity.team+'member'+identity.member:'instructor');}
