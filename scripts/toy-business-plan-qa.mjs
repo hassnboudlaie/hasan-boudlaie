@@ -1,0 +1,61 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+const url='http://127.0.0.1:4173/business-model-canvas/toy-business-plan.html';
+const folder='artifacts/bmc-qa/toy-plan';await fs.mkdir(folder,{recursive:true});
+const browser=await chromium.launch({headless:true});
+const failures=[];
+for(const viewport of [{width:390,height:844},{width:1360,height:900}]){
+ const ctx=await browser.newContext({viewport,acceptDownloads:true});const page=await ctx.newPage(),jsErrors=[];
+ page.on('pageerror',error=>jsErrors.push(error.message));
+ const label=viewport.width===390?'mobile':'desktop';
+ try{
+  const res=await page.goto(url,{waitUntil:'load'});assert(res?.ok(),'Toy plan page inaccessible');
+  assert.equal(await page.locator('#steps .step').count(),16,'Step count mismatch');
+  assert.equal(await page.locator('#p-owner').inputValue(),'محمدحسین','Prefilled respondent missing');
+  assert((await page.locator('#p-budget').inputValue()).includes('۵ تا ۱۰'),'Budget must be prefilled');
+  await page.locator('#p-business').fill('آزمایش اسباب بازی');
+  await page.locator('#steps .step').nth(1).click();
+  assert.equal(await page.locator('.question').count(),5,'Market questions missing');
+  await page.locator('.question input[type=checkbox]').first().check();
+  await page.locator('#a-market_0').fill('فروش آزمایشی در تهران');
+  assert((await page.locator('#answerCount').innerText()).includes('۱'),'Question progress not updated');
+  await page.locator('#steps .step').nth(12).click();
+  assert.equal(await page.locator('.risk').count(),10,'Risk registers missing');
+  await page.locator('.risk input[type=checkbox]').first().check();
+  await page.locator('#risk-note-0').fill('تخصیص مسئول ریسک');
+  await page.locator('#steps .step').nth(13).click();
+  for(const [id,n] of Object.entries({purchase:'100000',freight:'10000',customs:'30000',other:'10000',wholesale:'250000',units:'100',sold:'50',setup:'5',reserve:'10'}))await page.locator('#f-'+id).fill(n);
+  const finance=await page.locator('#financialResults').innerText();
+  assert(finance.includes('۱۵۰٬۰۰۰'),'Unit landed cost wrong: '+finance);
+  assert(finance.includes('۴۰'),'Gross margin should equal 40%');
+  assert(finance.includes('۳۰٬۰۰۰٬۰۰۰'),'Pilot total financing wrong: '+finance);
+  await page.reload({waitUntil:'load'});
+  await page.locator('#steps .step').nth(13).click();
+  assert.equal(await page.locator('#f-purchase').inputValue(),'100000','Finance values not autosaved');
+  await page.locator('#steps .step').nth(14).click();
+  assert.equal(await page.locator('.canvas-tile').count(),9,'Canvas must have nine blocks');
+  await page.locator('#c-segments').fill('مشتریان عمده و فروشگاه‌های هدف');
+  await page.locator('#steps .step').nth(15).click();
+  const downloadPromise=page.waitForEvent('download');await page.locator('#saveHtml').click();const downloaded=await downloadPromise;
+  const filename=path.join(folder,label+'-full-plan.html');await downloaded.saveAs(filename);
+  const html=await fs.readFile(filename,'utf8');
+  for(const phrase of ['فروش آزمایشی در تهران','مشتریان عمده و فروشگاه‌های هدف','تخصیص مسئول ریسک','آزمایش اسباب بازی'])assert(html.includes(phrase),'Missing from exported report: '+phrase);
+  const backupPromise=page.waitForEvent('download');await page.locator('#saveJson').click();const backup=await backupPromise;
+  const backupPath=path.join(folder,label+'-backup.json');await backup.saveAs(backupPath);
+  const body=JSON.parse(await fs.readFile(backupPath,'utf8'));assert.equal(body.data.finance.purchase,'100000');
+  await page.evaluate(()=>{window.__printed=0;window.print=()=>{window.__printed++}});
+  await page.locator('#printReport').click();
+  assert.equal(await page.evaluate(()=>window.__printed),1,'PDF print action not called');
+  assert((await page.locator('#printArea').innerText()).includes('مشتریان عمده'),'Print report missing canvas edits');
+  const wide=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,inner:innerWidth}));
+  assert(wide.scroll<=wide.inner+3,'Horizontal overflow '+JSON.stringify(wide));
+  assert.equal(jsErrors.length,0,'JavaScript errors: '+jsErrors.join(' | '));
+  await page.screenshot({path:path.join(folder,label+'.png'),fullPage:true});
+  console.log('PASS toy plan '+label);
+ }catch(e){failures.push(label+': '+e.stack);console.error('FAIL toy plan '+label,e);await page.screenshot({path:path.join(folder,label+'-failure.png'),fullPage:true}).catch(()=>{});}
+ finally{await ctx.close();}
+}
+await browser.close();
+if(failures.length)throw Error(failures.join('\n'));
