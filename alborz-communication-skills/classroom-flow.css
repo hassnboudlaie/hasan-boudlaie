@@ -428,3 +428,12 @@
 /* Original per-scenario art: sharp vector on small screens and classroom projection */
 .classroom-case-art .classroom-case-image{width:clamp(160px,29vw,280px);max-width:47%;height:auto;aspect-ratio:12 / 7;object-fit:contain;border:1px solid #bad8e1;border-radius:16px;background:#f4f9fc;flex-shrink:0}
 @media(max-width:620px){.classroom-case-art{display:flex;flex-direction:column;align-items:flex-start}.classroom-case-art .classroom-case-image{width:100%;max-width:100%;max-height:230px;object-fit:contain}.classroom-case-art strong{font-size:25px}}
+
+
+/* Classroom read-aloud audit: large form text, high-contrast focus and consistent touch targets */
+.classroom-screen .classroom-content input:not([type="checkbox"]):not([type="radio"]),.classroom-screen .classroom-content textarea,.classroom-screen .classroom-content select{font:inherit;font-size:clamp(19px,1.55vw,22px);line-height:1.8;color:#163647;min-height:50px}
+.classroom-screen .classroom-content textarea{padding:13px 15px;min-height:115px}
+.classroom-screen .classroom-content label{line-height:1.8}
+.classroom-screen .classroom-story,.classroom-screen .classroom-event,.classroom-screen .classroom-options,.classroom-screen .classroom-recap{font-size:clamp(19px,1.6vw,22px);line-height:1.9}
+.classroom-screen .mastery-roles,.classroom-screen .mastery-dialogues{scroll-margin-top:18px}
+@media(prefers-reduced-motion:reduce){.classroom-screen *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
