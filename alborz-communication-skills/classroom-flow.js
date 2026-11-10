@@ -296,7 +296,7 @@ function chooseMission(team=identity.team){
  return simpleTitle('مرحله انتخاب مأموریت','انتخاب مأموریت با توافق اعضای گروه','چهار مأموریت باز هستند؛ گروه شما یکی را انتخاب می‌کند. ابتدا گفت‌وگو کنید، بعد فقط یک نفر به نمایندگی ثبت نهایی کند.')+
  consensusProcess()+missionCards('group',team)+
  (selected!==null?
-  '<section class="classroom-choice-confirmed" role="status"><strong>✅ مأموریت گروه ثبت شد: '+animals[selected]+' '+labels[selected]+'</strong><p>این انتخاب برای اعضای گروه یکسان است. اکنون منتظر شروع سناریو از سوی مدرس بمانید. برای اصلاح انتخاب با مدرس هماهنگ کنید.</p></section>':
+  '<section class="classroom-choice-confirmed" role="status"><strong>✅ مأموریت گروه ثبت شد: '+animals[selected]+' '+labels[selected]+'</strong><p>انتخاب گروه ثبت شد. دکمه «گام بعد» را بزنید و سناریوی خود را شروع کنید.</p></section>':
   '<section class="classroom-consensus-submit"><p>'+(consensusDraft===null?'ابتدا مأموریت توافق‌شده را از چهار گزینه بالا انتخاب کنید.':'انتخاب موقت: <strong>'+animals[consensusDraft]+' '+labels[consensusDraft]+'</strong>')+'</p>'+
   '<label class="classroom-consensus-check"><input type="checkbox" data-class-consensus-check '+(consensusAgreed?'checked':'')+'><span>به نمایندگی از اعضای گروه تأیید می‌کنم که درباره این مأموریت گفت‌وگو کرده و به توافق رسیده‌ایم.</span></label>'+
   '<button type="button" class="btn primary" data-class-confirm-mission '+(consensusDraft===null||!consensusAgreed?'disabled':'')+'>ثبت نهایی مأموریت گروه</button>'+
@@ -379,7 +379,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
  if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">نتیجه تیم و یک اقدام واقعی برای محیط خسارت را کوتاه بنویسید.</p><label class="classroom-input"><span>نتیجه و اقدام من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="از این مأموریت چه نتیجه‌ای گرفتید؟ فردا چه اقدامی انجام می‌دهید؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت نتیجه من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
- return title+body+'<div class="classroom-ready-action"><button type="button" class="btn primary" data-class-ready '+(stepReady(team,phase)?'disabled':'')+'>'+(stepReady(team,phase)?'این گام انجام شد ✓':'این گام را انجام دادیم')+'</button><p>پس از انجام فعالیت گروهی، یک نفر دکمه را بزند. مدرس می‌بیند گروه شما آماده گام بعد است.</p></div><p class="classroom-wait">منتظر اعلام مرحله بعد از سوی مدرس بمانید؛ صفحه خودکار به‌روز می‌شود.</p>';
+ return title+body+'<div class="classroom-ready-action"><p>وقتی گفت‌وگو و ثبت نتیجه این مرحله تمام شد، یکی از اعضا روی «گام بعد» بزند؛ ادامه مسیر به تأیید مدرس وابسته نیست.</p></div>';
 }
 function missionMilestones(team){
  const i=groupChoice(team);
@@ -447,14 +447,13 @@ function render(force=false){
  const allReadyHaveMission=groups().filter(confirmed).every(t=>groupChoice(t)!==null);
  const stepProgress=readiness();
  const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage>=3&&stage<=9&&stepProgress.waiting.length>0||stage===10);
- const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'تغییر مرحله روی موبایل گروه‌ها حدود ۱۰ ثانیه زمان می‌برد.';
+ const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'گروه‌ها مستقل پیش می‌روند و هر مرحله را خودشان باز می‌کنند.';
  const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow(displayStage)+'</header>'+
  '<div class="classroom-stage-progress" role="status"><span>پیشرفت کلاس: '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
- const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '';
+ const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">گروه شما مستقل پیش می‌رود · گام '+fa(stage+1)+' از ۱۱</span>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
  else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant()+missionShortcut();
- else if(!teacher&&!confirmed(identity.team)&&displayStage>2)content=simpleTitle('در انتظار فعال‌سازی گروه','برای ادامه فعالیت گروهی با مدرس هماهنگ کنید','انتخاب مأموریت در گام سوم بدون تأیید مدرس در دسترس است.')+personDots(identity.team);
  else if(displayStage===1)content=teacher?strategyIntro(true):missionShortcut()+strategyIntro(false);
  else if(displayStage===2)content=teacher?missionTeacherChoice():(stage<2?'<button type="button" class="btn" data-class-back-current>بازگشت به گام جاری</button>':'')+chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
@@ -498,6 +497,23 @@ root.addEventListener('change',event=>{
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
+ if(btn.hasAttribute('data-team-prev')||btn.hasAttribute('data-team-next')){
+  if(identity?.role!=='team'||earlyMissionOpen)return;
+  const delta=btn.hasAttribute('data-team-next')?1:-1, next=Math.max(0,Math.min(10,stage+delta));
+  if(delta>0&&stage===0&&!checkin(identity.team,identity.member))return alertUser('ابتدا حضور خود را ثبت کنید.',true);
+  if(delta>0&&stage===2&&groupChoice(identity.team)===null)return alertUser('ابتدا مأموریت گروه را ثبت کنید.',true);
+  const chosen=groupChoice(identity.team),prefix='r'+chosen;
+  if(delta>0&&stage===6&&!String(val(identity.team,prefix+'initial')||'').trim())return alertUser('ابتدا تصمیم اولیه گروه را ثبت کنید.',true);
+  if(delta>0&&stage===8&&!String(val(identity.team,prefix+'revision')||'').trim())return alertUser('ابتدا تصمیم اصلاح‌شده گروه را ثبت کنید.',true);
+  if(delta>0&&stage===9&&!Array.from({length:5},(_,i)=>val(identity.team,prefix+'member'+(i+1))).some(v=>String(v||'').trim()))return alertUser('ابتدا نتیجه یا اقدام گروه را ثبت کنید.',true);
+  if(next===stage)return;
+  execute(()=>saveFields({teamPhase:next}));return;
+ }
+ if(btn.hasAttribute('data-team-restart')){
+  if(identity?.role!=='team'||stage!==10||classroomRound>=3)return;
+  if(!window.confirm('مأموریت فعلی ثبت شده است. آیا دور بعد را با انتخاب یک مأموریت دیگر شروع می‌کنید؟'))return;
+  execute(()=>saveFields({teamRound:classroomRound+1,teamPhase:2}));return;
+ }
  if(btn.hasAttribute('data-class-open-mission')){if(identity?.role!=='team'||stage>=2)return;earlyMissionOpen=true;openStep=2;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-back-current')){if(identity?.role!=='team'||stage>=2)return;earlyMissionOpen=false;openStep=stage;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-view')){if(identity?.role!=='teacher')return;projectionMode=btn.dataset.classView==='participant';lastFingerprint='';render(true);return;}
@@ -606,7 +622,7 @@ window.addEventListener('alborz:classroom-data',event=>{
  rows=event.detail.records||[];
  if(identity?.role==='teacher'){
   const record=rec(1,'classroomPhase');stage=Number(record?.field_value??0);stageVersion=record?.version??0;classroomRound=Number(rec(1,'classroomRound')?.field_value??0);
- }else{stage=Number(event.detail.classroom?.phase??0);stageVersion=event.detail.classroom?.version??0;classroomRound=Number(event.detail.classroom?.round??0);}
+ }else{stage=Number(val(identity.team,'teamPhase')??0);stageVersion=version(identity.team,'teamPhase');classroomRound=Number(val(identity.team,'teamRound')??0);}
  stage=Math.max(0,Math.min(10,stage));if(stage!==oldStage||classroomRound!==oldRound){openStep=stage;previewStep=null;lastFingerprint='';}render();
 });
 render(true);
