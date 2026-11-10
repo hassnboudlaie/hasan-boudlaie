@@ -436,7 +436,7 @@ function render(force=false){
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
- const displayStage=teacher&&previewStep!==null?previewStep:stage,previewActive=teacher&&previewStep!==null;
+ const displayStage=teacher?(previewStep!==null?previewStep:stage):Math.max(stage,2),previewActive=teacher&&previewStep!==null;
  const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
@@ -453,7 +453,7 @@ function render(force=false){
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
  else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
- else if(!teacher&&!confirmed(identity.team))content=simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و اعلام تعداد افراد، مدرس گروه را فعال می‌کند. سپس همین صفحه به‌طور خودکار وارد گام جاری می‌شود.')+personDots(identity.team);
+ else if(!teacher&&!confirmed(identity.team)&&displayStage>2)content=simpleTitle('در انتظار فعال‌سازی گروه','برای ادامه فعالیت گروهی با مدرس هماهنگ کنید','انتخاب مأموریت در گام سوم بدون تأیید مدرس در دسترس است.')+personDots(identity.team);
  else if(displayStage===1)content=strategyIntro(teacher);
  else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
@@ -489,7 +489,7 @@ root.addEventListener('change',event=>{
 });
 root.addEventListener('change',event=>{
  const box=event.target.closest('[data-class-consensus-check]');
- if(!box||identity?.role!=='team'||stage!==2||groupChoice(identity.team)!==null)return;
+ if(!box||identity?.role!=='team'||Math.max(stage,2)!==2||groupChoice(identity.team)!==null)return;
  consensusAgreed=box.checked;
  const submit=root.querySelector('[data-class-confirm-mission]');
  if(submit)submit.disabled=!consensusAgreed||consensusDraft===null;
@@ -543,7 +543,7 @@ root.addEventListener('click',event=>{
   consensusDraft=choice;consensusAgreed=false;lastFingerprint='';render(true);return;
  }
  if(btn.hasAttribute('data-class-confirm-mission')){
-  if(identity?.role!=='team'||stage!==2||!confirmed(identity.team)||groupChoice(identity.team)!==null)return;
+  if(identity?.role!=='team'||Math.max(stage,2)!==2||groupChoice(identity.team)!==null)return;
   if(consensusDraft===null||!consensusAgreed||usedMissions(identity.team).includes(consensusDraft))return alertUser('ابتدا با گروه به توافق برسید و انتخاب نهایی را تأیید کنید.',true);
   const choice=consensusDraft;
   execute(()=>saveFields({missionChoice:choice,missionChoiceRound:classroomRound,['missionRound'+classroomRound]:choice}));
