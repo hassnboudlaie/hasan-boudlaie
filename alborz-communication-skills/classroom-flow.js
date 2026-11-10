@@ -164,7 +164,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,earlyMissionOpen=false,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
+let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,earlyMissionOpen=false,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -173,8 +173,8 @@ function groupChoice(team){const v=val(team,'missionChoice');return Number(val(t
 function usedMissions(team){return Array.from({length:classroomRound},(_,i)=>val(team,'missionRound'+i)).filter(Number.isInteger);}
 function stepReady(team,phase=stage){return val(team,'classStepReady')===classroomRound+':'+phase;}
 function readiness(){const active=groups().filter(confirmed),ready=active.filter(stepReady),waiting=active.filter(t=>!stepReady(t));return {active,ready,waiting};}
-function size(team){const v=val(team,'groupSize');return [3,4,5].includes(v)?v:0;}
-function confirmed(team){return val(team,'groupReady')===true;}
+function size(team){const actual=identity?.role==='teacher'?assignedCounts?.[team]:(team===identity?.team?assignedCount:null);if(Number.isInteger(actual))return actual;const v=val(team,'groupSize');return [3,4,5].includes(v)?v:0;}
+function confirmed(team){return size(team)>=3;}
 function checkin(team,j){return val(team,'checkin'+j)===true;}
 function attendance(team){return Array.from({length:5},(_,j)=>checkin(team,j+1)).filter(Boolean).length;}
 function groups(){return Array.from({length:10},(_,i)=>i+1);}
@@ -259,7 +259,7 @@ function stepMap(){
 }
 function messageBox(){return '<p id="classroom-feedback" class="classroom-feedback" role="status">'+E(notice)+'</p>';}
 function simpleTitle(kicker,title,description){return '<div class="classroom-section-title"><span>'+E(kicker)+'</span><h2>'+E(title)+'</h2>'+(description?'<p>'+E(description)+'</p>':'')+'</div>';}
-function personDots(team){return '<div class="classroom-member-dots">'+Array.from({length:5},(_,j)=>'<span class="'+(checkin(team,j+1)?'has-arrived':'')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':' ○')+'</span>').join('')+'</div>';}
+function personDots(team){return '<div class="classroom-member-dots">'+Array.from({length:size(team)||5},(_,j)=>'<span class="'+(checkin(team,j+1)?'has-arrived':'')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':' ○')+'</span>').join('')+'</div>';}
 function rosterTeacher(){
  const ready=groups().filter(confirmed).length,attending=groups().reduce((n,t)=>n+attendance(t),0);
  return simpleTitle('مرحله شروع','گروه‌ها را آماده کنیم','کارشناسان با کد ملی وارد می‌شوند و گروه آن‌ها به‌صورت خودکار تعیین می‌شود. بسته به حضور واقعی، گروه‌ها می‌توانند سه، چهار یا پنج نفره باشند. پس از ثبت حضور، هر گروه را تأیید کن.')+
@@ -326,9 +326,9 @@ function chooseMission(team=identity.team){
 }
 function missionTeacherChoice(){
  const ready=groups().filter(confirmed),pending=ready.filter(t=>groupChoice(t)===null),saved=ready.filter(t=>groupChoice(t)!==null);
- const status=!ready.length?'در حال حاضر گروه تأییدشده‌ای وجود ندارد؛ این پیش‌نمایش مستقل از تشکیل گروه قابل بررسی است.':pending.length?
-  'از '+fa(ready.length)+' گروه تأییدشده، '+fa(saved.length)+' گروه انتخاب نهایی را ثبت کرده و '+fa(pending.length)+' گروه هنوز در حال گفت‌وگو یا انتخاب هستند.':
-  'هر '+fa(ready.length)+' گروه تأییدشده انتخاب نهایی خود را ثبت کرده‌اند و آماده ورود به سناریو هستند.';
+ const status=!ready.length?'در حال حاضر گروه تشکیل‌شده‌ای وجود ندارد؛ این پیش‌نمایش مستقل از تشکیل گروه قابل بررسی است.':pending.length?
+  'از '+fa(ready.length)+' گروه تشکیل‌شده، '+fa(saved.length)+' گروه انتخاب نهایی را ثبت کرده و '+fa(pending.length)+' گروه هنوز در حال گفت‌وگو یا انتخاب هستند.':
+  'هر '+fa(ready.length)+' گروه تشکیل‌شده انتخاب نهایی خود را ثبت کرده‌اند و آماده ورود به سناریو هستند.';
  return simpleTitle('انتخاب مأموریت گروه‌ها','هر گروه با توافق اعضا مأموریتش را انتخاب می‌کند','دو دقیقه گفت‌وگوی گروهی؛ سپس یک نماینده انتخاب توافق‌شده را ثبت می‌کند. گروه‌ها می‌توانند مأموریت یکسان یا متفاوت انتخاب کنند.')+
  '<section class="classroom-live-roster"><h3>وضعیت واقعی گروه‌ها</h3>'+missionRoster()+'<p class="classroom-wait">'+status+'</p></section>'+
  '<section class="classroom-teacher-demo"><div class="classroom-teacher-demo-head"><strong>👁️ پیش‌نمایش تعاملی تجربه کارشناس</strong><span>فقط نمایش · بدون ثبت اطلاعات</span></div>'+
@@ -641,6 +641,8 @@ window.addEventListener('alborz:classroom-auth',event=>{identity=event.detail.id
 window.addEventListener('alborz:classroom-data',event=>{
  const oldStage=stage,oldRound=classroomRound;
  identity=event.detail.identity;
+ assignedCount=Number(event.detail.assignedCount??0);
+ assignedCounts=event.detail.assignedCounts||null;
  rows=event.detail.records||[];
  if(identity?.role==='teacher'){
   const record=rec(1,'classroomPhase');stage=Number(record?.field_value??0);stageVersion=record?.version??0;classroomRound=Number(rec(1,'classroomRound')?.field_value??0);
