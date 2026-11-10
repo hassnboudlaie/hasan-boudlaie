@@ -409,7 +409,6 @@ function ending(team=identity.team,asParticipant=false){
 
 function projectedParticipantContent(team,member,phase,sample){
  if(phase===0)return checkinParticipant(team,member);
- if(!confirmed(team)&&!sample)return simpleTitle('در انتظار تأیید گروه','مدرس هنوز گروه شما را تأیید نکرده است','پس از ثبت حضور و تعیین ظرفیت گروه، مدرس گروه را فعال می‌کند.')+personDots(team);
  if(phase===1)return strategyIntro(false,true);
  if(phase===2)return chooseMission(team);
  if(phase<=9)return learnerMission(team,member,phase,sample?reference:null);
@@ -423,9 +422,9 @@ function projectorPanel(phase){
  const missionName=selectedChoice===null?'هنوز ثبت نشده':animals[selectedChoice]+' '+labels[selectedChoice];
  const options=groups().map(t=>{
   const chosen=groupChoice(t),people=attendance(t),ready=confirmed(t),label=chosen===null?'انتخاب نشده':animals[chosen]+' '+labels[chosen];
-  return '<button type="button" class="classroom-projector-team '+(t===team?'selected':'')+'" data-class-projection-team="'+t+'" aria-pressed="'+(t===team?'true':'false')+'"><strong>گروه '+fa(t)+'</strong><span>'+E(label)+'</span><small>'+fa(people)+' حضور · '+(ready?'تأیید شده':'در انتظار تأیید')+'</small></button>';
+  return '<button type="button" class="classroom-projector-team '+(t===team?'selected':'')+'" data-class-projection-team="'+t+'" aria-pressed="'+(t===team?'true':'false')+'"><strong>گروه '+fa(t)+'</strong><span>'+E(label)+'</span><small>'+fa(people)+' حضور · '+(ready?'گروه تشکیل‌شده':'بدون اعضای کافی')+'</small></button>';
  }).join('');
- const members=Array.from({length:5},(_,j)=>'<button type="button" class="'+(member===j+1?'selected':'')+'" data-class-projection-member="'+(j+1)+'" aria-pressed="'+(member===j+1?'true':'false')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':'')+'</button>').join('');
+ const members=Array.from({length:size(team)||5},(_,j)=>'<button type="button" class="'+(member===j+1?'selected':'')+'" data-class-projection-member="'+(j+1)+'" aria-pressed="'+(member===j+1?'true':'false')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':'')+'</button>').join('');
  const mustSample=realChoice===null&&!useSample&&phase>=3&&phase<=10;
  let content=projectedParticipantContent(team,member,phase,useSample);
  const scope=phase===1?'شش گزاره خودارزیابی و ده سؤال فردی فقط روی دستگاه هر کارشناس ذخیره می‌شوند؛ پاسخ‌های شخصی در پنل مدرس قابل مشاهده نیستند.':'محتوای صفحه و پاسخ‌های ثبت‌شده این گروه از اطلاعات مشترک کلاس نمایش داده می‌شوند. انتخاب‌های موقت و متن تایپ‌شده‌ای که هنوز ذخیره نشده‌اند روی دستگاه اعضا باقی می‌مانند.';
@@ -552,12 +551,7 @@ root.addEventListener('click',event=>{
  if(btn.hasAttribute('data-class-overview')){openStep=null;previewStep=null;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-open')){const n=Number(btn.dataset.classOpen);if(!Number.isInteger(n)||n<0||n>10)return;if(identity?.role==='teacher'){previewStep=n===stage?null:n;openStep=n;}else if(n===stage){openStep=stage;previewStep=null;}else{previewStep=n;openStep=null;}lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-checkin')){const key='checkin'+identity.member;execute(()=>saveFields({[key]:true}));return;}
- if(identity?.role==='teacher'&&previewStep!==null&&(btn.dataset.classConfirm||btn.hasAttribute('data-class-reset')))return alertUser('این بخش در حالت پیش‌نمایش است؛ برای عملیات به گام فعال برگردید.',true);
- if(btn.dataset.classConfirm){const team=Number(btn.dataset.classConfirm),node=root.querySelector('[data-class-team-size="'+team+'"]'),size=Number(node?.value||0);
-   if(![0,3,4,5].includes(size))return alertUser('برای گروه فعال ۳، ۴ یا ۵ نفر انتخاب کنید؛ عدد صفر گروه را غیرفعال می‌کند.',true);
-   if(size>0&&!attendance(team))return alertUser('برای تأیید گروه '+fa(team)+' ابتدا حداقل یک عضو حضورش را ثبت کند.',true);
-   execute(()=>L.request({action:'groupSetup',team,size}));return;
- }
+ if(identity?.role==='teacher'&&previewStep!==null&&btn.hasAttribute('data-class-reset'))return alertUser('برای عملیات به گام فعال برگردید.',true);
  if(btn.hasAttribute('data-class-preview-mission')){
   if(identity?.role!=='teacher'||(previewStep!==2&&stage!==2))return;
   const choice=Number(btn.dataset.classPreviewMission);if(!Number.isInteger(choice)||choice<0||choice>3)return;
