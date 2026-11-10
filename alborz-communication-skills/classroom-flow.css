@@ -437,3 +437,14 @@
 .classroom-screen .classroom-story,.classroom-screen .classroom-event,.classroom-screen .classroom-options,.classroom-screen .classroom-recap{font-size:clamp(19px,1.6vw,22px);line-height:1.9}
 .classroom-screen .mastery-roles,.classroom-screen .mastery-dialogues{scroll-margin-top:18px}
 @media(prefers-reduced-motion:reduce){.classroom-screen *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Individual resilience alignment: one optional four-step lens per scenario */
+.classroom-personal-lens{margin:17px 0 23px;border:1.5px solid #9bc4cd;border-radius:17px;padding:14px 17px;background:#f5fafb}
+.classroom-personal-lens>summary{cursor:pointer;font-size:clamp(20px,1.8vw,24px);font-weight:850;line-height:1.7;color:#0c5368}
+.classroom-personal-lens[open]>summary{border-bottom:1px solid #bfd6dd;padding-bottom:11px;margin-bottom:10px}
+.classroom-personal-lens ol{padding-inline-start:26px;padding-inline-end:10px;margin:4px 0 0}
+.classroom-personal-lens li{font-size:clamp(18px,1.5vw,21px);line-height:1.8;margin:12px 0}
+.classroom-personal-lens li::marker{color:#0a7a75;font-weight:800}
+.classroom-personal-lens strong{color:#073e57;font-size:inherit}
+.classroom-personal-lens p{font-size:inherit;line-height:1.85;margin:4px 0 0;color:#2b4856}
