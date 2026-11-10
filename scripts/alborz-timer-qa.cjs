@@ -48,6 +48,10 @@ const server=http.createServer((req,res)=>{
       await page.locator('[data-timer-compact]').click();
       await page.locator('#alborz-timer-panel').waitFor({state:'visible'});
       assert.equal(await page.locator('[data-timer-preset]').count(),4);
+      await page.locator('[data-timer-action="view"]').click();
+      assert.equal(await page.locator('#alborz-facilitator-timer').evaluate(n=>n.classList.contains('timer-projector')),true,'projector view available');
+      await page.locator('[data-timer-action="view"]').click();
+      assert.equal(await page.locator('#alborz-facilitator-timer').evaluate(n=>n.classList.contains('timer-projector')),false,'projector view reversible');
       await page.locator('[data-timer-action="sound"]').click();
       await page.locator('[data-timer-preset="60"]').click();
       await page.locator('[data-timer-action="toggle"]').click();
