@@ -455,7 +455,7 @@ function render(force=false){
  else if(displayStage===0)content=teacher?rosterTeacher():chooseMission();
  else if(!teacher&&!confirmed(identity.team)&&displayStage>2)content=simpleTitle('در انتظار فعال‌سازی گروه','برای ادامه فعالیت گروهی با مدرس هماهنگ کنید','انتخاب مأموریت در گام سوم بدون تأیید مدرس در دسترس است.')+personDots(identity.team);
  else if(displayStage===1)content=strategyIntro(teacher);
- else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
+ else if(displayStage===2)content=teacher?missionTeacherChoice():(stage===0?checkinParticipant():'')+chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
  else content=ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
