@@ -17,7 +17,10 @@ on:
       - 'scripts/alborz-presentation-qa.cjs'
       - 'scripts/alborz-four-hour-qa.cjs'
       - 'scripts/alborz-instructor-journey-qa.cjs'
-      - 'scripts/alborz-classroom-flow-qa.cjs'
+      - 'scripts/alborz-self-paced-qa.cjs'
+      - 'scripts/alborz-timer-qa.cjs'
+      - 'alborz-communication-skills/classroom-timer.js'
+      - 'alborz-communication-skills/classroom-timer.css'
       - 'scripts/alborz-projection-contract-qa.cjs'
       - 'scripts/alborz-national-id-api-qa.py'
       - 'scripts/alborz-teacher-session-rotation-qa.cjs'
@@ -44,7 +47,8 @@ jobs:
           node --check alborz-communication-skills/classroom-flow.js
           node --check scripts/alborz-four-hour-qa.cjs
           node --check scripts/alborz-instructor-journey-qa.cjs
-          node --check scripts/alborz-classroom-flow-qa.cjs
+          node --check scripts/alborz-self-paced-qa.cjs
+          node --check scripts/alborz-timer-qa.cjs
           node --check scripts/alborz-projection-contract-qa.cjs
           node --check scripts/alborz-teacher-session-rotation-qa.cjs
           node --check alborz-communication-skills/claims-presentation.js
@@ -65,7 +69,8 @@ jobs:
           node scripts/alborz-resilience-browser-qa.mjs
           node scripts/alborz-presentation-qa.cjs
           node scripts/alborz-instructor-journey-qa.cjs
-          node scripts/alborz-classroom-flow-qa.cjs
+          node scripts/alborz-self-paced-qa.cjs
+          node scripts/alborz-timer-qa.cjs
       - name: Save visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
