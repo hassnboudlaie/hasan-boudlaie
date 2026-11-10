@@ -8,7 +8,7 @@
   const clamp=n=>Math.max(60,Math.min(90*60,Math.round(Number(n)||300)));
   const fmt=sec=>fa(pad(Math.floor(sec/60))+':'+pad(sec%60));
   const defaults={duration:300,remaining:300,endAt:null,running:false,finished:false,sound:true,expanded:false};
-  let state={...defaults},host=null,interval=null,audio=null,lastStatus='',lastSeconds=null;
+  let state={...defaults,projector:false},host=null,interval=null,audio=null,lastStatus='',lastSeconds=null;
   try{
     const saved=JSON.parse(localStorage.getItem(KEY)||'null');
     if(saved&&typeof saved==='object'&&Number.isFinite(saved.duration)&&Number.isFinite(saved.remaining)){
@@ -54,6 +54,8 @@
     host.classList.toggle('timer-finished',state.finished);
     host.classList.toggle('timer-running',state.running);
     host.classList.toggle('timer-expanded',state.expanded);
+    host.classList.toggle('timer-projector',!!state.projector);
+    const view=host.querySelector('[data-timer-action="view"]');if(view)view.textContent=state.projector?'نمای معمولی':'نمای بزرگ روی پرده';
     host.setAttribute('data-timer-phase',state.finished?'finished':state.running?'running':'paused');
     const status=host.querySelector('#alborz-timer-status');
     if(status&&lastStatus!==phase){status.textContent=phase;lastStatus=phase;}
@@ -82,7 +84,7 @@
   }
   function reset(){state.remaining=state.duration;state.running=false;state.finished=false;state.endAt=null;save();tick();}
   function expand(on){
-    state.expanded=on;host.classList.toggle('timer-expanded',on);
+    state.expanded=on;if(!on)state.projector=false;host.classList.toggle('timer-expanded',on);
     const panel=host.querySelector('#alborz-timer-panel');
     if(panel)panel.hidden=!on;
     const compact=host.querySelector('[data-timer-compact]');
@@ -114,7 +116,7 @@
         <div class="timer-clock" data-timer-clock><span dir="ltr" data-timer-readout>۰۵:۰۰</span><small id="alborz-timer-status" aria-live="polite">آماده شروع</small></div>
         <progress data-timer-progress min="0" max="300" value="300" aria-label="زمان باقی‌مانده"></progress>
         <p id="alborz-timer-done" role="status" hidden>زمان تمام شد! وقت جمع‌بندی و ارائه گروه‌هاست.</p>
-        <div class="timer-actions"><button type="button" data-timer-action="toggle" class="timer-primary">شروع شمارش</button><button type="button" data-timer-action="reset">از ابتدا</button><button type="button" data-timer-action="sound" aria-pressed="true">صدا: روشن</button></div>
+        <div class="timer-actions"><button type="button" data-timer-action="toggle" class="timer-primary">شروع شمارش</button><button type="button" data-timer-action="reset">از ابتدا</button><button type="button" data-timer-action="view">نمای بزرگ روی پرده</button><button type="button" data-timer-action="sound" aria-pressed="true">صدا: روشن</button></div>
         <p class="timer-note">فقط برای مدرس است؛ هیچ تغییری در پاسخ‌ها، گروه‌بندی یا مراحل کارگاه ایجاد نمی‌کند.</p>
       </div>`;
     document.body.appendChild(host);
@@ -125,6 +127,7 @@
       if(button.dataset.timerAction==='close'){expand(false);host.querySelector('[data-timer-compact]')?.focus();return;}
       if(button.dataset.timerAction==='toggle'){toggle();return;}
       if(button.dataset.timerAction==='reset'){reset();return;}
+      if(button.dataset.timerAction==='view'){state.projector=!state.projector;tick();return;}
       if(button.dataset.timerAction==='sound'){state.sound=!state.sound;if(state.sound)prepareSound();save();tick();}
     });
     host.querySelector('#alborz-timer-custom')?.addEventListener('submit',e=>{
@@ -140,7 +143,7 @@
   }
   function syncIdentity(){
     const authorized=window.AlborzLive.identity()?.role==='teacher';
-    if(authorized)render();else if(host){host.remove();host=null;if(interval){clearInterval(interval);interval=null;}state.expanded=false;}
+    if(authorized)render();else if(host){host.remove();host=null;if(interval){clearInterval(interval);interval=null;}state.expanded=false;state.projector=false;}
   }
   window.addEventListener('alborz:classroom-auth',syncIdentity);
   window.addEventListener('alborz:classroom-data',syncIdentity);
