@@ -155,10 +155,10 @@ function individualDiscussion(i){
  return '<section class="individual-discussion" dir="rtl" style="font-size:18px;line-height:1.9">'+
  '<h3>سه پرسش برای گفت‌وگوی گروه</h3><p>هر پنج نفر نظر بدهند. هیچ پاسخ نوشتاری اجباری نیست.</p>'+
  qs.map((q,j)=>'<article style="margin:12px 0;padding:12px;border:1px solid #d6e5dc;border-radius:14px"><p><strong>'+E((j+1)+'. '+q)+'</strong></p><details><summary style="cursor:pointer;font-weight:700">پاسخ پیشنهادی</summary><p>'+E(as[j]||'')+'</p></details></article>').join('')+
- '<p>پس از جمع‌بندی شفاهی، فقط یک نفر روی «این گام را انجام دادیم» بزند.</p></section>';
+ '<p>پس از جمع‌بندی شفاهی، یکی از اعضا دکمه «گام بعد» را بزند.</p></section>';
 }
 
-const names=['تشکیل و تأیید گروه‌ها','معرفی چهار راهبرد','انتخاب مأموریت',...C.missionFlow,'جمع‌بندی و انتقال به کار'];
+const names=['ورود و ثبت حضور گروه','معرفی چهار راهبرد','انتخاب مأموریت',...C.missionFlow,'جمع‌بندی و انتقال به کار'];
 const keys=['camel','salmon','chameleon','octopus'];
 const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fa=n=>Number(n).toLocaleString('fa-IR');
@@ -189,16 +189,16 @@ function masteryLessons(){
 }
 function masteryRoles(i){
  const m=C.mastery[i],info=C.missions[i].info;
- return '<section class="mastery-roles"><h3>پنج کاراکتر این مأموریت</h3><p>هر نفر اطلاعات نقش خودش را بخواند و با هدف و نگرانی همان شخصیت در گفت‌وگو حضور پیدا کند. در گروه سه یا چهار‌نفره، بعضی افراد دو نقش می‌گیرند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>پاسخ احتمالی:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">نقش را طبیعی اجرا کنید؛ لازم نیست دیالوگ را از حفظ بگویید. اسم‌ها فرضی‌اند و اطلاعات واقعی مراجعان نباید وارد تمرین شود.</p></section>';
+ return '<section class="mastery-roles"><h3>پنج کاراکتر این مأموریت</h3><p>هر نفر اطلاعات نقش خودش را بخواند و با هدف و نگرانی همان شخصیت در گفت‌وگو حضور پیدا کند. در گروه سه یا چهار‌نفره، بعضی افراد دو نقش می‌گیرند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>پاسخ احتمالی:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">تمرین پنج‌دقیقه‌ای: یک نفر نقش مشتری یا مدیر دشوار را اجرا کند و بقیه پاسخ حرفه‌ای بسازند؛ سپس نقش‌ها را عوض کنید. نام‌ها فرضی‌اند و داده واقعی پرونده را وارد تمرین نکنید.</p></section>';
 }
 
 function masteryTalk(i){
  const m=C.mastery[i],lines=m.after;
  const summary=[
- 'شتر: فشار واقعی بود، اما روش رسیدگی درست ماند. کارشناس با مرزبندی، حفظ کنترل‌ها و مکث کوتاه، توان خود را بازیابی کرد.',
- 'ماهی آزاد: رسیدگی جاری حفظ شد؛ در کنار آن یک مسیر مستقل برای یادگیری گفت‌وگوهای دشوار ایجاد شد و به کار اصلی آسیب نزد.',
- 'آفتاب‌پرست: روش اصلی فرد از پیگیری حافظه‌محور به ثبت ساختاریافته تغییر کرد؛ فقط تغییر لحن نبود.',
- 'اختاپوس: کارشناس هم روش رسیدگی شخصی خود را تغییر داد و هم مسیر مستقل تمرین مهارت ساخت؛ این چندوظیفگی نبود.'
+ 'شتر: ازدحام موقت خسارت بدنه و شخص ثالث مدیریت شد؛ روال اصلی درست ماند و تیم با تقسیم بار، کنترل مدارک و مکث کوتاه به خدمت ادامه داد.',
+ 'ماهی آزاد: رسیدگی عادی ناوگان سالم ماند؛ در کنار آن یک خدمت مستقل برای پیشگیری و کاهش توقف خودرو صرفاً در قالب فرضیه تجاری آزموده شد.',
+ 'آفتاب‌پرست: رفت‌وبرگشت خسارت درمان با بازطراحی مسیر اصلی، فهرست واحد مدارک و مسئول پیگیری اصلاح شد؛ هیچ خدمت تازه‌ای ساخته نشد.',
+ 'اختاپوس: برای خسارت اموال، هم روش بازدید و ارزیابی تغییر کرد و هم یک خدمت مستقل پیشگیری ریسک طراحی شد؛ دو جریان و دو مالک روشن بودند.'
  ][i];
  return '<section class="mastery-dialogues"><h3>گفت‌وگوی نمونه · '+E(C.models[i][1])+'</h3><div class="mastery-dialogue">'+lines.map((x,n)=>'<article class="mastery-turn mastery-speaker-'+x.p+'"><div class="mastery-speaker"><span class="mastery-speaker-avatar">'+E(m.people[x.p].name.charAt(0))+'</span><div><strong>'+E(m.people[x.p].name)+'</strong><small>'+E(m.people[x.p].role)+'</small></div><em>'+fa(n+1)+'</em></div><p>'+E(x.t)+'</p></article>').join('')+'</div><section class="mastery-final-analysis"><h4>تحلیل پایانی</h4><p>'+E(summary)+'</p></section></section>';
 }
@@ -232,8 +232,8 @@ function stepMap(){
   const action=teacher?'باز کردن مستقل؛ بدون تغییر مرحله کلاس':i===stage?'باز کردن فعالیت این گام':i<stage?'مرور عنوان گام':'مشاهده جایگاه گام';
   return '<button type="button" class="classroom-map-card '+state+'" data-class-open="'+i+'" '+(i===stage?'aria-current="step" ':'')+'aria-label="گام '+fa(i+1)+'، '+E(name)+'، '+status+'"><span class="classroom-map-num">'+fa(i+1)+'</span><span class="classroom-map-details"><strong>'+E(name)+'</strong><small>'+status+'</small><em>'+action+'</em></span></button>';
  }).join('');
- const intro=teacher?'برای ممیزی محتوا می‌توانید هر ۱۱ گام را مستقل باز کنید؛ در حالت پیش‌نمایش، مرحله گروه‌ها و پاسخ‌های آن‌ها تغییر نمی‌کند.':'همه گام‌ها را از ابتدا می‌بینید. گام فعال را باز کنید و همراه با مدرس پیش بروید؛ گام‌های بعدی با هدایت مدرس فعال می‌شوند.';
- const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'این گام هنوز فعال نشده است. پس از تکمیل گام‌های قبلی و اعلام مدرس، می‌توانید فعالیت آن را باز کنید.')+'</p></div>';
+ const intro=teacher?'برای ممیزی محتوا می‌توانید هر ۱۱ گام را مستقل باز کنید؛ در حالت پیش‌نمایش، مرحله گروه‌ها و پاسخ‌های آن‌ها تغییر نمی‌کند.':'هر گروه مستقل پیش می‌رود. بعد از انجام فعالیت و ثبت نتیجه، روی «گام بعد» بزنید؛ تأیید مدرس لازم نیست.';
+ const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'پس از تکمیل فعالیت قبلی، با دکمه «گام بعد» وارد این مرحله شوید.')+'</p></div>';
  return '<section class="classroom-map"><div class="classroom-map-intro"><span>مسیر مشترک تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
 }
 function messageBox(){return '<p id="classroom-feedback" class="classroom-feedback" role="status">'+E(notice)+'</p>';}
