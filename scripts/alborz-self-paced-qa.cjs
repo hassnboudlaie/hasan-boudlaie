@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..');
 const server=http.createServer((req,res)=>{
  const name=path.resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));
  if(!name.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}
- fs.readFile(name,(err,buf)=>{res.statusCode=err?404:200;res.setHeader('content-type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');res.end(err?'not found':buf);});
+ fs.readFile(name,(err,buf)=>{res.statusCode=err?404:200;res.setHeader('content-type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':'text/html');res.end(err?'not found':buf);});
 });
 (async()=>{
  await new Promise(ok=>server.listen(4197,'127.0.0.1',ok));
@@ -59,6 +59,8 @@ const server=http.createServer((req,res)=>{
    assert.equal(data.get('1:missionChoice')?.field_value,0,'group one chooses camel without instructor');
    await p1.locator('[data-team-next]').click();
    await p1.locator('.classroom-story').waitFor();
+   await p1.waitForFunction(()=>{const img=document.querySelector('.classroom-case-image');return img&&img.complete&&img.naturalWidth>0;},{},{timeout:12000});
+   assert.equal(await p1.locator('.classroom-case-image').count(),1,'original claims illustration loads');
    assert.equal(data.get('1:teamPhase')?.field_value,3,'group advances itself to scenario');
    assert.equal(data.get('2:teamPhase'),undefined,'second group remains independent');
    await p2.locator('[data-class-checkin]').click();
@@ -77,6 +79,8 @@ const server=http.createServer((req,res)=>{
    for(let st=3;st<10;st++){
       await p1.locator('[data-team-next]').click();
       await p1.waitForFunction(v=>document.querySelector('.class-stage-marker')?.textContent.includes('مرحله '+new Intl.NumberFormat('fa-IR').format(v+1)),st+1);
+      if(st===3)assert.equal(await p1.locator('.mastery-person').count(),5,'five role cards for scenario');
+      if(st===4){assert.equal(await p1.locator('.mastery-turn.effective').count(),12,'twelve natural dialogue turns');assert.equal(await p1.locator('.mastery-weak-dialog').count(),1,'before/after dialogue available');assert.equal(await p1.locator('.mastery-final-analysis li').count()>=8,true,'observer checklist plus debrief');}
    }
    assert.equal(data.get('1:teamPhase')?.field_value,10,'all eleven steps traversed without teacher');
    await p1.reload({waitUntil:'load'});
