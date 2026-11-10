@@ -85,7 +85,8 @@ async function join(code){
   }catch{}
   if(!teacher&&identity.team!==W.group){
    const missionQuery=requestedMission>=0?'&mission='+encodeURIComponent(params.get('mission')):'';
-   location.replace(classroom?'resilience.html?classroom=1&group='+identity.team+missionQuery:'resilience.html?group='+identity.team+'&step='+(requestedMission>=0?requestedMission+3:0)+missionQuery);
+   const freshPageQuery=params.get('v')?'&v='+encodeURIComponent(params.get('v')):'';
+   location.replace(classroom?'resilience.html?classroom=1&group='+identity.team+missionQuery+freshPageQuery:'resilience.html?group='+identity.team+'&step='+(requestedMission>=0?requestedMission+3:0)+missionQuery);
    return;
   }
   mount();await refresh();clearInterval(timer);timer=setInterval(refresh,10000);
