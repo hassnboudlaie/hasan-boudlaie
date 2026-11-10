@@ -7,6 +7,7 @@ on:
       - "alborz-communication-skills/resilience-game.js"
       - "alborz-communication-skills/classroom-flow.js"
       - "alborz-communication-skills/classroom-flow.css"
+      - "alborz-communication-skills/assets/claims-*.svg"
       - "scripts/alborz-self-paced-qa.cjs"
       - ".github/workflows/alborz-self-paced-qa.yml"
   workflow_dispatch:
