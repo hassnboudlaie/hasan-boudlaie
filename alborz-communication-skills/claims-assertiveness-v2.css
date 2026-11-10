@@ -1,0 +1,80 @@
+
+/* Alborz Assertiveness v2: scoped, high-contrast, mobile-first */
+.asv2-hero,.asv2-panel,.asv2-tabs,.asv2-result{font-family:AlborzVazir,'Vazirmatn',Tahoma,sans-serif;direction:rtl;text-align:right}
+.asv2-hero{background:linear-gradient(130deg,#083c38,#105b51 68%,#176f62);border-radius:24px;padding:30px 28px;color:#fff;margin:14px 0 18px;box-shadow:0 14px 34px #093e3324}
+.asv2-hero h1{font-size:clamp(27px,3.9vw,38px);line-height:1.5;margin:8px 0 9px;color:#fff;font-weight:900}
+.asv2-hero p{font-size:clamp(18px,1.9vw,21px);line-height:1.9;color:#ecf5f1;margin:0;max-width:940px}
+.asv2-kicker{font-size:16px;letter-spacing:.1px;color:#d7efdf;font-weight:800}
+.asv2-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.asv2-pills span{background:#ffffff1c;color:#fff;border:1px solid #ffffff6c;border-radius:99px;padding:5px 14px;font-size:16px;font-weight:650}
+.asv2-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 20px;padding:5px}
+.asv2-tabs button{flex:1 1 175px;min-height:55px;border:1.5px solid #aecbc2;border-radius:14px;background:#fff;color:#17493f;font-size:19px;font-weight:800;transition:background .2s,border-color .2s}
+.asv2-tabs button.active{background:#145d52;color:#fff;border-color:#145d52;box-shadow:0 6px 16px #1b68502e}
+.asv2-tabs button:focus-visible,.asv2-option:focus-visible,.asv2-group-picker button:focus-visible{outline:3px solid #a16a25;outline-offset:2px}
+.asv2-panel{background:#fff;border:1px solid #d4e2db;border-radius:22px;padding:clamp(18px,2.5vw,29px);box-shadow:0 8px 27px #19463a0d;margin:16px 0}
+.asv2-panel h2{font-size:clamp(23px,2.9vw,29px);line-height:1.55;color:#104d41;margin:0 0 14px;font-weight:900}
+.asv2-panel h3{font-size:clamp(20px,2.35vw,24px);color:#174b40;margin:16px 0 10px;font-weight:850;line-height:1.6}
+.asv2-panel p,.asv2-panel li{font-size:18.5px;line-height:2.05;color:#2d4841}
+.asv2-lead{font-size:20px!important;color:#203e36!important}
+.asv2-triad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:19px 0}
+.asv2-triad>div{padding:17px;border-radius:15px;background:#fbfaf5;border:1.5px solid #ded9c9}
+.asv2-triad>div:nth-child(2){background:#fdf8f7;border-color:#edceca}
+.asv2-triad>div.best{background:#eff8f2;border-color:#83bba5}
+.asv2-triad strong{display:block;font-size:19px;color:#19493d;margin-bottom:8px}
+.asv2-triad p{font-size:17px;line-height:1.9;margin:0}
+.asv2-lessons{display:grid;gap:12px}
+.asv2-lesson{border:1.5px solid #cbded5;border-radius:16px;background:#fcfefd;overflow:hidden}
+.asv2-lesson summary{display:flex;gap:13px;align-items:center;padding:14px 16px;cursor:pointer;min-height:74px;list-style:none;color:#174c40}
+.asv2-lesson summary::-webkit-details-marker,.asv2-path summary::-webkit-details-marker{display:none}
+.asv2-lesson summary strong{font-size:20px;flex:1;line-height:1.7}.asv2-lesson[open] summary{background:#f2f9f5}
+.asv2-icon{font-size:24px}.asv2-index{font-size:15px;color:#315c4e;background:#dfede5;border-radius:50%;width:32px;height:32px;text-align:center;line-height:32px}
+.asv2-lesson-body{padding:16px 18px 21px;border-top:1px solid #d8e4dc}.asv2-lesson-body>p{margin:0 0 14px}
+.asv2-example{padding:12px 15px;border-radius:12px;margin:10px 0;border-right:4px solid #a47248;background:#faf7f2}
+.asv2-example.right{background:#edf8f2;border-right-color:#2b7c59}
+.asv2-example strong{font-size:17px;color:#204d40}.asv2-example p{margin:3px 0 0;font-size:18px}
+.asv2-framework{display:grid;gap:10px;margin:18px 0}.asv2-framework>div{display:grid;grid-template-columns:minmax(145px,185px) 1fr;align-items:center;gap:18px;border:1px solid #d6e7de;background:#f6fbf7;border-radius:13px;padding:14px}
+.asv2-framework b{font-size:18px;color:#174f44;direction:ltr;text-align:left}.asv2-framework span{font-size:18px;line-height:1.85;color:#29453e}
+.asv2-note{padding:15px 18px;background:#f6f4eb;border:1px solid #e0d7b7;border-radius:13px;font-size:17.5px!important;line-height:1.9}
+.asv2-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.asv2-actions .btn{font-size:18px;min-height:52px}
+.asv2-sources{margin-top:22px;border-top:1px solid #dae6df;padding-top:14px}.asv2-sources summary{cursor:pointer;color:#235d4e;font-weight:800;font-size:17px}.asv2-sources a{color:#155c70;overflow-wrap:anywhere}
+.asv2-meter{border:1px solid #bcd4c9;background:#f3f9f5;border-radius:13px;padding:13px 17px;margin:18px 0 22px}
+.asv2-meter b{font-size:18px}.asv2-meter-track{height:12px;border-radius:99px;background:#dce7e0;overflow:hidden;margin:10px 0 1px}.asv2-meter-track span{display:block;height:100%;background:#206a56;transition:width .2s}
+.asv2-question{border:1.5px solid #d6e4dc;border-radius:17px;padding:18px 19px;margin:17px 0;background:#fff}
+.asv2-question h3{margin:0 0 10px;font-size:20px;color:#1b6554}
+.asv2-qtext{color:#183e34!important;font-size:20px!important;line-height:1.9!important;font-weight:750}
+.asv2-facts{border-right:4px solid #c99f51;padding:10px 14px;margin:14px 0;background:#faf8f2;font-size:17px;line-height:1.9;color:#3c4b3f;border-radius:8px}
+.asv2-options{display:grid;gap:9px}.asv2-option{width:100%;display:flex;align-items:flex-start;gap:13px;text-align:right;direction:rtl;min-height:59px;padding:13px 14px;border:1.5px solid #cbd9d1;border-radius:12px;background:#fdfefd;color:#244438;font-size:18px;line-height:1.85}
+.asv2-option:hover:not(:disabled){background:#f0f8f3;border-color:#91bba4}.asv2-option.selected{background:#e8f2ed;border-color:#165e4e;box-shadow:inset 0 0 0 1px #165e4e}
+.asv2-option.correct{border-color:#297351;background:#eff8f1;color:#174c32}.asv2-option.incorrect{border-color:#ad5a46;background:#fff3f0}
+.asv2-option:disabled{opacity:1;cursor:default}.asv2-choice-symbol{flex:0 0 30px;border:1px solid #bfd7c9;color:#1c5947;border-radius:9px;text-align:center;background:#fff;line-height:29px;font-size:17px;font-weight:700}
+.asv2-feedback{margin-top:15px;padding:15px;border-radius:13px;border:1px solid #cbded1;background:#f8fbf8}.asv2-feedback>strong{font-size:19px;color:#124d39}.asv2-feedback p{font-size:17px;line-height:1.9;margin:8px 0}.asv2-feedback .asv2-good-reason{border-right:3px solid #277852;background:#ecf7ef;padding:10px 12px;border-radius:7px;color:#143c2c}
+.asv2-submit{margin:22px 0 4px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:#eff7f2;padding:19px;border-radius:14px}
+.asv2-submit span{font-size:17px;line-height:1.8}.asv2-submit .btn:disabled{cursor:not-allowed;opacity:.5}
+.asv2-result{background:#e9f5ed;border:2px solid #458465;padding:18px 22px;border-radius:15px;margin:20px 0;color:#164632}
+.asv2-result span{display:block;font-size:18px}.asv2-result strong{font-size:clamp(28px,4vw,39px);display:block;line-height:1.5;margin:4px 0}.asv2-result p{font-size:17.5px;line-height:1.9}
+.asv2-scenario-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.asv2-scenario-card{position:relative;display:flex;flex-direction:column;gap:8px;border:1.5px solid #cdded4;border-radius:17px;background:#f9fcfa;padding:21px}
+.asv2-scenario-card h3{font-size:22px;margin:0}.asv2-scenario-card p{flex:1;margin:0 0 13px}.asv2-scenario-card button{align-self:flex-start}
+.asv2-scenicon{font-size:27px}.asv2-tag{display:inline-block;color:#185846;background:#dff0e6;padding:4px 12px;font-size:15px;font-weight:800;border-radius:25px;margin-bottom:5px}
+.asv2-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.asv2-roles>div{background:#f7faf8;border:1px solid #d2e1d8;padding:14px 16px;border-radius:13px}
+.asv2-roles strong{font-size:19px;color:#174f3e}.asv2-roles p{font-size:17px;margin:5px 0 0}
+.asv2-instructions{padding-right:26px}.asv2-instructions li{margin:4px 0}.asv2-twist{background:#fff7e9;border:1.5px solid #cb9952;border-radius:14px;padding:16px 18px;font-size:19px;line-height:1.9;color:#533d20;margin-top:20px}
+.asv2-paths{display:grid;gap:13px}.asv2-path{border:1.5px solid #d0ddd5;border-radius:16px;overflow:hidden;background:#fff}
+.asv2-path summary{cursor:pointer;display:flex;gap:12px;align-items:center;min-height:72px;padding:14px 17px;list-style:none;background:#f8fbf9}
+.asv2-path summary>span:first-child{font-size:25px}.asv2-path summary strong{font-size:19px;line-height:1.6;flex:1}.asv2-path summary>span:last-child{font-size:15px;color:#456659}
+.asv2-path.asv2-passive{border-color:#d7b981}.asv2-path.asv2-aggressive{border-color:#d5a29a}.asv2-path.asv2-assertive{border-color:#6eab86}
+.asv2-path.asv2-passive summary{background:#fdfaf3}.asv2-path.asv2-aggressive summary{background:#fdf7f6}.asv2-path.asv2-assertive summary{background:#f1faf3}
+.asv2-path-body{padding:16px}.asv2-transcript{display:grid;gap:9px}
+.asv2-line{background:#f6faf7;border:1px solid #e0e8e0;padding:11px 16px;border-radius:13px;line-height:1.9;max-width:96%}
+.asv2-line:nth-child(2n){background:#faf8f3;margin-right:auto;margin-left:0;border-color:#e9e0d6}
+.asv2-line strong{color:#1b624a;font-size:16px}.asv2-line p{margin:3px 0 0;font-size:18.5px;color:#243e35}
+.asv2-path-analysis{border-top:1px solid #d8e4db;margin-top:18px;padding:13px;background:#f8faf9;border-radius:11px;color:#2a4a3f;font-size:18px;line-height:2}
+.asv2-group-picker{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 21px}
+.asv2-group-picker button{border:1px solid #b7d0c3;background:#fff;color:#1b5c46;padding:7px 11px;font-size:16px;border-radius:11px}
+.asv2-group-picker button.active{background:#165d4a;color:white}
+.asv2-checklist{display:grid;gap:10px}.asv2-checklist label{display:flex;gap:12px;align-items:flex-start;background:#f7faf8;border:1px solid #d5e3d9;border-radius:12px;padding:11px 14px;cursor:pointer;font-size:18px;line-height:1.9}
+.asv2-checklist input{width:22px;height:22px;min-width:22px;margin-top:8px;accent-color:#146448}
+.asv2-checkscore{font-weight:850;color:#145b41!important;background:#eaf6ed;border-radius:11px;padding:12px 14px;margin:16px 0}
+.asv2-discussion{border-top:1px solid #d7e6db;margin:18px 0 4px;padding-top:12px}.asv2-discussion li{margin:6px 0}
+@media(max-width:750px){.asv2-triad,.asv2-scenario-cards,.asv2-roles{grid-template-columns:1fr}.asv2-framework>div{grid-template-columns:1fr;gap:6px}.asv2-tabs{gap:7px}.asv2-tabs button{min-height:54px;font-size:18px}.asv2-hero{padding:22px 18px;border-radius:17px}.asv2-panel{padding:17px 15px;border-radius:17px}.asv2-option{font-size:17.5px}.asv2-line{max-width:100%}.asv2-path summary strong{font-size:18px}.asv2-pills span{font-size:15px}.asv2-actions .btn{width:100%;text-align:center}}
+@media(prefers-reduced-motion:reduce){.asv2-meter-track span,.asv2-tabs button{transition:none}}
