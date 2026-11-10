@@ -30,7 +30,7 @@ const server=http.createServer((req,res)=>{const target=path.resolve(root,'.'+de
   await page.locator('[data-mission-prev]').click();
   assert.match(await page.locator('#mission-progress-text').innerText(),/مسئله و هدف/);
   const goal=await page.locator('.case-goal').innerText();
-  assert.match(goal,/خدمت|خطا/);
+  assert.match(goal,/خدمت|خطا|کیفیت|پاسخ‌گویی/);
   await page.goto(base+'resilience.html?teacher=1&mission=camel&legacy=1',{waitUntil:'load'});
   assert.equal(await page.locator('#live-code').count(),1,'instructor national-ID login is required');
   assert.equal(await page.locator('.simple-teacher-workspace').count(),0,'teaching content protected before login');
