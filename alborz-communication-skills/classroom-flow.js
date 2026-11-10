@@ -192,7 +192,7 @@ function strategyContrast(compact=false){
 }
 function caseIllustration(i){
  const icons=['🚗','🚚','🏥','🏢'],areas=['بدنه و شخص ثالث','ناوگان و مشتری طرف قرارداد','درمان تکمیلی','اموال و مشتریان تجاری'];
- return '<div class="classroom-case-art case-art-'+i+'"><span class="classroom-case-emoji" role="img" aria-label="'+E(areas[i])+'">'+icons[i]+'</span><div><strong>'+E(C.models[i][0]+' '+C.models[i][1])+'</strong><p>'+E(areas[i])+'</p></div></div>';
+ return '<div class="classroom-case-art case-art-'+i+'"><img class="classroom-case-image" loading="lazy" src="assets/claims-'+['camel','salmon','chameleon','octopus'][i]+'.svg" alt="تصویر آموزشی سناریوی '+E(areas[i])+'"><div><strong>'+icons[i]+' '+E(C.models[i][1])+'</strong><p>'+E(areas[i])+'</p></div></div>';
 }
 function masteryLessons(){
  return '<section class="mastery-lessons"><h3>چهار راهبرد تاب‌آوری</h3><p>برای انتخاب راهبرد، دو سؤال بپرسید: آیا روش اصلی من هنوز مؤثر است؟ آیا در کنار آن به یک مسیر تازه و متمایز برای یادگیری نیاز دارم؟ این چهار استعاره، اقتباس آموزشی از چارچوب سازمانی Kurt Verweire هستند؛ آزمون روان‌شناختی نیستند.</p><div class="mastery-matrix">'+
