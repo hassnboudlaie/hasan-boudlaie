@@ -181,6 +181,19 @@ function groups(){return Array.from({length:10},(_,i)=>i+1);}
 function clearNotice(){notice='';}
 function alertUser(text,error=false){notice=text;let el=root.querySelector('#classroom-feedback');if(el){el.textContent=text;el.classList.toggle('is-error',error);}else render(true);}
 function className(){return identity?.role==='teacher'?'مدرس کارگاه':'گروه '+fa(identity?.team||0)+' · عضو '+fa(identity?.member||0);}
+function strategyContrast(compact=false){
+ const comparisons=[
+ ['🐪','شتر','بله؛ روش فعلی درست است','خیر','بدنه و شخص ثالث؛ صف یک‌روزه شلوغ شده'],
+ ['🐟','ماهی آزاد','بله؛ روش فعلی درست است','بله؛ خدمت جداگانه','ناوگان طرف قرارداد؛ خدمت مستقلِ پیشگیری از توقف'],
+ ['🦎','آفتاب‌پرست','خیر؛ روش باید بازطراحی شود','خیر','درمان تکمیلی؛ مدارک ماه‌ها برگشت می‌خورند'],
+ ['🐙','اختاپوس','خیر؛ روش باید بازطراحی شود','بله؛ خدمت جداگانه','اموال تجاری؛ اصلاح ارزیابی خسارت + خدمت مستقل پیشگیری ریسک']
+ ];
+ return '<section class="classroom-strategy-comparison"><h3>چهار راهبرد؛ چهار تصمیم متفاوت</h3><p>دو سؤال بپرسید: آیا روش فعلی رسیدگی جواب می‌دهد؟ آیا خدمت مستقلی بیرون از رسیدگی معمول شکل می‌گیرد؟</p><div class="classroom-contrast-grid">'+comparisons.map((r,i)=>'<article class="contrast-item contrast-'+i+'"><div class="contrast-head"><span role="img" aria-label="'+E(r[1])+'">'+r[0]+'</span><h4>'+r[1]+'</h4></div><p><b>رسیدگی فعلی:</b> '+r[2]+'</p><p><b>خدمت مستقل:</b> '+r[3]+'</p><p class="contrast-example"><b>نمونه خسارت:</b> '+r[4]+'</p></article>').join('')+'</div>'+(compact?'':'<p class="contrast-note">این استعاره‌ها از یک چارچوب راهبردی سازمانی برای بحث آموزشی اقتباس شده‌اند؛ آزمون شخصیت یا تشخیص روان‌شناختی نیستند.</p>')+'</section>';
+}
+function caseIllustration(i){
+ const icons=['🚗','🚚','🏥','🏢'],areas=['بدنه و شخص ثالث','ناوگان و مشتری طرف قرارداد','درمان تکمیلی','اموال و مشتریان تجاری'];
+ return '<div class="classroom-case-art case-art-'+i+'"><span class="classroom-case-emoji" role="img" aria-label="'+E(areas[i])+'">'+icons[i]+'</span><div><strong>'+E(C.models[i][0]+' '+C.models[i][1])+'</strong><p>'+E(areas[i])+'</p></div></div>';
+}
 function masteryLessons(){
  return '<section class="mastery-lessons"><h3>چهار راهبرد تاب‌آوری</h3><p>برای انتخاب راهبرد، دو سؤال بپرسید: آیا روش اصلی من هنوز مؤثر است؟ آیا در کنار آن به یک مسیر تازه و متمایز برای یادگیری نیاز دارم؟ این چهار استعاره، اقتباس آموزشی از چارچوب سازمانی Kurt Verweire هستند؛ آزمون روان‌شناختی نیستند.</p><div class="mastery-matrix">'+
  C.mastery.map((m,i)=>'<div><strong>'+C.models[i][0]+' '+E(C.models[i][1])+'</strong><span>'+E(m.lesson.core)+'</span></div>').join('')+'</div>'+
@@ -257,7 +270,8 @@ function strategyCards(){
  return '<div class="classroom-strategy-grid">'+C.models.map((m,i)=>'<article><span>'+m[0]+'</span><h3>'+E(m[1])+'</h3><strong>'+E(m[4])+'</strong><p>'+E(m[5])+'</p></article>').join('')+'</div>';
 }
 function strategyIntro(teacher,neutral=false){
- return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','این‌ها چهار انتخاب راهبردی‌اند؛ تیپ شخصیتی یا برچسب کارکنان نیستند.')+
+ return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','تفاوت راهبردها را با مثال‌های خسارت ببینید؛ سپس در مورد انتخاب مناسب گفت‌وگو کنید.')+
+ '<figure class="classroom-hero-figure"><img loading="lazy" src="assets/claims-resilience-approved-20261106.png" alt="پوستر رسمی کارگاه تاب‌آوری کارشناسان خسارت بیمه البرز"><figcaption>آکادمی مدیریت بیمه البرز · تمرین تصمیم‌گیری در شرایط دشوار</figcaption></figure>'+strategyContrast()+
  strategyCards()+masteryLessons()+oneTimeAssessment(neutral)+professionalTest(neutral)+
  '<p class="classroom-wait">'+(teacher?'چهار راهبرد، خودارزیابی یک‌نوبتی و آزمون ده‌سؤالی را مرور کن؛ سپس انتخاب مأموریت را آغاز کن.':'راهبردها، خودارزیابی یک‌نوبتی و ده سؤال حرفه‌ای را مرور کنید؛ سپس گروه خود مأموریتش را انتخاب می‌کند.')+'</p>';
 }
@@ -294,7 +308,7 @@ function chooseMission(team=identity.team){
  const selected=groupChoice(team);
  if(selected!==null&&identity?.role==='team'){consensusDraft=null;consensusAgreed=false;}
  return simpleTitle('مرحله انتخاب مأموریت','انتخاب مأموریت با توافق اعضای گروه','چهار مأموریت باز هستند؛ گروه شما یکی را انتخاب می‌کند. ابتدا گفت‌وگو کنید، بعد فقط یک نفر به نمایندگی ثبت نهایی کند.')+
- consensusProcess()+missionCards('group',team)+
+ strategyContrast(true)+consensusProcess()+missionCards('group',team)+
  (selected!==null?
   '<section class="classroom-choice-confirmed" role="status"><strong>✅ مأموریت گروه ثبت شد: '+animals[selected]+' '+labels[selected]+'</strong><p>انتخاب گروه ثبت شد. دکمه «گام بعد» را بزنید و سناریوی خود را شروع کنید.</p></section>':
   '<section class="classroom-consensus-submit"><p>'+(consensusDraft===null?'ابتدا مأموریت توافق‌شده را از چهار گزینه بالا انتخاب کنید.':'انتخاب موقت: <strong>'+animals[consensusDraft]+' '+labels[consensusDraft]+'</strong>')+'</p>'+
@@ -379,7 +393,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
  if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">نتیجه تیم و یک اقدام واقعی برای محیط خسارت را کوتاه بنویسید.</p><label class="classroom-input"><span>نتیجه و اقدام من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="از این مأموریت چه نتیجه‌ای گرفتید؟ فردا چه اقدامی انجام می‌دهید؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت نتیجه من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
- return title+body+'<div class="classroom-ready-action"><p>وقتی گفت‌وگو و ثبت نتیجه این مرحله تمام شد، یکی از اعضا روی «گام بعد» بزند؛ ادامه مسیر به تأیید مدرس وابسته نیست.</p></div>';
+ return title+caseIllustration(i)+body+'<div class="classroom-ready-action"><p>وقتی گفت‌وگو و ثبت نتیجه این مرحله تمام شد، یکی از اعضا روی «گام بعد» بزند؛ ادامه مسیر به تأیید مدرس وابسته نیست.</p></div>';
 }
 function missionMilestones(team){
  const i=groupChoice(team);
