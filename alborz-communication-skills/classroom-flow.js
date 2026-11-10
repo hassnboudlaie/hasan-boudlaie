@@ -185,8 +185,7 @@ function caseIllustration(i){
  return '<div class="classroom-case-art case-art-'+i+'"><img class="classroom-case-image" loading="lazy" src="assets/claims-'+['camel','salmon','chameleon','octopus'][i]+'.svg?v=20261111-individual5" alt="تصویر آموزشی سناریوی '+E(areas[i])+'"><div><strong>'+icons[i]+' '+E(C.models[i][1])+'</strong><p>'+E(areas[i])+'</p></div></div>';
 }
 function masteryLessons(){
- return '<section class="mastery-lessons"><h3>چهار راهبرد تاب‌آوری</h3><p>برای انتخاب راهبرد، دو سؤال بپرسید: آیا روش اصلی من هنوز مؤثر است؟ آیا در کنار آن به یک مسیر تازه و متمایز برای یادگیری نیاز دارم؟ این چهار استعاره، اقتباس آموزشی از چارچوب سازمانی Kurt Verweire هستند؛ آزمون روان‌شناختی نیستند.</p><div class="mastery-matrix">'+
- C.mastery.map((m,i)=>'<div><strong>'+C.models[i][0]+' '+E(C.models[i][1])+'</strong><span>'+E(m.lesson.core)+'</span></div>').join('')+'</div>'+
+ return '<section class="mastery-lessons"><p>برای مشاهده جزئیات کاربردی هر راهبرد، فقط همان بخش را باز کنید.</p>'+
  C.mastery.map((m,i)=>'<details class="mastery-lesson"><summary>'+C.models[i][0]+' '+E(C.models[i][1])+' · توضیح و مثال</summary><div class="mastery-lesson-body"><p><strong>معنای ساده:</strong> '+E(m.lesson.definition)+'</p><p><strong>شرایط کاربرد:</strong> '+E(m.lesson.condition)+'</p><p><strong>مرز با راهبردهای دیگر:</strong> '+E(m.lesson.boundary)+'</p><p><strong>اشتباه رایج:</strong> '+E(m.lesson.error)+'</p><p><strong>کاربرد در بیمه:</strong> '+E(C.models[i][6])+'</p><strong>سه اقدام مناسب</strong><ol>'+m.lesson.actions.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol><p class="mastery-takeaway">'+E(m.lesson.takeaway)+'</p></div></details>').join('')+
  '<p class="mastery-source">اقتباس از چهار راهبرد سازمانی Kurt Verweire؛ این چارچوب آزمون شخصیت نیست.</p></section>';
 }
@@ -251,34 +250,37 @@ function messageBox(){return '<p id="classroom-feedback" class="classroom-feedba
 function simpleTitle(kicker,title,description){return '<div class="classroom-section-title"><span>'+E(kicker)+'</span><h2>'+E(title)+'</h2>'+(description?'<p>'+E(description)+'</p>':'')+'</div>';}
 function personDots(team){return '<div class="classroom-member-dots">'+Array.from({length:size(team)||5},(_,j)=>'<span class="'+(checkin(team,j+1)?'has-arrived':'')+'">عضو '+fa(j+1)+(checkin(team,j+1)?' ✓':' ○')+'</span>').join('')+'</div>';}
 function rosterTeacher(){
- const ready=groups().filter(confirmed).length,attending=groups().reduce((n,t)=>n+attendance(t),0);
- return simpleTitle('مرحله شروع','گروه‌ها را آماده کنیم','کارشناسان با کد ملی وارد می‌شوند و گروه آن‌ها به‌صورت خودکار تعیین می‌شود. بسته به حضور واقعی، گروه‌ها می‌توانند سه، چهار یا پنج نفره باشند. پس از ثبت حضور، هر گروه را تأیید کن.')+
- '<div class="classroom-stats"><span>'+fa(ready)+' گروه تأیید‌شده</span><span>'+fa(attending)+' عضو حاضر</span></div>'+
- '<div class="classroom-team-list">'+groups().map(t=>{const n=size(t),c=attendance(t);return '<article class="classroom-team-row"><div><h3>گروه '+fa(t)+(confirmed(t)?'<small class="class-ready">آماده ✓</small>':'')+'</h3><p>'+fa(c)+' حضور ثبت‌شده · ظرفیت گروه: '+(n?fa(n):'هنوز مشخص نشده')+'</p>'+personDots(t)+'</div><label>ظرفیت گروه<select data-class-team-size="'+t+'"><option value="0" '+(!n&&!c?'selected':'')+'>فعال نیست</option>'+[3,4,5].map(v=>'<option value="'+v+'" '+(v===n||!n&&c>0&&v===Math.min(5,Math.max(3,c))?'selected':'')+'>'+fa(v)+' نفر</option>').join('')+'</select></label><button type="button" class="btn '+(confirmed(t)?'':'primary')+'" data-class-confirm="'+t+'">'+(confirmed(t)?'ثبت دوباره':'تأیید گروه')+'</button></article>';}).join('')+'</div>'+
- '<p class="classroom-footnote">برای هر گروه پنج جایگاه ثبت‌نام وجود دارد؛ مدرس می‌تواند با توجه به تعداد حاضران، گروه‌های سه تا پنج نفره را تأیید کند. ورود تکراری با همان کد ملی، همان گروه و همان شماره عضو را باز می‌کند.</p>';
+ const list=groups().filter(t=>size(t)>0);
+ const enrolled=list.reduce((sum,t)=>sum+size(t),0),attending=list.reduce((sum,t)=>sum+attendance(t),0);
+ return simpleTitle('ثبت‌نام گروه‌ها','گروه‌بندی خودکار','شماره گروه و شماره عضو با کد ملی تعیین می‌شود؛ گروه‌ها بدون تأیید مدرس مراحل را انجام می‌دهند.')+
+ '<div class="classroom-stats"><span>'+fa(list.length)+' گروه دارای عضو</span><span>'+fa(enrolled)+' ثبت‌نام‌شده</span><span>'+fa(attending)+' حضور ثبت‌شده</span></div>'+
+ '<div class="classroom-team-list">'+list.map(t=>'<article class="classroom-team-row"><div><h3>گروه '+fa(t)+' · '+fa(size(t))+' نفر</h3><p>'+fa(attendance(t))+' نفر حضورشان را ثبت کرده‌اند</p>'+personDots(t)+'</div></article>').join('')+'</div>'+
+ '<p class="classroom-footnote">ترکیب گروه‌ها به‌صورت خودکار تعیین می‌شود؛ ثبت‌نام مجدد با همان کد ملی، عضویت ثبت‌شده فرد را بازیابی می‌کند. هیچ تأیید دستی برای پیشروی لازم نیست.</p>';
 }
 function checkinParticipant(t=identity.team,m=identity.member){
  const count=attendance(t),done=checkin(t,m);
  return simpleTitle('مرحله ۱','گروه شما مشخص شد','نام گروه و شماره عضو هنگام ورود با کد ملی تعیین شده‌اند؛ لازم نیست گروه را دستی انتخاب کنی.')+
  '<div class="classroom-welcome"><div><small>شماره گروه</small><strong>'+fa(t)+'</strong></div><div><small>شماره عضو</small><strong>'+fa(m)+'</strong></div></div>'+
  '<div class="classroom-checkin"><h3>حضور خود را تأیید کن</h3><p>'+(done?'حضور تو ثبت شده است.':'پس از ورود، روی دکمه تأیید حضور بزن.')+'</p><button class="btn primary" data-class-checkin '+(done?'disabled':'')+'>'+(done?'حضور من ثبت شد ✓':'حضورم را تأیید می‌کنم')+'</button></div>'+
- personDots(t)+'<p class="classroom-wait">'+fa(count)+' عضو حضورشان را ثبت کرده‌اند. '+(confirmed(t)?'مدرس این گروه را تأیید کرده است.':'برای انتخاب مأموریت نیازی به تأیید مدرس ندارید.')+'</p>';
+ personDots(t)+'<p class="classroom-wait">'+fa(count)+' نفر حضورشان را ثبت کرده‌اند. با دکمه «گام بعد» ادامه دهید.</p>';
 }
 function strategyCards(){
  return '<div class="classroom-strategy-grid">'+C.models.map((m,i)=>'<article><span>'+m[0]+'</span><h3>'+E(m[1])+'</h3><strong>'+E(m[4])+'</strong><p>'+E(m[5])+'</p></article>').join('')+'</div>';
 }
 function strategyIntro(teacher,neutral=false){
- return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','تفاوت راهبردها را با مثال‌های خسارت ببینید؛ سپس در مورد انتخاب مناسب گفت‌وگو کنید.')+
- '<figure class="classroom-hero-figure"><img loading="lazy" src="assets/claims-resilience-approved-20261106.png" alt="پوستر رسمی کارگاه تاب‌آوری کارشناسان خسارت بیمه البرز"><figcaption>آکادمی مدیریت بیمه البرز · تمرین تصمیم‌گیری در شرایط دشوار</figcaption></figure>'+strategyContrast()+
- strategyCards()+masteryLessons()+oneTimeAssessment(neutral)+professionalTest(neutral)+
- '<p class="classroom-wait">'+(teacher?'چهار راهبرد، خودارزیابی یک‌نوبتی و آزمون ده‌سؤالی را مرور کن؛ سپس انتخاب مأموریت را آغاز کن.':'راهبردها، خودارزیابی یک‌نوبتی و ده سؤال حرفه‌ای را مرور کنید؛ سپس گروه خود مأموریتش را انتخاب می‌کند.')+'</p>';
+ return simpleTitle('گام آشنایی','چهار راهبرد تاب‌آوری','برای تشخیص راهبرد مناسب، ابتدا دو سؤال زیر را مرور کنید.')+
+ '<figure class="classroom-hero-figure"><img loading="lazy" src="assets/claims-resilience-approved-20261106.png" alt="پوستر رسمی کارگاه تاب‌آوری کارشناسان خسارت بیمه البرز"><figcaption>چهار راهبرد برای تصمیم‌گیری در موقعیت‌های دشوار</figcaption></figure>'+
+ strategyContrast()+
+ '<details class="classroom-expandable"><summary>درسنامه کاربردی چهار راهبرد</summary>'+masteryLessons()+'</details>'+
+ '<details class="classroom-expandable"><summary>خودارزیابی شش‌گزاره‌ای من</summary>'+oneTimeAssessment(neutral)+'</details>'+
+ '<details class="classroom-expandable"><summary>آزمون ده‌سؤالی</summary>'+professionalTest(neutral)+'</details>';
 }
 function consensusProcess(){
- return '<section class="classroom-consensus-process"><div class="classroom-consensus-heading"><strong>🤝 انتخاب مأموریت با اجماع گروهی</strong><span>⏱️ ۲ دقیقه گفت‌وگو</span></div>'+
+ return '<section class="classroom-consensus-process"><div class="classroom-consensus-heading"><strong>🤝 توافق گروه</strong><span>⏱️ ۲ دقیقه</span></div>'+
  '<div class="classroom-consensus-steps"><p><b>۱. گفت‌وگو کنید</b><span>هر نفر خیلی کوتاه بگوید کدام راهبرد برای تمرین گروه مناسب‌تر است و چرا.</span></p>'+
  '<p><b>۲. به توافق برسید</b><span>فقط یک مأموریت را انتخاب کنید؛ لازم نیست همه گروه‌ها راهبرد یکسان داشته باشند.</span></p>'+
  '<p><b>۳. یک نفر ثبت کند</b><span>نماینده گروه گزینه توافق‌شده را انتخاب و ثبت نهایی می‌کند.</span></p></div>'+
- '<p class="classroom-consensus-note">زمان گفت‌وگو پیشنهادی است. نیازی به رأی‌گیری یا ثبت پاسخ تک‌تک افراد نیست.</p></section>';
+ '</section>';
 }
 function missionCards(mode,team=0){
  const used=mode==='group'?usedMissions(team):[];
@@ -294,7 +296,7 @@ function missionCards(mode,team=0){
 }
 function missionRoster(){
  const list=groups().filter(t=>confirmed(t)||attendance(t)||groupChoice(t)!==null);
- if(!list.length)return '<p class="classroom-empty">هنوز گروهی تشکیل یا تأیید نشده است. پیش‌نمایش پایین صرفاً آموزشی است و داده‌ای ثبت نمی‌کند.</p>';
+ if(!list.length)return '<p class="classroom-empty">هنوز ثبت‌نام گروهی نمایش داده نمی‌شود. پیش‌نمایش پایین صرفاً آموزشی است.</p>';
  return '<div class="classroom-choice-roster">'+list.map(t=>{
   const mission=groupChoice(t),canReopen=identity?.role==='teacher'&&stage===2&&previewStep===null&&mission!==null;
   return '<div><strong>گروه '+fa(t)+'</strong><span>'+(mission===null?'منتظر انتخاب و ثبت نماینده':animals[mission]+' '+labels[mission])+'</span>'+
@@ -306,7 +308,7 @@ function chooseMission(team=identity.team){
  const selected=groupChoice(team);
  if(selected!==null&&identity?.role==='team'){consensusDraft=null;consensusAgreed=false;}
  return simpleTitle('مرحله انتخاب مأموریت','انتخاب مأموریت با توافق اعضای گروه','چهار مأموریت باز هستند؛ گروه شما یکی را انتخاب می‌کند. ابتدا گفت‌وگو کنید، بعد فقط یک نفر به نمایندگی ثبت نهایی کند.')+
- strategyContrast(true)+consensusProcess()+missionCards('group',team)+
+ consensusProcess()+missionCards('group',team)+
  (selected!==null?
   '<section class="classroom-choice-confirmed" role="status"><strong>✅ مأموریت گروه ثبت شد: '+animals[selected]+' '+labels[selected]+'</strong><p>انتخاب گروه ثبت شد. دکمه «گام بعد» را بزنید و سناریوی خود را شروع کنید.</p></section>':
   '<section class="classroom-consensus-submit"><p>'+(consensusDraft===null?'ابتدا مأموریت توافق‌شده را از چهار گزینه بالا انتخاب کنید.':'انتخاب موقت: <strong>'+animals[consensusDraft]+' '+labels[consensusDraft]+'</strong>')+'</p>'+
@@ -391,7 +393,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
  if(n===5)body='<p class="classroom-prompt">کدام بخش از تصمیم اولیه باید تغییر کند؟ دلیل خود را بنویسید.</p><label class="classroom-input"><span>تصمیم اصلاح‌شده گروه</span><textarea data-class-answer="revision" rows="4" placeholder="چه چیزی را تغییر دادید و بر اساس چه شاهدی؟">'+E(val(team,prefix+'revision')||'')+'</textarea></label><button class="btn primary" data-class-save="revision">ثبت تصمیم اصلاح‌شده</button>'+(val(team,prefix+'revision')?'<p class="classroom-saved">اصلاح قبلی ثبت شده است ✓</p>':'');
  if(n===6){const k=prefix+'member'+member;body='<p class="classroom-prompt">نتیجه تیم و یک اقدام واقعی برای محیط خسارت را کوتاه بنویسید.</p><label class="classroom-input"><span>نتیجه و اقدام من · عضو '+fa(member)+'</span><textarea data-class-answer="evidence" rows="3" placeholder="از این مأموریت چه نتیجه‌ای گرفتید؟ فردا چه اقدامی انجام می‌دهید؟">'+E(val(team,k)||'')+'</textarea></label><button class="btn primary" data-class-save="evidence">ثبت نتیجه من</button><div class="classroom-recap"><p><b>تصمیم اولیه:</b> '+formatText(val(team,prefix+'initial'))+'</p><p><b>تصمیم اصلاح‌شده:</b> '+formatText(val(team,prefix+'revision'))+'</p></div>';}
- return title+caseIllustration(i)+body+'<div class="classroom-ready-action"><p>وقتی گفت‌وگو و ثبت نتیجه این مرحله تمام شد، یکی از اعضا روی «گام بعد» بزند؛ ادامه مسیر به تأیید مدرس وابسته نیست.</p></div>';
+ return title+(n===0?caseIllustration(i):'')+body+'<div class="classroom-ready-action"><p>وقتی گفت‌وگو و ثبت نتیجه این مرحله تمام شد، یکی از اعضا روی «گام بعد» بزند؛ ادامه مسیر به تأیید مدرس وابسته نیست.</p></div>';
 }
 function missionMilestones(team){
  const i=groupChoice(team);
@@ -458,11 +460,11 @@ function render(force=false){
  const countConfirmed=groups().filter(confirmed).length;
  const allReadyHaveMission=groups().filter(confirmed).every(t=>groupChoice(t)!==null);
  const stepProgress=readiness();
- const nextDisabled=teacher &&(stage===0&&countConfirmed===0||stage===2&&(countConfirmed===0||!allReadyHaveMission)||stage>=3&&stage<=9&&stepProgress.waiting.length>0||stage===10);
+ const nextDisabled=teacher&&stage===10;
  const guideNote=stage>=3&&stage<=9?'آماده: '+fa(stepProgress.ready.length)+' از '+fa(stepProgress.active.length)+' گروه'+(stepProgress.waiting.length?' · منتظر گروه‌های '+stepProgress.waiting.map(fa).join('، '):' · همه آماده‌اند'):'گروه‌ها مستقل پیش می‌روند و هر مرحله را خودشان باز می‌کنند.';
  const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow(displayStage)+'</header>'+
- '<div class="classroom-stage-progress" role="status"><span>پیشرفت کلاس: '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
- const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">گروه شما مستقل پیش می‌رود · گام '+fa(stage+1)+' از ۱۱</span>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
+ '<div class="classroom-stage-progress" role="status"><span>'+(teacher?'مسیر مدرس':'پیشرفت گروه')+': '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
+ const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">مراحل گروه مستقل هستند؛ تأیید مدرس لازم نیست</span>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
  else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant()+missionShortcut();
