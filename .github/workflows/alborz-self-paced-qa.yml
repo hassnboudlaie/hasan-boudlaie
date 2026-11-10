@@ -7,6 +7,9 @@ on:
       - "alborz-communication-skills/resilience-game.js"
       - "alborz-communication-skills/classroom-flow.js"
       - "alborz-communication-skills/classroom-flow.css"
+      - "alborz-communication-skills/classroom-timer.js"
+      - "alborz-communication-skills/classroom-timer.css"
+      - "scripts/alborz-timer-qa.cjs"
       - "alborz-communication-skills/assets/claims-*.svg"
       - "scripts/alborz-self-paced-qa.cjs"
       - ".github/workflows/alborz-self-paced-qa.yml"
@@ -26,3 +29,6 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Verify independent group progress, rounds and accessible mobile UI
         run: node scripts/alborz-self-paced-qa.cjs
+
+      - name: Verify teacher-only countdown, reload persistence, and four scenario identities
+        run: node scripts/alborz-timer-qa.cjs
