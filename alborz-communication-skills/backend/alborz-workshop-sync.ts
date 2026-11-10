@@ -97,7 +97,9 @@ Deno.serve(async req=>{
   const cols='team_no,field_key,field_value,editor_label,updated_at,version';
   if(body.action==='teacher'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
-   return respond({ok:true,records:await db('alborz_team_fields?select='+cols+'&order=team_no.asc,field_key.asc&limit=1500')},200,origin);
+   const [records,seats]=await Promise.all([db('alborz_team_fields?select='+cols+'&order=team_no.asc,field_key.asc&limit=1500'),db('alborz_national_members?select=team_no&limit=50')]);
+   const assignedCounts=Object.fromEntries(Array.from({length:10},(_,i)=>[i+1,(seats||[]).filter(s=>s.team_no===i+1).length]));
+   return respond({ok:true,records,assignedCounts},200,origin);
   }
   // Instructor-only classroom progression and group confirmation. No new authentication or finance access.
   async function teacherWrite(team, fields, expectedFromClient){
@@ -168,12 +170,13 @@ Deno.serve(async req=>{
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
   }else if(identity.role!=='team'||identity.team!==team)return respond({error:'مجوز این گروه را ندارید'},403,origin);
   if(body.action==='read'){
-   const [records,current]=(await Promise.all([
+   const [records,current,seats]=(await Promise.all([
     db('alborz_team_fields?team_no=eq.'+team+'&select='+cols+'&order=field_key.asc&limit=150'),
-    db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomPhase,classroomRound)&select=field_key,field_value,version')
+    db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomPhase,classroomRound)&select=field_key,field_value,version'),
+    db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5')
    ]));
    const by=Object.fromEntries((current||[]).map(x=>[x.field_key,x]));
-   return respond({ok:true,identity,records,classroom:{phase:Number(by.classroomPhase?.field_value??0),version:by.classroomPhase?.version??0,round:Number(by.classroomRound?.field_value??0)}},200,origin);
+   return respond({ok:true,identity,records,assignedCount:(seats||[]).length,classroom:{phase:Number(by.classroomPhase?.field_value??0),version:by.classroomPhase?.version??0,round:Number(by.classroomRound?.field_value??0)}},200,origin);
   }
   if(body.action==='write'||body.action==='grade'){
    const fields=body.fields,expected=body.expected;
