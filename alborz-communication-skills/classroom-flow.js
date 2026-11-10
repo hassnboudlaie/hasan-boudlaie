@@ -537,7 +537,7 @@ root.addEventListener('click',event=>{
   previewDraft=choice;lastFingerprint='';render(true);return;
  }
  if(btn.hasAttribute('data-class-mission')){
-  if(identity?.role!=='team'||stage!==2||groupChoice(identity.team)!==null)return;
+  if(identity?.role!=='team'||Math.max(stage,2)!==2||groupChoice(identity.team)!==null)return;
   const choice=Number(btn.dataset.classMission);
   if(!Number.isInteger(choice)||choice<0||choice>3||usedMissions(identity.team).includes(choice))return alertUser('این مأموریت در دور قبلی اجرا شده؛ یک راهبرد دیگر انتخاب کنید.',true);
   consensusDraft=choice;consensusAgreed=false;lastFingerprint='';render(true);return;
