@@ -348,3 +348,78 @@
 @media (max-width:1080px){.classroom-projector-team-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:700px){.classroom-projector-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.classroom-view-switch button{flex:1;font-size:16px}.classroom-projector{padding:13px}.classroom-projection-body{padding:10px}.classroom-projector-head h2{font-size:25px}.classroom-projector-member-picker button{font-size:15px;padding:7px 10px}}
 @media (max-width:390px){.classroom-projector-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.classroom-projector-team{min-height:110px;padding:9px}.classroom-projector-team strong{font-size:17px}.classroom-projector-team span{font-size:14px}}
+
+
+/* Self-paced Claims Workshop | Readability, mobile and teaching-room visual QA | 2026-11-10 */
+.classroom-screen{direction:rtl;text-align:right}
+.classroom-screen .classroom-content{font-size:clamp(19px,1.6vw,22px);line-height:1.9;color:#173747}
+.classroom-screen .classroom-content p,.classroom-screen .classroom-content li{line-height:1.9}
+.classroom-screen .classroom-section-title h2{font-size:clamp(26px,3vw,36px);line-height:1.5;color:#092e47;font-weight:900}
+.classroom-screen .classroom-section-title p{font-size:clamp(19px,1.8vw,23px);color:#284a59;line-height:1.85}
+.classroom-screen button.btn,.classroom-screen .classroom-controls button{min-height:54px;font-size:clamp(17px,1.45vw,21px);font-weight:800;line-height:1.55}
+.classroom-screen button:focus-visible,.classroom-screen a:focus-visible,.classroom-screen summary:focus-visible{outline:3px solid #de9400;outline-offset:3px}
+.classroom-team-controls{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#e9f5f6;border:2px solid #8dc7d0;border-radius:16px;padding:15px;margin:15px 0 22px}
+.classroom-team-controls .classroom-controls-note{flex:1;text-align:center;color:#13495a;font-size:18px;font-weight:800}
+.classroom-team-controls .btn.primary{background:#08716d;color:white;border-color:#08716d}
+.classroom-mission-shortcut{padding:18px 20px;border:2px solid #08716d;border-radius:18px;background:#e9f6f2;margin:20px 0}
+.classroom-mission-shortcut p{font-size:20px;line-height:1.9;color:#16483e}
+.classroom-strategy-comparison{background:#fff;border:1px solid #b7cdd8;border-radius:20px;padding:clamp(14px,2.5vw,25px);margin:19px 0 23px}
+.classroom-strategy-comparison h3{font-size:clamp(24px,2.6vw,31px);line-height:1.5;color:#083950;margin:0 0 10px}
+.classroom-strategy-comparison>p{font-size:clamp(18px,1.7vw,21px);color:#294b59}
+.classroom-contrast-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:15px}
+.classroom-contrast-grid .contrast-item{border:2px solid #b9d5df;background:#f7fbfd;border-radius:16px;padding:17px;min-width:0}
+.classroom-contrast-grid .contrast-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.classroom-contrast-grid .contrast-head span{font-size:clamp(39px,4vw,52px);line-height:1.25}
+.classroom-contrast-grid .contrast-head h4{font-size:clamp(24px,2.2vw,29px);margin:0;color:#113a55}
+.classroom-contrast-grid .contrast-item p{font-size:clamp(17px,1.5vw,20px);color:#173a4b;margin:8px 0;line-height:1.75}
+.classroom-contrast-grid .contrast-example{border-top:1px solid #b6ccd3;padding-top:10px;margin-top:12px!important;font-weight:650}
+.classroom-contrast-grid .contrast-0{border-right:6px solid #b77920}
+.classroom-contrast-grid .contrast-1{border-right:6px solid #167c93}
+.classroom-contrast-grid .contrast-2{border-right:6px solid #3e7a4b}
+.classroom-contrast-grid .contrast-3{border-right:6px solid #7057a7}
+.classroom-strategy-comparison .contrast-note{border-top:1px dashed #b7cfd8;margin-top:16px;padding-top:12px;font-size:17px}
+.classroom-hero-figure{margin:18px 0 24px;padding:12px;border-radius:18px;background:#fff;border:1px solid #c7d8df;display:flex;flex-direction:column;align-items:center}
+.classroom-hero-figure img{max-height:320px;max-width:100%;width:auto;height:auto;object-fit:contain;border-radius:12px}
+.classroom-hero-figure figcaption{font-size:17px;line-height:1.75;font-weight:700;color:#264d5f;margin-top:8px}
+.classroom-case-art{display:flex;align-items:center;gap:20px;padding:18px 22px;border-radius:19px;margin:18px 0 22px;border:2px solid #aecbd4;background:linear-gradient(115deg,#eef6f9,#fff)}
+.classroom-case-art .classroom-case-emoji{font-size:clamp(55px,6vw,82px);flex-shrink:0;line-height:1.2}
+.classroom-case-art strong{font-size:clamp(24px,2.3vw,31px);color:#0e4055;line-height:1.6}
+.classroom-case-art p{font-size:clamp(18px,1.6vw,21px);color:#234759;margin:0}
+.classroom-case-art.case-art-0{border-right:7px solid #b77920}
+.classroom-case-art.case-art-1{border-right:7px solid #167c93}
+.classroom-case-art.case-art-2{border-right:7px solid #3e7a4b}
+.classroom-case-art.case-art-3{border-right:7px solid #7057a7}
+.classroom-screen .classroom-choice-grid button{min-height:128px;border-width:2px}
+.classroom-screen .classroom-choice-grid b{font-size:clamp(23px,2.2vw,30px)}
+.classroom-screen .classroom-choice-grid small,.classroom-screen .classroom-choice-grid span{font-size:clamp(17px,1.55vw,20px);line-height:1.7}
+.classroom-screen .mastery-person summary{min-height:66px;font-size:20px;line-height:1.7;cursor:pointer}
+.classroom-screen .mastery-person-body p{font-size:19px;line-height:1.9}
+.classroom-screen .mastery-tip{font-size:20px;line-height:1.9;border-right:5px solid #08716d;background:#f0f8f5;padding:14px}
+.classroom-screen .mastery-dialogues>h3{font-size:clamp(25px,2.5vw,34px);line-height:1.5}
+.classroom-screen .mastery-dialogues>p{font-size:20px;line-height:1.8}
+.classroom-screen .mastery-dialogue{gap:12px}
+.classroom-screen .mastery-dialogue .mastery-turn{padding:16px 18px;border:1px solid #bfd2dc;background:#fff;border-radius:15px}
+.classroom-screen .mastery-dialogue .mastery-turn p{font-size:clamp(20px,1.85vw,23px);line-height:2;color:#1b3a49}
+.classroom-screen .mastery-dialogue .mastery-speaker strong{font-size:20px;color:#0a4160}
+.classroom-screen .mastery-dialogue .mastery-speaker small{font-size:16px;color:#456271}
+.classroom-screen .mastery-weak-dialog{margin:17px 0;border:2px dashed #d2a28e;background:#fffaf7;padding:14px;border-radius:16px}
+.classroom-screen .mastery-weak-dialog>summary{cursor:pointer;font-size:22px;font-weight:850;color:#7b382b;line-height:1.8}
+.classroom-screen .mastery-weak-dialog .mastery-turn{background:#fff}
+.classroom-screen .mastery-effective-heading{font-size:24px;color:#0d6558;line-height:1.5;margin:20px 0 12px}
+.classroom-screen .mastery-final-analysis{background:#f0f7f9;color:#153c4d;padding:20px;border:1px solid #c2dce3;border-radius:16px}
+.classroom-screen .mastery-final-analysis h4{font-size:clamp(22px,2.1vw,28px);color:#064966;line-height:1.6}
+.classroom-screen .mastery-final-analysis li{font-size:19px;line-height:1.9;margin:8px 0}
+.classroom-screen .classroom-controls-note,.classroom-screen .classroom-consensus-note{line-height:1.75}
+@media(max-width:700px){
+ .classroom-contrast-grid{grid-template-columns:1fr}
+ .classroom-team-controls{align-items:stretch}
+ .classroom-team-controls .btn{flex:1 1 44%}
+ .classroom-team-controls .classroom-controls-note{order:-1;flex:1 1 100%;text-align:right}
+ .classroom-case-art{padding:14px;gap:11px}
+ .classroom-hero-figure img{max-height:250px}
+ .classroom-screen .mastery-dialogue .mastery-turn{padding:12px}
+ .classroom-screen .mastery-dialogue .mastery-turn p{font-size:20px}
+ .classroom-screen .classroom-content{font-size:19px}
+ .classroom-screen .classroom-strategy-comparison{padding:14px}
+}
+@media(max-width:380px){.classroom-team-controls .btn{flex-basis:100%}.classroom-case-art .classroom-case-emoji{font-size:49px}}
