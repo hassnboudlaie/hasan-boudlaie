@@ -43,5 +43,6 @@
 </div>
 <div id="modalRoot"></div><div id="toast" role="status" aria-live="polite"></div>
 <noscript><div class="noscript">برای اجرای این برنامه، JavaScript مرورگر را فعال کنید.</div></noscript>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
 </body>
 </html>
