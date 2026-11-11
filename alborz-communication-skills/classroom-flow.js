@@ -130,6 +130,44 @@ const C=W.catalog,labels=['شتر','ماهی آزاد','آفتاب‌پرست','
  C.professionalQuiz.splice(0,C.professionalQuiz.length,...quiz.map((q,i)=>({stem:q[0],facts:['شرایط فرضی است؛ فقط اقدام‌های در اختیار کارشناس را بررسی کنید.','دقت، محرمانگی، حدود اختیار و بازیابی انرژی باید حفظ شوند.'],options:q[1].map((label,j)=>({t:label,correct:j===q[2],why:j===q[2]?q[3]:'این گزینه مشکل اصلی را دقیق حل نمی‌کند یا به اختیار، دقت و بازیابی توجه کافی ندارد.'}))})));
 })();
 ;
+
+const caseChoices=[
+ [
+ ['صف طولانی و کندی سامانه','پرخاشگری مراجعه‌کننده','فشار برای وعده پرداخت','خستگی و کاهش تمرکز'],
+ ['تفکیک پرونده‌های کامل و ناقص','اعلام زمان واقعی پیگیری','مرزبندی محترمانه در برابر توهین','ثبت موقت فقط از مسیر مصوب'],
+ ['مکث کوتاه پیش از پرونده بعد','تقسیم بار پاسخ‌گویی با سرپرست','کنترل دوباره مدارک پرونده بعدی','جداکردن تنش مشتری قبلی از کار جاری']
+ ],
+ [
+ ['شکایت از پوشش درمان تکمیلی','تماس‌های تند از مرکز طرف قرارداد','فشار تکرار توضیحات پرونده','ادامه تنش ذهنی بعد از تماس'],
+ ['بررسی پوشش قرارداد پیش از پاسخ','اعلام موعد پیگیری بدون قول تأیید','مرزبندی محترمانه در تماس دشوار','طراحی تمرین مستقل گفت‌وگوی حرفه‌ای'],
+ ['تمرین ده‌دقیقه‌ای با همکار','مکث کوتاه پس از تماس دشوار','ثبت جمله بهتر بدون داده شخصی','مرزبندی پایان روز کاری']
+ ],
+ [
+ ['برگشت مکرر پرونده اموال','یادداشت‌های پراکنده و فراموشی','تماس مکرر برای نقص مدارک','نامشخص‌بودن مسئول اقدام'],
+ ['پیگیری ساختاریافته به‌جای حافظه','تطبیق کامل چک‌لیست رسمی','اعلام یکجای نواقص تأییدشده','ثبت اقدام بعدی در سامانه مجاز'],
+ ['مرور پرونده‌های باز آخر روز','کاهش فشار با فهرست اقدام بعدی','مکث بعد از گفت‌وگوی پرتنش','سنجش کاهش پرونده‌های برگشتی']
+ ],
+ [
+ ['تأخیر پرونده آب‌گرفتگی انبار','هماهنگی پراکنده با ارزیاب','تنش با نماینده طرف قرارداد','فوریت رسیدگی و کمبود نیرو'],
+ ['تعیین مسئول و موعد پیگیری رسمی','مرزبندی محترمانه در برابر توهین','تطبیق گزارش ارزیاب و مدارک انبار','تمرین مستقل جرأت‌ورزی در کنار اصلاح روش'],
+ ['تمرین کوتاه گفت‌وگوی فرضی','مکث برای بازیابی تمرکز','مرور ساختاریافته اقدام بعدی','درخواست حمایت و زمان از سرپرست']
+ ]];
+const casePrompts=['مهم‌ترین عامل فشار در این پرونده چیست؟','چه اقدامی در محدوده اختیار کارشناس است؟','برای حفظ دقت و بازیابی توان چه می‌کنید؟'];
+function contextAnswers(team,i){
+ try{const d=JSON.parse(val(team,'r'+i+'context')||'');return Array.isArray(d.answers)&&d.answers.length===3?d.answers.map(String):[];}catch{return [];}
+}
+function contextForm(i,team){
+ const saved=contextAnswers(team,i);
+ return '<section class="classroom-capture"><h3>ثبت کوتاه نتیجه گروه</h3><p>یک نفر از طرف گروه برای هر سؤال یک گزینه انتخاب کند.</p>'+
+ casePrompts.map((q,j)=>{const answers=caseChoices[i][j],current=saved[j]||'',other=!!current&&!answers.includes(current);
+ return '<label class="classroom-capture-question"><strong>'+fa(j+1)+'. '+E(q)+'</strong><select data-class-context-select="'+j+'"><option value="">انتخاب کنید</option>'+
+ answers.map(a=>'<option value="'+E(a)+'" '+(a===current?'selected':'')+'>'+E(a)+'</option>').join('')+
+ '<option value="__other__" '+(other?'selected':'')+'>سایر؛ پاسخ خودمان</option></select>'+
+ '<textarea maxlength="280" rows="2" data-class-context-other="'+j+'" placeholder="پاسخ کوتاه گروه" '+(other?'':'hidden')+'>'+E(other?current:'')+'</textarea></label>';}).join('')+
+ '<button class="btn primary" data-class-save-context>ثبت سه پاسخ گروه</button>'+
+ (saved.length===3?'<p class="classroom-saved">سه پاسخ گروه ثبت شده‌اند ✓</p>':'')+'</section>';
+}
+
 function individualDiscussion(i){
  const c=C.cases[i],qs=c.individualQuestions||[],as=c.individualAnswers||[];
  return '<section class="individual-discussion" dir="rtl" style="font-size:18px;line-height:1.9">'+
@@ -330,7 +368,7 @@ function missionTeacherChoice(){
 function teacherStep(phase=stage){
  const i=reference,n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],mod=C.models[i];
  const say=[
- '«موقعیت را بخوانید. هر نفر بگوید چه چیزی به او فشار می‌آورد، چه کاری در اختیارش است و چطور تمرکز را بازمی‌یابد. پاسخ نوشتاری لازم نیست.»',
+ '«موقعیت را بخوانید. هر نفر بگوید چه چیزی به او فشار می‌آورد، چه کاری در اختیارش است و چطور تمرکز را بازمی‌یابد. یک نفر نتیجه گفت‌وگو را از گزینه‌های همان پرونده ثبت کند.»',
  '«پنج نقش را متناسب با تعداد افراد تقسیم کنید. در گروه‌های سه یا چهار‌نفره، بعضی نفرات دو نقش می‌گیرند؛ هر نفر اطلاعات نقش خود را برای گروه توضیح دهد.»',
  '«گفت‌وگوی نمونه را یک بار با حضور شخصیت‌ها اجرا کنید؛ در پایان تحلیل راهبردی همان گفت‌وگو را بخوانید.»',
  '«با شش سکه حداقل دو اقدام انتخاب کنید؛ تصمیم اولیه، دلیل و مسئول را ثبت کنید.»',
@@ -339,7 +377,7 @@ function teacherStep(phase=stage){
  '«هر گروه نتیجه نهایی و یک اقدام واقعی برای واحد خسارت را با دلیل کوتاه ثبت کند.»'
  ][n];
  const ask=[
- 'سناریوی راهبرد انتخابی گروه را بخوانند، هر پنج نفر درباره سه پرسش گفت‌وگو کنند و فقط یک نفر پایان گام را ثبت کند؛ نوشتن اجباری نیست.',
+ 'سناریوی راهبرد انتخابی گروه را بخوانند، هر پنج نفر درباره سه پرسش گفت‌وگو کنند و فقط یک نفر پایان گام را ثبت کند؛ یک نفر پاسخ‌های گروه را ثبت کند.',
  'نقش‌ها را تقسیم کنند و هر فرد اطلاعات اختصاصی نقش خود را مطرح کند.',
  'یک گفت‌وگوی کامل اجرا و تحلیل نهایی راهبرد را مرور کنند.',
  'دو یا چند اقدام در سقف ۶ سکه انتخاب و تصمیم اولیه را با گروه به اشتراک بگذارند.',
@@ -381,7 +419,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  const n=phase-3,m=C.missions[i],d=C.cases[i],x=C.embedded[i],prefix='r'+i;
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
- if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></div>'+personalResilienceLens(i)+individualDiscussion(i);
+ if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></div>'+personalResilienceLens(i)+contextForm(i,team);
  if(n===1)body=masteryRoles(i);
  if(n===2)body=masteryTalk(i);
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
