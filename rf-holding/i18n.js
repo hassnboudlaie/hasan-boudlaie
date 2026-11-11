@@ -63,7 +63,7 @@ const rows=[
 ["این بخش","This section"],
 ["مدیریت یکپارچه","Unified Management"],
 ["ثبت اطلاعات","Record Entry"],
-["راهنما","Guide"]
+["راهنما","Guide"],["خدمات مشترک هلدینگ","Group Shared Services"],["در همه واحدها","Across All Units"],["دریافت / پرداخت","Income / Expense"],["ثبت نشده","Not Recorded"],["درآمد و هزینه","Income and Expenses"]
 ];
 const exact=new Map(rows);
 const sorted=rows.filter(r=>r[0].length>=4).sort((a,b)=>b[0].length-a[0].length);
@@ -82,6 +82,7 @@ function translate(str){
  if(exact.has(x))return leading+exact.get(x)+trailing;
  // Translate combined labels and counts without changing stored data.
  for(const [fa,en] of sorted){if(x.includes(fa))x=x.split(fa).join(en);}
+ x=x.replace(/(\d+)\s+ثبت/g,"$1 records");
  x=x.replace(/[\u200c]/g," ").replace(/\s+←/g," ←");
  x=x.replace(/«/g,"“").replace(/»/g,"”");
  return leading+x+trailing;
