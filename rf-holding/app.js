@@ -91,6 +91,36 @@ function bizOverview(b){
  out+='<div class="business-widget-grid"><div class="card"><div class="card-title-row"><h3>آخرین فعالیت‌های این کسب‌وکار</h3><button class="link-btn" data-action="biz-all-records" data-id="'+esc(b.id)+'">مشاهده فعالیت‌ها ←</button></div>'+(rs.length?'<div class="record-list">'+rs.map(function(r){return '<button type="button" class="record-item" data-record="'+esc(r.id)+'" style="background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:right;cursor:pointer"><div class="record-main"><span class="record-icon">'+(RECORD_ICONS[r.kind]||"▤")+'</span><div><strong>'+esc(r.title)+'</strong><small>'+RECORD_TITLES[r.kind]+' · '+dateText(r.date)+'</small></div></div>'+status(r.status)+'</button>';}).join("")+'</div>':empty("🗂️","هنوز فعالیتی ثبت نشده است","با یکی از ابزارهای تخصصی این کسب‌وکار شروع کنید.","add-record:"+k.quick[0][0]+":"+b.id,"شروع ثبت"))+'</div><div class="card"><div class="card-title-row"><h3>دسترسی سریع</h3><span class="card-caption">'+k.name+'</span></div><div class="quick-buttons">'+k.quick.map(function(item){return '<button class="quick-tile" type="button" data-action="add-record:'+item[0]+':'+esc(b.id)+'"><span class="quick-icon">'+item[2]+'</span><strong>'+item[1]+'</strong><small>ثبت و پیگیری در این واحد</small></button>';}).join("")+'<button type="button" class="quick-tile" data-action="add-finance:'+esc(b.id)+'"><span class="quick-icon">💳</span><strong>دریافت / پرداخت</strong><small>در حساب مشترک مالی</small></button></div></div></div>';
  return out;
 }
+
+function specialTab(b,tab,rows){
+ var title=kindTitle(tab),action="add-record:"+tab+":"+b.id;
+ if(tab==="tables"){
+  var out=sectionHead("نقشه میزهای رستوران","وضعیت و ظرفیت میزها؛ برای ویرایش روی هر میز بزنید.","＋ تعریف میز",action);
+  out+=rows.length?'<div class="table-floor">'+rows.map(function(r){
+   return '<button type="button" data-record="'+esc(r.id)+'" class="floor-table '+stateClass(r.status)+'"><span class="table-icon">🪑</span><strong>'+esc(r.title)+'</strong><small>'+esc(r.detail||"سالن اصلی")+'</small><span class="capacity">ظرفیت: '+number(r.amount)+' نفر</span>'+status(r.status)+'</button>';
+  }).join("")+'</div>':empty("🪑","هنوز میزی تعریف نشده است","برای هر میز، عنوان، ظرفیت و وضعیت ثبت کنید.",action,"＋ تعریف اولین میز");
+  return out;
+ }
+ if(tab==="inventory"){
+  var out=sectionHead("ویترین موجودی طلا و جواهر","کد محصول، وزن، عیار، تعداد و قیمت ثبت‌شده.","＋ محصول جدید",action);
+  out+=rows.length?'<div class="product-grid">'+rows.map(function(r){
+   var m=r.meta||{};
+   var media=m.image?'<img src="'+esc(m.image)+'" alt="'+esc(r.title)+'" loading="lazy" onerror="this.hidden=true">':'<span>💍</span>';
+   return '<button type="button" data-record="'+esc(r.id)+'" class="product-tile"><div class="product-media">'+media+'</div><div class="product-content"><strong>'+esc(r.title)+'</strong><small>'+esc(m.sku||r.detail||"بدون کد")+'</small><div class="product-facts"><span>'+esc(m.grams||"—")+' گرم</span><span>'+esc(m.karat||"—")+' عیار</span><span>تعداد '+number(m.qty||0)+'</span></div><b>'+money(r.amount)+'</b></div></button>';
+  }).join("")+'</div>':empty("💎","هنوز موجودی ثبت نشده است","محصول جدید با عیار، وزن، تعداد و تصویر واقعی ثبت کنید.",action,"＋ ثبت اولین محصول");
+  return out;
+ }
+ if(tab==="packages"){
+  var out=sectionHead("تور و خدمات سفر","مقصد، تاریخ حرکت و ظرفیت هر تور در یک نما.","＋ تور / خدمت",action);
+  out+=rows.length?'<div class="product-grid">'+rows.map(function(r){
+   var m=r.meta||{};
+   var media=m.image?'<img src="'+esc(m.image)+'" alt="'+esc(r.title)+'" loading="lazy" onerror="this.hidden=true">':'<span>🧳</span>';
+   return '<button type="button" data-record="'+esc(r.id)+'" class="product-tile"><div class="product-media">'+media+'</div><div class="product-content"><strong>'+esc(r.title)+'</strong><small>'+esc(m.destination||r.detail||"مقصد تعیین نشده")+'</small><div class="product-facts"><span>حرکت: '+dateText(m.departure)+'</span><span>ظرفیت: '+number(m.capacity||0)+'</span></div><b>'+money(r.amount)+'</b></div></button>';
+  }).join("")+'</div>':empty("✈️","هنوز تور یا خدمتی تعریف نشده است","مقصد، زمان‌بندی، ظرفیت و قیمت خدمات سفر را ثبت کنید.",action,"＋ ثبت تور جدید");
+  return out;
+ }
+ return null;
+}
 function bizPage(){
  var b=findBiz(route.biz);if(!b)return businessesPage();
  var k=kindOf(b),tabs=tabsFor(b),valid=tabs.some(function(x){return x[0]===route.tab;});if(!valid)route.tab="overview";
@@ -99,6 +129,7 @@ function bizPage(){
  out+='<div class="tabs" role="tablist">'+tabs.map(function(t){return '<button type="button" class="tab '+(route.tab===t[0]?"active":"")+'" data-tab="'+esc(t[0])+'" data-forbiz="'+esc(b.id)+'" role="tab" aria-selected="'+(route.tab===t[0]?"true":"false")+'">'+esc(t[1])+'</button>';}).join("")+'<button type="button" class="tab" data-action="add-module:'+esc(b.id)+'">＋ ماژول جدید</button></div>';
  if(route.tab==="overview")return out+bizOverview(b);
  var rows=data.records.filter(function(r){return r.businessId===b.id&&r.kind===route.tab;}).slice().sort(function(a,z){return (z.date||"").localeCompare(a.date||"");});
+ var customView=specialTab(b,route.tab,rows);if(customView!==null)return out+customView;
  var fields={
  orders:["سفارش","مشتری / میز","مبلغ","وضعیت","تاریخ"],tables:["میز","جایگاه / توضیح","ظرفیت","وضعیت","تاریخ"],
  reservations:["نام رزرو","مشتری / میز","تعداد / مبلغ","وضعیت","تاریخ"],
