@@ -1,0 +1,21 @@
+{
+  "id": "/hasan-boudlaie/rf-holding/",
+  "name": "RF Holding | کسب‌وکارهای من",
+  "short_name": "RF Holding",
+  "description": "داشبورد یکپارچه مدیریت چند کسب‌وکار با واحدهای عملیاتی مستقل",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f5",
+  "theme_color": "#10383c",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
