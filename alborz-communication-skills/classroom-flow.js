@@ -206,7 +206,7 @@ function strategyContrast(compact=false){
  ['🦎','آفتاب‌پرست','خیر؛ روش شخصی باید تغییر کند','خیر','اموال؛ جایگزینی پیگیری حافظه‌محور با ثبت ساختاریافته'],
  ['🐙','اختاپوس','خیر؛ روش شخصی باید تغییر کند','بله؛ مسیر یادگیری جدا','اموال طرف قرارداد؛ ثبت ساختاریافته + تمرین مستقل جرأت‌ورزی']
  ];
- return '<section class="classroom-strategy-comparison"><h3>چهار راهبرد؛ چهار تصمیم متفاوت</h3><p>دو سؤال بپرسید: آیا روش فعلی رسیدگی جواب می‌دهد؟ آیا در کنار آن یک مسیر مستقل برای یادگیری و رشد حرفه‌ای ایجاد می‌کنم؟</p><div class="classroom-contrast-grid">'+comparisons.map((r,i)=>'<article class="contrast-item contrast-'+i+'"><div class="contrast-head"><span role="img" aria-label="'+E(r[1])+'">'+r[0]+'</span><h4>'+r[1]+'</h4></div><p><b>رسیدگی فعلی:</b> '+r[2]+'</p><p><b>مسیر یادگیری مستقل:</b> '+r[3]+'</p><p class="contrast-example"><b>نمونه خسارت:</b> '+r[4]+'</p></article>').join('')+'</div>'+(compact?'':'<p class="contrast-note">این استعاره‌ها از یک چارچوب راهبردی سازمانی برای بحث آموزشی اقتباس شده‌اند؛ آزمون شخصیت یا تشخیص روان‌شناختی نیستند.</p>')+'</section>';
+ return '<section class="classroom-strategy-comparison"><h3>چهار راهبرد؛ چهار تصمیم متفاوت</h3><p>دو سؤال بپرسید: آیا روش فعلی رسیدگی جواب می‌دهد؟ آیا در کنار آن یک مسیر مستقل برای یادگیری و رشد حرفه‌ای ایجاد می‌کنم؟</p><div class="classroom-contrast-grid">'+comparisons.map((r,i)=>'<article class="contrast-item contrast-'+i+'"><div class="contrast-head"><span role="img" aria-label="'+E(r[1])+'">'+r[0]+'</span><h4>'+r[1]+'</h4></div><p><b>رسیدگی فعلی:</b> '+r[2]+'</p><p><b>مسیر یادگیری مستقل:</b> '+r[3]+'</p><p class="contrast-example"><b>نمونه خسارت:</b> '+r[4]+'</p></article>').join('')+'</div>'+(compact?'':'<p class="contrast-note">این راهبردها اقتباس مفهومی برای تاب‌آوری فردی‌اند؛ ابزار سنجش روان‌شناختی نیستند.</p>')+'</section>';
 }
 function personalResilienceLens(i){
  const lesson=C.mastery[i].lesson;
@@ -226,6 +226,12 @@ function masteryLessons(){
  return '<section class="mastery-lessons"><p>برای مشاهده جزئیات کاربردی هر راهبرد، فقط همان بخش را باز کنید.</p>'+
  C.mastery.map((m,i)=>'<details class="mastery-lesson"><summary>'+C.models[i][0]+' '+E(C.models[i][1])+' · توضیح و مثال</summary><div class="mastery-lesson-body"><p><strong>معنای ساده:</strong> '+E(m.lesson.definition)+'</p><p><strong>شرایط کاربرد:</strong> '+E(m.lesson.condition)+'</p><p><strong>مرز با راهبردهای دیگر:</strong> '+E(m.lesson.boundary)+'</p><p><strong>اشتباه رایج:</strong> '+E(m.lesson.error)+'</p><p><strong>کاربرد در بیمه:</strong> '+E(C.models[i][6])+'</p><strong>سه اقدام مناسب</strong><ol>'+m.lesson.actions.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol><p class="mastery-takeaway">'+E(m.lesson.takeaway)+'</p></div></details>').join('')+
  '<p class="mastery-source">اقتباس از چهار راهبرد سازمانی Kurt Verweire؛ این چارچوب آزمون شخصیت نیست.</p></section>';
+}
+function allocatedRoles(t,i){try{const r=JSON.parse(val(t,'r'+i+'roles')||'{}');return r&&typeof r==='object'&&!Array.isArray(r)?r:{};}catch{return {};}}
+function rolesComplete(t,i){const r=allocatedRoles(t,i),n=size(t),a=Array.from({length:n},(_,j)=>r[j+1]);return n>=3&&n<=5&&a.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=(n<5?2:1))&&a.flat().length===5&&new Set(a.flat()).size===5;}
+function rolePicker(i,t,member){
+ const roles=allocatedRoles(t,i),mine=roles[member]||[],limit=size(t)<5?2:1;
+ return '<section class="classroom-role-picker"><h3>انتخاب نقش من · عضو '+fa(member)+'</h3><p>هر نفر نقش خودش را با تیک انتخاب و ثبت کند؛ حداکثر '+fa(limit)+' نقش.</p><div class="classroom-role-choices">'+C.mastery[i].people.map((p,j)=>{const owner=Object.keys(roles).find(k=>Number(k)!==member&&(roles[k]||[]).includes(j));return '<label><input type="checkbox" data-class-role="'+j+'" '+(mine.includes(j)?'checked':'')+' '+(owner?'disabled':'')+'><span><b>'+E(p.name)+'</b><small>'+E(p.role)+'</small></span><em>'+(owner?'عضو '+fa(Number(owner)):mine.includes(j)?'نقش من':'آزاد')+'</em></label>';}).join('')+'</div><button type="button" class="btn primary" data-class-save-roles>ثبت نقش‌های من</button><p role="status">'+(rolesComplete(t,i)?'پنج نقش کامل ثبت شده‌اند ✓':'ثبت‌شده: '+fa(Object.values(roles).flat().length)+' از ۵ نقش')+'</p></section>';
 }
 function masteryRoles(i){
  const m=C.mastery[i],info=C.missions[i].info;
@@ -377,8 +383,8 @@ function teacherStep(phase=stage){
  '«هر گروه نتیجه نهایی و یک اقدام واقعی برای واحد خسارت را با دلیل کوتاه ثبت کند.»'
  ][n];
  const ask=[
- 'سناریوی راهبرد انتخابی گروه را بخوانند، هر پنج نفر درباره سه پرسش گفت‌وگو کنند و فقط یک نفر پایان گام را ثبت کند؛ یک نفر پاسخ‌های گروه را ثبت کند.',
- 'نقش‌ها را تقسیم کنند و هر فرد اطلاعات اختصاصی نقش خود را مطرح کند.',
+ 'هر عضو نظر بدهد و فقط یک نماینده سه پاسخ گروه را از گزینه‌های همان سناریو ثبت کند.',
+ 'هر عضو نقش خود را روی موبایل تیک بزند و ثبت کند؛ همه پنج نقش باید بدون تکرار پوشش داده شوند.',
  'یک گفت‌وگوی کامل اجرا و تحلیل نهایی راهبرد را مرور کنند.',
  'دو یا چند اقدام در سقف ۶ سکه انتخاب و تصمیم اولیه را با گروه به اشتراک بگذارند.',
  'اتفاق تازه را بخوانند و درباره تأثیر آن بر تصمیم گفت‌وگو کنند.',
@@ -420,8 +426,8 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  const title=simpleTitle(animals[i]+' '+labels[i],'گام '+fa(n+1)+' از ۷ · '+C.missionFlow[n],m.title);
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></div>'+personalResilienceLens(i)+contextForm(i,team);
- if(n===1)body=masteryRoles(i);
- if(n===2)body=masteryTalk(i);
+ if(n===1)body=rolePicker(i,team,member)+masteryRoles(i);
+ if(n===2){const mine=allocatedRoles(team,i)[member]||[];body='<p class="classroom-my-roles">نقش‌های من در گفت‌وگو: <b>'+(mine.length?mine.map(j=>E(C.mastery[i].people[j].name)).join('، '):'هنوز ثبت نشده')+'</b></p>'+masteryTalk(i);}
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
  body='<p class="classroom-prompt">با ۶ سکه حداقل دو اقدام انتخاب کنید. یک نفر تصمیم را از طرف گروه ثبت کند.</p><div class="classroom-money">بودجه تصمیم: <strong>۶ سکه</strong></div><div class="classroom-options">'+m.actions.map((a,j)=>'<label><input type="checkbox" data-class-pick="'+j+'" '+(picked.includes(j)?'checked':'')+'><span>'+E(a[0])+'</span><b>'+fa(a[1])+' سکه</b></label>').join('')+'</div><label class="classroom-input"><span>تصمیم و دلیل گروه</span><textarea data-class-answer="initial" rows="3" placeholder="چه اقدام‌هایی را انتخاب کردید؟ چرا؟ مسئول کیست؟">'+E(val(team,prefix+'initial')||'')+'</textarea></label><button class="btn primary" data-class-save="initial">ثبت تصمیم گروه</button>'+(val(team,prefix+'initial')?'<p class="classroom-saved">تصمیم قبلی گروه ثبت شده است ✓</p>':'');}
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
@@ -436,10 +442,14 @@ function missionMilestones(team){
  return [attendance(team)>0,true,!!String(val(team,p+'initial')||'').trim(),!!String(val(team,p+'revision')||'').trim(),Array.from({length:5},(_,j)=>val(team,p+'member'+(j+1))).some(v=>String(v||'').trim())];
 }
 function missionBadge(team){
- const i=groupChoice(team),flags=missionMilestones(team);
- if(i===null||!flags.every(Boolean))return '';
- return '<section class="classroom-completion-badge"><h3>🏅 نشان گروه · '+animals[i]+' '+labels[i]+'</h3><p>مأموریت انتخاب و انجام شد؛ تصمیم اولیه، اصلاح تصمیم و نتیجه کاربردی ثبت شده‌اند. این نشان برای تکمیل مسیر یادگیری است، نه رتبه‌بندی کارکنان.</p></section>';
+ const i=groupChoice(team);if(i===null)return '';
+ const m=identity.member,p='r'+i,n=size(team),own=String(val(team,p+'member'+m)||'').trim().length>=10;
+ const awarded=val(team,p+'badge'+m)==='earned';
+ const count=Array.from({length:n},(_,j)=>String(val(team,p+'member'+(j+1))||'').trim().length>=10).filter(Boolean).length;
+ if(!awarded)return '<section class="classroom-award-start"><h3>پایان مأموریت تاب‌آوری</h3><p>پس از ثبت اقدام فردی گام دهم، نشان خود را دریافت کنید.</p><button type="button" class="btn primary" data-class-claim-badge '+(own?'':'disabled')+'>تکمیل مأموریت و دریافت نشان</button>'+(own?'':'<p>برای فعال شدن دکمه، اقدام فردی خود را ثبت کنید.</p>')+'</section>';
+ return '<section class="classroom-award" role="status"><img class="classroom-award-img" alt="نشان طلایی تاب‌آوری" src="assets/resilience-medal.svg?v=20261111-award1"><div class="classroom-award-animals">🐪　🐟　🦎　🐙</div><h3>تبریک! مأموریت تاب‌آوری فردی را تکمیل کردید.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+' · عضو '+fa(m)+'</p><strong>نشان تاب‌آوری فردی ✓</strong><p>'+(n>=3&&count===n?'نشان تاب‌آوری گروهی ✓':'نشان گروهی: '+fa(count)+' از '+fa(n)+' عضو اقدام خود را ثبت کرده‌اند.')+'</p><small>این نشان تأیید تکمیل فعالیت آموزشی است، نه گواهی سنجش روان‌شناختی تاب‌آوری.</small></section>';
 }
+
 function ending(team=identity.team,asParticipant=false){
  return simpleTitle('جمع‌بندی','از این مأموریت چه یاد گرفتیم؟','گروه‌ها تجربه، تصمیم و نکته قابل انتقال به محیط خسارت را با هم مرور می‌کنند.')+
  (identity.role==='teacher'&&!asParticipant?'<p class="classroom-prompt">نتیجه هر گروه و یک اقدام عملی برای کار روزمره را جمع‌بندی کن.</p>'+monitorAllGroups():'<p class="classroom-prompt">یک نتیجه و یک اقدام قابل اجرا برای محیط خسارت با خود ببرید. ادامه دوره در بخش مستقل مدیریت خشم است.</p>'+missionBadge(team));
@@ -537,6 +547,7 @@ root.addEventListener('change',event=>{
  const submit=root.querySelector('[data-class-confirm-mission]');
  if(submit)submit.disabled=!consensusAgreed||consensusDraft===null;
 });
+root.addEventListener('change',event=>{const el=event.target.closest('[data-class-context-select]');if(!el)return;const box=root.querySelector('[data-class-context-other="'+el.dataset.classContextSelect+'"]');if(box){box.hidden=el.value!=='__other__';if(!box.hidden)box.focus();}});
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
@@ -546,7 +557,9 @@ root.addEventListener('click',event=>{
   if(delta>0&&stage===0&&!checkin(identity.team,identity.member))return alertUser('ابتدا حضور خود را ثبت کنید.',true);
   if(delta>0&&stage===2&&groupChoice(identity.team)===null)return alertUser('ابتدا مأموریت گروه را ثبت کنید.',true);
   const chosen=groupChoice(identity.team),prefix='r'+chosen;
-  if(delta>0&&stage===6&&!String(val(identity.team,prefix+'initial')||'').trim())return alertUser('ابتدا تصمیم اولیه گروه را ثبت کنید.',true);
+  if(delta>0&&stage===3&&contextAnswers(identity.team,chosen).length!==3)return alertUser('ابتدا سه پاسخ گام چهارم را ثبت کنید.',true);
+   if(delta>0&&stage===4&&!rolesComplete(identity.team,chosen))return alertUser('پنج نقش را بین همه اعضا بدون تکرار ثبت کنید.',true);
+   if(delta>0&&stage===6&&!String(val(identity.team,prefix+'initial')||'').trim())return alertUser('ابتدا تصمیم اولیه گروه را ثبت کنید.',true);
   if(delta>0&&stage===8&&!String(val(identity.team,prefix+'revision')||'').trim())return alertUser('ابتدا تصمیم اصلاح‌شده گروه را ثبت کنید.',true);
   if(delta>0&&stage===9&&!Array.from({length:5},(_,i)=>val(identity.team,prefix+'member'+(i+1))).some(v=>String(v||'').trim()))return alertUser('ابتدا نتیجه یا اقدام گروه را ثبت کنید.',true);
   if(next===stage)return;
@@ -557,7 +570,26 @@ root.addEventListener('click',event=>{
   if(!window.confirm('مأموریت فعلی ثبت شده است. آیا دور بعد را با انتخاب یک مأموریت دیگر شروع می‌کنید؟'))return;
   execute(()=>saveFields({teamRound:classroomRound+1,teamPhase:2}));return;
  }
- if(btn.hasAttribute('data-class-view')){if(identity?.role!=='teacher')return;projectionMode=btn.dataset.classView==='participant';lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-save-context')){
+   if(identity?.role!=='team'||stage!==3)return;const i=groupChoice(identity.team);if(i===null)return;
+   const answers=casePrompts.map((_,j)=>{const choice=root.querySelector('[data-class-context-select="'+j+'"]')?.value||'';return choice==='__other__'?(root.querySelector('[data-class-context-other="'+j+'"]')?.value.trim()||''):choice;});
+   if(answers.some(x=>x.length<3||x.length>280))return alertUser('برای هر سه سؤال پاسخ مناسب ثبت کنید.',true);
+   execute(()=>saveFields({['r'+i+'context']:JSON.stringify({answers})}));return;
+  }
+  if(btn.hasAttribute('data-class-save-roles')){
+   if(identity?.role!=='team'||stage!==4)return;const i=groupChoice(identity.team);if(i===null)return;
+   const picked=[...root.querySelectorAll('[data-class-role]:checked')].map(x=>Number(x.dataset.classRole)),max=size(identity.team)<5?2:1;
+   if(picked.length<1||picked.length>max)return alertUser('حداقل یک و حداکثر '+fa(max)+' نقش برای خود انتخاب کنید.',true);
+   const r=allocatedRoles(identity.team,i);r[identity.member]=picked;const all=Object.values(r).flat();
+   if(new Set(all).size!==all.length)return alertUser('این نقش قبلاً انتخاب شده است؛ صفحه را به‌روزرسانی کنید.',true);
+   execute(()=>saveFields({['r'+i+'roles']:JSON.stringify(r)}));return;
+  }
+  if(btn.hasAttribute('data-class-claim-badge')){
+   if(identity?.role!=='team'||stage!==10)return;const i=groupChoice(identity.team);if(i===null)return;
+   if(String(val(identity.team,'r'+i+'member'+identity.member)||'').trim().length<10)return alertUser('ابتدا نتیجه فردی گام دهم را ثبت کنید.',true);
+   execute(()=>saveFields({['r'+i+'badge'+identity.member]:'earned'}));return;
+  }
+  if(btn.hasAttribute('data-class-view')){if(identity?.role!=='teacher')return;projectionMode=btn.dataset.classView==='participant';lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-team')){if(identity?.role!=='teacher')return;const team=Number(btn.dataset.classProjectionTeam);if(!Number.isInteger(team)||team<1||team>10)return;projectedTeam=team;projectedMember=1;projectionSample=false;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-member')){if(identity?.role!=='teacher')return;const member=Number(btn.dataset.classProjectionMember);if(!Number.isInteger(member)||member<1||member>5)return;projectedMember=member;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-projection-sample')){if(identity?.role!=='teacher')return;projectionSample=!projectionSample;lastFingerprint='';render(true);return;}
