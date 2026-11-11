@@ -26,9 +26,9 @@ var seed=[
  {id:"jewelry",name:"طلا و جواهر",kind:"jewelry",desc:"کالکشن، موجودی، فروش و درخواست مشتریان",image:PHOTOS.jewelry,createdAt:""},
  {id:"travel",name:"دفتر گردشگری",kind:"travel",desc:"تورهای مسافرتی، رزروها و پرونده مسافران",image:PHOTOS.travel,createdAt:""}
 ];
-function fresh(){return {version:1,businesses:JSON.parse(JSON.stringify(seed)),finances:[],customers:[],tasks:[],records:[],events:[],updatedAt:""};}
+function fresh(){return {version:1,businesses:JSON.parse(JSON.stringify(seed)),finances:[],customers:[],tasks:[],records:[],events:[],modules:[],updatedAt:""};}
 var data=fresh(),route={area:"home",biz:null,tab:"overview"},filterBiz="all",searchTerm="";
-try{var old=JSON.parse(localStorage.getItem(KEY)||"null");if(old&&Array.isArray(old.businesses)){data=Object.assign(fresh(),old);["businesses","finances","customers","tasks","records","events"].forEach(function(k){if(!Array.isArray(data[k]))data[k]=[];});}}catch(e){}
+try{var old=JSON.parse(localStorage.getItem(KEY)||"null");if(old&&Array.isArray(old.businesses)){data=Object.assign(fresh(),old);["businesses","finances","customers","tasks","records","events","modules"].forEach(function(k){if(!Array.isArray(data[k]))data[k]=[];});}}catch(e){}
 function persist(){data.updatedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){toast("فضای ذخیره‌سازی مرورگر کافی نیست؛ خروجی پشتیبان تهیه کنید.");}}
 function esc(x){return String(x===null||x===undefined?"":x).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function money(n){return Number(n||0).toLocaleString("fa-IR")+" تومان";}
@@ -39,6 +39,9 @@ function id(prefix){return prefix+"_"+Date.now().toString(36)+"_"+Math.random().
 function findBiz(k){return data.businesses.find(function(b){return b.id===k;});}
 function bizName(k){return findBiz(k)?.name||"عمومی مجموعه";}
 function icon(kind){return INDUSTRIES[kind]?.icon||INDUSTRIES.general.icon;}
+function customModule(key){return data.modules.find(function(m){return m.id===key;});}
+function kindTitle(key){return RECORD_TITLES[key]||customModule(key)?.name||"مورد عملیاتی";}
+function tabsFor(b){return kindOf(b).tabs.concat(data.modules.filter(function(m){return m.businessId===b.id;}).map(function(m){return [m.id,(m.icon||"🧩")+" "+m.name];}));}
 function img(b){return b.image||PHOTOS[b.kind]||PHOTOS.general;}
 function kindOf(b){return INDUSTRIES[b.kind]||INDUSTRIES.general;}
 function stateLabel(s){return ({new:"جدید",pending:"در انتظار",active:"در جریان",done:"تکمیل‌شده",paid:"تسویه‌شده",cancelled:"لغوشده"}[s]||"ثبت‌شده");}
@@ -90,10 +93,10 @@ function bizOverview(b){
 }
 function bizPage(){
  var b=findBiz(route.biz);if(!b)return businessesPage();
- var k=kindOf(b),tabs=k.tabs,valid=tabs.some(function(x){return x[0]===route.tab;});if(!valid)route.tab="overview";
- var title=route.tab==="overview"?"":RECORD_TITLES[route.tab];
+ var k=kindOf(b),tabs=tabsFor(b),valid=tabs.some(function(x){return x[0]===route.tab;});if(!valid)route.tab="overview";
+ var title=route.tab==="overview"?"":kindTitle(route.tab);
  var out='<section class="detail-hero"><div class="detail-copy"><small>'+esc(k.label)+' · RF HOLDING</small><h1>'+esc(b.name)+'</h1><p>'+esc(b.desc||"مدیریت عملیات و اطلاعات این کسب‌وکار")+'</p><div class="details-action">'+button("＋ ثبت در واحد","quick-record:"+esc(b.id),"")+button("ویرایش مشخصات","edit-business:"+esc(b.id),"ghost")+'</div></div><img class="detail-photo" src="'+esc(img(b))+'" alt="نمای مرتبط با '+esc(b.name)+'" onerror="this.style.opacity=0"></section>';
- out+='<div class="tabs" role="tablist">'+tabs.map(function(t){return '<button type="button" class="tab '+(route.tab===t[0]?"active":"")+'" data-tab="'+esc(t[0])+'" data-forbiz="'+esc(b.id)+'" role="tab" aria-selected="'+(route.tab===t[0]?"true":"false")+'">'+esc(t[1])+'</button>';}).join("")+'</div>';
+ out+='<div class="tabs" role="tablist">'+tabs.map(function(t){return '<button type="button" class="tab '+(route.tab===t[0]?"active":"")+'" data-tab="'+esc(t[0])+'" data-forbiz="'+esc(b.id)+'" role="tab" aria-selected="'+(route.tab===t[0]?"true":"false")+'">'+esc(t[1])+'</button>';}).join("")+'<button type="button" class="tab" data-action="add-module:'+esc(b.id)+'">＋ ماژول جدید</button></div>';
  if(route.tab==="overview")return out+bizOverview(b);
  var rows=data.records.filter(function(r){return r.businessId===b.id&&r.kind===route.tab;}).slice().sort(function(a,z){return (z.date||"").localeCompare(a.date||"");});
  var fields={
@@ -148,6 +151,8 @@ function settingsPage(){
  var out=dashboardHeading("تنظیمات و توسعه مجموعه","مدیریت ساختار کسب‌وکارها، نگهداری داده‌ها و برنامه توسعه سامانه.",button("＋ تعریف کسب‌وکار","add-business","strong"),"WORKSPACE SETTINGS");
  out+=sectionHead("ساختار گروه","برای هر کسب‌وکار هویت و ماژول‌های جداگانه تعریف می‌شود.");
  out+='<section class="wide-card"><div class="record-list">'+data.businesses.map(function(b){return '<div class="record-item"><div class="record-main"><span class="record-icon">'+icon(b.kind)+'</span><div><strong>'+esc(b.name)+'</strong><small>'+esc(kindOf(b).name)+' · '+number(recordCount(b.id))+' ثبت</small></div></div><button type="button" class="link-btn" data-action="edit-business:'+esc(b.id)+'">ویرایش ←</button></div>';}).join("")+'</div></section>';
+ out+=sectionHead("ماژول‌های اختصاصی","برای هر کسب‌وکار می‌توانید ماژول‌های جدید تعریف کنید.");
+ out+='<section class="wide-card"><div class="record-list">'+(data.modules.length?data.modules.map(function(m){return '<div class="record-item"><div class="record-main"><span class="record-icon">'+esc(m.icon)+'</span><div><strong>'+esc(m.name)+'</strong><small>'+esc(bizName(m.businessId))+' · '+esc(m.description||"ماژول سفارشی")+'</small></div></div><button class="link-btn" type="button" data-action="edit-module:'+esc(m.id)+'">ویرایش ←</button></div>';}).join(""):empty("🧩","هنوز ماژول سفارشی تعریف نشده است","داخل هر کسب‌وکار، از دکمه «ماژول جدید» استفاده کنید."))+'</div></section>';
  out+=sectionHead("نسخه پشتیبان و نگهداری اطلاعات","برای جلوگیری از از دست رفتن اطلاعات مرورگر، مرتب فایل پشتیبان بگیرید.");
  out+='<div class="tool-cards"><button type="button" class="tool-card" data-action="export-json"><span class="tool-ico">⬇️</span><strong>دریافت پشتیبان</strong><small>دریافت همه کسب‌وکارها، تراکنش‌ها، مشتریان و کارها در یک فایل JSON.</small></button><button type="button" class="tool-card" data-action="import-json"><span class="tool-ico">📤</span><strong>بازیابی پشتیبان</strong><small>بارگذاری فایل خروجی قبلی؛ پس از تأیید جایگزین داده‌های مرورگر می‌شود.</small></button><button type="button" class="tool-card" data-action="reset-data"><span class="tool-ico">♻️</span><strong>بازنشانی فضای آزمایشی</strong><small>پاک کردن داده‌های واردشده و بازگشت به سه کسب‌وکار اولیه.</small></button></div>';
  out+=sectionHead("نقشه توسعه محصول","قابلیت‌های زیر برای فاز عملیاتی به زیرساخت اختصاصی نیاز دارند.");
@@ -187,6 +192,18 @@ function editBusiness(bid){
   log(isEdit?"ویرایش کسب‌وکار "+v.name:"تعریف کسب‌وکار "+v.name,bid||"");afterSave(isEdit?"مشخصات کسب‌وکار به‌روزرسانی شد.":"کسب‌وکار جدید ساخته شد.");
  },"ذخیره کسب‌وکار",isEdit&& !["restaurant","jewelry","travel"].includes(b.id)?"حذف کسب‌وکار":null,"delete-business:"+bid);
 }
+function editModule(mid,bid){
+ var m=data.modules.find(function(x){return x.id===mid;});var isEdit=!!m;
+ var b=findBiz(bid||m?.businessId);if(!b){toast("ابتدا کسب‌وکار را انتخاب کنید.");return;}
+ var body=field("name","عنوان ماژول","text",m?.name||"","required maxlength=80",true)
+ +select("icon","نشانه ماژول",[["🧩","🧩 عمومی"],["📦","📦 موجودی"],["📋","📋 فرایند"],["🛒","🛒 فروش"],["📅","📅 برنامه‌ریزی"],["🤝","🤝 قراردادها"],["📈","📈 عملکرد"],["🧑‍💼","🧑‍💼 منابع انسانی"]],m?.icon||"🧩")
+ +field("description","توضیح کاربرد","text",m?.description||"",'placeholder="مثلاً مدیریت قراردادها"',true);
+ modal(isEdit?"ویرایش ماژول":"افزودن ماژول به "+b.name,body,function(v){
+  if(isEdit){m.name=v.name.trim();m.icon=v.icon;m.description=v.description.trim();}
+  else{var item={id:id("mod"),name:v.name.trim(),icon:v.icon,description:v.description.trim(),businessId:b.id};data.modules.push(item);route={area:"business",biz:b.id,tab:item.id};}
+  log((isEdit?"ویرایش ":"افزودن ")+"ماژول "+v.name,b.id);afterSave("ماژول اختصاصی ذخیره شد.");
+ },"ذخیره ماژول",isEdit?"حذف ماژول":null,"delete-module:"+mid);
+}
 function editFinance(fid,chosenBiz){
  var f=data.finances.find(function(x){return x.id===fid;});var isEdit=!!f;
  var body=field("title","شرح تراکنش","text",f?.title||"","required maxlength=120",true)+select("type","نوع تراکنش",[["income","دریافتی / درآمد"],["expense","پرداختی / هزینه"]],f?.type||"expense")+businessSelect(f?.businessId||chosenBiz||data.businesses[0]?.id)+field("amount","مبلغ (تومان)","number",f?.amount||"","required min=0 step=1")+field("date","تاریخ","date",f?.date||today(),"required")+field("category","دسته‌بندی","text",f?.category||"",'placeholder="مثلاً خرید مواد اولیه"')+textarea("note","توضیحات",f?.note||"");
@@ -199,7 +216,7 @@ function editFinance(fid,chosenBiz){
 }
 function editRecord(bid,kind,rid){
  var r=data.records.find(function(x){return x.id===rid;});var isEdit=!!r;
- var title=RECORD_TITLES[kind]||"مورد عملیاتی";
+ var title=kindTitle(kind);
  var labelTitle=({menu:"نام غذا / نوشیدنی",inventory:"نام محصول",reservations:"نام رزرو یا میز",packages:"نام تور / خدمت",bookings:"عنوان رزرو / مسافر",projects:"عنوان پروژه",requests:"عنوان درخواست",orders:"شماره یا عنوان سفارش",sales:"عنوان فروش"}[kind]||"عنوان");
  var labelDetail=({menu:"دسته‌بندی منو",inventory:"کد / عیار / وزن",reservations:"نام مشتری / شماره میز",packages:"مقصد / مدت",bookings:"مقصد / نام مسافر",projects:"مسئول / مرحله",requests:"مشتری / توضیح",orders:"مشتری / میز",sales:"مشتری / شرح"}[kind]||"جزئیات");
  var labelAmount=({menu:"قیمت فروش (تومان)",inventory:"ارزش / قیمت (تومان)",reservations:"بیعانه (تومان)",packages:"قیمت تور (تومان)",bookings:"مبلغ رزرو (تومان)",projects:"بودجه (تومان)",requests:"برآورد (تومان)",orders:"مبلغ سفارش (تومان)",sales:"مبلغ فروش (تومان)"}[kind]||"مبلغ (تومان)");
@@ -240,9 +257,12 @@ function removeItem(kind,k){
 function exportBlob(name,content,mime){var a=document.createElement("a"),url=URL.createObjectURL(new Blob([content],{type:mime}));a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1200);}
 function exportCSV(){var rows=[["تاریخ","کسب‌وکار","نوع","شرح","دسته‌بندی","مبلغ تومان","یادداشت"]].concat(financeRows(filterBiz==="all"?null:filterBiz).map(function(f){return [f.date,bizName(f.businessId),f.type==="income"?"دریافتی":"پرداختی",f.title,f.category,f.amount,f.note];}));var csv="\uFEFF"+rows.map(function(x){return x.map(function(c){return '"'+String(c===undefined?"":c).replace(/"/g,'""')+'"';}).join(",");}).join("\r\n");exportBlob("RF-Holding-Finance.csv",csv,"text/csv;charset=utf-8");toast("فایل CSV آماده شد.");}
 function exportJSON(){exportBlob("RF-Holding-Backup-"+today()+".json",JSON.stringify({product:"rf-holding",exportedAt:new Date().toISOString(),data:data},null,2),"application/json;charset=utf-8");toast("فایل پشتیبان دریافت شد.");}
-function importJSON(){var input=document.createElement("input");input.type="file";input.accept=".json,application/json";input.addEventListener("change",function(){var file=input.files[0];if(!file)return;file.text().then(function(txt){var src=JSON.parse(txt);if(src.product!=="rf-holding"||!src.data||!Array.isArray(src.data.businesses)){throw new Error("فرمت فایل پشتیبان معتبر نیست.");}if(!confirm("داده‌های موجود این دستگاه با فایل انتخاب‌شده جایگزین شوند؟"))return;var incoming=src.data;for(var k of ["finances","customers","tasks","records","events"]){if(!Array.isArray(incoming[k]))throw Error("ساختار پشتیبان کامل نیست.");}data=incoming;persist();routeTo("home");toast("اطلاعات پشتیبان بازیابی شدند.");}).catch(function(err){alert("بازیابی ناموفق: "+err.message);});});input.click();}
+function importJSON(){var input=document.createElement("input");input.type="file";input.accept=".json,application/json";input.addEventListener("change",function(){var file=input.files[0];if(!file)return;file.text().then(function(txt){var src=JSON.parse(txt);if(src.product!=="rf-holding"||!src.data||!Array.isArray(src.data.businesses)){throw new Error("فرمت فایل پشتیبان معتبر نیست.");}if(!confirm("داده‌های موجود این دستگاه با فایل انتخاب‌شده جایگزین شوند؟"))return;var incoming=src.data;for(var k of ["finances","customers","tasks","records","events","modules"]){if(!Array.isArray(incoming[k]))throw Error("ساختار پشتیبان کامل نیست.");}data=incoming;persist();routeTo("home");toast("اطلاعات پشتیبان بازیابی شدند.");}).catch(function(err){alert("بازیابی ناموفق: "+err.message);});});input.click();}
 function runAction(a){
  if(a==="add-business"){editBusiness();return;}
+ if(a.startsWith("add-module:")){editModule(null,a.split(":")[1]);return;}
+ if(a.startsWith("edit-module:")){editModule(a.split(":")[1]);return;}
+ if(a.startsWith("delete-module:")){var mid=a.split(":")[1];if(data.records.some(function(r){return r.kind===mid;})){toast("ابتدا موارد ثبت‌شده در این ماژول را حذف کنید.");return;}if(confirm("ماژول حذف شود؟")){data.modules=data.modules.filter(function(m){return m.id!==mid;});route.tab="overview";afterSave("ماژول حذف شد.");}return;}
  if(a==="add-finance"){editFinance();return;}
  if(a==="add-customer"){editCustomer();return;}
  if(a==="add-task"){editTask();return;}
