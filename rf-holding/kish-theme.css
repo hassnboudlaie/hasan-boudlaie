@@ -276,3 +276,21 @@ html[lang=en] .service-card{text-align:left}
 @media(max-width:1260px){.shared-services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.shared-services-grid{gap:10px}.service-card{min-height:154px;padding:15px 13px}.service-icon{width:35px;height:35px;font-size:19px}.service-card strong{font-size:14px}.service-card small{font-size:12px}.service-arrow{inset-inline-end:10px;top:12px}}
 @media(max-width:355px){.shared-services-grid{grid-template-columns:1fr}.service-card{min-height:110px}}
+
+
+/* Mobile-first records: replace horizontal scrolling with accessible detail rows */
+.mini-task label{font-size:14px;line-height:1.8}
+.mini-task label small{font-size:12.5px;color:#4e6b70}
+@media(max-width:640px){
+ .table-wrap{overflow:visible;border:none;background:transparent}
+ .data-table{min-width:0;width:100%;display:block;border:0;text-align:inherit}
+ .data-table thead{display:none}
+ .data-table tbody{display:grid;grid-template-columns:1fr;gap:12px}
+ .data-table tbody tr{display:block;background:#fffefb;border:1px solid #c9dcd4;border-radius:13px;overflow:hidden;box-shadow:0 4px 16px #1246510b}
+ .data-table tbody td{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;text-align:start;border-bottom:1px solid #e0ebe5;padding:12px 14px;font-size:14px;min-height:47px;line-height:1.75}
+ .data-table tbody td:last-child{border-bottom:none}
+ .data-table tbody td::before{content:attr(data-label);display:inline-block;flex:0 0 38%;max-width:38%;color:#345a62;font-size:13px;font-weight:800;line-height:1.8}
+ .data-table tbody td strong{font-size:14px}
+ .data-table tbody td .status{font-size:12px}
+ .wide-card{padding:15px;border-radius:14px}
+}
