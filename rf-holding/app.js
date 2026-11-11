@@ -1,12 +1,14 @@
 (function(){
 "use strict";
 var KEY="rf_holding_workspace_v1";
+function uiLang(){return window.RF_I18N?.getLanguage?.()||"fa";}
+function trans(x){return window.RF_I18N?.translate?.(x)||x;}
 var PHOTOS={
  restaurant:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1050&q=85",
  jewelry:"https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1050&q=85",
  travel:"https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1050&q=85",
  general:"https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1050&q=85",
- hero:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=82"
+ hero:"https://commons.wikimedia.org/wiki/Special:FilePath/Kish_Island%2C_Persian_Gulf%2C_Iran.jpg?width=1600"
 };
 var INDUSTRIES={
  restaurant:{name:"رستوران و کافه",icon:"🍽️",label:"RESTAURANT OPERATIONS",tabs:[["overview","نمای کلی"],["orders","سفارش‌ها"],["reservations","رزرو میز"],["tables","میزها و سالن"],["menu","منو و اقلام"]],quick:[["orders","سفارش جدید","🧾"],["reservations","رزرو جدید","📅"],["tables","تعریف میز","🪑"],["menu","آیتم منو","🍲"]]},
@@ -31,9 +33,9 @@ var data=fresh(),route={area:"home",biz:null,tab:"overview"},filterBiz="all",sea
 try{var old=JSON.parse(localStorage.getItem(KEY)||"null");if(old&&Array.isArray(old.businesses)){data=Object.assign(fresh(),old);["businesses","finances","customers","tasks","records","events","modules"].forEach(function(k){if(!Array.isArray(data[k]))data[k]=[];});}}catch(e){}
 function persist(){data.updatedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){toast("فضای ذخیره‌سازی مرورگر کافی نیست؛ خروجی پشتیبان تهیه کنید.");}}
 function esc(x){return String(x===null||x===undefined?"":x).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
-function money(n){return Number(n||0).toLocaleString("fa-IR")+" تومان";}
-function number(n){return Number(n||0).toLocaleString("fa-IR");}
-function dateText(x){if(!x)return "بدون تاریخ";try{return new Date(x+"T12:00:00").toLocaleDateString("fa-IR");}catch(e){return x;}}
+function money(n){return Number(n||0).toLocaleString(uiLang()==="en"?"en-US":"fa-IR")+(uiLang()==="en"?" Toman":" تومان");}
+function number(n){return Number(n||0).toLocaleString(uiLang()==="en"?"en-US":"fa-IR");}
+function dateText(x){if(!x)return trans("بدون تاریخ");try{return new Date(x+"T12:00:00").toLocaleDateString(uiLang()==="en"?"en-US":"fa-IR",uiLang()==="en"?{year:"numeric",month:"short",day:"numeric"}:undefined);}catch(e){return x;}}
 function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function id(prefix){return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);}
 function findBiz(k){return data.businesses.find(function(b){return b.id===k;});}
@@ -52,7 +54,7 @@ function financeRows(biz){return data.finances.filter(function(f){return !biz||f
 function financials(biz){var items=financeRows(biz),income=0,expense=0;items.forEach(function(f){if(f.type==="income")income+=Number(f.amount)||0;else expense+=Number(f.amount)||0;});return {income:income,expense:expense,balance:income-expense,count:items.length};}
 function log(text,businessId){data.events.unshift({id:id("event"),text:text,businessId:businessId||"",at:new Date().toISOString()});data.events=data.events.slice(0,100);}
 function routeTo(area,biz,tab){route={area:area,biz:biz||null,tab:tab||"overview"};searchTerm="";document.getElementById("globalSearch").value="";document.getElementById("searchResults").hidden=true;closeSidebar();render();window.scrollTo({top:0,behavior:"auto"});}
-function toast(t){var box=document.getElementById("toast");box.textContent=t;box.classList.add("visible");clearTimeout(toast.timer);toast.timer=setTimeout(function(){box.classList.remove("visible");},2800);}
+function toast(t){var box=document.getElementById("toast");box.textContent=trans(t);box.classList.add("visible");clearTimeout(toast.timer);toast.timer=setTimeout(function(){box.classList.remove("visible");},2800);}
 function closeSidebar(){document.getElementById("sidebar").classList.remove("is-open");document.getElementById("navOverlay").hidden=true;}
 function dashboardHeading(title,sub,actions,eyebrow){return '<div class="page-head"><div><div class="eyebrow">'+esc(eyebrow||"RF HOLDING · EXECUTIVE WORKSPACE")+'</div><h1>'+esc(title)+'</h1><p class="page-subtitle">'+esc(sub||"")+'</p></div><div class="page-actions">'+(actions||"")+'</div></div>';}
 function button(label,act,cls,extra){return '<button type="button" class="button '+(cls||"")+'" data-action="'+esc(act)+'" '+(extra||"")+'>'+label+'</button>';}
@@ -66,7 +68,7 @@ function bizCards(withAdd){
 }
 function sidebar(){
  var nav=document.getElementById("mainNav");
- nav.innerHTML=NAV.map(function(n){return '<button type="button" data-route="'+n[0]+'" class="nav-link '+(route.area===n[0]?"active":"")+'"><span class="nav-icon">'+n[2]+'</span>'+n[1]+'</button>';}).join("");
+ nav.innerHTML=NAV.map(function(n,i){return (i===2?'<div class="nav-group-label shared-label">خدمات مشترک</div>':i===6?'<div class="nav-group-label shared-label">مدیریت سامانه</div>':'')+'<button type="button" data-route="'+n[0]+'" class="nav-link '+(route.area===n[0]?"active":"")+'"><span class="nav-icon">'+n[2]+'</span>'+n[1]+'</button>';}).join("");
  document.getElementById("bizNav").innerHTML=data.businesses.map(function(b){return '<button type="button" class="nav-link '+(route.area==="business"&&route.biz===b.id?"active":"")+'" data-biz="'+esc(b.id)+'"><span class="biz-dot">'+icon(b.kind)+'</span>'+esc(b.name)+'</button>';}).join("");
  document.getElementById("mobileNav").innerHTML=[["home","خانه","⌂"],["businesses","کسب‌وکارها","▦"],["finance","مالی","◈"],["tasks","کارها","☑"],["settings","بیشتر","⚙"]].map(function(n){var active=route.area===n[0]||(route.area==="business"&&n[0]==="businesses");return '<button type="button" class="mobile-tab '+(active?"active":"")+'" data-route="'+n[0]+'"><span class="nav-icon">'+n[2]+'</span><span>'+n[1]+'</span></button>';}).join("");
  var title=route.area==="business"?(bizName(route.biz)):NAV.find(function(n){return n[0]===route.area;})?.[1]||"داشبورد مجموعه";
@@ -75,9 +77,11 @@ function sidebar(){
 function home(){
  var f=financials(),open=data.tasks.filter(function(t){return !t.done;}).length;
  var out=dashboardHeading("سلام، به RF Holding خوش آمدید","تمام کسب‌وکارهای شما در یک فضای یکپارچه، با عملیات مستقل و خدمات مشترک.",button("＋ افزودن کسب‌وکار","add-business","strong"),"BUSINESS GROUP · OWNER DASHBOARD");
- out+='<section class="overview-banner"><div class="banner-copy"><small>ONE GROUP. MULTIPLE BUSINESSES.</small><h2>دید کامل به مجموعه،<br>مدیریت دقیق هر کسب‌وکار.</h2><p>از رستوران و طلا و جواهر تا گردشگری؛ همه زیر یک سقف مدیریتی، بدون از بین رفتن استقلال هر واحد.</p>'+button("مشاهده کسب‌وکارها","go-businesses","")+'</div><div class="banner-img" style="background-image:url(\''+PHOTOS.hero+'\')"></div><span class="banner-orb"></span></section>';
- out+='<section class="stats-grid">'+statCard("کسب‌وکارهای فعال",number(data.businesses.length),"واحدهای تعریف‌شده در گروه","▦")+statCard("دریافتی ثبت‌شده",money(f.income),"جمع کل واحدها · داده واقعی واردشده","↙")+statCard("پرداختی ثبت‌شده",money(f.expense),"تمام هزینه‌های ثبت‌شده","↗")+statCard("کارهای باز",number(open),"نیازمند پیگیری","☑")+'</section>';
- out+=sectionHead("کسب‌وکارهای من","هر واحد محیط، ابزارها و داده‌های مستقل خودش را دارد.","مشاهده همه","go-businesses")+bizCards(true);
+ out+='<section class="overview-banner"><div class="banner-copy"><small>ONE GROUP. MULTIPLE BUSINESSES.</small><h2>مدیریت یکپارچه<br>کسب‌وکارها</h2><p>رستوران، طلا و جواهر و گردشگری؛ با عملیات مستقل و خدمات مشترک در یک فضای واحد.</p>'+button("مشاهده کسب‌وکارها","go-businesses","")+'</div><div class="banner-img" style="background-image:url(\''+PHOTOS.hero+'\')"></div><span class="banner-orb"></span></section>';
+ out+='<section class="stats-grid">'+statCard("کسب‌وکارهای فعال",number(data.businesses.length),"واحدهای تعریف‌شده در گروه","▦")+statCard("دریافتی ثبت‌شده",money(f.income),"جمع کل واحدها · داده واقعی واردشده","↙")+statCard("کارهای باز",number(open),"نیازمند پیگیری","☑")+statCard("مشتریان ثبت‌شده",number(data.customers.length),"در تمام واحدها","♧")+'</section>';
+ out+=sectionHead("واحدهای کسب‌وکار","هر واحد محیط، ابزارها و داده‌های مستقل خودش را دارد.","مشاهده همه","go-businesses")+bizCards(true);
+ out+=sectionHead("خدمات مشترک هلدینگ","مالی، مشتریان، پیگیری و گزارش‌های مدیریتی؛ یکپارچه در سطح مجموعه.");
+ out+='<div class="shared-services-grid"><button class="service-card" type="button" data-route="finance"><span class="service-icon">💳</span><strong>خدمات مالی مشترک هلدینگ</strong><small>درآمد و هزینه تفکیکی هر کسب‌وکار</small><span class="service-arrow">↗</span></button><button class="service-card" type="button" data-route="customers"><span class="service-icon">👥</span><strong>مشتریان و ارتباطات</strong><small>دفتر مشترک با تفکیک واحدهای کسب‌وکار</small><span class="service-arrow">↗</span></button><button class="service-card" type="button" data-route="tasks"><span class="service-icon">✅</span><strong>کارها و پیگیری‌ها</strong><small>وظایف مشترک و عملیاتی</small><span class="service-arrow">↗</span></button><button class="service-card" type="button" data-route="reports"><span class="service-icon">📊</span><strong>گزارش‌ها و تحلیل مدیریتی</strong><small>تصویر تجمیعی و مقایسه عملکرد</small><span class="service-arrow">↗</span></button></div>';
  var recent=data.finances.slice().sort(function(a,b){return (b.createdAt||b.date||"").localeCompare(a.createdAt||a.date||"");}).slice(0,5);
  var tasks=data.tasks.filter(function(t){return !t.done;}).slice().sort(function(a,b){return (a.due||"9999").localeCompare(b.due||"9999");}).slice(0,5);
  out+='<div class="two-column"><section class="card"><div class="card-title-row"><h3>آخرین گردش‌های مالی</h3><button class="link-btn" data-route="finance">مدیریت مالی ←</button></div>'+(recent.length?'<div class="record-list">'+recent.map(function(f){return '<div class="record-item"><div class="record-main"><span class="record-icon">'+(f.type==="income"?"↙":"↗")+'</span><div><strong>'+esc(f.title)+'</strong><small>'+esc(bizName(f.businessId))+' · '+dateText(f.date)+'</small></div></div><strong class="record-meta">'+(f.type==="income"?"+":"−")+money(f.amount)+'</strong></div>';}).join("")+'</div>':empty("💳","هنوز تراکنشی ثبت نشده است","ثبت دریافت و پرداخت از همین‌جا آغاز می‌شود.","add-finance","ثبت تراکنش"))+'</section><section class="card"><div class="card-title-row"><h3>پیگیری‌های نزدیک</h3><button class="link-btn" data-route="tasks">همه کارها ←</button></div>'+(tasks.length?'<div class="record-list">'+tasks.map(function(t){return '<div class="record-item"><div class="record-main"><span class="record-icon">☑</span><div><strong>'+esc(t.title)+'</strong><small>'+esc(bizName(t.businessId))+'</small></div></div><span class="record-meta">'+dateText(t.due)+'</span></div>';}).join("")+'</div>':empty("✓","موردی در انتظار پیگیری نیست","کارهای واحدها و کارهای مشترک را ثبت کنید.","add-task","افزودن کار"))+'</section></div>';
@@ -209,6 +213,7 @@ function modal(title,body,onSubmit,submitLabel,dangerLabel,dangerAction){
  root.innerHTML='<div class="modal-backdrop" data-modal-close></div><div role="dialog" aria-modal="true" aria-label="'+esc(title)+'" class="modal"><div class="modal-head"><h2>'+esc(title)+'</h2><button class="modal-close" data-modal-close type="button" aria-label="بستن پنجره">×</button></div><form id="editForm" class="modal-body"><div class="form-grid">'+body+'</div><div class="form-footer"><div>'+button("انصراف","close-modal","")+(dangerLabel?' '+button(dangerLabel,dangerAction,"danger"):"")+'</div><button class="button strong" type="submit">'+esc(submitLabel||"ذخیره اطلاعات")+'</button></div></form></div>';
  var form=document.getElementById("editForm");form.addEventListener("submit",function(e){e.preventDefault();if(!form.reportValidity())return;var v=Object.fromEntries(new FormData(form).entries());onSubmit(v);});
  root.querySelectorAll("[data-modal-close]").forEach(function(x){x.addEventListener("click",closeModal);});
+ window.RF_I18N?.apply?.(root);
  setTimeout(function(){root.querySelector("input,select,textarea")?.focus();},30);
 }
 function closeModal(){var root=document.getElementById("modalRoot");root.innerHTML="";root.classList.remove("has-modal");}
