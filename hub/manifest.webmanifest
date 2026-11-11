@@ -2,7 +2,7 @@
   "id": "/hasan-boudlaie/hub/",
   "name": "HB | Management & Leadership Hub",
   "short_name": "HB Hub",
-  "description": "HB Hub Super App: a single launcher to all 19 independent management, leadership, consulting and personal applications; no shared accounts.",
+  "description": "HB Hub Super App: a single launcher to all 20 independent management, leadership, consulting and personal applications; no shared accounts.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
