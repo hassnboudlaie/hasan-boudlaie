@@ -231,10 +231,10 @@ function masteryLessons(){
  '<p class="mastery-source">منبع: Kurt Verweire و همکاران، Strategy in Turbulent Times، فصل‌های ۳ تا ۷. چهار راهبرد کتاب درباره سازمان‌اند؛ مثال‌های فردی این کارگاه اقتباس آموزشی هستند و ابزار روان‌سنجی یا مدل اعتبارسنجی‌شده تاب‌آوری فردی محسوب نمی‌شوند.</p></section>';
 }
 function allocatedRoles(t,i){try{const r=JSON.parse(val(t,'r'+i+'roles')||'{}');return r&&typeof r==='object'&&!Array.isArray(r)?r:{};}catch{return {};}}
-function rolesComplete(t,i){const r=allocatedRoles(t,i),n=size(t),a=Array.from({length:n},(_,j)=>r[j+1]);return n>=3&&n<=5&&a.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=(n<5?2:1))&&a.flat().length===5&&new Set(a.flat()).size===5;}
+function rolesComplete(t,i){const r=allocatedRoles(t,i),a=Object.values(r).flat();return a.length===5&&new Set(a).size===5;}
 function rolePicker(i,t,member){
- const roles=allocatedRoles(t,i),mine=roles[member]||[],limit=size(t)<5?2:1;
- return '<section class="classroom-role-picker"><h3>انتخاب نقش من · عضو '+fa(member)+'</h3><p>هر نفر نقش خودش را با تیک انتخاب و ثبت کند؛ حداکثر '+fa(limit)+' نقش.</p><div class="classroom-role-choices">'+C.mastery[i].people.map((p,j)=>{const owner=Object.keys(roles).find(k=>Number(k)!==member&&(roles[k]||[]).includes(j));return '<label><input type="checkbox" data-class-role="'+j+'" '+(mine.includes(j)?'checked':'')+' '+(owner?'disabled':'')+'><span><b>'+E(p.name)+'</b><small>'+E(p.role)+'</small></span><em>'+(owner?'عضو '+fa(Number(owner)):mine.includes(j)?'نقش من':'آزاد')+'</em></label>';}).join('')+'</div><button type="button" class="btn primary" data-class-save-roles>ثبت نقش‌های من</button><p role="status">'+(rolesComplete(t,i)?'پنج نقش کامل ثبت شده‌اند ✓':'ثبت‌شده: '+fa(Object.values(roles).flat().length)+' از ۵ نقش')+'</p></section>';
+ const roles=allocatedRoles(t,i),mine=roles[member]||[],limit=2;
+ return '<section class="classroom-role-picker"><h3>انتخاب نقش من · عضو '+fa(member)+'</h3><p>هر فرد می‌تواند یک یا دو نقش را انتخاب و ثبت کند. اگر عضوی حضور ندارد، فرد دیگری نقش او را هم اجرا کند. تکمیل همه پنج نقش برای گام بعد اجباری نیست.</p><div class="classroom-role-choices">'+C.mastery[i].people.map((p,j)=>{const owner=Object.keys(roles).find(k=>Number(k)!==member&&(roles[k]||[]).includes(j));return '<label><input type="checkbox" data-class-role="'+j+'" '+(mine.includes(j)?'checked':'')+' '+(owner?'disabled':'')+'><span><b>'+E(p.name)+'</b><small>'+E(p.role)+'</small></span><em>'+(owner?'عضو '+fa(Number(owner)):mine.includes(j)?'نقش من':'آزاد')+'</em></label>';}).join('')+'</div><button type="button" class="btn primary" data-class-save-roles>ثبت نقش‌های من</button><p role="status">'+(rolesComplete(t,i)?'پنج نقش کامل ثبت شده‌اند ✓':'ثبت‌شده: '+fa(Object.values(roles).flat().length)+' از ۵ نقش؛ ادامه مسیر آزاد است')+'</p></section>';
 }
 function masteryRoles(i){
  const m=C.mastery[i],info=C.missions[i].info;
@@ -520,7 +520,7 @@ function render(force=false){
  const guideNote='نمای مدرس · هر گروه بدون تأیید، مسیر و تصمیم‌های خود را ثبت می‌کند.';
  const header='<header class="classroom-top"><div><span>'+E(className())+'</span><h1>کارگاه تاب‌آوری · اجرای مرحله‌به‌مرحله</h1></div>'+lessonRow(displayStage)+'</header>'+
  '<div class="classroom-stage-progress" role="status"><span>'+(teacher?'مسیر مدرس':'پیشرفت گروه')+': '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
- const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">مراحل گروه مستقل هستند؛ تأیید مدرس لازم نیست</span>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
+ const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">مراحل گروه مستقل هستند؛ تأیید مدرس لازم نیست</span><button type="button" class="btn" data-class-force-refresh>به‌روزرسانی گام</button>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
  let content;
  if(teacher&&projectionMode)content=projectorPanel(displayStage);
  else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
@@ -568,6 +568,7 @@ root.addEventListener('change',event=>{const el=event.target.closest('[data-clas
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
+ if(btn.hasAttribute('data-class-force-refresh')){execute(()=>L.refresh());return;}
  if(btn.hasAttribute('data-class-open-awards')){if(identity?.role!=='team'||stage!==10)return;awardScreen=true;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-close-awards')){if(identity?.role!=='team')return;awardScreen=false;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-save-late-evidence')){if(identity?.role!=='team'||stage!==10)return;const i=groupChoice(identity.team);if(i===null)return;const answer=root.querySelector('[data-class-late-evidence]')?.value.trim()||'';if(answer.length<10)return alertUser('یک اقدام قابل اجرا با دست‌کم ۱۰ حرف بنویسید.',true);execute(()=>saveFields({['r'+i+'member'+identity.member]:answer}));return;}
@@ -578,7 +579,7 @@ root.addEventListener('click',event=>{
   if(delta>0&&stage===2&&groupChoice(identity.team)===null)return alertUser('ابتدا مأموریت گروه را ثبت کنید.',true);
   const chosen=groupChoice(identity.team),prefix='r'+chosen;
   if(delta>0&&stage===3&&contextAnswers(identity.team,chosen).length!==3)return alertUser('ابتدا سه پاسخ گام چهارم را ثبت کنید.',true);
-   if(delta>0&&stage===4&&!rolesComplete(identity.team,chosen))return alertUser('پنج نقش را بین همه اعضا بدون تکرار ثبت کنید.',true);
+   // Role choice is recommended; group progression stays unblocked when someone is absent.
    if(delta>0&&stage===6&&!String(val(identity.team,prefix+'initial')||'').trim())return alertUser('ابتدا تصمیم اولیه گروه را ثبت کنید.',true);
   if(delta>0&&stage===8&&!String(val(identity.team,prefix+'revision')||'').trim())return alertUser('ابتدا تصمیم اصلاح‌شده گروه را ثبت کنید.',true);
   if(delta>0&&stage===9&&!Array.from({length:5},(_,i)=>val(identity.team,prefix+'member'+(i+1))).some(v=>String(v||'').trim()))return alertUser('ابتدا نتیجه یا اقدام گروه را ثبت کنید.',true);
@@ -598,7 +599,7 @@ root.addEventListener('click',event=>{
   }
   if(btn.hasAttribute('data-class-save-roles')){
    if(identity?.role!=='team'||stage!==4)return;const i=groupChoice(identity.team);if(i===null)return;
-   const picked=[...root.querySelectorAll('[data-class-role]:checked')].map(x=>Number(x.dataset.classRole)),max=size(identity.team)<5?2:1;
+   const picked=[...root.querySelectorAll('[data-class-role]:checked')].map(x=>Number(x.dataset.classRole)),max=2;
    if(picked.length<1||picked.length>max)return alertUser('حداقل یک و حداکثر '+fa(max)+' نقش برای خود انتخاب کنید.',true);
    const r=allocatedRoles(identity.team,i);r[identity.member]=picked;const all=Object.values(r).flat();
    if(new Set(all).size!==all.length)return alertUser('این نقش قبلاً انتخاب شده است؛ صفحه را به‌روزرسانی کنید.',true);
