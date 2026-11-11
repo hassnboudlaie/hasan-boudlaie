@@ -1,5 +1,5 @@
-const CACHE="rf-holding-shell-v2";
-const ASSETS=["./","./index.html","./style.css?v=20261111.6","./app.js?v=20261111.6","./icon.svg","./manifest.webmanifest"];
+const CACHE="rf-holding-shell-v3";
+const ASSETS=["./","./index.html","./style.css?v=20261111.9","./kish-theme.css?v=20261111.9","./i18n.js?v=20261111.9","./app.js?v=20261111.9","./icon.svg","./manifest.webmanifest"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("rf-holding-shell-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{const u=new URL(e.request.url);if(e.request.method!=="GET"||u.origin!==location.origin)return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const clone=r.clone();caches.open(CACHE).then(c=>c.put(e.request,clone)).catch(()=>{});}return r;}).catch(()=>caches.match(e.request)));});
