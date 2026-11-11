@@ -11,9 +11,9 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const products=read('products.html'),hub=read('hub/index.html');
 const entries=[...products.matchAll(/<article class="app-card"[^>]*>[\s\S]*?<\/article>/g)].map(m=>m[0]);
 const hubEntries=[...hub.matchAll(/<a class="super-app-link"[^>]*>/g)].map(m=>m[0]);
-assert.equal(hubEntries.length,20,'HB Hub Super App must contain all 19 other catalog products');
+assert.equal(hubEntries.length,20,'HB Hub Super App must contain all 20 other catalog products');
 
-assert.equal(entries.length,21,'The website should list all 20 current cards including HB Hub');
+assert.equal(entries.length,21,'The website should list all 21 current cards including HB Hub');
 function card(href){
  const matches=entries.filter(s=>s.includes('href="'+href+'"'));
  assert.equal(matches.length,1,'One catalog card must point to '+href);
