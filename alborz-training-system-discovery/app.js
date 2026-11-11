@@ -87,7 +87,7 @@ function getReport(){
 function refresh(){
  var needed=M.filter(function(m){return (state.modules[m.id]||{}).status==='yes';}).length;
  var review=M.filter(function(m){return (state.modules[m.id]||{}).status==='review';}).length;
- var f=M.reduce(function(n,m){return n+((state.modules[m.id]||{}).features||[]).length;},0);
+ var f=M.reduce(function(n,m){var s=state.modules[m.id]||{};return n+((s.status==='yes'||s.status==='review')?(s.features||[]).length:0);},0);
  var a=G.reduce(function(n,g){return n+g.questions.filter(function(x){return hasAnswer(x[0]);}).length;},0);
  var x=Object.values(state.fields).filter(function(v){return String(v||'').trim();}).length+Object.values(state.notes).filter(function(v){return String(v||'').trim();}).length+M.filter(function(m){return String((state.modules[m.id]||{}).note||'').trim();}).length;
  G.forEach(function(g){g.questions.forEach(function(item){if((item[2]==='text'||item[2]==='long')&&hasAnswer(item[0]))x++;});});
