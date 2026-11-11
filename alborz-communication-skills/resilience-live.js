@@ -64,7 +64,7 @@ async function refresh(force=false){
  }
  const gen=generation;busy=true;try{const d=await request({action:teacher?'teacher':'read',...(teacher?{}:{team:auth.team})});if(gen!==generation||!auth)return;if(classroom){
   if(teacher)allRows=d.records;else records=Object.fromEntries(d.records.map(r=>[r.field_key,r]));
-  window.dispatchEvent(new CustomEvent('alborz:classroom-data',{detail:{identity:{role:auth.role,team:auth.team,member:auth.member},records:d.records,classroom:d.classroom||null,assignedCount:d.assignedCount,assignedCounts:d.assignedCounts}}));
+  window.dispatchEvent(new CustomEvent('alborz:classroom-data',{detail:{identity:{role:auth.role,team:auth.team,member:auth.member},records:d.records,checklistBoard:d.checklistBoard||[],classroom:d.classroom||null,assignedCount:d.assignedCount,assignedCounts:d.assignedCounts}}));
  }else if(teacher){allRows=d.records;showTeacher();}else applyRows(d.records);message('متصل · آخرین دریافت '+new Date().toLocaleTimeString('fa-IR')+(Object.keys(drafts).length?' · '+fa(Object.keys(drafts).length)+' تغییر هنوز اشتراک‌گذاری نشده':''));}catch(e){if(gen!==generation)return;message((e.status===401?'کد منقضی یا لغو شده؛ دوباره وارد شوید.':'ارتباط قطع است؛ پیش‌نویس شما حفظ شده است. ')+e.message,true);}finally{if(gen===generation)busy=false;}}
 async function join(code){
  try{
