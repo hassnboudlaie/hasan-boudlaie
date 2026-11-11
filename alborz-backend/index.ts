@@ -232,14 +232,9 @@ Deno.serve(async req=>{
         const value=current['r'+current.missionChoice+'context'];
         if(typeof value!=='string'||!value.trim())return respond({error:'ابتدا سه پاسخ مشترک گام چهارم را ثبت کنید'},409,origin);
       }
-      if(fields.teamPhase===5&&phase===4){
-       let assigned;try{assigned=JSON.parse(current[prefix+'roles']||'');}catch{}
-       const seats=await db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5');
-       const all=(seats||[]).map(x=>Number(x.member_no));
-       const picks=assigned&&all.flatMap(n=>assigned[n]||[]);
-       if(!all.length||all.some(n=>!Array.isArray(assigned?.[n])||assigned[n].length<1||assigned[n].length>(all.length<5?2:1))||picks?.length!==5||new Set(picks).size!==5)
-         return respond({error:'برای ورود به گام ششم، هر پنج نقش باید بدون تکرار بین اعضای گروه تقسیم و ثبت شوند'},409,origin);
-      }
+      // Classroom-safe progression: assigning five dialogue characters is recommended,
+      // not a blocking gate. Registered seats may exceed the four or three people
+      // physically at a table. All steps remain self-paced and independent of instructor.
       if(fields.teamPhase===10&&phase===9){
        if(!Array.from({length:5},(_,j)=>current[prefix+'member'+(j+1)]).some(v=>typeof v==='string'&&v.trim().length>=10))
         return respond({error:'ابتدا حداقل یک اقدام فردی در گام دهم ثبت کنید'},409,origin);
@@ -284,7 +279,7 @@ Deno.serve(async req=>{
        return respond({error:'فقط نقش‌های خودتان را تغییر دهید'},403,origin);
     }
     const seats=await db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5');
-    const max=(seats||[]).length<5?2:1;
+    const max=2; // Any participant may cover one extra dialogue role if someone is absent.
     if((next[memberKey]||[]).length>max)return respond({error:'تعداد نقش‌های انتخابی بیش از ظرفیت مجاز است'},400,origin);
    }
    for(const [k] of entries){
