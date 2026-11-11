@@ -157,7 +157,7 @@ function financePage(){
 }
 function customersPage(){
  var list=data.customers.slice().reverse(),out=dashboardHeading("مشتریان و ارتباطات","یک دفتر مشترک مشتریان، با امکان اتصال هر مخاطب به کسب‌وکار مربوطه.",button("＋ افزودن مشتری","add-customer","strong"),"SHARED SERVICES · CRM");
- out+='<section class="stats-grid">'+statCard("مشتریان ثبت‌شده",number(list.length),"در تمام واحدها","♧")+statCard("مشتریان رستوران",number(list.filter(function(x){return x.businessId==="restaurant";}).length),"مخاطبان این واحد","🍽️")+statCard("طلا و جواهر",number(list.filter(function(x){return x.businessId==="jewelry";}).length),"مخاطبان این واحد","💎")+statCard("گردشگری",number(list.filter(function(x){return x.businessId==="travel";}).length),"مخاطبان این واحد","✈️")+'</section>';
+ out+='<section class="stats-grid">'+statCard("مشتریان ثبت‌شده",number(list.length),"در تمام واحدها","♧")+statCard("مشتریان رستوران",number(list.filter(function(x){return findBiz(x.businessId)?.kind==="restaurant";}).length),"مخاطبان این واحد","🍽️")+statCard("طلا و جواهر",number(list.filter(function(x){return findBiz(x.businessId)?.kind==="jewelry";}).length),"مخاطبان این واحد","💎")+statCard("گردشگری",number(list.filter(function(x){return findBiz(x.businessId)?.kind==="travel";}).length),"مخاطبان این واحد","✈️")+'</section>';
  out+='<div class="wide-card" style="margin-top:20px"><h3>فهرست مخاطبان</h3>'+(list.length?'<div class="table-wrap"><table class="data-table"><thead><tr><th>نام</th><th>کسب‌وکار</th><th>تلفن</th><th>یادداشت</th></tr></thead><tbody>'+list.map(function(c){return '<tr data-customer="'+esc(c.id)+'" style="cursor:pointer"><td><strong>'+esc(c.name)+'</strong></td><td>'+esc(bizName(c.businessId))+'</td><td dir="ltr" style="text-align:right">'+esc(c.phone||"—")+'</td><td>'+esc(c.note||"—")+'</td></tr>';}).join("")+'</tbody></table></div>':empty("👤","هنوز مشتری ثبت نشده است","می‌توانید مشتری هر واحد را در همین دفتر مشترک ثبت و پیگیری کنید.","add-customer","＋ مشتری جدید"))+'</div>';
  return out;
 }
@@ -296,7 +296,7 @@ function removeItem(kind,k){
  if(!target)return;
  if(kind==="business"&&["restaurant","jewelry","travel"].includes(k)){toast("برای واحدهای اصلی، از ویرایش مشخصات استفاده کنید.");return;}
  if(!confirm("این مورد به‌صورت دائمی از همین مرورگر حذف شود؟"))return;
- if(kind==="business"&&(data.finances.some(function(f){return f.businessId===k;})||data.records.some(function(f){return f.businessId===k;}))){toast("ابتدا اطلاعات وابسته این کسب‌وکار را حذف یا منتقل کنید.");return;}
+ if(kind==="business"&&(data.finances.some(function(f){return f.businessId===k;})||data.records.some(function(f){return f.businessId===k;})||data.customers.some(function(f){return f.businessId===k;})||data.tasks.some(function(f){return f.businessId===k;})||data.modules.some(function(f){return f.businessId===k;}))){toast("ابتدا اطلاعات وابسته این کسب‌وکار را حذف یا منتقل کنید.");return;}
  data[target]=data[target].filter(function(x){return x.id!==k;});
  if(route.biz===k)route={area:"businesses",biz:null,tab:"overview"};log("حذف مورد از "+target,"");afterSave("مورد انتخاب‌شده حذف شد.");
 }
