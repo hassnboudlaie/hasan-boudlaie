@@ -9,17 +9,17 @@ var PHOTOS={
  hero:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=82"
 };
 var INDUSTRIES={
- restaurant:{name:"رستوران و کافه",icon:"🍽️",label:"RESTAURANT OPERATIONS",tabs:[["overview","نمای کلی"],["orders","سفارش‌ها"],["reservations","رزرو میز"],["menu","منو و اقلام"]],quick:[["orders","سفارش جدید","🧾"],["reservations","رزرو جدید","📅"],["menu","آیتم منو","🍲"]]},
+ restaurant:{name:"رستوران و کافه",icon:"🍽️",label:"RESTAURANT OPERATIONS",tabs:[["overview","نمای کلی"],["orders","سفارش‌ها"],["reservations","رزرو میز"],["tables","میزها و سالن"],["menu","منو و اقلام"]],quick:[["orders","سفارش جدید","🧾"],["reservations","رزرو جدید","📅"],["tables","تعریف میز","🪑"],["menu","آیتم منو","🍲"]]},
  jewelry:{name:"طلا و جواهر",icon:"💎",label:"JEWELRY RETAIL",tabs:[["overview","نمای کلی"],["inventory","موجودی طلا"],["sales","فروش و سفارش"],["requests","درخواست مشتری"]],quick:[["inventory","محصول جدید","💍"],["sales","ثبت فروش","🧾"],["requests","درخواست مشتری","💬"]]},
  travel:{name:"گردشگری و سفر",icon:"✈️",label:"TRAVEL AGENCY",tabs:[["overview","نمای کلی"],["packages","تور و خدمات"],["bookings","رزرو سفر"],["requests","درخواست سفر"]],quick:[["packages","تور جدید","🧳"],["bookings","رزرو جدید","🎫"],["requests","درخواست مشتری","🌐"]]},
  general:{name:"سایر کسب‌وکارها",icon:"🏢",label:"BUSINESS OPERATIONS",tabs:[["overview","نمای کلی"],["projects","پروژه‌ها"],["sales","فرصت‌های فروش"],["requests","درخواست‌ها"]],quick:[["projects","پروژه جدید","📁"],["sales","فرصت فروش","🤝"],["requests","درخواست جدید","📩"]]}
 };
 var RECORD_TITLES={
- orders:"سفارش",reservations:"رزرو میز",menu:"آیتم منو",
+ orders:"سفارش",reservations:"رزرو میز",tables:"میز سالن",menu:"آیتم منو",
  inventory:"محصول طلا و جواهر",sales:"فروش / فرصت",requests:"درخواست مشتری",
  packages:"تور / خدمت سفر",bookings:"رزرو سفر",projects:"پروژه"
 };
-var RECORD_ICONS={orders:"🧾",reservations:"📅",menu:"🍲",inventory:"💍",sales:"💳",requests:"💬",packages:"🧳",bookings:"🎫",projects:"📁"};
+var RECORD_ICONS={orders:"🧾",reservations:"📅",tables:"🪑",menu:"🍲",inventory:"💍",sales:"💳",requests:"💬",packages:"🧳",bookings:"🎫",projects:"📁"};
 var NAV=[["home","داشبورد مجموعه","⌂"],["businesses","کسب‌وکارهای من","▦"],["finance","امور مالی مشترک","◈"],["customers","مشتریان","♧"],["tasks","کارها و پیگیری‌ها","☑"],["reports","گزارش‌های مدیریتی","▤"],["settings","تنظیمات و توسعه","⚙"]];
 var seed=[
  {id:"restaurant",name:"رستوران",kind:"restaurant",desc:"عملیات سالن، سفارش‌ها، رزرو میز و مدیریت منو",image:PHOTOS.restaurant,createdAt:""},
@@ -44,8 +44,8 @@ function kindTitle(key){return RECORD_TITLES[key]||customModule(key)?.name||"م�
 function tabsFor(b){return kindOf(b).tabs.concat(data.modules.filter(function(m){return m.businessId===b.id;}).map(function(m){return [m.id,(m.icon||"🧩")+" "+m.name];}));}
 function img(b){return b.image||PHOTOS[b.kind]||PHOTOS.general;}
 function kindOf(b){return INDUSTRIES[b.kind]||INDUSTRIES.general;}
-function stateLabel(s){return ({new:"جدید",pending:"در انتظار",active:"در جریان",done:"تکمیل‌شده",paid:"تسویه‌شده",cancelled:"لغوشده"}[s]||"ثبت‌شده");}
-function stateClass(s){return ["pending","active","done","paid","cancelled"].includes(s)?s:"other";}
+function stateLabel(s){return ({new:"جدید",pending:"در انتظار",active:"در جریان",done:"تکمیل‌شده",paid:"تسویه‌شده",cancelled:"لغوشده",free:"آزاد",reserved:"رزروشده",occupied:"اشغال"}[s]||"ثبت‌شده");}
+function stateClass(s){return ["pending","active","done","paid","cancelled","free","reserved","occupied"].includes(s)?s:"other";}
 function status(s){return '<span class="status '+stateClass(s)+'">'+stateLabel(s)+'</span>';}
 function recordCount(biz,kind){return data.records.filter(function(x){return x.businessId===biz&&(!kind||x.kind===kind);}).length;}
 function financeRows(biz){return data.finances.filter(function(f){return !biz||f.businessId===biz;});}
@@ -100,7 +100,7 @@ function bizPage(){
  if(route.tab==="overview")return out+bizOverview(b);
  var rows=data.records.filter(function(r){return r.businessId===b.id&&r.kind===route.tab;}).slice().sort(function(a,z){return (z.date||"").localeCompare(a.date||"");});
  var fields={
- orders:["سفارش","مشتری / میز","مبلغ","وضعیت","تاریخ"],
+ orders:["سفارش","مشتری / میز","مبلغ","وضعیت","تاریخ"],tables:["میز","جایگاه / توضیح","ظرفیت","وضعیت","تاریخ"],
  reservations:["نام رزرو","مشتری / میز","تعداد / مبلغ","وضعیت","تاریخ"],
  menu:["نام آیتم","دسته‌بندی","قیمت","وضعیت","تاریخ"],
  inventory:["نام محصول","کد / عیار / وزن","مبلغ","وضعیت","تاریخ"],
@@ -217,10 +217,10 @@ function editFinance(fid,chosenBiz){
 function editRecord(bid,kind,rid){
  var r=data.records.find(function(x){return x.id===rid;});var isEdit=!!r;
  var title=kindTitle(kind);
- var labelTitle=({menu:"نام غذا / نوشیدنی",inventory:"نام محصول",reservations:"نام رزرو یا میز",packages:"نام تور / خدمت",bookings:"عنوان رزرو / مسافر",projects:"عنوان پروژه",requests:"عنوان درخواست",orders:"شماره یا عنوان سفارش",sales:"عنوان فروش"}[kind]||"عنوان");
- var labelDetail=({menu:"دسته‌بندی منو",inventory:"کد / عیار / وزن",reservations:"نام مشتری / شماره میز",packages:"مقصد / مدت",bookings:"مقصد / نام مسافر",projects:"مسئول / مرحله",requests:"مشتری / توضیح",orders:"مشتری / میز",sales:"مشتری / شرح"}[kind]||"جزئیات");
- var labelAmount=({menu:"قیمت فروش (تومان)",inventory:"ارزش / قیمت (تومان)",reservations:"بیعانه (تومان)",packages:"قیمت تور (تومان)",bookings:"مبلغ رزرو (تومان)",projects:"بودجه (تومان)",requests:"برآورد (تومان)",orders:"مبلغ سفارش (تومان)",sales:"مبلغ فروش (تومان)"}[kind]||"مبلغ (تومان)");
- var body=field("title",labelTitle,"text",r?.title||"","required maxlength=150",true)+field("detail",labelDetail,"text",r?.detail||"",'placeholder="توضیحات کوتاه"')+field("amount",labelAmount,"number",r?.amount||"","min=0 step=1")+select("status","وضعیت",[["new","جدید"],["pending","در انتظار"],["active","در جریان"],["done","تکمیل‌شده"],["paid","تسویه‌شده"],["cancelled","لغوشده"]],r?.status||"new")+field("date","تاریخ","date",r?.date||today(),"required")+textarea("note","توضیحات / جزئیات",r?.note||"");
+ var labelTitle=({tables:"شماره یا نام میز",menu:"نام غذا / نوشیدنی",inventory:"نام محصول",reservations:"نام رزرو یا میز",packages:"نام تور / خدمت",bookings:"عنوان رزرو / مسافر",projects:"عنوان پروژه",requests:"عنوان درخواست",orders:"شماره یا عنوان سفارش",sales:"عنوان فروش"}[kind]||"عنوان");
+ var labelDetail=({tables:"بخش سالن / موقعیت میز",menu:"دسته‌بندی منو",inventory:"کد / عیار / وزن",reservations:"نام مشتری / شماره میز",packages:"مقصد / مدت",bookings:"مقصد / نام مسافر",projects:"مسئول / مرحله",requests:"مشتری / توضیح",orders:"مشتری / میز",sales:"مشتری / شرح"}[kind]||"جزئیات");
+ var labelAmount=({tables:"ظرفیت میز (نفر)",menu:"قیمت فروش (تومان)",inventory:"ارزش / قیمت (تومان)",reservations:"بیعانه (تومان)",packages:"قیمت تور (تومان)",bookings:"مبلغ رزرو (تومان)",projects:"بودجه (تومان)",requests:"برآورد (تومان)",orders:"مبلغ سفارش (تومان)",sales:"مبلغ فروش (تومان)"}[kind]||"مبلغ (تومان)");
+ var body=field("title",labelTitle,"text",r?.title||"","required maxlength=150",true)+field("detail",labelDetail,"text",r?.detail||"",'placeholder="توضیحات کوتاه"')+field("amount",labelAmount,"number",r?.amount||"","min=0 step=1")+select("status","وضعیت",kind==="tables"?[["free","آزاد"],["reserved","رزروشده"],["occupied","اشغال"],["cancelled","غیرفعال"]]:[["new","جدید"],["pending","در انتظار"],["active","در جریان"],["done","تکمیل‌شده"],["paid","تسویه‌شده"],["cancelled","لغوشده"]],r?.status||(kind==="tables"?"free":"new"))+field("date","تاریخ","date",r?.date||today(),"required")+textarea("note","توضیحات / جزئیات",r?.note||"");
  modal((isEdit?"ویرایش ":"ثبت ")+title,body,function(v){
   var item={id:rid||id("record"),businessId:bid,kind:kind,title:v.title.trim(),detail:v.detail.trim(),amount:Math.max(0,Number(v.amount)||0),status:v.status,date:v.date,note:v.note.trim(),createdAt:r?.createdAt||new Date().toISOString()};
   if(isEdit)Object.assign(r,item);else data.records.push(item);
