@@ -2,7 +2,7 @@
 const endpoint = Deno.env.get('SUPABASE_URL') || '';
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const origins = new Set(['https://hassnboudlaie.github.io']);
-const fieldPattern = /^(?:teamname|stage|teamPhase|teamRound|checkin[1-5]|missionChoice|missionChoiceRound|missionRound[0-3]|classStepReady|r[0-3](?:pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
+const fieldPattern = /^(?:teamname|stage|teamPhase|teamRound|checkin[1-5]|missionChoice|missionChoiceRound|missionRound[0-3]|classStepReady|r[0-3](?:context|roles|pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
 const headers = (origin) => ({'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':origins.has(origin)?origin:'https://hassnboudlaie.github.io','access-control-allow-headers':'content-type','access-control-allow-methods':'POST, OPTIONS','vary':'Origin','x-content-type-options':'nosniff'});
 const respond = (data,status,origin) => new Response(JSON.stringify(data),{status,headers:headers(origin)});
 async function hash(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');}
@@ -26,6 +26,22 @@ function valid(k,v){
  if(k==='missionChoiceRound'||/^missionRound[0-3]$/.test(k))return Number.isInteger(v)&&v>=0&&v<=3;
  if(k==='classStepReady')return typeof v==='string'&&/^[0-3]:[3-9]$/.test(v);
  if(/^checkin[1-5]$/.test(k))return typeof v==='boolean';
+ if(/^r[0-3]context$/.test(k)){
+  if(typeof v!=='string'||v.length>1800)return false;
+  try{const p=JSON.parse(v);return Array.isArray(p.answers)&&p.answers.length===3&&p.answers.every(a=>typeof a==='string'&&a.trim().length>=3&&a.length<=280);}catch{return false;}
+ }
+ if(/^r[0-3]roles$/.test(k)){
+  if(typeof v!=='string'||v.length>750)return false;
+  try{
+   const p=JSON.parse(v),taken=[];
+   if(!p||typeof p!=='object'||Array.isArray(p))return false;
+   for(const [member,roles] of Object.entries(p)){
+    if(!/^[1-5]$/.test(member)||!Array.isArray(roles)||roles.length>2||roles.some(i=>!Number.isInteger(i)||i<0||i>4))return false;
+    taken.push(...roles);
+   }
+   return new Set(taken).size===taken.length;
+  }catch{return false;}
+ }
  if(/^r[0-3]pick$/.test(k))return Array.isArray(v)&&v.length<=4&&new Set(v).size===v.length&&v.every(i=>Number.isInteger(i)&&i>=0&&i<=3);
  if(/^r[0-3]reveal$/.test(k))return typeof v==='boolean';
  if(/score[0-4]$/.test(k))return typeof v==='string'&&/^[012]?$/.test(v);
@@ -199,7 +215,7 @@ Deno.serve(async req=>{
     if((earlier||[]).some(x=>Number(x.field_key.slice(-1))<round&&x.field_value===fields.missionChoice))return respond({error:'این مأموریت در دور قبلی اجرا شده است؛ یکی از راهبردهای دیگر را انتخاب کنید'},409,origin);
    }
    if(body.action==='write'&&('teamPhase' in fields||'teamRound' in fields)){
-    const stateRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(teamPhase,teamRound,missionChoice,missionChoiceRound,r0initial,r1initial,r2initial,r3initial,r0revision,r1revision,r2revision,r3revision,r0member1,r0member2,r0member3,r0member4,r0member5,r1member1,r1member2,r1member3,r1member4,r1member5,r2member1,r2member2,r2member3,r2member4,r2member5,r3member1,r3member2,r3member3,r3member4,r3member5)&select=field_key,field_value');
+    const stateRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(teamPhase,teamRound,missionChoice,missionChoiceRound,r0context,r1context,r2context,r3context,r0initial,r1initial,r2initial,r3initial,r0revision,r1revision,r2revision,r3revision,r0member1,r0member2,r0member3,r0member4,r0member5,r1member1,r1member2,r1member3,r1member4,r1member5,r2member1,r2member2,r2member3,r2member4,r2member5,r3member1,r3member2,r3member3,r3member4,r3member5)&select=field_key,field_value');
     const current=Object.fromEntries((stateRows||[]).map(x=>[x.field_key,x.field_value]));
     const phase=Number(current.teamPhase??0),round=Number(current.teamRound??0);
     if('teamRound' in fields){
@@ -211,12 +227,14 @@ Deno.serve(async req=>{
       if(fields.teamPhase===3&&(current.missionChoiceRound!==round||!Number.isInteger(current.missionChoice)))
         return respond({error:'ابتدا مأموریت گروه را ثبت کنید'},409,origin);
       const prefix='r'+current.missionChoice;
+      if(fields.teamPhase===4&&phase===3){
+        const value=current['r'+current.missionChoice+'context'];
+        if(typeof value!=='string'||!value.trim())return respond({error:'ابتدا سه پاسخ مشترک گام چهارم را ثبت کنید'},409,origin);
+      }
       if(fields.teamPhase===7&&phase===6&&!(typeof current[prefix+'initial']==='string'&&current[prefix+'initial'].trim().length>=1))
         return respond({error:'ابتدا تصمیم اولیه گروه را ثبت کنید'},409,origin);
       if(fields.teamPhase===9&&phase===8&&!(typeof current[prefix+'revision']==='string'&&current[prefix+'revision'].trim().length>=1))
         return respond({error:'ابتدا تصمیم اصلاح‌شده را ثبت کنید'},409,origin);
-      if(fields.teamPhase===10&&phase===9&&!Array.from({length:5},(_,i)=>current[prefix+'member'+(i+1)]).some(v=>typeof v==='string'&&v.trim().length>=1))
-        return respond({error:'ابتدا نتیجه یا اقدام گروه را ثبت کنید'},409,origin);
     }
    }
    if(body.action==='write'&&'classStepReady' in fields){
@@ -231,7 +249,21 @@ Deno.serve(async req=>{
     const prefix='r'+mine.missionChoice;
     if(phase===6&&!(typeof mine[prefix+'initial']==='string'&&mine[prefix+'initial'].trim().length>=10))return respond({error:'ابتدا تصمیم اولیه گروه را ثبت کنید'},409,origin);
     if(phase===8&&!(typeof mine[prefix+'revision']==='string'&&mine[prefix+'revision'].trim().length>=10))return respond({error:'ابتدا تصمیم اصلاح‌شده را ثبت کنید'},409,origin);
-    if(phase===9&&!Array.from({length:5},(_,i)=>mine[prefix+'member'+(i+1)]).some(v=>typeof v==='string'&&v.trim().length>=10))return respond({error:'ابتدا یک شاهد رفتاری از گروه ثبت کنید'},409,origin);
+   }
+   const roleEntry=entries.find(([k])=>/^r[0-3]roles$/.test(k));
+   if(roleEntry){
+    if(identity.role!=='team'||entries.length!==1)return respond({error:'ثبت نقش‌ها فقط برای اعضای گروه مجاز است'},403,origin);
+    const [roleKey,roleText]=roleEntry,next=JSON.parse(roleText);
+    const existing=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=eq.'+roleKey+'&select=field_value');
+    let previous={};try{previous=JSON.parse(existing?.[0]?.field_value||'{}')}catch{previous={}}
+    const memberKey=String(identity.member);
+    for(const key of new Set([...Object.keys(previous),...Object.keys(next)])){
+     if(key!==memberKey&&JSON.stringify(previous[key]||[])!==JSON.stringify(next[key]||[]))
+       return respond({error:'فقط نقش‌های خودتان را تغییر دهید'},403,origin);
+    }
+    const seats=await db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5');
+    const max=(seats||[]).length<5?2:1;
+    if((next[memberKey]||[]).length>max)return respond({error:'تعداد نقش‌های انتخابی بیش از ظرفیت مجاز است'},400,origin);
    }
    for(const [k] of entries){
     const member=k.match(/^r[0-3]member([1-5])$/);
