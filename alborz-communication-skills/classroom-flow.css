@@ -537,3 +537,35 @@
 .classroom-featured-title p{font-size:18px;margin:3px 0 7px;color:#345d58}
 .classroom-featured-evaluation .classroom-teacher-observer{margin:8px 0 0;background:#fff;border:1px solid #bddfd5}
 @media(max-width:560px){.classroom-featured-evaluation{padding:8px}.classroom-featured-title h2{font-size:25px}}
+
+/* Award gallery: earned badges only; teacher projection and mobile PNG actions. */
+.classroom-teacher-award-nav{display:flex;gap:12px;margin:14px 0;padding:5px}
+.classroom-teacher-award-nav .btn{font-size:19px;min-height:51px;font-weight:800}
+.classroom-teacher-awards{direction:rtl;background:#f8fafb;color:#153b53;padding:22px;border-radius:22px;border:2px solid #bfd1dc;margin:14px 0 25px}
+.classroom-teacher-awards>h2{font-size:clamp(25px,4vw,33px);font-weight:850;color:#153b53;margin:0 0 8px}
+.classroom-teacher-awards>p{font-size:18px;line-height:1.9;color:#425e6b;margin:0 0 16px}
+.classroom-medal-chooser{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:18px;padding:16px;background:#e9f1f4;border-radius:14px}
+.classroom-medal-chooser label{display:flex;flex-direction:column;font-weight:750;gap:5px;font-size:17px;flex:1;min-width:170px}
+.classroom-medal-chooser select{border:2px solid #a6c3cd;background:white;color:#183f56;border-radius:12px;padding:10px;font:inherit;font-size:18px;min-height:49px}
+.classroom-medal-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.classroom-showcase-card{border-radius:19px;background:white;border:2px solid #cad6dd;padding:20px;text-align:center;min-height:270px}
+.classroom-showcase-card.is-earned{border-color:#d2a650;box-shadow:0 6px 20px #b59b581f}
+.classroom-showcase-card h3{font-size:clamp(23px,3vw,28px);font-weight:800;margin:3px 0 14px;color:#153d56}
+.classroom-showcase-card p{font-size:18px;line-height:1.8;margin:8px 0}
+.classroom-showcase-card strong{font-size:22px;color:#246651;display:block}
+.classroom-showcase-card.is-unearned p{color:#546b78}
+.classroom-showcase-medal{display:block;width:min(100%,260px);height:auto;aspect-ratio:1;margin:0 auto}
+.classroom-medal-actions{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.classroom-medal-actions .btn,.classroom-medal-download{min-height:51px;font-size:17px!important;font-weight:800;white-space:normal;line-height:1.6}
+.classroom-medal-footnote{margin-top:15px!important;font-size:15px!important;color:#60717b!important}
+.classroom-award .classroom-medal-download{display:block;margin:17px auto 12px;max-width:100%;padding:13px 20px;font-size:19px!important}
+.classroom-badge-archive .classroom-medal-download{display:inline-flex;margin:8px 14px 8px 0;padding:8px 12px;font-size:16px!important}
+.classroom-award-projector{position:fixed;inset:0;z-index:99999;overflow-y:auto;background:radial-gradient(circle at 50% 0%,#175772,#071c30);color:white;display:grid;place-items:center;padding:12px;direction:rtl}
+.classroom-award-projector-card{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:min(900px,100%);min-height:90vh;padding:15px;background:transparent}
+.classroom-award-projector-card h2{font-size:clamp(31px,6vw,62px);line-height:1.35;color:#f8dfaa;margin:10px 0}
+.classroom-award-projector-card .classroom-showcase-medal{width:min(48vh,420px);max-width:90%}
+.classroom-award-projector-card p{font-size:clamp(27px,5vw,44px);margin:4px 0;color:#fff}
+.classroom-award-projector-card strong{font-size:clamp(24px,4vw,36px);color:#f4d692}
+.classroom-award-projector-card small{font-size:20px;color:#d1e0e7}
+.classroom-award-projector-card .btn{border:2px solid #d6b87b;background:#fff;color:#143f58;font-weight:800;padding:10px 22px;margin:6px}
+@media(max-width:650px){.classroom-teacher-awards{padding:14px}.classroom-medal-gallery{grid-template-columns:1fr}.classroom-medal-chooser{padding:10px}.classroom-medal-chooser label{min-width:130px}.classroom-award-projector-card h2{font-size:29px}.classroom-award-projector-card .classroom-showcase-medal{width:min(65vw,280px)}}
