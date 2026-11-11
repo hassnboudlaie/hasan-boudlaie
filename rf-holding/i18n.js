@@ -63,6 +63,9 @@ const rows=[
 ["این بخش","This section"],
 ["مدیریت یکپارچه","Unified Management"],
 ["ثبت اطلاعات","Record Entry"],
+["این بخش متناسب با ماهیت «رستوران و کافه» طراحی شده است. گردش‌های مالی واقعی را در قسمت «امور مالی مشترک» ثبت کنید تا گزارش تجمیعی هلدینگ به‌روز شود.","This restaurant workspace is designed around day-to-day hospitality operations. Record income and expenses in Shared Finance for consolidated reporting."],
+["این بخش متناسب با ماهیت «طلا و جواهر» طراحی شده است. گردش‌های مالی واقعی را در قسمت «امور مالی مشترک» ثبت کنید تا گزارش تجمیعی هلدینگ به‌روز شود.","This jewelry workspace focuses on stock, sales and customer requests. Record income and expenses in Shared Finance for consolidated reporting."],
+["این بخش متناسب با ماهیت «گردشگری و سفر» طراحی شده است. گردش‌های مالی واقعی را در قسمت «امور مالی مشترک» ثبت کنید تا گزارش تجمیعی هلدینگ به‌روز شود.","This travel workspace focuses on packages, bookings and guest enquiries. Record income and expenses in Shared Finance for consolidated reporting."],
 ["راهنما","Guide"],["خدمات مشترک هلدینگ","Group Shared Services"],["در همه واحدها","Across All Units"],["دریافت / پرداخت","Income / Expense"],["ثبت نشده","Not Recorded"],["درآمد و هزینه","Income and Expenses"]
 ];
 const exact=new Map(rows);
@@ -78,6 +81,8 @@ function translate(str){
  let x=s.trim();
  if(!x)return s;
  if(exact.has(x))return leading+exact.get(x)+trailing;
+ const missingRecord=x.match(/^موردی در بخش (.+) ثبت نشده$/);
+ if(missingRecord)return leading+"No records in "+translate(missingRecord[1])+" yet"+trailing;
  x=digits(x);
  if(exact.has(x))return leading+exact.get(x)+trailing;
  // Translate combined labels and counts without changing stored data.
