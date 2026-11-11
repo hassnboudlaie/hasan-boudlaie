@@ -198,6 +198,7 @@ function render(){
  sidebar();
  var html=route.area==="home"?home():route.area==="businesses"?businessesPage():route.area==="business"?bizPage():route.area==="finance"?financePage():route.area==="customers"?customersPage():route.area==="tasks"?tasksPage():route.area==="reports"?reportsPage():settingsPage();
  document.getElementById("workspace").innerHTML=html;
+ window.RF_I18N?.apply?.(document.getElementById("app"));
 }
 function optsBusiness(selected,includeGroup){var out=(includeGroup?'<option value="">مشترک · کل مجموعه</option>':"");return out+data.businesses.map(function(b){return '<option value="'+esc(b.id)+'" '+(b.id===selected?"selected":"")+'>'+esc(b.name)+'</option>';}).join("");}
 function field(n,label,type,value,extra,span2){
@@ -300,7 +301,7 @@ function removeItem(kind,k){
  var target={finance:"finances",record:"records",customer:"customers",task:"tasks",business:"businesses"}[kind];
  if(!target)return;
  if(kind==="business"&&["restaurant","jewelry","travel"].includes(k)){toast("برای واحدهای اصلی، از ویرایش مشخصات استفاده کنید.");return;}
- if(!confirm("این مورد به‌صورت دائمی از همین مرورگر حذف شود؟"))return;
+ if(!confirm(trans("این مورد به‌صورت دائمی از همین مرورگر حذف شود؟")))return;
  if(kind==="business"&&(data.finances.some(function(f){return f.businessId===k;})||data.records.some(function(f){return f.businessId===k;})||data.customers.some(function(f){return f.businessId===k;})||data.tasks.some(function(f){return f.businessId===k;})||data.modules.some(function(f){return f.businessId===k;}))){toast("ابتدا اطلاعات وابسته این کسب‌وکار را حذف یا منتقل کنید.");return;}
  data[target]=data[target].filter(function(x){return x.id!==k;});
  if(route.biz===k)route={area:"businesses",biz:null,tab:"overview"};log("حذف مورد از "+target,"");afterSave("مورد انتخاب‌شده حذف شد.");
@@ -308,12 +309,12 @@ function removeItem(kind,k){
 function exportBlob(name,content,mime){var a=document.createElement("a"),url=URL.createObjectURL(new Blob([content],{type:mime}));a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1200);}
 function exportCSV(){var rows=[["تاریخ","کسب‌وکار","نوع","شرح","دسته‌بندی","مبلغ تومان","یادداشت"]].concat(financeRows(filterBiz==="all"?null:filterBiz).map(function(f){return [f.date,bizName(f.businessId),f.type==="income"?"دریافتی":"پرداختی",f.title,f.category,f.amount,f.note];}));var csv="\uFEFF"+rows.map(function(x){return x.map(function(c){return '"'+String(c===undefined?"":c).replace(/"/g,'""')+'"';}).join(",");}).join("\r\n");exportBlob("RF-Holding-Finance.csv",csv,"text/csv;charset=utf-8");toast("فایل CSV آماده شد.");}
 function exportJSON(){exportBlob("RF-Holding-Backup-"+today()+".json",JSON.stringify({product:"rf-holding",exportedAt:new Date().toISOString(),data:data},null,2),"application/json;charset=utf-8");toast("فایل پشتیبان دریافت شد.");}
-function importJSON(){var input=document.createElement("input");input.type="file";input.accept=".json,application/json";input.addEventListener("change",function(){var file=input.files[0];if(!file)return;file.text().then(function(txt){var src=JSON.parse(txt);if(src.product!=="rf-holding"||!src.data||!Array.isArray(src.data.businesses)){throw new Error("فرمت فایل پشتیبان معتبر نیست.");}if(!confirm("داده‌های موجود این دستگاه با فایل انتخاب‌شده جایگزین شوند؟"))return;var incoming=src.data;for(var k of ["finances","customers","tasks","records","events","modules"]){if(!Array.isArray(incoming[k]))throw Error("ساختار پشتیبان کامل نیست.");}data=incoming;persist();routeTo("home");toast("اطلاعات پشتیبان بازیابی شدند.");}).catch(function(err){alert("بازیابی ناموفق: "+err.message);});});input.click();}
+function importJSON(){var input=document.createElement("input");input.type="file";input.accept=".json,application/json";input.addEventListener("change",function(){var file=input.files[0];if(!file)return;file.text().then(function(txt){var src=JSON.parse(txt);if(src.product!=="rf-holding"||!src.data||!Array.isArray(src.data.businesses)){throw new Error("فرمت فایل پشتیبان معتبر نیست.");}if(!confirm(trans("داده‌های موجود این دستگاه با فایل انتخاب‌شده جایگزین شوند؟")))return;var incoming=src.data;for(var k of ["finances","customers","tasks","records","events","modules"]){if(!Array.isArray(incoming[k]))throw Error("ساختار پشتیبان کامل نیست.");}data=incoming;persist();routeTo("home");toast("اطلاعات پشتیبان بازیابی شدند.");}).catch(function(err){alert(trans("بازیابی ناموفق: ")+err.message);});});input.click();}
 function runAction(a){
  if(a==="add-business"){editBusiness();return;}
  if(a.startsWith("add-module:")){editModule(null,a.split(":")[1]);return;}
  if(a.startsWith("edit-module:")){editModule(a.split(":")[1]);return;}
- if(a.startsWith("delete-module:")){var mid=a.split(":")[1];if(data.records.some(function(r){return r.kind===mid;})){toast("ابتدا موارد ثبت‌شده در این ماژول را حذف کنید.");return;}if(confirm("ماژول حذف شود؟")){data.modules=data.modules.filter(function(m){return m.id!==mid;});route.tab="overview";afterSave("ماژول حذف شد.");}return;}
+ if(a.startsWith("delete-module:")){var mid=a.split(":")[1];if(data.records.some(function(r){return r.kind===mid;})){toast("ابتدا موارد ثبت‌شده در این ماژول را حذف کنید.");return;}if(confirm(trans("ماژول حذف شود؟"))){data.modules=data.modules.filter(function(m){return m.id!==mid;});route.tab="overview";afterSave("ماژول حذف شد.");}return;}
  if(a==="add-finance"){editFinance();return;}
  if(a==="add-customer"){editCustomer();return;}
  if(a==="add-task"){editTask();return;}
@@ -327,7 +328,7 @@ function runAction(a){
  if(a==="export-finance"){exportCSV();return;}
  if(a==="export-json"){exportJSON();return;}
  if(a==="import-json"){importJSON();return;}
- if(a==="reset-data"){if(confirm("تمام داده‌های ثبت‌شده در این مرورگر حذف شود؟ ابتدا نسخه پشتیبان بگیرید.")){data=fresh();filterBiz="all";persist();routeTo("home");toast("فضای اولیه بازنشانی شد.");}return;}
+ if(a==="reset-data"){if(confirm(trans("تمام داده‌های ثبت‌شده در این مرورگر حذف شود؟ ابتدا نسخه پشتیبان بگیرید."))){data=fresh();filterBiz="all";persist();routeTo("home");toast("فضای اولیه بازنشانی شد.");}return;}
  if(a==="print-page"){window.print();return;}
  if(a.startsWith("edit-business:")){editBusiness(a.split(":")[1]);return;}
  if(a.startsWith("add-finance:")){editFinance(null,a.split(":")[1]);return;}
@@ -362,6 +363,8 @@ document.getElementById("globalSearch").addEventListener("input",function(e){
  data.tasks.filter(function(t){return t.title.toLowerCase().includes(term);}).slice(0,5).forEach(function(t){list.push({label:t.title,sub:"کار · "+bizName(t.businessId),task:t.id});});
  data.records.filter(function(r){return r.title.toLowerCase().includes(term);}).slice(0,5).forEach(function(r){list.push({label:r.title,sub:RECORD_TITLES[r.kind]+" · "+bizName(r.businessId),record:r.id});});
  box.hidden=false;box.innerHTML=list.length?list.slice(0,10).map(function(item){return '<button class="search-result" type="button" '+(item.biz?'data-biz="'+esc(item.biz)+'"':item.customer?'data-customer="'+esc(item.customer)+'"':item.task?'data-task="'+esc(item.task)+'"':'data-record="'+esc(item.record)+'"')+'><span>⌕</span><span><strong>'+esc(item.label)+'</strong><br><small class="muted">'+esc(item.sub)+'</small></span></button>';}).join(""):'<p class="micro-note" style="padding:12px">موردی پیدا نشد.</p>';
+ window.RF_I18N?.apply?.(box);
 });
+window.RF_RENDER=render;
 render();
 })();
