@@ -176,7 +176,7 @@ function badgeArchive(team){
  if(identity?.role!=='team')return '';
  const m=identity.member,earned=Array.from({length:4},(_,i)=>i).filter(i=>val(team,'r'+i+'badge'+m)==='earned');
  if(!earned.length)return '';
- return '<details class="classroom-personal-lens classroom-badge-archive"><summary>نشان‌های تاب‌آوری دریافت‌شده من · '+fa(earned.length)+'</summary><ul>'+earned.map(i=>'<li><b>'+animals[i]+' '+labels[i]+'</b> · نشان تاب‌آوری فردی آکادمی مدیریت بیمه البرز ✓</li>').join('')+'</ul><p>این نشان‌ها در سامانه ثبت شده‌اند و با ورود مجدد قابل مشاهده هستند.</p></details>';
+ return '<details class="classroom-personal-lens classroom-badge-archive"><summary>نشان‌های تاب‌آوری دریافت‌شده من · '+fa(earned.length)+'</summary><ul>'+earned.map(i=>'<li><b>'+animals[i]+' '+labels[i]+'</b> · نشان تاب‌آوری فردی ✓ '+medalDownloadButton('personal',i,m)+'</li>').join('')+'</ul><p>این نشان‌ها در سامانه ثبت شده‌اند و با ورود مجدد قابل مشاهده هستند.</p></details>';
 }
 
 const names=['ورود و ثبت حضور گروه','معرفی چهار راهبرد','انتخاب مأموریت',...C.missionFlow,'جمع‌بندی و انتقال به کار'];
@@ -493,20 +493,61 @@ function missionMilestones(team){
  const p='r'+i;
  return [attendance(team)>0,true,!!String(val(team,p+'initial')||'').trim(),!!String(val(team,p+'revision')||'').trim(),Array.from({length:5},(_,j)=>val(team,p+'member'+(j+1))).some(v=>String(v||'').trim())];
 }
+
+function hasGroupMedal(team,i){
+ if(!Number.isInteger(i)||i<0||i>3)return false;
+ const p='r'+i;
+ return !!String(val(team,p+'initial')||'').trim()&&!!String(val(team,p+'revision')||'').trim()&&
+  Array.from({length:5},(_,j)=>String(val(team,p+'member'+(j+1))||'').trim()).some(Boolean);
+}
+function hasPersonalMedal(team,i,member){
+ return Number.isInteger(i)&&i>=0&&i<4&&Number.isInteger(member)&&member>=1&&member<=5&&
+  val(team,'r'+i+'badge'+member)==='earned';
+}
+function medalDownloadButton(kind,i,member){
+ return '<button type="button" class="btn primary classroom-medal-download" data-award-download="'+kind+'" data-award-mission="'+i+'"'+
+  (kind==='personal'?' data-award-member="'+member+'"':'')+'>دانلود نشان '+(kind==='group'?'گروهی':'فردی')+' (PNG)</button>';
+}
+async function downloadMedalPng(kind,team,i,member){
+ const allowed=identity?.role==='teacher'||identity?.role==='team'&&identity.team===team&&
+   (kind==='group'||identity.member===member);
+ if(!allowed||!(kind==='group'?hasGroupMedal(team,i):kind==='personal'&&hasPersonalMedal(team,i,member)))
+  throw Error('این نشان هنوز کسب نشده یا مجوز دانلود آن وجود ندارد.');
+ const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;
+ const ctx=canvas.getContext('2d');if(!ctx)throw Error('مرورگر امکان ساخت تصویر ندارد.');
+ const gradient=ctx.createLinearGradient(0,0,1080,1350);gradient.addColorStop(0,'#0a3451');gradient.addColorStop(1,'#135b74');
+ ctx.fillStyle=gradient;ctx.fillRect(0,0,1080,1350);
+ ctx.strokeStyle='#e1bd74';ctx.lineWidth=12;ctx.strokeRect(38,38,1004,1274);
+ ctx.strokeStyle='#61889a';ctx.lineWidth=2;ctx.strokeRect(56,56,968,1238);
+ ctx.textAlign='center';ctx.textBaseline='middle';ctx.direction='rtl';
+ const draw=(v,y,font,color)=>{ctx.font=font;ctx.fillStyle=color;ctx.fillText(v,540,y,950);};
+ draw('آکادمی مدیریت بیمه البرز',150,'bold 50px Tahoma, Arial, sans-serif','#f6dfa5');
+ draw('نشان افتخار تاب‌آوری',246,'bold 70px Tahoma, Arial, sans-serif','#ffffff');
+ const medal=await new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=new URL('assets/resilience-medal.svg?v=20261111-award1',location.href).href;});
+ if(medal)ctx.drawImage(medal,270,285,540,540);
+ else{ctx.beginPath();ctx.arc(540,560,215,0,Math.PI*2);ctx.fillStyle='#d7a756';ctx.fill();draw('✓',560,'bold 185px Tahoma, Arial, sans-serif','#113f58');}
+ draw('نشان تاب‌آوری '+(kind==='group'?'گروهی':'فردی'),945,'bold 64px Tahoma, Arial, sans-serif','#f6dfa5');
+ draw(kind==='group'?'گروه '+fa(team):'عضو '+fa(member)+' · گروه '+fa(team),1041,'bold 56px Tahoma, Arial, sans-serif','#ffffff');
+ draw('راهبرد: '+labels[i],1125,'bold 45px Tahoma, Arial, sans-serif','#dceaf0');
+ ctx.fillStyle='#d5ac64';ctx.fillRect(250,1185,580,2);
+ draw('به‌پاس تکمیل مأموریت آموزشی تاب‌آوری',1248,'35px Tahoma, Arial, sans-serif','#d3e5eb');
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('خروجی PNG ساخته نشد.');
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download='alborz-resilience-'+(kind==='group'?'group-'+team:'member-'+team+'-'+member)+'-'+keys[i]+'.png';
+ document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+
 function missionBadge(team){
  const i=groupChoice(team);if(i===null)return '';
  const p='r'+i,m=identity?.role==='team'?identity.member:null;
- const hasInitial=!!String(val(team,p+'initial')||'').trim();
- const hasRevision=!!String(val(team,p+'revision')||'').trim();
- const hasGroupEvidence=Array.from({length:5},(_,j)=>String(val(team,p+'member'+(j+1))||'').trim()).some(Boolean);
- const groupDone=hasInitial&&hasRevision&&hasGroupEvidence;
+ const groupDone=hasGroupMedal(team,i);
  const own=m?String(val(team,p+'member'+m)||'').trim().length>=10:false;
  const awarded=m?val(team,p+'badge'+m)==='earned':false;
  const medallion='<img class="classroom-award-img" alt="نشان طلایی تاب‌آوری با چهار نماد شتر، ماهی آزاد، آفتاب‌پرست و اختاپوس" src="assets/resilience-medal.svg?v=20261111-award1"><div class="classroom-award-animals">🐪　🐟　🦎　🐙</div>';
- const groupAward=groupDone?'<section class="classroom-award" role="status">'+medallion+'<h3>تبریک! مأموریت تاب‌آوری گروهی تکمیل شد.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری گروهی ✓</strong><small>با ثبت تصمیم اولیه، اصلاح تصمیم و دست‌کم یک اقدام، نشان گروه صادر می‌شود. تکمیل‌نکردن دیگر اعضا مانع نمایش آن نیست.</small></section>':
+ const groupAward=groupDone?'<section class="classroom-award" role="status">'+medallion+'<h3>تبریک! مأموریت تاب‌آوری گروهی تکمیل شد.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری گروهی ✓</strong>'+medalDownloadButton('group',i,m)+'<small>با ثبت تصمیم اولیه، اصلاح تصمیم و دست‌کم یک اقدام، نشان گروه صادر می‌شود. تکمیل‌نکردن دیگر اعضا مانع نمایش آن نیست.</small></section>':
  '<section class="classroom-award-start"><h3>وضعیت نشان گروهی</h3><p>برای نمایش نشان، تصمیم اولیه، اصلاح تصمیم و دست‌کم یک اقدام گروهی لازم است.</p></section>';
  if(!m)return groupAward;
- const personal=awarded?'<section class="classroom-award classroom-personal-award" role="status">'+medallion+'<h3>تبریک! مأموریت تاب‌آوری فردی را تکمیل کردید.</h3><p>عضو '+fa(m)+' · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری فردی ✓</strong></section>':
+ const personal=awarded?'<section class="classroom-award classroom-personal-award" role="status">'+medallion+'<h3>تبریک! مأموریت تاب‌آوری فردی را تکمیل کردید.</h3><p>عضو '+fa(m)+' · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری فردی ✓</strong>'+medalDownloadButton('personal',i,m)+'</section>':
  own?'<section class="classroom-award-start"><h3>نشان فردی شما آماده است</h3><p>اقدام فردی شما ثبت شده است.</p><button type="button" class="btn primary" data-class-claim-badge>دریافت نشان فردی من</button></section>':
  '<section class="classroom-award-start"><h3>تکمیل اقدام فردی من</h3><p>اگر در گام دهم ثبت نکردید، همین‌جا ثبت کنید. نیازی نیست گروه به عقب برگردد.</p><textarea class="classroom-award-late-entry" data-class-late-evidence rows="3" maxlength="2500" placeholder="فردا در رسیدگی خسارت چه اقدام مشخصی انجام می‌دهم؟"></textarea><button type="button" class="btn primary" data-class-save-late-evidence>ثبت اقدام فردی من</button><p>تکمیل‌نکردن شما مانع دریافت نشان گروهی یا سایر اعضا نمی‌شود.</p></section>';
  return groupAward+personal+'<p class="classroom-completion-note">این نشان پاداش تکمیل مسیر یادگیری است؛ گواهی اندازه‌گیری علمی تاب‌آوری نیست.</p>';
