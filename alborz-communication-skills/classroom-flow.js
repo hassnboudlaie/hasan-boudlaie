@@ -555,6 +555,24 @@ function projectorPanel(phase){
  '<p class="classroom-projector-footer">این نما فقط برای مشاهده و پاسخ به پرسش‌هاست؛ نمی‌توان از آن حضور، انتخاب، آزمون یا تصمیم گروه را تغییر داد.</p></section>';
 }
 
+function syncCoinSelection(){
+ if(identity?.role!=='team'||stage!==6)return;
+ const choice=groupChoice(identity.team),mission=C.missions[choice];
+ if(!mission)return;
+ const options=[...root.querySelectorAll('input[data-class-pick]')];
+ if(!options.length)return;
+ const total=options.filter(x=>x.checked).reduce((n,x)=>n+Number(mission.actions[Number(x.dataset.classPick)]?.[1]||0),0);
+ const count=options.filter(x=>x.checked).length;
+ const rem=6-total;
+ const status=root.querySelector('.classroom-coin-remaining');
+ if(status)status.textContent=rem<0?'هزینه انتخاب‌ها '+fa(total)+' سکه است؛ '+fa(-rem)+' سکه بیش از بودجه. یک یا چند گزینه را بردارید.':
+  'هزینه انتخاب‌ها: '+fa(total)+' از ۶ سکه · باقی‌مانده: '+fa(rem)+' سکه'+(count<2?' · حداقل دو اقدام لازم است':'');
+ options.forEach(x=>{
+  if(x.checked){x.disabled=false;return;}
+  const cost=Number(mission.actions[Number(x.dataset.classPick)]?.[1]||0);
+  x.disabled=total+cost>6;
+ });
+}
 function render(force=false){
  if(classroomRound!==consensusRound){consensusRound=classroomRound;consensusDraft=null;consensusAgreed=false;previewDraft=null;awardScreen=false;}
  if(!root)return;
@@ -583,6 +601,7 @@ function render(force=false){
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
  const featuredObserver=teacher&&displayStage===5&&!projectionMode&&inStep?'<section class="classroom-featured-evaluation"><div class="classroom-featured-title"><h2>ارزیابی گفت‌وگوی گروه‌ها</h2><p>۵ معیار، انتخاب گروه و ثبت فوری امتیاز؛ فقط مدرس</p></div>'+teacherChecklistPanel()+'</section>':'';
  root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+featuredObserver+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
+ syncCoinSelection();
  if(teacher&&projectionMode&&inStep)root.querySelectorAll('.classroom-projection-body input,.classroom-projection-body textarea,.classroom-projection-body select,.classroom-projection-body button').forEach(el=>{el.disabled=true;el.setAttribute('aria-disabled','true');});
 }
 async function execute(task){
@@ -623,6 +642,11 @@ root.addEventListener('change',event=>{
   const indicator=root.querySelector('.classroom-observer-score');
   if(indicator)indicator.innerHTML='امتیاز انتخاب‌شده: <b>'+fa(chosen)+' از ۵</b> · برای نمایش روی ثبت بزنید';
  }
+});
+root.addEventListener('change',event=>{
+ const cb=event.target.closest('input[data-class-pick]');
+ if(!cb)return;
+ syncCoinSelection();
 });
 root.addEventListener('change',event=>{const el=event.target.closest('[data-class-context-select]');if(!el)return;const box=root.querySelector('[data-class-context-other="'+el.dataset.classContextSelect+'"]');if(box){box.hidden=el.value!=='__other__';if(!box.hidden)box.focus();}});
 root.addEventListener('click',event=>{
