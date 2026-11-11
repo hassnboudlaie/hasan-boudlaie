@@ -171,7 +171,7 @@ function contextForm(i,team){
 function individualDiscussion(i){
  const c=C.cases[i],qs=c.individualQuestions||[],as=c.individualAnswers||[];
  return '<section class="individual-discussion" dir="rtl" style="font-size:18px;line-height:1.9">'+
- '<h3>سه پرسش برای گفت‌وگوی گروه</h3><p>هر پنج نفر نظر بدهند. هیچ پاسخ نوشتاری اجباری نیست.</p>'+
+ '<h3>سه پرسش برای گفت‌وگوی گروه</h3><p>همه اعضای حاضر نظر بدهند. این بخش گفت‌وگویی است و پاسخ نوشتاری اجباری ندارد.</p>'+
  qs.map((q,j)=>'<article style="margin:12px 0;padding:12px;border:1px solid #d6e5dc;border-radius:14px"><p><strong>'+E((j+1)+'. '+q)+'</strong></p><details><summary style="cursor:pointer;font-weight:700">پاسخ پیشنهادی</summary><p>'+E(as[j]||'')+'</p></details></article>').join('')+
  '<p>پس از جمع‌بندی شفاهی، یکی از اعضا دکمه «گام بعد» را بزند.</p></section>';
 }
@@ -182,7 +182,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false;
+let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false,awardScreen=false;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -206,7 +206,7 @@ function strategyContrast(compact=false){
  ['🦎','آفتاب‌پرست','خیر؛ روش شخصی باید تغییر کند','خیر','اموال؛ جایگزینی پیگیری حافظه‌محور با ثبت ساختاریافته'],
  ['🐙','اختاپوس','خیر؛ روش شخصی باید تغییر کند','بله؛ مسیر یادگیری جدا','اموال طرف قرارداد؛ ثبت ساختاریافته + تمرین مستقل جرأت‌ورزی']
  ];
- return '<section class="classroom-strategy-comparison"><h3>چهار راهبرد؛ چهار تصمیم متفاوت</h3><p>دو سؤال بپرسید: آیا روش فعلی رسیدگی جواب می‌دهد؟ آیا در کنار آن یک مسیر مستقل برای یادگیری و رشد حرفه‌ای ایجاد می‌کنم؟</p><div class="classroom-contrast-grid">'+comparisons.map((r,i)=>'<article class="contrast-item contrast-'+i+'"><div class="contrast-head"><span role="img" aria-label="'+E(r[1])+'">'+r[0]+'</span><h4>'+r[1]+'</h4></div><p><b>رسیدگی فعلی:</b> '+r[2]+'</p><p><b>مسیر یادگیری مستقل:</b> '+r[3]+'</p><p class="contrast-example"><b>نمونه خسارت:</b> '+r[4]+'</p></article>').join('')+'</div>'+(compact?'':'<p class="contrast-note">این راهبردها اقتباس مفهومی برای تاب‌آوری فردی‌اند؛ ابزار سنجش روان‌شناختی نیستند.</p>')+'</section>';
+ return '<section class="classroom-strategy-comparison"><h3>چهار راهبرد؛ چهار تصمیم متفاوت</h3><p>دو سؤال بپرسید: آیا روش فعلی رسیدگی جواب می‌دهد؟ آیا در کنار آن یک مسیر مستقل برای یادگیری و رشد حرفه‌ای ایجاد می‌کنم؟</p><div class="classroom-contrast-grid">'+comparisons.map((r,i)=>'<article class="contrast-item contrast-'+i+'"><div class="contrast-head"><span role="img" aria-label="'+E(r[1])+'">'+r[0]+'</span><h4>'+r[1]+'</h4></div><p><b>رسیدگی فعلی:</b> '+r[2]+'</p><p><b>مسیر یادگیری مستقل:</b> '+r[3]+'</p><p class="contrast-example"><b>نمونه خسارت:</b> '+r[4]+'</p></article>').join('')+'</div>'+(compact?'':'<details class="classroom-personal-lens"><summary>مبنای علمی و مرز این اقتباس</summary><p>در مدل اصلی Verweire، پرسش نخست تغییر یا حفظ فعالیت اصلی سازمان است و پرسش دوم ایجاد یا عدم ایجاد یک فعالیت مستقل جدید. در این کارگاه فقط منطق تصمیم را به فرد تعمیم می‌دهیم: آیا روش حرفه‌ای فعلی را تغییر می‌دهم؟ آیا در کنار کار جاری مسیر مستقل توسعه توانمندی می‌سازم؟</p><p>شتر: حفظ روش معتبر و بازیابی توان؛ ماهی آزاد: حفظ روش معتبر و ایجاد مسیر مستقل رشد؛ آفتاب‌پرست: تغییر روش ناکارآمد؛ اختاپوس: تغییر روش و ایجاد مسیر مستقل رشد. این تفکیک یک قیاس آموزشی است و نباید به نویسنده به‌عنوان نظریه تاب‌آوری فردی منتسب شود.</p><p>تغییر صرف لحن، الزاماً آفتاب‌پرست نیست؛ اولویت‌بندی چند کار نیز تعریف اختاپوس نیست. همه مثال‌ها باید در محدوده اختیار کارشناس و با حفظ محرمانگی و کنترل‌های رسمی باشند.</p></details>')+'</section>';
 }
 function personalResilienceLens(i){
  const lesson=C.mastery[i].lesson;
@@ -225,7 +225,7 @@ function caseIllustration(i){
 function masteryLessons(){
  return '<section class="mastery-lessons"><p>برای مشاهده جزئیات کاربردی هر راهبرد، فقط همان بخش را باز کنید.</p>'+
  C.mastery.map((m,i)=>'<details class="mastery-lesson"><summary>'+C.models[i][0]+' '+E(C.models[i][1])+' · توضیح و مثال</summary><div class="mastery-lesson-body"><p><strong>معنای ساده:</strong> '+E(m.lesson.definition)+'</p><p><strong>شرایط کاربرد:</strong> '+E(m.lesson.condition)+'</p><p><strong>مرز با راهبردهای دیگر:</strong> '+E(m.lesson.boundary)+'</p><p><strong>اشتباه رایج:</strong> '+E(m.lesson.error)+'</p><p><strong>کاربرد در بیمه:</strong> '+E(C.models[i][6])+'</p><strong>سه اقدام مناسب</strong><ol>'+m.lesson.actions.map(x=>'<li>'+E(x)+'</li>').join('')+'</ol><p class="mastery-takeaway">'+E(m.lesson.takeaway)+'</p></div></details>').join('')+
- '<p class="mastery-source">اقتباس از چهار راهبرد سازمانی Kurt Verweire؛ این چارچوب آزمون شخصیت نیست.</p></section>';
+ '<p class="mastery-source">منبع: Kurt Verweire و همکاران، Strategy in Turbulent Times، فصل‌های ۳ تا ۷. چهار راهبرد کتاب درباره سازمان‌اند؛ مثال‌های فردی این کارگاه اقتباس آموزشی هستند و ابزار روان‌سنجی یا مدل اعتبارسنجی‌شده تاب‌آوری فردی محسوب نمی‌شوند.</p></section>';
 }
 function allocatedRoles(t,i){try{const r=JSON.parse(val(t,'r'+i+'roles')||'{}');return r&&typeof r==='object'&&!Array.isArray(r)?r:{};}catch{return {};}}
 function rolesComplete(t,i){const r=allocatedRoles(t,i),n=size(t),a=Array.from({length:n},(_,j)=>r[j+1]);return n>=3&&n<=5&&a.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=(n<5?2:1))&&a.flat().length===5&&new Set(a.flat()).size===5;}
@@ -450,18 +450,23 @@ function missionBadge(team){
  const groupDone=hasInitial&&hasRevision&&hasGroupEvidence;
  const own=m?String(val(team,p+'member'+m)||'').trim().length>=10:false;
  const awarded=m?val(team,p+'badge'+m)==='earned':false;
- const groupAward=groupDone?'<section class="classroom-award" role="status"><img class="classroom-award-img" alt="نشان طلایی تاب‌آوری گروه" src="assets/resilience-medal.svg?v=20261111-award1"><div class="classroom-award-animals">🐪　🐟　🦎　🐙</div><h3>تبریک! مأموریت تاب‌آوری گروهی را تکمیل کردید.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری گروهی ✓</strong><small>نشان گروه با تکمیل تصمیم‌ها و ثبت دست‌کم یک اقدام گروهی فعال می‌شود؛ به تکمیل همه اعضا وابسته نیست.</small></section>':
- '<section class="classroom-award-start"><p>برای تکمیل نشان گروه، تصمیم اولیه، تصمیم اصلاح‌شده و دست‌کم یک اقدام باید ثبت شده باشند.</p></section>';
+ const medallion='<img class="classroom-award-img" alt="نشان طلایی تاب‌آوری با چهار نماد شتر، ماهی آزاد، آفتاب‌پرست و اختاپوس" src="assets/resilience-medal.svg?v=20261111-award1"><div class="classroom-award-animals">🐪　🐟　🦎　🐙</div>';
+ const groupAward=groupDone?'<section class="classroom-award" role="status">'+medallion+'<h3>تبریک! مأموریت تاب‌آوری گروهی تکمیل شد.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری گروهی ✓</strong><small>با ثبت تصمیم اولیه، اصلاح تصمیم و دست‌کم یک اقدام، نشان گروه صادر می‌شود. تکمیل‌نکردن دیگر اعضا مانع نمایش آن نیست.</small></section>':
+ '<section class="classroom-award-start"><h3>وضعیت نشان گروهی</h3><p>برای نمایش نشان، تصمیم اولیه، اصلاح تصمیم و دست‌کم یک اقدام گروهی لازم است.</p></section>';
  if(!m)return groupAward;
- const personal=awarded?'<section class="classroom-award classroom-personal-award"><h3>نشان تاب‌آوری فردی ✓</h3><p>عضو '+fa(m)+' · گروه '+fa(team)+'</p><p>تبریک! اقدام فردی خود را ثبت کردید و نشان شما محفوظ است.</p></section>':
- own?'<section class="classroom-award-start"><h3>نشان فردی شما آماده است</h3><button type="button" class="btn primary" data-class-claim-badge>تکمیل مأموریت و دریافت نشان فردی</button></section>':
- '<section class="classroom-award-start"><h3>نشان تاب‌آوری فردی</h3><p>برای دریافت نشان فردی لازم است اقدام شخصی گام دهم را ثبت کنید. این موضوع نمایش نشان گروهی یا نشان سایر اعضا را متوقف نمی‌کند.</p></section>';
- return groupAward+personal;
+ const personal=awarded?'<section class="classroom-award classroom-personal-award" role="status">'+medallion+'<h3>تبریک! مأموریت تاب‌آوری فردی را تکمیل کردید.</h3><p>عضو '+fa(m)+' · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری فردی ✓</strong></section>':
+ own?'<section class="classroom-award-start"><h3>نشان فردی شما آماده است</h3><p>اقدام فردی شما ثبت شده است.</p><button type="button" class="btn primary" data-class-claim-badge>دریافت نشان فردی من</button></section>':
+ '<section class="classroom-award-start"><h3>تکمیل اقدام فردی من</h3><p>اگر در گام دهم ثبت نکردید، همین‌جا ثبت کنید. نیازی نیست گروه به عقب برگردد.</p><textarea class="classroom-award-late-entry" data-class-late-evidence rows="3" maxlength="2500" placeholder="فردا در رسیدگی خسارت چه اقدام مشخصی انجام می‌دهم؟"></textarea><button type="button" class="btn primary" data-class-save-late-evidence>ثبت اقدام فردی من</button><p>تکمیل‌نکردن شما مانع دریافت نشان گروهی یا سایر اعضا نمی‌شود.</p></section>';
+ return groupAward+personal+'<p class="classroom-completion-note">این نشان پاداش تکمیل مسیر یادگیری است؛ گواهی اندازه‌گیری علمی تاب‌آوری نیست.</p>';
 }
-
 function ending(team=identity.team,asParticipant=false){
- return simpleTitle('جمع‌بندی','از این مأموریت چه یاد گرفتیم؟','گروه‌ها تجربه، تصمیم و نکته قابل انتقال به محیط خسارت را با هم مرور می‌کنند.')+
- (identity.role==='teacher'&&!asParticipant?'<p class="classroom-prompt">نتیجه هر گروه و یک اقدام عملی برای کار روزمره را جمع‌بندی کن.</p>'+monitorAllGroups():'<p class="classroom-prompt">یک نتیجه و یک اقدام قابل اجرا برای محیط خسارت با خود ببرید. ادامه دوره در بخش مستقل مدیریت خشم است.</p>'+missionBadge(team));
+ const teacher=identity.role==='teacher'&&!asParticipant;
+ return simpleTitle('جمع‌بندی نهایی','از این مأموریت چه یاد گرفتیم؟','یک یادگیری و یک رفتار کاربردی برای رسیدگی به خسارت را با گروه مرور کنید.')+
+ (teacher?'<p class="classroom-prompt">یادگیری کلیدی و یک اقدام عملی هر گروه را جمع‌بندی کن.</p>'+monitorAllGroups():
+ '<section class="classroom-award-start"><h3>پایان مأموریت تاب‌آوری</h3><p>پس از مرور نتیجه، نشان‌های فردی و گروهی را در صفحه پایان مشاهده کنید.</p><button type="button" class="btn primary" data-class-open-awards>تکمیل مأموریت و مشاهده نشان‌ها</button></section>');
+}
+function awardPage(team=identity.team){
+ return '<section class="classroom-completion-page" dir="rtl"><button type="button" class="btn" data-class-close-awards>بازگشت به جمع‌بندی</button><div class="classroom-section-title"><span>پایان مأموریت</span><h2>نشان افتخار تاب‌آوری</h2><p>آکادمی مدیریت بیمه البرز</p></div>'+missionBadge(team)+'</section>';
 }
 
 function projectedParticipantContent(team,member,phase,sample){
@@ -499,7 +504,7 @@ function projectorPanel(phase){
 }
 
 function render(force=false){
- if(classroomRound!==consensusRound){consensusRound=classroomRound;consensusDraft=null;consensusAgreed=false;previewDraft=null;}
+ if(classroomRound!==consensusRound){consensusRound=classroomRound;consensusDraft=null;consensusAgreed=false;previewDraft=null;awardScreen=false;}
  if(!root)return;
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
@@ -519,7 +524,7 @@ function render(force=false){
  else if(displayStage===1)content=strategyIntro(teacher);
  else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
- else content=ending();
+ else content=identity?.role==='team'&&awardScreen?awardPage():ending();
  const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
  const inStep=openStep===displayStage;
  const viewSwitch=teacher&&inStep?'<nav class="classroom-view-switch" aria-label="نمای مخصوص مدرس یا گروه"><button type="button" class="'+(!projectionMode?'selected':'')+'" data-class-view="teacher" aria-pressed="'+(!projectionMode?'true':'false')+'">راهنمای مدرس</button><button type="button" class="'+(projectionMode?'selected':'')+'" data-class-view="participant" aria-pressed="'+(projectionMode?'true':'false')+'">نمایش صفحه گروه روی پرده</button></nav>':'';
@@ -560,6 +565,9 @@ root.addEventListener('change',event=>{const el=event.target.closest('[data-clas
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
+ if(btn.hasAttribute('data-class-open-awards')){if(identity?.role!=='team'||stage!==10)return;awardScreen=true;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-close-awards')){if(identity?.role!=='team')return;awardScreen=false;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-class-save-late-evidence')){if(identity?.role!=='team'||stage!==10)return;const i=groupChoice(identity.team);if(i===null)return;const answer=root.querySelector('[data-class-late-evidence]')?.value.trim()||'';if(answer.length<10)return alertUser('یک اقدام قابل اجرا با دست‌کم ۱۰ حرف بنویسید.',true);execute(()=>saveFields({['r'+i+'member'+identity.member]:answer}));return;}
  if(btn.hasAttribute('data-team-prev')||btn.hasAttribute('data-team-next')){
   if(identity?.role!=='team')return;
   const delta=btn.hasAttribute('data-team-next')?1:-1, next=Math.max(0,Math.min(10,stage+delta));
@@ -701,7 +709,7 @@ window.addEventListener('alborz:classroom-data',event=>{
  if(identity?.role==='teacher'){
   const record=rec(1,'classroomPhase');stage=Number(record?.field_value??0);stageVersion=record?.version??0;classroomRound=Number(rec(1,'classroomRound')?.field_value??0);
  }else{stage=Number(val(identity.team,'teamPhase')??0);stageVersion=version(identity.team,'teamPhase');classroomRound=Number(val(identity.team,'teamRound')??0);}
- stage=Math.max(0,Math.min(10,stage));if(stage!==oldStage||classroomRound!==oldRound){openStep=stage;previewStep=null;lastFingerprint='';}render();
+ stage=Math.max(0,Math.min(10,stage));if(stage!==oldStage||classroomRound!==oldRound){openStep=stage;previewStep=null;awardScreen=false;lastFingerprint='';}render();
 });
 render(true);
 })();
