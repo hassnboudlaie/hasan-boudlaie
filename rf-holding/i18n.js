@@ -38,7 +38,32 @@ const rows=[
 ["این فضای اولیه برای طراحی و ثبت اطلاعات ساخته شده است. داده‌ها فقط در مرورگر همین دستگاه نگهداری می‌شوند. تا راه‌اندازی ورود امن و پایگاه داده مرکزی، اطلاعات مالی یا مشخصات محرمانه مشتریان واقعی را در این نسخه آزمایشی وارد نکنید. همگام‌سازی چندکاربره و اتصال بانکی و فروشگاهی هنوز فعال نیست.","This is a preview workspace. Data remains in this browser only. Do not enter confidential customer or financial information until secure access and a central database are deployed. Multi-user synchronization and external integrations are not yet available."],
 ["این گزارش فقط ثبت‌های دستی در نسخه اولیه را نمایش می‌دهد؛ اتصال به صندوق رستوران، حسابداری، موجودی واقعی و سامانه‌های گردشگری هنوز راه‌اندازی نشده است.","These reports reflect manual entries only. No POS, accounting, inventory or booking integrations are connected."],
 ["نسخه اولیه","Preview"],["داده‌ها صرفاً روی همین دستگاه ذخیره می‌شوند","Data is stored on this device only"],["عکس: ساحل کیش","Photo: Kish Island"],["تصویر: ساحل کیش","Photo: Kish Island"],["عکس ساحل کیش: Mehrraz","Kish photo: Mehrraz"],
-["ریال","Rial"],["تومان","Toman"],["گرم","g"],["تعداد","Qty"],["بدون کد","No SKU"],["سالن","Hall"],["خالی","Empty"],["ساعت","Time"],["قبل","Previous"],["بعد","Next"],["ثبت اولین مورد","Add First Record"],["پیش‌نمایش","Preview"]
+["ریال","Rial"],["تومان","Toman"],["گرم","g"],["تعداد","Qty"],["بدون کد","No SKU"],["سالن","Hall"],["خالی","Empty"],["ساعت","Time"],["قبل","Previous"],["بعد","Next"],["ثبت اولین مورد","Add First Record"],["پیش‌نمایش","Preview"],
+["مدیریت سامانه","Platform Management"],
+["مدیریت یکپارچه کسب‌وکارها","One Group. Complete Visibility."],
+["مالی، مشتریان، پیگیری و گزارش‌های مدیریتی؛ یکپارچه در سطح مجموعه.","One set of shared capabilities for finance, CRM, workflows and reporting."],
+["درآمد و هزینه تفکیکی هر کسب‌وکار","Income and expenses by business"],
+["دفتر مشترک با تفکیک واحدهای کسب‌وکار","One contact directory, segmented by business"],
+["وظایف مشترک و عملیاتی","Shared and operational responsibilities"],
+["تصویر تجمیعی و مقایسه عملکرد","Consolidated insights and performance comparisons"],
+["این مورد به‌صورت دائمی از همین مرورگر حذف شود؟","Permanently delete this record from this browser?"],
+["داده‌های موجود این دستگاه با فایل انتخاب‌شده جایگزین شوند؟","Replace local data with the selected backup file?"],
+["ماژول حذف شود؟","Delete this custom module?"],
+["تمام داده‌های ثبت‌شده در این مرورگر حذف شود؟ ابتدا نسخه پشتیبان بگیرید.","Delete all locally recorded data? Please download a backup first."],
+["بازیابی ناموفق: ","Restore failed: "],
+["این مورد","This record"],
+["شماره میز","Table Number"],
+["میزهای سالن","Dining Room Tables"],
+["نام یا عنوان","Name / Title"],
+["پاسخ‌دهنده","Respondent"],
+["داده واقعی واردشده","Entered records"],
+["کسب‌وکار جدید ساخته شد.","New business created."],
+["پرسش‌وپاسخ","Questions & Answers"],
+["نامشخص","Unknown"],
+["این بخش","This section"],
+["مدیریت یکپارچه","Unified Management"],
+["ثبت اطلاعات","Record Entry"],
+["راهنما","Guide"]
 ];
 const exact=new Map(rows);
 const sorted=rows.filter(r=>r[0].length>=4).sort((a,b)=>b[0].length-a[0].length);
