@@ -127,6 +127,21 @@ Deno.serve(async req=>{
    const expected=Object.fromEntries(keys.map(key=>[key,existing[key]?.version||0]));
    return db('rpc/alborz_write_fields',{p_team:team,p_fields:fields,p_expected:expected,p_editor:'مدرس'});
   }
+  // Standalone, instructor-only observation checklist; it never advances or blocks a group.
+  if(body.action==='gradeChecklist'){
+   if(identity.role!=='teacher')return respond({error:'فقط مدرس اجازه ثبت چک‌لیست دارد'},403,origin);
+   const team=body.team,mission=body.mission,marks=body.marks;
+   if(!Number.isInteger(team)||team<1||team>10||!Number.isInteger(mission)||mission<0||mission>3||
+      !Array.isArray(marks)||marks.length!==5||!marks.every(v=>typeof v==='boolean'))
+      return respond({error:'ورودی ارزیابی نامعتبر است'},400,origin);
+   const choices=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(missionChoice,missionChoiceRound)&select=field_key,field_value');
+   const actual=Object.fromEntries((choices||[]).map(row=>[row.field_key,row.field_value]));
+   if(actual.missionChoice!==mission)return respond({error:'راهبرد گروه تغییر کرده است؛ دوباره گروه را انتخاب کنید'},409,origin);
+   const key='instructorChecklist'+mission;
+   const result=await teacherWrite(team,{[key]:JSON.stringify({marks})});
+   if(!result?.ok)return respond({error:'ارزیابی هم‌زمان تغییر کرده است؛ دوباره بررسی کنید'},409,origin);
+   return respond({ok:true,records:result.records,team,mission,score:marks.filter(Boolean).length},200,origin);
+  }
   if(body.action==='classroom'){
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
    const next=body.phase;
@@ -187,13 +202,21 @@ Deno.serve(async req=>{
    if(identity.role!=='teacher')return respond({error:'مجوز مدرس لازم است'},403,origin);
   }else if(identity.role!=='team'||identity.team!==team)return respond({error:'مجوز این گروه را ندارید'},403,origin);
   if(body.action==='read'){
-   const [records,current,seats]=(await Promise.all([
+   const [records,current,seats,checklistRows]=(await Promise.all([
     db('alborz_team_fields?team_no=eq.'+team+'&select='+cols+'&order=field_key.asc&limit=150'),
     db('alborz_team_fields?team_no=eq.1&field_key=in.(classroomPhase,classroomRound)&select=field_key,field_value,version'),
-    db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5')
+    db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5'),
+    db('alborz_team_fields?field_key=like.instructorChecklist*&select=team_no,field_key,field_value&limit=40')
    ]));
+   const checklistBoard=(checklistRows||[]).flatMap(row=>{
+    const match=/^instructorChecklist([0-3])$/.exec(row.field_key||'');
+    if(!match)return [];
+    let saved;try{saved=JSON.parse(row.field_value);}catch{return [];}
+    if(!Array.isArray(saved?.marks)||saved.marks.length!==5||!saved.marks.every(v=>typeof v==='boolean'))return [];
+    return [{team:Number(row.team_no),mission:Number(match[1]),marks:saved.marks}];
+   });
    const by=Object.fromEntries((current||[]).map(x=>[x.field_key,x]));
-   return respond({ok:true,identity,records,assignedCount:(seats||[]).length,classroom:{phase:Number(by.classroomPhase?.field_value??0),version:by.classroomPhase?.version??0,round:Number(by.classroomRound?.field_value??0)}},200,origin);
+   return respond({ok:true,identity,records,assignedCount:(seats||[]).length,checklistBoard,classroom:{phase:Number(by.classroomPhase?.field_value??0),version:by.classroomPhase?.version??0,round:Number(by.classroomRound?.field_value??0)}},200,origin);
   }
   if(body.action==='write'||body.action==='grade'){
    const fields=body.fields,expected=body.expected;
