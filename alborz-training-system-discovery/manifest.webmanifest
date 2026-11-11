@@ -1,13 +1,13 @@
 {
   "id": "/hasan-boudlaie/alborz-training-system-discovery/",
-  "name": "نیازسنجی سامانه آموزش بیمه البرز",
-  "short_name": "Alborz TMS",
-  "description": "فرم نیازسنجی و تعیین دامنه پروژه سامانه جامع آموزش بیمه البرز",
+  "name": "پرسشنامه شناخت نیازمندی‌های سامانه آموزش بیمه البرز",
+  "short_name": "Alborz Survey",
+  "description": "پرسشنامه تعاملی برای کشف نیازمندی‌های درگاه داخلی خدمات آموزشی کارکنان بیمه البرز",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f8f7",
-  "theme_color": "#183a49",
+  "background_color": "#f5f8fb",
+  "theme_color": "#162b43",
   "lang": "fa",
   "dir": "rtl",
   "icons": [
