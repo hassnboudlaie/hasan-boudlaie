@@ -345,31 +345,31 @@
     },
     {
       "title": {
-        "fa": "بوتیک طلا و جواهر",
-        "en": "Digital Jewelry Boutique"
+        "fa": "مدیریت جامع کسب‌وکارهای من",
+        "en": "RF Holding · Multi-Business Workspace"
       },
       "org": {
-        "fa": "زیلوکس",
-        "en": "Zilux Jewels"
+        "fa": "RF Holding · رضا فخرایی",
+        "en": "RF Holding"
       },
       "description": {
-        "fa": "ویترین لوکس دوزبانه، جزئیات محصول، علاقه‌مندی‌ها و ارتباط با بوتیک برای مشاوره و خرید؛ پیش‌نمایش با تصاویر و محصولات نمونه.",
-        "en": "A bilingual jewelry boutique with collections, product details, favorites and consultation enquiries. Design preview with illustrative products and imagery."
+        "fa": "داشبورد یکپارچه مدیریت رستوران، طلا و جواهر و گردشگری با عملیات مستقل هر واحد و خدمات مشترک مالی، مشتریان، کارها و گزارش‌ها.",
+        "en": "A unified multi-business management workspace for restaurant, jewelry and travel operations with shared finance, CRM, tasks and reporting."
       },
       "stage": {
-        "fa": "وب‌سایت دوزبانه · پیش‌نمایش طراحی",
-        "en": "Bilingual boutique · design preview"
+        "fa": "نسخه اولیه تعاملی · توسعه‌پذیر",
+        "en": "Interactive MVP · extensible"
       },
-      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/zilux-jewels/",
-      "id": "zilux",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/rf-holding/",
+      "id": "rf-holding",
       "type": {
-        "fa": "وب‌سایت بوتیک",
-        "en": "Boutique Website"
+        "fa": "سوپر اپ مدیریت کسب‌وکار",
+        "en": "Multi-Business Super App"
       },
-      "brandColor": "#154d4c",
-      "brandAccent": "#b69857",
-      "brandSoft": "#e9f5f2",
-      "wordmark": "ZILUX"
+      "brandColor": "#10383c",
+      "brandAccent": "#c9a56e",
+      "brandSoft": "#e5f4ed",
+      "wordmark": "RF HOLDING"
     },
     {
       "title": {
