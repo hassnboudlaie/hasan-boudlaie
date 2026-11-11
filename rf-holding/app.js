@@ -81,7 +81,7 @@ function home(){
  var recent=data.finances.slice().sort(function(a,b){return (b.createdAt||b.date||"").localeCompare(a.createdAt||a.date||"");}).slice(0,5);
  var tasks=data.tasks.filter(function(t){return !t.done;}).slice().sort(function(a,b){return (a.due||"9999").localeCompare(b.due||"9999");}).slice(0,5);
  out+='<div class="two-column"><section class="card"><div class="card-title-row"><h3>آخرین گردش‌های مالی</h3><button class="link-btn" data-route="finance">مدیریت مالی ←</button></div>'+(recent.length?'<div class="record-list">'+recent.map(function(f){return '<div class="record-item"><div class="record-main"><span class="record-icon">'+(f.type==="income"?"↙":"↗")+'</span><div><strong>'+esc(f.title)+'</strong><small>'+esc(bizName(f.businessId))+' · '+dateText(f.date)+'</small></div></div><strong class="record-meta">'+(f.type==="income"?"+":"−")+money(f.amount)+'</strong></div>';}).join("")+'</div>':empty("💳","هنوز تراکنشی ثبت نشده است","ثبت دریافت و پرداخت از همین‌جا آغاز می‌شود.","add-finance","ثبت تراکنش"))+'</section><section class="card"><div class="card-title-row"><h3>پیگیری‌های نزدیک</h3><button class="link-btn" data-route="tasks">همه کارها ←</button></div>'+(tasks.length?'<div class="record-list">'+tasks.map(function(t){return '<div class="record-item"><div class="record-main"><span class="record-icon">☑</span><div><strong>'+esc(t.title)+'</strong><small>'+esc(bizName(t.businessId))+'</small></div></div><span class="record-meta">'+dateText(t.due)+'</span></div>';}).join("")+'</div>':empty("✓","موردی در انتظار پیگیری نیست","کارهای واحدها و کارهای مشترک را ثبت کنید.","add-task","افزودن کار"))+'</section></div>';
- out+='<div class="note-card" style="margin-top:18px"><strong>درباره این نسخه:</strong> این فضای اولیه برای طراحی و ثبت اطلاعات ساخته شده است. داده‌ها در مرورگر همین دستگاه نگهداری می‌شوند؛ هنوز حساب کاربری سازمانی، همگام‌سازی چندکاربره یا اتصال بانکی و فروشگاهی فعال نیست.</div>';
+ out+='<div class="note-card" style="margin-top:18px"><strong>درباره این نسخه:</strong> این فضای اولیه برای طراحی و ثبت اطلاعات ساخته شده است. داده‌ها فقط در مرورگر همین دستگاه نگهداری می‌شوند. تا راه‌اندازی ورود امن و پایگاه داده مرکزی، اطلاعات مالی یا مشخصات محرمانه مشتریان واقعی را در این نسخه آزمایشی وارد نکنید. همگام‌سازی چندکاربره و اتصال بانکی و فروشگاهی هنوز فعال نیست.</div>';
  return out;
 }
 function businessesPage(){return dashboardHeading("کسب‌وکارهای من","مدیریت مستقل هر واحد در کنار خدمات تجمیعی هلدینگ.",button("＋ کسب‌وکار جدید","add-business","strong"),"BUSINESS PORTFOLIO")+bizCards(true);}
@@ -263,11 +263,11 @@ function editRecord(bid,kind,rid){
   body+=field("destination","مقصد","text",meta.destination||"")+field("departure","تاریخ حرکت","date",meta.departure||"");
   body+=field("capacity","ظرفیت (نفر)","number",meta.capacity||"",'min="0" step="1"')+field("image","لینک تصویر تور / مقصد","url",meta.image||"",'placeholder="https://..."',true);
  }
- if(kind==="reservations")body+=field("partySize","تعداد نفرات","number",meta.partySize||"",'min="1" step="1"');
+ if(kind==="reservations"){body+=field("partySize","تعداد نفرات","number",meta.partySize||"",'min="1" step="1"');body+=field("time","ساعت رزرو","time",meta.time||"");}
  if(kind==="bookings")body+=field("passengers","تعداد مسافران","number",meta.passengers||"",'min="1" step="1"');
  if(kind==="orders")body+=field("items","اقلام سفارش","text",meta.items||"",'placeholder="نام غذا و تعداد"',true);
  modal((isEdit?"ویرایش ":"ثبت ")+title,body,function(v){
-  var extraFields={};["sku","grams","karat","qty","image","destination","departure","capacity","partySize","passengers","items"].forEach(function(k){if(v[k]!==undefined)extraFields[k]=v[k];});
+  var extraFields={};["sku","grams","karat","qty","image","destination","departure","capacity","partySize","passengers","items","time"].forEach(function(k){if(v[k]!==undefined)extraFields[k]=v[k];});
   var item={id:rid||id("record"),businessId:bid,kind:kind,title:v.title.trim(),detail:v.detail.trim(),amount:Math.max(0,Number(v.amount)||0),status:v.status,date:v.date,note:v.note.trim(),meta:extraFields,createdAt:r?.createdAt||new Date().toISOString()};
   if(isEdit)Object.assign(r,item);else data.records.push(item);
   log((isEdit?"ویرایش ":"ثبت ")+title+" "+v.title,bid);afterSave(title+" ذخیره شد.");
