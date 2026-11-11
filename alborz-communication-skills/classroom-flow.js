@@ -185,7 +185,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false,awardScreen=false,reviewTeam=1,checklistBoard=[];
+let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false,awardScreen=false,reviewTeam=1,checklistBoard=[],teacherAwards=false,awardTeam=1,awardMember=1,awardMission=null,awardSpotlight=null;
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -537,6 +537,36 @@ async function downloadMedalPng(kind,team,i,member){
  document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 
+
+function currentTeacherAwardMission(){return Number.isInteger(awardMission)&&awardMission>=0&&awardMission<4?awardMission:(groupChoice(awardTeam)??0);}
+function teacherMedalsPanel(){
+ const team=awardTeam,i=currentTeacherAwardMission(),member=awardMember;
+ const groupOK=hasGroupMedal(team,i),personalOK=hasPersonalMedal(team,i,member);
+ const medal='<img src="assets/resilience-medal.svg?v=20261111-award1" class="classroom-showcase-medal" alt="نشان طلایی تاب‌آوری">';
+ const controls='<div class="classroom-medal-chooser"><label>گروه<select data-award-select-team>'+
+  groups().map(t=>'<option value="'+t+'" '+(t===team?'selected':'')+'>گروه '+fa(t)+'</option>').join('')+'</select></label>'+
+  '<label>راهبرد<select data-award-select-mission>'+C.models.map((c,j)=>'<option value="'+j+'" '+(j===i?'selected':'')+'>'+E(labels[j])+'</option>').join('')+'</select></label>'+
+  '<label>عضو<select data-award-select-member>'+Array.from({length:Math.max(1,size(team))},(_,n)=>'<option value="'+(n+1)+'" '+(n+1===member?'selected':'')+'>عضو '+fa(n+1)+'</option>').join('')+'</select></label></div>';
+ const card=(kind,earned,subject)=>'<article class="classroom-showcase-card '+(earned?'is-earned':'is-unearned')+'"><h3>نشان افتخار '+(kind==='group'?'گروهی':'فردی')+'</h3>'+
+  (earned?medal+'<p>'+subject+' · راهبرد '+E(labels[i])+'</p><strong>کسب شده ✓</strong><div class="classroom-medal-actions">'+
+  '<button class="btn" type="button" data-award-project="'+kind+'">نمایش بزرگ روی پرده</button>'+medalDownloadButton(kind,i,member)+'</div>':
+  '<p>این نشان هنوز برای گروه یا عضو انتخاب‌شده کسب نشده است.</p>')+'</article>';
+ const showGroup=card('group',groupOK,'گروه '+fa(team)),showPersonal=card('personal',personalOK,'عضو '+fa(member)+' · گروه '+fa(team));
+ let spotlight='';
+ if(awardSpotlight&&(awardSpotlight==='group'?groupOK:personalOK)){
+  const kind=awardSpotlight;
+  spotlight='<section class="classroom-award-projector" role="dialog" aria-modal="true" aria-label="نمایش روی پرده"><div class="classroom-award-projector-card">'+
+   '<button type="button" class="btn" data-award-close-project>× بازگشت به گالری</button>'+
+   '<h2>نشان افتخار تاب‌آوری '+(kind==='group'?'گروهی':'فردی')+'</h2>'+medal+
+   '<p>'+(kind==='group'?'گروه '+fa(team):'عضو '+fa(member)+' · گروه '+fa(team))+'</p>'+
+   '<strong>راهبرد '+E(labels[i])+'</strong><small>آکادمی مدیریت بیمه البرز</small>'+medalDownloadButton(kind,i,member)+'</div></section>';
+ }
+ return '<section class="classroom-teacher-awards" dir="rtl"><h2>نمایش و دانلود نشان‌های افتخار</h2>'+
+ '<p>گروه، راهبرد و عضو را انتخاب کنید. نشان کسب‌شده را بزرگ روی پرده نشان بدهید یا تصویر PNG آن را دانلود کنید.</p>'+
+ controls+'<div class="classroom-medal-gallery">'+showGroup+showPersonal+'</div>'+
+ '<p class="classroom-medal-footnote">فقط نشان‌های کسب‌شده نمایش و دانلود می‌شوند؛ وضعیت گروه‌ها و گام‌های کلاس تغییر نمی‌کند.</p></section>'+spotlight;
+}
+
 function missionBadge(team){
  const i=groupChoice(team);if(i===null)return '';
  const p='r'+i,m=identity?.role==='team'?identity.member:null;
@@ -555,7 +585,7 @@ function missionBadge(team){
 function ending(team=identity.team,asParticipant=false){
  const teacher=identity.role==='teacher'&&!asParticipant;
  return simpleTitle('جمع‌بندی نهایی','از این مأموریت چه یاد گرفتیم؟','یک یادگیری و یک رفتار کاربردی برای رسیدگی به خسارت را با گروه مرور کنید.')+
- (teacher?'<p class="classroom-prompt">یادگیری کلیدی و یک اقدام عملی هر گروه را جمع‌بندی کن.</p>'+monitorAllGroups():
+ (teacher?'<p class="classroom-prompt">یادگیری کلیدی و یک اقدام عملی هر گروه را جمع‌بندی کن.</p>'+monitorAllGroups()+'<button type="button" class="btn primary" data-award-gallery>نمایش و دانلود نشان‌های افتخار</button>':
  '<section class="classroom-award-start"><h3>پایان مأموریت تاب‌آوری</h3><p>پس از مرور نتیجه، نشان‌های فردی و گروهی را در صفحه پایان مشاهده کنید.</p><button type="button" class="btn primary" data-class-open-awards>تکمیل مأموریت و مشاهده نشان‌ها</button></section>');
 }
 function awardPage(team=identity.team){
@@ -620,7 +650,7 @@ function render(force=false){
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
  const displayStage=teacher&&previewStep!==null?previewStep:stage,previewActive=teacher&&previewStep!==null;
- const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]))+'/'+JSON.stringify(checklistBoard);
+ const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(teacherAwards)+'/'+String(awardTeam)+'/'+String(awardMember)+'/'+String(awardMission)+'/'+String(awardSpotlight)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]))+'/'+JSON.stringify(checklistBoard);
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
  needsRefresh=false;lastFingerprint=signature;
@@ -630,18 +660,20 @@ function render(force=false){
  '<div class="classroom-stage-progress" role="status"><span>'+(teacher?'مسیر مدرس':'پیشرفت گروه')+': '+fa(stage+1)+' از ۱۱</span><meter min="0" max="11" value="'+(stage+1)+'"></meter><span>'+(previewActive?'نمایش مستقل: گام '+fa(displayStage+1):'گام فعال')+'</span></div>';
  const controls=teacher?(previewActive?'<div class="classroom-preview-banner" role="status"><strong>👁️ پیش‌نمایش مستقل گام '+fa(displayStage+1)+'</strong><span>گام واقعی کلاس '+fa(stage+1)+' است؛ مشاهده این صفحه هیچ مرحله یا پاسخی را تغییر نمی‌دهد.</span><button type="button" class="btn primary" data-class-return-live>بازگشت به گام فعال کلاس</button></div>':'<nav class="classroom-controls" aria-label="کنترل مسیر کلاس"><button class="btn" data-class-prev '+(stage===0?'disabled':'')+'>گام قبل</button><div class="classroom-controls-note">'+E(guideNote)+'</div><button class="btn primary" data-class-next '+(nextDisabled?'disabled':'')+' >'+(stage===10?'بخش تاب‌آوری کامل شد':'گام بعد')+'</button></nav>') : '<nav class="classroom-controls classroom-team-controls" aria-label="پیشروی مستقل گروه"><button type="button" class="btn" data-team-prev '+(stage===0?'disabled':'')+'>گام قبل</button><span class="classroom-controls-note">مراحل گروه مستقل هستند؛ تأیید مدرس لازم نیست</span><button type="button" class="btn" data-class-force-refresh>به‌روزرسانی گام</button>'+(stage<10?'<button type="button" class="btn primary" data-team-next '+(stage===0&&!checkin(identity.team,identity.member)||stage===2&&groupChoice(identity.team)===null?'disabled':'')+'>گام بعد ←</button>':classroomRound<3?'<button type="button" class="btn primary" data-team-restart>انتخاب مأموریت بعدی</button>':'<strong>چهار مأموریت تکمیل شد ✓</strong>')+'</nav>';
  let content;
- if(teacher&&projectionMode)content=projectorPanel(displayStage);
+ if(teacher&&teacherAwards)content=teacherMedalsPanel();
+ else if(teacher&&projectionMode)content=projectorPanel(displayStage);
  else if(displayStage===0)content=teacher?rosterTeacher():checkinParticipant();
  else if(displayStage===1)content=strategyIntro(teacher);
  else if(displayStage===2)content=teacher?missionTeacherChoice():chooseMission();
  else if(displayStage<=9)content=teacher?teacherStep(displayStage):learnerMission();
  else content=identity?.role==='team'&&awardScreen?awardPage():ending();
- const resetPanel=teacher?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
+ const resetPanel=teacher&&!teacherAwards?'<details class="classroom-reset"><summary>شروع کارگاه جدید · تنظیمات مدرس</summary><p>برای پاک‌سازی پاسخ‌ها و حضورهای آزمایشی و شروع از مرحله اول استفاده کنید. عضویت‌های ثبت‌شده با کد ملی و محتوای کارگاه حفظ می‌شوند. این عملیات قابل بازگشت نیست.</p><button type="button" class="btn" data-class-reset>پاک‌کردن داده‌های تست و شروع تازه</button></details>':'';
  const inStep=openStep===displayStage;
  const viewSwitch=teacher&&inStep?'<nav class="classroom-view-switch" aria-label="نمای مخصوص مدرس یا گروه"><button type="button" class="'+(!projectionMode?'selected':'')+'" data-class-view="teacher" aria-pressed="'+(!projectionMode?'true':'false')+'">راهنمای مدرس</button><button type="button" class="'+(projectionMode?'selected':'')+'" data-class-view="participant" aria-pressed="'+(projectionMode?'true':'false')+'">نمایش صفحه گروه روی پرده</button></nav>':'';
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
  const featuredObserver=teacher&&displayStage===5&&!projectionMode&&inStep?'<section class="classroom-featured-evaluation"><div class="classroom-featured-title"><h2>ارزیابی گفت‌وگوی گروه‌ها</h2><p>۵ معیار، انتخاب گروه و ثبت فوری امتیاز؛ فقط مدرس</p></div>'+teacherChecklistPanel()+'</section>':'';
- root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+featuredObserver+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
+ const awardNav=teacher?'<nav class="classroom-teacher-award-nav"><button type="button" class="btn primary" data-award-gallery>'+(teacherAwards?'بازگشت به کلاس':'نمایش و دانلود نشان‌های افتخار')+'</button></nav>':'';
+ root.innerHTML='<div class="classroom-layout">'+header+messageBox()+awardNav+(teacherAwards?'<main class="classroom-content">'+content+'</main>':(inStep?navigation+viewSwitch+controls+featuredObserver+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>'))+resetPanel+'</div>';
  syncCoinSelection();
  if(teacher&&projectionMode&&inStep)root.querySelectorAll('.classroom-projection-body input,.classroom-projection-body textarea,.classroom-projection-body select,.classroom-projection-body button').forEach(el=>{el.disabled=true;el.setAttribute('aria-disabled','true');});
 }
@@ -690,6 +722,13 @@ root.addEventListener('change',event=>{
  syncCoinSelection();
 });
 root.addEventListener('change',event=>{const el=event.target.closest('[data-class-context-select]');if(!el)return;const box=root.querySelector('[data-class-context-other="'+el.dataset.classContextSelect+'"]');if(box){box.hidden=el.value!=='__other__';if(!box.hidden)box.focus();}});
+root.addEventListener('change',event=>{
+ if(identity?.role!=='teacher'||!teacherAwards)return;
+ const el=event.target;
+ if(el.matches('[data-award-select-team]')){awardTeam=Number(el.value);awardMember=1;awardMission=null;awardSpotlight=null;lastFingerprint='';render(true);}
+ if(el.matches('[data-award-select-mission]')){awardMission=Number(el.value);awardSpotlight=null;lastFingerprint='';render(true);}
+ if(el.matches('[data-award-select-member]')){awardMember=Number(el.value);awardSpotlight=null;lastFingerprint='';render(true);}
+});
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
@@ -699,6 +738,20 @@ root.addEventListener('click',event=>{
   if(mission===null)return alertUser('این گروه هنوز مأموریت انتخاب نکرده است.',true);
   const marks=Array.from({length:5},(_,j)=>Boolean(root.querySelector('[data-class-observer-mark="'+j+'"]:checked')));
   execute(()=>L.request({action:'gradeChecklist',team,mission,marks}));return;
+ }
+ if(btn.hasAttribute('data-award-gallery')){if(identity?.role!=='teacher')return;teacherAwards=!teacherAwards;awardSpotlight=null;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-award-close-project')){if(identity?.role!=='teacher')return;awardSpotlight=null;lastFingerprint='';render(true);return;}
+ if(btn.hasAttribute('data-award-project')){
+  if(identity?.role!=='teacher'||!teacherAwards)return;
+  const kind=btn.dataset.awardProject,i=currentTeacherAwardMission();
+  if(!(kind==='group'?hasGroupMedal(awardTeam,i):kind==='personal'&&hasPersonalMedal(awardTeam,i,awardMember)))return;
+  awardSpotlight=kind;lastFingerprint='';render(true);return;
+ }
+ if(btn.hasAttribute('data-award-download')){
+  const kind=btn.dataset.awardDownload,teacher=identity?.role==='teacher',team=teacher?awardTeam:identity?.team;
+  const member=teacher?awardMember:identity?.member,i=Number(btn.dataset.awardMission);
+  if(!teacher&&kind==='personal'&&Number(btn.dataset.awardMember)!==member)return;
+  downloadMedalPng(kind,team,i,member).catch(e=>alertUser(e.message||'دانلود ناموفق بود.',true));return;
  }
  if(btn.hasAttribute('data-class-force-refresh')){execute(()=>L.refresh());return;}
  if(btn.hasAttribute('data-class-open-awards')){if(identity?.role!=='team'||stage!==10)return;awardScreen=true;lastFingerprint='';render(true);return;}
