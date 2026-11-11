@@ -446,7 +446,7 @@ function teacherStep(phase=stage){
  const bodies=[
  '<div class="classroom-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>اطلاعاتی که گروه هم می‌بیند</h3><ul>'+d.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul></div>'+teacherContextPreview(i),
  masteryRoles(i),
- teacherChecklistPanel()+masteryTalk(i),
+ masteryTalk(i),
  '<details class="classroom-reference"><summary>کارت‌های تصمیم و پیامدها</summary>'+m.actions.map(a=>'<p><strong>'+E(a[0])+' · '+fa(a[1])+' سکه</strong> — '+E(a[2])+'</p>').join('')+'</details>',
  '<div class="classroom-event"><h3>اتفاق تازه</h3><p>'+E(m.shock)+'</p></div>',
  '<p class="classroom-prompt">'+E(d.question)+'</p>',
@@ -581,7 +581,8 @@ function render(force=false){
  const inStep=openStep===displayStage;
  const viewSwitch=teacher&&inStep?'<nav class="classroom-view-switch" aria-label="نمای مخصوص مدرس یا گروه"><button type="button" class="'+(!projectionMode?'selected':'')+'" data-class-view="teacher" aria-pressed="'+(!projectionMode?'true':'false')+'">راهنمای مدرس</button><button type="button" class="'+(projectionMode?'selected':'')+'" data-class-view="participant" aria-pressed="'+(projectionMode?'true':'false')+'">نمایش صفحه گروه روی پرده</button></nav>':'';
  const navigation=inStep?'<nav class="classroom-map-return"><button type="button" class="btn" data-class-overview>← بازگشت به نقشه ۱۱ گام</button><span>گام '+fa(displayStage+1)+' از ۱۱ · '+E(names[displayStage])+'</span></nav>':'';
- root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
+ const featuredObserver=teacher&&displayStage===5&&!projectionMode&&inStep?'<section class="classroom-featured-evaluation"><div class="classroom-featured-title"><h2>ارزیابی گفت‌وگوی گروه‌ها</h2><p>۵ معیار، انتخاب گروه و ثبت فوری امتیاز؛ فقط مدرس</p></div>'+teacherChecklistPanel()+'</section>':'';
+ root.innerHTML='<div class="classroom-layout">'+header+messageBox()+(inStep?navigation+viewSwitch+controls+featuredObserver+'<main class="classroom-content">'+content+'</main>':'<main class="classroom-content">'+stepMap()+'</main>')+resetPanel+'</div>';
  if(teacher&&projectionMode&&inStep)root.querySelectorAll('.classroom-projection-body input,.classroom-projection-body textarea,.classroom-projection-body select,.classroom-projection-body button').forEach(el=>{el.disabled=true;el.setAttribute('aria-disabled','true');});
 }
 async function execute(task){
