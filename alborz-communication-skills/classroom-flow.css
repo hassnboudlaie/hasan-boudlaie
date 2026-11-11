@@ -491,3 +491,14 @@
 .classroom-award-start h3{font-size:25px;margin-top:0}
 .classroom-award-start .btn{font-size:19px;min-height:55px;margin-top:8px}
 @media(max-width:560px){.classroom-capture,.classroom-role-picker{padding:13px}.classroom-role-choices{grid-template-columns:1fr}.classroom-award{padding:20px 12px}.classroom-award-img{width:210px}}
+
+/* Alborz-only ending, mobile late-action and independent learning awards. */
+.classroom-completion-page{max-width:820px;margin:0 auto;padding:8px 0 34px;text-align:center}
+.classroom-completion-page>.btn{display:inline-flex;margin:8px 0 20px;min-height:50px;align-items:center;justify-content:center}
+.classroom-completion-page .classroom-section-title{text-align:center}
+.classroom-completion-page .classroom-section-title h2{font-size:clamp(26px,4vw,36px)}
+.classroom-award-late-entry{display:block;width:100%;min-height:118px;padding:14px 16px;border:2px solid #a8c7d0;border-radius:14px;background:#fff;color:#173c52;line-height:1.9;font-size:18px;resize:vertical;box-sizing:border-box;text-align:right;direction:rtl}
+.classroom-award-late-entry:focus{outline:3px solid #9fd9cf;outline-offset:2px}
+.classroom-personal-award{border-color:#c9d0e9;background:linear-gradient(145deg,#102f52,#284879)}
+.classroom-completion-note{text-align:center;font-size:14px;line-height:1.85;color:#526472;padding:0 14px}
+@media(max-width:560px){.classroom-completion-page{padding:0 0 25px}.classroom-completion-page>.btn{width:100%}.classroom-award-start{padding:19px 14px}.classroom-award-start .btn{width:100%}}
