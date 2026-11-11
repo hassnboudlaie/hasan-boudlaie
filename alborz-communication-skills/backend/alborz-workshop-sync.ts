@@ -2,7 +2,7 @@
 const endpoint = Deno.env.get('SUPABASE_URL') || '';
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const origins = new Set(['https://hassnboudlaie.github.io']);
-const fieldPattern = /^(?:teamname|stage|teamPhase|teamRound|checkin[1-5]|missionChoice|missionChoiceRound|missionRound[0-3]|classStepReady|r[0-3](?:context|roles|pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
+const fieldPattern = /^(?:teamname|stage|teamPhase|teamRound|checkin[1-5]|missionChoice|missionChoiceRound|missionRound[0-3]|classStepReady|r[0-3](?:context|roles|badge[1-5]|pick|initial|revision|reveal|score[0-4]|evidence|member[1-5])|created(?:Context|Roles|Choice|Event|Dialogue|Debrief|Revision|score[0-4]|evidence)|pitch)$/;
 const headers = (origin) => ({'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':origins.has(origin)?origin:'https://hassnboudlaie.github.io','access-control-allow-headers':'content-type','access-control-allow-methods':'POST, OPTIONS','vary':'Origin','x-content-type-options':'nosniff'});
 const respond = (data,status,origin) => new Response(JSON.stringify(data),{status,headers:headers(origin)});
 async function hash(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),v=>v.toString(16).padStart(2,'0')).join('');}
@@ -36,12 +36,13 @@ function valid(k,v){
    const p=JSON.parse(v),taken=[];
    if(!p||typeof p!=='object'||Array.isArray(p))return false;
    for(const [member,roles] of Object.entries(p)){
-    if(!/^[1-5]$/.test(member)||!Array.isArray(roles)||roles.length>2||roles.some(i=>!Number.isInteger(i)||i<0||i>4))return false;
+    if(!/^[1-5]$/.test(member)||!Array.isArray(roles)||roles.length<1||roles.length>2||roles.some(i=>!Number.isInteger(i)||i<0||i>4))return false;
     taken.push(...roles);
    }
    return new Set(taken).size===taken.length;
   }catch{return false;}
  }
+ if(/^r[0-3]badge[1-5]$/.test(k))return v==='earned';
  if(/^r[0-3]pick$/.test(k))return Array.isArray(v)&&v.length<=4&&new Set(v).size===v.length&&v.every(i=>Number.isInteger(i)&&i>=0&&i<=3);
  if(/^r[0-3]reveal$/.test(k))return typeof v==='boolean';
  if(/score[0-4]$/.test(k))return typeof v==='string'&&/^[012]?$/.test(v);
@@ -215,7 +216,7 @@ Deno.serve(async req=>{
     if((earlier||[]).some(x=>Number(x.field_key.slice(-1))<round&&x.field_value===fields.missionChoice))return respond({error:'این مأموریت در دور قبلی اجرا شده است؛ یکی از راهبردهای دیگر را انتخاب کنید'},409,origin);
    }
    if(body.action==='write'&&('teamPhase' in fields||'teamRound' in fields)){
-    const stateRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(teamPhase,teamRound,missionChoice,missionChoiceRound,r0context,r1context,r2context,r3context,r0initial,r1initial,r2initial,r3initial,r0revision,r1revision,r2revision,r3revision,r0member1,r0member2,r0member3,r0member4,r0member5,r1member1,r1member2,r1member3,r1member4,r1member5,r2member1,r2member2,r2member3,r2member4,r2member5,r3member1,r3member2,r3member3,r3member4,r3member5)&select=field_key,field_value');
+    const stateRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(teamPhase,teamRound,missionChoice,missionChoiceRound,r0context,r1context,r2context,r3context,r0roles,r1roles,r2roles,r3roles,r0initial,r1initial,r2initial,r3initial,r0revision,r1revision,r2revision,r3revision,r0member1,r0member2,r0member3,r0member4,r0member5,r1member1,r1member2,r1member3,r1member4,r1member5,r2member1,r2member2,r2member3,r2member4,r2member5,r3member1,r3member2,r3member3,r3member4,r3member5)&select=field_key,field_value');
     const current=Object.fromEntries((stateRows||[]).map(x=>[x.field_key,x.field_value]));
     const phase=Number(current.teamPhase??0),round=Number(current.teamRound??0);
     if('teamRound' in fields){
@@ -230,6 +231,18 @@ Deno.serve(async req=>{
       if(fields.teamPhase===4&&phase===3){
         const value=current['r'+current.missionChoice+'context'];
         if(typeof value!=='string'||!value.trim())return respond({error:'ابتدا سه پاسخ مشترک گام چهارم را ثبت کنید'},409,origin);
+      }
+      if(fields.teamPhase===5&&phase===4){
+       let assigned;try{assigned=JSON.parse(current[prefix+'roles']||'');}catch{}
+       const seats=await db('alborz_national_members?team_no=eq.'+team+'&select=member_no&limit=5');
+       const all=(seats||[]).map(x=>Number(x.member_no));
+       const picks=assigned&&all.flatMap(n=>assigned[n]||[]);
+       if(!all.length||all.some(n=>!Array.isArray(assigned?.[n])||assigned[n].length<1||assigned[n].length>(all.length<5?2:1))||picks?.length!==5||new Set(picks).size!==5)
+         return respond({error:'برای ورود به گام ششم، هر پنج نقش باید بدون تکرار بین اعضای گروه تقسیم و ثبت شوند'},409,origin);
+      }
+      if(fields.teamPhase===10&&phase===9){
+       if(!Array.from({length:5},(_,j)=>current[prefix+'member'+(j+1)]).some(v=>typeof v==='string'&&v.trim().length>=10))
+        return respond({error:'ابتدا حداقل یک اقدام فردی در گام دهم ثبت کنید'},409,origin);
       }
       if(fields.teamPhase===7&&phase===6&&!(typeof current[prefix+'initial']==='string'&&current[prefix+'initial'].trim().length>=1))
         return respond({error:'ابتدا تصمیم اولیه گروه را ثبت کنید'},409,origin);
@@ -249,6 +262,15 @@ Deno.serve(async req=>{
     const prefix='r'+mine.missionChoice;
     if(phase===6&&!(typeof mine[prefix+'initial']==='string'&&mine[prefix+'initial'].trim().length>=10))return respond({error:'ابتدا تصمیم اولیه گروه را ثبت کنید'},409,origin);
     if(phase===8&&!(typeof mine[prefix+'revision']==='string'&&mine[prefix+'revision'].trim().length>=10))return respond({error:'ابتدا تصمیم اصلاح‌شده را ثبت کنید'},409,origin);
+   }
+   const badgeEntry=entries.find(([k])=>/^r[0-3]badge[1-5]$/.test(k));
+   if(badgeEntry){
+    if(entries.length!==1||Number(badgeEntry[0].slice(-1))!==identity.member)return respond({error:'نشان فردی را فقط خود کارشناس دریافت می‌کند'},403,origin);
+    const mission=Number(badgeEntry[0][1]),base='r'+mission;
+    const badgeRows=await db('alborz_team_fields?team_no=eq.'+team+'&field_key=in.(teamPhase,missionChoice,'+base+'member'+identity.member+')&select=field_key,field_value');
+    const current=Object.fromEntries((badgeRows||[]).map(x=>[x.field_key,x.field_value]));
+    if(Number(current.teamPhase)!==10||current.missionChoice!==mission||typeof current[base+'member'+identity.member]!=='string'||current[base+'member'+identity.member].trim().length<10)
+     return respond({error:'نشان پس از گام یازدهم و ثبت اقدام فردی قابل دریافت است'},409,origin);
    }
    const roleEntry=entries.find(([k])=>/^r[0-3]roles$/.test(k));
    if(roleEntry){
