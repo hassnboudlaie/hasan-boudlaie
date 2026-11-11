@@ -502,3 +502,30 @@
 .classroom-personal-award{border-color:#c9d0e9;background:linear-gradient(145deg,#102f52,#284879)}
 .classroom-completion-note{text-align:center;font-size:14px;line-height:1.85;color:#526472;padding:0 14px}
 @media(max-width:560px){.classroom-completion-page{padding:0 0 25px}.classroom-completion-page>.btn{width:100%}.classroom-award-start{padding:19px 14px}.classroom-award-start .btn{width:100%}}
+
+/* Five-point instructor-only observation and read-only classroom score board. */
+.classroom-teacher-observer,.classroom-observer-board{border:1px solid #b5d1d9;border-radius:20px;padding:20px;margin:18px 0 26px;background:#f4fafb;color:#133f57;line-height:1.9;direction:rtl}
+.classroom-teacher-observer{border-right:5px solid #0a807a;background:#edf8f6}
+.classroom-teacher-observer h3,.classroom-observer-board h3{font-size:clamp(22px,3vw,27px);font-weight:800;color:#123b55;margin:0 0 6px}
+.classroom-teacher-observer>p,.classroom-observer-board>p{font-size:17px;margin:6px 0 12px;color:#30566c}
+.classroom-observer-select{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.classroom-observer-select>span{font-size:18px;font-weight:700}
+.classroom-observer-select select{font:inherit;font-size:18px;color:#183d52;background:white;border:2px solid #a9c7cc;border-radius:13px;padding:11px 13px;max-width:100%;min-width:220px;min-height:54px}
+.classroom-observer-mission{background:white;border:1px solid #bbd3d7;border-radius:12px;padding:9px 13px}
+.classroom-observer-criteria{display:grid;gap:10px;margin:12px 0}
+.classroom-observer-criteria label{display:flex;align-items:center;gap:12px;padding:13px 15px;background:white;border:1px solid #bfd4d7;border-radius:13px;font-size:18px;color:#143b51;line-height:1.8;cursor:pointer}
+.classroom-observer-criteria input{width:24px;height:24px;flex-shrink:0;accent-color:#087e74}
+.classroom-observer-criteria label:has(input:checked){border-color:#158479;background:#e3f7ef}
+.classroom-teacher-observer .btn[data-class-save-observation]{min-height:58px;font-size:20px;font-weight:800;width:100%}
+.classroom-observer-score{font-size:20px!important;font-weight:700;padding:8px 0}
+.classroom-observer-score b{font-size:25px;color:#066c64}
+.classroom-observer-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.classroom-observer-result{background:white;border:1px solid #c6d9df;border-radius:14px;overflow:hidden}
+.classroom-observer-result.is-mine{border:2px solid #087b74;background:#f3fcf8}
+.classroom-observer-result summary{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;padding:12px 14px;cursor:pointer;list-style:revert;font-size:17px}
+.classroom-observer-result summary strong{font-size:19px}
+.classroom-observer-result summary b{color:#0d7469;font-size:20px}
+.classroom-observer-result ul{padding:9px 30px 13px 15px;margin:0;border-top:1px solid #d9e5e8;font-size:16px;line-height:1.8}
+.classroom-observer-result li{margin:5px 0}
+.classroom-observer-note{font-size:14px!important;color:#4f6571!important}
+@media(max-width:570px){.classroom-teacher-observer,.classroom-observer-board{padding:14px}.classroom-observer-results{grid-template-columns:1fr}.classroom-observer-criteria label{font-size:17px;padding:12px}}
