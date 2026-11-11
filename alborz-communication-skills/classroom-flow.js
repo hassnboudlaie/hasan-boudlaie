@@ -443,11 +443,20 @@ function missionMilestones(team){
 }
 function missionBadge(team){
  const i=groupChoice(team);if(i===null)return '';
- const m=identity.member,p='r'+i,n=size(team),own=String(val(team,p+'member'+m)||'').trim().length>=10;
- const awarded=val(team,p+'badge'+m)==='earned';
- const count=Array.from({length:n},(_,j)=>String(val(team,p+'member'+(j+1))||'').trim().length>=10).filter(Boolean).length;
- if(!awarded)return '<section class="classroom-award-start"><h3>پایان مأموریت تاب‌آوری</h3><p>پس از ثبت اقدام فردی گام دهم، نشان خود را دریافت کنید.</p><button type="button" class="btn primary" data-class-claim-badge '+(own?'':'disabled')+'>تکمیل مأموریت و دریافت نشان</button>'+(own?'':'<p>برای فعال شدن دکمه، اقدام فردی خود را ثبت کنید.</p>')+'</section>';
- return '<section class="classroom-award" role="status"><img class="classroom-award-img" alt="نشان طلایی تاب‌آوری" src="assets/resilience-medal.svg?v=20261111-award1"><div class="classroom-award-animals">🐪　🐟　🦎　🐙</div><h3>تبریک! مأموریت تاب‌آوری فردی را تکمیل کردید.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+' · عضو '+fa(m)+'</p><strong>نشان تاب‌آوری فردی ✓</strong><p>'+(n>=3&&count===n?'نشان تاب‌آوری گروهی ✓':'نشان گروهی: '+fa(count)+' از '+fa(n)+' عضو اقدام خود را ثبت کرده‌اند.')+'</p><small>این نشان تأیید تکمیل فعالیت آموزشی است، نه گواهی سنجش روان‌شناختی تاب‌آوری.</small></section>';
+ const p='r'+i,m=identity?.role==='team'?identity.member:null;
+ const hasInitial=!!String(val(team,p+'initial')||'').trim();
+ const hasRevision=!!String(val(team,p+'revision')||'').trim();
+ const hasGroupEvidence=Array.from({length:5},(_,j)=>String(val(team,p+'member'+(j+1))||'').trim()).some(Boolean);
+ const groupDone=hasInitial&&hasRevision&&hasGroupEvidence;
+ const own=m?String(val(team,p+'member'+m)||'').trim().length>=10:false;
+ const awarded=m?val(team,p+'badge'+m)==='earned':false;
+ const groupAward=groupDone?'<section class="classroom-award" role="status"><img class="classroom-award-img" alt="نشان طلایی تاب‌آوری گروه" src="assets/resilience-medal.svg?v=20261111-award1"><div class="classroom-award-animals">🐪　🐟　🦎　🐙</div><h3>تبریک! مأموریت تاب‌آوری گروهی را تکمیل کردید.</h3><p>آکادمی مدیریت بیمه البرز · گروه '+fa(team)+'</p><strong>نشان تاب‌آوری گروهی ✓</strong><small>نشان گروه با تکمیل تصمیم‌ها و ثبت دست‌کم یک اقدام گروهی فعال می‌شود؛ به تکمیل همه اعضا وابسته نیست.</small></section>':
+ '<section class="classroom-award-start"><p>برای تکمیل نشان گروه، تصمیم اولیه، تصمیم اصلاح‌شده و دست‌کم یک اقدام باید ثبت شده باشند.</p></section>';
+ if(!m)return groupAward;
+ const personal=awarded?'<section class="classroom-award classroom-personal-award"><h3>نشان تاب‌آوری فردی ✓</h3><p>عضو '+fa(m)+' · گروه '+fa(team)+'</p><p>تبریک! اقدام فردی خود را ثبت کردید و نشان شما محفوظ است.</p></section>':
+ own?'<section class="classroom-award-start"><h3>نشان فردی شما آماده است</h3><button type="button" class="btn primary" data-class-claim-badge>تکمیل مأموریت و دریافت نشان فردی</button></section>':
+ '<section class="classroom-award-start"><h3>نشان تاب‌آوری فردی</h3><p>برای دریافت نشان فردی لازم است اقدام شخصی گام دهم را ثبت کنید. این موضوع نمایش نشان گروهی یا نشان سایر اعضا را متوقف نمی‌کند.</p></section>';
+ return groupAward+personal;
 }
 
 function ending(team=identity.team,asParticipant=false){
