@@ -221,8 +221,23 @@ function editRecord(bid,kind,rid){
  var labelDetail=({tables:"بخش سالن / موقعیت میز",menu:"دسته‌بندی منو",inventory:"کد / عیار / وزن",reservations:"نام مشتری / شماره میز",packages:"مقصد / مدت",bookings:"مقصد / نام مسافر",projects:"مسئول / مرحله",requests:"مشتری / توضیح",orders:"مشتری / میز",sales:"مشتری / شرح"}[kind]||"جزئیات");
  var labelAmount=({tables:"ظرفیت میز (نفر)",menu:"قیمت فروش (تومان)",inventory:"ارزش / قیمت (تومان)",reservations:"بیعانه (تومان)",packages:"قیمت تور (تومان)",bookings:"مبلغ رزرو (تومان)",projects:"بودجه (تومان)",requests:"برآورد (تومان)",orders:"مبلغ سفارش (تومان)",sales:"مبلغ فروش (تومان)"}[kind]||"مبلغ (تومان)");
  var body=field("title",labelTitle,"text",r?.title||"","required maxlength=150",true)+field("detail",labelDetail,"text",r?.detail||"",'placeholder="توضیحات کوتاه"')+field("amount",labelAmount,"number",r?.amount||"","min=0 step=1")+select("status","وضعیت",kind==="tables"?[["free","آزاد"],["reserved","رزروشده"],["occupied","اشغال"],["cancelled","غیرفعال"]]:[["new","جدید"],["pending","در انتظار"],["active","در جریان"],["done","تکمیل‌شده"],["paid","تسویه‌شده"],["cancelled","لغوشده"]],r?.status||(kind==="tables"?"free":"new"))+field("date","تاریخ","date",r?.date||today(),"required")+textarea("note","توضیحات / جزئیات",r?.note||"");
+
+ var meta=r?.meta||{};
+ if(kind==="inventory"){
+  body+=field("sku","کد محصول / SKU","text",meta.sku||"")+field("grams","وزن (گرم)","number",meta.grams||"",'step="0.001" min="0"');
+  body+=select("karat","عیار",[["18","۱۸ عیار"],["21","۲۱ عیار"],["24","۲۴ عیار"],["other","سایر"]],meta.karat||"18");
+  body+=field("qty","تعداد موجودی","number",meta.qty||"",'min="0" step="1"')+field("image","لینک تصویر واقعی محصول","url",meta.image||"",'placeholder="https://..."',true);
+ }
+ if(kind==="packages"){
+  body+=field("destination","مقصد","text",meta.destination||"")+field("departure","تاریخ حرکت","date",meta.departure||"");
+  body+=field("capacity","ظرفیت (نفر)","number",meta.capacity||"",'min="0" step="1"')+field("image","لینک تصویر تور / مقصد","url",meta.image||"",'placeholder="https://..."',true);
+ }
+ if(kind==="reservations")body+=field("partySize","تعداد نفرات","number",meta.partySize||"",'min="1" step="1"');
+ if(kind==="bookings")body+=field("passengers","تعداد مسافران","number",meta.passengers||"",'min="1" step="1"');
+ if(kind==="orders")body+=field("items","اقلام سفارش","text",meta.items||"",'placeholder="نام غذا و تعداد"',true);
  modal((isEdit?"ویرایش ":"ثبت ")+title,body,function(v){
-  var item={id:rid||id("record"),businessId:bid,kind:kind,title:v.title.trim(),detail:v.detail.trim(),amount:Math.max(0,Number(v.amount)||0),status:v.status,date:v.date,note:v.note.trim(),createdAt:r?.createdAt||new Date().toISOString()};
+  var extraFields={};["sku","grams","karat","qty","image","destination","departure","capacity","partySize","passengers","items"].forEach(function(k){if(v[k]!==undefined)extraFields[k]=v[k];});
+  var item={id:rid||id("record"),businessId:bid,kind:kind,title:v.title.trim(),detail:v.detail.trim(),amount:Math.max(0,Number(v.amount)||0),status:v.status,date:v.date,note:v.note.trim(),meta:extraFields,createdAt:r?.createdAt||new Date().toISOString()};
   if(isEdit)Object.assign(r,item);else data.records.push(item);
   log((isEdit?"ویرایش ":"ثبت ")+title+" "+v.title,bid);afterSave(title+" ذخیره شد.");
  },"ذخیره "+title,isEdit?"حذف این مورد":null,"delete-record:"+rid);
