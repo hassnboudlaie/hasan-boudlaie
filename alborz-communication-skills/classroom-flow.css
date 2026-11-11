@@ -459,3 +459,35 @@
 .classroom-screen .classroom-expandable .mastery-source{font-size:16px;line-height:1.75}
 .classroom-screen .classroom-team-row{min-height:92px}
 @media(max-width:600px){.classroom-screen .classroom-expandable>summary{font-size:20px;padding:15px}.classroom-screen .classroom-expandable>.mastery-lessons,.classroom-screen .classroom-expandable>section{padding:12px}}
+
+/* Resilience individual/group learning completion and role selection */
+.classroom-capture{background:#f5f9fc;border:1px solid #bfd1e0;border-radius:20px;padding:20px;margin:22px 0;max-width:900px}
+.classroom-capture>h3,.classroom-role-picker>h3{margin:0 0 7px;color:#113d5b;font-size:clamp(20px,3vw,25px)}
+.classroom-capture>p,.classroom-role-picker>p{margin:4px 0 16px;color:#34576e;line-height:1.8}
+.classroom-capture-question{display:block;margin:0 0 14px;padding:14px;border:1px solid #d1dee8;border-radius:15px;background:#fff}
+.classroom-capture-question strong{display:block;font-weight:750;margin-bottom:6px;color:#193d56}
+.classroom-capture-question select,.classroom-capture-question textarea{box-sizing:border-box;display:block;width:100%;max-width:100%;font:inherit;color:#18344c;background:#fff;border:1px solid #b4c8d7;border-radius:12px;padding:11px;min-height:52px}
+.classroom-capture-question textarea{margin-top:8px;min-height:80px}
+.classroom-capture-question textarea[hidden]{display:none!important}
+.classroom-role-picker{margin:14px 0 25px;padding:18px;border:1px solid #b5d2d5;border-radius:20px;background:#f5fbfa}
+.classroom-role-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:10px;margin:16px 0}
+.classroom-role-choices label{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #c9dde0;border-radius:13px;padding:12px;cursor:pointer;min-height:67px}
+.classroom-role-choices input{width:22px;height:22px;flex-shrink:0;accent-color:#0f7872}
+.classroom-role-choices span{display:flex;flex:1;flex-direction:column;gap:3px;line-height:1.4}
+.classroom-role-choices small{font-size:13px;color:#5d7180}
+.classroom-role-choices em{font-size:12px;font-style:normal;color:#52706d}
+.classroom-role-choices label:has(input:disabled){opacity:.60;background:#eef2f3;cursor:not-allowed}
+.classroom-role-choices label:has(input:checked){border:2px solid #0e7b75;background:#ecf8f5}
+.classroom-my-roles{padding:14px 16px;background:#edf8f6;border-right:4px solid #0c817a;border-radius:12px;font-size:18px;color:#174c56}
+.classroom-award,.classroom-award-start{text-align:center;max-width:760px;margin:24px auto;padding:28px 22px;border-radius:24px}
+.classroom-award{color:#f5f6f9;background:radial-gradient(circle at 50% 0%,#16496d 0%,#093250 52%,#09273d 100%);box-shadow:0 15px 35px rgba(7,39,62,.17);border:1px solid #b99553}
+.classroom-award h3{color:#fff0c7;font-size:clamp(23px,3.6vw,30px);line-height:1.65;margin:9px 0}
+.classroom-award p{color:#eef2f4;font-size:17px;line-height:1.8}
+.classroom-award strong{display:block;margin:12px auto;color:#ffda83;font-size:22px}
+.classroom-award small{display:block;margin-top:17px;color:#cedee4;font-size:13px}
+.classroom-award-img{display:block;width:min(270px,75vw);height:auto;margin:0 auto;filter:drop-shadow(0 8px 18px rgba(0,0,0,.27))}
+.classroom-award-animals{font-size:clamp(23px,4vw,34px);letter-spacing:5px}
+.classroom-award-start{background:#f4f9fb;border:1px solid #b3cedd;color:#163d57}
+.classroom-award-start h3{font-size:25px;margin-top:0}
+.classroom-award-start .btn{font-size:19px;min-height:55px;margin-top:8px}
+@media(max-width:560px){.classroom-capture,.classroom-role-picker{padding:13px}.classroom-role-choices{grid-template-columns:1fr}.classroom-award{padding:20px 12px}.classroom-award-img{width:210px}}
