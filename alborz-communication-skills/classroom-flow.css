@@ -529,3 +529,11 @@
 .classroom-observer-result li{margin:5px 0}
 .classroom-observer-note{font-size:14px!important;color:#4f6571!important}
 @media(max-width:570px){.classroom-teacher-observer,.classroom-observer-board{padding:14px}.classroom-observer-results{grid-template-columns:1fr}.classroom-observer-criteria label{font-size:17px;padding:12px}}
+
+/* Instructor-first evaluation placement for the live role-play step. */
+.classroom-featured-evaluation{margin:12px 0 18px;padding:12px;border:3px solid #0a8275;border-radius:20px;background:#eaf7f2;box-shadow:0 8px 25px rgba(4,70,67,.12);direction:rtl}
+.classroom-featured-title{padding:10px 11px 0}
+.classroom-featured-title h2{font-size:clamp(25px,4vw,32px);font-weight:800;margin:0;color:#064c48}
+.classroom-featured-title p{font-size:18px;margin:3px 0 7px;color:#345d58}
+.classroom-featured-evaluation .classroom-teacher-observer{margin:8px 0 0;background:#fff;border:1px solid #bddfd5}
+@media(max-width:560px){.classroom-featured-evaluation{padding:8px}.classroom-featured-title h2{font-size:25px}}
