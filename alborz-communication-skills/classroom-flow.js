@@ -168,12 +168,15 @@ function contextForm(i,team){
  (saved.length===3?'<p class="classroom-saved">سه پاسخ گروه ثبت شده‌اند ✓</p>':'')+'</section>';
 }
 
-function individualDiscussion(i){
- const c=C.cases[i],qs=c.individualQuestions||[],as=c.individualAnswers||[];
- return '<section class="individual-discussion" dir="rtl" style="font-size:18px;line-height:1.9">'+
- '<h3>سه پرسش برای گفت‌وگوی گروه</h3><p>همه اعضای حاضر نظر بدهند. این بخش گفت‌وگویی است و پاسخ نوشتاری اجباری ندارد.</p>'+
- qs.map((q,j)=>'<article style="margin:12px 0;padding:12px;border:1px solid #d6e5dc;border-radius:14px"><p><strong>'+E((j+1)+'. '+q)+'</strong></p><details><summary style="cursor:pointer;font-weight:700">پاسخ پیشنهادی</summary><p>'+E(as[j]||'')+'</p></details></article>').join('')+
- '<p>پس از جمع‌بندی شفاهی، یکی از اعضا دکمه «گام بعد» را بزند.</p></section>';
+function teacherContextPreview(i){
+ return '<section class="classroom-capture"><h3>همان سه پرسشِ صفحه کارشناسان</h3><p>هر گروه برای هر پرسش یکی از گزینه‌های مرتبط با سناریوی خودش را انتخاب می‌کند؛ «سایر» هم دارد. مدرس نیازی به ثبت پاسخ ندارد.</p>'+
+ casePrompts.map((q,j)=>'<details><summary>'+fa(j+1)+'. '+E(q)+'</summary><ul>'+caseChoices[i][j].map(choice=>'<li>'+E(choice)+'</li>').join('')+'</ul></details>').join('')+'</section>';
+}
+function badgeArchive(team){
+ if(identity?.role!=='team')return '';
+ const m=identity.member,earned=Array.from({length:4},(_,i)=>i).filter(i=>val(team,'r'+i+'badge'+m)==='earned');
+ if(!earned.length)return '';
+ return '<details class="classroom-personal-lens classroom-badge-archive"><summary>نشان‌های تاب‌آوری دریافت‌شده من · '+fa(earned.length)+'</summary><ul>'+earned.map(i=>'<li><b>'+animals[i]+' '+labels[i]+'</b> · نشان تاب‌آوری فردی آکادمی مدیریت بیمه البرز ✓</li>').join('')+'</ul><p>این نشان‌ها در سامانه ثبت شده‌اند و با ورود مجدد قابل مشاهده هستند.</p></details>';
 }
 
 const names=['ورود و ثبت حضور گروه','معرفی چهار راهبرد','انتخاب مأموریت',...C.missionFlow,'جمع‌بندی و انتقال به کار'];
@@ -288,7 +291,7 @@ function stepMap(){
  }).join('');
  const intro=teacher?'برای ممیزی محتوا می‌توانید هر ۱۱ گام را مستقل باز کنید؛ در حالت پیش‌نمایش، مرحله گروه‌ها و پاسخ‌های آن‌ها تغییر نمی‌کند.':'هر گروه مستقل پیش می‌رود. بعد از انجام فعالیت و ثبت نتیجه، روی «گام بعد» بزنید؛ تأیید مدرس لازم نیست.';
  const preview=previewStep===null?'':'<div class="classroom-map-preview" role="status"><h3>گام '+fa(previewStep+1)+' · '+E(names[previewStep])+'</h3><p>'+(previewStep<stage?'این گام قبلاً طی شده است. فعالیت جاری را از گام مشخص‌شده با نشان «گام فعال» ادامه دهید.':'پس از تکمیل فعالیت قبلی، با دکمه «گام بعد» وارد این مرحله شوید.')+'</p></div>';
- return '<section class="classroom-map"><div class="classroom-map-intro"><span>نقشه مراحل تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+preview+'</section>';
+ return '<section class="classroom-map"><div class="classroom-map-intro"><span>نقشه مراحل تاب‌آوری</span><h2>مسیر کارگاه در ۱۱ گام</h2><p>'+intro+'</p></div><div class="classroom-map-grid" aria-label="فهرست کلیک‌پذیر یازده گام">'+cards+'</div>'+(teacher?'':badgeArchive(identity.team))+preview+'</section>';
 }
 function messageBox(){return '<p id="classroom-feedback" class="classroom-feedback" role="status">'+E(notice)+'</p>';}
 function simpleTitle(kicker,title,description){return '<div class="classroom-section-title"><span>'+E(kicker)+'</span><h2>'+E(title)+'</h2>'+(description?'<p>'+E(description)+'</p>':'')+'</div>';}
@@ -392,7 +395,7 @@ function teacherStep(phase=stage){
  'نتیجه مأموریت و یک اقدام قابل اجرا را ثبت کنند.'
  ][n];
  const bodies=[
- '<div class="classroom-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>اطلاعاتی که گروه هم می‌بیند</h3><ul>'+d.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul></div>'+individualDiscussion(i),
+ '<div class="classroom-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>اطلاعاتی که گروه هم می‌بیند</h3><ul>'+d.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul></div>'+teacherContextPreview(i),
  masteryRoles(i),
  masteryTalk(i),
  '<details class="classroom-reference"><summary>کارت‌های تصمیم و پیامدها</summary>'+m.actions.map(a=>'<p><strong>'+E(a[0])+' · '+fa(a[1])+' سکه</strong> — '+E(a[2])+'</p>').join('')+'</details>',
@@ -599,7 +602,19 @@ root.addEventListener('click',event=>{
    if(picked.length<1||picked.length>max)return alertUser('حداقل یک و حداکثر '+fa(max)+' نقش برای خود انتخاب کنید.',true);
    const r=allocatedRoles(identity.team,i);r[identity.member]=picked;const all=Object.values(r).flat();
    if(new Set(all).size!==all.length)return alertUser('این نقش قبلاً انتخاب شده است؛ صفحه را به‌روزرسانی کنید.',true);
-   execute(()=>saveFields({['r'+i+'roles']:JSON.stringify(r)}));return;
+   execute(async()=>{
+    const key='r'+i+'roles';
+    try{await saveFields({[key]:JSON.stringify(r)});}
+    catch(e){
+      // One bounded optimistic-concurrency retry for simultaneous team role picks.
+      await L.refresh();
+      const latest=allocatedRoles(identity.team,i);
+      const conflict=Object.entries(latest).some(([n,roles])=>Number(n)!==identity.member&&(roles||[]).some(v=>picked.includes(v)));
+      if(conflict)throw Error('یکی از نقش‌ها هم‌زمان به عضو دیگری اختصاص یافت؛ نقش آزاد را انتخاب کنید.');
+      latest[identity.member]=picked;
+      await saveFields({[key]:JSON.stringify(latest)});
+    }
+  });return;
   }
   if(btn.hasAttribute('data-class-claim-badge')){
    if(identity?.role!=='team'||stage!==10)return;const i=groupChoice(identity.team);if(i===null)return;
