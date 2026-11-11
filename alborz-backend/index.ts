@@ -222,6 +222,16 @@ Deno.serve(async req=>{
    const fields=body.fields,expected=body.expected;
    if(!fields||Array.isArray(fields)||typeof fields!=='object'||!expected||Array.isArray(expected)||typeof expected!=='object')return respond({error:'اطلاعات یا نسخه پایه نامعتبر است'},400,origin);
    const entries=Object.entries(fields);
+   const coinPrices=[[2,2,3,2],[2,2,3,2],[3,2,2,2],[3,2,2,2]];
+   for(const [key,picks] of entries){
+    const m=/^r([0-3])pick$/.exec(key);
+    if(!m||body.action!=='write')continue;
+    const costs=coinPrices[Number(m[1])];
+    const total=Array.isArray(picks)?picks.reduce((a,j)=>a+(costs[j]||99),0):99;
+    if(!Array.isArray(picks)||picks.length<2||picks.length>3||total>6){
+     return respond({error:'بودجه این مأموریت ۶ سکه است؛ دست‌کم دو اقدام را با مجموع حداکثر ۶ سکه انتخاب کنید.'},400,origin);
+    }
+   }
    if(entries.length<1||entries.length>12||entries.some(([k,v])=>body.action==='grade'?!/^instructorScore[0-4]$/.test(k)||!Number.isInteger(v)||v<0||v>10:!valid(k,v)))return respond({error:'فیلد یا مقدار نامعتبر است'},400,origin);
    if(body.action==='write'&&('missionChoice' in fields||'missionChoiceRound' in fields||Object.keys(fields).some(k=>/^missionRound[0-3]$/.test(k)))){
     if(!('missionChoice' in fields&&'missionChoiceRound' in fields))return respond({error:'انتخاب راهبرد و شماره دور باید با هم ثبت شوند'},400,origin);
