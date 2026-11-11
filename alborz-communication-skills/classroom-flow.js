@@ -185,7 +185,7 @@ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 const fa=n=>Number(n).toLocaleString('fa-IR');
 const formatText=x=>E(x||'هنوز پاسخی ثبت نشده است');
 const requested=keys.indexOf(params.get('mission'));
-let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false,awardScreen=false;
+let identity=L.identity(),rows=[],assignedCount=0,assignedCounts=null,stage=0,stageVersion=0,classroomRound=0,reference=requested>=0?requested:0,lastFingerprint='',notice='',busy=false,needsRefresh=false,openStep=0,previewStep=null,consensusDraft=null,previewDraft=null,consensusAgreed=false,consensusRound=0,projectedTeam=1,projectedMember=1,projectionMode=false,projectionSample=false,awardScreen=false,reviewTeam=1,checklistBoard=[];
 
 function rec(team,key){return rows.find(r=>Number(r.team_no)===Number(team)&&r.field_key===key)||null;}
 function val(team,key){return rec(team,key)?.field_value;}
@@ -239,6 +239,55 @@ function rolePicker(i,t,member){
 function masteryRoles(i){
  const m=C.mastery[i],info=C.missions[i].info;
  return '<section class="mastery-roles"><h3>پنج کاراکتر این مأموریت</h3><p>هر نفر اطلاعات نقش خودش را بخواند و با هدف و نگرانی همان شخصیت در گفت‌وگو حضور پیدا کند. در گروه سه یا چهار‌نفره، بعضی افراد دو نقش می‌گیرند.</p><div class="mastery-person-grid">'+m.people.map((p,j)=>'<details class="mastery-person"><summary><span class="mastery-person-num">'+fa(j+1)+'</span><span><strong>'+E(p.name)+'</strong><small>'+E(p.role)+'</small></span></summary><div class="mastery-person-body"><p><b>هدف من:</b> '+E(p.goal)+'</p><p><b>نگرانی من:</b> '+E(p.concern)+'</p><p><b>اطلاعات اختصاصی:</b> '+E(info[j])+'</p><p><b>لحن و رفتار:</b> '+E(p.style)+'</p><p class="mastery-person-cue"><b>پاسخ احتمالی:</b> '+E(p.cue)+'</p></div></details>').join('')+'</div><p class="mastery-tip">تمرین پنج‌دقیقه‌ای: یک نفر نقش مشتری یا مدیر دشوار را اجرا کند و بقیه پاسخ حرفه‌ای بسازند؛ سپس نقش‌ها را عوض کنید. نام‌ها فرضی‌اند و داده واقعی پرونده را وارد تمرین نکنید.</p></section>';
+}
+
+// Five observable behaviors for role-play feedback; only the instructor can save.
+const observerShared=[
+ 'فشار واقعی کارشناس خسارت را درست نشان دادند.',
+ 'گفت‌وگو طبیعی بود و افراد نقش‌هایشان را اجرا کردند.',
+ 'لحن قاطع و محترمانه بود؛ بدون توهین، تسلیم یا وعده غیرمجاز.',
+ 'اقدام بعدی مشخص، عملی و در محدوده اختیار کارشناس بود.'
+];
+const observerByMission=[
+ 'شتر: با حفظ روش درست رسیدگی، فشار را مدیریت و تمرکز را بازیابی کردند.',
+ 'ماهی آزاد: با حفظ رویه معتبر، مسیر مستقلی برای رشد مهارت و تاب‌آوری فردی ساختند.',
+ 'آفتاب‌پرست: روش ناکارآمد قبلی را واقعاً تغییر دادند، نه فقط قول پیگیری بهتر.',
+ 'اختاپوس: هم روش اصلی ناکارآمد را اصلاح کردند و هم مسیر مستقل توسعه توانمندی ساختند.'
+];
+function observerCriteria(i){return [...observerShared,observerByMission[i]];}
+function readChecklist(raw){
+ try{
+  const entry=typeof raw==='string'?JSON.parse(raw):raw;
+  return Array.isArray(entry?.marks)&&entry.marks.length===5&&entry.marks.every(x=>typeof x==='boolean')?entry.marks:null;
+ }catch{return null;}
+}
+function checklistSnapshot(){
+ if(identity?.role==='teacher'){
+  return rows.filter(r=>/^instructorChecklist[0-3]$/.test(r.field_key)).flatMap(r=>{
+   const marks=readChecklist(r.field_value);
+   return marks?[{team:Number(r.team_no),mission:Number(r.field_key.slice(-1)),marks}]:[];
+  });
+ }
+ return checklistBoard.filter(r=>Number.isInteger(r.team)&&r.team>=1&&r.team<=10&&Number.isInteger(r.mission)&&r.mission>=0&&r.mission<=3&&readChecklist({marks:r.marks}));
+}
+function observerScore(marks){return marks.filter(Boolean).length;}
+function observationBoard(currentTeam){
+ const results=checklistSnapshot().sort((a,b)=>a.team-b.team);
+ if(!results.length)return '<section class="classroom-observer-board"><h3>ارزیابی اجرای گفت‌وگوها</h3><p>پس از ثبت ارزیابی مدرس، امتیاز گروه‌ها همین‌جا نمایش داده می‌شود. این امتیاز مانع پیشروی گروه نیست.</p></section>';
+ return '<section class="classroom-observer-board" aria-live="polite"><h3>ارزیابی گفت‌وگوهای گروه‌ها</h3><p>امتیاز مدرس از ۵؛ قابل مشاهده برای همه گروه‌ها</p><div class="classroom-observer-results">'+
+ results.map(item=>'<details class="classroom-observer-result '+(item.team===currentTeam?'is-mine':'')+'"><summary><strong>گروه '+fa(item.team)+'</strong><span>'+animals[item.mission]+' '+labels[item.mission]+'</span><b>'+fa(observerScore(item.marks))+' از ۵</b></summary><ul>'+observerCriteria(item.mission).map((c,j)=>'<li><span aria-hidden="true">'+(item.marks[j]?'✓':'○')+'</span> '+E(c)+'</li>').join('')+'</ul></details>').join('')+
+ '</div><p class="classroom-observer-note">تیک‌ها رفتارهای مشاهده‌شده هنگام Role-play را نشان می‌دهند؛ نه آزمون روان‌شناختی تاب‌آوری.</p></section>';
+}
+function teacherChecklistPanel(){
+ const team=reviewTeam,mission=groupChoice(team);
+ const tabs='<label class="classroom-observer-select"><span>گروه در حال اجرا</span><select data-class-observer-team>'+groups().map(t=>'<option value="'+t+'" '+(t===team?'selected':'')+'>گروه '+fa(t)+(groupChoice(t)!==null?' · '+labels[groupChoice(t)]:'')+'</option>').join('')+'</select></label>';
+ if(mission===null)return '<section class="classroom-teacher-observer"><h3>ارزیابی اجرای گفت‌وگو · فقط مدرس</h3>'+tabs+'<p>این گروه هنوز مأموریتش را ثبت نکرده است. گروه دیگری را انتخاب کنید.</p></section>';
+ const saved=readChecklist(val(team,'instructorChecklist'+mission)),marks=saved||[false,false,false,false,false];
+ return '<section class="classroom-teacher-observer" aria-label="چک‌لیست ارزیابی مدرس"><h3>چک‌لیست ارزیابی Role-play · ۵ امتیاز</h3><p>پس از شنیدن اجرای هر گروه، رفتارهای دیده‌شده را تیک بزنید؛ سپس ثبت کنید.</p>'+tabs+
+ '<p class="classroom-observer-mission">سناریوی گروه: <b>'+animals[mission]+' '+labels[mission]+'</b></p>'+
+ '<div class="classroom-observer-criteria">'+observerCriteria(mission).map((c,j)=>'<label><input type="checkbox" data-class-observer-mark="'+j+'" '+(marks[j]?'checked':'')+'><span>'+E(c)+'</span></label>').join('')+'</div>'+
+ '<p class="classroom-observer-score" role="status">امتیاز انتخاب‌شده: <b>'+fa(observerScore(marks))+' از ۵</b> '+(saved?'· ارزیابی قبلی ثبت شده است':'· هنوز ثبت نشده')+'</p>'+
+ '<button type="button" class="btn primary" data-class-save-observation>ثبت و نمایش امتیاز برای همه</button><p class="classroom-observer-note">فقط شما می‌توانید ارزیابی را تغییر دهید؛ پیشروی گروه‌ها مستقل است.</p></section>';
 }
 
 function masteryTalk(i){
@@ -397,7 +446,7 @@ function teacherStep(phase=stage){
  const bodies=[
  '<div class="classroom-story"><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>اطلاعاتی که گروه هم می‌بیند</h3><ul>'+d.facts.map(f=>'<li>'+E(f)+'</li>').join('')+'</ul></div>'+teacherContextPreview(i),
  masteryRoles(i),
- masteryTalk(i),
+ teacherChecklistPanel()+masteryTalk(i),
  '<details class="classroom-reference"><summary>کارت‌های تصمیم و پیامدها</summary>'+m.actions.map(a=>'<p><strong>'+E(a[0])+' · '+fa(a[1])+' سکه</strong> — '+E(a[2])+'</p>').join('')+'</details>',
  '<div class="classroom-event"><h3>اتفاق تازه</h3><p>'+E(m.shock)+'</p></div>',
  '<p class="classroom-prompt">'+E(d.question)+'</p>',
@@ -430,7 +479,7 @@ function learnerMission(team=identity.team,member=identity.member,phase=stage,sa
  let body='';
  if(n===0)body='<div class="classroom-story"><h3>هدف شما</h3><p>'+E(d.goal)+'</p><h3>چه اتفاقی افتاده؟</h3><p>'+E(d.situation)+'</p><h3>سه داده مهم</h3><ul>'+d.facts.map(v=>'<li>'+E(v)+'</li>').join('')+'</ul></div>'+personalResilienceLens(i)+contextForm(i,team);
  if(n===1)body=rolePicker(i,team,member)+masteryRoles(i);
- if(n===2){const mine=allocatedRoles(team,i)[member]||[];body='<p class="classroom-my-roles">نقش‌های من در گفت‌وگو: <b>'+(mine.length?mine.map(j=>E(C.mastery[i].people[j].name)).join('، '):'هنوز ثبت نشده')+'</b></p>'+masteryTalk(i);}
+ if(n===2){const mine=allocatedRoles(team,i)[member]||[];body='<p class="classroom-my-roles">نقش‌های من در گفت‌وگو: <b>'+(mine.length?mine.map(j=>E(C.mastery[i].people[j].name)).join('، '):'هنوز ثبت نشده')+'</b></p>'+observationBoard(team)+masteryTalk(i);}
  if(n===3){const savedPick=val(team,prefix+'pick'),picked=Array.isArray(savedPick)?savedPick:[];
  body='<p class="classroom-prompt">با ۶ سکه حداقل دو اقدام انتخاب کنید. یک نفر تصمیم را از طرف گروه ثبت کند.</p><div class="classroom-money">بودجه تصمیم: <strong>۶ سکه</strong></div><div class="classroom-options">'+m.actions.map((a,j)=>'<label><input type="checkbox" data-class-pick="'+j+'" '+(picked.includes(j)?'checked':'')+'><span>'+E(a[0])+'</span><b>'+fa(a[1])+' سکه</b></label>').join('')+'</div><label class="classroom-input"><span>تصمیم و دلیل گروه</span><textarea data-class-answer="initial" rows="3" placeholder="چه اقدام‌هایی را انتخاب کردید؟ چرا؟ مسئول کیست؟">'+E(val(team,prefix+'initial')||'')+'</textarea></label><button class="btn primary" data-class-save="initial">ثبت تصمیم گروه</button>'+(val(team,prefix+'initial')?'<p class="classroom-saved">تصمیم قبلی گروه ثبت شده است ✓</p>':'');}
  if(n===4)body='<div class="classroom-event"><h3>اتفاق جدید</h3><p>'+E(m.shock)+'</p></div><p class="classroom-prompt">به تصمیم قبلی‌تان فکر کنید. آیا با این اطلاعات هنوز آن را مناسب می‌دانید؟</p>';
@@ -512,7 +561,7 @@ function render(force=false){
  if(!identity){root.innerHTML='<p class="classroom-wait">ابتدا با کد ملی وارد شوید؛ نقش مدرس یا کارشناس در سامانه مشخص می‌شود.</p>';lastFingerprint='';return;}
  const teacher=identity.role==='teacher';
  const displayStage=teacher&&previewStep!==null?previewStep:stage,previewActive=teacher&&previewStep!==null;
- const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]));
+ const signature=String(stage)+'/'+String(previewStep)+'/'+String(openStep)+'/'+String(classroomRound)+'/'+String(projectionMode)+'/'+String(projectedTeam)+'/'+String(projectedMember)+'/'+String(projectionSample)+'/'+String(teacher?'t':identity.team)+'/'+String(teacher?reference:groupChoice(identity.team))+'/'+JSON.stringify(rows.map(r=>[r.team_no,r.field_key,r.field_value,r.version]))+'/'+JSON.stringify(checklistBoard);
  if(!force&&signature===lastFingerprint)return;
  if(!force&&root.contains(document.activeElement)&&document.activeElement.matches('textarea,input,select')){needsRefresh=true;return;}
  needsRefresh=false;lastFingerprint=signature;
@@ -564,10 +613,27 @@ root.addEventListener('change',event=>{
  const submit=root.querySelector('[data-class-confirm-mission]');
  if(submit)submit.disabled=!consensusAgreed||consensusDraft===null;
 });
+root.addEventListener('change',event=>{
+ const selector=event.target.closest('[data-class-observer-team]');
+ if(selector&&identity?.role==='teacher'){reviewTeam=Number(selector.value);lastFingerprint='';render(true);return;}
+ const mark=event.target.closest('[data-class-observer-mark]');
+ if(mark&&identity?.role==='teacher'){
+  const chosen=[...root.querySelectorAll('[data-class-observer-mark]:checked')].length;
+  const indicator=root.querySelector('.classroom-observer-score');
+  if(indicator)indicator.innerHTML='امتیاز انتخاب‌شده: <b>'+fa(chosen)+' از ۵</b> · برای نمایش روی ثبت بزنید';
+ }
+});
 root.addEventListener('change',event=>{const el=event.target.closest('[data-class-context-select]');if(!el)return;const box=root.querySelector('[data-class-context-other="'+el.dataset.classContextSelect+'"]');if(box){box.hidden=el.value!=='__other__';if(!box.hidden)box.focus();}});
 root.addEventListener('click',event=>{
  const btn=event.target.closest('button');if(!btn||busy)return;
  if(btn.closest('.classroom-projection-body'))return;
+ if(btn.hasAttribute('data-class-save-observation')){
+  if(identity?.role!=='teacher')return;
+  const team=reviewTeam,mission=groupChoice(team);
+  if(mission===null)return alertUser('این گروه هنوز مأموریت انتخاب نکرده است.',true);
+  const marks=Array.from({length:5},(_,j)=>Boolean(root.querySelector('[data-class-observer-mark="'+j+'"]:checked')));
+  execute(()=>L.request({action:'gradeChecklist',team,mission,marks}));return;
+ }
  if(btn.hasAttribute('data-class-force-refresh')){execute(()=>L.refresh());return;}
  if(btn.hasAttribute('data-class-open-awards')){if(identity?.role!=='team'||stage!==10)return;awardScreen=true;lastFingerprint='';render(true);return;}
  if(btn.hasAttribute('data-class-close-awards')){if(identity?.role!=='team')return;awardScreen=false;lastFingerprint='';render(true);return;}
@@ -721,6 +787,7 @@ window.addEventListener('alborz:classroom-data',event=>{
  identity=event.detail.identity;
  assignedCount=Number(event.detail.assignedCount??0);
  assignedCounts=event.detail.assignedCounts||null;
+ checklistBoard=Array.isArray(event.detail.checklistBoard)?event.detail.checklistBoard:[];
  rows=event.detail.records||[];
  if(identity?.role==='teacher'){
   const record=rec(1,'classroomPhase');stage=Number(record?.field_value??0);stageVersion=record?.version??0;classroomRound=Number(rec(1,'classroomRound')?.field_value??0);
