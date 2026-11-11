@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#102b35">
+<meta name="theme-color" content="#0f3b46">
 <meta name="description" content="RF Holding | فضای مدیریتی یکپارچه کسب‌وکارها با واحدهای عملیاتی مستقل و خدمات مشترک">
 <meta property="og:title" content="RF Holding | کسب‌وکارهای من">
 <title>RF Holding | کسب‌وکارهای من</title>
@@ -12,8 +12,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=20261111.6">
-<script src="./app.js?v=20261111.6" defer></script>
+<link rel="stylesheet" href="./style.css?v=20261111.9"><link rel="stylesheet" href="./kish-theme.css?v=20261111.9">
+<script src="./i18n.js?v=20261111.9" defer></script>
+<script src="./app.js?v=20261111.9" defer></script>
 </head>
 <body>
 <a class="skip" href="#workspace">رفتن به محتوای اصلی</a>
@@ -21,7 +22,7 @@
 <aside class="sidebar" id="sidebar" aria-label="منوی اصلی">
 <div class="brand"><div class="brand-seal">RF<span class="brand-dot"></span></div><div class="brand-copy"><strong>RF HOLDING</strong><small>کسب‌وکارهای من</small></div><button type="button" id="closeSidebar" class="icon-btn sidebar-close" aria-label="بستن منو">×</button></div>
 <div class="sidebar-scroll">
-<div class="nav-group-label">فضای مدیریت</div>
+<div class="nav-group-label">مرکز مدیریت</div>
 <nav id="mainNav" class="main-nav" aria-label="ناوبری"></nav>
 <div class="nav-group-divider"></div>
 <div class="nav-group-label side-label-row"><span>کسب‌وکارها</span><button type="button" class="tiny-add" data-action="add-business" title="افزودن کسب‌وکار" aria-label="افزودن کسب‌وکار">＋</button></div>
@@ -32,11 +33,11 @@
 <div class="app-main">
 <header class="topbar">
 <div class="topbar-right"><button type="button" id="menuOpen" class="icon-btn mobile-menu" aria-label="باز کردن منو">☰</button><div class="breadcrumb" id="breadcrumb">داشبورد مجموعه</div></div>
-<div class="topbar-left"><label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="globalSearch" placeholder="جست‌وجوی کسب‌وکار، مشتری، کار..." autocomplete="off" aria-label="جست‌وجوی سراسری"></label><button type="button" class="top-action top-add" data-action="quick-add"><span>＋</span> ثبت جدید</button><button type="button" class="top-avatar" data-route="settings" title="تنظیمات مجموعه">RF</button></div>
+<div class="topbar-left"><div class="language-switch" role="group" aria-label="Choose interface language / انتخاب زبان"><button type="button" class="lang-option" data-rf-lang="fa" aria-label="فارسی" title="فارسی"><span class="flag" aria-hidden="true">🇮🇷</span><span class="lang-caption">فارسی</span></button><button type="button" class="lang-option" data-rf-lang="en" aria-label="English" title="English"><span class="flag" aria-hidden="true">🇺🇸</span><span class="lang-caption">EN</span></button></div><label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="globalSearch" placeholder="جست‌وجوی کسب‌وکار، مشتری، کار..." autocomplete="off" aria-label="جست‌وجوی سراسری"></label><button type="button" class="top-action top-add" data-action="quick-add"><span>＋</span> ثبت جدید</button><button type="button" class="top-avatar" data-route="settings" title="تنظیمات مجموعه">RF</button></div>
 </header>
 <div id="searchResults" class="search-results" hidden></div>
 <main id="workspace" class="workspace" tabindex="-1" aria-live="polite"></main>
-<footer class="site-footer"><span>RF Holding · Business Management Workspace</span><span>نسخه اولیه · داده‌ها صرفاً روی همین دستگاه ذخیره می‌شوند</span></footer>
+<footer class="site-footer"><span>RF Holding · Business Command Center</span><span>نسخه اولیه · داده‌ها صرفاً روی همین دستگاه ذخیره می‌شوند</span><a class="photo-credit" target="_blank" rel="noopener noreferrer" href="https://commons.wikimedia.org/wiki/File:Kish_Island,_Persian_Gulf,_Iran.jpg" title="Kish Island photo by Mehrraz, CC BY-SA 4.0">Kish Island photo · Mehrraz · CC BY-SA 4.0</a></footer>
 </div>
 <div class="overlay" id="navOverlay" hidden></div>
 <nav id="mobileNav" class="mobile-bottom-nav" aria-label="ناوبری موبایل"></nav>
