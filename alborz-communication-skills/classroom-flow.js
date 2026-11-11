@@ -550,21 +550,23 @@ function teacherMedalsPanel(){
  const card=(kind,earned,subject)=>'<article class="classroom-showcase-card '+(earned?'is-earned':'is-unearned')+'"><h3>نشان افتخار '+(kind==='group'?'گروهی':'فردی')+'</h3>'+
   (earned?medal+'<p>'+subject+' · راهبرد '+E(labels[i])+'</p><strong>کسب شده ✓</strong><div class="classroom-medal-actions">'+
   '<button class="btn" type="button" data-award-project="'+kind+'">نمایش بزرگ روی پرده</button>'+medalDownloadButton(kind,i,member)+'</div>':
-  '<p>این نشان هنوز برای گروه یا عضو انتخاب‌شده کسب نشده است.</p>')+'</article>';
+  medal+'<p>نمونه آموزشی · نشان هنوز صادر نشده</p><div class="classroom-medal-actions"><button type="button" class="btn" data-award-project="preview-'+kind+'">نمایش نمونه روی پرده</button></div>')+'</article>';
  const showGroup=card('group',groupOK,'گروه '+fa(team)),showPersonal=card('personal',personalOK,'عضو '+fa(member)+' · گروه '+fa(team));
  let spotlight='';
- if(awardSpotlight&&(awardSpotlight==='group'?groupOK:personalOK)){
-  const kind=awardSpotlight;
+ if(awardSpotlight){
+  const preview=awardSpotlight.startsWith('preview-'),kind=preview?awardSpotlight.slice(8):awardSpotlight;
+  const earned=kind==='group'?groupOK:personalOK;
+  if(!preview&&!earned)return '<section class="classroom-teacher-awards"><p>این نشان هنوز صادر نشده است.</p><button type="button" class="btn" data-award-close-project>بازگشت به گالری</button></section>';
   spotlight='<section class="classroom-award-projector" role="dialog" aria-modal="true" aria-label="نمایش روی پرده"><div class="classroom-award-projector-card">'+
    '<button type="button" class="btn" data-award-close-project>× بازگشت به گالری</button>'+
-   '<h2>نشان افتخار تاب‌آوری '+(kind==='group'?'گروهی':'فردی')+'</h2>'+medal+
+   '<h2>نشان افتخار تاب‌آوری '+(kind==='group'?'گروهی':'فردی')+'</h2>'+(preview?'<div class="classroom-award-demo-notice">نمونه آموزشی — نشان هنوز صادر نشده است</div>':'')+medal+
    '<p>'+(kind==='group'?'گروه '+fa(team):'عضو '+fa(member)+' · گروه '+fa(team))+'</p>'+
-   '<strong>راهبرد '+E(labels[i])+'</strong><small>آکادمی مدیریت بیمه البرز</small>'+medalDownloadButton(kind,i,member)+'</div></section>';
+   '<strong>راهبرد '+E(labels[i])+'</strong><small>آکادمی مدیریت بیمه البرز</small>'+(preview?'':medalDownloadButton(kind,i,member))+'</div></section>';
  }
  return '<section class="classroom-teacher-awards" dir="rtl"><h2>نمایش و دانلود نشان‌های افتخار</h2>'+
  '<p>گروه، راهبرد و عضو را انتخاب کنید. نشان کسب‌شده را بزرگ روی پرده نشان بدهید یا تصویر PNG آن را دانلود کنید.</p>'+
  controls+'<div class="classroom-medal-gallery">'+showGroup+showPersonal+'</div>'+
- '<p class="classroom-medal-footnote">فقط نشان‌های کسب‌شده نمایش و دانلود می‌شوند؛ وضعیت گروه‌ها و گام‌های کلاس تغییر نمی‌کند.</p></section>'+spotlight;
+ '<p class="classroom-medal-footnote">برای نشان‌های صادرنشده، فقط پیش‌نمایشِ مشخص با برچسب نمونه آموزشی قابل نمایش است؛ دانلود PNG فقط برای نشان‌های کسب‌شده فعال است.</p></section>'+spotlight;
 }
 
 function missionBadge(team){
@@ -744,7 +746,8 @@ root.addEventListener('click',event=>{
  if(btn.hasAttribute('data-award-project')){
   if(identity?.role!=='teacher'||!teacherAwards)return;
   const kind=btn.dataset.awardProject,i=currentTeacherAwardMission();
-  if(!(kind==='group'?hasGroupMedal(awardTeam,i):kind==='personal'&&hasPersonalMedal(awardTeam,i,awardMember)))return;
+  const preview=kind.startsWith('preview-'),realKind=preview?kind.slice(8):kind;
+  if(!['group','personal'].includes(realKind)||!preview&&!(realKind==='group'?hasGroupMedal(awardTeam,i):hasPersonalMedal(awardTeam,i,awardMember)))return;
   awardSpotlight=kind;lastFingerprint='';render(true);return;
  }
  if(btn.hasAttribute('data-award-download')){
