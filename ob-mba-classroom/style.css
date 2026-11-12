@@ -188,3 +188,8 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
 /* Keep the phone masthead uncluttered; installation remains one tap from student home. */
 .install-header{white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
 @media(max-width:700px){.mast .install-header{display:none}}
+
+/* Compact content-only layout after copy review */
+.student-focus{min-height:155px;gap:13px}.hero-card{min-height:170px;gap:14px}.learning-paths-head{margin:0}
+.demo-disclosure p{padding-top:0}
+@media(max-width:700px){.student-focus{min-height:170px;gap:13px}.hero-card{min-height:180px;gap:16px}.install-inline{min-height:66px}.student-redesign{gap:17px}}
