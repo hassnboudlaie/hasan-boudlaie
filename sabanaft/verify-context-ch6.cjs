@@ -23,5 +23,5 @@ assert.match(shellJS,/if\(r\.page==="context"\)setContext\(\)/,'PWA context rout
 assert.match(shellJS,/u\.hash="context"/,'PWA points at canonical course route');
 assert.match(original,/"dimensions":\[\{"id":"certainty"/,'canonical dimensions present');
 assert.match(read('app/lesson-notes.html'),/chapter6/,'chapter six summary present');
-assert.match(read('app/sw.js'),/shell-v17/,'PWA cache revision');
+assert.match(read('app/sw.js'),/shell-v18/,'PWA cache revision');
 console.log('PASS: one canonical Chapter 6 context workflow; studio legacy removed; chapter lesson links, PWA, reflection and syntax verified.');
