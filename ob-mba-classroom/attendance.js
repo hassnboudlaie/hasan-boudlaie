@@ -11,7 +11,7 @@ const named={
  invalid_name:"نام دانشجو معتبر نیست.",window_closed:"مهلت حضور این جلسه پایان یافته است.",
  wrong_code:"کد حضور صحیح نیست.",too_many_attempts:"تعداد تلاش‌های ناموفق بیش از حد مجاز است.",
  invalid_code:"کد شش‌رقمی حضور را وارد کنید.",student_disabled:"دسترسی این دانشجو غیرفعال است.",
- teacher_auth_required:"ورود مدرس لازم است.",server_error:"ارتباط با سامانه برقرار نشد.",
+ teacher_auth_required:"ورود مدرس لازم است.",password_too_short:"رمز جدید حداقل ۱۶ نویسه باشد.",server_error:"ارتباط با سامانه برقرار نشد.",
  attendance_submit_failed:"ثبت حضور انجام نشد؛ دوباره بررسی کنید."
 };
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -91,7 +91,7 @@ function teacherPage(){
  '<details class="expand"><summary>دعوت دانشجویان</summary><div class="inner"><form id="issueInvites" class="stack"><div class="field"><label for="rosterNames">نام دانشجویان (هر نفر یک خط)</label><textarea id="rosterNames" name="names" placeholder="نام و نام خانوادگی دانشجوی اول&#10;نام و نام خانوادگی دانشجوی دوم"></textarea></div><div class="field"><label for="inviteCount">یا تعداد کدهای بدون نام</label><input id="inviteCount" name="count" type="number" value="10" min="1" max="50"></div><button type="submit" class="main-btn">ساخت کدهای دعوت</button></form>'+
  (issued.length?'<div class="code-output" id="inviteOutput">'+esc(inviteLines)+'</div>'+btn("کپی کدها","copyInvites","minor-btn"):'')+
  '<p class="small">هر کد دعوت فقط یک‌بار قابل استفاده است. کدها را جداگانه برای دانشجویان بفرستید.</p></div></details>'+
- '<details class="expand"><summary>تنظیمات</summary><div class="inner">'+btn("خروج از حساب مدرس","signout","minor-btn danger-btn")+'</div></details>';
+ '<details class="expand"><summary>تنظیمات</summary><div class="inner"><form id="changePass" class="stack"><div class="field"><label for="passwordNew">تغییر رمز مدرس</label><input id="passwordNew" type="password" name="password" autocomplete="new-password" minlength="16" maxlength="100" required></div><button type="submit" class="minor-btn">ثبت رمز جدید</button></form>'+btn("خروج از حساب مدرس","signout","minor-btn danger-btn")+'</div></details>';
 }
 let currentCode=null;
 function render(){root.innerHTML=credential?.role==="teacher"&&remote?teacherPage():credential?.role==="student"&&remote?studentPage():loginPage()}
@@ -123,6 +123,9 @@ document.addEventListener("submit",e=>{
   selectedLesson=session;
   const result=await work("openWindow",{session,minutes});
   currentCode={session,code:result.code};notice="کد جلسه فعال شد.";
+ })}else if(form.id==="changePass"){run(async()=>{
+  await api("changeTeacherPassword",{password:String(data.get("password")||"")});
+  clearIdentity();activeTab="teacher";notice="رمز جدید ثبت شد. دوباره وارد شوید.";
  })}else if(form.id==="issueInvites"){run(async()=>{
   const names=String(data.get("names")||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
   const result=await work("issueInvites",names.length?{names}:{count:Number(data.get("count"))});
