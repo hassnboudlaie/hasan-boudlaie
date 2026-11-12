@@ -101,8 +101,10 @@ click('navigate',{page:'grades'});
 assert.ok(app.innerHTML.includes('ثبت و انتشار نمره‌ها'),'Grades in own expandable panel');
 role('projector');
 assert.ok(app.innerHTML.includes('حالت تمام‌صفحه'),'Projector supports fullscreen');
-assert.ok(app.innerHTML.includes('پخش اسلایدها'),'Projector can launch in-app lecture presentation');
+assert.ok(app.innerHTML.includes('پخش اسلایدهای فارسی')&&app.innerHTML.includes('پخش نسخه اصلی انگلیسی'),'Projector exposes both presentation languages');
 click('projectPresentation');assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'Projector launches current deck');
+click('openOriginalEnglish');assert.ok(app.innerHTML.includes('پیش‌نمایش پاورپوینت اصلی انگلیسی'),'English original can be projected in-app');
+click('backFromEnglish');assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'English viewer returns to lecture');
 assert.ok(!app.innerHTML.includes('CLASSROOM POLL'),'Projector UI must avoid unnecessary English');
 function lum(hex){const x=hex.replace('#','').match(/.{2}/g).map(v=>parseInt(v,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return .2126*x[0]+.7152*x[1]+.0722*x[2]}
 function ratio(a,b){const x=[lum(a),lum(b)].sort((a,b)=>b-a);return (x[0]+.05)/(x[1]+.05)}
