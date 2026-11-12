@@ -8,3 +8,108 @@ html[data-theme=dark]{color-scheme:dark;--bg:#101c2d;--panel:#1b2c43;--soft:#263
 @media(max-width:820px){.grid.three,.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.mast{padding:17px}.brand-emblem{width:48px;height:48px;font-size:21px}.projector-wrap{min-height:430px}.projector-option{padding:16px}.header-hub{display:none}}
 @media(max-width:600px){body{font-size:17px;line-height:1.85}.site{padding:10px 10px 100px}.mast{border-radius:17px;padding:14px;gap:8px}.brand{gap:10px}.brand-emblem{width:43px;height:43px;min-width:43px}.eyebrow{font-size:11px}.brand-sub{font-size:11px}.brand-copy h1{font-size:18px}.demo-notice{font-size:13px;flex-direction:column;gap:1px}.grid.two,.grid.three{grid-template-columns:1fr}.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.session-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.session-tile{padding:8px 3px;min-height:80px}.session-tile .num{font-size:20px}.form-grid{grid-template-columns:1fr}.card{padding:17px}.hero-card{padding:19px}.rolebar{margin:12px 0;gap:5px}.role-tab{flex:1;padding:8px 5px;font-size:14px;min-height:44px}.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:20;padding:6px max(5px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left));box-shadow:0 -6px 20px #0001}.bottom-nav button{border:0;background:none;color:var(--muted);font-size:12px;min-height:53px;display:grid;place-content:center;gap:1px;justify-items:center;border-radius:10px}.bottom-nav button.active{color:var(--text);background:var(--soft);font-weight:900}.bottom-nav .nav-icon{font-size:20px;line-height:1.2}.projector-wrap{border-radius:15px;min-height:360px;padding:16px;gap:23px}.projector-header h2{font-size:23px}.projector-content .question{font-size:23px}.projector-options{grid-template-columns:1fr;gap:9px}.projector-option{font-size:18px;padding:12px}.projector-footer{font-size:13px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+
+/* Mobile-first readability and progressive disclosure audit — 2026-11-12 */
+:root{--muted:#354960;--gold:#83561d;--line:#b8c5d2;--bg:#f6f5f1}
+html[data-theme=dark]{--muted:#d1e0ef;--gold:#edce97;--line:#657891}
+.site{width:100%;max-width:1680px;padding:clamp(10px,1.3vw,24px) clamp(12px,2.5vw,36px) 60px}
+body{font-size:21px;line-height:1.8}
+h2{font-size:clamp(27px,3vw,36px)}
+h3{font-size:clamp(23px,2.4vw,29px)}
+.eyebrow{font-size:16px}
+.brand-sub{font-size:17px}
+.section-note,.mini-note,.muted,.page-head p,.metric span,.link-card small{font-size:18px;line-height:1.75;color:var(--muted)}
+.pill,.course-tag{font-size:17px}
+.role-tab,.tab,.btn,.ghost,.icon-btn{font-size:19px;min-height:54px}
+.demo-disclosure,.demo-role-menu{margin:13px 0;border:1px solid var(--line);background:var(--panel);border-radius:16px;color:var(--text)}
+.demo-disclosure summary,.demo-role-menu summary{padding:11px 17px;cursor:pointer;font-weight:850;font-size:18px;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.demo-disclosure summary::-webkit-details-marker,.demo-role-menu summary::-webkit-details-marker,.disclosure summary::-webkit-details-marker,.session-section summary::-webkit-details-marker{display:none}
+.demo-disclosure summary::after,.demo-role-menu summary::after,.disclosure summary::after,.session-section summary::after{content:"⌄";font-size:28px;line-height:1;color:var(--gold);transition:transform .15s}
+.demo-disclosure[open] summary::after,.demo-role-menu[open] summary::after,.disclosure[open] summary::after,.session-section[open] summary::after{transform:rotate(180deg)}
+.demo-disclosure p{padding:0 17px 16px;margin:0;font-size:17px;color:var(--muted)}
+.demo-role-menu .rolebar{padding:0 13px 13px;margin:0}
+.disclosure,.session-section{border:1.5px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden}
+.disclosure>summary,.session-section>summary{list-style:none;cursor:pointer;min-height:66px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:850;font-size:22px}
+.disclosure>summary small,.session-section>summary small{font-size:16px;color:var(--muted);font-weight:650}
+.disclosure>.disclosure-body,.session-section>.disclosure-body{padding:0 18px 20px;display:grid;gap:15px}
+.session-section+.session-section{margin-top:12px}
+.hero-card{min-height:300px;align-content:center}
+.hero-card h2{font-size:clamp(27px,3vw,38px)}
+.hero-card p{font-size:20px}
+.card{padding:26px}
+.input,textarea,select{font-size:21px;min-height:60px;border-width:2px;border-color:var(--line)}
+.btn{padding:13px 20px}
+.btn.sm{font-size:18px;min-height:50px}
+.metric strong{font-size:36px}
+.link-card{min-height:100px;font-size:21px}
+.link-card small{font-size:18px}
+.session-tile{min-height:115px}.session-tile .num{font-size:32px}.session-tile small{font-size:16px}
+.option{font-size:21px;min-height:62px}
+.footer{font-size:16px}
+.content-block p{font-size:22px}
+@media(max-width:700px){
+ html{font-size:16px}
+ body{font-size:24px;line-height:1.72}
+ .site{max-width:none;width:100%;padding:8px 8px calc(88px + env(safe-area-inset-bottom))}
+ .mast{border-radius:15px;min-height:102px;padding:16px 13px;gap:9px}
+ .brand{gap:10px;min-width:0}
+ .brand-emblem{width:54px;height:54px;min-width:54px;font-size:23px}
+ .brand-copy{min-width:0}
+ .brand-copy h1{font-size:24px;line-height:1.42}
+ .eyebrow{font-size:15px;line-height:1.6}
+ .brand-sub{font-size:15px}
+ .icon-btn{min-width:51px;min-height:51px;font-size:25px}
+ .header-actions .header-hub{display:none}
+ .demo-disclosure,.demo-role-menu{margin:8px 0}
+ .demo-disclosure summary,.demo-role-menu summary{font-size:20px;padding:13px 15px}
+ .demo-disclosure p{font-size:20px;line-height:1.75}
+ .role-tab{font-size:21px;min-height:56px}
+ main{min-height:calc(100svh - 270px);width:100%}
+ .page{gap:18px;min-height:calc(100svh - 285px)}
+ .page-head{align-items:flex-start;gap:12px}
+ .page-head h2,h2{font-size:33px;line-height:1.43}
+ h3{font-size:27px}
+ p,.page-head p{font-size:23px;line-height:1.75}
+ .page-head p,.section-note,.mini-note,.muted,.link-card small,.metric span{font-size:21px;line-height:1.72;color:var(--muted)}
+ .card{padding:22px 19px;border-radius:19px}
+ .hero-card{min-height:min(58svh,540px);padding:27px 23px;align-content:center;gap:23px}
+ .hero-card h2{font-size:33px;line-height:1.5}
+ .hero-card p{font-size:23px;line-height:1.75}
+ .course-tag,.pill{font-size:19px;padding:7px 13px}
+ .btn,.tab{font-size:23px;min-height:64px;border-radius:14px}
+ .btn.sm{font-size:20px;min-height:52px}
+ .btn-row .btn{flex:1 1 100%}
+ .grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+ .session-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .session-tile{min-height:118px}
+ .session-tile .num{font-size:34px}
+ .session-tile small{font-size:19px}
+ .disclosure>summary,.session-section>summary{font-size:25px;padding:20px 19px;min-height:76px}
+ .disclosure>.disclosure-body,.session-section>.disclosure-body{padding:0 17px 20px}
+ .session-section>summary small{font-size:19px}
+ .link-card{font-size:24px;min-height:104px;padding:17px}
+ .link-card strong{font-size:24px}
+ .link-card small{font-size:21px}
+ .input,select,textarea{font-size:23px;min-height:65px;padding:13px 15px}
+ label{font-size:23px}
+ .option{font-size:23px;min-height:67px}
+ .content-block p{font-size:24px}
+ .slide-frame{font-size:26px;min-height:220px}
+ .metric strong{font-size:38px}.metric span{font-size:22px}
+ .step p{font-size:23px}
+ .bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr));padding:8px max(5px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left))}
+ .bottom-nav button{font-size:16px;min-height:64px;line-height:1.3}
+ .bottom-nav .nav-icon{font-size:28px}
+ .footer{display:none}
+ .projector-wrap{min-height:65svh;gap:25px}
+ .projector-content .question{font-size:27px}
+ .projector-content h3{font-size:29px}
+ .projector-option{font-size:25px}
+ .projector-footer{font-size:21px}
+}
+@media(max-width:350px){.brand-copy h1{font-size:22px}.eyebrow{font-size:13px}.role-tab{font-size:18px}.bottom-nav button{font-size:14px}}
+
+.editor-form{display:grid;gap:16px}.section-picker{max-width:720px}
+.projector-wrap:fullscreen{width:100vw;min-height:100svh;height:100svh;border-radius:0;overflow-y:auto;padding:clamp(24px,5vw,80px)}
+@media(max-width:700px){.editor-form{gap:13px}.section-picker{max-width:none;width:100%}.section-picker select{font-size:25px}.card.stack{gap:19px}}
