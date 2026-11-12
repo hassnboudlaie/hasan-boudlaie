@@ -113,3 +113,78 @@ h3{font-size:clamp(23px,2.4vw,29px)}
 .editor-form{display:grid;gap:16px}.section-picker{max-width:720px}
 .projector-wrap:fullscreen{width:100vw;min-height:100svh;height:100svh;border-radius:0;overflow-y:auto;padding:clamp(24px,5vw,80px)}
 @media(max-width:700px){.editor-form{gap:13px}.section-picker{max-width:none;width:100%}.section-picker select{font-size:25px}.card.stack{gap:19px}}
+
+
+/* Student Experience 3.0 — visually expressive but restrained; teal adds navigation cues to Executive Premium navy/gold. */
+:root{--teal:#086870;--teal-dark:#064950;--aqua:#d6f8f5;--ocean:#078c96}
+html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
+.student-redesign{gap:clamp(18px,2.4vw,30px)}
+.student-redesign .page-head{margin-top:5px}
+.student-redesign .page-head h2{font-size:clamp(27px,3vw,36px)}
+.student-focus{position:relative;isolation:isolate;display:grid;gap:17px;min-height:210px;border-radius:23px;background:linear-gradient(125deg,#11283d,#174858 90%);padding:26px 30px;color:#fff;overflow:hidden}
+.student-focus:before{content:"";position:absolute;left:-65px;bottom:-95px;width:270px;height:270px;border:2px solid #9bb7af60;border-radius:50%;z-index:-1}
+.student-focus:after{content:"";position:absolute;left:-10px;bottom:-65px;width:200px;height:200px;border:1px solid #8dc8cc60;border-radius:50%;z-index:-1}
+.student-focus h3{font-size:clamp(25px,2.7vw,34px);color:#fff}
+.student-focus p{font-size:20px;color:#e8eff5;line-height:1.75}
+.student-focus-top{display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap}
+.focus-kicker{font-size:15px;font-weight:800;color:#e9cf9f}
+.focus-number{font-size:16px;border:1px solid #d5c4a0a0;border-radius:99px;padding:3px 12px;color:#f8ead0}
+.student-focus .btn{justify-self:start;min-width:230px}
+.learning-paths-head{display:grid;gap:1px}
+.learning-paths-head h3{font-size:clamp(25px,2.8vw,32px)}
+.learning-paths-head p{color:var(--muted);font-size:18px}
+.learning-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.learning-card{position:relative;overflow:hidden;display:grid;grid-template-columns:70px minmax(0,1fr) 26px;align-items:center;gap:18px;min-height:174px;padding:24px 24px;border-radius:24px;text-align:right;color:#fff;background:linear-gradient(125deg,#093341,#086973);border:2px solid #54aeb5;box-shadow:0 10px 23px #003c4850;transition:transform .18s,box-shadow .18s,border-color .18s}
+.learning-card.practice-card{background:linear-gradient(120deg,#14283e,#186d73 95%);border-color:#71c4c8}
+.learning-card:before{content:"";position:absolute;left:-50px;top:-63px;width:175px;height:175px;border:2px solid #ffffff1c;border-radius:50%}
+.learning-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px #07334760}
+.learning-card:active{transform:scale(.985)}
+.learning-card:focus-visible{outline:4px solid #ddc184;outline-offset:3px}
+.learning-card-icon{position:relative;display:grid;place-items:center;border-radius:21px;background:#d7f8f5;color:#074f59;width:70px;height:70px}
+.learning-card-icon svg{width:45px;height:45px}
+.learning-card-copy{position:relative;display:grid;gap:8px;min-width:0}
+.learning-card-copy strong{font-size:clamp(23px,2.4vw,29px);line-height:1.4;color:#fff}
+.learning-card-copy small{font-size:18px;line-height:1.65;color:#eff9fb;font-weight:500}
+.learning-card-arrow{font-size:30px;font-weight:900;color:#e9cb8c;align-self:center}
+.student-redesign .extras{background:var(--panel)}
+.install-inline{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:17px;border:2px dashed var(--teal);color:var(--text);background:var(--panel);font-size:20px;font-weight:850;text-decoration:none;padding:15px 22px;min-height:70px}
+.install-inline>span:last-child{display:grid;place-items:center;background:#0b6871;border-radius:12px;color:#fff;width:42px;height:42px;font-size:30px}
+.install-inline:hover{background:var(--soft)}
+.lesson-paths{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lesson-track{min-height:96px;display:flex;align-items:center;justify-content:center;gap:14px;border:2px solid var(--line);background:var(--panel);color:var(--text);border-radius:18px;font-weight:850;font-size:22px;padding:15px}
+.lesson-track.selected{background:#093f49;color:#fff;border-color:#55c1c5;box-shadow:inset 0 0 0 2px #55c1c538}
+.lesson-track-icon{display:grid;place-items:center;width:45px;height:45px;background:#d8f4f1;color:#0c5760;border-radius:12px;flex-shrink:0}
+.lesson-track-icon svg{width:32px;height:32px}
+.empty-study{display:grid;justify-items:start;gap:14px;background:var(--panel);border:1px solid var(--line);padding:28px;border-radius:20px}
+.empty-study h3{font-size:27px}
+.empty-study p{color:var(--muted);font-size:20px}
+.empty-study-icon{display:grid;place-items:center;border-radius:16px;background:var(--soft);color:var(--teal);padding:16px}
+.empty-study-icon svg{width:45px;height:45px}
+@media(max-width:900px){.learning-paths{grid-template-columns:1fr}.learning-card{min-height:155px}.lesson-paths{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+ .student-redesign{gap:20px}
+ .student-redesign .page-head h2{font-size:34px}
+ .student-focus{min-height:225px;padding:22px 21px;gap:17px}
+ .student-focus h3{font-size:31px}
+ .student-focus p{font-size:23px;line-height:1.75}
+ .student-focus .btn{width:100%;justify-self:stretch;min-width:0}
+ .focus-kicker{font-size:18px}.focus-number{font-size:19px}
+ .learning-paths-head h3{font-size:29px}.learning-paths-head p{font-size:21px}
+ .learning-paths{gap:14px}
+ .learning-card{grid-template-columns:67px minmax(0,1fr) 23px;padding:21px 16px;gap:13px;min-height:185px;border-radius:22px}
+ .learning-card-icon{width:64px;height:64px;border-radius:17px}
+ .learning-card-icon svg{width:43px;height:43px}
+ .learning-card-copy strong{font-size:28px;line-height:1.5}
+ .learning-card-copy small{font-size:21px}
+ .learning-card-arrow{font-size:28px}
+ .install-inline{font-size:23px;min-height:76px}
+ .lesson-track{padding:12px 8px;min-height:101px;gap:7px;font-size:23px;flex-direction:column}
+ .lesson-track-icon{height:40px;width:40px}.lesson-track-icon svg{width:29px;height:29px}
+ .empty-study{padding:24px 20px}.empty-study p{font-size:23px}
+}
+@media(max-width:350px){.learning-card{grid-template-columns:50px minmax(0,1fr) 20px;gap:9px;padding:17px 10px}.learning-card-icon{width:48px;height:48px}.learning-card-icon svg{width:34px;height:34px}.learning-card-copy strong{font-size:25px}.learning-card-copy small{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.learning-card{transition:none}}
+
+/* Keep the phone masthead uncluttered; installation remains one tap from student home. */
+.install-header{white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+@media(max-width:700px){.mast .install-header{display:none}}
