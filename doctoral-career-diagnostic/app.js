@@ -90,7 +90,7 @@ function updateProgress(){
 function updateSteps(){
  byId('steps').innerHTML=SECTIONS.map((s,i)=>{
   const active=current===i?' active':'';
-  const done=s.questions.filter(x=>x.required).every(x=>hasAnswer(answers[x.id]))?' done':'';
+  const done=countAnswered(s)>0 && s.questions.filter(x=>x.required).every(x=>hasAnswer(answers[x.id]))?' done':'';
   return '<button type="button" class="step-link'+active+done+'" data-jump="'+i+'" '+(active?'aria-current="step"':'')+'><span class="step-no">'+(i+1)+'</span>'+esc(s.title)+'</button>';
  }).join('')+'<button type="button" class="step-link'+(current===SECTIONS.length?' active':'')+'" data-jump="'+SECTIONS.length+'"><span class="step-no">✓</span>Review & submit</button>';
 }
