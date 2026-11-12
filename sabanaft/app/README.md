@@ -42,3 +42,11 @@ A clear coming-soon card on Home routes to `#/coach`, which is a product-preview
 - All four existing model routes, their three-activity drill-down screens, the nine educational sessions, Case/Coaching workspace, practice, reflection and achievements remain navigable. The redesigned cards do not open inline or create duplicate menus.
 - This is a presentation-focused release: no change to The Reflective Leader content, source data, scoring criteria, storage keys, manager records, AI integration or coaching status.
 - Mobile single-column layout, keyboard focus visibility, reduced-motion support and a refreshed PWA shell cache.
+
+## Corrective visual and density audit (2026-11-12)
+- **Root cause found:** the app shell embedded course, context and Studio iframes with later-injected `background:#fff!important` and `font-size:16px!important`, defeating source visual styles. The injected overrides are now replaced with readable 18px and tinted backgrounds; fine print minimum 15px.
+- Home routes retain 4 model elements and the 5th continuous-reflection entry, but use five differentiated surfaces, a shorter image banner, and one clear case-first primary action. Stage pages use compact, separate drill-down screens, not expanding fragments.
+- 9 course cards use compact image-text rows on mobile and three columns on wide screens. Lesson content receives the same colored, high-contrast reading system; no chapter content has been rewritten.
+- Coach: initial form only; follow-through options appear after a response. Disabled AI option and human-coach contact remain accessible under a native disclosure panel, rather than occupying the initial viewport. Safety note remains visible.
+- Leadership Studio embedded and standalone views now share the typography/color hierarchy; data persistence and book-grounded coaching are unaffected.
+- Horizontal clipping, responsive min-width, 48px controls, keyboard focus, reduced-motion, and PWA cache v18. Regression suite must pass before publication.

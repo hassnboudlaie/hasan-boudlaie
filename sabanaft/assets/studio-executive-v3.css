@@ -1,0 +1,61 @@
+/* Saba Naft — Leadership Studio executive visual correction.
+   Display only; no changes to personal data, book interpretations, context ratings,
+   four roles, evidence, case flows, or save behavior. */
+:root{--studio-ink:#17384e;--studio-line:#b8d0de;--studio-soft:#dcebef;--studio-teal:#126b74;--studio-ochre:#9b6938}
+html{max-width:100%;overflow-x:clip}
+body{background:linear-gradient(145deg,#dbe9f0,#e8eff1 50%,#ddece8)!important;color:var(--studio-ink)!important;font:18px/1.74 Vazirmatn,Tahoma,sans-serif!important;overflow-x:clip}
+body .main{max-width:1050px!important;padding:12px clamp(12px,2.6vw,22px) 45px!important}
+body .pane{max-width:1000px!important}
+body .top{margin:0 0 10px!important;gap:8px}
+body .top .eyebrow{font-size:15px!important;color:#24536e!important}
+body .status{font-size:14px!important;background:#cfe7e3!important;color:#175e56!important}
+body .studio-tools{margin:5px 0 12px!important;background:#d5e9ec!important;border:1px solid #bad5da!important;padding:7px 13px!important;box-shadow:none!important;border-radius:14px!important}
+body .studio-tools>summary{min-height:39px!important;color:#194f61!important;font-size:17px!important}
+body .studio-workbar{background:transparent!important;border:0!important;box-shadow:none!important;position:static!important;gap:8px!important;margin:0!important;padding:7px 0 0!important}
+body .studio-workbar button,body .studio-workbar a{background:#e5f1f3!important;border:1px solid #b9d2dc!important;color:#194c61!important;font-size:16px!important;min-height:46px!important;border-radius:11px!important}
+body .studio-workbar [aria-current="page"]{background:#bbe0dc!important;color:#145954!important;border-color:#80beb7!important}
+body h1,body .page-title{font-size:clamp(26px,3vw,33px)!important;line-height:1.48!important;letter-spacing:0!important}
+body h2{font-size:clamp(22px,2.5vw,26px)!important;line-height:1.5!important}
+body h3{font-size:21px!important}
+body .hero{min-height:0!important;padding:clamp(20px,3vw,29px)!important;background:linear-gradient(112deg,#16415e,#216f7a)!important;border-radius:20px!important;box-shadow:0 9px 23px #16405a18!important}
+body .hero h1{font-size:clamp(26px,3.2vw,33px)!important;color:#fff!important}
+body .hero p{font-size:17px!important;color:#e4f3f5!important;line-height:1.7!important}
+body .hero-badge{font-size:15px!important;color:#f3cf91!important}
+body .grid{gap:12px!important;margin-top:13px!important}
+body .card{background:linear-gradient(118deg,#dfedf3,#edf5f7)!important;border:1px solid #bed3df!important;border-radius:17px!important;box-shadow:0 5px 16px #16425c0d!important;padding:clamp(16px,2vw,21px)!important}
+body #view .grid>.card:nth-child(3n+2){background:linear-gradient(115deg,#dceee7,#ebf6ee)!important;border-color:#b5d6c9!important}
+body #view .grid>.card:nth-child(3n){background:linear-gradient(115deg,#f4e9d8,#fbf3e7)!important;border-color:#e3d0b3!important}
+body .card h2,body .card h3{color:#173f56!important}
+body .card p,body .intro,body .title-row p{color:#3d5b6e!important;font-size:17px!important;line-height:1.75!important}
+body .small,body .muted,body .kicker{font-size:16px!important;line-height:1.7!important;color:#436276!important}
+body label,body .field label{font-size:17px!important;color:#20455a!important;font-weight:850!important}
+body button,body .btn{font-size:17px!important;min-height:46px!important;border-radius:11px!important}
+body .btn{background:#176976!important;color:#fff!important}
+body .btn.light{background:#d0e7e9!important;color:#195b68!important}
+body .btn.orange{background:#d7a76a!important;color:#2d343b!important}
+body input,body select,body textarea{font-size:17px!important;min-height:49px!important;border:1px solid #afc7d5!important;background:#f8fbfb!important;color:#17374b!important;border-radius:12px!important}
+body input:focus-visible,body select:focus-visible,body textarea:focus-visible,body button:focus-visible,body a:focus-visible{outline:3px solid #a97841!important;outline-offset:3px}
+body .role,body .case-item,body .metric{background:#edf5f6!important;border:1px solid #c1d9dd!important;border-radius:13px!important}
+body .form-actions{gap:9px!important}
+body .page-title{margin-bottom:10px!important}
+body .rail{background:linear-gradient(125deg,#123852,#1e6b75)!important}
+body .rail .brand small,body .rail .section-kicker{font-size:15px!important;color:#d7e9ed!important}
+body .rail .nav button{font-size:17px!important}
+@media(max-width:760px){
+ body{font-size:18px!important}
+ body .main{padding:8px 11px 37px!important}
+ body .top .eyebrow{font-size:14px!important}
+ body .status{font-size:13px!important}
+ body .studio-workbar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px!important}
+ body .studio-workbar button,body .studio-workbar a{font-size:16px!important;padding:8px 7px!important;min-height:47px!important}
+ body .hero{padding:18px 16px!important}
+ body .hero h1,body h1,body .page-title{font-size:27px!important}
+ body h2{font-size:23px!important}
+ body .grid{gap:10px!important}
+ body .card{padding:15px 14px!important}
+ body .card p,body .intro{font-size:16px!important}
+ body .field label{font-size:16px!important}
+ body .small,body .muted,body .kicker{font-size:15px!important}
+ body .form-grid,body .role-grid,body .role-table{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}

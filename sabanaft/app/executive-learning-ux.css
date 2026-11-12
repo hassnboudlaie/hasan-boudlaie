@@ -1,182 +1,316 @@
-/* Saba Naft / Reflective Leadership OS
-   Executive learning experience · 2026-11-12
-   Adopted interaction grammar: OB MBA (Allameh), Alborz S4, Behparvar S4.
-   Presentation only; no book content, score rules, storage, or security changes. */
+/* Saba Naft · V3 content-density & progressive-navigation correction · 2026-11-12
+   Last-loaded presentation layer. Preserve book content, saved user data,
+   route logic, real progress and all pre-existing working controls. */
 :root{
- --ex-navy:#152b43;--ex-blue:#225981;--ex-teal:#087f85;--ex-gold:#bb8040;
- --ex-bg:#f4f7fa;--ex-ink:#1a3148;--ex-sub:#52677a;--ex-line:#d6e2eb;
- --ex-shadow:0 12px 34px rgba(18,48,73,.075)
+ --ux-ink:#172f46;--ux-deep:#11344f;--ux-teal:#116f76;--ux-amber:#9b642e;
+ --ux-sky:#dceaf2;--ux-mist:#e5eef3;--ux-line:#bfcfdc;--ux-muted:#415d72;
+ --ux-lift:0 7px 21px rgba(15,50,75,.08)
 }
-html{scroll-padding-top:95px}
-body{background:var(--ex-bg)!important;color:var(--ex-ink)!important}
-.app-shell{max-width:1100px}
-button,a,input,textarea,select{touch-action:manipulation}
-button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #bc8242!important;outline-offset:3px}
-.view h1,.view h2,.view h3{letter-spacing:0}
-.view h1{line-height:1.5}
-.view p{line-height:1.85}
-.topbar,body.saba-home .topbar{border-bottom:1px solid #d6e2ed!important;box-shadow:0 5px 18px #1839510a!important}
-.topbar .brand strong{font-weight:950}
-.topbar .model-nav-toggle{min-height:47px}
-.topbar .global-score{min-height:45px}
-.model-side-nav{box-shadow:0 20px 65px #102f4b25!important}
-.model-side-list button,.model-side-extras button,.model-side-extras a{transition:background .18s,border-color .18s,transform .18s}
-.model-side-list button:hover,.model-side-extras button:hover,.model-side-extras a:hover{transform:translateX(-2px);border-color:#a5c9d6!important;background:#eef8f9!important}
-.model-side-list button:focus-visible,.model-side-extras button:focus-visible,.model-side-extras a:focus-visible{outline-offset:1px}
-
-/* Case-first home: the primary action now precedes the model tiles. */
-body.saba-home #homeView .saba-home-content{gap:18px!important}
-body.saba-home #homeView .saba-home-heading{height:228px}
-body.saba-home #homeView .saba-home-heading h1{font-size:clamp(34px,4.7vw,51px)!important;font-weight:950}
-body.saba-home #homeView .saba-home-heading p{font-size:clamp(17px,1.8vw,19px)!important;max-width:750px}
-body.saba-home #homeView .saba-companion-actions{margin:0!important}
+html{scroll-padding-top:86px;overflow-x:clip;max-width:100%;-webkit-text-size-adjust:100%}
+body{background:linear-gradient(125deg,#dbe9f1 0%,#e6eef2 49%,#e1eced 100%)!important;
+ color:var(--ux-ink)!important;font:18px/1.72 Vazirmatn,Tahoma,sans-serif!important;
+ overflow-x:clip;max-width:100%}
+*,*:before,*:after{box-sizing:border-box}
+.app-shell,main,.view,.frame-container,.cj-layout,.cj-main{min-width:0;max-width:100%}
+body:not(.saba-home) .app-shell{background:transparent!important;max-width:1040px}
+button,input,textarea,select,a,summary{font-family:Vazirmatn,Tahoma,sans-serif;touch-action:manipulation}
+button:focus-visible,a:focus-visible,summary:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a66f36!important;outline-offset:3px}
+.topbar,body.saba-home .topbar{
+ position:sticky!important;top:0!important;z-index:65!important;
+ min-height:74px!important;padding:8px clamp(12px,2.2vw,24px)!important;
+ background:#eaf2f6f5!important;backdrop-filter:blur(13px);
+ border-bottom:1px solid #c6d7e2!important;box-shadow:0 4px 15px #20496710!important;
+}
+.brand img,body.saba-home .topbar .brand img{background:#fff!important}
+.brand strong,body.saba-home .brand strong{font-size:18px!important;color:#183d57!important}
+.brand small,body.saba-home .brand small{font-size:13px!important;color:#436178!important;letter-spacing:0!important}
+.model-nav-toggle,body.saba-home .model-nav-toggle{font-size:15px!important;min-height:48px!important;background:#dcecf5!important;color:#1b4e6e!important}
+.global-score,body .global-score,body.saba-home .global-score{font-size:15px!important;background:#d9edea!important;color:#164f58!important;min-height:43px!important}
+.install,body.saba-home .topbar .install{font-size:15px!important}
+.model-side-nav{background:linear-gradient(158deg,#173a56,#0f334d)!important;color:#fff!important;box-shadow:-12px 0 36px #132e4640!important}
+.model-side-head>span{color:#fff!important}
+.model-side-head small,.model-side-note{color:#c5e0ee!important;font-size:15px!important}
+.model-side-list button,.model-side-extras button,.model-side-extras a{
+ background:#f0f8fa16!important;color:#f4faff!important;border:1px solid #a7cfdb50!important;
+ min-height:55px!important;font-size:17px!important
+}
+.model-side-list button strong{color:#f4faff!important;font-size:18px!important}
+.model-side-list button:hover,.model-side-extras button:hover,.model-side-extras a:hover{background:#f4ffff32!important;color:white!important}
+.model-side-extras h3{font-size:18px!important;color:#e5f2f7!important}
+.model-side-list button>span{background:#f1f7ff26;color:#fff}
+#modelNavClose{color:#fff;background:#ffffff23;border-color:#ffffff48}
+body:not(.model-nav-open) .model-side-nav{pointer-events:none}
+.view.active{animation:uxAppear .16s ease both}
+@keyframes uxAppear{from{opacity:.76}to{opacity:1}}
+.view h1,.view h2,.view h3{letter-spacing:0!important;line-height:1.48!important}
+.view p{line-height:1.73!important}
+.fineprint,.muted,.eyebrow,.page-heading p,.course-card p{color:var(--ux-muted)}
+.fineprint,.muted{font-size:15px!important}
+ 
+/* HOME: image-backed brand, four colored routes, a fifth reflection route,
+   one primary case action; do not stack supplemental explanations. */
+body.saba-home{background:#dfeaf0!important}
+body.saba-home .app-shell{max-width:100%;padding:0!important;background:transparent!important}
+body.saba-home #homeView.active{
+ background:linear-gradient(160deg,#d9e8ee 0%,#e7eff2 43%,#dcebe9 100%)!important;
+ min-height:0!important;overflow:visible!important
+}
+#homeView .saba-home-photo,#homeView .saba-home-scrim{height:186px!important;bottom:auto!important}
+#homeView .saba-home-photo img{
+ height:186px!important;min-height:0!important;object-position:center 42%!important;
+ filter:brightness(.87) saturate(.9)!important
+}
+#homeView .saba-home-scrim{background:linear-gradient(270deg,#092e4edb,#0a365f91,#06324878)!important}
+body.saba-home #homeView .saba-home-content{
+ max-width:1060px!important;width:100%!important;margin-inline:auto!important;
+ padding:0 clamp(15px,3vw,27px) 38px!important;
+ gap:11px!important;align-items:stretch!important;text-align:right!important
+}
+body.saba-home #homeView .saba-home-heading{
+ height:180px!important;max-width:none!important;margin:0!important;justify-content:center!important
+}
+body.saba-home #homeView .saba-home-overline{font-size:15px!important;color:#e0f4ff!important;text-shadow:0 2px 5px #10273a96}
+body.saba-home #homeView .saba-home-heading h1{
+ font-size:clamp(29px,3.4vw,39px)!important;font-weight:950!important;
+ line-height:1.38!important;margin:4px 0!important;text-shadow:0 3px 12px #062b4870
+}
+body.saba-home #homeView .saba-home-heading p{font-size:17px!important;line-height:1.65!important;color:#f0f9fd!important;max-width:850px}
+body.saba-home #homeView .saba-companion-actions{margin:1px 0 4px!important}
 body.saba-home #homeView .saba-companion-actions button{
- position:relative;min-height:76px!important;padding:17px 24px!important;
- background:linear-gradient(112deg,#087c84,#18587d)!important;
- border:1px solid #0c6b76!important;box-shadow:0 13px 30px #0d687a22!important;
- color:#fff!important;border-radius:19px!important;font-size:clamp(19px,2.3vw,23px)!important;
- font-weight:950!important;text-align:center;transition:transform .18s,box-shadow .18s!important
+ min-height:64px!important;padding:12px 17px!important;border-radius:16px!important;
+ font-size:20px!important;background:linear-gradient(115deg,#0c797b,#185c79)!important;
+ color:#fff!important;border:1px solid #145e76!important;
+ box-shadow:0 7px 17px #0a526123!important
 }
-body.saba-home #homeView .saba-companion-actions button:hover{transform:translateY(-2px);box-shadow:0 18px 40px #0b557533!important}
-body.saba-home #homeView .saba-model-label{margin-top:9px!important;font-size:clamp(22px,2.8vw,27px)!important}
-body.saba-home #homeView .saba-model-label::after{
- content:"";display:block;width:62px;height:4px;border-radius:8px;
- background:linear-gradient(90deg,#ba813f,#13979b);margin-top:7px
-}
-body.saba-home #homeView .saba-home-grid{gap:15px!important}
+body.saba-home #homeView .saba-model-label{font-size:23px!important;font-weight:950!important;margin:9px 0 2px!important;color:#1a4358!important}
+body.saba-home #homeView .saba-model-label::after{display:none!important}
+body.saba-home #homeView .saba-model-loop{gap:8px!important}
+body.saba-home #homeView .saba-home-grid{gap:12px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
 body.saba-home #homeView .saba-home-tile{
- min-height:138px!important;padding:21px 22px!important;
- border:1px solid #d6e2ec!important;border-right:4px solid #1d6b8d!important;
- border-radius:20px!important;box-shadow:var(--ex-shadow)!important;
- transition:transform .18s,box-shadow .18s,border-color .18s!important
+ display:grid!important;grid-template-columns:50px minmax(0,1fr)!important;
+ min-height:100px!important;padding:13px 16px!important;gap:3px 12px!important;
+ border:1px solid #b7d5df!important;border-right:5px solid #247b90!important;
+ border-radius:16px!important;background:linear-gradient(122deg,#cfe6ef,#e4f2f6)!important;
+ box-shadow:0 4px 13px #15425b16!important;color:#163d54!important;transition:transform .15s,box-shadow .15s
 }
-body.saba-home #homeView .saba-home-tile:nth-child(2){border-right-color:#168d86!important}
-body.saba-home #homeView .saba-home-tile:nth-child(3){border-right-color:#b88245!important}
-body.saba-home #homeView .saba-home-tile:nth-child(4){border-right-color:#42668d!important}
-body.saba-home #homeView .saba-home-tile:hover{transform:translateY(-3px);box-shadow:0 18px 39px #193b5c1a!important;border-color:#90b9ca!important}
+body.saba-home #homeView .saba-home-tile:nth-child(2){background:linear-gradient(122deg,#d1ece5,#e6f6ed)!important;border-color:#a6d5c8!important;border-right-color:#198179!important}
+body.saba-home #homeView .saba-home-tile:nth-child(3){background:linear-gradient(122deg,#f6e7d4,#fdf4e7)!important;border-color:#e1cba8!important;border-right-color:#a86e37!important}
+body.saba-home #homeView .saba-home-tile:nth-child(4){background:linear-gradient(122deg,#dce7f2,#eaf1f9)!important;border-color:#b9d2e7!important;border-right-color:#3b6c93!important}
 body.saba-home #homeView .saba-home-tile .saba-tile-icon{
- background:linear-gradient(145deg,#e6f2f9,#d9e9f3)!important;
- color:#195a7e!important;font-size:28px!important
+ height:48px!important;width:48px!important;grid-row:1/span 2!important;
+ background:#d7eaf3!important;color:#174f71!important;border-radius:12px!important;font-size:24px!important
 }
-body.saba-home #homeView .saba-home-tile:nth-child(2) .saba-tile-icon{background:#e2f3ed!important;color:#0b756f!important}
-body.saba-home #homeView .saba-home-tile:nth-child(3) .saba-tile-icon{background:#fff0dc!important;color:#986222!important}
-body.saba-home #homeView .saba-home-tile:nth-child(4) .saba-tile-icon{background:#e9eef9!important;color:#315b87!important}
-body.saba-home #homeView .saba-home-tile strong{font-size:clamp(20px,2.2vw,23px)!important}
-body.saba-home #homeView .saba-home-tile small{font-size:clamp(15px,1.65vw,17px)!important;color:#4e667b!important}
+body.saba-home #homeView .saba-home-tile:nth-child(2) .saba-tile-icon{background:#bce4d8!important;color:#0c685f!important}
+body.saba-home #homeView .saba-home-tile:nth-child(3) .saba-tile-icon{background:#f5dcb9!important;color:#855521!important}
+body.saba-home #homeView .saba-home-tile:nth-child(4) .saba-tile-icon{background:#cbdced!important;color:#2c608b!important}
+body.saba-home #homeView .saba-home-tile strong{font-size:20px!important;line-height:1.45!important;color:#173d52!important}
+body.saba-home #homeView .saba-home-tile small{font-size:16px!important;line-height:1.5!important;color:#345c6c!important}
+body.saba-home #homeView .saba-home-tile:hover{transform:translateY(-2px);box-shadow:var(--ux-lift)!important}
+body.saba-home #homeView .saba-reflection-connector{margin:0!important;min-height:14px!important;color:#705c49!important}
+body.saba-home #homeView .saba-reflection-connector span{font-size:14px!important}
 body.saba-home #homeView button.saba-reflection-band{
- min-height:122px!important;background:linear-gradient(120deg,#fffaf4,#fff)!important;
- border-right:4px solid #bf8646!important;box-shadow:var(--ex-shadow)!important
+ min-height:92px!important;padding:14px 17px!important;gap:10px!important;
+ border-radius:16px!important;border:1px solid #215f73!important;border-right:5px solid #c6914e!important;
+ background:linear-gradient(110deg,#143d58,#21667b)!important;color:#fff!important;
+ box-shadow:var(--ux-lift)!important
 }
-body.saba-home #homeView .saba-reflection-copy strong{font-size:23px!important}
-body.saba-home #homeView .saba-reflection-copy small{font-size:16px!important}
-body.saba-home #homeView .saba-reflection-hint{display:none!important}
-body.saba-home #homeView .saba-home-achievement button{border:1px solid #d6e2ed;box-shadow:0 5px 18px #153c5a0a}
+body.saba-home #homeView .saba-reflection-symbol{height:48px;width:48px;background:#e3f3ef24!important;color:#ffdc9d!important;font-size:34px}
+body.saba-home #homeView .saba-reflection-copy strong{font-size:21px!important;color:#fff!important}
+body.saba-home #homeView .saba-reflection-copy small{font-size:16px!important;color:#e4f3f7!important}
+body.saba-home #homeView .saba-reflection-action{min-height:39px!important;background:#f2dfc5!important;color:#183e53!important;border-radius:11px!important;font-size:15px!important}
+body.saba-home #homeView .saba-home-achievement{margin:0!important}
+body.saba-home #homeView .saba-home-achievement button{
+ min-height:47px!important;padding:9px 15px!important;background:#d0e5e8!important;
+ border:1px solid #b8d7db!important;color:#194b5b!important;border-radius:13px!important;
+ box-shadow:none!important;font-size:16px!important
+}
+body.saba-home #homeView .saba-home-achievement strong{font-size:15px!important;color:#376d78!important}
 
-/* Each selected leadership stage is its own screen and its existing three
-   actions are prominent, tappable drill-down cards. */
-#stageView{max-width:1010px;margin-inline:auto;padding-top:25px}
-.stage-top{margin-bottom:13px}
-.stage-index{font-size:16px;font-weight:800}
-.stage-back{background:#fff!important;border:1px solid #cddde8!important;color:#20547b!important;border-radius:13px;min-height:50px}
+/* STAGES: one active screen; cards colored by interaction purpose. */
+#stageView{padding:18px 0 32px!important}
+.stage-top{margin-bottom:8px!important}
+.stage-back{min-height:43px!important;border-color:#b7cedb!important;background:#d8e9ef!important;font-size:16px!important}
+.stage-index{font-size:15px!important;color:#426274!important}
 .stage-heading{
- background:linear-gradient(116deg,#152e49,#246281 70%,#0c7c83)!important;
- border:1px solid #336e82!important;border-radius:24px!important;
- padding:clamp(22px,3.2vw,35px)!important;
- box-shadow:0 18px 38px #0c40631c;min-height:167px
+ margin:9px 0 13px!important;min-height:118px!important;
+ padding:18px 21px!important;gap:15px!important;border-radius:19px!important;
+ background:linear-gradient(113deg,#173f5c,#226a7b)!important;box-shadow:var(--ux-lift)!important
 }
-.stage-heading h1{font-size:clamp(29px,3.5vw,39px)!important;font-weight:950}
-.stage-heading p{font-size:clamp(17px,2vw,19px)!important;max-width:710px}
-.stage-heading .stage-symbol{width:76px!important;height:76px!important;flex:0 0 76px!important;border-radius:20px!important;background:#ffffff21!important;font-size:39px!important}
-.stage-progress{border:1px solid #bce0d9!important;background:#edf9f6!important;color:#125c58!important;border-radius:15px!important;font-size:16px!important}
-.stage-section-title{font-size:clamp(24px,2.8vw,29px)!important;color:var(--ex-navy)!important;margin:30px 0 16px!important}
-.stage-action-list{gap:16px!important}
+.stage-heading .stage-symbol{width:58px!important;height:58px!important;flex:0 0 58px!important;border-radius:14px!important;font-size:29px!important}
+.stage-heading h1{font-size:clamp(25px,2.9vw,33px)!important;color:#fff!important}
+.stage-heading p{font-size:17px!important;color:#e3f1f4!important}
+.stage-progress{padding:10px 15px!important;font-size:15px!important;border-radius:13px!important;background:#d9eeea!important;color:#16544f!important}
+.stage-section-title{font-size:23px!important;margin:18px 0 11px!important;color:#183a53!important}
+.stage-action-list{gap:11px!important}
 .stage-action{
- min-height:125px!important;border:1px solid #d5e2eb!important;border-right:4px solid #188b92!important;
- padding:22px 24px!important;border-radius:21px!important;
- box-shadow:var(--ex-shadow)!important;transition:transform .17s,box-shadow .17s,border-color .17s!important
+ min-height:98px!important;padding:14px 19px!important;gap:14px!important;
+ border:1px solid #b7d5dd!important;border-right:5px solid #16858d!important;border-radius:17px!important;
+ background:linear-gradient(110deg,#d4e9ef,#e7f2f5)!important;
+ box-shadow:0 5px 13px #1b537015!important
 }
-.stage-action:nth-child(2){border-right-color:#be894a!important}
-.stage-action:nth-child(3){border-right-color:#2c638e!important}
-.stage-action:hover{transform:translateY(-3px);border-color:#94c2ca!important;box-shadow:0 17px 38px #14395018!important}
-.stage-action-num{width:62px!important;height:62px!important;flex:0 0 62px!important;background:#e7f5f3!important;color:#087d7e!important;border-radius:17px!important;font-size:28px!important}
-.stage-action:nth-child(2) .stage-action-num{background:#fff2df!important;color:#946222!important}
-.stage-action:nth-child(3) .stage-action-num{background:#eaf2fa!important;color:#285c86!important}
-.stage-action-copy strong{font-size:clamp(21px,2.2vw,24px)!important;color:#18364f!important}
-.stage-action-copy small{font-size:clamp(16px,1.75vw,18px)!important;color:#516779!important}
-.stage-action-arrow{font-size:29px!important;color:#15878e!important}
+.stage-action:nth-child(2){background:linear-gradient(110deg,#f2e5d2,#faf1e4)!important;border-color:#e0cca8!important;border-right-color:#ae793c!important}
+.stage-action:nth-child(3){background:linear-gradient(110deg,#d8e3f2,#e8eff8)!important;border-color:#bbd1e7!important;border-right-color:#3e6e9a!important}
+.stage-action-num{width:51px!important;height:51px!important;flex:0 0 51px!important;font-size:23px!important;border-radius:13px!important;background:#bfe0df!important;color:#0d676b!important}
+.stage-action:nth-child(2) .stage-action-num{background:#f0d6b2!important;color:#845321!important}
+.stage-action:nth-child(3) .stage-action-num{background:#c5d9ec!important;color:#245984!important}
+.stage-action-copy strong{font-size:21px!important;color:#173c54!important}
+.stage-action-copy small{font-size:16px!important;color:#3e6074!important;line-height:1.6!important}
+.stage-action-arrow{font-size:26px!important;color:#236986!important}
+.stage-action:hover{border-color:#82b9c0!important;box-shadow:var(--ux-lift)!important}
 .stage-note{display:none!important}
 
-/* Lecture, role-play, cases and assessments: unified card rhythm. */
-.page-heading{padding-top:34px}
-.page-heading h1{font-size:clamp(29px,3.8vw,39px)!important;font-weight:950}
-.page-heading>p{font-size:18px!important;color:var(--ex-sub)!important}
-.course-grid{gap:18px!important}
-.course-card{border:1px solid var(--ex-line)!important;border-radius:21px!important;overflow:hidden;box-shadow:var(--ex-shadow)!important;transition:transform .17s,box-shadow .17s}
-.course-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px #14395018!important}
-.course-card>img{height:144px!important;object-fit:cover}
-.course-card-body{padding:19px 21px!important}
-.course-card strong{font-size:clamp(19px,2vw,22px)!important}
-.course-card p{font-size:16px!important;color:#52677a!important}
-.course-card-bottom{font-size:15px!important}
-.lesson-list{gap:14px!important}
-.lesson-card{min-height:108px!important;border:1px solid var(--ex-line)!important;border-right:4px solid #1f7e88!important;border-radius:18px!important;padding:19px 20px!important;box-shadow:var(--ex-shadow)!important}
-.lesson-card:hover{border-color:#90bfc8!important;background:#faffff!important}
-.lesson-text strong{font-size:21px!important}
-.lesson-text small{font-size:16px!important}
-.session-output{background:#eaf7f4!important;border:1px solid #b9ded5!important;color:#1b5357!important;padding:19px 22px!important}
-.session-output strong{font-size:19px!important}
-.reader-top{box-shadow:0 8px 23px #123d5810}
-.lesson-switch>summary{font-size:18px!important;min-height:48px;display:flex;align-items:center}
-.reader-actions{gap:10px}
-.reader-actions .outline{min-height:54px!important;font-size:17px!important}
-#coachView .cj-card{border:1px solid var(--ex-line)!important;border-radius:21px!important;box-shadow:var(--ex-shadow)!important}
-#coachView .cj-step h2{font-size:clamp(23px,2.4vw,28px)!important}
-#coachView .cj-card p{font-size:17px!important}
-#coachView .cj-primary{background:linear-gradient(110deg,#0b7d82,#1b6485)!important;border-color:#147683!important}
-#coachView .cj-case-form textarea{min-height:172px}
-#coachView .cj-ai{background:#fcfdff}
-#coachView .cj-human{background:#f9fcfa}
-#passportView .sg-dashboard,#passportView .passport-banner{border-radius:22px}
-#passportView .sg-badge,#passportView .sg-step{border-radius:17px}
+/* COURSE & SESSION: image-led, less whitespace, readable card labels. */
+.page-heading{
+ padding:20px clamp(17px,2.5vw,25px)!important;margin:15px 0 12px!important;
+ border-radius:19px!important;background:linear-gradient(110deg,#1a405e,#1c6b79)!important;color:#fff!important;
+ box-shadow:var(--ux-lift)
+}
+.page-heading h1{font-size:clamp(26px,3vw,34px)!important;color:#fff!important}
+.page-heading .eyebrow{color:#e8ca9f!important;font-size:15px!important}
+.page-heading>p{color:#e9f4f4!important;font-size:17px!important}
+.page-heading .backlink{background:#f2f8f71f!important;border:1px solid #fff7!important;color:#fff!important;font-size:16px!important}
+.course-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:13px!important;margin:15px 0 20px!important}
+.course-card{
+ min-height:215px!important;border-radius:17px!important;overflow:hidden;
+ border:1px solid #bed2df!important;background:#e0edf4!important;
+ box-shadow:0 5px 16px #24496312!important
+}
+.course-card:nth-child(3n+2){background:#e3f0e9!important;border-color:#b7d8c9!important}
+.course-card:nth-child(3n){background:#f4ecdc!important;border-color:#e0cfb0!important}
+.course-card>img{height:104px!important;width:100%;object-fit:cover}
+.course-card-body{padding:13px 15px!important}
+.course-card strong{font-size:18px!important;line-height:1.48!important;color:#173a55!important}
+.course-card p{font-size:15px!important;line-height:1.6!important;color:#476476!important}
+.course-card-bottom{font-size:15px!important;color:#36586f!important}
+.course-card .eyebrow{font-size:14px!important;color:#85602e!important}
+.lesson-list{gap:11px!important;margin:14px 0!important}
+.lesson-card{
+ min-height:88px!important;padding:14px 17px!important;border-radius:16px!important;
+ border:1px solid #c1d7df!important;border-right:4px solid #1c8290!important;
+ background:linear-gradient(120deg,#deedf2,#eff6f7)!important;box-shadow:0 4px 13px #1f537213!important
+}
+.lesson-card:nth-child(3n+2){background:linear-gradient(120deg,#e2f0e7,#f0f8ed)!important}
+.lesson-card:nth-child(3n){background:linear-gradient(120deg,#f3e8d7,#fcf5ea)!important}
+.lesson-number{width:48px!important;height:48px!important;flex-basis:48px!important;background:#bfdfe7!important;color:#1c5f73!important}
+.lesson-text strong{font-size:20px!important;color:#183d55!important}
+.lesson-text small{font-size:16px!important;color:#49677a!important}
+.session-output{padding:15px 20px!important;background:#d7ece9!important;color:#134e50!important;border-color:#a9d5cb!important}
+.session-output strong{font-size:18px!important}
+.reader-top{background:#dceaf1!important;border-color:#bad0dd!important;border-radius:16px!important}
+.reader-info strong{font-size:20px!important}
+.reader-info small{font-size:15px!important}
+.lesson-switch{background:#e2eff3!important;border-color:#bfd4df!important}
+.lesson-switch>summary{min-height:46px!important;font-size:17px!important}
+.frame-container{background:#eff4f6!important;border-color:#b9d0df!important;box-shadow:none!important}
+.reader-actions .outline{min-height:49px!important;font-size:16px!important}
 
-/* Mobile: legible one-column cards, intentional spacing, no horizontal drift. */
-@media(max-width:700px){
- body{font-size:18px!important}
- .app-shell{padding-inline:14px!important}
- body.saba-home .app-shell{padding-inline:0!important}
- body.saba-home #homeView .saba-home-content{padding-inline:14px!important;gap:14px!important}
- body.saba-home #homeView .saba-home-heading{height:226px}
- body.saba-home #homeView .saba-home-heading h1{font-size:clamp(29px,8.5vw,40px)!important}
- body.saba-home #homeView .saba-home-heading p{font-size:16px!important}
- body.saba-home #homeView .saba-companion-actions button{min-height:72px!important;font-size:19px!important;padding:13px 15px!important}
- body.saba-home #homeView .saba-model-label{font-size:22px!important}
- body.saba-home #homeView .saba-home-grid{grid-template-columns:1fr!important;gap:11px!important}
- body.saba-home #homeView .saba-home-tile{min-height:103px!important;padding:17px!important}
- body.saba-home #homeView .saba-home-tile strong{font-size:20px!important}
- body.saba-home #homeView .saba-home-tile small{font-size:16px!important}
- body.saba-home #homeView .saba-reflection-copy strong{font-size:20px!important}
+/* CASE-FIRST WORKBENCH: one question at a time, optional support closed. */
+#coachView .page-heading{margin-top:15px!important}
+#coachView .cj-layout{display:flex!important;flex-direction:column!important;gap:12px!important;max-width:950px;margin:12px auto!important}
+#coachView .cj-main{width:100%;gap:12px!important}
+#coachView .cj-card{border-radius:17px!important;padding:clamp(17px,2.4vw,23px)!important;box-shadow:none!important}
+#coachView .cj-case-form{background:linear-gradient(135deg,#e1edf2,#f1f7f7)!important;border:1px solid #bed6e1!important}
+#coachView .cj-steps{display:none!important}
+#coachView:has(#cj-output:not([hidden])) .cj-steps{display:flex!important;background:#e0efe8!important;border-color:#b3d5c9!important}
+#coachView .cj-step{margin-bottom:11px!important}
+#coachView .cj-step>span{background:#c7e8e9!important;color:#155f69!important}
+#coachView .cj-step h2{font-size:24px!important}
+#coachView .cj-step p{font-size:16px!important}
+#coachView .cj-case-form>label{font-size:18px!important}
+#coachView textarea,#coachView select{background:#fbfdfc!important;color:#1a3c51!important;border-color:#afcad8!important;font-size:18px!important}
+#coachView .cj-note{font-size:15px!important;color:#445f70!important}
+#coachView .cj-fields{gap:10px!important}
+#coachView .cj-fields label{font-size:17px!important}
+#coachView .cj-primary{background:linear-gradient(110deg,#126f76,#235a7a)!important;font-size:18px!important}
+#coachView .cj-side{width:100%!important;display:block!important}
+#coachView .cj-support-options{
+ border:1px solid #b5d1d7;background:linear-gradient(110deg,#d2e7e9,#e8f3ee);
+ border-radius:17px;overflow:hidden;margin:0
+}
+#coachView .cj-support-options>summary{
+ list-style:none;display:flex;align-items:center;gap:13px;cursor:pointer;
+ min-height:75px;padding:14px 18px;color:#173e52
+}
+#coachView .cj-support-options>summary::-webkit-details-marker{display:none}
+#coachView .cj-support-options>summary .cj-support-icon{font-size:29px;width:45px;height:45px;border-radius:12px;display:grid;place-items:center;background:#b8dcd9;color:#0f6564;flex:0 0 45px}
+#coachView .cj-support-options>summary strong{font-size:20px;display:block}
+#coachView .cj-support-options>summary small{font-size:16px;color:#3d6070;display:block}
+#coachView .cj-support-chevron{font-size:28px;font-weight:600;margin-inline-start:auto}
+#coachView .cj-support-options[open] .cj-support-chevron{transform:rotate(45deg)}
+#coachView .cj-support-body{padding:0 13px 13px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#coachView .cj-ai{background:#e5eef5!important;border:1px solid #c3d7e6!important}
+#coachView .cj-human{background:#e1eee7!important;border:1px solid #c0d9c9!important}
+#coachView .cj-support-body .cj-card h2{font-size:22px!important}
+#coachView .cj-support-body .cj-card p{font-size:16px!important}
+#coachView .cj-support-body .cj-card small{font-size:15px!important}
+#passportView .passport-banner{background:linear-gradient(110deg,#163a59,#23717b)!important}
+#passportView .sg-dashboard{background:#dfecee!important}
+#passportView .sg-badge,#passportView .sg-step{border-radius:15px!important}
+
+/* Mobile: avoid stacked white cards and giant headings; no horizontal drift. */
+@media(max-width:720px){
+ .topbar,body.saba-home .topbar{padding:9px 10px!important;gap:8px!important;min-height:70px!important}
+ .brand img,body.saba-home .topbar .brand img{width:45px!important;height:44px!important;flex-basis:45px}
+ .brand strong,body.saba-home .brand strong{font-size:16px!important}
+ .brand small,body.saba-home .brand small{display:none!important}
+ .model-nav-toggle,body.saba-home .model-nav-toggle{min-height:44px!important;font-size:13px!important;flex:0 0 45px!important;width:45px!important}
+ .global-score,body .global-score{font-size:13px!important;min-height:42px!important;max-width:96px!important}
+ .install,body.saba-home .topbar .install{font-size:13px!important;min-height:42px}
+ .app-shell{padding:0 12px 45px!important}
+ body.saba-home .app-shell{padding:0!important}
+ #homeView .saba-home-photo,#homeView .saba-home-scrim,#homeView .saba-home-photo img{height:166px!important}
+ body.saba-home #homeView .saba-home-content{padding-inline:13px!important;gap:9px!important}
+ body.saba-home #homeView .saba-home-heading{height:163px!important}
+ body.saba-home #homeView .saba-home-heading h1{font-size:clamp(26px,7.5vw,32px)!important}
+ body.saba-home #homeView .saba-home-heading p{font-size:15px!important}
+ body.saba-home #homeView .saba-home-overline{font-size:13px!important}
+ body.saba-home #homeView .saba-model-label{font-size:21px!important}
+ body.saba-home #homeView .saba-home-grid{grid-template-columns:1fr!important;gap:9px!important}
+ body.saba-home #homeView .saba-home-tile{min-height:81px!important;padding:11px 14px!important;grid-template-columns:45px minmax(0,1fr)!important}
+ body.saba-home #homeView .saba-home-tile .saba-tile-icon{width:44px!important;height:44px!important;font-size:23px!important}
+ body.saba-home #homeView .saba-home-tile strong{font-size:19px!important}
+ body.saba-home #homeView .saba-home-tile small{font-size:15px!important}
+ body.saba-home #homeView .saba-companion-actions button{min-height:58px!important;padding:10px!important;font-size:18px!important}
+ body.saba-home #homeView button.saba-reflection-band{min-height:78px!important;padding:11px 12px!important;grid-template-columns:44px minmax(0,1fr) auto!important}
+ body.saba-home #homeView .saba-reflection-symbol{height:43px;width:43px;font-size:31px!important}
+ body.saba-home #homeView .saba-reflection-copy strong{font-size:18px!important}
  body.saba-home #homeView .saba-reflection-copy small{font-size:15px!important}
- body.saba-home #homeView .saba-reflection-action{font-size:14px!important;padding:8px!important}
- #stageView{padding-top:18px}
- .stage-heading{gap:13px!important;padding:22px 17px!important;min-height:142px}
- .stage-heading .stage-symbol{width:56px!important;height:56px!important;flex:0 0 56px!important;font-size:29px!important}
- .stage-heading h1{font-size:27px!important}
+ body.saba-home #homeView .saba-reflection-action{font-size:14px!important}
+ body.saba-home #homeView .saba-home-achievement button{min-height:44px!important;padding:7px 11px!important;font-size:15px!important}
+ .stage-heading{gap:11px!important;padding:16px 15px!important;min-height:110px!important}
+ .stage-heading h1{font-size:clamp(24px,7vw,29px)!important}
  .stage-heading p{font-size:16px!important}
- .stage-action{min-height:110px!important;padding:15px!important;gap:12px!important}
- .stage-action-num{width:48px!important;height:48px!important;flex:0 0 48px!important;font-size:23px!important}
- .stage-action-copy strong{font-size:20px!important}
- .stage-action-copy small{font-size:16px!important}
- .course-grid{grid-template-columns:1fr!important}
- .course-card>img{height:145px!important}
- .lesson-card{padding:16px!important}
+ .stage-heading .stage-symbol{width:48px!important;height:48px!important;flex-basis:48px!important;font-size:25px!important}
+ .stage-section-title{font-size:21px!important}
+ .stage-action{padding:12px 13px!important;min-height:89px!important;gap:10px!important}
+ .stage-action-num{height:45px!important;width:45px!important;flex-basis:45px!important;font-size:21px!important}
+ .stage-action-copy strong{font-size:19px!important}
+ .stage-action-copy small{font-size:15px!important}
+ .page-heading{margin-top:12px!important;padding:18px 16px!important}
+ .page-heading h1{font-size:27px!important}
+ .page-heading>p{font-size:16px!important}
+ .course-grid{grid-template-columns:1fr!important;gap:10px!important}
+ .course-card{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 108px!important;
+  grid-template-areas:"body image";min-height:125px!important;align-items:stretch
+ }
+ .course-card>img{grid-area:image;min-height:125px!important;height:100%!important;width:108px!important}
+ .course-card-body{grid-area:body;min-width:0;padding:11px 13px!important}
+ .course-card strong{font-size:18px!important;line-height:1.4!important}
+ .course-card p{font-size:15px!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+ .course-card-bottom{font-size:14px!important}
+ .lesson-card{min-height:82px!important;padding:12px 13px!important}
+ .lesson-number{width:43px!important;height:43px!important;flex-basis:43px!important}
  .lesson-text strong{font-size:19px!important}
- .page-heading>p{font-size:17px!important}
- .reader-actions{display:grid;grid-template-columns:1fr 1fr}
- .reader-actions #externalLesson{grid-column:1/-1;grid-row:2}
- #coachView .cj-layout{grid-template-columns:1fr!important}
- #coachView .cj-card{padding:19px 16px!important}
- #coachView .cj-fields{grid-template-columns:1fr!important}
+ .lesson-text small{font-size:15px!important}
+ #coachView .cj-layout{margin-top:10px!important}
+ #coachView .cj-card{padding:16px 14px!important}
+ #coachView .cj-step h2{font-size:21px!important}
+ #coachView .cj-support-body{grid-template-columns:1fr!important}
+ #coachView .cj-support-options>summary{padding:11px 13px}
+ #coachView .cj-support-options>summary small{font-size:15px!important}
+ .reader-actions{gap:8px!important}
 }
 @media(prefers-reduced-motion:reduce){
- .view.active,.stage-action,.course-card,.saba-home-tile{animation:none!important;transition:none!important}
+ .view.active,.course-card,.stage-action,.saba-home-tile{animation:none!important;transition:none!important}
 }
