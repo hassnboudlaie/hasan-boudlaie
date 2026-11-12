@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123c3c">
+<meta name="description" content="مطالعه امکان‌سنجی کسب‌وکار؛ انتقال بوم کسب‌وکار، تحلیل بازار و فنی، مدل مالی و تصمیم سرمایه‌گذاری">
+<title>FS Studio | مطالعه امکان‌سنجی</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./fs.css?v=1">
+<script src="./fs.js?v=1" defer></script>
+</head>
+<body>
+<header class="header">
+ <div class="wrap header-inner">
+  <a class="identity" href="./studio.html" title="بازگشت به بوم کسب‌وکار"><span class="identity-icon">FS</span><span>مطالعه امکان‌سنجی <small>Feasibility Study Studio</small></span></a>
+  <div class="header-actions"><span class="local-pill"><span class="status-dot"></span> ذخیره روی این دستگاه</span><a class="header-back" href="./studio.html">↩ بوم کسب‌وکار</a></div>
+ </div>
+</header>
+<div class="wrap main">
+ <section class="hero">
+  <div><div class="hero-eyebrow">از مدل کسب‌وکار تا تصمیم سرمایه‌گذاری</div><h1>آیا این کسب‌وکار واقعاً قابل اجرا و اقتصادی است؟</h1>
+  <p>فرضیه‌های Business Model Canvas را به مطالعه بازار، فنی، اجرایی، مالی و ریسک تبدیل کنید. هیچ عددی از روی بوم حدس زده نمی‌شود.</p></div>
+  <div class="hero-mark" aria-hidden="true"><span>Market</span><span>Technical</span><span>Financial</span><b>Go / No-Go</b></div>
+ </section>
+ <section class="workspaces" aria-label="مدیریت مطالعات امکان‌سنجی">
+  <div class="workspace-controls"><label for="studySelect">پرونده FS فعال <select id="studySelect" aria-label="انتخاب پرونده FS"></select></label>
+   <button id="newStudy" class="button primary" type="button">＋ مطالعه جدید</button>
+   <button id="deleteStudy" class="button outline-danger" type="button">حذف این مطالعه</button></div>
+  <div class="source-row"><div class="source-copy"><b>انتقال داده از بوم کسب‌وکار</b><small>بوم ثبت‌شده روی همین مرورگر را انتخاب کنید؛ پاسخ‌های آن به بخش‌های متناظر منتقل می‌شوند و با برچسب «فرضیه» باقی می‌مانند.</small></div>
+   <label for="bmcSelect" class="source-label">بوم مبدأ <select id="bmcSelect" aria-label="انتخاب بوم مبدأ"></select></label>
+   <button id="importBmc" class="button secondary" type="button">انتقال به FS</button>
+   <button id="importBmcFile" class="button ghost" type="button">ورود از فایل بوم</button>
+   <input id="bmcFile" type="file" accept=".json,application/json" hidden></div>
+  <p id="sourceStatus" class="source-status" role="status"></p>
+ </section>
+ <div class="layout">
+  <aside class="navigation" aria-label="مراحل مطالعه امکان‌سنجی">
+   <div class="nav-heading">مسیر مطالعه <span id="overallProgress">۰/۸</span></div>
+   <nav id="stepNav" class="step-nav"></nav>
+   <div class="nav-foot"><strong>Evidence first</strong><p>نتایج این ابزار صرفاً متناسب با کیفیت داده‌های شما هستند؛ جایگزین راستی‌آزمایی تخصصی، ارزیابی حقوقی و تصمیم سرمایه‌گذاری نیستند.</p></div>
+  </aside>
+  <main class="workspace-content">
+   <section id="sectionHeader" class="section-heading" aria-live="polite"></section>
+   <section id="sourceHints" class="source-hints" hidden></section>
+   <div id="stepContent"></div>
+   <div class="page-actions"><button id="prevStep" type="button" class="button ghost">مرحله قبل</button><span id="saveState" role="status">ذخیره خودکار</span><button id="nextStep" type="button" class="button primary">مرحله بعد ←</button></div>
+  </main>
+ </div>
+ <footer class="footer"><div>FS Studio — بوم کسب‌وکار من · داده‌ها صرفاً در مرورگر همین دستگاه نگهداری می‌شوند.</div><div><button id="downloadBackup" type="button">دریافت فایل پشتیبان</button><button id="restoreBackup" type="button">بازیابی مطالعه</button><input id="fsFile" type="file" accept=".json,application/json" hidden></div></footer>
+</div>
+</body></html>
