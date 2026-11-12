@@ -246,3 +246,9 @@ body{background:radial-gradient(ellipse at 96% -17%,#e0efe4 0%,transparent 43%),
 @media(max-width:760px){.workspace-manager{grid-template-columns:1fr;padding:17px}.workspace-manager-actions .btn{flex:1 1 185px;justify-content:center}.workspace-manager-copy h2{font-size:1.07rem}}
 @media(max-width:460px){.workspace-manager-actions{display:grid;grid-template-columns:1fr}.workspace-manager-actions .btn{width:100%;font-size:.93rem}.workspace-manager-copy p,.workspace-manager-hint{font-size:.86rem}}
 @media print{.workspace-manager{display:none!important}}
+
+/* Entry point to the independent feasibility study workspace. */
+.dash-action.fs-entry{background:linear-gradient(145deg,#f4e9d2,#e1f2e5);border-color:#c2d6c3}
+.dash-action.fs-entry .dash-symbol{background:#1a6057;color:#fff;font-size:1.65rem;font-weight:900;display:grid;place-items:center}
+.dash-action.fs-entry .dash-title{color:#154d43}
+.dash-action.fs-entry small{color:#395950}
