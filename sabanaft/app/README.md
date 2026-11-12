@@ -35,3 +35,10 @@ A clear coming-soon card on Home routes to `#/coach`, which is a product-preview
 - The commercial target of 11 × 2-hour sessions is distinct from the currently published nine-session course.
 - Service worker v6 precaches this page and preserves per-path navigation cache boundaries (business model navigation cannot overwrite cached app Home).
 - Verification: static source audits check JavaScript syntax, 9 unique interactive blocks, 9 detail definitions, Home route and offline manifest; an actual external browser test is still needed.
+
+## Executive learning UX refresh (2026-11-12)
+- Transferable presentation design principles from Allameh OB MBA, Alborz session 4, and Behparvar communication journey: RTL visual hierarchy, large type, high-contrast cards, layered interactions and consistent touch targets.
+- Case-first Home: real managerial issue is the primary action, ahead of four leadership-model cards and continuous reflection.
+- All four existing model routes, their three-activity drill-down screens, the nine educational sessions, Case/Coaching workspace, practice, reflection and achievements remain navigable. The redesigned cards do not open inline or create duplicate menus.
+- This is a presentation-focused release: no change to The Reflective Leader content, source data, scoring criteria, storage keys, manager records, AI integration or coaching status.
+- Mobile single-column layout, keyboard focus visibility, reduced-motion support and a refreshed PWA shell cache.
