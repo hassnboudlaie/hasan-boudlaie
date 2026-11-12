@@ -109,3 +109,7 @@ h3{font-size:clamp(23px,2.4vw,29px)}
  .projector-footer{font-size:21px}
 }
 @media(max-width:350px){.brand-copy h1{font-size:22px}.eyebrow{font-size:13px}.role-tab{font-size:18px}.bottom-nav button{font-size:14px}}
+
+.editor-form{display:grid;gap:16px}.section-picker{max-width:720px}
+.projector-wrap:fullscreen{width:100vw;min-height:100svh;height:100svh;border-radius:0;overflow-y:auto;padding:clamp(24px,5vw,80px)}
+@media(max-width:700px){.editor-form{gap:13px}.section-picker{max-width:none;width:100%}.section-picker select{font-size:25px}.card.stack{gap:19px}}
