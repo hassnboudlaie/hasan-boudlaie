@@ -1,0 +1,51 @@
+name: Build OB Classroom Lecture Downloads
+on:
+  push:
+    paths:
+      - ob-mba-classroom/course-content.js
+      - scripts/build-ob-lecture-assets.cjs
+      - .github/workflows/ob-lecture-assets.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install presentation dependencies
+        run: |
+          npm install --no-save --no-package-lock pptxgenjs
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libreoffice-impress fonts-dejavu-core fonts-noto-core
+      - name: Build presentation files
+        run: node scripts/build-ob-lecture-assets.cjs
+      - name: Check generated assets
+        run: |
+          test -s ob-mba-classroom/materials/session-01-robbins.pptx
+          test -s ob-mba-classroom/materials/session-01-robbins.pdf
+          test -s ob-mba-classroom/materials/session-02-robbins.pptx
+          test -s ob-mba-classroom/materials/session-02-robbins.pdf
+          python - <<'PY'
+          import zipfile, pathlib
+          for p in sorted(pathlib.Path('ob-mba-classroom/materials').glob('*.pptx')):
+              with zipfile.ZipFile(p) as f:
+                  assert f.testzip() is None
+                  assert 'ppt/presentation.xml' in f.namelist()
+              print('Valid', p)
+          PY
+      - name: Commit lecture downloads to this branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ob-mba-classroom/materials
+          if ! git diff --cached --quiet; then
+            git commit -m "Build downloadable OB MBA lecture PPTX and PDF assets"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          fi

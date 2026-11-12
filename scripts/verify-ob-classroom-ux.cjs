@@ -10,8 +10,8 @@ assert.doesNotThrow(()=>new Function(js),'Frontend JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScript must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-disclosure','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('style.css?v=5')&&html.includes('app.js?v=5'),'New CSS/JS bust old cache');
-assert.ok(sw.includes('shell-v5')&&sw.includes('style.css?v=5')&&sw.includes('app.js?v=5'),'Service-worker cache bump');
+assert.ok(html.includes('style.css?v=6')&&html.includes('app.js?v=6'),'New CSS/JS bust old cache');
+assert.ok(sw.includes('shell-v6')&&sw.includes('style.css?v=6')&&sw.includes('app.js?v=6'),'Service-worker cache bump');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(html.includes('course-content.js?v=1')&&sw.includes('course-content.js?v=1'),'Course content loads before main UI and is cached');
@@ -31,6 +31,9 @@ assert.equal(manifest.icons.some(i=>i.sizes==='512x512'),true,'PWA icon supports
 assert.ok(!js.includes('UPGRADE'),'No forced ads or paid upsell in classroom');
 assert.ok(js.includes('sessionPicker'),'Lesson content must be selectable');
 assert.ok(js.includes('۶. جمع‌بندی و تأمل فردی'),'Editor must be grouped in sections');
+const materials=["ob-mba-classroom/materials/session-01-robbins.pptx","ob-mba-classroom/materials/session-01-robbins.pdf","ob-mba-classroom/materials/session-02-robbins.pptx","ob-mba-classroom/materials/session-02-robbins.pdf"];
+for(const p of materials){const file=fs.readFileSync(path.join(root,p));assert.ok(file.length>5000,"Nonempty download: "+p);assert.ok(p.endsWith(".pdf")?file.subarray(0,4).toString()==="%PDF":file.subarray(0,2).toString()==="PK","Valid signature: "+p)}
+assert.ok(js.includes('lectureDownloads(s)')&&js.includes('projectPresentation'),'Download and projector UI actions must exist');
 const makeEl=()=>({innerHTML:'',style:{},hidden:false,textContent:'',dataset:{},open:false,classList:{toggle(){}},setAttribute(){},querySelectorAll(){return []},addEventListener(n,fn){this.handlers??={};this.handlers[n]=fn;}});
 const app=makeEl(),nav=makeEl(),roles=makeEl(),theme=makeEl(),toast=makeEl(),summary=makeEl(),menu=makeEl();
 roles.querySelectorAll=()=>['student','teacher','projector'].map(role=>({dataset:{role},classList:{toggle(){}},setAttribute(){}}));
@@ -68,6 +71,7 @@ assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'In-app lecture
 assert.ok(app.innerHTML.includes('اسلاید 1 از 16'),'Lecture starts on slide 1');
 click('slideNext');
 assert.ok(app.innerHTML.includes('اسلاید 2 از 16'),'Next slide works');
+assert.ok(app.innerHTML.includes('session-01-robbins.pptx')&&app.innerHTML.includes('session-01-robbins.pdf'),'Presentation 1 links to both downloadable files');
 click('backFromPresentation');
 click('setTrack',{track:'practice'});
 doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker"]'},value:'activity'}});
@@ -82,6 +86,8 @@ click('navigate',{page:'grades'});
 assert.ok(app.innerHTML.includes('ثبت و انتشار نمره‌ها'),'Grades in own expandable panel');
 role('projector');
 assert.ok(app.innerHTML.includes('حالت تمام‌صفحه'),'Projector supports fullscreen');
+assert.ok(app.innerHTML.includes('پخش اسلایدها'),'Projector can launch in-app lecture presentation');
+click('projectPresentation');assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'Projector launches current deck');
 assert.ok(!app.innerHTML.includes('CLASSROOM POLL'),'Projector UI must avoid unnecessary English');
 function lum(hex){const x=hex.replace('#','').match(/.{2}/g).map(v=>parseInt(v,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return .2126*x[0]+.7152*x[1]+.0722*x[2]}
 function ratio(a,b){const x=[lum(a),lum(b)].sort((a,b)=>b-a);return (x[0]+.05)/(x[1]+.05)}

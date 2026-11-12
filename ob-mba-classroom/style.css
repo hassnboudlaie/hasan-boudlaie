@@ -246,3 +246,12 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
  .presentation-actions .btn{min-width:0;flex:1 1 42%}
  .presentation-more .btn{width:100%}
 }
+
+/* Download/preview links: accessible on both instructor and student lesson views */
+.lecture-downloads{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%}
+.resource-link{display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;background:var(--panel);color:var(--text);border:2px solid var(--line);border-radius:14px;min-height:62px;padding:12px 15px;font-size:19px;font-weight:800;transition:border-color .18s}
+.resource-link:hover,.resource-link:focus-visible{border-color:var(--teal);outline-offset:3px}
+.resource-link span{color:var(--teal);font-size:23px}
+.presentation-more .lecture-downloads{flex-basis:100%}
+.lecture-entry .lecture-downloads{margin-top:3px}
+@media(max-width:700px){.lecture-downloads{grid-template-columns:1fr;gap:9px}.resource-link{min-height:66px;font-size:23px;padding:13px 17px}}
