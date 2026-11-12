@@ -62,5 +62,5 @@ assert.ok(ratio('#ffffff','#152740')>=7,'Primary header contrast should be AAA')
 assert.ok(ratio('#ffffff','#086973')>=4.5,'Student concepts card must meet AA contrast');
 assert.ok(ratio('#ffffff','#186d73')>=4.5,'Student practice card must meet AA contrast');
 assert.ok(css.includes('learning-card')&&css.includes('lesson-track'),'High contrast card UI included');
-assert.ok(installCss.includes('@media(max-width:600px)'),'Installer is mobile responsive');
+assert.ok(installCss.includes('@media(max-width:650px)'),'Installer is mobile responsive');
 console.log('PASS OB MBA Classroom: concise install/UI copy, 16 blank lessons, progressive disclosure, responsive typography, and v4 cache.');
