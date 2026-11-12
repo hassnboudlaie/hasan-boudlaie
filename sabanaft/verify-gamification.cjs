@@ -20,7 +20,16 @@ assert.match(shell,/executive-learning-ux\.css/,'executive design linked');
 assert.ok(shell.indexOf('id="futureCoachEntry"')<shell.indexOf('class="saba-model-label"'),'case-first entry precedes model');
 assert.match(read('app/executive-learning-ux.css'),/\.stage-action\{/,'drill-down actions remain readable');
 assert.match(read('app/sw.js'),/executive-learning-ux\.css/,'new design precached');
-assert.match(read('app/sw.js'),/shell-v17/,'offline assets refreshed');
+assert.match(shell,/class="cj-support-options"/,'optional coaching guidance is disclosed on demand');
+assert.match(shell,/class="cj-support-body"/,'support content stays accessible');
+assert.match(read('app/executive-learning-ux.css'),/overflow-x:clip/,'horizontal document overflow constrained');
+assert.match(read('app/executive-learning-ux.css'),/linear-gradient\(122deg,#cfe6ef/,'tinted model cards replace white cards');
+assert.match(read('app/executive-learning-ux.css'),/\.course-card\:nth-child/,'course card surfaces differentiated');
+assert.match(read('leadership-studio.html'),/studio-executive-v3\.css/,'Studio uses integrated executive design');
+assert.match(read('index.html'),/course-executive-v3\.css/,'source course uses integrated executive design');
+assert.match(read('app/sw.js'),/course-executive-v3\.css/,'course design precached');
+
+assert.match(read('app/sw.js'),/shell-v18/,'offline assets refreshed');
 assert.match(read('reflective-app.js'),/completedAt/,'real dates attached to learning');
 assert.match(studio,/c\.decisionAt=/,'decision timestamps');
 assert.match(studio,/c\.actionAt=/,'action timestamps');
