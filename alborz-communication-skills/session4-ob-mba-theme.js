@@ -140,6 +140,8 @@ function showCasePager(){
 function renderView(view,options={}){
  const valid=Object.keys(subtitles);
  if(!valid.includes(view))view="home";
+ // Leaving a case must restore the case index: the original engine hides it with .s4-active.
+ if(view!=="case")$(".s4-lab")?.classList.remove("s4-active");
  currentView=view;
  if(Number.isInteger(options.groupIndex))groupIndex=Math.max(0,Math.min(5,options.groupIndex));
  if(Number.isInteger(options.techIndex))techIndex=Math.max(0,Math.min(5,options.techIndex));
@@ -157,7 +159,7 @@ function renderView(view,options={}){
  if(footer)footer.hidden=view!=="home";
  if(overview)overview.hidden=!["techniques","technique"].includes(view);
  if(lab)lab.hidden=!["practice","group","case"].includes(view);
- if(guide)guide.hidden=view!=="guide";
+ if(guide){guide.hidden=view!=="guide";if(view==="guide")guide.open=true;}
  if(exam)exam.hidden=view!=="exam";
  if(head)head.hidden=view==="home";
  if(flip)flip.hidden=view==="home";
@@ -258,7 +260,12 @@ document.addEventListener("click",ev=>{
  if(b.matches("[data-s4-group]")){renderView("group",{groupIndex:Number(b.dataset.s4Group)});return;}
  if(b.matches("[data-s4-group-prev]")){renderView("group",{groupIndex:groupIndex-1});return;}
  if(b.matches("[data-s4-group-next]")){renderView("group",{groupIndex:groupIndex+1});return;}
- if(b.matches("[data-s4-tech]")){renderView("technique",{techIndex:Number(b.dataset.s4Tech)});return;}
+ if(b.matches("[data-s4-tech]")){
+  // When reopening an already-selected technique from its index, core toggles it off.
+  // Trigger the same card once more to restore its existing detail content.
+  if($("#s4-tech-detail")?.hidden){b.click();return;}
+  renderView("technique",{techIndex:Number(b.dataset.s4Tech)});return;
+ }
  if(b.matches("[data-s4-tech-flip]")){openTechnique(Number(b.dataset.s4TechFlip));return;}
  if(b.matches("[data-s4-tech-close]")){renderView("techniques");return;}
  if(b.matches("[data-s4-case]")){caseIndex=Number(b.dataset.s4Case);renderView("case",{caseIndex,groupIndex:Math.floor(caseIndex/2)});return;}
