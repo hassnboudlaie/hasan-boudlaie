@@ -99,6 +99,14 @@ async function actionRouter(input:Record<string,unknown>){
  }
  const teacher=await identity(input.token,"teacher");
  if(!teacher)return fail("teacher_auth_required",401);
+ if(action==="changeTeacherPassword"){
+  const password=String(input.password||"");
+  if(password.length<16||password.length>100)return fail("password_too_short");
+  const {data,error}=await supabase.rpc("mba_ob_set_teacher_password",{p_new:password});
+  if(error||data!==true)throw new Error("password_change_failed");
+  await supabase.from("mba_ob_sessions").update({revoked_at:stamp()}).eq("role","teacher").is("revoked_at",null);
+  return result({ok:true});
+ }
  if(action==="teacherState"){
   const [students,attend,windows,invites]=await Promise.all([
    supabase.from("mba_ob_students").select("id,full_name,enrolled_at,disabled_at").order("enrolled_at"),
