@@ -6,6 +6,18 @@ const html=read('app/index.html');
 const d=new JSDOM(html,{url:'https://example.test/sabanaft/app/',runScripts:'outside-only'});
 const w=d.window;w.scrollTo=()=>{};w.HTMLElement.prototype.scrollIntoView=()=>{};
 const doc=w.document,home=doc.getElementById('homeView');
+// Critical structural guard: malformed aside/details closers previously swallowed
+// the main app into the hidden model drawer. Catch repaired-but-invalid markup.
+const appShell=doc.querySelector('.app-shell'),sideNav=doc.getElementById('modelSideNav'),main=doc.getElementById('main');
+assert.equal(sideNav.parentElement,appShell,'model drawer must be a sibling of the main app, not its wrapper');
+assert.equal(main.parentElement,appShell,'main must not be nested under a hidden drawer or disclosure');
+assert.equal(home.parentElement,main,'Home view must be a direct child of main to render on mobile');
+assert.equal(main.querySelectorAll(':scope > section.view').length,9,'all nine routed screens must remain direct main children');
+assert.equal(sideNav.querySelectorAll('details').length,0,'model menu must not contain orphaned coaching disclosures');
+const coachingSide=doc.querySelector('#coachView .cj-side'),support=doc.querySelector('#coachView .cj-support-options');
+assert.equal(support.parentElement,coachingSide,'optional coach disclosure must stay within the Coach screen');
+assert.equal(support.querySelector('.cj-support-body')?.parentElement,support,'coaching content must be inside its own disclosure');
+assert.equal(doc.querySelectorAll('.cj-support-options').length,1,'exactly one optional coaching disclosure');
 const cards=[...home.querySelectorAll('.saba-home-grid .saba-home-tile')];
 assert.equal(cards.length,4,'four Fig 5.1 book stages, not arbitrary workflow tiles');
 assert.ok(cards.every(c=>c.tagName==='BUTTON'),'all four destinations must be buttons');
