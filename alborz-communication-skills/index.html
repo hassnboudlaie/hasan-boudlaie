@@ -605,6 +605,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 @media(max-width:690px){.claims-photo-cover,.claims-photo-cover img{min-height:230px;height:230px}.claims-cover-copy{inset:auto 16px 12px}}
 </style>
 <script src="session3-listening-lab.js?v=20261108-r6-six-roles"></script>
+<script src="session4-speaking-lab.js?v=20261112-lab1"></script>
 </head>
 <body>
 <div id="app"></div>
@@ -1600,6 +1601,7 @@ function s1CopyPlan(){
 
 function sessionPage(id){
 if(id===3){window.alborzSession3Page();return}
+if(id===4){window.alborzSession4Page();return}
 if(id===1){session1Page();return}
 const s=sessions.find(x=>x.id===id); if(!s){home();return}
 if(id===0){
@@ -1626,7 +1628,7 @@ document.getElementById("app").innerHTML=header()+
 }
 function renderAcademyAfterLogin(){
 const params=new URLSearchParams(location.search); const hasM=params.has("m"); const m=Number(params.get("m")); const view=params.get("view"); const item=params.get("item");
-if(hasM && m===3)sessionPage(3); else if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else if(params.get("course")==="communication")communicationHome(); else home();
+if(hasM && (m===3||m===4))sessionPage(m); else if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else if(params.get("course")==="communication")communicationHome(); else home();
 }
 if(!document.documentElement.classList.contains("alborz-class-locked"))renderAcademyAfterLogin();
 document.addEventListener("alborz-classroom-authenticated",renderAcademyAfterLogin);
