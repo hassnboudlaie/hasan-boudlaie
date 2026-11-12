@@ -316,3 +316,8 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
  .language-version>small{font-size:18px}
  .original-slide-frame{min-height:440px;aspect-ratio:auto}
 }
+
+.lesson-panel-body .lesson-line{margin:0;font-size:21px;line-height:1.85}
+.lesson-panel-body .lesson-line strong{font-size:1.06em;font-weight:900;color:var(--text)}
+.lesson-panel-body .lesson-order{color:var(--gold);margin-inline-end:4px}
+@media(max-width:700px){.lesson-panel-body .lesson-line{font-size:23px;line-height:1.85}}
