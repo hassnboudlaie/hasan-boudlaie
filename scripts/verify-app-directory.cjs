@@ -11,15 +11,16 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const products=read('products.html'),hub=read('hub/index.html');
 const entries=[...products.matchAll(/<article class="app-card"[^>]*>[\s\S]*?<\/article>/g)].map(m=>m[0]);
 const hubEntries=[...hub.matchAll(/<a class="super-app-link"[^>]*>/g)].map(m=>m[0]);
-assert.equal(hubEntries.length,20,'HB Hub Super App must contain all 20 other catalog products');
+assert.equal(hubEntries.length,entries.length-1,'HB Hub must contain every product except its own launcher');
 
-assert.equal(entries.length,21,'The website should list all 21 current cards including HB Hub');
+assert.ok(entries.length>=22,'The website should list the new MBA classroom in addition to the existing catalog');
 function card(href){
  const matches=entries.filter(s=>s.includes('href="'+href+'"'));
  assert.equal(matches.length,1,'One catalog card must point to '+href);
  return matches[0];
 }
 const expected=[
+ ['OB MBA Classroom','ob-mba-classroom/','organization','ob-mba-classroom/index.html'],
  ['Alborz Training Discovery','alborz-training-system-discovery/','organization','alborz-training-system-discovery/index.html'],
  ['TRM','trm-workspace/','organization','trm-workspace/index.html'],
  ['OKR Kish','okr-system/','strategy','okr-system/index.html'],
@@ -44,7 +45,7 @@ for(const [name,href,category,target] of expected){
 for(const filt of ['all','organization','strategy','business','client','personal']){
  assert.ok(products.includes('data-filter="'+filt+'"'),'Missing discoverable filter: '+filt);
 }
-for(const route of ['../alborz-training-system-discovery/','../okr-system/','../trm-workspace/','../sabanaft/app/','../business-model-canvas/studio.html','../small-business/index.html','../okr-service/index.html','../alborz-communication-skills/','../clinic-customer-app/','../life-organization/','../my-finance/','../ba-parastoo/','../alborz-performance/my-branch/','../alborz-performance/','../sabanaft/leadership-studio.html','../zilux-jewels/','https://hassnboudlaie.github.io/afra-tejarat-mad/','https://hassnboudlaie.github.io/reflective-leader/','https://hassnboudlaie.github.io/naavsanat-culture-app/','https://hassnboudlaie.github.io/behparvar-leadership-lab/']){
+for(const route of ['../ob-mba-classroom/','../alborz-training-system-discovery/','../okr-system/','../trm-workspace/','../sabanaft/app/','../business-model-canvas/studio.html','../small-business/index.html','../okr-service/index.html','../alborz-communication-skills/','../clinic-customer-app/','../life-organization/','../my-finance/','../ba-parastoo/','../alborz-performance/my-branch/','../alborz-performance/','../sabanaft/leadership-studio.html','../zilux-jewels/','https://hassnboudlaie.github.io/afra-tejarat-mad/','https://hassnboudlaie.github.io/reflective-leader/','https://hassnboudlaie.github.io/naavsanat-culture-app/','https://hassnboudlaie.github.io/behparvar-leadership-lab/']){
  assert.ok(hub.includes('href="'+route+'"'),'The HB Hub must still link to '+route);
 }
 assert.ok(products.includes('Independent interactive OKR pilot: strategy map'),'OKR product must be explicitly described as functional local pilot');
@@ -67,4 +68,6 @@ assert.ok(read('hub/manifest.webmanifest').includes("Super App"),'Hub identity c
 assert.equal((hub.match(/data-kind="strategy"/g)||[]).length,2,'Public OKR and Kish OKR are two distinct Strategy entries');
 assert.equal(hub.split('href="../okr-system/"').length-1,1,'Kish destination remains unmodified and unique inside Super App');
 
-console.log('PASS: 12 installed apps mapped correctly, public OKR separated from Kish, all 20 products in Super App; categories and links verified.');
+assert.ok(read('ob-mba-classroom/app.js').includes('Array.from({length:16}'),'OB classroom must start with 16 unpopulated sessions');
+assert.ok(read('ob-mba-classroom/index.html').includes('dir="rtl"'),'OB classroom must be RTL');
+console.log('PASS: existing 12 installed apps remain mapped, classroom present, and all '+hubEntries.length+' independent products are listed in Super App.');
