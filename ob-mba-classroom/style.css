@@ -184,3 +184,7 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
 }
 @media(max-width:350px){.learning-card{grid-template-columns:50px minmax(0,1fr) 20px;gap:9px;padding:17px 10px}.learning-card-icon{width:48px;height:48px}.learning-card-icon svg{width:34px;height:34px}.learning-card-copy strong{font-size:25px}.learning-card-copy small{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.learning-card{transition:none}}
+
+/* Keep the phone masthead uncluttered; installation remains one tap from student home. */
+.install-header{white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+@media(max-width:700px){.mast .install-header{display:none}}
