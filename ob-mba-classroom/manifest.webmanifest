@@ -1,0 +1,33 @@
+{
+  "id": "/hasan-boudlaie/ob-mba-classroom/",
+  "name": "مدیریت رفتار سازمانی | MBA علامه",
+  "short_name": "کلاس رفتار سازمانی",
+  "description": "سامانه کلاسی مدیریت رفتار سازمانی دانشگاه علامه طباطبایی",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#152740",
+  "background_color": "#f6f4ef",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "../hub/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../hub/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
