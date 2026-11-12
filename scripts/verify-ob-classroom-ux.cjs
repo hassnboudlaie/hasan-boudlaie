@@ -9,13 +9,15 @@ const installHtml=read('ob-mba-classroom/install.html'),installJs=read('ob-mba-c
 assert.doesNotThrow(()=>new Function(js),'Frontend JavaScript must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-disclosure','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('style.css?v=3')&&html.includes('app.js?v=3'),'New CSS/JS bust old cache');
-assert.ok(sw.includes('shell-v3')&&sw.includes('style.css?v=3')&&sw.includes('app.js?v=3'),'Service-worker cache bump');
+assert.ok(html.includes('style.css?v=4')&&html.includes('app.js?v=4'),'New CSS/JS bust old cache');
+assert.ok(sw.includes('shell-v4')&&sw.includes('style.css?v=4')&&sw.includes('app.js?v=4'),'Service-worker cache bump');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(html.includes('href="./install.html"'),'App must link its installer');
-assert.ok(sw.includes('./install.html')&&sw.includes('./install.js?v=1'),'Install page must be cached by the PWA');
-assert.ok(installHtml.includes('id="installAction"')&&installHtml.includes('Add to Home Screen'),'Persian installer gives mobile installation routes');
+assert.ok(sw.includes('./install.html')&&sw.includes('./install.js?v=2'),'Install page must be cached by the PWA');
+assert.ok(installHtml.includes('id="installAction"')&&installHtml.includes('Add to Home Screen'),'Installer offers concise device-specific help');
+assert.ok(installHtml.includes('<details id="instructions"')&&installHtml.includes('<details class="about-demo"'),'Install help and version notice stay collapsed');
+assert.ok(!installHtml.includes('وضعیت فعلی اپ')&&!installHtml.includes('آیکون «مدیریت رفتار سازمانی» اضافه می‌شود'),'Verbose install copy removed');
 assert.ok(installJs.includes('beforeinstallprompt')&&installJs.includes('appinstalled'),'Installer handles supported and fallback paths');
 assert.equal(manifest.display,'standalone','PWA launches in standalone mode');
 assert.equal(manifest.icons.some(i=>i.sizes==='512x512'),true,'PWA icon supports 512x512');
@@ -29,6 +31,7 @@ const doc={documentElement:{dataset:{}},listeners:{},querySelector(sel){return (
 const saved={};const storage={getItem(k){return saved[k]??null},setItem(k,v){saved[k]=String(v)}};
 new Function('document','localStorage','window','crypto','setTimeout','clearTimeout',js)(doc,storage,{scrollTo(){}},{getRandomValues(a){a[0]=54321}},()=>{},()=>{});
 assert.ok(app.innerHTML.includes('سایر امکانات کلاس'),'Student home uses progressive disclosure');
+assert.ok(!app.innerHTML.includes('یکی از دو مسیر را انتخاب کنید')&&!app.innerHTML.includes('در زمان مناسب'),'Student home avoids redundant instructions');
 assert.ok(app.innerHTML.includes('مفاهیم و نظریه‌ها')&&app.innerHTML.includes('از نظریه تا عمل'),'Student home has two visual learning tracks');
 assert.ok(app.innerHTML.includes('href="./install.html"'),'Student can find installation from home');
 assert.ok(!app.innerHTML.includes('class="metric"'),'Student home is not a metric dashboard');
@@ -60,4 +63,4 @@ assert.ok(ratio('#ffffff','#086973')>=4.5,'Student concepts card must meet AA co
 assert.ok(ratio('#ffffff','#186d73')>=4.5,'Student practice card must meet AA contrast');
 assert.ok(css.includes('learning-card')&&css.includes('lesson-track'),'High contrast card UI included');
 assert.ok(installCss.includes('@media(max-width:600px)'),'Installer is mobile responsive');
-console.log('PASS OB MBA Classroom: 16 blank lessons, high-contrast visual tracks, progressive disclosure, PWA installer, responsive typography, instructor/projector flows and cache.');
+console.log('PASS OB MBA Classroom: concise install/UI copy, 16 blank lessons, progressive disclosure, responsive typography, and v4 cache.');
