@@ -14,12 +14,12 @@ assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson dat
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
 assert.ok(html.includes('style.css?v=8')&&html.includes('app.js?v=8'),'New CSS/JS bust old cache');
-assert.ok(sw.includes('shell-v8')&&sw.includes('style.css?v=8')&&sw.includes('app.js?v=8'),'Service-worker cache bump');
+assert.ok(sw.includes('shell-v9')&&sw.includes('style.css?v=8')&&sw.includes('app.js?v=8'),'Service-worker cache bump');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
-assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=1'),'Attendance page is installable');
+assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=2'),'Attendance page is installable');
 assert.ok(attendanceHtml.includes('id="attendanceRoot"')&&attendanceHtml.includes('dir="rtl"'),'RTL attendance portal exists');
-for(const word of ['studentEnroll','teacherLogin','checkIn','openWindow','issueInvites','exportCsv','approvePending'])assert.ok(attendanceJs.includes(word),'Attendance functionality missing: '+word);
+for(const word of ['studentEnroll','teacherLogin','checkIn','openWindow','issueInvites','exportCsv','approvePending','changeTeacherPassword'])assert.ok(attendanceJs.includes(word),'Attendance functionality missing: '+word);
 assert.ok(!attendanceJs.includes('SERVICE_ROLE_KEY'),'No server key in public attendance script');
 assert.ok(attendanceSql.includes('enable row level security')&&attendanceSql.includes('revoke all')&&attendanceSql.includes('clock_timestamp()'),'DB attendance is role protected and controlled by server clock');
 assert.ok(attendanceApi.includes('SUPABASE_SERVICE_ROLE_KEY')&&attendanceApi.includes('teacherLogin')&&attendanceApi.includes('redeem'),'API authenticates both roles');
