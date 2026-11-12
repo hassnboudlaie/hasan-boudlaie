@@ -1,0 +1,22 @@
+name: OB MBA Classroom UX integrity
+on:
+  push:
+    paths:
+      - 'ob-mba-classroom/**'
+      - 'scripts/verify-ob-classroom-ux.cjs'
+      - '.github/workflows/ob-classroom-ux.yml'
+  pull_request:
+    paths:
+      - 'ob-mba-classroom/**'
+      - 'scripts/verify-ob-classroom-ux.cjs'
+      - '.github/workflows/ob-classroom-ux.yml'
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check ob-mba-classroom/app.js
+      - run: node scripts/verify-ob-classroom-ux.cjs
