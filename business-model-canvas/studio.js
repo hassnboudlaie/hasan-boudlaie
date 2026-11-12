@@ -15,7 +15,10 @@ return active}
 let workspaceId=initWorkspace();
 function refreshWorkspaceSelector(){
  const picker=document.getElementById('workspaceSelect');if(!picker)return;
- picker.replaceChildren();registry().forEach(w=>{const opt=document.createElement('option');opt.value=w.id;opt.textContent=(w.name||'مدل بدون نام')+(w.owner?' · '+w.owner:'');picker.append(opt)});picker.value=workspaceId;
+ const rows=registry();
+ picker.replaceChildren();rows.forEach(w=>{const opt=document.createElement('option');opt.value=w.id;opt.textContent=(w.name||'مدل بدون نام')+(w.owner?' · '+w.owner:'');picker.append(opt)});picker.value=workspaceId;
+ const summary=document.getElementById('workspaceSummary');
+ if(summary)summary.textContent=rows.length.toLocaleString('fa-IR')+' مدل روی این دستگاه ذخیره شده است. از فهرست بالای صفحه می‌توانید مدل دلخواه را انتخاب کنید.';
 }
 function updateWorkspaceLabel(){
  const rows=registry(),r=rows.find(x=>x.id===workspaceId);if(!r)return;
@@ -30,11 +33,34 @@ function switchWorkspace(id){
  state=load();initProfile();refreshWorkspaceSelector();goto('dashboard');
 }
 function createWorkspace(){
- const owner=prompt('نام یا نام مستعار صاحب مدل جدید (اختیاری):','');if(owner===null)return;
- save();const id=makeId(),rows=registry();rows.push({id,name:'مدل جدید',owner:owner.trim().slice(0,80),updatedAt:new Date().toISOString()});
- setRegistry(rows);workspaceId=id;state=fresh();state.profile.ownerName=owner.trim().slice(0,80);
+ const requested=prompt('نام ایده یا کسب‌وکار جدید (اختیاری):','');if(requested===null)return;
+ const name=requested.trim().slice(0,120);
+ save();
+ const id=makeId(),rows=registry();
+ rows.push({id,name:name||'مدل جدید',owner:'',updatedAt:new Date().toISOString()});
+ setRegistry(rows);workspaceId=id;state=fresh();state.profile.businessName=name;
  try{localStorage.setItem(ACTIVE_KEY,id)}catch(e){}
  save();initProfile();refreshWorkspaceSelector();goto('onboard');
+}
+function deleteWorkspace(){
+ const rows=registry(),selected=rows.find(w=>w.id===workspaceId);
+ if(!selected)return;
+ const name=String(state.profile.businessName||selected.name||'مدل بدون نام').trim();
+ if(!confirm('مدل «'+name+'» و همه پاسخ‌های ذخیره‌شده آن در این مرورگر حذف شود؟\\nاین کار قابل بازگشت نیست. سایر مدل‌ها حذف نمی‌شوند. اگر لازم است ابتدا فایل پشتیبان دریافت کنید.'))return;
+ const remaining=rows.filter(w=>w.id!==workspaceId);
+ const nextId=remaining.length?remaining[0].id:makeId();
+ if(!remaining.length)remaining.push({id:nextId,name:'مدل جدید',owner:'',updatedAt:new Date().toISOString()});
+ try{
+  localStorage.setItem(REGISTRY_KEY,JSON.stringify(remaining));
+  localStorage.setItem(ACTIVE_KEY,nextId);
+  localStorage.removeItem(PROJECT_PREFIX+workspaceId);
+  // Legacy data must not resurrect a deleted model after refreshing the app.
+  localStorage.removeItem(KEY);localStorage.removeItem(OLD);
+ }catch(e){alert('حذف مدل به دلیل محدودیت ذخیره‌سازی مرورگر انجام نشد. دوباره تلاش کنید.');return}
+ workspaceId=nextId;state=load();
+ if(rows.length===1)save();
+ initProfile();refreshWorkspaceSelector();goto('dashboard');
+ alert('مدل انتخاب‌شده حذف شد. اکنون می‌توانید یک بوم تازه بسازید.');
 }
 
 const BLOCKS=[
@@ -395,6 +421,9 @@ function init(){
  $('#clearAll').addEventListener('click',resetData);
  $('#workspaceSelect').addEventListener('change',e=>switchWorkspace(e.target.value));
  $('#newWorkspace').addEventListener('click',createWorkspace);
+ $('#dashboardNewWorkspace').addEventListener('click',createWorkspace);
+ $('#deleteWorkspace').addEventListener('click',deleteWorkspace);
+ $('#deleteWorkspaceMenu').addEventListener('click',deleteWorkspace);
  $('#downloadCanvasReport').addEventListener('click',downloadCanvasReport);
  $('#printFinal').addEventListener('click',printFinal);
  $('#canvas').addEventListener('click',event=>{
