@@ -255,3 +255,69 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
 .presentation-more .lecture-downloads{flex-basis:100%}
 .lecture-entry .lecture-downloads{margin-top:3px}
 @media(max-width:700px){.lecture-downloads{grid-template-columns:1fr;gap:9px}.resource-link{min-height:66px;font-size:23px;padding:13px 17px}}
+
+
+/* Rich instructional content — hierarchy, scannability, and controlled disclosure. */
+.rich-collection{display:grid;gap:13px}
+.rich-collection-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.rich-collection-heading h3{font-size:clamp(25px,2.8vw,31px);font-weight:900}
+.rich-accordion{border:1.5px solid var(--line);box-shadow:0 6px 18px #112a3a0b}
+.rich-accordion>summary{padding:20px 22px;min-height:80px}
+.rich-summary{display:grid;gap:3px;line-height:1.45;flex:1}
+.rich-summary strong{font-size:clamp(22px,2.4vw,28px);font-weight:900;color:var(--text)}
+.rich-summary small{font-family:Arial,sans-serif;font-size:16px;color:var(--muted);font-weight:600;direction:ltr;unicode-bidi:embed;text-align:right}
+.rich-body{padding:0 22px 24px;display:grid;gap:17px}
+.rich-body .rich-index{display:inline-flex;width:max-content;max-width:100%;border-radius:999px;padding:2px 12px;border:1px solid var(--line);color:var(--muted);font-size:15px;font-weight:800}
+.rich-part{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:14px}
+.rich-part h4,.rich-subhead{font-size:clamp(20px,2vw,25px);line-height:1.5;font-weight:900;color:var(--text);margin:0}
+.rich-part p,.rich-body p{font-size:20px;line-height:1.95;color:var(--text);margin:0}
+.rich-part.definition p{font-size:22px;font-weight:650}
+.rich-part.example{border-inline-start:4px solid #238b8a;padding-inline-start:14px;border-top:0}
+.rich-part.takeaway{border-inline-start:4px solid #bc9654;padding-inline-start:14px;border-top:0}
+.rich-part.discussion{border-inline-start:4px solid #5c83aa;padding-inline-start:14px;border-top:0}
+.rich-list{margin:0;padding-inline-start:28px;display:grid;gap:10px}
+.rich-list li{font-size:20px;line-height:1.83;padding-inline-start:4px}
+.rich-lead{font-size:23px!important;font-weight:680;line-height:1.8!important}
+.rich-body .source-link{margin-top:6px}
+.role-dialogues{display:grid;gap:10px}
+.role-line{padding:12px 16px;border:1px solid var(--line);border-radius:15px;background:var(--soft);display:grid;gap:3px}
+.role-line strong{font-size:21px;font-weight:900;color:var(--text)}
+.role-line p{font-size:20px;line-height:1.75}
+.version-choices{display:grid;gap:17px}
+.language-version{border:1.5px solid var(--line);border-radius:20px;padding:21px 22px;display:grid;gap:17px;background:var(--panel)}
+.language-version .version-label{display:flex;align-items:center;gap:15px}
+.language-version .version-label h3{font-size:clamp(23px,2.5vw,28px);font-weight:900;margin:0}
+.language-version .version-label p{font-size:16px;color:var(--muted);margin:0}
+.version-tag{width:52px;height:52px;flex-shrink:0;display:grid;place-items:center;border-radius:13px;background:#113d48;color:#fff;font:900 21px Arial,sans-serif}
+.english-version .version-tag{background:#344967}
+.version-actions{display:grid;gap:10px}
+.language-version>small{color:var(--muted);font-size:16px}
+.version-choices .btn{font-size:21px}
+.original-viewer-page{max-width:1150px;margin:0 auto}
+.original-viewer-actions{display:flex;gap:12px;flex-wrap:wrap}
+.original-viewer-actions>*{flex:1 1 210px;text-decoration:none;text-align:center;display:grid;place-items:center}
+.original-slide-frame{width:100%;min-height:620px;aspect-ratio:16/10;border:2px solid var(--line);border-radius:15px;background:var(--panel)}
+@media(max-width:700px){
+ .rich-collection-heading h3{font-size:27px}
+ .rich-accordion>summary{padding:20px 17px;min-height:80px}
+ .rich-summary strong{font-size:27px}
+ .rich-summary small{font-size:16px;line-height:1.45}
+ .rich-body{padding:0 17px 22px;gap:17px}
+ .rich-part h4,.rich-subhead{font-size:23px}
+ .rich-part p,.rich-body p,.rich-list li{font-size:23px;line-height:1.8}
+ .rich-part.definition p{font-size:24px}
+ .rich-lead{font-size:24px!important}
+ .role-line strong{font-size:24px}
+ .role-line p{font-size:23px}
+ .language-version{padding:20px 17px;gap:16px}
+ .language-version .version-label h3{font-size:27px}
+ .language-version .version-label p{font-size:18px}
+ .version-choices .btn{font-size:23px}
+ .language-version>small{font-size:18px}
+ .original-slide-frame{min-height:440px;aspect-ratio:auto}
+}
+
+.lesson-panel-body .lesson-line{margin:0;font-size:21px;line-height:1.85}
+.lesson-panel-body .lesson-line strong{font-size:1.06em;font-weight:900;color:var(--text)}
+.lesson-panel-body .lesson-order{color:var(--gold);margin-inline-end:4px}
+@media(max-width:700px){.lesson-panel-body .lesson-line{font-size:23px;line-height:1.85}}
