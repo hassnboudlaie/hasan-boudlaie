@@ -1,0 +1,68 @@
+/* Saba Naft V3 secondary routes: notes & business model. Text >=15px. */
+html{overflow-x:clip}
+body.saba-notes{
+ background:linear-gradient(135deg,#dce9f0,#e8f0ed 60%,#d9e9ee)!important;
+ color:#17394e!important;font:18px/1.72 Vazirmatn,Tahoma,sans-serif!important
+}
+.saba-notes main{max-width:950px;padding:19px 17px 45px}
+.saba-notes header{background:linear-gradient(110deg,#153b57,#206e76);border-radius:17px;color:white;padding:16px 19px;margin-bottom:14px}
+.saba-notes header h1{font-size:clamp(27px,3.3vw,33px);color:white;margin:0}
+.saba-notes header a{background:#e0f0ef;color:#19515c;min-height:45px;display:inline-flex;align-items:center;border-radius:10px;padding:7px 13px;font-size:17px;font-weight:800;text-decoration:none}
+.saba-notes main>p{font-size:18px!important;font-weight:800;margin:13px 0 5px}
+.saba-notes main>small{font-size:15px!important;line-height:1.75!important;display:block;color:#3e6478}
+.saba-notes .chapter{background:linear-gradient(118deg,#d7e9f0,#ecf5f5);border:1px solid #b6d0dc;border-right:5px solid #1c7785;border-radius:16px;margin:11px 0;overflow:hidden;box-shadow:0 4px 14px #18496510}
+.saba-notes .chapter:nth-of-type(3n+2){background:linear-gradient(118deg,#dceee4,#eff6ec);border-color:#b9d6c7;border-right-color:#187b6d}
+.saba-notes .chapter:nth-of-type(3n){background:linear-gradient(118deg,#f1e4d0,#fcf2e6);border-color:#dfcaa9;border-right-color:#a77132}
+.saba-notes .chapter>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:18px 19px;min-height:74px}
+.saba-notes .chapter>summary::-webkit-details-marker{display:none}
+.saba-notes .chapter>summary::before{content:"＋";display:grid;place-items:center;flex:0 0 39px;height:39px;border-radius:11px;background:#b7dce1;color:#115668;font-size:25px;font-weight:800}
+.saba-notes .chapter[open]>summary::before{content:"−"}
+.saba-notes .chapter h2{font-size:clamp(20px,2.6vw,24px)!important;margin:0;color:#163e55;line-height:1.5}
+.saba-notes .chapter>p,.saba-notes .chapter>ol,.saba-notes .chapter>a{margin:0 19px 19px;font-size:18px!important;line-height:1.8!important;color:#224759}
+.saba-notes .chapter ol{padding-inline-start:26px;margin-top:2px}
+.saba-notes .chapter li{font-size:17px!important;line-height:1.75!important;margin-bottom:12px}
+.saba-notes .chapter>a{color:#126c75;font-weight:850;display:inline-block;min-height:44px}
+.saba-notes :focus-visible{outline:3px solid #b17b41;outline-offset:3px}
+body.saba-business-model{background:linear-gradient(145deg,#dce9ef,#e7f0ee 54%,#e2ede7)!important;color:#17394e!important;font-size:18px!important;overflow-x:clip}
+.saba-business-model .top:after{background:#deebef!important}
+.saba-business-model .map-shell,.saba-business-model .packages,.saba-business-model .detail-wrap,.saba-business-model .disclaimer{
+ background:linear-gradient(125deg,#d9eaf0,#edf4f2)!important;border:1px solid #bbd1dd!important;border-radius:18px!important;box-shadow:0 6px 20px #184b6b12!important
+}
+.saba-business-model .quick{gap:12px!important}
+.saba-business-model .quick button{background:linear-gradient(115deg,#d7e9ef,#edf5f5)!important;border:1px solid #bad3dc!important;border-right:4px solid #277f89!important;min-height:88px!important}
+.saba-business-model .quick button:nth-child(3n+2){background:linear-gradient(115deg,#d8ece4,#eaf4eb)!important;border-right-color:#16796f!important}
+.saba-business-model .quick button:nth-child(3n){background:linear-gradient(115deg,#f3e6d2,#fdf2e3)!important;border-right-color:#aa7135!important}
+.saba-business-model .quick button strong{font-size:20px!important;color:#163e55!important}
+.saba-business-model .quick button small{font-size:16px!important;color:#436476!important}
+.saba-business-model .canvas-block{background:linear-gradient(150deg,#e1eff4,#f5f9f8)!important;border-color:#a9cbdc!important}
+.saba-business-model .canvas-block:nth-child(3n+2){background:linear-gradient(150deg,#e2f2ea,#f6fbf6)!important}
+.saba-business-model .canvas-block:nth-child(3n){background:linear-gradient(150deg,#f5eadd,#fdf9f0)!important}
+.saba-business-model .canvas-block .head{font-size:16px!important;line-height:1.55!important;padding:9px 11px!important}
+.saba-business-model .canvas-block .hint{font-size:15px!important;color:#1d5b78!important}
+.saba-business-model .canvas-block .inner,.saba-business-model .canvas-footer{font-size:15px!important;line-height:1.6!important;background:#e1edf3!important}
+.saba-business-model .instructions h2,.saba-business-model .section-top h2{font-size:clamp(23px,2.7vw,29px)!important}
+.saba-business-model .instructions p,.saba-business-model .section-top p{font-size:16px!important}
+.saba-business-model .packages{padding:18px!important;margin-top:15px!important}
+.saba-business-model .package,.saba-business-model .reward-grid>div,.saba-business-model .detail-item{background:#e0edf2!important;border:1px solid #bed5de!important}
+.saba-business-model .package:nth-child(3n+2),.saba-business-model .reward-grid>div:nth-child(even),.saba-business-model .detail-item:nth-child(3n+2){background:#e3f0e8!important}
+.saba-business-model .reward-grid strong{font-size:17px!important}
+.saba-business-model .reward-grid span{font-size:15px!important;line-height:1.75!important}
+.saba-business-model .reward-guardrail{font-size:16px!important}
+.saba-business-model .detail-hero{padding:17px 20px!important;background:linear-gradient(110deg,#153d59,#1d6a78)!important}
+.saba-business-model .detail-badge{font-size:15px!important}
+.saba-business-model .detail-item p,.saba-business-model .detail-item small{font-size:16px!important}
+.saba-business-model .steps{font-size:15px!important}
+.saba-business-model button,.saba-business-model a{touch-action:manipulation}
+.saba-business-model :focus-visible{outline:3px solid #af793e!important;outline-offset:3px}
+@media(max-width:700px){
+ .saba-notes main{padding:12px 11px 38px}
+ .saba-notes header{padding:13px 14px}
+ .saba-notes .chapter>summary{padding:13px 14px;min-height:66px}
+ .saba-notes .chapter>p,.saba-notes .chapter>ol,.saba-notes .chapter>a{margin:0 14px 16px}
+ .saba-notes .chapter h2{font-size:20px!important}
+ .saba-business-model .map-shell{padding:12px!important}
+ .saba-business-model .quick button{min-height:80px!important}
+ .saba-business-model .canvas-block .head{font-size:15px!important}
+ .saba-business-model .canvas-block .hint{font-size:15px!important}
+ .saba-business-model .packages{padding:15px!important}
+}

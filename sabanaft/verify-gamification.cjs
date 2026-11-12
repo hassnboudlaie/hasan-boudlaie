@@ -28,8 +28,12 @@ assert.match(read('app/executive-learning-ux.css'),/\.course-card\:nth-child/,'c
 assert.match(read('leadership-studio.html'),/studio-executive-v3\.css/,'Studio uses integrated executive design');
 assert.match(read('index.html'),/course-executive-v3\.css/,'source course uses integrated executive design');
 assert.match(read('app/sw.js'),/course-executive-v3\.css/,'course design precached');
+assert.match(read('app/lesson-notes.html'),/class="chapter"/,'six chapter notes use progressive disclosures');
+assert.equal([...read('app/lesson-notes.html').matchAll(/class="chapter"/g)].length,6,'all six chapters preserved');
+assert.match(read('app/business-model.html'),/resource-pages-v3\.css/,'BMC typography integration active');
+assert.match(read('app/sw.js'),/resource-pages-v3\.css/,'resource styles precached');
 
-assert.match(read('app/sw.js'),/shell-v18/,'offline assets refreshed');
+assert.match(read('app/sw.js'),/shell-v19/,'offline assets refreshed');
 assert.match(read('reflective-app.js'),/completedAt/,'real dates attached to learning');
 assert.match(studio,/c\.decisionAt=/,'decision timestamps');
 assert.match(studio,/c\.actionAt=/,'action timestamps');
