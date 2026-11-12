@@ -1,0 +1,182 @@
+/* Saba Naft / Reflective Leadership OS
+   Executive learning experience · 2026-11-12
+   Adopted interaction grammar: OB MBA (Allameh), Alborz S4, Behparvar S4.
+   Presentation only; no book content, score rules, storage, or security changes. */
+:root{
+ --ex-navy:#152b43;--ex-blue:#225981;--ex-teal:#087f85;--ex-gold:#bb8040;
+ --ex-bg:#f4f7fa;--ex-ink:#1a3148;--ex-sub:#52677a;--ex-line:#d6e2eb;
+ --ex-shadow:0 12px 34px rgba(18,48,73,.075)
+}
+html{scroll-padding-top:95px}
+body{background:var(--ex-bg)!important;color:var(--ex-ink)!important}
+.app-shell{max-width:1100px}
+button,a,input,textarea,select{touch-action:manipulation}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #bc8242!important;outline-offset:3px}
+.view h1,.view h2,.view h3{letter-spacing:0}
+.view h1{line-height:1.5}
+.view p{line-height:1.85}
+.topbar,body.saba-home .topbar{border-bottom:1px solid #d6e2ed!important;box-shadow:0 5px 18px #1839510a!important}
+.topbar .brand strong{font-weight:950}
+.topbar .model-nav-toggle{min-height:47px}
+.topbar .global-score{min-height:45px}
+.model-side-nav{box-shadow:0 20px 65px #102f4b25!important}
+.model-side-list button,.model-side-extras button,.model-side-extras a{transition:background .18s,border-color .18s,transform .18s}
+.model-side-list button:hover,.model-side-extras button:hover,.model-side-extras a:hover{transform:translateX(-2px);border-color:#a5c9d6!important;background:#eef8f9!important}
+.model-side-list button:focus-visible,.model-side-extras button:focus-visible,.model-side-extras a:focus-visible{outline-offset:1px}
+
+/* Case-first home: the primary action now precedes the model tiles. */
+body.saba-home #homeView .saba-home-content{gap:18px!important}
+body.saba-home #homeView .saba-home-heading{height:228px}
+body.saba-home #homeView .saba-home-heading h1{font-size:clamp(34px,4.7vw,51px)!important;font-weight:950}
+body.saba-home #homeView .saba-home-heading p{font-size:clamp(17px,1.8vw,19px)!important;max-width:750px}
+body.saba-home #homeView .saba-companion-actions{margin:0!important}
+body.saba-home #homeView .saba-companion-actions button{
+ position:relative;min-height:76px!important;padding:17px 24px!important;
+ background:linear-gradient(112deg,#087c84,#18587d)!important;
+ border:1px solid #0c6b76!important;box-shadow:0 13px 30px #0d687a22!important;
+ color:#fff!important;border-radius:19px!important;font-size:clamp(19px,2.3vw,23px)!important;
+ font-weight:950!important;text-align:center;transition:transform .18s,box-shadow .18s!important
+}
+body.saba-home #homeView .saba-companion-actions button:hover{transform:translateY(-2px);box-shadow:0 18px 40px #0b557533!important}
+body.saba-home #homeView .saba-model-label{margin-top:9px!important;font-size:clamp(22px,2.8vw,27px)!important}
+body.saba-home #homeView .saba-model-label::after{
+ content:"";display:block;width:62px;height:4px;border-radius:8px;
+ background:linear-gradient(90deg,#ba813f,#13979b);margin-top:7px
+}
+body.saba-home #homeView .saba-home-grid{gap:15px!important}
+body.saba-home #homeView .saba-home-tile{
+ min-height:138px!important;padding:21px 22px!important;
+ border:1px solid #d6e2ec!important;border-right:4px solid #1d6b8d!important;
+ border-radius:20px!important;box-shadow:var(--ex-shadow)!important;
+ transition:transform .18s,box-shadow .18s,border-color .18s!important
+}
+body.saba-home #homeView .saba-home-tile:nth-child(2){border-right-color:#168d86!important}
+body.saba-home #homeView .saba-home-tile:nth-child(3){border-right-color:#b88245!important}
+body.saba-home #homeView .saba-home-tile:nth-child(4){border-right-color:#42668d!important}
+body.saba-home #homeView .saba-home-tile:hover{transform:translateY(-3px);box-shadow:0 18px 39px #193b5c1a!important;border-color:#90b9ca!important}
+body.saba-home #homeView .saba-home-tile .saba-tile-icon{
+ background:linear-gradient(145deg,#e6f2f9,#d9e9f3)!important;
+ color:#195a7e!important;font-size:28px!important
+}
+body.saba-home #homeView .saba-home-tile:nth-child(2) .saba-tile-icon{background:#e2f3ed!important;color:#0b756f!important}
+body.saba-home #homeView .saba-home-tile:nth-child(3) .saba-tile-icon{background:#fff0dc!important;color:#986222!important}
+body.saba-home #homeView .saba-home-tile:nth-child(4) .saba-tile-icon{background:#e9eef9!important;color:#315b87!important}
+body.saba-home #homeView .saba-home-tile strong{font-size:clamp(20px,2.2vw,23px)!important}
+body.saba-home #homeView .saba-home-tile small{font-size:clamp(15px,1.65vw,17px)!important;color:#4e667b!important}
+body.saba-home #homeView button.saba-reflection-band{
+ min-height:122px!important;background:linear-gradient(120deg,#fffaf4,#fff)!important;
+ border-right:4px solid #bf8646!important;box-shadow:var(--ex-shadow)!important
+}
+body.saba-home #homeView .saba-reflection-copy strong{font-size:23px!important}
+body.saba-home #homeView .saba-reflection-copy small{font-size:16px!important}
+body.saba-home #homeView .saba-reflection-hint{display:none!important}
+body.saba-home #homeView .saba-home-achievement button{border:1px solid #d6e2ed;box-shadow:0 5px 18px #153c5a0a}
+
+/* Each selected leadership stage is its own screen and its existing three
+   actions are prominent, tappable drill-down cards. */
+#stageView{max-width:1010px;margin-inline:auto;padding-top:25px}
+.stage-top{margin-bottom:13px}
+.stage-index{font-size:16px;font-weight:800}
+.stage-back{background:#fff!important;border:1px solid #cddde8!important;color:#20547b!important;border-radius:13px;min-height:50px}
+.stage-heading{
+ background:linear-gradient(116deg,#152e49,#246281 70%,#0c7c83)!important;
+ border:1px solid #336e82!important;border-radius:24px!important;
+ padding:clamp(22px,3.2vw,35px)!important;
+ box-shadow:0 18px 38px #0c40631c;min-height:167px
+}
+.stage-heading h1{font-size:clamp(29px,3.5vw,39px)!important;font-weight:950}
+.stage-heading p{font-size:clamp(17px,2vw,19px)!important;max-width:710px}
+.stage-heading .stage-symbol{width:76px!important;height:76px!important;flex:0 0 76px!important;border-radius:20px!important;background:#ffffff21!important;font-size:39px!important}
+.stage-progress{border:1px solid #bce0d9!important;background:#edf9f6!important;color:#125c58!important;border-radius:15px!important;font-size:16px!important}
+.stage-section-title{font-size:clamp(24px,2.8vw,29px)!important;color:var(--ex-navy)!important;margin:30px 0 16px!important}
+.stage-action-list{gap:16px!important}
+.stage-action{
+ min-height:125px!important;border:1px solid #d5e2eb!important;border-right:4px solid #188b92!important;
+ padding:22px 24px!important;border-radius:21px!important;
+ box-shadow:var(--ex-shadow)!important;transition:transform .17s,box-shadow .17s,border-color .17s!important
+}
+.stage-action:nth-child(2){border-right-color:#be894a!important}
+.stage-action:nth-child(3){border-right-color:#2c638e!important}
+.stage-action:hover{transform:translateY(-3px);border-color:#94c2ca!important;box-shadow:0 17px 38px #14395018!important}
+.stage-action-num{width:62px!important;height:62px!important;flex:0 0 62px!important;background:#e7f5f3!important;color:#087d7e!important;border-radius:17px!important;font-size:28px!important}
+.stage-action:nth-child(2) .stage-action-num{background:#fff2df!important;color:#946222!important}
+.stage-action:nth-child(3) .stage-action-num{background:#eaf2fa!important;color:#285c86!important}
+.stage-action-copy strong{font-size:clamp(21px,2.2vw,24px)!important;color:#18364f!important}
+.stage-action-copy small{font-size:clamp(16px,1.75vw,18px)!important;color:#516779!important}
+.stage-action-arrow{font-size:29px!important;color:#15878e!important}
+.stage-note{display:none!important}
+
+/* Lecture, role-play, cases and assessments: unified card rhythm. */
+.page-heading{padding-top:34px}
+.page-heading h1{font-size:clamp(29px,3.8vw,39px)!important;font-weight:950}
+.page-heading>p{font-size:18px!important;color:var(--ex-sub)!important}
+.course-grid{gap:18px!important}
+.course-card{border:1px solid var(--ex-line)!important;border-radius:21px!important;overflow:hidden;box-shadow:var(--ex-shadow)!important;transition:transform .17s,box-shadow .17s}
+.course-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px #14395018!important}
+.course-card>img{height:144px!important;object-fit:cover}
+.course-card-body{padding:19px 21px!important}
+.course-card strong{font-size:clamp(19px,2vw,22px)!important}
+.course-card p{font-size:16px!important;color:#52677a!important}
+.course-card-bottom{font-size:15px!important}
+.lesson-list{gap:14px!important}
+.lesson-card{min-height:108px!important;border:1px solid var(--ex-line)!important;border-right:4px solid #1f7e88!important;border-radius:18px!important;padding:19px 20px!important;box-shadow:var(--ex-shadow)!important}
+.lesson-card:hover{border-color:#90bfc8!important;background:#faffff!important}
+.lesson-text strong{font-size:21px!important}
+.lesson-text small{font-size:16px!important}
+.session-output{background:#eaf7f4!important;border:1px solid #b9ded5!important;color:#1b5357!important;padding:19px 22px!important}
+.session-output strong{font-size:19px!important}
+.reader-top{box-shadow:0 8px 23px #123d5810}
+.lesson-switch>summary{font-size:18px!important;min-height:48px;display:flex;align-items:center}
+.reader-actions{gap:10px}
+.reader-actions .outline{min-height:54px!important;font-size:17px!important}
+#coachView .cj-card{border:1px solid var(--ex-line)!important;border-radius:21px!important;box-shadow:var(--ex-shadow)!important}
+#coachView .cj-step h2{font-size:clamp(23px,2.4vw,28px)!important}
+#coachView .cj-card p{font-size:17px!important}
+#coachView .cj-primary{background:linear-gradient(110deg,#0b7d82,#1b6485)!important;border-color:#147683!important}
+#coachView .cj-case-form textarea{min-height:172px}
+#coachView .cj-ai{background:#fcfdff}
+#coachView .cj-human{background:#f9fcfa}
+#passportView .sg-dashboard,#passportView .passport-banner{border-radius:22px}
+#passportView .sg-badge,#passportView .sg-step{border-radius:17px}
+
+/* Mobile: legible one-column cards, intentional spacing, no horizontal drift. */
+@media(max-width:700px){
+ body{font-size:18px!important}
+ .app-shell{padding-inline:14px!important}
+ body.saba-home .app-shell{padding-inline:0!important}
+ body.saba-home #homeView .saba-home-content{padding-inline:14px!important;gap:14px!important}
+ body.saba-home #homeView .saba-home-heading{height:226px}
+ body.saba-home #homeView .saba-home-heading h1{font-size:clamp(29px,8.5vw,40px)!important}
+ body.saba-home #homeView .saba-home-heading p{font-size:16px!important}
+ body.saba-home #homeView .saba-companion-actions button{min-height:72px!important;font-size:19px!important;padding:13px 15px!important}
+ body.saba-home #homeView .saba-model-label{font-size:22px!important}
+ body.saba-home #homeView .saba-home-grid{grid-template-columns:1fr!important;gap:11px!important}
+ body.saba-home #homeView .saba-home-tile{min-height:103px!important;padding:17px!important}
+ body.saba-home #homeView .saba-home-tile strong{font-size:20px!important}
+ body.saba-home #homeView .saba-home-tile small{font-size:16px!important}
+ body.saba-home #homeView .saba-reflection-copy strong{font-size:20px!important}
+ body.saba-home #homeView .saba-reflection-copy small{font-size:15px!important}
+ body.saba-home #homeView .saba-reflection-action{font-size:14px!important;padding:8px!important}
+ #stageView{padding-top:18px}
+ .stage-heading{gap:13px!important;padding:22px 17px!important;min-height:142px}
+ .stage-heading .stage-symbol{width:56px!important;height:56px!important;flex:0 0 56px!important;font-size:29px!important}
+ .stage-heading h1{font-size:27px!important}
+ .stage-heading p{font-size:16px!important}
+ .stage-action{min-height:110px!important;padding:15px!important;gap:12px!important}
+ .stage-action-num{width:48px!important;height:48px!important;flex:0 0 48px!important;font-size:23px!important}
+ .stage-action-copy strong{font-size:20px!important}
+ .stage-action-copy small{font-size:16px!important}
+ .course-grid{grid-template-columns:1fr!important}
+ .course-card>img{height:145px!important}
+ .lesson-card{padding:16px!important}
+ .lesson-text strong{font-size:19px!important}
+ .page-heading>p{font-size:17px!important}
+ .reader-actions{display:grid;grid-template-columns:1fr 1fr}
+ .reader-actions #externalLesson{grid-column:1/-1;grid-row:2}
+ #coachView .cj-layout{grid-template-columns:1fr!important}
+ #coachView .cj-card{padding:19px 16px!important}
+ #coachView .cj-fields{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .view.active,.stage-action,.course-card,.saba-home-tile{animation:none!important;transition:none!important}
+}
