@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="./ch5-product-shell.css?v=4">
 <link rel="stylesheet" href="./gamification.css?v=1">
 <link rel="stylesheet" href="./premium-v2.css?v=1">
+<link rel="stylesheet" href="./executive-learning-ux.css?v=20261112">
 <title>رهبری بازتابی من | صبا نفت</title>
 
 
@@ -52,8 +53,9 @@
   <header class="saba-home-heading">
    <span class="saba-home-overline">سامانه رهبری بازتابی صبا نفت</span>
    <h1>رهبری بازتابی من</h1>
-   <p>مدل رهبری، تمرین واقعی و رشد مرحله‌به‌مرحله</p>
+   <p>از یک مسئله واقعی شروع کنید؛ یاد بگیرید، تمرین کنید و تصمیم بعدی را بهتر بگیرید.</p>
   </header>
+  <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ ثبت و بررسی یک مسئله مدیریتی</button></div>
   <div class="saba-model-label">پنج بخش مدل رهبری</div>
   <section class="saba-model-loop" aria-label="چهار جزء مدل رهبری و بازاندیشی مستمر">
    <nav class="saba-home-grid" aria-label="چهار جزء مدل اصلی رهبری آرمین تروست">
@@ -69,7 +71,7 @@
     <span class="saba-reflection-action" aria-hidden="true">ورود ←</span>
   </button>
   </section>
-  <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ ثبت یک مسئله جدید</button></div>
+  
   <div class="saba-home-achievement">
     <button type="button" data-go="passport" aria-label="مشاهده امتیازها، سطح و نشان‌ها"><span id="homeScoreMini">⭐ پیشرفت من</span><strong>مشاهده نشان‌ها ←</strong></button>
     
@@ -81,7 +83,7 @@
  <div class="stage-top"><button type="button" id="stageBack" class="stage-back">→ بازگشت به مدل</button><span class="stage-index" id="stageKicker">مرحله مدل</span></div>
  <header class="stage-heading"><span class="stage-symbol" id="stageSymbol" aria-hidden="true">۲</span><div><h1 id="stageTitle">ایده رهبری من</h1><p id="stageLead">مسیر تمرین و یادگیری</p></div></header>
  <div class="stage-progress" id="stageProgress">با انجام فعالیت‌ها امتیاز و نشان بگیرید.</div>
- <h2 class="stage-section-title">از کجا شروع کنم؟</h2>
+ <h2 class="stage-section-title">یکی از فعالیت‌های این بخش را انتخاب کنید</h2>
  <nav id="stageActionList" class="stage-action-list" aria-label="انتخاب فعالیت در این مرحله"></nav>
  <p class="stage-note">هر فعالیت در صفحه جداگانه باز می‌شود؛ برای بازگشت از دکمه «بازگشت» استفاده کنید.</p>
 </section>
@@ -161,7 +163,7 @@
    <section class="cj-card cj-ai" aria-label="کوچ هوش مصنوعی">
     <span class="cj-symbol">✦</span><h2>مربی هوشمند رهبری</h2>
     <p><strong>اتصال هوش مصنوعی هنوز فعال نیست.</strong> پس از فعال‌سازی حساب امن سازمانی و سرویس اختصاصی، می‌توانید همین کیس را ارسال کنید و پاسخ مولد را در همین صفحه دریافت کنید.</p>
-    <label class="cj-consent"><input type="checkbox" id="cj-ai-consent"> موافقم فقط متن بدون اطلاعات محرمانه این کیس برای پردازش برای پردازش هوشمند ارسال شود.</label>
+    <label class="cj-consent"><input type="checkbox" id="cj-ai-consent"> موافقم فقط متن بدون اطلاعات محرمانه این کیس برای پردازش هوشمند ارسال شود.</label>
     <button type="button" class="cj-primary cj-ai-submit" id="cj-ask-ai" disabled>مربی هوشمند · نیازمند اتصال امن</button>
     <div class="cj-ai-response" id="cj-ai-response" role="status" aria-live="polite" hidden></div>
     <p>راه جایگزین فعلی: پرسش را به انتخاب خودتان کپی کنید و در حساب شخصی چت‌جی‌پی‌تی وارد کنید. پاسخ در چت‌جی‌پی‌تی دریافت می‌شود، نه این اپ.</p>
