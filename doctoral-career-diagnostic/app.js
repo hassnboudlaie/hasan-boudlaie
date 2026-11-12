@@ -80,17 +80,17 @@ function save(manual){
 }
 function countAnswered(s){return s.questions.filter(x=>hasAnswer(answers[x.id])).length;}
 function totalAnswered(){return allQuestions().filter(x=>hasAnswer(answers[x.id])).length;}
-function percent(){return Math.round(totalAnswered()*100/allQuestions().length);}
+function percent(){return Math.round((current/SECTIONS.length)*100);}
 function updateProgress(){
  const value=percent();
- byId('completion').textContent=totalAnswered()+' of '+allQuestions().length+' answered';
+ byId('completion').textContent='Section '+Math.min(current+1,SECTIONS.length)+' / '+SECTIONS.length+' · '+totalAnswered()+' reflections captured';
  byId('progressFill').style.width=value+'%';
  document.querySelector('.progress-track').setAttribute('aria-valuenow',value);
 }
 function updateSteps(){
  byId('steps').innerHTML=SECTIONS.map((s,i)=>{
   const active=current===i?' active':'';
-  const done=countAnswered(s)===s.questions.length?' done':'';
+  const done=s.questions.filter(x=>x.required).every(x=>hasAnswer(answers[x.id]))?' done':'';
   return '<button type="button" class="step-link'+active+done+'" data-jump="'+i+'" '+(active?'aria-current="step"':'')+'><span class="step-no">'+(i+1)+'</span>'+esc(s.title)+'</button>';
  }).join('')+'<button type="button" class="step-link'+(current===SECTIONS.length?' active':'')+'" data-jump="'+SECTIONS.length+'"><span class="step-no">✓</span>Review & submit</button>';
 }
