@@ -233,3 +233,16 @@ body{background:radial-gradient(ellipse at 96% -17%,#e0efe4 0%,transparent 43%),
 .specialized-link small{display:block;font-size:.74rem;color:#687e70;line-height:1.65;margin-top:3px}
 .specialized-chevron{color:#347755}
 @media(max-width:650px){.specialized-models>summary{padding:10px 12px;gap:4px 8px}.specialized-title{font-size:.85rem}.specialized-summary-sub{flex-basis:100%;padding-inline-start:38px;font-size:.7rem;line-height:1.5;order:3}.specialized-models>summary::after{order:2}.specialized-link{padding:10px 5px}.specialized-link strong{font-size:.84rem}}
+
+/* Business-model workspaces: clear, accessible creation and single-model deletion. */
+.workspace-manager{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:22px;row-gap:12px;margin:0 0 20px;padding:18px 21px;border:1px solid #b7d3c2;border-radius:18px;background:linear-gradient(120deg,#e4f2e8,#f7fbf6);box-shadow:0 8px 24px #1b453115}
+.workspace-manager-copy h2{font-size:1.1rem;line-height:1.5;color:#173c31;font-weight:900;margin:0 0 3px}
+.workspace-manager-copy p{font-size:.91rem;line-height:1.75;color:#315c4b;margin:0}
+.workspace-manager-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.workspace-manager-actions .btn{min-height:44px;font-size:.91rem;font-weight:850;white-space:nowrap}
+.workspace-manager-actions .workspace-delete{background:#fff;border:1px solid #ba645e;color:#94322a}
+.workspace-manager-actions .workspace-delete:hover{background:#fff0ee}
+.workspace-manager-hint{grid-column:1/-1;margin:0;font-size:.85rem;line-height:1.8;color:#385b4a}
+@media(max-width:760px){.workspace-manager{grid-template-columns:1fr;padding:17px}.workspace-manager-actions .btn{flex:1 1 185px;justify-content:center}.workspace-manager-copy h2{font-size:1.07rem}}
+@media(max-width:460px){.workspace-manager-actions{display:grid;grid-template-columns:1fr}.workspace-manager-actions .btn{width:100%;font-size:.93rem}.workspace-manager-copy p,.workspace-manager-hint{font-size:.86rem}}
+@media print{.workspace-manager{display:none!important}}
