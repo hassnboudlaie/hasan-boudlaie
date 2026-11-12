@@ -321,3 +321,17 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
 .lesson-panel-body .lesson-line strong{font-size:1.06em;font-weight:900;color:var(--text)}
 .lesson-panel-body .lesson-order{color:var(--gold);margin-inline-end:4px}
 @media(max-width:700px){.lesson-panel-body .lesson-line{font-size:23px;line-height:1.85}}
+
+/* Student-facing presentation cards: use one primary action and hide file options */
+.asset-downloads{border:1.5px solid var(--line);border-radius:15px;overflow:hidden;background:var(--panel)}
+.asset-downloads>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;min-height:60px;font-size:21px;font-weight:850}
+.asset-downloads>summary::-webkit-details-marker{display:none}
+.asset-downloads>summary:after{content:"⌄";font-size:29px;color:var(--gold)}
+.asset-downloads[open]>summary:after{transform:rotate(180deg)}
+.asset-downloads .lecture-downloads{padding:10px 13px 15px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.language-version{gap:12px}.language-version .version-label{gap:12px}
+.language-version h3{font-size:clamp(25px,3vw,31px)}
+.version-label p,.language-version>small{display:none}
+.language-version .btn{width:100%;min-height:59px}
+.language-version .version-tag{width:47px;height:47px}
+@media(max-width:700px){.asset-downloads .lecture-downloads{grid-template-columns:1fr;padding:10px}.asset-downloads>summary{font-size:23px}.language-version{padding:18px 15px}}
