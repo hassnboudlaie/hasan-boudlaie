@@ -193,3 +193,56 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
 .student-focus{min-height:155px;gap:13px}.hero-card{min-height:170px;gap:14px}.learning-paths-head{margin:0}
 .demo-disclosure p{padding-top:0}
 @media(max-width:700px){.student-focus{min-height:170px;gap:13px}.hero-card{min-height:180px;gap:16px}.install-inline{min-height:66px}.student-redesign{gap:17px}}
+
+
+/* Robbins chapters 1–2: clickable teaching content, quiz, assignments, and accessible native slide deck */
+.lesson-panel{border:1.5px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden}
+.lesson-panel>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 21px;min-height:72px;font-size:23px;font-weight:850}
+.lesson-panel>summary::-webkit-details-marker{display:none}
+.lesson-panel>summary:after{content:"⌄";color:var(--gold);font-size:27px}
+.lesson-panel[open]>summary:after{transform:rotate(180deg)}
+.lesson-panel-body{display:grid;gap:11px;padding:0 21px 20px}
+.lesson-panel-body p{margin:0;line-height:1.86;font-size:20px;overflow-wrap:anywhere}
+.lesson-panel-body p+p{border-top:1px solid var(--line);padding-top:12px}
+.lesson-answer-form{background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:21px;display:grid;gap:12px}
+.lesson-answer-form textarea{min-height:150px}
+.lesson-answer-form .btn{justify-self:start}
+.source-link{font-size:17px;color:var(--teal);display:inline-flex;align-items:center;gap:5px;font-weight:850;text-decoration:underline;text-underline-offset:4px}
+.quiz-workshop .quiz-question{font-size:23px;line-height:1.75;font-weight:750}
+.quiz-workshop .option{font-size:20px}
+.quiz-workshop .mini-note{display:grid;gap:5px}
+.quiz-workshop .mini-note p{font-size:18px}
+.lecture-entry{border-color:var(--teal)}
+.lecture-entry h3{font-size:25px}
+.lecture-entry-count{font-size:19px;color:var(--muted)}
+.lecture-entry .btn{width:100%;font-size:24px}
+.lecture-slide{position:relative;display:grid;grid-template-rows:auto minmax(0,auto) 1fr auto;gap:clamp(16px,3vw,28px);width:100%;aspect-ratio:4/3;min-height:450px;background:linear-gradient(135deg,#152940,#0a5b62);color:white;border-radius:24px;padding:clamp(25px,4.5vw,65px);box-shadow:0 17px 30px #102b4050;overflow:auto}
+.lecture-slide-kicker{font-size:clamp(14px,1.5vw,19px);color:#edce97;font-weight:800}
+.lecture-slide h3{font-size:clamp(30px,4.5vw,57px);font-weight:900;color:white;line-height:1.43}
+.lecture-slide-points{display:grid;align-content:center;gap:clamp(12px,1.6vw,25px)}
+.lecture-slide-point{position:relative;color:#fff;font-size:clamp(22px,2.5vw,37px);line-height:1.6;padding-inline-start:26px}
+.lecture-slide-point::before{content:"";position:absolute;inset-inline-start:0;top:.7em;width:12px;height:12px;background:#f0ca83;border-radius:50%}
+.lecture-slide-footer{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#cddde6;font-size:clamp(14px,1.4vw,17px);border-top:1px solid #ffffff50;padding-top:13px}
+.presentation-actions,.presentation-more{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.presentation-actions>*{flex:1 1 150px}
+.lecture-slide:fullscreen{width:100vw;height:100dvh;min-height:100dvh;aspect-ratio:auto;border-radius:0;box-shadow:none;padding:clamp(25px,5vw,95px)}
+.presentation-page{max-width:1050px;margin:0 auto}
+@media(max-width:700px){
+ .lesson-panel>summary{font-size:25px;min-height:78px;padding:17px 17px}
+ .lesson-panel-body{padding:0 17px 20px}
+ .lesson-panel-body p{font-size:23px;line-height:1.85}
+ .lesson-answer-form{padding:19px 15px}
+ .lesson-answer-form .btn{width:100%}
+ .source-link{font-size:20px}
+ .quiz-workshop .quiz-question{font-size:24px}
+ .quiz-workshop .option{font-size:23px}
+ .quiz-workshop .mini-note p{font-size:20px}
+ .lecture-entry-count{font-size:21px}
+ .lecture-slide{aspect-ratio:auto;min-height:480px;padding:26px 20px;gap:23px;border-radius:19px}
+ .lecture-slide h3{font-size:34px}
+ .lecture-slide-point{font-size:25px;padding-inline-start:19px}
+ .lecture-slide-point::before{width:9px;height:9px}
+ .lecture-slide-footer{font-size:14px;align-items:flex-end}
+ .presentation-actions .btn{min-width:0;flex:1 1 42%}
+ .presentation-more .btn{width:100%}
+}
