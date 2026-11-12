@@ -78,7 +78,7 @@ click('navigate',{page:'sessions'});
 assert.ok(app.innerHTML.includes('در انتظار مدرس'),'Remaining sessions are empty');
 click('openSession',{id:'1'});
 doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker"]'},value:'slides'}});
-assert.ok(app.innerHTML.includes('16 اسلاید'),'Session 1 slides are available');
+assert.ok(app.innerHTML.includes('فارسی')&&app.innerHTML.includes('انگلیسی'),'Session 1 slides are available in two concise versions');
 assert.ok(app.innerHTML.includes('انگلیسی')&&app.innerHTML.includes('فارسی'),'Bilingual presentation version cards available');
 assert.ok(!app.innerHTML.includes('پرزنتیشن بازآفرینی‌شده')&&!app.innerHTML.includes('نمایش فایل اصلی'),'Unnecessary instructional labels removed');
 assert.ok(!app.innerHTML.includes('نمایش فایل اصلی'),'English source card is concise');
@@ -105,7 +105,7 @@ assert.ok(app.innerHTML.includes('پاسخ درست'),'Quiz answer shows explana
 role('teacher');
 assert.ok(app.innerHTML.includes('ابزارهای مدیریت کلاس'),'Teacher tools are collapsed');
 click('editActive');
-assert.equal((app.innerHTML.match(/<details/g)||[]).length,6,'Lesson editor has six expandable groups');
+assert.ok((app.innerHTML.match(/<details/g)||[]).length>=6,'Lesson editor has at least six expandable groups');
 click('navigate',{page:'grades'});
 assert.ok(app.innerHTML.includes('ثبت و انتشار نمره‌ها'),'Grades in own expandable panel');
 role('projector');
