@@ -1,5 +1,5 @@
-const CACHE='ob-mba-classroom-shell-v3';
-const FILES=['./','./index.html','./style.css?v=3','./app.js?v=3','./install.html','./install.css?v=1','./install.js?v=1','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
+const CACHE='ob-mba-classroom-shell-v4';
+const FILES=['./','./index.html','./style.css?v=4','./app.js?v=4','./install.html','./install.css?v=2','./install.js?v=2','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('ob-mba-classroom-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{if(event.request.method!=='GET'||new URL(event.request.url).origin!==self.location.origin)return;event.respondWith(fetch(event.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(event.request,copy)).catch(()=>{})}return r}).catch(()=>caches.match(event.request)))})

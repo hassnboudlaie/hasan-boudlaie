@@ -1,6 +1,19 @@
-(()=>{"use strict";const action=document.getElementById("installAction"),status=document.getElementById("installStatus"),details=document.getElementById("instructions"),copy=document.getElementById("copyLink");let pending=null;const installed=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
-function refresh(){if(installed()){action.textContent="برنامه نصب شده است";action.disabled=true;status.textContent="اپ را از صفحه اصلی گوشی اجرا کنید."}else if(pending){action.innerHTML='نصب مستقیم اپ <span aria-hidden="true">↓</span>';status.textContent="مرورگر شما قابلیت نصب مستقیم را ارائه کرده است."}else{action.innerHTML='نمایش راهنمای نصب <span aria-hidden="true">↓</span>';status.textContent="اگر دکمه نصب مستقیم نمایش داده نشد، از منوی مرورگر استفاده کنید."}}
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();pending=e;refresh()});window.addEventListener("appinstalled",()=>{pending=null;refresh()});
-action.addEventListener("click",async()=>{if(installed())return;if(pending){const event=pending;pending=null;try{await event.prompt();const result=await event.userChoice;refresh();status.textContent=result.outcome==="accepted"?"درخواست نصب پذیرفته شد؛ پس از تکمیل، آیکون اپ روی گوشی ظاهر می‌شود.":"درخواست نصب بسته شد. از منوی مرورگر هم می‌توانید اقدام کنید."}catch{refresh();status.textContent="نصب مستقیم در این مرورگر در دسترس نبود؛ از راهنمای پایین استفاده کنید."}}else{details.scrollIntoView({behavior:"smooth",block:"start"});details.focus?.({preventScroll:true})}});
-copy.addEventListener("click",async()=>{const url=new URL("./install.html",location.href).href;try{await navigator.clipboard.writeText(url);status.textContent="لینک نصب کپی شد."}catch{status.textContent="امکان کپی خودکار نیست. لینک صفحه را از نوار آدرس مرورگر کپی کنید."}});
-refresh()})();
+(()=>{"use strict";
+const action=document.getElementById("installAction"),status=document.getElementById("installStatus"),details=document.getElementById("instructions"),copy=document.getElementById("copyLink");
+let pending=null;const installed=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const say=t=>{status.hidden=!t;status.textContent=t||""};
+function refresh(){
+if(installed()){action.textContent="ورود به اپ";action.dataset.mode="open";say("")}
+else if(pending){action.innerHTML='نصب اپ <span aria-hidden="true">↓</span>';action.dataset.mode="prompt";say("")}
+else{action.innerHTML='روش نصب <span aria-hidden="true">↓</span>';action.dataset.mode="help";say("")}
+}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();pending=e;refresh()});
+window.addEventListener("appinstalled",()=>{pending=null;refresh()});
+action.addEventListener("click",async()=>{
+if(action.dataset.mode==="open"){location.href="./";return}
+if(pending){const e=pending;pending=null;try{await e.prompt();const r=await e.userChoice;refresh();say(r.outcome==="accepted"?"درخواست نصب ثبت شد.":"نصب لغو شد.")}catch{refresh();details.open=true;details.scrollIntoView({block:"start",behavior:"smooth"})}}
+else{details.open=true;details.scrollIntoView({block:"start",behavior:"smooth"})}
+});
+copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(new URL("./install.html",location.href).href);say("لینک کپی شد.")}catch{say("لینک را از نوار آدرس کپی کنید.")}});
+refresh();
+})();
