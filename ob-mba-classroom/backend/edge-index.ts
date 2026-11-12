@@ -73,7 +73,7 @@ async function actionRouter(input:Record<string,unknown>){
    p_invite_hash:await sha256(code),p_name:name,p_session_hash:hash
   });
   if(error||!data?.ok)return fail(String(data?.error||"invite_unavailable"),409);
-  return result({ok:true,role:"student",token,name,student_id:data.student_id,
+  return result({ok:true,role:"student",token,name:data.name,student_id:data.student_id,
    expires_at:new Date(Date.now()+365*86400000).toISOString(),...await publicState()});
  }
  if(action==="studentState"){
@@ -104,20 +104,22 @@ async function actionRouter(input:Record<string,unknown>){
    supabase.from("mba_ob_students").select("id,full_name,enrolled_at,disabled_at").order("enrolled_at"),
    supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at").order("checked_at",{ascending:false}),
    supabase.from("mba_ob_windows").select("session_no,opened_at,closes_at,closed_at").order("session_no"),
-   supabase.from("mba_ob_invitations").select("id,redeemed_at,revoked_at")
+   supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at")
   ]);
   if(students.error||attend.error||windows.error||invites.error)throw new Error("roster_lookup_failed");
   return result({ok:true,students:students.data||[],attendance:attend.data||[],windows:windows.data||[],
-   unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,server_time:stamp()});
+   unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],server_time:stamp()});
  }
  if(action==="issueInvites"){
-  const count=Number(input.count);
-  if(!isInt(count,1,50))return fail("invite_count_invalid");
+  const provided=Array.isArray(input.names)?input.names:null;
+  const names=provided?provided.map(safeName):null;
+  const count=names?names.length:Number(input.count);
+  if(!isInt(count,1,50)||(names&&names.some(n=>!n)))return fail("invite_count_invalid");
   const raw=Array.from({length:count},()=>randomHex(16));
-  const data=await Promise.all(raw.map(async code=>({token_hash:await sha256(code)})));
+  const data=await Promise.all(raw.map(async(code,i)=>({token_hash:await sha256(code),expected_name:names?.[i]||null})));
   const {error}=await supabase.from("mba_ob_invitations").insert(data);
   if(error)throw new Error("invite_creation_failed");
-  return result({ok:true,codes:raw});
+  return result({ok:true,codes:raw.map((code,i)=>({code,name:names?.[i]||""}))});
  }
  if(action==="openWindow"){
   const lesson=Number(input.session),minutes=Number(input.minutes);
