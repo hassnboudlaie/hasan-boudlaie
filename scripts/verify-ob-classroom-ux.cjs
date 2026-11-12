@@ -40,7 +40,7 @@ click('openSession',{id:'4'});
 assert.ok(app.innerHTML.includes('sectionSelect'),'Lesson content selected by dropdown');
 assert.ok(app.innerHTML.includes('مفاهیم')&&app.innerHTML.includes('کاربرد عملی'),'Learning tracks available in each lesson');
 click('setTrack',{track:'practice'});
-assert.ok(app.innerHTML.includes('کیس')&&app.innerHTML.includes('پرسش'),'Practice track only displays relevant sections');
+assert.ok(app.innerHTML.includes('کیس')&&app.innerHTML.includes('جمع‌بندی'),'Practice track only displays relevant sections');
 click('setTrack',{track:'concepts'});
 assert.ok(app.innerHTML.includes('اسلایدها')&&app.innerHTML.includes('مفاهیم'),'Concept track displays theory and slides');
 role('teacher');
