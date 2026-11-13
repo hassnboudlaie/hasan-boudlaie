@@ -31,6 +31,10 @@ jobs:
           node --check sabanaft/practice-kits.js
           node --check sabanaft/app/coaching-journey.js
           node --check sabanaft/app/ai-connector.js
+          node --check sabanaft/app/leadership-journey-core.js
+          node --check sabanaft/app/leadership-journey-content.js
+          node --check sabanaft/app/leadership-journey.js
+          node --check sabanaft/verify-leadership-journey.cjs
       - name: Install isolated test-only jsdom
         run: npm install --prefix /tmp/saba-ci --no-save --no-audit --no-fund jsdom@26.1.0
       - name: Book alignment, persistence, practice and knowledge checks
@@ -43,3 +47,4 @@ jobs:
           node sabanaft/verify-gamification.cjs
           node sabanaft/verify-drilldown.cjs
           node sabanaft/verify-coaching.cjs
+          node sabanaft/verify-leadership-journey.cjs
