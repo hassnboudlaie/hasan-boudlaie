@@ -74,7 +74,7 @@ function renderFeedback(){
  var body='<section class="lj-milestone"><span class="lj-milestone-icon">✧</span><span class="lj-kicker">ایستگاه دستاورد · مرحله '+fa(state.stage+1)+'</span>'+
  '<h2>تصمیم و تمرین شما ثبت شد</h2>'+
  '<div class="lj-earn"><div><strong>'+fa(a.points)+'</strong><span>از ۱۰ امتیاز این مرحله</span></div><div><strong>'+fa(C.summary(state).raw)+'</strong><span>امتیاز خام تا اینجا</span></div><div><strong>+۱</strong><span>سکه تمرین</span></div></div>'+
- coachCard(st.takeaway,"milestone")+
+ coachCard((a.decision>=8?"انتخاب شما تعادل مناسبی میان شواهد، اختیار و پیامد برقرار می‌کند. در اجرا نیز این معیار را حفظ کنید.":a.decision>=6?"در این انتخاب بخشی از مسئله پوشش داده شد. کدام Trade-off یا محدودیت را باید پیش از اقدام روشن‌تر کنید؟":"انتخابتان ثبت شد. یک فرض کلیدی پشت تصمیم خود را شناسایی کنید و اثر آن را بر افراد، اختیار و نتیجه دوباره بسنجید.")+" "+st.takeaway,"milestone")+
  '<div class="lj-coach-reflect"><strong>بازتاب خودارزیابی '+fa(a.rating)+' از ۵</strong><p>'+esc(level)+'</p></div>'+
  '<p class="lj-muted">این امتیاز براساس معیار آموزشی مرحله ثبت شد؛ کلید و تحلیل گزینه‌ها در پایان ۱۰ مرحله باز می‌شوند.</p>'+
  '<button type="button" class="lj-primary" data-lj="advance">'+(state.stage===9?"مشاهده نتیجه نهایی ←":"ادامه به مرحله بعد ←")+'</button></section>';
