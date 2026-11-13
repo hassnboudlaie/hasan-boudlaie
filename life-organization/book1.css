@@ -149,3 +149,22 @@
 @media(max-width:390px){.lb-cover{padding:21px 17px}.lb-cover h1{font-size:25px}.lb-tile-actions .lb-button{width:100%}.lb-jump-list button{width:100%}.lb-page-bottom{flex-direction:column;align-items:stretch}.lb-read-meta{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.lb-root .lb-button,.lb-root .lb-track>div,.lb-root .lb-expand-icon{transition:none}}
 @media print{.sidebar,.topbar,.bottom-nav,.page-footer,.lb-workbook-actions,.lb-workbook-nav,.lb-cover-buttons,.lb-page-bottom{display:none!important}.lb-root,.lb-root .lb-form-field{color:#111;background:#fff;box-shadow:none}.lb-workbook-form{grid-template-columns:1fr}.lb-form-field textarea{background:#fff;min-height:80px}.lb-reading-panel{break-inside:avoid}.lb-reading-panel:not([open]){display:none}}
+
+/* Post-implementation readability audit: preserve the six-module shell while improving small labels. */
+.nav-link{font-size:14px;font-weight:750}
+.card-title{font-size:17px;line-height:1.65}
+.card-desc{font-size:13px;line-height:1.9;color:var(--ink);opacity:.78}
+.card-en{font-size:12px}
+.workbook-item strong{font-size:15px}
+.workbook-item small{font-size:12px}
+.bottom-link{font-size:12px}
+:root[data-theme="dark"] .card-desc{opacity:.93}
+@media(max-width:700px){
+ .card-title{font-size:15px}
+ .card-desc{font-size:12px}
+ .card-en{font-size:11px}
+ .module-card{min-height:235px}
+ .workbook-item strong{font-size:14px}
+ .workbook-item small{font-size:12px}
+ .bottom-link{font-size:11px}
+}
