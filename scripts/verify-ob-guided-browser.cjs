@@ -34,10 +34,18 @@ async function run(){
  for(const config of [{name:"android-390",width:390,height:844,mobile:true},{name:"desktop-1440",width:1440,height:900,mobile:false}]){
   const ctx=await browser.newContext({viewport:{width:config.width,height:config.height},isMobile:config.mobile,hasTouch:config.mobile,deviceScaleFactor:1});
   await ctx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"student",token:"qa-approved-device",name:"دانشجوی آزمون"})));
+  let draftSent=null;
   await ctx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
-   const req=route.request(),params=JSON.parse(req.postData()||"{}");
-   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},
-    body:JSON.stringify(params.action==="accessState"?{ok:true,role:"student",approval_status:"approved",student:{name:"دانشجوی آزمون",student_number:"123456789"}}:{ok:false,error:"invalid_action"})});
+   const params=JSON.parse(route.request().postData()||"{}");
+   let result={ok:false,error:"invalid_action"};
+   if(params.action==="accessState")result={ok:true,role:"student",approval_status:"approved",student:{name:"دانشجوی آزمون",student_number:"123456789"}};
+   if(params.action==="caseMy")result={ok:true,submission:draftSent,history:[]};
+   if(params.action==="caseSubmit"){
+    draftSent={id:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",session_no:params.session,answers:params.answers,
+     status:"submitted",score:null,feedback:null,submitted_at:new Date().toISOString(),revision_no:1};
+    result={ok:true,status:"submitted",id:draftSent.id,revision_no:1};
+   }
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
   });
   const page=await ctx.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(e.message));
@@ -64,22 +72,36 @@ async function run(){
   await noOverflow(page,config.name+" examples");
   await page.locator("#sectionSelect").selectOption("case");
   await page.locator('.gr-shell[data-guided-mode="case"]').waitFor();
-  assert.ok((await page.locator(".gr-source").count())>=1,"Documented case source visible");
+  assert.ok((await page.locator(".gr-case-table").count())===1,"Chapter case presents evidence table rather than an irrelevant case link");
+  assert.ok((await page.locator(".gr-case-table tr").count())>=5,"Case contains usable management data");
   await save(page,config.name+"-03-case-source");
   await page.locator('[data-action="guidedNext"]').click();
+  assert.ok(await page.getByText("Three Levels of OB").first().isVisible(),"Theory toolbox links case to Robbins");
   await page.locator('[data-action="guidedNext"]').click();
-  assert.equal(await page.locator(".gr-stage textarea").count(),2,"Two analytical case questions per stage");
-  await page.locator('[data-guided-key="case-q-0"]').fill("آزمون ثبت پاسخ کیس");
+  await page.locator('[data-action="guidedNext"]').click();
+  assert.equal(await page.locator(".gr-stage textarea").count(),1,"Case workbook shows one rubric section per stage");
+  await page.locator('[data-guided-key="case-problem"]').fill("آزمون ثبت پاسخ کیس که به داده های همین جلسه مربوط است");
   await page.locator('[data-action="guidedNext"]').click();
   await page.locator('[data-action="guidedPrev"]').click();
-  assert.equal(await page.locator('[data-guided-key="case-q-0"]').inputValue(),"آزمون ثبت پاسخ کیس","Autosave across stages");
+  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),"آزمون ثبت پاسخ کیس که به داده های همین جلسه مربوط است","Autosave across stages");
   await noOverflow(page,config.name+" case worksheet");
   await save(page,config.name+"-04-case-workbook");
   await page.reload({waitUntil:"domcontentloaded"});
   await page.locator('.student-focus button[data-action="openActive"]').click();
   await page.locator('[data-track="practice"]').click();
   await page.locator("#sectionSelect").selectOption("case");
-  assert.equal(await page.locator('[data-guided-key="case-q-0"]').inputValue(),"آزمون ثبت پاسخ کیس","Session text survives refresh");
+  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),"آزمون ثبت پاسخ کیس که به داده های همین جلسه مربوط است","Session text survives refresh");
+  const keys=["problem","evidence","levels","explain","intervention","measurement"];
+  for(let i=0;i<keys.length;i++){
+   await page.locator('[data-action="guidedJump"][data-index="'+(i+3)+'"]').click();
+   await page.locator('[data-guided-key="case-'+keys[i]+'"]').fill("پاسخ تحلیلی مستند و مرتبط با کیس برای "+keys[i]);
+  }
+  await page.locator('[data-action="guidedJump"][data-index="9"]').click();
+  await page.locator('[data-action="submitCase"]').click();
+  await page.getByText("ارسال‌شده · در انتظار ارزیابی").waitFor();
+  assert.ok(draftSent&&Object.keys(draftSent.answers).length===6,"All six analytical answers submitted to backend");
+  await noOverflow(page,config.name+" submission");
+  await save(page,config.name+"-04b-submitted");
   await page.locator("#sectionSelect").selectOption("activity");
   await page.locator('.gr-mode-switch').waitFor();
   assert.equal(await page.locator('.gr-shell[data-guided-mode="group"]').count(),1,"Group exercise staged");
@@ -94,13 +116,11 @@ async function run(){
   await page.locator("#sectionSelect").selectOption("reflection");
   await page.locator('.gr-shell[data-guided-mode="reflection"]').waitFor();
   await page.locator('[data-action="guidedNext"]').click();
-  assert.equal(await page.locator('.gr-stage textarea').count(),2,"Two workbook prompts at a time");
-  await page.locator('[data-guided-key="reflection-0"]').fill("نمونه ثبت تکلیف فردی");
-  await page.locator('[data-action="guidedNext"]').click();
-  await page.locator('[data-action="guidedPrev"]').click();
-  assert.equal(await page.locator('[data-guided-key="reflection-0"]').inputValue(),"نمونه ثبت تکلیف فردی","Workbook value survives navigation");
-  await noOverflow(page,config.name+" reflection");
-  await save(page,config.name+"-06-reflection");
+  assert.ok(await page.locator('[data-action="jumpToCase"]').isVisible(),"Assignment follows exactly the same six-step case framework");
+  await page.locator('[data-action="jumpToCase"]').click();
+  assert.ok(await page.locator('.gr-shell[data-guided-mode="case"]').isVisible(),"Assignment returns to case not disconnected tasks");
+  await noOverflow(page,config.name+" assignment");
+  await save(page,config.name+"-06-assignment");
   await page.locator('[data-track="concepts"]').click();
   await page.locator("#sectionSelect").selectOption("slides");
   assert.ok(await page.locator(".persian-version").isVisible(),"Persian presentation kept");
@@ -113,7 +133,7 @@ async function run(){
   await page.locator(".student-focus").waitFor();
   assert.deepEqual(errors,[],config.name+" uncaught frontend JavaScript errors");
   await ctx.close();
-  console.log("PASS "+config.name+": source intact, guided 7 concepts, 3 examples, case/workbook auto-save, role-play, quiz, presentations, dark theme, RTL and overflow");
+  console.log("PASS "+config.name+": 7 concepts, chapter-aligned case, six-part submitted workbook, role-play, quiz, presentations, dark theme, RTL and overflow");
  }
  // Access-gate approval flow: registration does not unlock lessons before teacher review.
  const pendingCtx=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
@@ -158,6 +178,11 @@ async function run(){
  await instructorPage.goto(url,{waitUntil:"domcontentloaded"});
  await instructorPage.locator(".page").waitFor();
  assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
+ assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
+ await instructorPage.locator('[data-action="showJoinQR"]').click();
+ assert.ok(await instructorPage.locator(".join-qr-projector").isVisible(),"Projected first screen shows large join QR");
+ await noOverflow(instructorPage,"teacher projector QR");
+ await save(instructorPage,"android-390-08-qr-projector");
  await instructorPage.goto(url+"attendance.html",{waitUntil:"domcontentloaded"});
  await instructorPage.getByText("درخواست‌های عضویت").waitFor();
  assert.ok((await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').count())===1,"Teacher sees pending student");
