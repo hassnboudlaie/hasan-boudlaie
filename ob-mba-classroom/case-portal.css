@@ -1,0 +1,120 @@
+/* Life Organization–led MBA refinement: emerald, sage, warm sand, honey and slate.
+   Distinct content bands reduce the previous black-on-white monotony without sacrificing contrast. */
+:root{--case-forest:#15554d;--case-sea:#176f62;--case-sage:#e5f1e7;--case-mist:#e6f4f0;
+ --case-sand:#fff1d9;--case-amber:#b27d38;--case-ink:#213d43}
+body:not([data-theme=dark]){background:radial-gradient(circle at 94% 4%,#e1f1e7 0,transparent 36%),
+ radial-gradient(circle at 10% 80%,#f7eddb 0,transparent 42%),#f6f5f1}
+.teacher-home .hero-card{background:linear-gradient(125deg,#0f5349,#2a7463)!important;border:1px solid #3b8e7b;color:#fff}
+.teacher-home .hero-card h2,.teacher-home .course-tag{color:#fff!important}
+.student-redesign .learning-card.concepts-card{background:linear-gradient(130deg,#ffffff,#e8f3ee)}
+.student-redesign .learning-card.practice-card{background:linear-gradient(135deg,#fffdf8,#fff0da)}
+.student-redesign .learning-card.sessions-card{background:linear-gradient(130deg,#ffffff,#e5eef6)}
+.student-redesign .learning-card.attendance-card{background:linear-gradient(130deg,#ffffff,#e5f5e9)}
+.term-progress{background:linear-gradient(120deg,#fff,#ebf5ee)}
+.lesson-panel[open]>summary{background:linear-gradient(90deg,var(--soft),var(--panel))}
+.gr-shell{border-color:#bdd7cd;background:linear-gradient(170deg,var(--panel),var(--soft))}
+.gr-header{background:linear-gradient(120deg,#0e4d48,#257c68)!important;color:white}
+.gr-stage .gr-part:nth-of-type(even){background:var(--soft)}
+.gr-stage .gr-part.gr-definition{background:#f6eddd}
+.gr-stage .gr-part.gr-example{background:#e0f0e8}
+.gr-stage .gr-part.gr-takeaway{background:#fff0d0}
+.gr-concept-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gr-concept-tool{border-radius:17px;padding:18px 19px;background:#eaf4ec;border:1px solid #c9dfd1;border-inline-start:4px solid #218574;display:grid;gap:7px}
+.gr-concept-tool:nth-child(3n+2){background:#fff3df;border-color:#f1ddbb;border-inline-start-color:#c18d4d}
+.gr-concept-tool:nth-child(3n+3){background:#e5eef3;border-color:#ccdfe7;border-inline-start-color:#508198}
+.gr-concept-tool strong{font-family:Arial,sans-serif;font-weight:850;direction:ltr;unicode-bidi:plaintext;text-align:right;font-size:20px;line-height:1.45;color:#163f42}
+.gr-concept-tool p{color:#29464b;font-size:20px;line-height:1.75;margin:0}
+.gr-table-scroll{overflow-x:auto;border-radius:18px;border:1px solid #c7d9d0;background:#fff}
+.gr-case-table{width:100%;border-collapse:collapse;min-width:460px;font-size:20px}
+.gr-case-table th,.gr-case-table td{text-align:right;padding:13px 17px;border-bottom:1px solid #d9e4df}
+.gr-case-table th{background:#11584f;color:#fff;font-weight:900;white-space:nowrap}
+.gr-case-table tr:nth-child(even){background:#edf6f1}
+.gr-case-submit{border:2px solid #c8a878;background:linear-gradient(120deg,#fff6e6,#e7f4e9);padding:22px;border-radius:20px;display:grid;gap:15px}
+.gr-case-submit>h4{margin:0;font-size:27px;font-weight:900;color:#25493f}
+.gr-case-submit>p{margin:0;font-size:21px;line-height:1.8;color:#345047}
+.case-submit-btn{border:1px solid #126257;border-radius:14px;background:#13685c;color:white;padding:14px 18px;min-height:60px;font-size:22px;font-weight:900;cursor:pointer}
+.case-submit-btn:hover{background:#0a534a}
+.case-status-pill{display:inline-flex;border-radius:100px;background:#dce8e9;color:#254b4e;padding:6px 14px;font-weight:850}
+.case-status-pill.approved{background:#daf1df;color:#17613f}
+.case-status-pill.revision{background:#fff0d5;color:#7b5015}
+.case-status-pill.pending{background:#ddecf2;color:#225a70}
+.case-hint,.case-network-status{font-size:19px;line-height:1.8;color:var(--muted)}
+.case-error{padding:12px 15px;border-radius:12px;background:#fff0ed;color:#963e38;font-size:20px}
+.case-feedback{border-radius:15px;padding:17px 20px;background:#e1f2e8;color:#26544a;border:1px solid #b9dbca;display:grid;gap:8px}
+.case-feedback strong{font-size:22px;font-weight:900}
+.case-feedback p{font-size:20px;margin:0;white-space:pre-wrap}
+.case-history{border-radius:15px;border:1px solid var(--line);background:var(--panel);padding:13px 17px}
+.case-history summary{font-weight:900;font-size:19px;cursor:pointer}
+.case-history li{margin-top:13px;font-size:18px}
+.case-history li p{white-space:pre-wrap}
+.case-teacher-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--panel)}
+.case-teacher-toolbar label{font-size:20px;font-weight:900}
+.case-teacher-toolbar select{font-size:20px;padding:11px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text)}
+.case-review-list{display:grid;gap:15px}
+.case-grade-summary{display:flex;flex-wrap:wrap;gap:11px}
+.case-grade-summary span{display:inline-flex;border-radius:30px;padding:9px 15px;background:var(--soft);border:1px solid var(--line);font-size:18px;font-weight:800}
+.case-student-record{border:1.5px solid var(--line);border-radius:20px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}
+.case-student-record>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px;background:linear-gradient(110deg,var(--soft),var(--panel))}
+.case-student-record>summary::-webkit-details-marker{display:none}
+.case-student-record>summary strong{font-size:23px;font-weight:900}
+.case-student-record>summary small{display:block;color:var(--muted);font-size:17px;font-weight:550}
+.case-grade-chip{color:var(--teal);font-size:17px;font-weight:900}
+.case-student-record-inner{display:grid;gap:18px;padding:19px}
+.case-submission-date{margin:0;color:var(--muted);font-size:17px}
+.case-response-list{display:grid;gap:12px}
+.case-response-row{background:var(--soft);border:1px solid var(--line);border-inline-start:4px solid var(--teal);border-radius:15px;padding:18px}
+.case-response-row:nth-child(even){border-inline-start-color:#c29c5e}
+.case-response-row strong{display:block;font-size:22px;font-weight:900}
+.case-response-row p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:21px;line-height:1.8;margin:8px 0}
+.case-response-row small{font-size:16px;color:var(--muted)}
+.case-review-form{border:1.5px solid #d6bd91;background:linear-gradient(135deg,var(--panel),var(--soft));border-radius:16px;padding:19px;display:grid;gap:14px}
+.case-review-form h4{font-size:24px;font-weight:900;margin:0}
+.case-review-form label{font-size:20px;font-weight:800;display:grid;gap:7px}
+.case-review-form input,.case-review-form select,.case-review-form textarea{width:100%;background:var(--panel);border:1.5px solid var(--line);color:var(--text);border-radius:12px;padding:12px 15px;font-size:21px}
+.case-review-form textarea{min-height:145px;resize:vertical}
+.case-history-btn{border:1.5px solid var(--line);background:var(--soft);padding:12px 16px;color:var(--text);font-weight:850;font-size:19px;border-radius:12px;cursor:pointer}
+.case-history-item{border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:10px;font-size:18px;background:var(--soft)}
+.join-qr-card{background:linear-gradient(125deg,#e7f1e6,#fff3db);border:1px solid #b8d8c9;border-radius:22px;box-shadow:0 11px 24px #18574816;display:grid;grid-template-columns:minmax(0,1fr) 194px;gap:16px;align-items:center;padding:23px 26px}
+.join-qr-copy{display:grid;gap:7px}
+.join-qr-copy .join-qr-label{font-size:16px;font-weight:900;color:#2c6f64}
+.join-qr-copy h3{font-size:clamp(23px,2.7vw,31px);color:#143e3e;font-weight:900;margin:0}
+.join-qr-copy p{font-size:20px;line-height:1.75;color:#36584f;margin:0}
+.join-qr-image{display:grid;place-items:center;background:#fff;border:6px solid #fff;padding:9px;border-radius:16px;box-shadow:0 5px 20px #14524822}
+.join-qr-image img{display:block;width:100%;height:auto;aspect-ratio:1;image-rendering:pixelated}
+.join-qr-actions{display:flex;gap:12px;grid-column:1/-1;flex-wrap:wrap}
+.join-qr-actions>.btn{flex:1 1 190px}
+.join-qr-projector{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,420px);align-items:center;gap:clamp(18px,3vw,56px);padding:clamp(25px,4vw,60px);background:linear-gradient(120deg,#e6f2e9,#fff4df);border-radius:22px;color:#163f3c;width:100%;min-height:470px}
+.join-qr-projector .join-qr-image{width:100%;max-width:420px;justify-self:center;box-shadow:0 9px 26px #15423820}
+.join-qr-projector .join-qr-copy h3{font-size:clamp(34px,4vw,57px);color:#144c45}
+.join-qr-projector .join-qr-copy p{font-size:clamp(23px,2.6vw,34px);color:#235b52}
+.join-qr-projector .join-qr-note{grid-column:1/-1;font-size:clamp(20px,2vw,28px);font-weight:900;color:#326358;text-align:center}
+html[data-theme=dark] .gr-stage .gr-part.gr-definition{background:#34352e}
+html[data-theme=dark] .gr-stage .gr-part.gr-example{background:#183e38}
+html[data-theme=dark] .gr-stage .gr-part.gr-takeaway{background:#40372a}
+html[data-theme=dark] .gr-concept-tool{background:#20453d;border-color:#376457}
+html[data-theme=dark] .gr-concept-tool strong,html[data-theme=dark] .gr-concept-tool p{color:#eff5e9}
+html[data-theme=dark] .gr-case-table td{color:#1a3a34}
+html[data-theme=dark] .gr-case-submit{background:#354333}
+html[data-theme=dark] .gr-case-submit>h4,html[data-theme=dark] .gr-case-submit>p{color:#f7eddb}
+@media(max-width:800px){
+ .gr-concept-tools{grid-template-columns:1fr}
+ .join-qr-projector{grid-template-columns:1fr;min-height:auto;padding:26px}
+ .join-qr-projector .join-qr-image{width:min(100%,365px)}
+ .join-qr-projector .join-qr-copy{text-align:center}
+ .join-qr-projector .join-qr-note{margin:0}
+}
+@media(max-width:650px){
+ .gr-case-table{font-size:18px;min-width:440px}
+ .gr-case-table th,.gr-case-table td{padding:11px 12px}
+ .gr-concept-tool{padding:15px 17px}
+ .gr-concept-tool strong{font-size:20px}
+ .gr-concept-tool p{font-size:21px}
+ .join-qr-card{grid-template-columns:1fr;gap:14px;padding:20px 17px}
+ .join-qr-card .join-qr-image{grid-row:2;width:min(100%,240px);justify-self:center}
+ .join-qr-actions{grid-column:1}
+ .join-qr-copy p{font-size:21px}
+ .case-teacher-toolbar{align-items:stretch}
+ .case-student-record>summary{align-items:flex-start;flex-direction:column}
+ .case-response-row p{font-size:21px}
+ .case-review-form{padding:17px 15px}
+}
