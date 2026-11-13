@@ -180,7 +180,7 @@ function chapterPage(n,lang){
  '<p>'+T(lang,"قرار نیست خودتان را با دیگران مقایسه کنید. این فصل را به یک مشاهده روشن و قابل استفاده در دفتر کار تبدیل کنید.","The point is not comparison with other people. Turn the chapter into an observation you can use in your workbook.")+'</p>'+
  '<button type="button" class="lb-button lb-button-primary" data-route="book1/'+n+'/workbook">'+T(lang,"ثبت خروجی فصل "+n,"Capture Chapter "+n+" output")+'</button></section>'+
  '<div class="lb-page-bottom"><button class="lb-button lb-button-quiet" type="button" data-route="module/1">'+T(lang,"بازگشت به مسیر سه فصل","Back to chapters")+'</button>'+next+'</div>'+
- '<p class="lb-manuscript-note">'+T(lang,"منبع: Book1_Part1_FINAL_v1.0_FA. روایت‌ها و شخصیت‌ها آموزشی و فرضی‌اند. منابع علمی در انتهای هر فصل درج شده‌اند.","Source: Book1_Part1_FINAL_v1.0_FA. Characters and situations are fictional teaching examples; references are included at each chapter’s end.")+'</p></div>';
+ '<p class="lb-manuscript-note">'+T(lang,"منبع: Book1_Part1_FINAL_v1.0_FA. روایت‌ها و شخصیت‌ها آموزشی و فرضی‌اند. منابع علمی در انتهای هر فصل درج شده‌اند.","Source: Book1_Part1_FINAL_v1.0_FA. Characters and situations are fictional teaching examples; references are included at each chapter’s end.")+' <a href="'+E(SOURCE.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(lang,"مشاهده فایل اصلی در Google Drive","View original manuscript on Google Drive")+'</a></p></div>';
 }
 function fieldValue(n,key){
  const group=state.fields[n];
