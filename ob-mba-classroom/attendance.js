@@ -19,7 +19,7 @@ const persian=n=>Number(n).toLocaleString("fa-IR");
 const dateText=v=>!v?"—":new Intl.DateTimeFormat("fa-IR",{timeZone:"Asia/Tehran",hour:"2-digit",minute:"2-digit",year:"numeric",month:"short",day:"numeric"}).format(new Date(v));
 const t=()=>new Date().toISOString();
 let credential=null;try{credential=JSON.parse(localStorage.getItem(STORAGE)||"null")}catch{}
-let activeTab="student",selectedLesson=1,busy=false,error="",notice="",remote=null,issued=[],issuedGuestCode="";
+let activeTab="student",selectedLesson=1,busy=false,error="",notice="",remote=null,issued=[];
 function storeIdentity(id){credential=id;localStorage.setItem(STORAGE,JSON.stringify(id))}
 function clearIdentity(){credential=null;localStorage.removeItem(STORAGE);remote=null;issued=[]}
 async function api(action,extra={},token=credential?.token){
@@ -69,12 +69,11 @@ function studentPage(){
 function teacherPage(){
  const students=remote?.students||[],attendance=remote?.attendance||[],invites=remote?.invites||[];
  const requested=students.filter(x=>x.approval_status==="pending"&&!x.disabled_at);
- const guests=remote?.guests||[],guestCodes=remote?.guest_codes||[];
+ const guests=remote?.guests||[];
  const guestPending=guests.filter(x=>x.approval_status==="pending"&&!x.revoked_at);
  const guestApproved=guests.filter(x=>x.approval_status==="approved"&&!x.revoked_at);
  const guestRequests=guestPending.length?guestPending.map(x=>'<div class="list-entry"><div><strong>'+esc(x.full_name)+'</strong><small>درخواست بازدید · '+dateText(x.requested_at)+'</small></div><div class="roster-actions">'+btn("تأیید","reviewGuest","minor-btn",'data-guest="'+esc(x.id)+'" data-status="approved"')+btn("رد","reviewGuest","minor-btn danger-btn",'data-guest="'+esc(x.id)+'" data-status="rejected"')+'</div></div>').join(""):'<p class="empty">درخواست مهمان جدیدی وجود ندارد.</p>';
- const activeGuestCodes=guestCodes.filter(x=>x.active&&!x.revoked_at);
- const guestSection='<section class="card"><div class="row"><h2>ورود مهمان · Guest Access</h2><span class="pill warn">'+persian(guestPending.length)+' درخواست</span></div><p class="small">مهمان کد و نام و نام خانوادگی را وارد می‌کند و پس از تأیید شما، امکان مشاهده محیط آموزشی را خواهد داشت. حضور رسمی و نمره‌دهی ندارد.</p><div class="list">'+guestRequests+'</div><div class="row"><h3>مهمان‌های تأییدشده</h3><span class="pill ok">'+persian(guestApproved.length)+' نفر</span></div><div class="list">'+(guestApproved.length?guestApproved.map(x=>'<div class="list-entry"><div><strong>'+esc(x.full_name)+'</strong><small>دسترسی تا '+dateText(x.expires_at)+'</small></div>'+btn("لغو دسترسی","revokeGuest","minor-btn danger-btn",'data-guest="'+esc(x.id)+'"')+'</div>').join(""):'<p class="empty">مهمانی تأیید نشده است.</p>')+'</div><details class="expand"><summary>مدیریت کدهای مهمان</summary><div class="inner"><p class="small">کد مهمان قابل اشتراک است؛ هر نفر با نام خودش درخواست جداگانه ثبت می‌کند.</p>'+btn("ساخت کد مهمان جدید","issueGuestCode","main-btn")+(issuedGuestCode?'<div class="code-output" dir="ltr">'+esc(issuedGuestCode)+'</div>'+btn("کپی کد مهمان","copyGuestCode","minor-btn"):'')+'<p class="small">کد جدید فقط یک‌بار نشان داده می‌شود. آن را کپی و نزد خود نگه دارید.</p><div class="list">'+(activeGuestCodes.length?activeGuestCodes.map(x=>'<div class="list-entry"><div><strong>کد فعال</strong><small>ساخته‌شده: '+dateText(x.created_at)+'</small></div>'+btn("غیرفعال‌سازی کد","revokeGuestCode","minor-btn danger-btn",'data-code="'+esc(x.id)+'"')+'</div>').join(""):'<p class="empty">کد فعالی موجود نیست.</p>')+'</div></div></details></section>';
+ const guestSection='<section class="card"><div class="row"><h2>درخواست‌های ورود مهمان</h2><span class="pill warn">'+persian(guestPending.length)+' در انتظار</span></div><p class="small">هر مهمان تنها نام و نام خانوادگی خود را ثبت می‌کند. پس از تأیید شما، امکان بازدید از محیط آموزشی برای او فعال می‌شود. مهمان در فهرست حضور رسمی یا نمرات دانشجویان قرار نمی‌گیرد.</p><div class="list">'+guestRequests+'</div><div class="row"><h3>مهمان‌های تأییدشده</h3><span class="pill ok">'+persian(guestApproved.length)+' نفر</span></div><div class="list">'+(guestApproved.length?guestApproved.map(x=>'<div class="list-entry"><div><strong>'+esc(x.full_name)+'</strong><small>دسترسی تا '+dateText(x.expires_at)+'</small></div>'+btn("لغو دسترسی","revokeGuest","minor-btn danger-btn",'data-guest="'+esc(x.id)+'"')+'</div>').join(""):'<p class="empty">مهمان تأییدشده‌ای وجود ندارد.</p>')+'</div></section>';
  const approvedMembers=students.filter(x=>x.approval_status==="approved"&&!x.disabled_at).length;
  const requestCards=requested.length?requested.map(x=>'<div class="list-entry"><div><strong>'+esc(x.full_name)+'</strong><small>کد دانشجویی: '+esc(x.student_number||"—")+'</small></div><div class="roster-actions">'+btn("تأیید","reviewStudent","minor-btn",'data-student="'+esc(x.id)+'" data-status="approved"')+btn("رد","reviewStudent","minor-btn danger-btn",'data-student="'+esc(x.id)+'" data-status="rejected"')+'</div></div>').join(""):'<p class="empty">درخواست جدیدی وجود ندارد.</p>';
 
@@ -173,9 +172,6 @@ document.addEventListener("click",e=>{
  if(action==="exportCsv"){exportCsv();return}
  if(action==="reviewGuest"){run(async()=>{await work("reviewGuest",{guest_id:b.dataset.guest,status:b.dataset.status});notice=b.dataset.status==="approved"?"ورود مهمان تأیید شد.":"درخواست مهمان رد شد.";});return}
  if(action==="revokeGuest"){if(!confirm("دسترسی این مهمان لغو شود؟"))return;run(async()=>{await work("revokeGuest",{guest_id:b.dataset.guest});notice="دسترسی مهمان لغو شد.";});return}
- if(action==="issueGuestCode"){run(async()=>{const result=await work("issueGuestCode");issuedGuestCode=result.code;notice="کد مهمان جدید ساخته شد.";});return}
- if(action==="copyGuestCode"){run(async()=>{await navigator.clipboard.writeText(issuedGuestCode);notice="کد مهمان کپی شد.";});return}
- if(action==="revokeGuestCode"){if(!confirm("این کد برای درخواست‌های جدید غیرفعال شود؟"))return;run(async()=>{await work("revokeGuestCode",{code_id:b.dataset.code});notice="کد مهمان غیرفعال شد.";});return}
  if(action==="copyInvites"){run(async()=>{await navigator.clipboard.writeText(issued.map(x=>(x.name?x.name+" | ":"")+x.code).join("\n"));notice="کدها کپی شدند."});return}
  if(action==="refresh"){run(()=>refresh());return}
  if(action==="closeWindow"){run(async()=>{await work("closeWindow",{session:selectedLesson});currentCode=null;notice="ثبت حضور بسته شد."});return}

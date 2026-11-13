@@ -8,7 +8,7 @@ const STORE="mba-ob-classroom-attendance-identity-v1",TRUST="mba-ob-teacher-trus
 const gate=document.getElementById("entryGate"),site=document.getElementById("site");
 const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این کد دانشجویی قبلاً ثبت شده است. برای بازیابی دسترسی با مدرس هماهنگ کنید.",
  invalid_credentials:"اطلاعات ورود مدرس صحیح نیست یا این دستگاه تأیید نشده است.",
- invalid_guest_registration:"نام و کد مهمان را بررسی کنید.",invalid_guest_code:"کد مهمان معتبر یا فعال نیست.",guest_registration_limit:"تعداد درخواست‌ها موقتاً زیاد است؛ با مدرس هماهنگ کنید.",
+ invalid_guest_registration:"نام و نام خانوادگی را کامل وارد کنید.",guest_registration_limit:"تعداد درخواست‌ها موقتاً زیاد است؛ با مدرس هماهنگ کنید.",
  invalid_national_id:"کد ملی معتبر نیست.",session_expired:"دسترسی این دستگاه منقضی شده است.",
  network_error:"اتصال اینترنت برای بررسی عضویت لازم است.",server_error:"اتصال به سامانه کلاس برقرار نشد."};
 const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -46,7 +46,7 @@ function present(){
  }else if(selected==="student"){
   inner='<h2>ورود دانشجو</h2><form id="entranceStudent" class="entrance-form"><label for="studentNumber">کد دانشجویی</label><input id="studentNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" required autocomplete="off" placeholder="کد دانشجویی"><label for="studentName">نام و نام خانوادگی</label><input id="studentName" name="name" maxlength="90" autocomplete="name" required placeholder="نام و نام خانوادگی"><button class="entrance-primary" type="submit">درخواست ورود</button></form><p class="entrance-hint">ورود به کلاس بعد از تأیید مدرس فعال می‌شود.</p>';
  }else if(selected==="guest"){
-  inner='<h2>ورود مهمان</h2><p class="entrance-hint">برای بازدید از محیط و امکانات آموزشی، نام و نام خانوادگی و کد مهمان را وارد کنید. ورود پس از تأیید مدرس فعال می‌شود.</p><form id="entranceGuest" class="entrance-form"><label for="guestName">نام و نام خانوادگی</label><input id="guestName" name="name" maxlength="90" minlength="3" autocomplete="name" required placeholder="نام و نام خانوادگی"><label for="guestCode">کد مهمان</label><input id="guestCode" name="guest_code" dir="ltr" maxlength="19" autocapitalize="characters" autocomplete="off" spellcheck="false" required placeholder="OBG-XXXX-XXXX-XXXX"><button class="entrance-primary" type="submit">ارسال درخواست بازدید</button></form><p class="entrance-hint">مهمان به اطلاعات خصوصی، نمرات و حضور رسمی دانشجویان دسترسی ندارد.</p>';
+  inner='<h2>ورود مهمان</h2><p class="entrance-hint">نام و نام خانوادگی خود را وارد کنید. پس از تأیید مدرس می‌توانید از امکانات آموزشی بازدید کنید.</p><form id="entranceGuest" class="entrance-form"><label for="guestFirst">نام</label><input id="guestFirst" name="first_name" minlength="2" maxlength="45" autocomplete="given-name" required placeholder="نام"><label for="guestLast">نام خانوادگی</label><input id="guestLast" name="last_name" minlength="2" maxlength="45" autocomplete="family-name" required placeholder="نام خانوادگی"><button class="entrance-primary" type="submit">ارسال درخواست</button></form><p class="entrance-hint">بازدید مهمان به نمرات، حضور رسمی یا اطلاعات خصوصی دانشجویان دسترسی نمی‌دهد.</p>';
  }else if(trusted){
   inner='<h2>ورود مدرس</h2><form id="entranceTeacher" class="entrance-form"><label for="teacherNational">کد ملی مدرس</label><input id="teacherNational" name="national_id" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{10}" maxlength="10" autocomplete="off" required placeholder="کد ملی ۱۰ رقمی"><button class="entrance-primary" type="submit">ورود به کلاس</button></form><button class="entrance-secondary" data-entrance="newDevice" type="button">ورود با دستگاه دیگر</button>';
  }else{
@@ -119,10 +119,10 @@ gate.addEventListener("submit",e=>{
    saveCred({role:"student",token:data.token,name:data.name,student_number:studentNumber});
    view="pending";status="pending";
   }else if(form.id==="entranceGuest"){
-   const name=String(d.get("name")||"").trim();
-   const guestCode=String(d.get("guest_code")||"").trim().toUpperCase().replace(/\s+/g,"");
-   if(name.length<3||!/^OBG-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(guestCode))throw Error("invalid_guest_registration");
-   const data=await request("registerGuest",{name,guest_code:guestCode},null);
+   const first=String(d.get("first_name")||"").replace(/\s+/g," ").trim();
+   const last=String(d.get("last_name")||"").replace(/\s+/g," ").trim();
+   if(first.length<2||last.length<2||first.length+last.length+1>90)throw Error("invalid_guest_registration");
+   const data=await request("registerGuest",{first_name:first,last_name:last},null);
    saveCred({role:"guest",token:data.token,name:data.name});selected="guest";view="pending";status="pending";
   }else if(form.id==="entranceTeacher"){
    const data=await request("teacherNationalLogin",{national_id:digit(d.get("national_id")),device_token:trusted},null);

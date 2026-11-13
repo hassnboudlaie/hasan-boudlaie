@@ -12,9 +12,9 @@ Independent GitHub Pages PWA in the main HB Hub repository.
 
 ## Guest access — November 2026
 
-The entrance now supports a separate guest role: guest code and full name, pending request, and cross-device teacher approval. The instructor can approve/reject/revoke guests, create one-time-visible shared guest codes, and disable codes from the attendance dashboard. Approved guests can preview published educational content, but cannot submit official attendance, access student grades or private submissions, or use instructor tools. Guest sessions expire after 30 days.
+The entrance provides a Guest role with two fields (first name and family name), no guest code or invitation. Submission creates a server-backed pending request on the visitor device; the authenticated instructor can approve, reject or revoke access from the attendance dashboard, across devices. Only approved guests can preview published educational content; they cannot submit official attendance, access student grades or private submissions, or use instructor tools. Guest sessions expire after 30 days. Requests are rate-limited and legacy guest-code records are retained only for historical compatibility.
 
-The guest invitation and approval system is server-backed; the lesson editor, local quiz experiments and other demo features still run in the browser. Public GitHub Pages assets are not private course content.
+The guest registration and approval system is server-backed; the lesson editor, local quiz experiments and other demo features still run in the browser. Public GitHub Pages assets are not private course content.
 
 ## Important security & capability boundary
 This is a browser-local demonstration shell, **not a production LMS**.

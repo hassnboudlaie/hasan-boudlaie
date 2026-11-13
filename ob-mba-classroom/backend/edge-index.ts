@@ -72,16 +72,18 @@ async function actionRouter(input:Record<string,unknown>){
  const action=String(input.action||"");
 
  if(action==="registerGuest"){
-  const name=safeName(input.name);
-  const code=String(input.guest_code||"").trim().toUpperCase().replace(/\s+/g,"");
-  if(!name||!/^OBG-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(code))return fail("invalid_guest_registration",400);
-  const {data:guestCode,error:codeError}=await supabase.from("mba_ob_guest_codes").select("id,active,expires_at,revoked_at").eq("code_hash",await sha256(code)).maybeSingle();
-  if(codeError||!guestCode||!guestCode.active||guestCode.revoked_at||(guestCode.expires_at&&Date.parse(guestCode.expires_at)<=Date.now()))return fail("invalid_guest_code",403);
-  const {count,error:countError}=await supabase.from("mba_ob_guests").select("id",{head:true,count:"exact"}).eq("code_id",guestCode.id).gte("requested_at",new Date(Date.now()-3600000).toISOString());
+  // Open application, but approval remains entirely teacher-controlled.
+  const first=String(input.first_name||"").replace(/\s+/g," ").trim(),last=String(input.last_name||"").replace(/\s+/g," ").trim();
+  if(first.length<2||last.length<2||first.length>45||last.length>45)return fail("invalid_guest_registration",400);
+  const name=safeName(first+" "+last);
+  if(!name)return fail("invalid_guest_registration",400);
+  const {count,error:countError}=await supabase.from("mba_ob_guests").select("id",{head:true,count:"exact"})
+   .gte("requested_at",new Date(Date.now()-3600000).toISOString());
   if(countError)throw new Error("guest_registration_lookup_failed");
   if((count||0)>=60)return fail("guest_registration_limit",429);
   const token=randomHex(32);
-  const {error:insertError}=await supabase.from("mba_ob_guests").insert({code_id:guestCode.id,full_name:name,token_hash:await sha256(token)});
+  const {error:insertError}=await supabase.from("mba_ob_guests")
+   .insert({code_id:null,full_name:name,token_hash:await sha256(token)});
   if(insertError)throw new Error("guest_registration_failed");
   return result({ok:true,role:"guest",token,name,approval_status:"pending"});
  }
@@ -261,17 +263,16 @@ async function actionRouter(input:Record<string,unknown>){
   return result({ok:true,history:data||[]});
  }
  if(action==="teacherState"){
-  const [students,attend,windows,invites,guests,guestCodes]=await Promise.all([
+  const [students,attend,windows,invites,guests]=await Promise.all([
    supabase.from("mba_ob_students").select("id,full_name,student_number,approval_status,enrolled_at,disabled_at,reviewed_at").order("enrolled_at"),
    supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at").order("checked_at",{ascending:false}),
    supabase.from("mba_ob_windows").select("session_no,opened_at,closes_at,closed_at").order("session_no"),
    supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at"),
-   supabase.from("mba_ob_guests").select("id,full_name,approval_status,requested_at,reviewed_at,revoked_at,expires_at").order("requested_at",{ascending:false}).limit(500),
-   supabase.from("mba_ob_guest_codes").select("id,active,created_at,revoked_at,expires_at").order("created_at",{ascending:false}).limit(50)
+   supabase.from("mba_ob_guests").select("id,full_name,approval_status,requested_at,reviewed_at,revoked_at,expires_at").order("requested_at",{ascending:false}).limit(500)
   ]);
-  if(students.error||attend.error||windows.error||invites.error||guests.error||guestCodes.error)throw new Error("roster_lookup_failed");
+  if(students.error||attend.error||windows.error||invites.error||guests.error)throw new Error("roster_lookup_failed");
   return result({ok:true,students:students.data||[],attendance:attend.data||[],windows:windows.data||[],
-   unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],guests:guests.data||[],guest_codes:guestCodes.data||[],server_time:stamp()});
+   unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],guests:guests.data||[],server_time:stamp()});
  }
 
  if(action==="reviewGuest"){
@@ -288,23 +289,6 @@ async function actionRouter(input:Record<string,unknown>){
   const {data,error}=await supabase.from("mba_ob_guests").update({revoked_at:stamp()})
    .eq("id",id).is("revoked_at",null).select("id").maybeSingle();
   if(error||!data)return fail("guest_not_found",404);
-  return result({ok:true});
- }
- if(action==="issueGuestCode"){
-  const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  const bytes=crypto.getRandomValues(new Uint8Array(12));
-  const raw=Array.from(bytes,b=>alphabet[b%alphabet.length]).join("");
-  const code="OBG-"+raw.slice(0,4)+"-"+raw.slice(4,8)+"-"+raw.slice(8,12);
-  const {error}=await supabase.from("mba_ob_guest_codes").insert({code_hash:await sha256(code)});
-  if(error)throw new Error("guest_code_creation_failed");
-  return result({ok:true,code});
- }
- if(action==="revokeGuestCode"){
-  const id=String(input.code_id||"");
-  if(!/^[0-9a-f-]{36}$/.test(id))return fail("review_invalid");
-  const {data,error}=await supabase.from("mba_ob_guest_codes").update({active:false,revoked_at:stamp()})
-   .eq("id",id).eq("active",true).select("id").maybeSingle();
-  if(error||!data)return fail("guest_code_not_found",404);
   return result({ok:true});
  }
  if(action==="reviewStudent"){
