@@ -208,6 +208,7 @@ async function actionRouter(input:Record<string,unknown>){
  if(action==="caseReview"){
   const id=String(input.submission_id||""),decision=String(input.decision||"");
   const rawScore=input.score;
+  if(decision==="reviewed"&&(rawScore===null||rawScore===undefined||String(rawScore).trim()===""))return fail("invalid_case_review");
   const score=decision==="revision_requested"?null:Number(rawScore);
   const feedback=String(input.feedback||"").trim();
   if(!/^[0-9a-f-]{36}$/.test(id)||!["reviewed","revision_requested"].includes(decision)||
