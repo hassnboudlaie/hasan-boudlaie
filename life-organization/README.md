@@ -1,4 +1,4 @@
-# The Life Organization — Super App (Book I / Part I v0.2)
+# The Life Organization — Super App (Life Architecture + Guided Learning v0.3)
 
 A separate modular, FA/EN, RTL/LTR, mobile-first and installable PWA in the life-organization/ directory. Nothing in my-finance/ or okr-system/ is modified.
 
@@ -45,3 +45,13 @@ Guiding principles: Tool-First, Profile over Score, Fit rather than universal be
 - Keep a single master emblem with presentation variants; do not reuse the retired orbit/diamond logo or introduce unrelated symbols.
 - Design implementation is under `icon.svg`, `brand-symbol.svg`, and `brand.css`; PWA raster icons are 192/512 PNG, and a fresh service-worker cache prevents stale offline assets.
 - Installed Android shortcuts may need removing and reinstalling to refresh the operating-system-provided shortcut artwork.
+
+## v0.3 Coaching, mentoring and learner gamification
+- 13 chapter readings are presented as paged, freely navigable steps with context-specific, scripted coaching check-ins. Optional reflection notes do not affect rewards.
+- A reviewed reading earns **15 Learning XP and 5 Journey Coins**, at most once per unique reading step. Confirming one meaningful observation in a chapter workbook earns **45 XP and 15 Coins**, at most once per chapter.
+- Finishing all chapter readings plus that chapter's workbook earns a thematic chapter badge. Completing all three unlocks the final **Foundation Builder** badge. Badges export as PNG, with SVG fallback.
+- Each chapter workbook uses **two prompts per screen**; existing notes are preserved from v0.2. Two optional 30-second reflection stations are available in the journey.
+- Progress is an activity ledger, **never a psychological score, life-success evaluation or ranking**. This is not an AI dialogue, clinical coaching service or a validated instrument.
+- Rewards and optional coaching notes are stored under `tlo-guided-learning-v03` in browser LocalStorage, while Book I worksheets continue under `tlo-book1-part1-workbook-v1`. Both are cleared through the app's confirmed reset. JSON exports include the journey ledger and coaching notes.
+- New assets: `book1-journey.js` and `book1-journey.css`. PWA cache key: `life-org-book1-v030`.
+- Detailed design, accessibility, editorial and privacy audit: [UX_LEARNING_AUDIT_v03.md](./UX_LEARNING_AUDIT_v03.md).
