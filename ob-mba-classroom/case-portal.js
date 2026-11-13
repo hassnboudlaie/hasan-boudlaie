@@ -35,6 +35,7 @@ async function request(action,extra={}){
 }
 const explain=e=>errorNames[e?.message]||"خطا در ارتباط با سامانه. دوباره تلاش کنید.";
 function statusHTML(lesson){
+  if(window.OB_ACCESS?.role==="guest")return '<p class="case-hint">حالت بازدید مهمان: این بخش برای آشنایی با فرایند تحلیل کیس قابل مشاهده است. ارسال رسمی تکلیف، بازخورد خصوصی و نمره‌دهی مخصوص دانشجویان تأییدشده است.</p>';
  const state=my.get(lesson);
  if(!state)return '<p class="case-network-status">در حال بررسی وضعیت تکلیف…</p>';
  const rec=state.submission;
@@ -49,12 +50,14 @@ function drawStudent(lesson){
  if(target&&Number(target.dataset.session)===lesson)target.innerHTML=statusHTML(lesson);
 }
 async function refreshStudent(lesson,force=false){
+  if(window.OB_ACCESS?.role==="guest"){drawStudent(Number(lesson));return;}
  if(![1,2].includes(Number(lesson)))return;
  if(!force&&my.has(lesson)){drawStudent(lesson);return}
  try{const response=await request("caseMy",{session:Number(lesson)});my.set(Number(lesson),response);drawStudent(Number(lesson))}
  catch(e){const elem=document.querySelector("#caseSubmitStatus");if(elem)elem.textContent=explain(e)}
 }
 async function submitCase(lesson,work){
+  if(window.OB_ACCESS?.role==="guest")return false;
  const node=document.getElementById("caseSubmitStatus");
  const values={};
  for(const key of fields){
