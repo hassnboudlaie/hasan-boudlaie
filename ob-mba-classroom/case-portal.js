@@ -88,7 +88,7 @@ function drawTeacher(){
  const entries=rows.map(x=>{
   const label=x.status==="reviewed"?"ارزیابی‌شده":x.status==="revision_requested"?"در انتظار اصلاح":"منتظر ارزیابی";
   return '<details class="case-student-record" data-submission="'+esc(x.id)+'"><summary><span><strong>'+esc(x.student_name)+'</strong><small>کد دانشجویی: '+esc(x.student_number||"—")+' · جلسه '+x.session_no+' · نسخه '+x.revision_no+'</small></span><span class="case-grade-chip">'+esc(label)+(x.score!==null?" · "+digit(x.score)+"/۲۰":"")+'</span></summary><div class="case-student-record-inner"><p class="case-submission-date">ارسال: '+date(x.submitted_at)+'</p>'+studentFields(x)+
-  '<form class="case-review-form" data-case-review="'+esc(x.id)+'"><h4>ارزیابی مدرس</h4><label>نتیجه<select name="decision" required><option value="reviewed">ثبت نمره</option><option value="revision_requested">درخواست اصلاح</option></select></label><label>نمره از ۲۰<input type="number" name="score" min="0" max="20" step="0.5" value="'+(x.score??"")+'" placeholder="۰ تا ۲۰"></label><label>بازخورد استاد<textarea name="feedback" rows="4" minlength="8" maxlength="3000" required>'+esc(x.feedback||"")+'</textarea></label><button type="submit" class="btn gold">ثبت در سوابق</button></form><button class="case-history-btn" data-case-action="history" data-id="'+esc(x.id)+'" type="button">سوابق قبلی این دانشجو</button><div id="caseHistory-'+esc(x.id)+'" class="case-history-content"></div></div></details>';
+  '<form class="case-review-form" data-case-review="'+esc(x.id)+'"><h4>ارزیابی مدرس</h4><label>نتیجه<select name="decision" required><option value="reviewed">ثبت نمره</option><option value="revision_requested">درخواست اصلاح</option></select></label><label>نمره از ۲۰<input type="number" name="score" min="0" max="20" step="0.5" value="'+(x.score??"")+'" placeholder="۰ تا ۲۰" required></label><label>بازخورد استاد<textarea name="feedback" rows="4" minlength="8" maxlength="3000" required>'+esc(x.feedback||"")+'</textarea></label><button type="submit" class="btn gold">ثبت در سوابق</button></form><button class="case-history-btn" data-case-action="history" data-id="'+esc(x.id)+'" type="button">سوابق قبلی این دانشجو</button><div id="caseHistory-'+esc(x.id)+'" class="case-history-content"></div></div></details>';
  }).join("");
  target.innerHTML=head+entries;
 }
@@ -124,8 +124,8 @@ document.addEventListener("submit",async e=>{
  const form=e.target.closest?.("form[data-case-review]");if(!form)return;
  e.preventDefault();
  const data=new FormData(form),id=form.dataset.caseReview,decision=String(data.get("decision")||""),feedback=String(data.get("feedback")||"").trim();
- const score=decision==="reviewed"?Number(data.get("score")):null,btn=form.querySelector("button[type=submit]");
- if(decision==="reviewed"&&(!Number.isFinite(score)||score<0||score>20)){alert("نمره را بین ۰ تا ۲۰ وارد کنید.");return}
+ const rawScore=String(data.get("score")??"").trim(),score=decision==="reviewed"?Number(rawScore):null,btn=form.querySelector("button[type=submit]");
+ if(decision==="reviewed"&&(!rawScore||!Number.isFinite(score)||score<0||score>20)){alert("نمره را بین ۰ تا ۲۰ وارد کنید.");return}
  if(btn)btn.disabled=true;
  try{
   await request("caseReview",{submission_id:id,decision,score,feedback});
