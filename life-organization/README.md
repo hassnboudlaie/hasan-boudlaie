@@ -38,3 +38,10 @@ Guiding principles: Tool-First, Profile over Score, Fit rather than universal be
 - The persistent workbook key `tlo-book1-part1-workbook-v1` is distinct from the existing module notes key. The app-wide reset clears both after user confirmation.
 - Stored responses are private only to the current browser/device and are not encrypted or synchronized; avoid confidential details.
 - Completion counts are **reading markers and filled-form counts**, never quality-of-life or psychological scores.
+
+## Approved brand identity — Life Architecture (2026-11-13)
+- The approved emblem features an integrated architectural structure with a human at the center, using emerald-teal and champagne-gold.
+- The same brand mark is used in PWA icon, desktop and mobile navigation, brief launch splash, Book I mastheads, and contextual home/reading accents.
+- Keep a single master emblem with presentation variants; do not reuse the retired orbit/diamond logo or introduce unrelated symbols.
+- Design implementation is under `icon.svg`, `brand-symbol.svg`, and `brand.css`; PWA raster icons are 192/512 PNG, and a fresh service-worker cache prevents stale offline assets.
+- Installed Android shortcuts may need removing and reinstalling to refresh the operating-system-provided shortcut artwork.
