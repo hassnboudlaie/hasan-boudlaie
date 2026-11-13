@@ -28,8 +28,8 @@
 | وضعیت | بررسی قابل اتکا | اولویت بعدی |
 |---|---|---|
 | Home | hero جلسه جاری، ۴ کارت اصلی و bottom navigation ساخته شده | حفظ مینیمالیسم؛ ناوبری دسکتاپ را با الگوی مرجع بازبینی کنید |
-| Session content | بیشتر بخش‌ها در Accordionهای طولانی هستند | reader صفحه‌به‌صفحه برای theory / examples / cases |
-| Forms | تکلیف و case در textarea یک‌صفحه‌ای ثبت می‌شوند | worksheet مرحله‌ای با دو prompt یا کمتر در هر صفحه، auto-save و بازبینی |
+| Session content | جلسه‌های ۱ و ۲ اکنون reader مرحله‌به‌مرحله برای مفاهیم، مثال‌ها، کیس و تمرین دارند | حفظ و تعمیم همین الگو برای محتوای جلسات بعدی |
+| Forms | دفتر تمرین و تحلیل کیس مرحله‌ای با حداکثر دو پرسش در هر صفحه، auto-save و بازیابی مرحله آخر اجرا شده‌اند | ادامه QA روی دستگاه واقعی و توسعه Export/Import در صورت نیاز |
 | Quiz | سؤال به سؤال و پاسخ تشریحی موجود است | feedback layout و completion state معنادار |
 | Teacher dashboard | نمای مدرس در پوستهٔ اصلی با انتخاب role قابل نمایش است | authorization واقعی و جداسازی UI/permissions را در مرحله Production کامل کنید |
 | Attendance | API مستقل با منطق زمان سرور ساخته شده | end-to-end تست دو دستگاه واقعی قبل از استفاده رسمی |
@@ -42,3 +42,14 @@
 - Screenshots واقعی UI موبایل و دسکتاپ، تست navigation، فرم، حضور و غیاب، نمایش PDF/Slides و بدون overflow انجام شود.
 - نگاشت عناصر UI به benchmark فوق در PR یا گزارش تغییر درج شود.
 - تغییر ظاهر به‌تنهایی «تطبیق با Best Practice» نامیده نشود؛ باید بهبود قابل‌سنجش در **cognitive load، flow و accessibility** حاصل شود.
+
+## Implementation Review — 2026-11-13 (Guided Learning v11)
+
+- **Completed:** Robbins sessions 1–2 render 7 concepts as independent paged steps and 3 examples as independent analytical cards in each chapter.
+- **Completed:** Source-backed case moves through original facts → management decision → 2 questions per page → action and evidence reflection; the original source link remains available.
+- **Completed:** Group activity has overview, individual staged tasks and a final debrief; role-play has two dialogue turns per stage and a feedback page. Quiz remains a separate selectable activity.
+- **Completed:** Reflection workbook displays two answer fields per stage, auto-saves to the existing browser-local studentWork object, resumes the last visited step, retains prior single-field drafts and exports the current lesson's structured notes in UTF-8 TXT.
+- **Completed:** Premium editorial treatment with teal/emerald headings, warm paper concept cards, sage example blocks, gold reflection accents, accessible keyboard controls, touch targets, mobile stage rail and dark mode.
+- **QA:** Existing integrity suite + Chromium Playwright at 390×844 mobile and 1440×900 desktop. Checks main routes, seven topics, three examples, case facts/citations, answer autosave and refresh, 2-field workbook, role-play, quiz, presentation language choices, contrast-sensitive styles, dark theme and no horizontal overflow. Device screenshot artifacts saved in workflow `OB MBA Guided Browser QA`.
+- **Not modified:** Scientific/Robbins source text, the original English/translated Persian decks, 16-session structure, teacher editor, and live attendance server.
+- **Remaining boundary:** Official grades, poll and teacher-role selection in the legacy shell are not central multi-user services yet; the guided workbook is intentionally browser-local. This UX completion is not a claim that those modules have production-grade permissions.
