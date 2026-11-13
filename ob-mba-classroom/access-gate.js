@@ -113,7 +113,7 @@ gate.addEventListener("submit",e=>{
   }else if(form.id==="entranceTeacherSetup"){
    const nationalId=digit(d.get("national_id"));
    const pwd=String(d.get("password")||"");
-   const data=await request("teacherLogin",{password:pwd},null);
+   const data=await request("teacherLogin",{password:pwd,national_id:nationalId},null);
    const bound=await request("teacherBindNational",{national_id:nationalId},data.token);
    trusted=bound.device_token;localStorage.setItem(TRUST,trusted);
    saveCred({role:"teacher",token:data.token});unlock("teacher");
