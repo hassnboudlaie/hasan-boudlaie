@@ -1,0 +1,43 @@
+name: Saba Naft leadership journey Chromium UX
+on:
+  pull_request:
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-journey-browser.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-journey-browser.yml'
+  workflow_dispatch:
+jobs:
+  chromium-journey:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium test dependencies
+        run: |
+          npm install --prefix /tmp/saba-browser --no-save --no-audit --no-fund playwright@1.56.1
+          /tmp/saba-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve the actual Pages directory
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/saba-journey-http.log 2>&1 &
+          echo $! > /tmp/saba-journey-http.pid
+          sleep 2
+      - name: Test desktop and mobile journey in Chromium
+        env:
+          NODE_PATH: /tmp/saba-browser/node_modules
+        run: node sabanaft/verify-leadership-journey-browser.cjs
+      - name: Attach actual-browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saba-leadership-journey-chromium
+          path: artifacts/saba-leadership-journey/*.png
+          if-no-files-found: ignore

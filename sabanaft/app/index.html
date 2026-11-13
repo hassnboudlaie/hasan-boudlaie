@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="./gamification.css?v=1">
 <link rel="stylesheet" href="./premium-v2.css?v=1">
 <link rel="stylesheet" href="./executive-learning-ux.css?v=20261113">
+<link rel="stylesheet" href="./leadership-journey.css?v=1">
 <link rel="stylesheet" href="./brand-splash.css?v=1">
 <title>مهارت‌های رهبری من | صبا نفت</title>
 
@@ -73,6 +74,7 @@
   </button>
   </section>
   
+  <button type="button" class="saba-home-journey-entry" data-go="journey"><span aria-hidden="true">✧</span><span><strong>سفر تعاملی رهبری بازتابی</strong><small>۱۰ مرحله · کوچ همراه · رقابت یا مطالعه آزاد</small></span></button>
   <div class="saba-home-achievement">
     <button type="button" data-go="passport" aria-label="مشاهده امتیازها، سطح و نشان‌ها"><span id="homeScoreMini">⭐ پیشرفت من</span><strong>مشاهده نشان‌ها ←</strong></button>
     
@@ -90,14 +92,17 @@
 </section>
 <section id="courseView" class="view" aria-label="جلسات دوره">
  <div class="page-heading"><span class="eyebrow">جلسات آموزشی</span><h1>مسیر رهبری بازتابی</h1><p>۹ جلسه آموزشی؛ هر جلسه را جداگانه باز کنید.</p></div>
+ <button type="button" class="saba-course-journey-entry" data-go="journey">✧ آزمایشگاه کاربردی رهبری · سفر ۱۰ مرحله‌ای ←</button>
  <div class="course-grid" id="courseGrid"></div>
 </section>
 <section id="sessionView" class="view" aria-label="بخش‌های جلسه">
   <div class="page-heading"><button type="button" id="sessionBack" class="backlink">→ همه جلسات</button><span class="eyebrow" id="sessionKicker">جلسه اول</span><h1 id="sessionTitle">جلسه اول</h1><p id="sessionSubtitle"></p></div>
   <div class="session-output"><small>خروجی یادگیری این جلسه</small><strong id="sessionOutput"></strong></div>
+  <button type="button" id="sessionJourneyEntry" class="saba-course-journey-entry" data-go="journey" hidden>✧ مأموریت عملیِ جلسه ۹: سفر ده‌مرحله‌ای رهبری ←</button>
   <div class="section-title"><div><h2>بخش‌های این جلسه</h2><p class="muted">برای دیدن و انجام تمرین هر بخش، روی آن بزنید.</p></div></div>
   <div class="lesson-list" id="lessonList"></div>
 </section>
+<section id="journeyView" class="view" aria-label="سفر تعاملی مهارت‌های رهبری من"><div id="journeyRoot" aria-live="polite"></div></section>
 <section id="readerView" class="view" aria-label="مطالعه و تمرین">
   <div class="reader-top"><button type="button" id="readerBack" class="round-button" aria-label="بازگشت به بخش‌های جلسه">→</button><div class="reader-info"><strong id="readerTitle">درس</strong><small id="readerSession"></small></div><button type="button" id="bookmark" class="round-button" aria-label="نشان کردن درس">☆</button></div>
   <details class="lesson-switch"><summary>مشاهده دیگر بخش‌های این جلسه</summary><nav id="lessonChips" class="chips" aria-label="انتخاب بخش دیگری از همین جلسه"></nav></details>
@@ -188,7 +193,7 @@
 <section id="passportView" class="view" aria-label="پیشرفت و نشان شده‌ها">
  <div class="page-heading"><span class="eyebrow">امتیاز و نشان‌ها</span><h1>مسیر یادگیری من</h1><p>پیشرفت واقعی ثبت‌شده در وب‌سایت دوره؛ برای حوزه کاری انتخاب‌شده در همان مرورگر.</p></div>
  <div class="passport-banner"><div><small>حوزه کاری فعال</small><strong id="contextName">حوزه انتخاب‌شده</strong><p id="passportSummary">۰ بخش تکمیل‌شده از ۴۷ بخش</p></div><div class="ring" id="progressRing"><b id="progressPct">۰٪</b></div></div>
- <div id="gamificationDashboard" aria-live="polite"></div><div class="section-title"><div><h2>درس‌های نشان‌شده</h2><p class="muted">بخش‌هایی که برای مرور بعدی ذخیره کرده‌اید.</p></div></div>
+ <div id="journeyPassportSummary"></div><div id="gamificationDashboard" aria-live="polite"></div><div class="section-title"><div><h2>درس‌های نشان‌شده</h2><p class="muted">بخش‌هایی که برای مرور بعدی ذخیره کرده‌اید.</p></div></div>
  <div id="bookmarkList" class="saved-list"></div>
  <div class="passport-actions"><button type="button" id="openPortfolio" class="outline">مرور بسته شخصی دوره ←</button><button type="button" id="changeContext" class="outline">انتخاب حوزه کاری در دوره ←</button></div>
  <p class="fineprint">پیشرفت از داده اصلی دوره خوانده می‌شود و مستقل از ارزیابی مهارت یا رتبه‌بندی مدیران است. روی دستگاه دیگر منتقل نمی‌شود؛ برای تهیه نسخه پشتیبان، از گزینه «دریافت داده‌ها» در دوره استفاده کنید.</p>
@@ -205,7 +210,10 @@
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 <script src="../reflective-content.js"></script>
 <script src="./gamification.js?v=1"></script>
-<script src="./app.js?v=6"></script>
+<script src="./leadership-journey-core.js?v=1"></script>
+<script src="./leadership-journey-content.js?v=1"></script>
+<script src="./app.js?v=7"></script>
+<script src="./leadership-journey.js?v=1"></script>
 <script src="./coaching-journey.js?v=1"></script>
 <script src="./ai-connector.js?v=1"></script>
 <script src="./brand-splash.js?v=1"></script>
