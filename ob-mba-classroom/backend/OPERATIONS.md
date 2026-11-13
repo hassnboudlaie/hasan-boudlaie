@@ -75,3 +75,16 @@
 - If a student loses the local credential, instructor issues a new invitation for a fresh account. The old attendance record persists and is not silently transferred; reconcile manually.
 - If the free Supabase project pauses, restore it in the Supabase dashboard; student lesson content on GitHub Pages remains readable independently.
 - Do not paste the teacher password into a public issue, repository file or student chat.
+
+## تکلیف رسمی تحلیل کیس — Sessions 1–2
+
+- هر دو کیس **ساختگی و داده‌محور** هستند و صرفاً برای تمرین رابینز طراحی شده‌اند؛ جلسه اول: بهره‌وری، کیفیت، غیبت و ترک خدمت / سه سطح OB و TQM؛ جلسه دوم: ادراک، اسناد، نگرش، ناهماهنگی شناختی و یادگیری.
+- پاسخ‌های تکلیف در **شش بخش ثابت** نوشته می‌شوند: Problem Definition, Evidence, Levels/Concepts, Explanation, Intervention, Measurement. Rubric به‌ترتیب **۳+۳+۴+۳+۴+۳ = ۲۰** است.
+- پیش‌نویس هر دانشجو روی همان دستگاه ذخیره می‌شود. **تنها با انتخاب «ثبت نهایی و ارسال برای استاد»** شش بخش در `public.mba_ob_case_submissions` نوشته می‌شوند. اگر عضویت تأیید نشده باشد یا یکی از بخش‌ها خالی باشد، سرور رد می‌کند.
+- تکلیف ثبت‌شده قابل تغییر نیست؛ مدرس می‌تواند از بخش «تکالیف و ارزیابی کیس» نمره ۰ تا ۲۰ و بازخورد ثبت کند یا `Revision Request` بدهد.
+- هر ارزیابی به‌صورت **append-only** در `mba_ob_case_reviews` نگهداری می‌شود. در صورت درخواست اصلاح، دانشجو نسخه بعدی را ارسال می‌کند؛ سوابق نمره و بازخورد قبلی حذف نمی‌شوند.
+- مدرس می‌تواند پاسخ‌های ثبت‌شده را با کد دانشجویی ببیند، بر مبنای Rubric ارزیابی کند، بازخورد بدهد و CSV صادر کند. دانشجو فقط تکلیف و نتیجه خود را از طریق توکن معتبر خود می‌بیند.
+- جدول‌ها RLS deny-all برای `anon` و `authenticated` دارند؛ Edge Function فقط با service-role سمت سرور عمل می‌کند. **هیچ کلید service-role در JavaScript عمومی وجود ندارد**.
+- QR کد `join-qr.svg` روی صفحه اول مدرس و نمای پروژکتور، لینک مستقیم فرم ثبت‌نام دانشجویان علامه را نمایش می‌دهد؛ QR هیچ امکان دورزدن Approval نمی‌دهد.
+- ستون‌های سایر Gradebook محلی در پوسته قدیمی، نمرات رسمی بین‌دستگاهی نیستند و از این ارزیابی مرکزی جدا شده‌اند. اتصال محاسبه نمره نهایی کل درس به سامانه رسمی دانشگاه نیازمند تصمیم مستقل مدرس است.
+- محتوای عمومی PDF/PPTX هنوز روی GitHub Pages قابل دسترسی مستقیم است و مخفی‌سازی کامل منابع با این User Interface ممکن نیست.
