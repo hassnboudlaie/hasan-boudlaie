@@ -64,7 +64,7 @@ function unlock(role){
  const roleMenu=document.querySelector(".demo-role-menu");
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  // Education scripts load only after the server authorizes this device.
- const scripts=["./course-content.js?v=2","./lesson-enrichment.js?v=2","./case-portal.js?v=2","./guided-learning.js?v=2","./app.js?v=13"];
+ const scripts=["./course-content.js?v=2","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./guided-learning.js?v=2","./app.js?v=14"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
