@@ -26,9 +26,9 @@ function tickStateTests(){
  assert.equal(C.buyExtension(fresh,10,start+7000000),true);
  assert.equal(C.timePenalty(fresh),8);
  assert.equal(C.remaining(fresh,start+7000000),600000);
- assert.equal(C.hintCost(fresh,0),0);assert.equal(C.grantHint(fresh,0),true);
- assert.equal(C.hintCost(fresh,1),0);assert.equal(C.grantHint(fresh,1),true);
- assert.equal(C.hintCost(fresh,2),2);assert.equal(C.grantHint(fresh,2),true);
+ assert.equal(C.hintCost(fresh,0),0);assert.equal(C.grantHint(fresh,0,start+7000000),true);
+ assert.equal(C.hintCost(fresh,1),0);assert.equal(C.grantHint(fresh,1,start+7000000),true);
+ assert.equal(C.hintCost(fresh,2),2);assert.equal(C.grantHint(fresh,2,start+7000000),true);
  assert.equal(C.hintCost(fresh,2),0);assert.equal(C.hintPenalty(fresh),2);
  const step={options:[{points:8},{points:4}]};
  fresh.stage=0;assert.equal(C.submit(fresh,step,0,"پرسش کاربردی درباره تحویل",3),true);
