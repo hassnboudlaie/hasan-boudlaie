@@ -49,7 +49,6 @@ async function run(){
   });
   const page=await ctx.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(e.message));
-  page.on("console",message=>{if(message.text().includes("PRESENTER_CHANGE"))console.log(message.text())});
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor();
   assert.equal(await page.locator(".learning-card").count(),4,"Four classroom learning routes");
@@ -136,10 +135,8 @@ async function run(){
   await save(page,config.name+"-07-original-English-1");
   await page.locator('[data-action="slideNext"]').click();
   assert.ok((await page.locator('.presenter-original-slide img').getAttribute('src')).includes('slide-02.webp'),"Next English slide has original page 2");
-  await page.locator("#presenterPageSelect").selectOption("15");
-  const jumpInfo={src:await page.locator('.presenter-original-slide img').getAttribute('src'),selected:await page.locator('#presenterPageSelect').inputValue(),count:await page.locator('.presenter-count').textContent()};
-  console.log('PRESENTER_JUMP_DIAGNOSTIC',JSON.stringify(jumpInfo));
-  assert.ok(jumpInfo.src.includes('slide-16.webp'),"Can jump to last English slide without switching page");
+  await page.locator("#presenterPageSelect").selectOption("16");
+  assert.ok((await page.locator('.presenter-original-slide img').getAttribute('src')).includes('slide-16.webp'),"Can jump to last English slide by visible page number");
   await page.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
   assert.ok(await page.locator('.presenter-fa-slide').isVisible(),"Persian deck stays in the same player");
   await page.locator('[data-action="presenterLanguage"][data-language="en"]').click();
