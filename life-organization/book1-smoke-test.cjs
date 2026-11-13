@@ -23,7 +23,7 @@ const handlers={};
 const nodes={};
 function node(key){
  return nodes[key]||(nodes[key]={
-  innerHTML:"",textContent:"",value:"",dataset:{},classList:{add(){},remove(){},toggle(){}},
+  innerHTML:"",textContent:"",value:"",dataset:{},style:{},classList:{add(){},remove(){},toggle(){}},
   addEventListener(){},setAttribute(){},focus(){},showModal(){}
  });
 }
