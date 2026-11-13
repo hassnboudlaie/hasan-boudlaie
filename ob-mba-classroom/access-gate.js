@@ -8,6 +8,7 @@ const STORE="mba-ob-classroom-attendance-identity-v1",TRUST="mba-ob-teacher-trus
 const gate=document.getElementById("entryGate"),site=document.getElementById("site");
 const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این کد دانشجویی قبلاً ثبت شده است. برای بازیابی دسترسی با مدرس هماهنگ کنید.",
  invalid_credentials:"اطلاعات ورود مدرس صحیح نیست یا این دستگاه تأیید نشده است.",
+ invalid_guest_registration:"نام و کد مهمان را بررسی کنید.",invalid_guest_code:"کد مهمان معتبر یا فعال نیست.",guest_registration_limit:"تعداد درخواست‌ها موقتاً زیاد است؛ با مدرس هماهنگ کنید.",
  invalid_national_id:"کد ملی معتبر نیست.",session_expired:"دسترسی این دستگاه منقضی شده است.",
  network_error:"اتصال اینترنت برای بررسی عضویت لازم است.",server_error:"اتصال به سامانه کلاس برقرار نشد."};
 const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -15,6 +16,7 @@ const digit=s=>String(s||"").replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776))
 let credential=null,trusted=null,selected="student",error="",loading=false,view="login",status=null,loaded=false;
 try{credential=JSON.parse(localStorage.getItem(STORE)||"null");trusted=localStorage.getItem(TRUST)}catch{}
 if(credential?.role==="teacher")selected="teacher";
+if(credential?.role==="guest")selected="guest";
 const fromStore=()=>{try{return JSON.parse(localStorage.getItem(STORE)||"null")}catch{return null}};
 function saveCred(c){credential=c;localStorage.setItem(STORE,JSON.stringify(c))}
 function forgetCred(){credential=null;localStorage.removeItem(STORE)}
@@ -34,7 +36,7 @@ async function request(action,args={},token=credential?.token){
 function present(){
  site.hidden=true;document.documentElement.dataset.access="locked";
  const flash=error?'<p class="entrance-error" role="alert">'+enc(message[error]||"درخواست انجام نشد؛ دوباره بررسی کنید.")+'</p>':"";
- const tabs='<div class="entrance-tabs"><button type="button" data-entrance="student" aria-pressed="'+(selected==="student")+'">دانشجو</button><button type="button" data-entrance="teacher" aria-pressed="'+(selected==="teacher")+'">مدرس</button></div>';
+ const tabs='<div class="entrance-tabs"><button type="button" data-entrance="student" aria-pressed="'+(selected==="student")+'">دانشجو</button><button type="button" data-entrance="guest" aria-pressed="'+(selected==="guest")+'">مهمان</button><button type="button" data-entrance="teacher" aria-pressed="'+(selected==="teacher")+'">مدرس</button></div>';
  let inner="";
  if(view==="pending"||view==="rejected"){
   inner='<div class="entrance-status-icon" aria-hidden="true">'+(view==="pending"?"◷":"!")+'</div><h2>'+(view==="pending"?"در انتظار تأیید مدرس":"درخواست تأیید نشد")+'</h2><p>'+(view==="pending"?"درخواست شما ثبت شده است. بعد از تأیید مدرس به کلاس دسترسی پیدا می‌کنید.":"برای بررسی وضعیت عضویت با مدرس هماهنگ کنید.")+'</p>'
@@ -43,6 +45,8 @@ function present(){
   +'<button class="entrance-secondary" data-entrance="reset" type="button">تغییر دستگاه یا حساب</button>';
  }else if(selected==="student"){
   inner='<h2>ورود دانشجو</h2><form id="entranceStudent" class="entrance-form"><label for="studentNumber">کد دانشجویی</label><input id="studentNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" required autocomplete="off" placeholder="کد دانشجویی"><label for="studentName">نام و نام خانوادگی</label><input id="studentName" name="name" maxlength="90" autocomplete="name" required placeholder="نام و نام خانوادگی"><button class="entrance-primary" type="submit">درخواست ورود</button></form><p class="entrance-hint">ورود به کلاس بعد از تأیید مدرس فعال می‌شود.</p>';
+ }else if(selected==="guest"){
+  inner='<h2>ورود مهمان</h2><p class="entrance-hint">برای بازدید از محیط و امکانات آموزشی، نام و نام خانوادگی و کد مهمان را وارد کنید. ورود پس از تأیید مدرس فعال می‌شود.</p><form id="entranceGuest" class="entrance-form"><label for="guestName">نام و نام خانوادگی</label><input id="guestName" name="name" maxlength="90" minlength="3" autocomplete="name" required placeholder="نام و نام خانوادگی"><label for="guestCode">کد مهمان</label><input id="guestCode" name="guest_code" dir="ltr" maxlength="19" autocapitalize="characters" autocomplete="off" spellcheck="false" required placeholder="OBG-XXXX-XXXX-XXXX"><button class="entrance-primary" type="submit">ارسال درخواست بازدید</button></form><p class="entrance-hint">مهمان به اطلاعات خصوصی، نمرات و حضور رسمی دانشجویان دسترسی ندارد.</p>';
  }else if(trusted){
   inner='<h2>ورود مدرس</h2><form id="entranceTeacher" class="entrance-form"><label for="teacherNational">کد ملی مدرس</label><input id="teacherNational" name="national_id" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{10}" maxlength="10" autocomplete="off" required placeholder="کد ملی ۱۰ رقمی"><button class="entrance-primary" type="submit">ورود به کلاس</button></form><button class="entrance-secondary" data-entrance="newDevice" type="button">ورود با دستگاه دیگر</button>';
  }else{
@@ -54,13 +58,13 @@ function present(){
 function unlock(role){
  if(loaded)return;
  view="ready";loaded=true;
- window.OB_ACCESS={role,student:credential?.name||"",approved:true};
+ window.OB_ACCESS={role,student:role==="student"?(credential?.name||""):"",guest:role==="guest"?(credential?.name||""):"",approved:true};
  document.documentElement.dataset.access=role;
  gate.hidden=true;site.hidden=false;
  const roleMenu=document.querySelector(".demo-role-menu");
- if(role==="student"&&roleMenu)roleMenu.hidden=true;
+ if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  // Education scripts load only after the server authorizes this device.
- const scripts=["./course-content.js?v=2","./lesson-enrichment.js?v=2","./case-portal.js?v=2","./guided-learning.js?v=2","./presenter-player.js?v=1","./app.js?v=14"];
+ const scripts=["./course-content.js?v=2","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./guided-learning.js?v=2","./presenter-player.js?v=1","./app.js?v=15"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
@@ -72,6 +76,13 @@ async function check(){
   loading=true;
   const data=await request("accessState");
   if(data.role==="teacher"){unlock("teacher");return}
+  if(data.role==="guest"){
+   credential.role="guest";credential.name=data.guest?.name||credential.name;
+   localStorage.setItem(STORE,JSON.stringify(credential));
+   status=data.approval_status;
+   if(status==="approved"){unlock("guest");return}
+   view=status==="rejected"?"rejected":"pending";error="";present();return;
+  }
   credential.name=data.student?.name||credential.name;
   credential.student_number=data.student?.student_number||credential.student_number;
   localStorage.setItem(STORE,JSON.stringify(credential));
@@ -88,7 +99,7 @@ async function check(){
 gate.addEventListener("click",e=>{
  const b=e.target.closest("[data-entrance]");if(!b||loading)return;
  const act=b.dataset.entrance;
- if(act==="student"||act==="teacher"){selected=act;error="";present()}
+ if(act==="student"||act==="teacher"||act==="guest"){selected=act;error="";present()}
  else if(act==="refresh"){check()}
  else if(act==="newDevice"){trusted=null;localStorage.removeItem(TRUST);present()}
  else if(act==="reset"){
@@ -107,6 +118,12 @@ gate.addEventListener("submit",e=>{
    const data=await request("registerStudent",{student_number:studentNumber,name:String(d.get("name")||"").trim()},null);
    saveCred({role:"student",token:data.token,name:data.name,student_number:studentNumber});
    view="pending";status="pending";
+  }else if(form.id==="entranceGuest"){
+   const name=String(d.get("name")||"").trim();
+   const guestCode=String(d.get("guest_code")||"").trim().toUpperCase().replace(/\s+/g,"");
+   if(name.length<3||!/^OBG-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(guestCode))throw Error("invalid_guest_registration");
+   const data=await request("registerGuest",{name,guest_code:guestCode},null);
+   saveCred({role:"guest",token:data.token,name:data.name});selected="guest";view="pending";status="pending";
   }else if(form.id==="entranceTeacher"){
    const data=await request("teacherNationalLogin",{national_id:digit(d.get("national_id")),device_token:trusted},null);
    saveCred({role:"teacher",token:data.token});unlock("teacher");
