@@ -142,8 +142,8 @@ async function run(){
   await page.locator('[data-action="presenterLanguage"][data-language="en"]').click();
   assert.ok(await page.locator('.presenter-original-slide img').isVisible(),"Language switching is reversible");
   await page.locator('[data-action="slideFull"]').click();
-  const fullscreen=await page.evaluate(()=>Boolean(document.fullscreenElement));
-  assert.equal(fullscreen,true,"Fullscreen presentation must activate on click");
+  await page.waitForFunction(()=>Boolean(document.fullscreenElement),null,{timeout:5000});
+  assert.ok(await page.evaluate(()=>Boolean(document.fullscreenElement)),"Fullscreen presentation must activate on click");
   await page.locator('[data-action="slideNext"]').click();
   assert.equal(await page.evaluate(()=>Boolean(document.fullscreenElement)),true,"Slide navigation does not exit fullscreen");
   await page.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
