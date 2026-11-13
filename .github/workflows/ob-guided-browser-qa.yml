@@ -1,0 +1,36 @@
+name: OB MBA Guided Browser QA
+on:
+  push:
+    paths:
+      - "ob-mba-classroom/**"
+      - "scripts/verify-ob-guided-browser.cjs"
+      - ".github/workflows/ob-guided-browser-qa.yml"
+  pull_request:
+    paths:
+      - "ob-mba-classroom/**"
+      - "scripts/verify-ob-guided-browser.cjs"
+      - ".github/workflows/ob-guided-browser-qa.yml"
+permissions:
+  contents: read
+jobs:
+  chromium-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Playwright
+        run: npm install --no-save playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify Android and desktop guided course flows
+        run: node scripts/verify-ob-guided-browser.cjs
+      - name: Upload device screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ob-mba-guided-v11-visual-audit
+          path: qa-artifacts/ob-mba-guided-v11/*.png
+          if-no-files-found: ignore
