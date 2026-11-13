@@ -149,6 +149,12 @@ async function run(){
   await page.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
   assert.equal(await page.evaluate(()=>Boolean(document.fullscreenElement)),true,"Language switching does not exit fullscreen");
   await page.keyboard.press("Escape");
+  if(await page.evaluate(()=>Boolean(document.fullscreenElement))){
+   // Headless Chrome does not always propagate Escape to fullscreen; the
+   // accessible in-stage toggle must also exit reliably.
+   await page.locator('[data-action="slideFull"]').click();
+  }
+  await page.waitForFunction(()=>!document.fullscreenElement,null,{timeout:5000});
   await page.locator("#lectureSlide").focus();
   await page.keyboard.press("PageDown");
   assert.ok((await page.locator('.presenter-count').textContent()).includes("۲")||(await page.locator('.presenter-count').textContent()).includes("2"),"Keyboard PageDown advances Persian deck");
