@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="430" viewBox="0 0 1360 430" role="img" aria-label="مهارت‌های رهبری من، لوگوی رسمی محصول">
+<defs>
+<linearGradient id="ink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b6856"/><stop offset="1" stop-color="#053b36"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4d58c"/><stop offset=".55" stop-color="#c28b34"/><stop offset="1" stop-color="#9d6826"/></linearGradient>
+<linearGradient id="swoosh" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#144c45"/><stop offset=".62" stop-color="#117a67"/><stop offset="1" stop-color="#30ad91"/></linearGradient>
+</defs>
+<g transform="translate(925 28) scale(.73)">
+<path d="M132 344 A168 168 0 1 1 380 344" fill="none" stroke="url(#gold)" stroke-width="17" stroke-linecap="round"/>
+<path d="M255 49 L266 97 L255 89 L245 97 Z" fill="url(#gold)"/>
+<path d="M252 231 L354 132 L304 264 Z" fill="url(#gold)" stroke="#f8e7b8" stroke-width="2"/>
+<path d="M252 231 L172 328 L226 261 Z" fill="#0b947b"/>
+<circle cx="252" cy="239" r="17" fill="url(#gold)" stroke="#fff0c4" stroke-width="4"/>
+<path d="M127 372 Q201 327 258 349 T387 317" fill="none" stroke="url(#swoosh)" stroke-width="15" stroke-linecap="round"/>
+<g fill="url(#gold)"><rect x="285" y="336" width="25" height="34" rx="6"/><rect x="324" y="315" width="25" height="55" rx="6"/><rect x="363" y="284" width="25" height="86" rx="6"/></g>
+</g>
+<g font-family="Noto Sans Arabic,Vazirmatn,Tahoma,Arial,sans-serif" text-anchor="middle" direction="rtl" font-weight="900">
+<text x="535" y="152" font-size="87" fill="url(#ink)">مهارت‌های</text>
+<text x="655" y="296" font-size="119" fill="url(#ink)">رهبری</text>
+<text x="310" y="296" font-size="119" fill="url(#gold)">من</text>
+</g>
+<path d="M188 357 Q480 395 830 355" fill="none" stroke="url(#swoosh)" stroke-width="9" stroke-linecap="round"/>
+<path d="M267 378 Q513 404 784 382" fill="none" stroke="url(#gold)" stroke-width="3" opacity=".8" stroke-linecap="round"/>
+</svg>

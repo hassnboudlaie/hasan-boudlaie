@@ -1,0 +1,13 @@
+/* My Leadership Skills — brand introduction, RTL and reduced motion aware */
+.brand-splash[hidden]{display:none!important}
+.brand-splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:clamp(15px,4vh,32px);padding:calc(35px + env(safe-area-inset-top)) 18px calc(30px + env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 22%,#176e5d 0%,#0b4b43 43%,#062e2e 100%);color:#f8f4e8;text-align:center;isolation:isolate;overflow:auto;font-family:Vazirmatn,Tahoma,sans-serif}
+.brand-splash::before{content:"";position:absolute;z-index:-1;width:min(115vw,560px);height:min(115vw,560px);border:1px solid #e8c67b47;border-radius:50%;top:12%;left:50%;transform:translateX(-50%)}
+.brand-splash::after{content:"";position:absolute;z-index:-1;bottom:-21%;width:140%;height:46%;border-radius:50% 50% 0 0;background:linear-gradient(120deg,#063c3d,#08433e 45%,#0b5b49);transform:rotate(-8deg)}
+.brand-splash__icon{width:clamp(145px,41vw,220px);height:auto;border-radius:26%;box-shadow:0 24px 45px #01201d4a}
+.brand-splash h1{font-size:clamp(30px,7vw,46px)!important;font-weight:950;line-height:1.65;color:#fff7e7!important;max-width:11em}
+.brand-splash__tagline{font-size:clamp(15px,4vw,21px)!important;color:#e0ece2!important;font-weight:700;line-height:1.8}
+.brand-splash__organization{position:relative;margin-top:clamp(22px,8vh,95px);font-size:clamp(15px,3.8vw,18px)!important;color:#efd19a!important;font-weight:850}
+.brand-splash__action{min-width:215px;min-height:48px;border:1px solid #f0d597;background:#f3dfb8;color:#194d3e;border-radius:99px;padding:9px 23px;font:850 17px/1.6 Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.brand-splash__action:hover{background:#fff0d3}.brand-splash__action:focus-visible{outline:3px solid white;outline-offset:3px}
+.brand-splash.is-exiting{opacity:0;pointer-events:none;transition:opacity .25s ease}
+@media(prefers-reduced-motion:reduce){.brand-splash.is-exiting{transition:none}}

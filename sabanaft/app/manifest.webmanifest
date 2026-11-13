@@ -1,21 +1,27 @@
 {
   "id": "./",
-  "name": "رهبری بازتابی من | صبا نفت",
-  "short_name": "رهبری صبا نفت",
-  "description": "محیط کاربردی رهبری بازاندیشانه مدیران صبا نفت: مسئله من، بازاندیشی، هویت رهبری و توسعه فردی؛ بر پایه پنج فصل نخست کتاب The Reflective Leader.",
+  "name": "مهارت‌های رهبری من | صبا نفت",
+  "short_name": "رهبری من",
+  "description": "ابزار توسعه مهارت‌های رهبری مدیران، برای یادگیری، بازاندیشی و اقدام متناسب با موقعیت. نسخه اختصاصی صبا نفت.",
   "lang": "fa",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f8fc",
-  "theme_color": "#042ca5",
+  "background_color": "#073e39",
+  "theme_color": "#073e39",
   "icons": [
     {
-      "src": "../assets/sabanaft-logo.svg",
+      "src": "./assets/my-leadership-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    },
+    {
+      "src": "./assets/my-leadership-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }

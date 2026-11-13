@@ -2,10 +2,10 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#042ca5"><meta name="description" content="رهبری بازتابی من | اپلیکیشن ۹ جلسه‌ای توسعه رهبری مدیران صبا نفت، بر اساس رویکرد آرمین تروست">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="رهبری صبا نفت">
+<meta name="theme-color" content="#073e39"><meta name="description" content="مهارت‌های رهبری من؛ یادگیری، بازاندیشی و اقدام در رهبری. نسخه اختصاصی مدیران صبا نفت، بر اساس رویکرد آرمین تروست.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="رهبری من">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="../assets/sabanaft-logo.svg" type="image/svg+xml">
+<link rel="icon" href="./assets/my-leadership-icon.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/vazirmatn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./app.css?v=2">
 <link rel="stylesheet" href="./coaching-journey.css?v=1">
@@ -13,14 +13,15 @@
 <link rel="stylesheet" href="./gamification.css?v=1">
 <link rel="stylesheet" href="./premium-v2.css?v=1">
 <link rel="stylesheet" href="./executive-learning-ux.css?v=20261113">
-<title>رهبری بازتابی من | صبا نفت</title>
+<link rel="stylesheet" href="./brand-splash.css?v=1">
+<title>مهارت‌های رهبری من | صبا نفت</title>
 
 
 </head>
-<body><div class="app-shell">
+<body><div id="brandSplash" class="brand-splash" role="status" aria-label="صفحه آغازین مهارت‌های رهبری من" hidden><img class="brand-splash__icon" src="./assets/my-leadership-icon.svg" alt="قطب‌نمای رهبری"><h1>مهارت‌های رهبری من</h1><p class="brand-splash__tagline">یادگیری، بازاندیشی و اقدام در رهبری</p><p class="brand-splash__organization">نسخه اختصاصی مدیران صبا نفت</p><button id="splashEnter" class="brand-splash__action" type="button">ورود به برنامه ←</button></div><div class="app-shell">
 <header class="topbar">
 <button type="button" id="modelNavToggle" class="model-nav-toggle" aria-controls="modelSideNav" aria-expanded="false" aria-label="بازکردن فهرست مدل رهبری"><span aria-hidden="true">☰</span><span>مدل</span></button>
-<a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="../assets/sabanaft-logo.svg" alt="لوگوی رسمی شرکت صبا نفت"><span><strong>رهبری بازتابی من</strong><small>سامانه توسعه رهبری</small></span></a>
+<a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="./assets/my-leadership-icon.svg" alt="نشان قطب‌نمای مهارت‌های رهبری من"><span><strong>مهارت‌های رهبری من</strong><small>نسخه اختصاصی مدیران صبا نفت</small></span></a>
 <div class="topbar-actions"><button type="button" id="globalScore" class="global-score" aria-label="دیدن سطح پیشرفت و نشان‌ها" data-go="passport">⭐ <span>امتیاز من</span></button><button type="button" id="install" class="install" hidden>نصب اپ <span aria-hidden="true">＋</span></button></div>
 </header>
 
@@ -51,8 +52,8 @@
  <div class="saba-home-scrim" aria-hidden="true"></div>
  <div class="saba-home-content">
   <header class="saba-home-heading">
-   <span class="saba-home-overline">سامانه رهبری بازتابی صبا نفت</span>
-   <h1>رهبری بازتابی من</h1>
+   <span class="saba-home-overline">مسیر توسعه مهارت‌های رهبری</span>
+   <h1>مهارت‌های رهبری من</h1>
    <p>یک مسئله واقعی را بررسی کنید یا مسیر توسعه رهبری خود را انتخاب کنید.</p>
   </header>
   <div class="saba-companion-actions"><button type="button" id="futureCoachEntry">＋ ثبت و بررسی یک مسئله مدیریتی</button></div>
@@ -207,4 +208,5 @@
 <script src="./app.js?v=6"></script>
 <script src="./coaching-journey.js?v=1"></script>
 <script src="./ai-connector.js?v=1"></script>
+<script src="./brand-splash.js?v=1"></script>
 </body></html>

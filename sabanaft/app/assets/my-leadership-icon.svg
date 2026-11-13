@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="قطب‌نمای رهبری، آیکن مهارت‌های رهبری من">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0e7362"/><stop offset=".55" stop-color="#075046"/><stop offset="1" stop-color="#042d2d"/></linearGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0bd"/><stop offset=".36" stop-color="#e9b759"/><stop offset=".7" stop-color="#bf862b"/><stop offset="1" stop-color="#f6d997"/></linearGradient>
+<linearGradient id="turq" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#13a28d"/><stop offset="1" stop-color="#87dec4"/></linearGradient>
+<radialGradient id="glow"><stop stop-color="#55d7b4" stop-opacity=".18"/><stop offset="1" stop-color="#55d7b4" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<circle cx="256" cy="245" r="211" fill="url(#glow)"/>
+<rect x="27" y="27" width="458" height="458" rx="88" fill="none" stroke="#e7c37a" stroke-opacity=".23" stroke-width="3"/>
+<path d="M132 344 A168 168 0 1 1 380 344" fill="none" stroke="url(#gold)" stroke-width="13" stroke-linecap="round"/>
+<path d="M255 54 L265 99 L255 90 L246 99 Z" fill="url(#gold)"/>
+<path d="M426 245 L405 253 L405 238 Z" fill="url(#gold)" opacity=".75"/>
+<path d="M90 245 L111 253 L111 238 Z" fill="url(#gold)" opacity=".75"/>
+<path d="M252 231 L354 132 L304 264 Z" fill="url(#gold)" stroke="#ffeac3" stroke-width="2" stroke-linejoin="round"/>
+<path d="M252 231 L172 328 L226 261 Z" fill="#1ba890" stroke="#8fddc5" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="252" cy="239" r="16" fill="url(#gold)" stroke="#fff3ca" stroke-width="4"/>
+<path d="M121 375 Q207 325 258 352 T387 318" fill="none" stroke="url(#turq)" stroke-width="17" stroke-linecap="round"/>
+<g fill="url(#gold)"><rect x="282" y="335" width="24" height="35" rx="6"/><rect x="321" y="315" width="24" height="55" rx="6"/><rect x="360" y="286" width="24" height="84" rx="6"/></g>
+<path d="M166 414 Q256 445 357 408" fill="none" stroke="#dfc58d" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+</svg>

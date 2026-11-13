@@ -478,3 +478,9 @@ body.saba-home #homeView .saba-home-achievement strong{color:#185747!important}
  .saba-tabbar button{font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){.saba-tabbar *{transition:none!important}}
+
+/* 2026-11-13: independent product icon, official company identity unchanged */
+.brand img,body.saba-home .topbar .brand img{width:56px!important;height:56px!important;flex:0 0 56px;object-fit:contain!important;padding:3px!important;background:#0c5147!important;border-radius:15px!important;border-color:#b7d9c6!important}
+.brand strong,body.saba-home .brand strong{font-size:clamp(17px,2.3vw,21px)!important;letter-spacing:0!important}
+.brand small,body.saba-home .brand small{font-size:13px!important;letter-spacing:0!important;white-space:normal!important}
+@media(max-width:700px){.brand img,body.saba-home .topbar .brand img{width:46px!important;height:46px!important;flex-basis:46px!important}.brand strong,body.saba-home .brand strong{font-size:16px!important}.brand small,body.saba-home .brand small{display:block!important;font-size:11px!important;line-height:1.35!important}.topbar-actions{gap:4px!important}.global-score{max-width:84px!important;padding:6px!important}.global-score span{display:none!important}}
