@@ -14,7 +14,7 @@ assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson dat
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
 assert.ok(html.includes('style.css?v=10')&&html.includes('app.js?v=10'),'New CSS/JS bust old cache');
-assert.ok(sw.includes('shell-v10')&&sw.includes('style.css?v=8')&&sw.includes('app.js?v=8'),'Service-worker cache bump');
+assert.ok(sw.includes('shell-v10')&&sw.includes('style.css?v=10')&&sw.includes('app.js?v=10'),'Service-worker cache bump');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=2'),'Attendance page is installable');
