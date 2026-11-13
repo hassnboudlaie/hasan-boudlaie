@@ -127,6 +127,35 @@ async function actionRouter(input:Record<string,unknown>){
   if(error)throw new Error("attendance_submit_failed");
   return result(data as Record<string,unknown>,data?.ok?200:409);
  }
+ if(action==="caseMy"||action==="caseSubmit"){
+  const student=await identity(input.token,"student");
+  if(!student)return fail("session_expired",401);
+  if(student.approval_status!=="approved")return fail("approval_required",403);
+  const lesson=Number(input.session);
+  if(![1,2].includes(lesson))return fail("case_not_published");
+  if(action==="caseSubmit"){
+   const answers=input.answers;
+   if(!answers||typeof answers!=="object"||Array.isArray(answers))return fail("invalid_case_answers");
+   const {data,error}=await supabase.rpc("mba_ob_submit_case",{
+    p_student_id:student.student_id,p_session_no:lesson,p_answers:answers
+   });
+   if(error)throw new Error("case_submission_failed");
+   return result(data as Record<string,unknown>,data?.ok?200:409);
+  }
+  const {data:submission,error}=await supabase.from("mba_ob_case_submissions")
+   .select("id,session_no,case_title,answers,status,score,feedback,submitted_at,reviewed_at,revision_no")
+   .eq("student_id",student.student_id).eq("session_no",lesson).maybeSingle();
+  if(error)throw new Error("case_lookup_failed");
+  let history:unknown[]=[];
+  if(submission){
+   const {data:reviews,error:historyError}=await supabase.from("mba_ob_case_reviews")
+    .select("decision,score,feedback,reviewed_at,revision_no")
+    .eq("submission_id",submission.id).order("reviewed_at",{ascending:false}).limit(50);
+   if(historyError)throw new Error("case_lookup_failed");
+   history=reviews||[];
+  }
+  return result({ok:true,submission:submission||null,history,server_time:stamp()});
+ }
  const teacher=await identity(input.token,"teacher");
  if(!teacher)return fail("teacher_auth_required",401);
  if(action==="accessState"){return result({ok:true,role:"teacher",approval_status:"approved"})}
@@ -156,6 +185,48 @@ async function actionRouter(input:Record<string,unknown>){
   if(error||data!==true)throw new Error("password_change_failed");
   await supabase.from("mba_ob_sessions").update({revoked_at:stamp()}).eq("role","teacher").is("revoked_at",null);
   return result({ok:true});
+ }
+ if(action==="caseList"){
+  const lesson=Number(input.session)||0;
+  if(lesson!==0&&![1,2].includes(lesson))return fail("case_not_published");
+  let query=supabase.from("mba_ob_case_submissions")
+   .select("id,student_id,session_no,case_title,answers,status,score,feedback,submitted_at,reviewed_at,revision_no")
+   .order("submitted_at",{ascending:false}).limit(500);
+  if(lesson)query=query.eq("session_no",lesson);
+  const [cases,students]=await Promise.all([
+   query,
+   supabase.from("mba_ob_students").select("id,student_number,full_name").limit(1000)
+  ]);
+  if(cases.error||students.error)throw new Error("case_list_failed");
+  const names=new Map((students.data||[]).map(v=>[v.id,v]));
+  const submissions=(cases.data||[]).map(v=>({
+   ...v,student_name:names.get(v.student_id)?.full_name||"دانشجو",
+   student_number:names.get(v.student_id)?.student_number||""
+  }));
+  return result({ok:true,submissions,server_time:stamp()});
+ }
+ if(action==="caseReview"){
+  const id=String(input.submission_id||""),decision=String(input.decision||"");
+  const rawScore=input.score;
+  const score=decision==="revision_requested"?null:Number(rawScore);
+  const feedback=String(input.feedback||"").trim();
+  if(!/^[0-9a-f-]{36}$/.test(id)||!["reviewed","revision_requested"].includes(decision)||
+     feedback.length<8||feedback.length>3000||
+     (decision==="reviewed"&&(!Number.isFinite(score)||score<0||score>20)))return fail("invalid_case_review");
+  const {data,error}=await supabase.rpc("mba_ob_review_case",{
+   p_submission_id:id,p_decision:decision,p_score:score,p_feedback:feedback
+  });
+  if(error)throw new Error("case_review_failed");
+  return result(data as Record<string,unknown>,data?.ok?200:409);
+ }
+ if(action==="caseHistory"){
+  const id=String(input.submission_id||"");
+  if(!/^[0-9a-f-]{36}$/.test(id))return fail("invalid_case_review");
+  const {data,error}=await supabase.from("mba_ob_case_reviews")
+   .select("decision,score,feedback,reviewed_at,revision_no")
+   .eq("submission_id",id).order("reviewed_at",{ascending:false}).limit(100);
+  if(error)throw new Error("case_lookup_failed");
+  return result({ok:true,history:data||[]});
  }
  if(action==="teacherState"){
   const [students,attend,windows,invites]=await Promise.all([
@@ -233,7 +304,7 @@ Deno.serve(async(req:Request)=>{
   "Access-Control-Allow-Methods":"POST, OPTIONS","Vary":"Origin"}});
  if(req.method==="GET")return result({ok:true,service:"mba-ob-attendance"});
  if(req.method!=="POST")return fail("method_not_allowed",405);
- if(Number(req.headers.get("content-length")||"0")>20000)return fail("request_too_large",413);
+ if(Number(req.headers.get("content-length")||"0")>30000)return fail("request_too_large",413);
  try {
   const input=await req.json();
   if(!input||typeof input!=="object"||Array.isArray(input))return fail("bad_request");
