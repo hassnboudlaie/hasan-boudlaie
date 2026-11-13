@@ -171,7 +171,7 @@ document.addEventListener("input",e=>{
  if(saved()){const status=document.querySelector("[data-save-status]");if(status)status.textContent="ذخیره شد · فقط در همین دستگاه";}
 });
 
-document.addEventListener("change",e=>{if(e.target.matches('[data-action="presenterGo"]')){ui.slideIndex=Number(e.target.value)||0;updatePresentation();return}if(e.target.matches('[data-action="sessionPicker"]')){ui.tab=e.target.value;render();return}if(e.target.matches('[data-action="feedbackStatus"]')){const idx=Number(e.target.dataset.index);if(state.feedback[idx]){state.feedback[idx].status=e.target.value;saved();toast("وضعیت پیشنهاد ذخیره شد.")}}});
+document.addEventListener("change",e=>{if(e.target.matches('[data-action="presenterGo"]')){console.log("PRESENTER_CHANGE",String(e.target.value),String(ui.slideIndex));ui.slideIndex=Number(e.target.value)||0;updatePresentation();console.log("PRESENTER_CHANGE_DONE",String(ui.slideIndex));return}if(e.target.matches('[data-action="sessionPicker"]')){ui.tab=e.target.value;render();return}if(e.target.matches('[data-action="feedbackStatus"]')){const idx=Number(e.target.dataset.index);if(state.feedback[idx]){state.feedback[idx].status=e.target.value;saved();toast("وضعیت پیشنهاد ذخیره شد.")}}});
 document.addEventListener("keydown",e=>{
  if(ui.page!=="presentation"||!document.querySelector("#presenterStage"))return;
  if(e.altKey||e.ctrlKey||e.metaKey||e.target?.closest?.("button,input,select,textarea,[contenteditable=true]"))return;
