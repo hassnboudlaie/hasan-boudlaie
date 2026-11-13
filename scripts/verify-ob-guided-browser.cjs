@@ -165,13 +165,19 @@ async function run(){
  // Teacher authority: pending student appears in admin list and only verified teacher can approve.
  const instructorCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  await instructorCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"teacher",token:"qa-teacher-session"})));
- let reviewed=false;
+ let reviewed=false,caseGraded=false;
+ const sampleSubmission={id:"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",student_id:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",student_name:"دانشجوی منتظر",student_number:"991122334",session_no:1,case_title:"مرکز خدمات سپهر",answers:{problem:"مسئله خدمات","evidence":"شواهد مورد نیاز","levels":"سازمان فرد گروه","explain":"تبیین رفتار","intervention":"مداخله عملی","measurement":"شاخص سنجش"},revision_no:1,status:"submitted",score:null,feedback:null,submitted_at:new Date().toISOString()};
+ 
  await instructorCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
   const req=JSON.parse(route.request().postData()||"{}");
   let out={ok:false,error:"invalid_action"};
   if(req.action==="accessState")out={ok:true,role:"teacher",approval_status:"approved"};
   if(req.action==="teacherState")out={ok:true,students:[{id:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",full_name:"دانشجوی منتظر",student_number:"991122334",approval_status:reviewed?"approved":"pending",disabled_at:null}],attendance:[],windows:[],invites:[],unredeemed:0,server_time:new Date().toISOString()};
   if(req.action==="reviewStudent"){assert.equal(req.status,"approved");reviewed=true;out={ok:true,approval_status:"approved"}}
+  if(req.action==="caseList")out={ok:true,submissions:[sampleSubmission],server_time:new Date().toISOString()};
+  if(req.action==="caseReview"){assert.equal(req.submission_id,sampleSubmission.id);assert.equal(req.score,18);caseGraded=true;
+   sampleSubmission.status="reviewed";sampleSubmission.score=req.score;sampleSubmission.feedback=req.feedback;out={ok:true,status:"reviewed",score:18}}
+  if(req.action==="caseHistory")out={ok:true,history:[{decision:"reviewed",score:18,feedback:"پاسخ مبتنی بر شواهد و با چارچوب دقیق است.",reviewed_at:new Date().toISOString(),revision_no:1}]};
   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(out)});
  });
  const instructorPage=await instructorCtx.newPage();
@@ -179,6 +185,20 @@ async function run(){
  await instructorPage.locator(".page").waitFor();
  assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
  assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
+ await instructorPage.locator(".teacher-home details.disclosure").first().locator("summary").click();
+ await instructorPage.locator('[data-page="caseReviews"]').click();
+ await instructorPage.getByText("ارزیابی تحلیل کیس‌ها").waitFor();
+ await instructorPage.getByText("کد دانشجویی: 991122334").first().waitFor();
+ await instructorPage.locator(".case-student-record summary").click();
+ await instructorPage.locator('.case-review-form [name=score]').fill("18");
+ await instructorPage.locator('.case-review-form [name=feedback]').fill("پاسخ مبتنی بر شواهد و با چارچوب دقیق است.");
+ await instructorPage.locator('.case-review-form button[type=submit]').click();
+ await instructorPage.getByText("ارزیابی‌شده").first().waitFor();
+ assert.ok(caseGraded,"Real teacher case evaluation reaches backend");
+ await noOverflow(instructorPage,"teacher case grading");
+ await save(instructorPage,"android-390-08-gradebook");
+ await instructorPage.locator('[data-action="navigate"][data-page="home"]').first().click();
+assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
  await instructorPage.locator('[data-action="showJoinQR"]').click();
  assert.ok(await instructorPage.locator(".join-qr-projector").isVisible(),"Projected first screen shows large join QR");
  await noOverflow(instructorPage,"teacher projector QR");
