@@ -33,6 +33,9 @@ function collect(opts){
   add('relationship',c.id,35,c.perspectivesRatedAt,hasPerspective(c));
   add('tools',c.id,25,c.toolRatedAt,!!(str(c.tool?.why).length>=12&&str(c.tool?.context).length>=12));
  });
+ // Guided Journey results are credited only after completion, using net score after confirmed deductions.
+ var missionArchive=read("sabanaft_leadership_journey_v1");
+ arr(missionArchive?.history).forEach(function(h){if(!h||!h.id||!h.finishedAt)return;var raw=Math.max(0,Math.min(100,Number(h.raw)||0)),guide=Math.max(0,Number(h.guide)||0),overtime=Math.max(0,Number(h.overtime)||0);var net=Math.max(0,raw-guide-overtime);add("learning","mission:"+h.id,net,h.finishedAt,true)});
  var meaningful=0,decisions=0,actions=0,returned=0;
  cases.forEach(function(c){
   if(!c||typeof c!=='object'||!c.id)return;

@@ -29,12 +29,17 @@ jobs:
         run: |
           node --check sabanaft/reflective-app.js
           node --check sabanaft/app/app.js
+          node --check sabanaft/app/leadership-journey-content.js
+          node --check sabanaft/app/leadership-journey.js
+          node --check sabanaft/verify-guided-journey.cjs
           node --check sabanaft/verify-context-ch6.cjs
           node --check sabanaft/verify-drilldown.cjs
           node --check sabanaft/role-development.js
           node --check sabanaft/guided-reflection.js
           node --check sabanaft/app/coaching-journey.js
           node --check sabanaft/verify-chapters.cjs
+      - name: Guided mission end-to-end DOM regression
+        run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-guided-journey.cjs
       - name: Book-aligned core regression
         run: NODE_PATH=/tmp/saba-test-deps/node_modules node sabanaft/verify-reflective.cjs
       - name: Case & coaching regression

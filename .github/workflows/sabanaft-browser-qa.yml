@@ -1,0 +1,38 @@
+name: Saba Naft guided journey Chromium QA
+on:
+  pull_request:
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-browser-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'sabanaft/**'
+      - '.github/workflows/sabanaft-browser-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Browser test syntax
+        run: node --check sabanaft/verify-guided-browser.cjs
+      - name: Install Playwright
+        run: npm install --no-save playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: In-browser RTL mobile and desktop UX and data-persistence checks
+        run: node sabanaft/verify-guided-browser.cjs
+      - name: Upload screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saba-guided-journey-qa
+          path: qa-artifacts/saba-guided/*.png
+          if-no-files-found: ignore
