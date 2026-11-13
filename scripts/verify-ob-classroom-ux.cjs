@@ -17,8 +17,8 @@ assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScr
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=5')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
-assert.ok(sw.includes('shell-v16')&&sw.includes('app.js?v=15')&&sw.includes('access-gate.js?v=5'),'PWA cache and approved assets');
+assert.ok(html.includes('access-gate.js?v=6')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
+assert.ok(sw.includes('shell-v17')&&sw.includes('app.js?v=15')&&sw.includes('access-gate.js?v=6'),'PWA cache and approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(presenterCss.includes('.presenter-stage:fullscreen')&&presenterCss.includes('.presenter-mode-switch'),'Unified player supports fullscreen and language switch');
@@ -38,7 +38,7 @@ for(const session of [1,2]){
   assert.ok(sw.includes('./materials/original/session-'+no+'/slide-'+String(n).padStart(2,'0')+'.webp'),'English slide cached for offline view');
  }
 }
-assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=4'),'Attendance page is installable');
+assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=5'),'Attendance page is installable');
 assert.ok(attendanceHtml.includes('id="attendanceRoot"')&&attendanceHtml.includes('dir="rtl"'),'RTL attendance portal exists');
 for(const word of ['studentEnroll','teacherLogin','checkIn','openWindow','issueInvites','exportCsv','approvePending','changeTeacherPassword'])assert.ok(attendanceJs.includes(word),'Attendance functionality missing: '+word);
 assert.ok(!attendanceJs.includes('SERVICE_ROLE_KEY'),'No server key in public attendance script');
@@ -49,7 +49,10 @@ assert.ok(approvalSql.includes('mba_ob_register_by_student_number')&&approvalSql
 assert.ok(html.includes('id="entryGate"')&&html.includes('id="site" class="site" hidden'),'Classroom hidden until server approval');
 assert.ok(gateJs.includes('accessState')&&gateJs.includes('registerStudent')&&gateJs.includes('teacherNationalLogin'),'Gate handles student and teacher');
 assert.ok(gateJs.includes('registerGuest')&&gateJs.includes('data-entrance="guest"')&&gateJs.includes('unlock("guest")'),'Guest entry requires approval');
-assert.ok(attendanceJs.includes('reviewGuest')&&attendanceJs.includes('issueGuestCode')&&attendanceJs.includes('revokeGuest'),'Instructor manages guest approvals');
+assert.ok(gateJs.includes('name="first_name"')&&gateJs.includes('name="last_name"')&&gateJs.includes('registerGuest'),'Guest requests only full name and teacher approval');
+assert.ok(!gateJs.includes('guest_code')&&!gateJs.includes('guestCode'),'Guest code input and submission removed from login');
+assert.ok(attendanceJs.includes('reviewGuest')&&attendanceJs.includes('revokeGuest')&&!attendanceJs.includes('issueGuestCode'),'Teacher reviews guests without code management');
+assert.ok(attendanceApi.includes('input.first_name')&&attendanceApi.includes('input.last_name')&&!attendanceApi.includes('input.guest_code'),'Server accepts first and family names without an invitation code');
 assert.ok(js.includes('guest-preview-banner')&&js.includes('isGuest()'),'Guest sees limited educational preview');
 assert.ok(caseJs.includes('window.OB_ACCESS?.role==="guest"'),'Guest cannot submit official assignments');
 assert.ok(gateJs.includes('course-content.js?v=2')&&sw.includes('course-content.js?v=2'),'Course content scripts load after approved access');
