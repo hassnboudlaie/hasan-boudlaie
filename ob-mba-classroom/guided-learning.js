@@ -23,18 +23,28 @@ const stepsOf=(x,mode,work)=>{
   body:part("موقعیت",e.situation)+part("واقعیت مشاهده‌شده",e.observation,"gr-definition")+part("تحلیل با مفهوم درس",e.analysis)+part("اقدام پیشنهادی",e.action,"gr-example")+part("پرسش برای بحث",e.question,"gr-takeaway")
  }));
  if(mode==="case"){
-  const c=x.caseStudy;if(!c)return [];
+  const c=x.caseStudy,framework=x.caseFramework;if(!c||!framework)return [];
+  const cells=cleanArray(c.dataTable),columns=cells[0]||[];
+  const table=cells.length?'<div class="gr-table-scroll"><table class="gr-case-table"><thead><tr>'+columns.map(v=>'<th>'+escapeHtml(v)+'</th>').join("")+'</tr></thead><tbody>'+cells.slice(1).map(row=>'<tr>'+row.map(value=>'<td>'+escapeHtml(value)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>':"";
+  const concepts='<div class="gr-concept-tools">'+cleanArray(framework.concepts).map(v=>
+   '<div class="gr-concept-tool"><strong>'+escapeHtml(v.name)+'</strong><p>'+escapeHtml(v.use)+'</p></div>').join("")+'</div>';
+  const itemSteps=cleanArray(framework.steps).map((item,i)=>({
+   kicker:"تحلیل کیس · مرحله "+(i+1),
+   title:item.title,sub:item.en||"",
+   body:part("سؤال راهنما",item.prompt,"gr-definition")+note("case-"+item.key,"تحلیل شما با استفاده از مفهوم جلسه",work,"معیار ارزیابی: "+item.rubric+" · "+item.points+" امتیاز")
+  }));
   return [
-   {kicker:"کیس مستند · ۱",title:"اطلاعات رویداد",sub:c.title,body:'<h4 class="gr-section">واقعیت‌های مستند</h4>'+list(c.facts)+part("رویکرد علمی",c.teachingNote)+
-    (c.sourceUrl?'<a class="gr-source" href="'+escapeHtml(c.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(c.sourceTitle||"منبع رسمی")+' ↗</a>':"")},
-   {kicker:"کیس مستند · ۲",title:"موقعیت تصمیم‌گیری",sub:c.title,body:part("تصمیم مدیریتی",c.decision,"gr-definition")+originalDraft("پاسخ قبلی من",work?.case||"")},
-   ...Array.from({length:Math.ceil(cleanArray(c.questions).length/2)},(_,page)=>({
-    kicker:"تحلیل کیس",title:"پرسش‌های تحلیلی",sub:"پاسخ شخصی · بدون نمره رسمی",
-    body:cleanArray(c.questions).slice(page*2,page*2+2).map((q,j)=>note("case-q-"+(page*2+j),"پرسش "+(page*2+j+1)+" · "+q,work)).join("")
-   })),
-   {kicker:"جمع‌بندی",title:"از تحلیل تا اقدام",sub:"Decision & Evidence",
-    body:part("راهنمای تحلیل",c.teachingNote)+note("case-decision","تصمیم نهایی و شواهد پشتیبان شما",work)+
-    (c.sourceUrl?'<a class="gr-source" href="'+escapeHtml(c.sourceUrl)+'" target="_blank" rel="noopener noreferrer">مشاهده منبع ↗</a>':"")}
+   {kicker:"کیس جلسه "+x.id,title:c.title,sub:c.tag||"",
+    body:part("موقعیت",c.facts[0],"gr-definition")+'<h4 class="gr-section">اطلاعات کیس</h4>'+list(c.facts.slice(1))+table+part("یادداشت مدرس",c.teachingNote)},
+   {kicker:"ابزار تحلیل",title:framework.title,sub:"Concept Toolkit · Robbins",
+    body:part("هدف",framework.description,"gr-takeaway")+concepts+
+    '<h4 class="gr-section">شش مرحله تحلیل</h4>'+list(framework.steps.map(item=>item.title),true)},
+   {kicker:"تصمیم مدیریتی",title:"مسئله تصمیم‌گیری",sub:c.title,
+    body:part("مأموریت شما",c.decision,"gr-definition")+part("خروجی نهایی","برای هر یک از شش مرحله چارچوب پاسخ بنویسید. در انتها پاسخ‌ها را برای ارزیابی مدرس ارسال کنید.")+
+    originalDraft("پیش‌نویس قبلی من",work?.case||"")},
+   ...itemSteps,
+   {kicker:"ثبت تکلیف",title:"تحویل تحلیل کیس به استاد",sub:"Assignment Submission",
+    body:'<div class="gr-case-submit"><h4>ثبت نهایی تحلیل شش‌مرحله‌ای</h4><p>پاسخ‌های شما در این دستگاه ذخیره شده‌اند. پس از ارسال نهایی، استاد می‌تواند آن‌ها را بررسی، نمره‌گذاری یا برای اصلاح برگرداند.</p><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
   ];
  }
  if(mode==="group"){
@@ -58,27 +68,15 @@ const stepsOf=(x,mode,work)=>{
   ];
  }
  if(mode==="reflection"){
-  const a=x.assignment;if(!a)return [];
-  const prompts=x.id===1?[
-   "مشاهده عینی: مسئله سازمانی را بدون تفسیر توصیف کنید.",
-   "برای مسئله، فرضیه‌های فردی، گروهی و سازمانی بنویسید.",
-   "برای بررسی هر فرضیه به چه شواهد و داده‌هایی نیاز دارید؟",
-   "یک اقدام مدیریتی و شاخص پیگیری پیشنهاد کنید."
-  ]:[
-   "رفتار مشاهده‌شده را بدون قضاوت توصیف کنید.",
-   "برداشت یا نتیجه‌گیری اولیه شما چه بود؟",
-   "کدام خطای ادراکی یا اسنادی محتمل است و چه شواهدی کم دارید؟",
-   "تصمیم اصلاح‌شده و یک سؤال حرفه‌ای برای گفت‌وگو چیست؟"
-  ];
+  const fw=x.caseFramework,a=x.assignment;
+  if(!fw||!a)return [];
   return [
-   {kicker:"دفتر تمرین",title:a.title,sub:"Personal Reflection",
-    body:part("صورت تکلیف",a.instruction)+part("خروجی مورد انتظار",a.submit)+originalDraft("پاسخ قبلی من",work?.reflection||"")},
-   ...Array.from({length:Math.ceil(prompts.length/2)},(_,page)=>({
-    kicker:"پرسش‌های "+(page*2+1)+" و "+Math.min(prompts.length,(page+1)*2),title:"تکمیل دفتر تمرین",sub:"دو پرسش در هر صفحه",
-    body:prompts.slice(page*2,page*2+2).map((p,i)=>note("reflection-"+(page*2+i),p,work)).join("")
-   })),
-   {kicker:"مرور نهایی",title:"جمع‌بندی و بازبینی",sub:"Next Best Step",body:
-    part("معیار یک پاسخ خوب",a.quality)+part("خروجی قابل ارائه",a.submit)+note("reflection-summary","یک اقدام مشخص که از این تمرین می‌گیرید",work)}
+   {kicker:"تکلیف جلسه "+x.id,title:a.title,sub:"Case-Based Assignment",
+    body:part("صورت تکلیف",a.instruction,"gr-definition")+part("خروجی مورد انتظار",a.submit)+part("معیار یک پاسخ خوب",a.quality)},
+   {kicker:"الگوی تحویل",title:"شش مرحله تحلیل کیس",sub:"Framework",
+    body:list(fw.steps.map(st=>st.title+" — "+st.rubric),true)+
+      '<button type="button" class="gr-next gr-case-open" data-action="jumpToCase">ورود به تحلیل و ثبت تکلیف ←</button>'+
+      originalDraft("یادداشت‌های قدیمی",work?.reflection||"")}
   ];
  }
  return [];
