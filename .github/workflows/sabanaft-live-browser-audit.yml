@@ -38,5 +38,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: saba-published-site-mobile-desktop
-          path: artifacts/saba-leadership-journey/*.png
+          path: artifacts/saba-leadership-journey/
           if-no-files-found: ignore

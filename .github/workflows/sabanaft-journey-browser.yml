@@ -30,7 +30,7 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/saba-journey-http.log 2>&1 &
           echo $! > /tmp/saba-journey-http.pid
           sleep 2
-      - name: Test desktop and mobile journey in Chromium
+      - name: Test all ten stages at four viewport sizes in Chromium
         env:
           NODE_PATH: /tmp/saba-browser/node_modules
         run: node sabanaft/verify-leadership-journey-browser.cjs
@@ -39,5 +39,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: saba-leadership-journey-chromium
-          path: artifacts/saba-leadership-journey/*.png
+          path: artifacts/saba-leadership-journey/
           if-no-files-found: ignore
