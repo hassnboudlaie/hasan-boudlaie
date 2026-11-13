@@ -65,9 +65,16 @@ async function actionRouter(input:Record<string,unknown>){
  const action=String(input.action||"");
  if(action==="status"){return result({ok:true,...await publicState()})}
  if(action==="teacherLogin"){
-  if(typeof input.password!=="string"||input.password.length<16||input.password.length>100)return fail("invalid_credentials",401);
+  const national=digits(input.national_id);
+  if(!validNationalID(national)||typeof input.password!=="string"||input.password.length<16||input.password.length>100)return fail("invalid_credentials",401);
   const {data,error}=await supabase.rpc("mba_ob_check_teacher",{p_password:input.password});
   if(error||data!==true)return fail("invalid_credentials",401);
+  const {data:settings,error:settingsError}=await supabase.from("mba_ob_teacher_auth").select("national_hash").eq("id",1).maybeSingle();
+  if(settingsError||!settings)return fail("invalid_credentials",401);
+  if(settings.national_hash){
+   const {data:match,error:matchError}=await supabase.rpc("mba_ob_check_teacher_national",{p_number:national});
+   if(matchError||match!==true)return fail("invalid_credentials",401);
+  }
   return result({ok:true,role:"teacher",...await grantSession("teacher",null)});
  }
  if(action==="registerStudent"){
@@ -90,23 +97,10 @@ async function actionRouter(input:Record<string,unknown>){
   if(error||data!==true)return fail("invalid_credentials",401);
   return result({ok:true,role:"teacher",...await grantSession("teacher",null)});
  }
- if(action==="redeem"){return fail("registration_by_student_number_required",410)}
- if(false&&action==="deprecatedInviteRedeem"){
-  const code=String(input.invite||"").trim().toLowerCase();
-  const name=safeName(input.name);
-  if(!/^[0-9a-f]{32}$/.test(code)||!name)return fail("invalid_invitation");
-  const token=randomHex(32);
-  const hash=await sha256(token);
-  const {data,error}=await supabase.rpc("mba_ob_redeem_invitation",{
-   p_invite_hash:await sha256(code),p_name:name,p_session_hash:hash
-  });
-  if(error||!data?.ok)return fail(String(data?.error||"invite_unavailable"),409);
-  return result({ok:true,role:"student",token,name:data.name,student_id:data.student_id,
-   expires_at:new Date(Date.now()+365*86400000).toISOString(),...await publicState()});
- }
  if(action==="studentState"||action==="accessState"){
   const user=await identity(input.token,"student");
-  if(!user)return fail("session_expired",401);
+  if(!user){if(action==="studentState")return fail("session_expired",401);}
+  else {
   if(user.approval_status!=="approved"){
     return result({ok:true,role:"student",approval_status:user.approval_status,
       student:{id:user.student_id,name:user.name,student_number:user.student_number},
@@ -118,6 +112,7 @@ async function actionRouter(input:Record<string,unknown>){
   return result({ok:true,role:"student",approval_status:"approved",
    student:{id:user.student_id,name:user.name,student_number:user.student_number},
    attendance:data||[],...await publicState()});
+  }
  }
  if(action==="checkIn"){
   const user=await identity(input.token,"student");
@@ -138,6 +133,12 @@ async function actionRouter(input:Record<string,unknown>){
  if(action==="teacherBindNational"){
    const number=digits(input.national_id);
    if(!validNationalID(number))return fail("invalid_national_id");
+   const {data:settings,error:settingsError}=await supabase.from("mba_ob_teacher_auth").select("national_hash").eq("id",1).maybeSingle();
+   if(settingsError||!settings)return fail("teacher_auth_required",401);
+   if(settings.national_hash){
+     const {data:matches,error:matchError}=await supabase.rpc("mba_ob_check_teacher_national",{p_number:number});
+     if(matchError||matches!==true)return fail("invalid_credentials",401);
+   }
    const {data,error}=await supabase.rpc("mba_ob_set_teacher_national",{p_number:number});
    if(error||data!==true)throw new Error("teacher_binding_failed");
    const deviceToken=randomHex(32);
