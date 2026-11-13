@@ -314,3 +314,167 @@ body.saba-home #homeView .saba-home-achievement strong{font-size:15px!important;
 @media(prefers-reduced-motion:reduce){
  .view.active,.course-card,.stage-action,.saba-home-tile{animation:none!important;transition:none!important}
 }
+
+
+/* Executive visual refresh — 2026-11-13
+   Reference direction: evergreen / jade / champagne / warm ivory.
+   Presentation only: keep approved Trost model, real progress and local data unchanged. */
+:root{
+ --ux-ink:#143e3b;--ux-deep:#093c3a;--ux-teal:#087965;--ux-amber:#926a37;
+ --ux-sky:#dcece5;--ux-mist:#edf3ec;--ux-line:#c5d7ca;--ux-muted:#47645c;
+ --ux-lift:0 12px 30px rgba(16,72,59,.11);
+ --blue:#115e56;--deep:#0b403d;--orange:#b58c4f;--ink:#143e3b;--muted:#49675e;
+ --bg:#f1f3eb;--line:#d4dfd5;--shadow:0 14px 30px rgba(17,65,51,.10)
+}
+html{background:#eaf1e9}
+body,body.saba-home{background:linear-gradient(148deg,#e3ede7 0%,#f2f2ea 55%,#e2ece3 100%)!important;color:#163d38!important}
+.topbar,body.saba-home .topbar{
+ background:rgba(246,248,239,.97)!important;border-bottom:1px solid #cbdccf!important;
+ box-shadow:0 4px 20px rgba(15,62,50,.09)!important
+}
+.brand strong,body.saba-home .brand strong{color:#13483f!important;font-size:clamp(18px,2.3vw,22px)!important}
+.brand small,body.saba-home .brand small{color:#486d60!important;font-weight:750!important}
+.brand img,body.saba-home .topbar .brand img{
+ background:#f0f4ee!important;border:1px solid #c9dbd0!important;border-radius:14px!important
+}
+.model-nav-toggle,body.saba-home .model-nav-toggle{
+ background:#e1eee5!important;color:#0f6155!important;border:1px solid #bad4c5!important
+}
+.global-score,body.saba-home .global-score,.install,body.saba-home .topbar .install{
+ background:#e4f1e7!important;color:#175b51!important;border-color:#bbd8c8!important
+}
+.model-side-nav{background:linear-gradient(159deg,#0c403d,#155a4d)!important}
+.model-side-list button:hover,.model-side-extras button:hover,.model-side-extras a:hover{background:#e3f4e331!important}
+body.saba-home #homeView.active{
+ background:linear-gradient(155deg,#dcebe3 0%,#edf2e9 45%,#e5eee8 100%)!important;
+}
+#homeView .saba-home-photo,#homeView .saba-home-scrim,#homeView .saba-home-photo img{height:208px!important}
+#homeView .saba-home-photo img{filter:brightness(.82) saturate(.85)!important;object-position:center 42%!important}
+#homeView .saba-home-scrim{background:linear-gradient(270deg,#093a35ec,#125c4bb8,#144d3c6b)!important}
+body.saba-home #homeView .saba-home-heading{height:204px!important;padding:17px 0!important}
+body.saba-home #homeView .saba-home-content{max-width:1030px!important;gap:15px!important}
+body.saba-home #homeView .saba-home-overline{font-size:15px!important;color:#f4e6c8!important;letter-spacing:0!important}
+body.saba-home #homeView .saba-home-heading h1{font-size:clamp(31px,4vw,44px)!important;font-weight:950!important;color:#fff!important;text-shadow:0 4px 14px #0d352b70!important}
+body.saba-home #homeView .saba-home-heading p{font-size:clamp(16px,2vw,19px)!important;color:#f3f8f2!important}
+body.saba-home #homeView .saba-companion-actions button{
+ background:linear-gradient(108deg,#0e6655,#0e8066)!important;
+ border:1px solid #267963!important;border-radius:20px!important;
+ box-shadow:0 12px 26px #12584429!important;min-height:68px!important;
+ font-size:20px!important;font-weight:900!important
+}
+body.saba-home #homeView .saba-model-label{color:#164d42!important;font-size:24px!important;letter-spacing:0!important}
+body.saba-home #homeView .saba-home-grid{gap:15px!important}
+body.saba-home #homeView .saba-home-tile{
+ background:linear-gradient(135deg,#ecf4e9,#daeae1)!important;border:1px solid #c5dbce!important;
+ border-right:5px solid #176d5f!important;border-radius:21px!important;
+ min-height:122px!important;padding:18px!important;gap:5px 13px!important;
+ box-shadow:0 10px 23px #184e3d12!important
+}
+body.saba-home #homeView .saba-home-tile:nth-child(2){
+ background:linear-gradient(135deg,#dceee4,#cbe5dc)!important;
+ border-color:#b5d8c7!important;border-right-color:#117b65!important
+}
+body.saba-home #homeView .saba-home-tile:nth-child(3){
+ background:linear-gradient(135deg,#f6edda,#eee0c5)!important;
+ border-color:#e2d3b8!important;border-right-color:#b18b50!important
+}
+body.saba-home #homeView .saba-home-tile:nth-child(4){
+ background:linear-gradient(135deg,#e5ece6,#d4e1dd)!important;
+ border-color:#c5d5ce!important;border-right-color:#407b72!important
+}
+body.saba-home #homeView .saba-home-tile .saba-tile-icon{
+ border-radius:16px!important;width:54px!important;height:54px!important;
+ background:#c9e4d6!important;color:#195d4e!important;font-size:25px!important;
+ box-shadow:inset 0 1px 0 #ffffff9c
+}
+body.saba-home #homeView .saba-home-tile:nth-child(2) .saba-tile-icon{background:#b1dcc9!important;color:#0d6858!important}
+body.saba-home #homeView .saba-home-tile:nth-child(3) .saba-tile-icon{background:#e9d2a7!important;color:#73521f!important}
+body.saba-home #homeView .saba-home-tile:nth-child(4) .saba-tile-icon{background:#b9d7d0!important;color:#275c53!important}
+body.saba-home #homeView .saba-home-tile strong{font-size:21px!important;color:#173e37!important;font-weight:950!important}
+body.saba-home #homeView .saba-home-tile small{font-size:16px!important;color:#46685d!important;font-weight:700!important}
+body.saba-home #homeView button.saba-reflection-band{
+ background:linear-gradient(112deg,#0d443c,#176b58)!important;
+ border:1px solid #2f7b65!important;border-right:5px solid #caa56b!important;
+ border-radius:20px!important;box-shadow:0 12px 28px #164f3c30!important
+}
+body.saba-home #homeView .saba-reflection-symbol{color:#f3d9a8!important}
+body.saba-home #homeView .saba-reflection-action{background:#f1dfc0!important;color:#184f3f!important}
+body.saba-home #homeView .saba-home-achievement button{
+ background:linear-gradient(110deg,#d2e8d9,#e5f0e5)!important;
+ border-color:#b5d5c1!important;border-radius:16px!important;color:#185747!important
+}
+body.saba-home #homeView .saba-home-achievement strong{color:#185747!important}
+.stage-heading,.page-heading{
+ background:linear-gradient(115deg,#103f3b,#1d6957)!important;
+ border:1px solid #2b7868!important;border-radius:23px!important;
+ box-shadow:0 14px 28px #124d3c1b!important
+}
+.stage-progress{background:#dceee2!important;color:#195c47!important;border:1px solid #badbc7!important}
+.stage-section-title,.section-title h2{color:#184d41!important;font-weight:950!important}
+.stage-action,.course-card,.lesson-card,.reader-top,.reader-actions .outline,.session-output{
+ border-radius:19px!important;box-shadow:0 7px 18px #13574413!important
+}
+.stage-action{background:linear-gradient(110deg,#e0efe4,#eef5ed)!important;border-color:#bfdcc9!important;border-right-color:#167c65!important}
+.stage-action:nth-child(2){background:linear-gradient(110deg,#f1e7d2,#faf4e7)!important;border-color:#dfd1b3!important;border-right-color:#b28a51!important}
+.stage-action:nth-child(3){background:linear-gradient(110deg,#dbe9e3,#edf4ee)!important;border-color:#c4d8cc!important;border-right-color:#4b8b79!important}
+.stage-action-copy strong,.course-card strong,.lesson-text strong{color:#153f36!important;font-weight:950!important}
+.stage-action-copy small,.course-card p,.lesson-text small{color:#4b665d!important}
+.stage-action-num{background:#c6e5d3!important;color:#125e4c!important}
+.stage-action-arrow{color:#1c7b64!important}
+.course-card{background:#edf5ed!important;border:1px solid #c8dcca!important}
+.course-card:nth-child(3n+2){background:#e0eee4!important;border-color:#bad8c5!important}
+.course-card:nth-child(3n){background:#f3e9d6!important;border-color:#e0d1b1!important}
+.course-card>img{filter:saturate(.89)}
+.course-card .eyebrow,.page-heading .eyebrow{color:#e7c895!important}
+.reader-top{background:#e0eee4!important;border-color:#c3dccb!important}
+.reader-info strong{color:#124d40!important}
+.lesson-card{background:#e8f2e9!important;border-color:#c7ddca!important}
+.session-output{background:#e2eee4!important;border:1px solid #bed8c5!important}
+#passportView .passport-banner{background:linear-gradient(120deg,#0d483e,#1c7560)!important}
+#coachView .cj-card{background:linear-gradient(135deg,#e7f2e9,#f2f3e9)!important;border:1px solid #c5dbcb!important}
+#coachView .cj-card h2{color:#153e35!important}
+.fineprint,.muted{color:#4d675e!important;font-size:15px!important}
+.saba-tabbar{display:none}
+@media(max-width:800px){
+ .saba-tabbar{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  position:fixed;z-index:80;bottom:0;inset-inline:0;
+  padding:8px max(10px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
+  border-top:1px solid #c2d8c7;background:rgba(248,250,244,.97);
+  box-shadow:0 -8px 25px #194b3620;backdrop-filter:blur(15px)
+ }
+ .saba-tabbar button{
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;
+  padding:7px 3px;min-height:54px;border:0;border-radius:14px;background:transparent;
+  color:#456b5b;font-size:13px;font-weight:850;line-height:1.3
+ }
+ .saba-tabbar svg{width:23px;height:23px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+ .saba-tabbar button[aria-current="page"]{background:#d9ecdf;color:#0d6851;font-weight:950}
+ .saba-tabbar button[aria-current="page"] svg{stroke-width:2.3}
+ body:not(.saba-home) .app-shell{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+ body.saba-home #homeView .saba-home-content{padding-bottom:calc(111px + env(safe-area-inset-bottom))!important}
+ .topbar,body.saba-home .topbar{min-height:70px!important}
+ .brand strong,body.saba-home .brand strong{font-size:17px!important}
+ body.saba-home #homeView .saba-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ body.saba-home #homeView .saba-home-tile{
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  min-height:156px!important;padding:13px 12px!important;gap:4px!important;
+  border-right-width:4px!important
+ }
+ body.saba-home #homeView .saba-home-tile .saba-tile-icon{height:43px!important;width:43px!important;font-size:21px!important}
+ body.saba-home #homeView .saba-home-tile strong{font-size:18px!important;line-height:1.35!important}
+ body.saba-home #homeView .saba-home-tile small{font-size:15px!important;line-height:1.42!important}
+ body.saba-home #homeView .saba-home-heading h1{font-size:clamp(28px,7vw,34px)!important}
+ body.saba-home #homeView .saba-home-heading p{font-size:16px!important}
+ body.saba-home #homeView .saba-model-label{font-size:21px!important}
+ body.saba-home #homeView .saba-companion-actions button{min-height:57px!important;font-size:18px!important}
+ #homeView .saba-home-photo,#homeView .saba-home-scrim,#homeView .saba-home-photo img{height:185px!important}
+ body.saba-home #homeView .saba-home-heading{height:181px!important}
+ .page-heading,.stage-heading{border-radius:19px!important}
+}
+@media(max-width:350px){
+ body.saba-home #homeView .saba-home-tile{min-height:170px!important}
+ body.saba-home #homeView .saba-home-tile strong{font-size:17px!important}
+ .saba-tabbar button{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.saba-tabbar *{transition:none!important}}
