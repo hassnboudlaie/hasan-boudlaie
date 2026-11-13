@@ -1,0 +1,59 @@
+/* Secure-entry experience: visually locked until server verifies the enrollment.
+   Access control for sensitive API data is enforced on Supabase, not by this CSS. */
+[hidden],#site[hidden],#entryGate[hidden],.demo-role-menu[hidden]{display:none!important}
+html[data-access="locked"]{background:#f6f5f1}
+.entrance-root{
+ min-height:100dvh;background:radial-gradient(circle at 10% 10%,#ebf4ed 0%,transparent 50%),#f6f5f1;
+ padding:clamp(18px,4vw,40px) 14px 38px;display:grid;place-items:center;
+ color:#19383e;font-family:inherit
+}
+.entrance-shell{width:min(100%,570px);display:grid;gap:18px}
+.entrance-brand{
+ display:flex;align-items:center;gap:16px;padding:17px 21px;
+ background:linear-gradient(120deg,#13383f,#10685b);color:#fff;
+ border-radius:23px;box-shadow:0 15px 33px #174c4027
+}
+.entrance-logo{width:61px;height:61px;min-width:61px;display:grid;place-items:center;
+ border:1.5px solid #e4c58b;border-radius:17px;font:bold 25px Georgia,serif;color:#efdbb1;
+ background:#ffffff14}
+.entrance-brand div{display:grid;gap:3px}
+.entrance-brand small{font-size:17px;color:#efd7a7;line-height:1.6}
+.entrance-brand strong{font-size:clamp(23px,5vw,29px);line-height:1.5;font-weight:900}
+.entrance-card{background:#fff;border:1px solid #d5e3dd;border-radius:24px;
+ padding:clamp(19px,4vw,31px);display:grid;gap:19px;
+ box-shadow:0 18px 36px #183f3020}
+.entrance-tabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;
+ background:#e8f3ef;padding:6px;border-radius:15px}
+.entrance-tabs button{min-height:54px;border:0;background:transparent;
+ border-radius:12px;color:#31504f;font:850 22px/1.4 inherit;cursor:pointer}
+.entrance-tabs button[aria-pressed="true"]{background:#146255;color:white;box-shadow:0 4px 12px #0c56462e}
+.entrance-card h2{font-size:clamp(27px,5vw,33px);font-weight:900;margin:0;line-height:1.5}
+.entrance-card>p{font-size:21px;line-height:1.85;margin:0}
+.entrance-form{display:grid;gap:11px}
+.entrance-form label{font-size:21px;font-weight:900;color:#1a3d43}
+.entrance-form input{min-height:63px;border:2px solid #adcac4;border-radius:14px;
+ padding:14px 17px;width:100%;font:700 23px/1.5 inherit;background:#fff;color:#15383d}
+.entrance-form input::placeholder{color:#677a78;font-size:19px}
+.entrance-form input:focus-visible,.entrance-card button:focus-visible{
+ outline:3px solid #c99e5e;outline-offset:3px
+}
+.entrance-primary,.entrance-secondary{min-height:62px;padding:13px 20px;border-radius:14px;
+ font:900 22px/1.4 inherit;cursor:pointer;border:1.5px solid #16695d}
+.entrance-primary{background:#135f53;color:white;margin-top:12px}
+.entrance-secondary{background:#edf5f0;color:#176153;border-color:#bfd9cd}
+.entrance-hint{font-size:18px!important;color:#435f61}
+.entrance-error{padding:12px 15px;color:#7b2834;background:#fff0ef;
+ border:1px solid #e5c0bf;border-radius:12px;font-size:18px!important}
+.entrance-status-icon{font-size:47px;color:#bc9150;text-align:center}
+.entrance-student{padding:12px;border-radius:14px;background:#ecf4f0;
+ font-size:19px;font-weight:850;text-align:center;overflow-wrap:anywhere}
+.entrance-foot{text-align:center;font-size:17px;color:#506566;font-weight:800}
+@media(max-width:460px){
+ .entrance-root{padding:10px 12px 28px}
+ .entrance-brand{padding:18px 14px}
+ .entrance-brand small{font-size:15px}
+ .entrance-brand strong{font-size:23px}
+ .entrance-card{padding:22px 17px;gap:17px}
+ .entrance-card h2{font-size:28px}
+ .entrance-form input{font-size:23px}
+}

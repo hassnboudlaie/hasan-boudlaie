@@ -33,6 +33,12 @@ async function run(){
  try{
  for(const config of [{name:"android-390",width:390,height:844,mobile:true},{name:"desktop-1440",width:1440,height:900,mobile:false}]){
   const ctx=await browser.newContext({viewport:{width:config.width,height:config.height},isMobile:config.mobile,hasTouch:config.mobile,deviceScaleFactor:1});
+  await ctx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"student",token:"qa-approved-device",name:"دانشجوی آزمون"})));
+  await ctx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
+   const req=route.request(),params=JSON.parse(req.postData()||"{}");
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},
+    body:JSON.stringify(params.action==="accessState"?{ok:true,role:"student",approval_status:"approved",student:{name:"دانشجوی آزمون",student_number:"123456789"}}:{ok:false,error:"invalid_action"})});
+  });
   const page=await ctx.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
@@ -109,6 +115,58 @@ async function run(){
   await ctx.close();
   console.log("PASS "+config.name+": source intact, guided 7 concepts, 3 examples, case/workbook auto-save, role-play, quiz, presentations, dark theme, RTL and overflow");
  }
+ // Access-gate approval flow: registration does not unlock lessons before teacher review.
+ const pendingCtx=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
+ let admitted=false;
+ await pendingCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
+  const data=JSON.parse(route.request().postData()||"{}");
+  const value=data.action==="registerStudent"?{ok:true,role:"student",name:"دانشجوی تست",student_number:"991122334",approval_status:"pending",token:"qa-pending-token"}:
+    data.action==="accessState"?{ok:true,role:"student",approval_status:admitted?"approved":"pending",student:{name:"دانشجوی تست",student_number:"991122334"}}:{ok:false,error:"invalid_action"};
+  await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(value)});
+ });
+ const pendingPage=await pendingCtx.newPage();
+ await pendingPage.goto(url,{waitUntil:"domcontentloaded"});
+ await pendingPage.locator("#entranceStudent").waitFor();
+ await pendingPage.locator("#studentNumber").fill("991122334");
+ await pendingPage.locator("#studentName").fill("دانشجوی تست");
+ await pendingPage.locator("#entranceStudent button[type=submit]").click();
+ await pendingPage.getByText("در انتظار تأیید مدرس").waitFor();
+ assert.equal(await pendingPage.locator(".student-focus").count(),0,"Pending student cannot reach lesson UI");
+ assert.ok(await pendingPage.locator("#site").isHidden(),"App shell hidden before teacher approval");
+ await pendingPage.getByText("بررسی وضعیت").click();
+ assert.equal(await pendingPage.locator(".student-focus").count(),0,"Pending remains locked on status refresh");
+ admitted=true;
+ await pendingPage.getByText("بررسی وضعیت").click();
+ await pendingPage.locator(".student-focus").waitFor();
+ assert.ok(await pendingPage.locator("#entryGate").isHidden(),"Approved student enters class");
+ await noOverflow(pendingPage,"mobile auth gate");
+ await save(pendingPage,"android-390-07-approved-entry");
+ await pendingCtx.close();
+ // Teacher authority: pending student appears in admin list and only verified teacher can approve.
+ const instructorCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await instructorCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"teacher",token:"qa-teacher-session"})));
+ let reviewed=false;
+ await instructorCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
+  const req=JSON.parse(route.request().postData()||"{}");
+  let out={ok:false,error:"invalid_action"};
+  if(req.action==="accessState")out={ok:true,role:"teacher",approval_status:"approved"};
+  if(req.action==="teacherState")out={ok:true,students:[{id:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",full_name:"دانشجوی منتظر",student_number:"991122334",approval_status:reviewed?"approved":"pending",disabled_at:null}],attendance:[],windows:[],invites:[],unredeemed:0,server_time:new Date().toISOString()};
+  if(req.action==="reviewStudent"){assert.equal(req.status,"approved");reviewed=true;out={ok:true,approval_status:"approved"}}
+  await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(out)});
+ });
+ const instructorPage=await instructorCtx.newPage();
+ await instructorPage.goto(url,{waitUntil:"domcontentloaded"});
+ await instructorPage.locator(".page").waitFor();
+ assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
+ await instructorPage.goto(url+"attendance.html",{waitUntil:"domcontentloaded"});
+ await instructorPage.getByText("درخواست‌های عضویت").waitFor();
+ assert.ok((await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').count())===1,"Teacher sees pending student");
+ await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').click();
+ await instructorPage.getByText("درخواست جدیدی وجود ندارد.").waitFor();
+ assert.equal(reviewed,true,"Teacher approval sent to server");
+ await save(instructorPage,"android-390-08-teacher-approval");
+ await instructorCtx.close();
+
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 }
 run().catch(err=>{console.error(err);process.exitCode=1;server.close()});

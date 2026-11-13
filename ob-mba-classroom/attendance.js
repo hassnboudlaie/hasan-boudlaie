@@ -10,7 +10,7 @@ const named={
  invalid_invitation:"کد دعوت یا نام معتبر نیست.",invite_unavailable:"این کد دعوت قبلاً مصرف شده یا معتبر نیست.",
  invalid_name:"نام دانشجو معتبر نیست.",window_closed:"مهلت حضور این جلسه پایان یافته است.",
  wrong_code:"کد حضور صحیح نیست.",too_many_attempts:"تعداد تلاش‌های ناموفق بیش از حد مجاز است.",
- invalid_code:"کد شش‌رقمی حضور را وارد کنید.",student_disabled:"دسترسی این دانشجو غیرفعال است.",
+ invalid_code:"کد شش‌رقمی حضور را وارد کنید.",student_disabled:"دسترسی این دانشجو غیرفعال است.",approval_required:"ابتدا عضویت شما باید توسط مدرس تأیید شود.",
  teacher_auth_required:"ورود مدرس لازم است.",password_too_short:"رمز جدید حداقل ۱۶ نویسه باشد.",server_error:"ارتباط با سامانه برقرار نشد.",
  attendance_submit_failed:"ثبت حضور انجام نشد؛ دوباره بررسی کنید."
 };
@@ -52,12 +52,10 @@ async function run(fn){
  try{await fn()}catch(e){error=explain(e)}finally{busy=false;root.classList.remove("loading");render()}
 }
 function loginPage(){
- return '<section class="card"><div class="switcher">'+btn("دانشجو","tab-student",activeTab==="student"?"active":"")+btn("مدرس","tab-teacher",activeTab==="teacher"?"active":"")+'</div>'+
- (activeTab==="student"?'<form id="studentEnroll" class="stack"><h2>ورود دانشجو</h2><div class="field"><label for="studentName">نام و نام خانوادگی</label><input id="studentName" name="name" autocomplete="name" maxlength="90" required></div><div class="field"><label for="inviteCode">کد دعوت اختصاصی</label><input id="inviteCode" name="invite" dir="ltr" maxlength="32" autocomplete="off" autocapitalize="off" spellcheck="false" required></div><button class="main-btn gold-btn" type="submit">ورود به کلاس</button></form>':
- '<form id="teacherLogin" class="stack"><h2>ورود مدرس</h2><div class="field"><label for="teacherPass">رمز مدیریت کلاس</label><input id="teacherPass" type="password" name="password" autocomplete="current-password" required></div><button class="main-btn" type="submit">ورود به داشبورد</button></form>')+
- errorHtml()+noticeHtml()+'</section>'+links();
+ return '<section class="card"><h2>ورود به کلاس</h2><p>دانشجو با کد دانشجویی درخواست عضویت می‌دهد. پس از تأیید مدرس، محیط کلاس باز می‌شود.</p><a class="main-btn" href="./">ورود با کد دانشجویی یا کد ملی مدرس</a>'+errorHtml()+'</section>';
 }
 function studentPage(){
+ if(remote?.approval_status!=="approved")return '<section class="card"><h2>'+ (remote?.approval_status==="rejected"?"درخواست رد شد":"در انتظار تأیید مدرس")+'</h2><p>پس از تأیید عضویت، دسترسی به حضور و مطالب کلاس فعال می‌شود.</p>'+btn("بررسی مجدد","refresh","minor-btn")+'</section>';
  const active=remote?.active,allowed=Boolean(active&&Date.parse(active.closes_at)>Date.now());
  const attended=remote?.attendance||[];
  const registered=attended.find(x=>x.session_no===active?.session_no);
@@ -70,18 +68,23 @@ function studentPage(){
 }
 function teacherPage(){
  const students=remote?.students||[],attendance=remote?.attendance||[],invites=remote?.invites||[];
+ const requested=students.filter(x=>x.approval_status==="pending"&&!x.disabled_at);
+ const approvedMembers=students.filter(x=>x.approval_status==="approved"&&!x.disabled_at).length;
+ const requestCards=requested.length?requested.map(x=>'<div class="list-entry"><div><strong>'+esc(x.full_name)+'</strong><small>کد دانشجویی: '+esc(x.student_number||"—")+'</small></div><div class="roster-actions">'+btn("تأیید","reviewStudent","minor-btn",'data-student="'+esc(x.id)+'" data-status="approved"')+btn("رد","reviewStudent","minor-btn danger-btn",'data-student="'+esc(x.id)+'" data-status="rejected"')+'</div></div>').join(""):'<p class="empty">درخواست جدیدی وجود ندارد.</p>';
+
  const windows=remote?.windows||[],win=windows.find(x=>x.session_no===selectedLesson);
  const open=Boolean(win&&!win.closed_at&&Date.parse(win.closes_at)>Date.now());
  const seen=new Map(attendance.filter(x=>x.session_no===selectedLesson).map(x=>[x.student_id,x]));
  const pending=students.filter(x=>seen.get(x.id)?.status==="pending").length;
  const confirmed=students.filter(x=>seen.get(x.id)?.status==="approved").length;
- const enrolled=students.filter(x=>!x.disabled_at);
+ const enrolled=students.filter(x=>!x.disabled_at&&x.approval_status==="approved");
  const namedPending=invites.filter(x=>!x.redeemed_at&&!x.revoked_at&&x.expected_name).map(x=>x.expected_name);
- const roster=[...enrolled.map(x=>({id:x.id,name:x.full_name,record:seen.get(x.id)||null})),
+ const roster=[...enrolled.map(x=>({id:x.id,name:x.full_name,student_number:x.student_number,record:seen.get(x.id)||null})),
   ...namedPending.map(n=>({id:null,name:n,record:null}))].sort((a,b)=>a.name.localeCompare(b.name,"fa"));
- const row=(x,i)=>'<tr><td>'+persian(i+1)+'</td><td><strong>'+esc(x.name)+'</strong></td><td>'+indicator(x.record?.status)+'</td><td>'+(x.record?'<div class="roster-actions">'+(x.record.status!=="approved"?btn("تأیید","review","minor-btn",'data-student="'+esc(x.id)+'" data-status="approved"'):"")+(x.record.status!=="rejected"?btn("رد","review","minor-btn",'data-student="'+esc(x.id)+'" data-status="rejected"'):"")+'</div>':'—')+'</td></tr>';
+ const row=(x,i)=>'<tr><td>'+persian(i+1)+'</td><td><strong>'+esc(x.name)+'</strong>'+(x.student_number?'<small>کد دانشجویی: '+esc(x.student_number)+'</small>':'')+'</td><td>'+indicator(x.record?.status)+'</td><td>'+(x.record?'<div class="roster-actions">'+(x.record.status!=="approved"?btn("تأیید","review","minor-btn",'data-student="'+esc(x.id)+'" data-status="approved"'):"")+(x.record.status!=="rejected"?btn("رد","review","minor-btn",'data-student="'+esc(x.id)+'" data-status="rejected"'):"")+'</div>':'—')+'</td></tr>';
  const inviteLines=issued.map(x=>(x.name?x.name+" | ":"")+x.code).join("\n");
- return '<section class="card"><div class="row"><h2>داشبورد مدرس</h2>'+btn("به‌روزرسانی","refresh","minor-btn")+'</div><div class="grid-two"><div class="pill">ثبت‌نام‌شده: '+persian(enrolled.length)+'</div><div class="pill">کد دعوت استفاده‌نشده: '+persian(remote?.unredeemed||0)+'</div></div></section>'+
+ return '<section class="card"><div class="row"><h2>درخواست‌های عضویت</h2><span class="pill warn">'+persian(requested.length)+' در انتظار</span></div><div class="list">'+requestCards+'</div><span class="small">دانشجویان تأییدشده: '+persian(approvedMembers)+'</span></section>'
+ +'<section class="card"><div class="row"><h2>داشبورد مدرس</h2>'+btn("به‌روزرسانی","refresh","minor-btn")+'</div><div class="grid-two"><div class="pill">ثبت‌نام‌شده: '+persian(enrolled.length)+'</div><div class="pill">کد دعوت استفاده‌نشده: '+persian(remote?.unredeemed||0)+'</div></div></section>'+
  '<section class="card"><h3>ثبت حضور جلسه</h3><form id="openWindow" class="stack"><div class="grid-two"><div class="field"><label for="sessionPick">جلسه</label><select id="sessionPick" name="session">'+Array.from({length:16},(_,i)=>'<option value="'+(i+1)+'" '+(selectedLesson===i+1?"selected":"")+'>'+persian(i+1)+'</option>').join("")+'</select></div><div class="field"><label for="windowMinutes">مهلت ثبت</label><select id="windowMinutes" name="minutes">'+[5,10,15,20,30].map(n=>'<option value="'+n+'" '+(n===15?"selected":"")+'>'+persian(n)+' دقیقه</option>').join("")+'</select></div></div><button type="submit" class="main-btn gold-btn">'+(open?"تولید کد جدید و شروع مجدد":"شروع ثبت حضور")+'</button></form>'+
  (open?'<div class="alert">مهلت حضور جلسه '+persian(selectedLesson)+' تا '+dateText(win.closes_at)+' باز است.</div>':win?'<span class="pill">مهلت حضور این جلسه بسته است</span>':"")+
  (currentCode&&Number(currentCode.session)===selectedLesson?'<div class="code-box">'+esc(currentCode.code)+'</div><span class="small">کد کلاس را فقط هنگام شروع حضور به دانشجویان اعلام کنید.</span>':"")+
@@ -164,6 +167,7 @@ document.addEventListener("click",e=>{
  if(action==="copyInvites"){run(async()=>{await navigator.clipboard.writeText(issued.map(x=>(x.name?x.name+" | ":"")+x.code).join("\n"));notice="کدها کپی شدند."});return}
  if(action==="refresh"){run(()=>refresh());return}
  if(action==="closeWindow"){run(async()=>{await work("closeWindow",{session:selectedLesson});currentCode=null;notice="ثبت حضور بسته شد."});return}
+ if(action==="reviewStudent"){run(async()=>{await work("reviewStudent",{student_id:b.dataset.student,status:b.dataset.status});notice=b.dataset.status==="approved"?"عضویت دانشجو تأیید شد.":"درخواست رد شد.";});return}
  if(action==="review"){run(async()=>{await work("review",{student_id:b.dataset.student,session:selectedLesson,status:b.dataset.status});notice="وضعیت ذخیره شد."});return}
  if(action==="approvePending"){
   run(async()=>{const pending=(remote?.attendance||[]).filter(a=>a.session_no===selectedLesson&&a.status==="pending");
