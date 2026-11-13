@@ -1,0 +1,42 @@
+name: Saba Naft deployed website — live Chromium audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sabanaft-live-browser-audit.yml'
+jobs:
+  live-site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm live Pages assets are accessible
+        run: |
+          curl --fail --location --retry 3 --retry-delay 2 --silent --show-error \
+            https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/leadership-journey.js \
+            | grep -q "Saba Naft"
+          curl --fail --location --retry 3 --retry-delay 2 --silent --show-error \
+            https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/leadership-journey-content.js \
+            | grep -q "SABA_LEADERSHIP_JOURNEY"
+      - name: Install Chromium browser for true deployment test
+        run: |
+          npm install --prefix /tmp/saba-live --no-save --no-audit --no-fund playwright@1.56.1
+          /tmp/saba-live/node_modules/.bin/playwright install --with-deps chromium
+      - name: Audit published Journey at mobile and desktop widths
+        env:
+          NODE_PATH: /tmp/saba-live/node_modules
+          SABA_TEST_URL: https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/#/journey
+        run: node sabanaft/verify-leadership-journey-browser.cjs
+      - name: Preserve screenshots of live deployed site
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saba-published-site-mobile-desktop
+          path: artifacts/saba-leadership-journey/*.png
+          if-no-files-found: ignore
