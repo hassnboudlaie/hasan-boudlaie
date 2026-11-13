@@ -98,7 +98,7 @@ click('openSession',{id:'4'});
 assert.ok(app.innerHTML.includes('sectionSelect'),'Lesson content selected by dropdown');
 assert.ok(app.innerHTML.includes('مفاهیم')&&app.innerHTML.includes('کاربرد عملی'),'Learning tracks available in each lesson');
 click('setTrack',{track:'practice'});
-assert.ok(app.innerHTML.includes('کیس واقعی')&&app.innerHTML.includes('تکلیف فردی')&&app.innerHTML.includes('مثال‌ها'),'Practice track lists only relevant sections');
+assert.ok(app.innerHTML.includes('کیس مدیریتی')&&app.innerHTML.includes('تکلیف فردی')&&app.innerHTML.includes('مثال‌ها'),'Practice track labels the hypothetical case honestly');
 click('setTrack',{track:'concepts'});
 assert.ok(app.innerHTML.includes('اسلایدها')&&app.innerHTML.includes('مفاهیم'),'Concept track displays theory and slides');
 click('openSession',{id:'1'});
