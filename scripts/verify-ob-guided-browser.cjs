@@ -168,7 +168,8 @@ async function run(){
   await page.locator('[data-track="concepts"]').click();
   await page.locator("#sectionSelect").selectOption("slides");
   await page.locator('[data-action="openOriginalEnglish"]').click();
-  assert.ok(await page.locator('.presenter-original-slide img').evaluate(img=>img.complete&&img.naturalWidth>=900),"Second chapter original source image renders");
+  await page.waitForFunction(()=>{const image=document.querySelector(".presenter-original-slide img");return image&&image.complete&&image.naturalWidth>=900},null,{timeout:6500});
+  assert.ok(await page.locator('.presenter-original-slide img').isVisible(),"Second chapter original source image renders");
   assert.ok((await page.locator('.presenter-count').textContent()).includes("14"),"Second chapter has 14 original English slides");
   await page.locator('[data-action="backFromPresentation"]').click();
   await noOverflow(page,config.name+" presentations");
