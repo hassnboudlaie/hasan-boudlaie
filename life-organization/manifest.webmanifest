@@ -25,7 +25,7 @@
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png?v=life-architecture-1",
+      "src": "./maskable-512.png?v=life-architecture-1",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
