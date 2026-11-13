@@ -335,3 +335,258 @@ html[data-theme=dark]{--teal:#45c0c8;--teal-dark:#0b4b55;--aqua:#1c4653}
 .language-version .btn{width:100%;min-height:59px}
 .language-version .version-tag{width:47px;height:47px}
 @media(max-width:700px){.asset-downloads .lecture-downloads{grid-template-columns:1fr;padding:10px}.asset-downloads>summary{font-size:23px}.language-version{padding:18px 15px}}
+
+
+/* Allameh MBA — Focused Premium UI (reference: calm ivory canvas, green academic identity, gold accents).
+   Intent: one classroom app, crisp typographic hierarchy, no cross-app navigation. */
+:root{
+ color-scheme:light;
+ --navy:#153b43;--navy2:#255861;--gold:#a67d41;--gold2:#eed4a2;
+ --bg:#f6f5f1;--panel:#ffffff;--soft:#eaf3f0;
+ --text:#18333b;--muted:#52636a;--line:#d8e2dd;
+ --ok:#16694c;--danger:#a0343e;
+ --teal:#0a756a;--teal-dark:#0a514b;--ocean:#09796f;--aqua:#e5f6ef;
+ --shadow:0 12px 34px rgba(15,58,56,.075);
+}
+html[data-theme=dark]{
+ color-scheme:dark;
+ --navy:#102b30;--navy2:#22434a;--gold:#e6be7d;--gold2:#f5dba9;
+ --bg:#0e1c21;--panel:#182c31;--soft:#203c40;
+ --text:#f5f9f7;--muted:#c5d3d2;--line:#3a5659;
+ --ok:#91e0bd;--teal:#7dd9c4;--teal-dark:#174e49;--aqua:#234842;
+ --shadow:0 8px 30px rgba(0,0,0,.16);
+}
+body{background:var(--bg);color:var(--text);font-size:20px;line-height:1.8;letter-spacing:0;text-rendering:optimizeLegibility}
+.site{max-width:1320px;padding:22px 26px 80px}
+.mast{
+ min-height:90px;padding:15px 22px;
+ background:var(--panel);color:var(--text);
+ border:1px solid var(--line);border-radius:23px;
+ box-shadow:0 7px 25px rgba(16,65,61,.065);
+ position:relative;z-index:25;
+}
+.brand{gap:15px;min-width:0}
+.brand-emblem{
+ width:63px;height:63px;min-width:63px;
+ background:linear-gradient(155deg,#13494a,#0b383d);
+ border:1.5px solid #bfa171;border-radius:19px;
+ color:#f0d9a8;font:900 26px/1 Georgia,serif;
+ box-shadow:inset 0 0 0 4px rgba(255,255,255,.07),0 5px 16px rgba(9,62,57,.18)
+}
+.brand-copy h1{font-size:clamp(23px,2.3vw,31px);font-weight:900;line-height:1.4;color:var(--text)}
+.eyebrow{font-size:15px;color:var(--muted);font-weight:850;line-height:1.4}
+.header-actions{gap:9px;flex-shrink:0}
+.header-actions .ghost{display:none}
+.header-actions .icon-btn{
+ background:var(--soft);color:var(--teal-dark);border:1px solid var(--line);
+ width:51px;min-width:51px;min-height:51px;border-radius:15px;font-size:26px;
+}
+.demo-role-menu{
+ position:relative;margin:0!important;min-width:0;
+ border:1px solid var(--line);background:var(--soft);border-radius:14px;color:var(--text)
+}
+.demo-role-menu>summary{
+ font-size:17px!important;min-height:51px;padding:10px 13px!important;
+ display:flex;justify-content:space-between;align-items:center;gap:12px;white-space:nowrap;
+ font-weight:850;color:var(--text)
+}
+.demo-role-menu>summary::after{font-size:21px;color:var(--gold)}
+.demo-role-menu .rolebar{
+ position:absolute;inset-inline-end:0;top:calc(100% + 9px);
+ width:min(260px,86vw);padding:9px;margin:0;
+ border:1px solid var(--line);border-radius:17px;background:var(--panel);
+ box-shadow:0 16px 36px rgba(13,49,50,.20);
+ display:grid;grid-template-columns:1fr;gap:6px;z-index:100
+}
+.demo-role-menu .role-tab{font-size:19px;min-height:51px;padding:10px 14px;text-align:right;border-radius:11px}
+.demo-role-menu .role-tab.active{background:var(--teal-dark);color:#fff}
+main{min-height:0}
+.page{min-height:0;gap:21px}
+.page-head h2{font-weight:900}
+.page-head p,.muted,.section-note,.mini-note{color:var(--muted)}
+.card{
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:21px;box-shadow:var(--shadow)
+}
+.btn{border-radius:14px;font-weight:850;min-height:56px}
+.btn.gold{background:#e7c58c;color:#18353a;border-color:#e4bd82}
+.btn.gold:hover{background:#f1d5a1}
+.btn.secondary{color:var(--text);border-color:var(--line);background:var(--panel)}
+.btn:focus-visible,.learning-card:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.disclosure,.session-section,.lesson-panel{
+ border:1px solid var(--line);border-radius:18px;
+ background:var(--panel);box-shadow:0 4px 16px rgba(14,57,53,.045)
+}
+.disclosure>summary,.session-section>summary{font-weight:900;color:var(--text)}
+.disclosure>summary::after,.session-section>summary::after{color:var(--gold)}
+.student-redesign{gap:clamp(15px,2.1vw,23px)}
+.welcome-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px 4px 0}
+.welcome-eyebrow{font-size:16px;font-weight:700;color:var(--muted)}
+.welcome-head h2{font-size:clamp(27px,3vw,36px);font-weight:900;line-height:1.55;color:var(--text)}
+.welcome-mark{width:55px;height:55px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(140deg,#f5e3c4,#fff9ec);border:1px solid #e5d4b7;color:#96733c;font-size:28px}
+.student-focus{
+ min-height:245px;gap:15px;
+ background:radial-gradient(circle at 4% 0%,rgba(255,213,136,.18),transparent 38%),linear-gradient(115deg,#0f4949,#0c605c 62%,#153c44);
+ border:1px solid #34716c;border-radius:26px;
+ box-shadow:0 16px 34px rgba(10,66,61,.22);
+ padding:28px 32px;position:relative;overflow:hidden;color:#fff
+}
+.student-focus:before{left:-115px;bottom:-142px;width:380px;height:380px;border:1px solid #edca8b55}
+.student-focus:after{left:-55px;bottom:-90px;width:265px;height:265px;border:1px solid #edca8b48}
+.student-focus h3{
+ font-size:clamp(27px,3.5vw,43px);line-height:1.42;
+ font-weight:900;color:#fff;max-width:800px;position:relative;z-index:1
+}
+.student-focus-top{gap:12px;position:relative;z-index:1}
+.focus-kicker{font-size:19px;font-weight:800;color:#f1d7a1}
+.focus-number{font-size:18px;line-height:1.45;border:1px solid #ecd0a27a;color:#fff;background:#ffffff17}
+.focus-bottom{display:flex;gap:18px;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.focus-bottom .btn{width:max-content;min-width:192px;font-size:21px}
+.focus-spark{font-size:86px;font-family:Georgia,serif;color:#e6c99080;line-height:1;pointer-events:none}
+.learning-paths-head{margin:3px 4px 0}
+.learning-paths-head h3{font-size:clamp(24px,2.7vw,30px);font-weight:900;color:var(--text)}
+.learning-paths{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.learning-card,
+.learning-card.practice-card{
+ position:relative;display:flex;flex-direction:column;
+ align-items:flex-start;justify-content:flex-start;gap:14px;
+ min-height:212px;padding:22px 20px;
+ color:var(--text);text-align:right;text-decoration:none;
+ background:var(--panel);border:1.5px solid var(--line);
+ border-radius:22px;box-shadow:0 9px 25px rgba(17,65,56,.07);
+ transition:transform .17s ease,border-color .17s ease,box-shadow .17s ease
+}
+.learning-card::before,.learning-card:before{display:none}
+.learning-card:hover{
+ transform:translateY(-3px);border-color:#8ac4ad;
+ box-shadow:0 15px 30px rgba(16,74,66,.13)
+}
+.learning-card-icon{
+ width:66px;height:66px;border-radius:20px;
+ background:#e3f3ec;color:#12695c;border:1px solid #d2e8dc;
+ box-shadow:none;flex-shrink:0;display:grid;place-items:center
+}
+.learning-card-icon svg{width:40px;height:40px}
+.practice-card .learning-card-icon{background:#fff0d9;color:#8e6734;border-color:#f0dfc3}
+.sessions-card .learning-card-icon{background:#e9f0f8;color:#3e6789;border-color:#dae6f2}
+.attendance-card .learning-card-icon{background:#e0f4ec;color:#147552;border-color:#cce6da}
+.learning-card-copy{display:grid;gap:4px;min-width:0}
+.learning-card-copy strong,.learning-card.practice-card .learning-card-copy strong{
+ color:var(--text);font-size:clamp(21px,2vw,27px);font-weight:900;line-height:1.4
+}
+.learning-card-copy small,.learning-card.practice-card .learning-card-copy small{
+ color:var(--muted);font-size:16px;line-height:1.5;font-weight:600
+}
+.learning-card-arrow{
+ position:absolute;inset-inline-end:18px;top:21px;
+ font-size:25px;color:var(--gold);font-weight:900;line-height:1.1
+}
+.term-progress{
+ display:grid;gap:16px;padding:21px 25px;
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:21px;box-shadow:var(--shadow)
+}
+.term-progress-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.term-progress-head strong{font-size:21px;font-weight:900}
+.term-progress-head span{font-size:19px;color:var(--muted);font-weight:800}
+.term-progress-bar{height:11px;width:100%;border-radius:50px;background:var(--soft);overflow:hidden}
+.term-progress-bar span{display:block;height:100%;border-radius:50px;background:linear-gradient(90deg,#0a655c,#36a281);min-width:0;transition:width .2s}
+.student-redesign .extras{border-radius:18px;background:var(--panel);box-shadow:none}
+.student-redesign .extras>summary{font-size:21px;min-height:64px;padding:14px 19px}
+.student-redesign .extras .link-card{min-height:70px;font-size:20px;border-radius:14px}
+.student-redesign .extras .link-card strong{font-size:20px}
+.session-tile{border-radius:17px;box-shadow:0 4px 14px rgba(15,56,52,.04)}
+.session-tile.published{border-color:#b6d6c7;background:linear-gradient(150deg,var(--panel),var(--soft))}
+.lesson-panel>summary,.rich-accordion>summary{font-weight:900;color:var(--text)}
+.role-line{background:var(--soft)}
+.version-choices .language-version{border-radius:21px;box-shadow:var(--shadow)}
+.language-version h3{font-weight:900}
+.projector-wrap{background:#112f35}
+.footer{display:none}
+@media(min-width:901px){
+ .home-page{max-width:1170px;margin:0 auto}
+ .student-focus{min-height:270px}
+}
+@media(max-width:900px){
+ .learning-paths{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .learning-card,.learning-card.practice-card{min-height:175px}
+}
+@media(max-width:700px){
+ html{font-size:16px}
+ body{font-size:21px;line-height:1.7}
+ .site{max-width:none;width:100%;padding:11px 12px calc(100px + env(safe-area-inset-bottom))}
+ .mast{
+  min-height:85px;padding:12px 13px;gap:10px;
+  border-radius:19px
+ }
+ .brand{gap:10px}
+ .brand-emblem{width:52px;height:52px;min-width:52px;border-radius:16px;font-size:22px}
+ .brand-copy{min-width:0}
+ .brand-copy h1{font-size:clamp(19px,5vw,24px);line-height:1.4}
+ .eyebrow{font-size:12px;line-height:1.5}
+ .header-actions{gap:6px}
+ .header-actions .icon-btn{width:43px;min-width:43px;min-height:47px;font-size:23px;padding:6px;border-radius:12px}
+ .demo-role-menu>summary{min-height:47px;padding:8px 10px!important;font-size:16px!important;gap:5px}
+ .demo-role-menu>summary::after{font-size:19px}
+ .demo-role-menu .rolebar{width:min(235px,87vw)}
+ main,.page{min-height:0}
+ .page{gap:16px}
+ .student-redesign{gap:16px}
+ .welcome-head{padding:3px 2px 0}
+ .welcome-head h2{font-size:30px}
+ .welcome-eyebrow{font-size:16px}
+ .welcome-mark{width:46px;height:46px;border-radius:15px;font-size:24px}
+ .student-focus{
+  min-height:217px;padding:23px 22px;gap:17px;
+  border-radius:22px;box-shadow:0 10px 26px rgba(10,66,61,.18)
+ }
+ .student-focus h3{font-size:clamp(26px,6.8vw,34px);line-height:1.48;max-width:100%}
+ .focus-kicker{font-size:19px}.focus-number{font-size:17px}
+ .focus-bottom .btn{font-size:22px;min-height:58px;min-width:0;width:auto;padding:10px 20px}
+ .focus-spark{font-size:60px}
+ .learning-paths-head{margin:4px 2px 0}
+ .learning-paths-head h3{font-size:27px}
+ .learning-paths{gap:11px;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .learning-card,.learning-card.practice-card{
+  min-height:163px;padding:18px 14px;gap:10px;
+  border-radius:19px;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;
+  border-width:1.5px
+ }
+ .learning-card-icon{width:56px;height:56px;border-radius:16px}
+ .learning-card-icon svg{width:36px;height:36px}
+ .learning-card-copy{gap:2px}
+ .learning-card-copy strong,.learning-card.practice-card .learning-card-copy strong{font-size:clamp(20px,5.2vw,25px);line-height:1.4}
+ .learning-card-copy small,.learning-card.practice-card .learning-card-copy small{font-size:16px;line-height:1.5}
+ .learning-card-arrow{font-size:22px;top:18px;inset-inline-end:14px}
+ .term-progress{padding:18px 17px;gap:15px;border-radius:19px}
+ .term-progress-head strong{font-size:21px}
+ .term-progress-head span{font-size:18px}
+ .term-progress-bar{height:11px}
+ .student-redesign .extras>summary{font-size:23px;min-height:71px}
+ .bottom-nav{
+  background:var(--panel);border-top:1px solid var(--line);
+  box-shadow:0 -9px 24px rgba(23,62,62,.09);
+  padding:9px max(9px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-left))
+ }
+ .bottom-nav button{font-size:15px;min-height:66px;gap:5px;border-radius:15px;font-weight:750;color:var(--muted)}
+ .bottom-nav button.active{background:var(--soft);color:var(--teal-dark);font-weight:900}
+ .bottom-nav .nav-icon{font-size:25px;line-height:1;display:grid;place-items:center;width:30px;height:30px}
+ .bottom-nav .nav-icon svg{width:27px;height:27px}
+ .page-head h2{font-size:29px}
+ .disclosure>summary,.session-section>summary{font-size:23px}
+ .student-redesign .extras .link-card{min-height:69px}
+}
+@media(max-width:385px){
+ .site{padding-inline:9px}
+ .brand-copy h1{font-size:19px}
+ .eyebrow{font-size:11px}
+ .mast{padding:10px 9px}
+ .brand-emblem{width:45px;height:45px;min-width:45px;font-size:20px}
+ .demo-role-menu>summary{font-size:14px!important}
+ .header-actions .icon-btn{min-width:40px;width:40px}
+ .learning-card,.learning-card.practice-card{padding:14px 10px;min-height:159px}
+ .learning-card-copy strong,.learning-card.practice-card .learning-card-copy strong{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ .student-focus,.learning-card,.term-progress-bar span{transition:none}
+}
