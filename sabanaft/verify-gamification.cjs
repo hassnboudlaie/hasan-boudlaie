@@ -33,7 +33,7 @@ assert.equal([...read('app/lesson-notes.html').matchAll(/class="chapter"/g)].len
 assert.match(read('app/business-model.html'),/resource-pages-v3\.css/,'BMC typography integration active');
 assert.match(read('app/sw.js'),/resource-pages-v3\.css/,'resource styles precached');
 
-assert.match(read('app/sw.js'),/shell-v19/,'offline assets refreshed');
+assert.match(read('app/sw.js'),/sabanaft-reflective-pwa-shell-v(?:19|2[0-9]|[3-9][0-9])/g,'offline assets refreshed');
 assert.match(read('reflective-app.js'),/completedAt/,'real dates attached to learning');
 assert.match(studio,/c\.decisionAt=/,'decision timestamps');
 assert.match(studio,/c\.actionAt=/,'action timestamps');
