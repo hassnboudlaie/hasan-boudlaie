@@ -291,6 +291,26 @@ async function actionRouter(input:Record<string,unknown>){
   if(error||!data)return fail("guest_not_found",404);
   return result({ok:true});
  }
+ if(action==="reviewStudent"){
+   const id=String(input.student_id||""),status=String(input.status||"");
+   if(!/^[0-9a-f-]{36}$/.test(id)||!["approved","rejected"].includes(status))return fail("review_invalid");
+   const {data,error}=await supabase.from("mba_ob_students")
+    .update({approval_status:status,reviewed_at:stamp()})
+    .eq("id",id).is("disabled_at",null).select("id").maybeSingle();
+   if(error||!data)return fail("student_not_found",404);
+   return result({ok:true,approval_status:status});
+ }
+ if(action==="issueInvites"){
+  const provided=Array.isArray(input.names)?input.names:null;
+  const names=provided?provided.map(safeName):null;
+  const count=names?names.length:Number(input.count);
+  if(!isInt(count,1,50)||(names&&names.some(n=>!n)))return fail("invite_count_invalid");
+  const raw=Array.from({length:count},()=>randomHex(16));
+  const data=await Promise.all(raw.map(async(code,i)=>({token_hash:await sha256(code),expected_name:names?.[i]||null})));
+  const {error}=await supabase.from("mba_ob_invitations").insert(data);
+  if(error)throw new Error("invite_creation_failed");
+  return result({ok:true,codes:raw.map((code,i)=>({code,name:names?.[i]||""}))});
+ }
  if(action==="openWindow"){
   const lesson=Number(input.session),minutes=Number(input.minutes);
   if(!isInt(lesson,1,16)||![5,10,15,20,30].includes(minutes))return fail("window_parameters_invalid");
