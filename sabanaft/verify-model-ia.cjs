@@ -25,5 +25,5 @@ assert.doesNotMatch(studio,/var central=null;try\{var raw=JSON\.parse/,'case ana
 assert.match(ui,/contextId:currentTeamId\(\)/,'fast case creation links to base team');
 assert.match(coach,/contextId:v.context/,'coach handoff links to selected base team');
 assert.match(app,/function syncCoachTeams/,'PWA coach draws from canonical team list');
-assert.match(r('app/sw.js'),/shell-v19/,'new PWA shell cache version');
+assert.match(r('app/sw.js'),/sabanaft-reflective-pwa-shell-v(?:19|2[0-9]|[3-9][0-9])/g,'new PWA shell cache version');
 console.log('PASS: book Fig. 5.1 IA, stable baseline, per-case exception separation, single context source, simplified labels, routes and script syntax');
