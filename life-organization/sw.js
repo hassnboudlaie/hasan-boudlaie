@@ -1,6 +1,6 @@
 /* The Life Organization v0.2.1 Life Architecture service worker */
 const CACHE="life-org-brand-v021";
-const ASSETS=["./","./index.html","./styles.css?v=0.1.2","./brand.css?v=life-architecture-1","./book1.css?v=0.2.0","./book1-content.js?v=0.2.0","./book1-ui.js?v=0.2.0","./app.js?v=0.2.0","./brand-symbol.svg","./icon.svg?v=life-architecture-1","./icon-192.png","./icon-512.png","./maskable-512.png","./manifest.webmanifest?v=life-architecture-1"];
+const ASSETS=["./","./index.html","./styles.css?v=0.1.2","./brand.css?v=life-architecture-1","./book1.css?v=0.2.0","./book1-content.js?v=0.2.0","./book1-ui.js?v=0.2.0","./app.js?v=0.2.0","./brand-symbol.svg","./icon.svg?v=life-architecture-1","./icon-192.png?v=life-architecture-1","./icon-512.png?v=life-architecture-1","./maskable-512.png?v=life-architecture-1","./manifest.webmanifest?v=life-architecture-1"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
