@@ -1,0 +1,376 @@
+/* The Life Organization | Visual experience v0.3
+   Editorial readability · PCC-style reflective support · opt-in gamification
+   All badges/coins represent learning engagement, never wellness or life scoring. */
+:root{
+ --tlo-navy:#173843;--tlo-teal:#155e62;--tlo-teal-deep:#0d474e;
+ --tlo-gold:#cba263;--tlo-mint:#dff0e9;--tlo-cream:#f7eddb;
+ --tlo-shadow:0 16px 44px rgba(19,52,61,.10);
+}
+body{background:linear-gradient(135deg,#eef3f0 0%,#f7f5ef 55%,#eef4f2 100%);background-attachment:fixed;font-size:16px}
+.sidebar{background:linear-gradient(180deg,#fff 0%,#f2f7f3 100%);border-inline-end-color:#cbded5}
+.brand-words strong{font-size:16px;letter-spacing:-.15px}
+.side-caption{font-size:12px;color:#485f62}
+.nav-link{font-size:15px;font-weight:750;min-height:48px}
+.nav-link.active{box-shadow:inset 3px 0 0 var(--primary)}
+.card-title{font-size:18px;font-weight:850}
+.card-en{font-size:12px}
+.card-desc{font-size:14px;font-weight:500;color:var(--ink);opacity:.85}
+.module-card{border-color:#d7e3dc;min-height:240px;box-shadow:0 9px 29px rgba(19,53,60,.065)}
+.module-card:hover,.module-card:focus-visible{border-color:#76a9a1;box-shadow:0 18px 32px rgba(19,53,60,.11)}
+.section-heading h2{font-size:24px;font-weight:850}
+.section-heading p{font-size:14px}
+.status,.module-number{font-size:12px}
+.lb-root{--lb-muted:#465e63;--lb-border:#d2ded8;--lb-tint:#e8f1eb;--lb-sand:#f2e9d8;line-height:1.9}
+.lb-cover,.lb-chapter-hero{background:radial-gradient(circle at 90% 8%,#347b75 0%,transparent 40%),linear-gradient(115deg,#173a49,#1c5960 71%,#244f4e)}
+.lb-cover h1{font-weight:900}
+.lb-chapter-tile{border:1px solid #d0dfd9;box-shadow:0 10px 30px rgba(16,54,60,.085);position:relative;overflow:hidden}
+.lb-chapter-tile:nth-child(1){border-top:6px solid #1e7773}
+.lb-chapter-tile:nth-child(2){border-top:6px solid #c59b58}
+.lb-chapter-tile:nth-child(3){border-top:6px solid #6d85b7}
+.lb-chapter-tile h3{font-size:22px;font-weight:900}
+.lb-chapter-tile p{font-size:15px;color:var(--ink);opacity:.77}
+.lb-form-field{border-color:#d0ded8;box-shadow:0 10px 22px rgba(24,63,62,.06)}
+.lb-form-field label{font-size:19px;font-weight:850}
+.lb-form-field p{font-size:15px}
+.lb-form-field textarea{font-size:17px}
+.lb-workbook-item strong{font-size:16px}
+.lb-root button{transition:transform .2s,background .2s,border-color .2s}
+.lb-root button:focus-visible,.lj-root button:focus-visible,.lj-root textarea:focus-visible,
+.lj-root a:focus-visible{outline:3px solid #bd8c39;outline-offset:4px}
+.lj-root{--lj-ink:#173944;--lj-muted:#486369;--lj-aqua:#105d65;--lj-line:#cfdfd8;color:var(--ink);font-family:Vazirmatn,Tahoma,"DM Sans",sans-serif}
+.lj-root *{box-sizing:border-box}
+.lj-root .lj-kicker,.lj-kicker{display:block;font-family:"DM Sans",Vazirmatn,sans-serif;color:#147176;font-size:12px;letter-spacing:.7px;line-height:1.8;font-weight:900}
+.lj-topnav{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:1px 0 17px;color:#597179;font-size:14px;font-weight:800}
+.lj-topnav button{background:transparent;border:0;padding:8px 0;color:var(--primary);font-size:14px;font-weight:850;text-decoration:underline;text-underline-offset:5px}
+.lj-head{background:radial-gradient(circle at 18% 25%,#2c7774 0%,transparent 42%),linear-gradient(125deg,#123949 0%,#194e57 55%,#102a3e 100%);border-radius:27px;padding:30px 36px;color:white;display:grid;grid-template-columns:128px minmax(0,1fr);align-items:center;gap:28px;position:relative;isolation:isolate;box-shadow:0 18px 34px rgba(12,53,59,.19);overflow:hidden}
+.lj-head:after{content:"";position:absolute;inset-inline-end:-100px;top:-150px;width:430px;height:430px;border:1px solid #a8d7c630;border-radius:50%;pointer-events:none;z-index:-1}
+.lj-head .lj-kicker{color:#efcb8a;font-family:"DM Sans";font-size:11px;letter-spacing:2px}
+.lj-head-art{display:grid;place-items:center}
+.lj-orbit{width:126px;height:126px;border:2px solid #e0c38b9c;position:relative;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 15px #ffffff09,0 0 0 28px #ffffff06}
+.lj-orbit:before,.lj-orbit:after{content:"";width:16px;height:16px;position:absolute;top:-9px;inset-inline-end:39%;background:#e7c78e;border-radius:50%}
+.lj-orbit:after{top:auto;bottom:-8px;inset-inline-end:auto;inset-inline-start:18%;background:#91d9cb;width:12px;height:12px}
+.lj-orbit span{font-family:"DM Sans";font-size:48px;font-weight:900;color:#f9e3b3}
+.lj-head h1{font-size:clamp(27px,3.1vw,37px);line-height:1.65;font-weight:900;color:white;margin:6px 0 10px}
+.lj-core{display:flex;gap:12px;align-items:flex-start;margin:0;color:#e2f0ec;font-size:17px;line-height:2}
+.lj-core>span:first-child{font-size:20px;color:#e8c481}
+.lj-head-bottom{display:flex;align-items:center;gap:20px;justify-content:space-between;flex-wrap:wrap;margin-top:18px}
+.lj-head-progress{min-width:180px;max-width:360px;flex:1;font-size:13px}
+.lj-head-progress strong{color:#f1e8d5}
+.lj-progress-track{height:9px;background:#fff5;border-radius:15px;overflow:hidden;margin-top:8px}
+.lj-progress-track span{display:block;height:100%;background:linear-gradient(90deg,#e9c889,#83d9ca);border-radius:inherit}
+.lj-head-worksheet{background:#f7e5bc;color:#213f47;border:0;border-radius:13px;font-weight:900;padding:12px 17px;min-height:46px;font-size:14px}
+.lj-head-worksheet:hover{background:#fff0ce}
+.lj-bank{display:flex;gap:12px;align-items:stretch;margin:17px 0 22px;max-width:100%}
+.lj-bank-item{display:flex;gap:8px;align-items:center;flex:1;min-width:0;border:1px solid #d5e3db;border-radius:15px;padding:13px 16px;background:linear-gradient(160deg,#ffffff 0%,#eaf3ef 100%);box-shadow:0 5px 18px rgba(27,61,55,.06)}
+.lj-bank-item strong{font-family:"DM Sans",Vazirmatn,sans-serif;color:#153e49;font-size:23px;font-weight:900;line-height:1.2;white-space:nowrap}
+.lj-bank-item small{font-size:12px;font-weight:800;color:#37585b;line-height:1.5}
+.lj-bank-icon{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:12px;font-size:24px;font-family:"DM Sans"}
+.lj-xp-icon{background:#d7efe5;color:#12665f}
+.lj-coin-icon{background:#f6e4bd;color:#967030}
+.lj-badge-icon{background:#e4e6f7;color:#575ea0}
+.lj-bank-compact{margin:0 0 9px;gap:7px}
+.lj-bank-compact .lj-bank-item{padding:8px 10px}
+.lj-bank-compact .lj-bank-item strong{font-size:20px}
+.lj-bank-compact .lj-bank-icon{width:30px;height:30px;font-size:20px}
+.lj-reading-layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:17px;align-items:start;margin-top:17px}
+.lj-rail{background:linear-gradient(180deg,#e8f0eb,#f3f1e8);border-radius:22px;border:1px solid #cfddd5;overflow:hidden;position:sticky;top:16px;box-shadow:0 8px 27px rgba(29,65,64,.055)}
+.lj-rail-header{padding:18px 18px 13px}
+.lj-rail-header h2{font-size:21px;font-weight:900;color:#214148;margin:0}
+.lj-steps{display:flex;flex-direction:column;gap:3px;padding:0 9px 10px}
+.lj-step{width:100%;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent;border-radius:13px;padding:11px 9px;color:#324e53;min-height:68px;text-align:start}
+.lj-step:hover{background:#ffffffb9}
+.lj-step-current{background:#fff!important;border-color:#a1c4b9;box-shadow:0 8px 18px #18474512}
+.lj-step-index{width:36px;height:36px;flex:none;border-radius:12px;background:#d4e8df;color:#165759;display:grid;place-items:center;font-family:"DM Sans",Vazirmatn;font-size:14px;font-weight:900}
+.lj-step-current .lj-step-index{background:#1a6668;color:#fff}
+.lj-step-done .lj-step-index{background:#d8ead6;color:#216a4f;font-size:19px}
+.lj-step-details{display:flex;flex-direction:column;min-width:0;flex:1;gap:1px}
+.lj-step-details small{font-size:10px;font-weight:850;letter-spacing:.25px;color:#48676c}
+.lj-step-details strong{font-size:14px;line-height:1.55;font-weight:850;color:#23444a}
+.lj-step-caret{color:#77938f;font-size:21px;flex:none}
+.lj-paper{background:linear-gradient(115deg,#fefefa,#fffdf8);border:1px solid #dfdfd0;border-radius:23px;box-shadow:0 15px 45px rgba(23,54,54,.09);position:relative;overflow:hidden;padding:28px clamp(22px,4vw,49px) 23px;min-height:420px}
+.lj-paper:before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:6px;background:linear-gradient(#cca563,#346f73,#cca563)}
+.lj-page-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lj-page-heading .lj-kicker{color:#9b7438}
+.lj-page-count{background:#e5f0e9;color:#24535a;border-radius:22px;font-size:12px;font-weight:900;padding:5px 13px;white-space:nowrap}
+.lj-paper h2{font-size:clamp(23px,2.55vw,29px);font-weight:900;color:#173c43;line-height:1.7;margin:9px 0 15px}
+.lj-paper-rule{height:2px;width:86px;background:linear-gradient(90deg,#b68a48,#d7b77a);border-radius:5px;margin-bottom:24px}
+.lj-paragraph{font-size:18px;line-height:2.23;text-align:justify;text-justify:inter-word;color:#263e41;font-weight:500;margin:0 0 1em}
+.lj-inline-heading{font-size:19px;margin:1.25em 0 .4em;font-weight:900;color:#135c60}
+.lj-bullet{font-size:17px;line-height:2.1;color:#263e41;display:flex;align-items:flex-start;gap:12px}
+.lj-bullet>span{flex:none;color:#b58643}
+.lj-source{text-align:left;direction:ltr;font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+.lj-source a{color:#0b6572;text-decoration:underline}
+.lj-page-end{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:27px;padding-top:12px;border-top:1px solid #e6e2d7;color:#607373;font-size:12px}
+.lj-pages-number{font-family:"DM Sans";font-weight:900;letter-spacing:1px;color:#8d744b}
+.lj-pager,.lj-form-pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:13px 0 20px;border-radius:16px;background:#e8f0eb;border:1px solid #d7e3d9;padding:11px 13px}
+.lj-pager>button,.lj-form-pager>button{border:0;background:#fff;color:#15565c;border-radius:11px;min-height:44px;padding:10px 15px;font-size:14px;font-weight:850}
+.lj-pager>button:hover:not(:disabled),.lj-form-pager>button:hover:not(:disabled){background:#d3eae3}
+.lj-pager button:disabled,.lj-form-pager button:disabled{cursor:not-allowed;opacity:.45}
+.lj-page-dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:50%}
+.lj-page-dots button{width:11px;height:11px;background:#9bb9ad;border:0;border-radius:50%;padding:0;min-height:11px}
+.lj-page-dots button.active{width:24px;border-radius:8px;background:#1a6463}
+.lj-coach{display:flex;align-items:start;gap:17px;padding:22px 24px;margin:0 0 18px;background:linear-gradient(120deg,#dbece4,#f1e8d9);border:1px solid #cbdfd5;border-radius:20px}
+.lj-coach-symbol,.lj-practice-icon{flex:none;width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#1c706d,#123d4c);display:grid;place-items:center;color:#ffe5af;font-size:27px;box-shadow:0 7px 19px #0d495d25}
+.lj-coach-content{flex:1;min-width:0}
+.lj-coach .lj-kicker{font-size:12px;color:#176068}
+.lj-coach h3{font-size:20px;color:#1b4146;line-height:1.65;font-weight:900;margin:5px 0 5px}
+.lj-coach p{font-size:16px;color:#244c4e;line-height:2;margin:0 0 12px;font-weight:600}
+.lj-coach label{display:block;font-size:13px;font-weight:850;color:#365959;margin-bottom:7px}
+.lj-coach textarea{width:100%;background:#fcfefb;border:1px solid #a9c7bd;color:#173d40;border-radius:13px;padding:11px 13px;font-size:16px;line-height:1.9;resize:vertical;min-height:86px}
+.lj-coach textarea::placeholder{color:#587773}
+.lj-coach small{display:block;font-size:12px;color:#466466;margin-top:7px}
+.lj-after-reading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:linear-gradient(125deg,#173d48,#1b5359);color:#fff;border-radius:17px;padding:17px 19px}
+.lj-action-main,.lj-action-secondary{border-radius:12px;padding:12px 18px;min-height:49px;font-size:15px;font-weight:900;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:7px;line-height:1.65;cursor:pointer}
+.lj-action-main{background:#e7c07b;color:#213b43}
+.lj-action-main:hover{background:#ffdaa0}
+.lj-action-secondary{background:#ffffff15;border-color:#83b7b2;color:white}
+.lj-action-secondary:hover{background:#ffffff27}
+.lj-continue-hint{font-size:13px;color:#e3e9d8;line-height:1.8;max-width:340px}
+.lj-completed-label{background:#d7f4e4;color:#174f47;border-radius:11px;padding:11px;font-size:14px;font-weight:850}
+.lj-chapter-outcome{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-top:16px;padding:20px 22px;border-radius:19px;border:1px solid #dfd1b8;background:linear-gradient(110deg,#f5ecd9,#e6eee5)}
+.lj-chapter-outcome h3{font-size:20px;font-weight:900;margin:0 0 3px;color:#28474a}
+.lj-chapter-outcome p{font-size:14px;line-height:1.9;margin:0;color:#405f60}
+.lj-chapter-outcome button{flex:none;background:#1b6265;color:#fff;border:0;border-radius:11px;padding:11px 17px;min-height:46px;font-size:14px;font-weight:850}
+.lj-milestone{display:block;margin-top:12px;padding:10px 14px;border:1px solid #bddec9;background:#e3f1e4;border-radius:11px;color:#21684c;font-size:13px;font-weight:850}
+.lj-milestone-pending{background:#f0eee8;border-color:#ded7c8;color:#5a625b}
+.lj-rest-link{width:100%;text-align:start;margin-top:13px;background:#eaf0ef;color:#165e64;border:1px dashed #87afa8;border-radius:12px;padding:13px 16px;font-size:14px;font-weight:850}
+.lj-rest-link span{font-size:21px;color:#b18a50}
+.lj-footer-nav{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:20px 0 12px;flex-wrap:wrap}
+.lj-footer-nav button{border:1px solid #aac9bd;border-radius:12px;background:transparent;color:#155e61;padding:10px 14px;font-size:13px;font-weight:850}
+.lj-footer-nav a{color:#155961;text-decoration:underline;text-underline-offset:4px;font-size:13px;font-weight:800}
+.lj-disclaimer{font-size:12px;color:#52696b;line-height:1.95;border-inline-start:3px solid #cfaf73;padding:5px 13px}
+.lj-landing-welcome{display:flex;gap:18px;align-items:center;padding:23px 26px;border:1px solid #ccdcd6;border-radius:21px;background:linear-gradient(115deg,#e1efea,#f6ead7);margin:21px 0 17px}
+.lj-landing-welcome h2{font-size:23px;color:#20484a;font-weight:900;line-height:1.6;margin:3px 0 6px}
+.lj-landing-welcome p{color:#3e5b5e;line-height:2;font-size:15px;margin:0}
+.lj-mentor-art{flex:none;width:80px;height:80px;border-radius:50%;display:grid;place-items:center;background:#1a5760;border:5px double #d7ba81;color:#f1dfb5;font-size:41px}
+.lj-legend{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 20px}
+.lj-legend span{padding:8px 15px;border:1px solid #bfcfc9;background:#ffffffbe;color:#33595a;border-radius:14px;font-size:13px;font-weight:850}
+.lj-gallery{border:1px solid #d3dfd7;background:linear-gradient(140deg,#e5efeb,#eeeade);border-radius:24px;padding:24px;margin:28px 0}
+.lj-gallery-title{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:17px}
+.lj-gallery-title h2{font-size:25px;font-weight:900;color:#244348;margin:1px 0 0}
+.lj-gallery-title p{font-size:13px;color:#465e60;line-height:1.8;max-width:350px;margin:0}
+.lj-badge-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.lj-badge-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:#fff;border:1px solid #d5dfd7;border-radius:18px;padding:18px 12px 15px;min-width:0;box-shadow:0 8px 21px rgba(13,49,54,.08)}
+.lj-badge-image{width:140px;height:140px;max-width:100%}
+.lj-badge-image svg{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 9px #0c273527)}
+.lj-is-locked .lj-badge-image{filter:grayscale(1);opacity:.48}
+.lj-badge-card h3{font-size:16px;line-height:1.6;font-weight:900;color:#254549;margin:7px 0 0}
+.lj-badge-card p{font-size:12px;color:#546c6c;margin:0 0 7px}
+.lj-download{border-radius:10px;border:0;background:#17656b;color:#fff;min-height:40px;padding:8px 12px;font-size:13px;font-weight:850;margin-top:auto}
+.lj-locked-tag{margin-top:auto;color:#62797b;font-size:12px;font-weight:800}
+.lj-practice-coach{display:flex;gap:17px;align-items:flex-start;border:1px solid #cddfd5;background:linear-gradient(115deg,#e4f0e8,#f4e9d7);padding:24px;border-radius:21px;margin:18px 0}
+.lj-practice-coach>div:nth-child(2){flex:1}
+.lj-practice-coach h3{font-size:22px;line-height:1.6;color:#20474b;font-weight:900;margin:2px 0 8px}
+.lj-practice-coach p{font-size:15px;color:#37575a;line-height:2;margin:0 0 13px}
+.lj-practice-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:11px}
+.lj-practice-actions strong{font-size:14px;color:#255555}
+.lj-practice-coach small{color:#5a6a65;font-size:12px}
+.lj-finished{background:#d9ecde;color:#195b44;border-radius:12px;padding:10px 13px;font-size:13px;font-weight:850}
+.lj-form-stepper .lb-form-field{display:none}
+.lj-form-stepper[data-lj-active="0"] .lb-form-field[data-lj-form-group="0"],
+.lj-form-stepper[data-lj-active="1"] .lb-form-field[data-lj-form-group="1"],
+.lj-form-stepper[data-lj-active="2"] .lb-form-field[data-lj-form-group="2"],
+.lj-form-stepper[data-lj-active="3"] .lb-form-field[data-lj-form-group="3"],
+.lj-form-stepper[data-lj-active="4"] .lb-form-field[data-lj-form-group="4"],
+.lj-form-stepper[data-lj-active="5"] .lb-form-field[data-lj-form-group="5"]{display:block}
+.lj-form-pager{margin-top:17px}
+.lj-form-pager span{font-size:14px;color:#305c5c;font-weight:850}
+.lj-reward-overlay,.lj-rest-overlay{position:fixed;inset:0;background:rgba(10,31,42,.72);z-index:3000;display:grid;place-items:center;padding:18px;backdrop-filter:blur(8px)}
+.lj-reward-dialog,.lj-rest-dialog{width:min(560px,100%);max-height:93dvh;overflow-y:auto;border-radius:25px;border:2px solid #ddb875;background:linear-gradient(155deg,#123d4c,#1a5860 60%,#203b4d);box-shadow:0 25px 60px #040f1999;color:#f9f5e9;text-align:center;padding:29px 29px 26px;position:relative}
+.lj-reward-dialog .lj-kicker,.lj-rest-dialog .lj-kicker{color:#eed097;font-size:12px}
+.lj-reward-glow{font-size:66px;color:#f0cb8a;text-shadow:0 0 36px #e8b972aa;line-height:1.25}
+.lj-reward-dialog h2,.lj-rest-dialog h2{font-size:27px;font-weight:900;color:white;line-height:1.6;margin:7px 0}
+.lj-reward-dialog p,.lj-rest-dialog p{font-size:16px;line-height:2;color:#e3efec}
+.lj-reward-badge{width:180px;height:180px;margin:15px auto}
+.lj-reward-badge svg{width:100%;height:100%;filter:drop-shadow(0 13px 13px #0005)}
+.lj-reward-name{display:block;font-size:20px;font-weight:900}
+.lj-reward-numbers{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:21px auto 13px}
+.lj-reward-numbers strong{background:#f4d79a;color:#21434b;border-radius:13px;min-width:120px;font-family:"DM Sans",Vazirmatn;font-size:23px;padding:10px 14px}
+.lj-reward-dialog .lj-reward-message{font-size:12px;color:#d4e9e2}
+.lj-reward-buttons{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.lj-reward-buttons button{border-radius:12px;border:1px solid #c8dbcf;padding:12px 18px;min-height:47px;font-size:15px;font-weight:850;background:#ffffff1c;color:white}
+.lj-reward-buttons .lj-action-main{background:#e7c07b;color:#1a3840}
+.lj-mini-notice{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);width:min(90vw,450px);padding:14px 20px;border-radius:14px;background:#173f47;color:white;box-shadow:0 15px 35px #0f263d50;z-index:3005;font-size:15px;font-weight:750;text-align:center}
+.lj-rest-orbit{height:126px;width:126px;display:grid;place-items:center;border-radius:50%;border:2px solid #c3d7c3;margin:0 auto 18px;box-shadow:0 0 0 15px #ffffff11;color:#f2d58e;font-size:67px;animation:lj-rest-glow 5s ease-in-out infinite}
+.lj-rest-clock{display:flex;flex-direction:column;gap:2px;align-items:center;margin:15px 0}
+.lj-rest-clock strong{font-family:"DM Sans",sans-serif;font-size:49px;color:#f8d795}
+.lj-rest-clock span{font-size:13px;color:#daebe3}
+.lj-rest-dialog>.lj-action-main{margin-top:10px}
+@keyframes lj-rest-glow{50%{box-shadow:0 0 0 30px #ffffff05,0 0 25px #edcb7c40}}
+:root[data-theme="dark"] body{background:linear-gradient(120deg,#101e27,#142a30 45%,#1a242d)}
+:root[data-theme="dark"] .sidebar{background:linear-gradient(180deg,#192b32,#182e34);border-inline-end-color:#345258}
+:root[data-theme="dark"] .card-desc{color:#e4efed;opacity:.95}
+:root[data-theme="dark"] .lb-root{--lb-muted:#d0e0dc;--lb-border:#486264;--lb-tint:#24403e;--lb-sand:#3f4035}
+:root[data-theme="dark"] .lj-bank-item{background:linear-gradient(135deg,#233e45,#1a3339);border-color:#466469}
+:root[data-theme="dark"] .lj-bank-item strong,:root[data-theme="dark"] .lj-bank-item small{color:#f0f6f4}
+:root[data-theme="dark"] .lj-rail{background:linear-gradient(160deg,#203d44,#253939);border-color:#4b6669}
+:root[data-theme="dark"] .lj-rail-header h2,:root[data-theme="dark"] .lj-step-details strong{color:#f1f6f4}
+:root[data-theme="dark"] .lj-step-details small{color:#b5d1cc}
+:root[data-theme="dark"] .lj-step{color:#e5f1ee}
+:root[data-theme="dark"] .lj-step-current{background:#305458!important;border-color:#62928d}
+:root[data-theme="dark"] .lj-step:hover{background:#ffffff15}
+:root[data-theme="dark"] .lj-step-index{background:#38565b;color:#dff3ee}
+:root[data-theme="dark"] .lj-step-current .lj-step-index{background:#87d2c4;color:#123638}
+:root[data-theme="dark"] .lj-paper{background:linear-gradient(115deg,#24363c,#1d3038);border-color:#4b6263}
+:root[data-theme="dark"] .lj-paper h2,:root[data-theme="dark"] .lj-paragraph,:root[data-theme="dark"] .lj-bullet{color:#eff5f1}
+:root[data-theme="dark"] .lj-page-count{background:#36534f;color:#eff9f0}
+:root[data-theme="dark"] .lj-page-end{color:#c9ddd4;border-color:#49615f}
+:root[data-theme="dark"] .lj-coach,:root[data-theme="dark"] .lj-practice-coach{background:linear-gradient(120deg,#2a4544,#403e32);border-color:#607367}
+:root[data-theme="dark"] .lj-coach h3,:root[data-theme="dark"] .lj-coach p,:root[data-theme="dark"] .lj-coach label,
+:root[data-theme="dark"] .lj-practice-coach h3,:root[data-theme="dark"] .lj-practice-coach p{color:#f0f4ea}
+:root[data-theme="dark"] .lj-coach small,:root[data-theme="dark"] .lj-practice-coach small{color:#c3d6cd}
+:root[data-theme="dark"] .lj-coach textarea{background:#1c3335;border-color:#688581;color:#f2f8f3}
+:root[data-theme="dark"] .lj-coach textarea::placeholder{color:#b5d1c8}
+:root[data-theme="dark"] .lj-pager,:root[data-theme="dark"] .lj-form-pager{background:#233e43;border-color:#506963}
+:root[data-theme="dark"] .lj-pager>button,:root[data-theme="dark"] .lj-form-pager>button{background:#365456;color:#eef7f0}
+:root[data-theme="dark"] .lj-form-pager span{color:#d6efe7}
+:root[data-theme="dark"] .lj-chapter-outcome{background:linear-gradient(105deg,#313f3b,#414335);border-color:#706744}
+:root[data-theme="dark"] .lj-chapter-outcome h3,:root[data-theme="dark"] .lj-chapter-outcome p{color:#f1f2e7}
+:root[data-theme="dark"] .lj-milestone-pending{background:#303c3d;border-color:#617070;color:#d9eae5}
+:root[data-theme="dark"] .lj-rest-link{background:#254248;border-color:#6c938b;color:#e9f4ee}
+:root[data-theme="dark"] .lj-footer-nav a,:root[data-theme="dark"] .lj-footer-nav button{color:#aee4d9}
+:root[data-theme="dark"] .lj-disclaimer{color:#c7dcd7}
+:root[data-theme="dark"] .lj-landing-welcome{background:linear-gradient(120deg,#294747,#414333);border-color:#697063}
+:root[data-theme="dark"] .lj-landing-welcome h2,:root[data-theme="dark"] .lj-landing-welcome p{color:#f2f2e8}
+:root[data-theme="dark"] .lj-gallery{background:linear-gradient(135deg,#274042,#343b35);border-color:#536861}
+:root[data-theme="dark"] .lj-gallery-title h2,:root[data-theme="dark"] .lj-gallery-title p{color:#f0f7f3}
+:root[data-theme="dark"] .lj-badge-card{background:#263b42;border-color:#50706d}
+:root[data-theme="dark"] .lj-badge-card h3,:root[data-theme="dark"] .lj-badge-card p{color:#edf6ef}
+:root[data-theme="dark"] .lj-locked-tag{color:#c8dbd5}
+:root[data-theme="dark"] .lb-chapter-tile h3,:root[data-theme="dark"] .lb-chapter-tile p{color:#f2f7f1}
+:root[data-theme="dark"] .lj-legend span{background:#28464b;border-color:#587772;color:#ecf7f3}
+@media(max-width:1200px){
+ .lj-reading-layout{grid-template-columns:222px minmax(0,1fr)}
+ .lj-head{grid-template-columns:96px 1fr;gap:20px;padding:26px}
+ .lj-orbit{width:96px;height:96px}
+ .lj-orbit span{font-size:40px}
+ .lj-bank-item{padding:11px}
+ .lj-bank-item strong{font-size:20px}
+ .lj-badge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:870px){
+ .lj-reading-layout{grid-template-columns:1fr}
+ .lj-rail{position:relative;top:auto}
+ .lj-rail-header{padding:13px 16px 1px}
+ .lj-rail-header h2{font-size:17px}
+ .lj-steps{display:flex;flex-direction:row;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;gap:8px;padding:11px 13px 15px;scrollbar-width:thin}
+ .lj-step{flex:0 0 210px;min-height:62px;scroll-snap-align:start;background:#ffffff73;border-color:#d9e3da}
+ .lj-step-details strong{font-size:13px}
+ .lj-step-current{background:#fff}
+ .lj-head{grid-template-columns:88px 1fr;gap:16px}
+ .lj-orbit{width:88px;height:88px}
+ .lj-landing-welcome{padding:18px}
+}
+@media(max-width:700px){
+ body{font-size:16px}
+ #main{padding-inline:15px}
+ .topbar{background:#f6faf7}
+ .mobile-brand{font-size:15px;font-weight:850}
+ .bottom-link{font-size:12px;font-weight:850;min-width:59px}
+ .module-grid{grid-template-columns:1fr 1fr}
+ .module-card{min-height:235px}
+ .card-title{font-size:16px}
+ .card-desc{font-size:13px}
+ .card-en{font-size:11px}
+ .section-heading h2{font-size:21px}
+ .lb-chapter-tile h3{font-size:21px}
+ .lj-topnav{font-size:12px}
+ .lj-head{display:block;padding:21px 21px 22px;border-radius:21px}
+ .lj-head-art{display:none}
+ .lj-head h1{font-size:26px}
+ .lj-core{font-size:16px;line-height:1.9}
+ .lj-head-bottom{align-items:stretch}
+ .lj-head-worksheet{width:100%}
+ .lj-bank{gap:7px}
+ .lj-bank-item{flex:1;flex-wrap:wrap;justify-content:center;text-align:center;padding:10px 5px;gap:4px;border-radius:13px}
+ .lj-bank-icon{width:30px;height:30px;font-size:18px}
+ .lj-bank-item strong{font-size:21px}
+ .lj-bank-item small{width:100%;font-size:11px}
+ .lj-bank-compact{gap:5px}
+ .lj-bank-compact .lj-bank-item{padding:6px 4px}
+ .lj-bank-compact .lj-bank-item small{font-size:10px}
+ .lj-paper{padding:21px 20px 20px;border-radius:19px;min-height:310px}
+ .lj-paper h2{font-size:22px}
+ .lj-paragraph{font-size:18px;line-height:2.2;text-align:start}
+ .lj-page-heading .lj-kicker{font-size:10px}
+ .lj-page-count{font-size:11px;padding:5px 8px}
+ .lj-pager,.lj-form-pager{padding:9px}
+ .lj-pager>button,.lj-form-pager>button{padding:9px 11px;font-size:13px}
+ .lj-page-dots{max-width:34%;gap:5px}
+ .lj-page-dots button{width:9px;height:9px;min-height:9px}
+ .lj-page-dots button.active{width:18px}
+ .lj-coach{gap:10px;padding:18px 15px}
+ .lj-coach-symbol,.lj-practice-icon{width:39px;height:39px;border-radius:13px;font-size:22px}
+ .lj-coach h3{font-size:18px}
+ .lj-coach p{font-size:16px}
+ .lj-after-reading{padding:13px 14px}
+ .lj-action-main,.lj-action-secondary{width:100%;font-size:14px}
+ .lj-continue-hint{max-width:100%}
+ .lj-chapter-outcome{padding:17px;flex-direction:column;align-items:stretch}
+ .lj-chapter-outcome h3{font-size:18px}
+ .lj-chapter-outcome button{width:100%}
+ .lj-gallery{padding:18px 13px;border-radius:18px}
+ .lj-gallery-title{align-items:start;flex-direction:column;gap:3px}
+ .lj-gallery-title h2{font-size:22px}
+ .lj-badge-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .lj-badge-card{padding:14px 8px 12px}
+ .lj-badge-image{width:125px;height:125px}
+ .lj-badge-card h3{font-size:14px}
+ .lj-download{font-size:12px}
+ .lj-landing-welcome{padding:17px;align-items:start;gap:12px}
+ .lj-mentor-art{width:48px;height:48px;font-size:26px;border-width:3px}
+ .lj-landing-welcome h2{font-size:19px}
+ .lj-landing-welcome p{font-size:14px}
+ .lj-practice-coach{gap:10px;padding:17px 14px}
+ .lj-practice-coach h3{font-size:19px}
+ .lj-practice-coach p{font-size:15px}
+ .lj-practice-actions .lj-action-main{width:100%}
+ .lj-reward-dialog,.lj-rest-dialog{padding:22px 16px 19px}
+ .lj-reward-dialog h2,.lj-rest-dialog h2{font-size:24px}
+ .lj-reward-glow{font-size:46px}
+ .lj-reward-badge{width:150px;height:150px}
+ .lb-workbook-form{grid-template-columns:1fr}
+}
+@media(max-width:390px){
+ .lj-bank-item strong{font-size:18px}
+ .lj-bank-item small{font-size:10px}
+ .lj-page-count{white-space:normal}
+ .lj-pager>button{padding:8px;font-size:12px}
+ .lj-badge-image{width:104px;height:104px}
+ .lj-landing-welcome{flex-direction:column}
+ .lj-form-pager span{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .lj-rest-orbit{animation:none}
+ .lj-root *, .lj-root *:before,.lj-root *:after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+
+
+/* Final visual audit · dashboard composition, focus, dense small-screen resilience. */
+.lb-home-feature:has(.lj-bank){flex-wrap:wrap;align-items:center}
+.lb-home-feature .lj-bank{flex:1 1 100%;margin:5px 0 0}
+.lb-home-feature .lj-bank-item{flex:1}
+:root[data-theme="dark"] .lj-root .lj-kicker{color:#b4e6dc}
+:root[data-theme="dark"] .lj-root .lj-paper .lj-kicker{color:#ead39b}
+:root[data-theme="dark"] .lj-root .lj-bank-item small{color:#d4e8e2}
+:root[data-theme="dark"] .lj-root .lj-topnav{color:#c8ddd7}
+:root[data-theme="dark"] .lj-root .lj-topnav button{color:#aee4d9}
+:root[data-theme="dark"] .lj-root .lj-rail-header .lj-kicker{color:#b2e8db}
+:root[data-theme="dark"] .lj-root .lj-practice-actions strong{color:#e8f1e7}
+:root[data-theme="dark"] .lj-root .lj-legend span{color:#eff7f2}
+@media(max-width:700px){
+ .lb-home-feature .lj-bank{width:100%;flex-basis:100%}
+ .lb-home-feature .lj-bank-item{min-width:0}
+ .lb-home-feature .lj-bank-item small{font-size:10px}
+}
+
+
+/* Global journey view: the same source-of-truth wallet and collection. */
+.lj-global-progress{padding:23px;border-radius:22px;border:1px solid #c9dfd2;background:linear-gradient(125deg,#e3f0eb,#f4ebdb);margin-bottom:20px}
+.lj-global-progress-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:16px}
+.lj-global-progress-heading h2{font-size:23px;font-weight:900;color:#214648;margin:0 0 5px}
+.lj-global-progress-heading p{font-size:14px;line-height:1.9;color:#496568;margin:0}
+.lj-global-progress .lj-bank{margin:0}
+:root[data-theme="dark"] .lj-global-progress{background:linear-gradient(120deg,#244a48,#383d35);border-color:#5c756b}
+:root[data-theme="dark"] .lj-global-progress-heading h2,:root[data-theme="dark"] .lj-global-progress-heading p{color:#eef5ee}
+@media(max-width:700px){.lj-global-progress{padding:17px 13px}.lj-global-progress-heading{align-items:stretch;flex-direction:column}.lj-global-progress-heading h2{font-size:20px}.lj-global-progress-heading .lb-button{width:100%}}
