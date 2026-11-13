@@ -90,7 +90,8 @@ async function actionRouter(input:Record<string,unknown>){
   if(error||data!==true)return fail("invalid_credentials",401);
   return result({ok:true,role:"teacher",...await grantSession("teacher",null)});
  }
- if(action==="redeem"){
+ if(action==="redeem"){return fail("registration_by_student_number_required",410)}
+ if(false&&action==="deprecatedInviteRedeem"){
   const code=String(input.invite||"").trim().toLowerCase();
   const name=safeName(input.name);
   if(!/^[0-9a-f]{32}$/.test(code)||!name)return fail("invalid_invitation");
