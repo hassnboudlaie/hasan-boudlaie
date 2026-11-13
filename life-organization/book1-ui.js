@@ -199,7 +199,7 @@ function worksheetPage(n,lang){
    '<p>'+E(T(lang,f[3],f[4]))+'</p>'+
    '<textarea id="'+id+'" data-lb-field="'+E(f[0])+'" data-chapter="'+n+'" rows="4" maxlength="1800" placeholder="'+E(T(lang,"مشاهده خود را بنویسید؛ «نمی‌دانم» هم یک پاسخ معتبر است.","Write your observation. Saying “I don’t know yet” is valid."))+'">'+E(fieldValue(n,f[0]))+'</textarea></div>';
  }).join("");
- const next=n<3?'<button class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'/workbook">'+T(lang,"ابزار فصل بعدی","Next worksheet")+'</button>:'<button class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"جمع‌بندی سه فصل","Review three chapters")+'</button>';
+ const next=n<3?'<button class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'/workbook">'+T(lang,"ابزار فصل بعدی","Next worksheet")+'</button>':'<button class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"جمع‌بندی سه فصل","Review three chapters")+'</button>';
  return '<div class="lb-root lb-workbook-page">'+ribbon(lang,n)+masthead(lang)+
  '<section class="lb-worksheet-hero"><div class="lb-eyebrow">'+T(lang,"WORKBOOK · فصل "+cnum(n),"WORKBOOK · CHAPTER "+cnum(n))+'</div><h1>'+title+'</h1>'+
  '<p>'+T(lang,"این یک برگه مشاهده و بازاندیشی است، نه آزمون یا نمره زندگی. پاسخ‌ها فقط در دستگاه شما ذخیره می‌شوند.","This is a learning and reflection worksheet, not a diagnostic test or life score. Answers remain on this device.")+'</p>'+
