@@ -35,6 +35,7 @@ async function main(){
    page.on("pageerror",err=>errors.push(err.message));
    await page.goto(home+"#module/1",{waitUntil:"domcontentloaded"});
    await page.locator(".lb-landing .lj-bank").waitFor();
+   if(await page.locator("#brand-splash").count())await page.locator("#brand-splash").waitFor({state:"detached"});
    assert.equal(await page.locator(".lb-chapter-tile").count(),3,"three chapter tiles");
    assert.equal(await page.locator(".lj-badge-card").count(),4,"four badge collection slots");
    await page.screenshot({path:path.join(SHOTS,item.name+"-landing.png"),fullPage:true});
