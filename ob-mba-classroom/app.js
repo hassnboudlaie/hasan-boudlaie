@@ -46,7 +46,7 @@ return '<div class="page home-page student-redesign">'
 +'</div>'}
 
 function sessionsStudent(){return '<section class="page"><div class="page-head"><div><h2>جلسات درس</h2></div></div><div class="card stack">'+sessionTiles()+'</div></section>'}
-const sessionTabs=[["theory","مفاهیم"],["slides","اسلایدها"],["examples","مثال‌ها"],["case","کیس واقعی"],["activity","تمرین و آزمون"],["reflection","تکلیف فردی"]];
+const sessionTabs=[["theory","مفاهیم"],["slides","اسلایدها"],["examples","مثال‌ها"],["case","کیس مدیریتی"],["activity","تمرین و آزمون"],["reflection","تکلیف فردی"]];
 const studentWork=s=>{state.studentWork=state.studentWork||{};if(!state.studentWork[s.id])state.studentWork[s.id]={quizAnswers:{},case:"",reflection:""};return state.studentWork[s.id]};
 const formattedLessonLine=line=>{const t=String(line).trim();const m=t.match(/^([۰-۹0-9]+[.)-])\s*(.+)$/);if(m)return '<p class="lesson-line"><strong class="lesson-order">'+esc(m[1])+'</strong> '+esc(m[2])+'</p>';const pos=t.indexOf(":");if(pos>0&&pos<43)return '<p class="lesson-line"><strong>'+esc(t.slice(0,pos+1))+'</strong> '+esc(t.slice(pos+1).trim())+'</p>';return '<p class="lesson-line">'+esc(t)+'</p>'};
 const lessonSection=(heading,value,opened=false)=>value?'<details class="lesson-panel" '+(opened?'open':'')+'><summary><strong>'+esc(heading)+'</strong></summary><div class="lesson-panel-body">'+String(value).split("\n").filter(Boolean).map(formattedLessonLine).join("")+'</div></details>':"";
