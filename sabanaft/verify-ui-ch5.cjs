@@ -12,7 +12,8 @@ const appShell=doc.querySelector('.app-shell'),sideNav=doc.getElementById('model
 assert.equal(sideNav.parentElement,appShell,'model drawer must be a sibling of the main app, not its wrapper');
 assert.equal(main.parentElement,appShell,'main must not be nested under a hidden drawer or disclosure');
 assert.equal(home.parentElement,main,'Home view must be a direct child of main to render on mobile');
-assert.equal(main.querySelectorAll(':scope > section.view').length,9,'all nine routed screens must remain direct main children');
+assert.equal(main.querySelectorAll(':scope > section.view').length,10,'existing nine routes and integrated journey must remain direct main children');
+assert.ok(doc.getElementById('journeyView')?.parentElement===main,'new journey must be a direct route, not a second app');
 assert.equal(sideNav.querySelectorAll('details').length,0,'model menu must not contain orphaned coaching disclosures');
 const coachingSide=doc.querySelector('#coachView .cj-side'),support=doc.querySelector('#coachView .cj-support-options');
 assert.equal(support.parentElement,coachingSide,'optional coach disclosure must stay within the Coach screen');
