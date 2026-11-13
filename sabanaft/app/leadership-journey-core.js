@@ -65,9 +65,9 @@
     if(s.mode==="study"||(s.hintsUsed||[]).includes(id))return 0;
     return (s.hintsUsed||[]).length<2?0:2;
   }
-  function grantHint(s,id){
+  function grantHint(s,id,now){
     if(!integer(id)||id<0||id>9)return false;
-    if(s.mode==="competitive"&&(s.finished||expired(s)||s.pause.since))return false;
+    if(s.mode==="competitive"&&(s.finished||expired(s,now)||s.pause.since))return false;
     if(!s.hintsUsed.includes(id))s.hintsUsed.push(id);
     return true;
   }
