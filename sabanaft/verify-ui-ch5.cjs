@@ -24,7 +24,7 @@ assert.ok(cards.every(c=>c.tagName==='BUTTON'),'all four destinations must be bu
 assert.ok(cards.every((c,i)=>c.querySelector('.saba-tile-icon')?.textContent.trim()===String(i+1).replace(/[0-9]/g,n=>'۰۱۲۳۴۵۶۷۸۹'[Number(n)])),'four numbered book-model stages, not arbitrary app activities');
 assert.ok(cards.every(c=>c.querySelector('strong')),'short readable labels');
 assert.equal(home.querySelectorAll('h1').length,1,'one clear product heading');
-assert.match(home.querySelector('h1').textContent,/رهبری بازتابی من/);
+assert.match(home.querySelector('h1').textContent,/مهارت‌های رهبری من/,'approved independent product name');
 assert.equal(home.querySelectorAll('.saba-home-photo img').length,1,'real photographic cover exists');
 assert.match(home.querySelector('.saba-home-photo img').getAttribute('src'),/sabanaft-meeting\.jpg$/);
 assert.ok(home.querySelector('.saba-home-scrim'),'contrast overlay must be present');
