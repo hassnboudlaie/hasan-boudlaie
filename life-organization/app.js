@@ -21,7 +21,7 @@
       workbookTeaser:"دفتر کار شخصی شما",workbookTeaserDesc:"یادداشت‌ها و Reflectionهای هر ماژول، در یک فضای منظم.",openWorkbook:"ورود به دفتر کار",
       moduleDescription:"این فضا فعلاً یک نمای اولیه از ماژول است. ابزارها و محتوای نهایی مطابق کتاب‌های مجموعه توسعه پیدا می‌کنند.",moduleTag:"MODULE",yourWorkspace:"فضای اختصاصی این ماژول",moduleOverview:"نمای کلی",moduleAreas:"حوزه‌های اصلی",moduleReflections:"یادداشت و بازاندیشی",moduleReflectionDesc:"نخستین فکر، سؤال یا مشاهده خود را در این حوزه بنویسید. این یک یادداشت شخصی است، نه آزمون یا ارزیابی.",reflectionPlaceholder:"چه چیزی در این بخش از زندگی برای من مهم‌تر است؟",localSave:"یادداشت در همین مرورگر و دستگاه ذخیره می‌شود.",startModule:"شروع کاوش این ماژول",continueModule:"ادامه کاوش",moduleStarted:"ماژول به مسیر شما اضافه شد.",saved:"ذخیره شد",coming:"ابزارها و Assessmentهای تخصصی در نسخه‌های بعد اضافه می‌شوند.",
       allModulesTitle:"ماژول‌های سازمان زندگی",allModulesDesc:"شش فضای مستقل، با تجربه کاربری هماهنگ و امکان حرکت آزاد میان آن‌ها.",moduleBrowse:"انتخاب و ورود به یک ماژول",
-      workbookTitle:"دفتر کار من",workbookDesc:"یک نمای یکپارچه از یادداشت‌های شخصی شش ماژول. محتوای Workbook علمی در مراحل بعد افزوده می‌شود.",notesCount:"ماژول دارای یادداشت",yourNotes:"یادداشت‌های من",noNote:"هنوز یادداشتی ثبت نشده است",openAndWrite:"باز کردن ماژول",exportNotes:"دریافت نسخه پشتیبان",exportDone:"فایل یادداشت‌ها دریافت شد.",localNotice:"این نسخه پیش‌نمایش است. داده‌ها فقط در مرورگر فعلی ذخیره می‌شوند؛ برای استفاده از چند دستگاه یا اطلاعات حساس طراحی نشده است.",
+      workbookTitle:"دفتر کار من",workbookDesc:"یادداشت‌های شش ماژول و دفتر کار کامل سه فصل نخست جلد اول، در یک فضای واحد. ابزارهای جلدهای بعد به‌تدریج اضافه می‌شوند.",notesCount:"ماژول دارای یادداشت",yourNotes:"یادداشت‌های من",noNote:"هنوز یادداشتی ثبت نشده است",openAndWrite:"باز کردن ماژول",exportNotes:"دریافت نسخه پشتیبان",exportDone:"فایل یادداشت‌ها دریافت شد.",localNotice:"این نسخه پیش‌نمایش است. داده‌ها فقط در مرورگر فعلی ذخیره می‌شوند؛ برای استفاده از چند دستگاه یا اطلاعات حساس طراحی نشده است.",
       progressTitle:"مسیر من",progressDesc:"یک نمای ساده از ماژول‌هایی که باز کرده‌اید؛ بدون نمره‌دهی یا رتبه‌بندی زندگی.",modulesExplored:"ماژول‌های شروع‌شده",modulesRemaining:"ماژول‌های باقی‌مانده",notesWritten:"یادداشت‌های ثبت‌شده",moduleStatuses:"وضعیت ماژول‌ها",pathNotice:"این شاخص‌ها صرفاً وضعیت استفاده از اپلیکیشن را نشان می‌دهند، نه کیفیت یا موفقیت زندگی شما.",
       profileTitle:"فضای شخصی من",profileDesc:"تنظیمات ساده نسخه اولیه — روی همین دستگاه.",displayName:"نام نمایشی",namePlaceholder:"نام دلخواه",saveName:"ذخیره نام",nameSaved:"نام ذخیره شد.",appearance:"ظاهر اپلیکیشن",theme:"حالت نمایش",language:"زبان",light:"روشن",dark:"تیره",system:"مطابق دستگاه",privacy:"حریم خصوصی نسخه اولیه",privacyDesc:"این نسخه حساب کاربری، سرور ذخیره‌سازی یا همگام‌سازی ندارد. نوشته‌های شما فقط در Local Storage مرورگر نگهداری می‌شوند؛ برای داده محرمانه مناسب نیست.",install:"نصب روی دستگاه",reset:"پاک کردن داده‌های این نسخه",resetAsk:"همه یادداشت‌ها و تنظیمات محلی این اپلیکیشن پاک شود؟ این کار برگشت‌پذیر نیست.",resetDone:"داده‌های محلی پاک شد.",installation:"نصب اپلیکیشن",installHelp:"در Chrome از منوی سه‌نقطه گزینه Install app یا Add to Home screen را انتخاب کنید. در iPhone از Share و سپس Add to Home Screen استفاده کنید.",gotIt:"متوجه شدم",
       greeting:"سلام",anonymous:"من",backHome:"بازگشت به خانه",noNavigation:"صفحه یافت نشد",openModule:"ورود به ماژول",
@@ -35,7 +35,7 @@
       workbookTeaser:"Your personal workbook",workbookTeaserDesc:"Notes and reflections from every module, organized in one place.",openWorkbook:"Open workbook",
       moduleDescription:"This is an early module preview. Full content and tools will follow the book series.",moduleTag:"MODULE",yourWorkspace:"Your module workspace",moduleOverview:"Overview",moduleAreas:"Focus areas",moduleReflections:"Notes & reflection",moduleReflectionDesc:"Capture an early thought, question or observation. This is a personal note, not an assessment.",reflectionPlaceholder:"What matters most to me in this part of life?",localSave:"Saved only in this browser on this device.",startModule:"Start exploring",continueModule:"Continue exploring",moduleStarted:"Module added to your journey.",saved:"Saved",coming:"Dedicated tools and assessments will arrive in later versions.",
       allModulesTitle:"Life Organization modules",allModulesDesc:"Six independent spaces with a consistent experience and flexible navigation.",moduleBrowse:"Choose a module",
-      workbookTitle:"My Workbook",workbookDesc:"One place for personal notes across all six modules. The research-based Workbook will be added in later releases.",notesCount:"modules with notes",yourNotes:"My notes",noNote:"No notes yet",openAndWrite:"Open module",exportNotes:"Export my notes",exportDone:"Notes exported.",localNotice:"This is a preview. Data is only stored in this browser; it is not suitable for sensitive data or multi-device use.",
+      workbookTitle:"My Workbook",workbookDesc:"Your notes across six modules plus the complete linked workbook for the first three chapters of Book One. Later volumes will be added progressively.",notesCount:"modules with notes",yourNotes:"My notes",noNote:"No notes yet",openAndWrite:"Open module",exportNotes:"Export my notes",exportDone:"Notes exported.",localNotice:"This is a preview. Data is only stored in this browser; it is not suitable for sensitive data or multi-device use.",
       progressTitle:"My Journey",progressDesc:"A simple view of the modules you have begun, without life scores or rankings.",modulesExplored:"Modules explored",modulesRemaining:"Modules remaining",notesWritten:"Notes created",moduleStatuses:"Module status",pathNotice:"These indicators track app usage, not the quality or success of your life.",
       profileTitle:"My space",profileDesc:"Basic settings for the early preview, on this device.",displayName:"Display name",namePlaceholder:"Your preferred name",saveName:"Save name",nameSaved:"Name saved.",appearance:"Appearance",theme:"Theme",language:"Language",light:"Light",dark:"Dark",system:"Follow device",privacy:"Privacy in this preview",privacyDesc:"No account, cloud storage or syncing is available. Notes stay in browser local storage and are not suitable for confidential information.",install:"Install the app",reset:"Clear preview data",resetAsk:"Permanently erase notes and preferences saved in this browser?",resetDone:"Local data cleared.",installation:"Install the app",installHelp:"In Chrome, choose Install app or Add to Home screen from the browser menu. On iPhone, use Share > Add to Home Screen.",gotIt:"Got it",
       greeting:"Hello",anonymous:"Me",backHome:"Back home",noNavigation:"Page not found",openModule:"Open module",
@@ -88,8 +88,8 @@
     return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(map[name]||map.spark)+'</svg>';
   }
   const moduleName=m=>tr(m.fa,m.en), moduleShort=m=>tr(m.shortFa,m.shortEn),moduleIntro=m=>tr(m.introFa,m.introEn);
-  const started=id=>state.started.includes(id);
-  const hasNote=id=>Boolean(typeof state.notes[id]==="string"&&state.notes[id].trim());
+  const started=id=>state.started.includes(id)||(id===1&&window.LifeBook&&window.LifeBook.progress().some(p=>p.reviewed>0||p.filled>0));
+  const hasNote=id=>Boolean(typeof state.notes[id]==="string"&&state.notes[id].trim())||(id===1&&window.LifeBook&&window.LifeBook.progress().some(p=>p.filled>0));
   const moduleIcon=m=>'<span class="module-icon">'+icons(m.icon)+'</span>';
   const status=id=>'<span class="status '+(started(id)?"active":"")+'">'+(started(id)?t("started"):t("ready"))+'</span>';
   const navItems=[["home","home"],["modules","modules"],["workbook","workbook"],["coach","coach"],["progress","progress"],["profile","profile"]];
@@ -97,6 +97,8 @@
     const h=decodeURIComponent(location.hash.replace(/^#/,""))||"home";
     const parts=h.split("/");
     if(parts[0]==="module"&&/^[1-6]$/.test(parts[1]||""))return {page:"module",id:Number(parts[1])};
+    if(parts[0]==="book1"&&parts[1]==="workbook"&&parts.length===2)return {page:"book1",id:0,mode:"workbook"};
+    if(parts[0]==="book1"&&/^[1-3]$/.test(parts[1]||"")&&(parts.length===2||(parts.length===3&&parts[2]==="workbook")))return {page:"book1",id:Number(parts[1]),mode:parts[2]==="workbook"?"workbook":"read"};
     if(["home","modules","workbook","coach","progress","profile"].includes(h))return {page:h};
     return {page:"home"};
   }
@@ -120,7 +122,7 @@
     return '<section class="hero"><div class="hero-copy"><div class="eyebrow">'+t("homeEyebrow")+'</div>'+
       '<h1>'+t("homeTitle")+'</h1><p class="hero-sub">'+t("homeDesc")+'</p><div class="hero-buttons">'+
       '<button class="btn btn-hero" data-route="module/'+next.id+'">'+t("startJourney")+' <span aria-hidden="true">↗</span></button>'+
-      '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+
+      '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+(window.LifeBook?window.LifeBook.homeFeature(state.lang):'')+
       '<section><div class="section-heading"><div><div class="section-kicker">'+t("moduleKicker")+'</div><h2>'+t("modulesHeading")+'</h2><p>'+t("modulesDesc")+'</p></div><button class="inline-link" data-route="modules">'+t("viewAll")+' ↗</button></div>'+
       '<div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div></section>'+
       '<section class="life-coach-teaser"><div><span class="section-kicker">MY AI LIFE COACH</span><h2>'+(state.lang==="fa"?"مربی هوش مصنوعی زندگی من":"My AI Life Coach")+'</h2><p>'+(state.lang==="fa"?"فضایی برای Reflection، انتخاب آگاهانه و طراحی زندگی؛ به‌زودی.":"A place to reflect, clarify choices and move forward — coming soon.")+'</p></div><button type="button" class="btn btn-primary" data-route="coach">'+(state.lang==="fa"?"مشاهده · به‌زودی":"Explore · Coming soon")+' ↗</button></section>'+
@@ -131,6 +133,7 @@
     '<div class="section-heading"><div><h2>'+t("moduleBrowse")+'</h2></div></div><div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div>';
   }
   function modulePage(id){
+    if(id===1&&window.LifeBook)return window.LifeBook.landing(state.lang);
     const m=MODULES[id-1];
     return '<section class="module-hero module-'+id+'"><div class="module-hero-main">'+moduleIcon(m)+'<div class="module-overline">'+t("moduleTag")+' 0'+id+' / 06</div>'+
       '<h1>'+esc(moduleName(m))+'</h1><div class="en-title">'+esc(m.en)+'</div><p>'+esc(moduleIntro(m))+'</p></div>'+
@@ -144,15 +147,16 @@
   }
   function workbookPage(){
     const count=MODULES.filter(m=>hasNote(m.id)).length;
+    const bookCTA=window.LifeBook?'<div class="lb-journal-teaser"><div><h2>'+tr('دفتر کار سه فصل نخست جلد اول','Book One · Chapters 1–3 Workbook')+'</h2><p>'+tr('نمای فوری، معیارهای اولیه و مقایسه وضع موجود و مناسب؛ با ذخیره محلی و خروجی قابل دریافت.','Your snapshot, fit criteria and current/suitable-state comparison, with local save and downloadable outputs.')+'</p></div><button class="lb-button lb-button-primary" type="button" data-route="book1/workbook">'+tr('ورود به دفتر کار سه فصل','Open the three-chapter workbook')+'</button></div>':'';
     return '<div class="page-lead"><p class="section-kicker">'+t("teaserTag")+'</p><h1>'+t("workbookTitle")+'</h1><p>'+t("workbookDesc")+'</p></div>'+
-      '<div class="stat-strip"><div class="stat-block"><b>'+count+' / 6</b><span>'+t("notesCount")+'</span></div></div>'+
+      bookCTA+'<div class="stat-strip"><div class="stat-block"><b>'+count+' / 6</b><span>'+t("notesCount")+'</span></div></div>'+
       '<div class="section-heading"><h2>'+t("yourNotes")+'</h2><button class="btn btn-outline" data-action="export">'+icons("download")+t("exportNotes")+'</button></div>'+
       '<div class="workbook-list">'+MODULES.map(m=>'<button class="workbook-item module-'+m.id+'" data-route="module/'+m.id+'">'+moduleIcon(m)+
-      '<span><strong>'+esc(moduleName(m))+'</strong><small>'+esc(hasNote(m.id)?state.notes[m.id].trim().slice(0,67):t("noNote"))+'</small></span><span class="card-arrow">↗</span></button>').join("")+'</div>'+
+      '<span><strong>'+esc(moduleName(m))+'</strong><small>'+esc(hasNote(m.id)?(state.notes[m.id]||tr("پاسخ‌های ابزارهای سه فصل جلد اول","Book One worksheet responses")).trim().slice(0,67):t("noNote"))+'</small></span><span class="card-arrow">↗</span></button>').join("")+'</div>'+
       '<div class="feature-callout"><p>'+t("localNotice")+'</p></div>';
   }
   function progressPage(){
-    const count=state.started.length,n=MODULES.filter(m=>hasNote(m.id)).length;
+    const count=MODULES.filter(m=>started(m.id)).length,n=MODULES.filter(m=>hasNote(m.id)).length;
     return '<div class="page-lead"><p class="section-kicker">MY JOURNEY</p><h1>'+t("progressTitle")+'</h1><p>'+t("progressDesc")+'</p></div>'+
       '<div class="stat-strip"><div class="stat-block"><b>'+count+' / 6</b><span>'+t("modulesExplored")+'</span></div>'+
       '<div class="stat-block"><b>'+(6-count)+'</b><span>'+t("modulesRemaining")+'</span></div><div class="stat-block"><b>'+n+'</b><span>'+t("notesWritten")+'</span></div></div>'+
@@ -188,15 +192,15 @@
     const themeBtn=$("#theme-btn"); if(themeBtn)themeBtn.innerHTML=icons(dark?"sun":"moon");
   }
   function render(){
-    const r=route(), active=r.page==="module"?"modules":r.page;
+    const r=route(), active=(r.page==="module"||r.page==="book1")?"modules":r.page;
     document.documentElement.lang=state.lang;
     document.documentElement.dir=state.lang==="fa"?"rtl":"ltr";
     document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
     $("#side-nav").innerHTML=navHtml(active);
     $("#bottom-nav").innerHTML=navHtml(active,true);
-    const crumb=r.page==="module"?moduleName(MODULES[r.id-1]):t(r.page==="home"?"homeCrumb":r.page);
+    const crumb=r.page==="module"?moduleName(MODULES[r.id-1]):r.page==="book1"?(state.lang==="fa"?"جلد اول / دیدن سازمان زندگی":"Book One / Seeing Your Life Organization"):t(r.page==="home"?"homeCrumb":r.page);
     $("#breadcrumbs").innerHTML='<span>'+t("home")+'</span><span class="crumb-sep">/</span><strong>'+esc(crumb)+'</strong>';
-    $("#page").innerHTML=r.page==="module"?modulePage(r.id):pageFn[r.page]();
+    $("#page").innerHTML=r.page==="module"?modulePage(r.id):r.page==="book1"&&window.LifeBook?(r.id===0?window.LifeBook.workbook(state.lang):r.mode==="workbook"?window.LifeBook.worksheet(r.id,state.lang):window.LifeBook.chapter(r.id,state.lang)):pageFn[r.page]();
     $("#language-btn").textContent=state.lang==="fa"?"EN":"فا";
     $("#avatar-letter").textContent=(state.name.trim()||t("anonymous")).charAt(0).toUpperCase();
     $("#install-title").textContent=t("installation");$("#install-body").textContent=t("installHelp");
@@ -209,7 +213,7 @@
     toastTimeout=setTimeout(()=>el.classList.remove("visible"),2400);
   }
   function downloadNotes(){
-    const payload={app:"The Life Organization",exportedAt:new Date().toISOString(),formatVersion:1,notes:state.notes,startedModules:state.started};
+    const payload={app:"The Life Organization",exportedAt:new Date().toISOString(),formatVersion:2,notes:state.notes,startedModules:state.started,book1:window.LifeBook?window.LifeBook.exportData():null};
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
     const a=document.createElement("a");a.href=url;a.download="life-organization-notes.json";
     document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(t("exportDone"));
@@ -226,7 +230,7 @@
       }
       case "save-name":state.name=($("#name-input")?.value||"").trim().slice(0,80);persist();render();toast(t("nameSaved"));break;
       case "export":downloadNotes();break;
-      case "reset":if(confirm(t("resetAsk"))){const lang=state.lang,theme=state.theme;state=blank();state.lang=lang;state.theme=theme;persist();render();toast(t("resetDone"))}break;
+      case "reset":if(confirm(t("resetAsk"))){const lang=state.lang,theme=state.theme;state=blank();state.lang=lang;state.theme=theme;if(window.LifeBook)window.LifeBook.resetAll();persist();render();toast(t("resetDone"))}break;
       case "install":if(installPrompt){installPrompt.prompt();installPrompt.userChoice.finally(()=>{installPrompt=null})}else $("#install-dialog").showModal();break;
     }
   });

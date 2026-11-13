@@ -1,6 +1,6 @@
-/* The Life Organization v0.1.2 service worker */
-const CACHE="life-org-preview-v014";
-const ASSETS=["./","./index.html","./styles.css?v=0.1.2","./app.js?v=0.1.2","./icon.svg","./icon-192.png","./icon-512.png","./manifest.webmanifest?v=20261029r3"];
+/* The Life Organization v0.2.0 service worker */
+const CACHE="life-org-book1-v020";
+const ASSETS=["./","./index.html","./styles.css?v=0.1.2","./book1.css?v=0.2.0","./book1-content.js?v=0.2.0","./book1-ui.js?v=0.2.0","./app.js?v=0.2.0","./icon.svg","./icon-192.png","./icon-512.png","./manifest.webmanifest?v=20261029r3"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
