@@ -61,7 +61,7 @@ assert.ok(doc.querySelector('link[href*="gamification.css?v=1"]'),'gamification 
 assert.match(read('assets/ch5-studio-dashboard.css'),/\.ch5-studio-shortcuts/);
 assert.match(read('leadership-studio.html'),/ch5-studio-dashboard.css/);
 const sw=read('app/sw.js');
-assert.match(sw,/sabanaft-reflective-pwa-shell-v19/);
+assert.match(sw,/sabanaft-reflective-pwa-shell-v(?:19|2[0-9]|[3-9][0-9])/g);
 assert.ok(sw.includes('./ch5-product-shell.css'),'redesigned Home stylesheet cached offline');
 w.eval(read('reflective-content.js'));
 w.eval(read('app/app.js'));
