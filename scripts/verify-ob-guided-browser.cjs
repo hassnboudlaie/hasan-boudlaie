@@ -49,6 +49,7 @@ async function run(){
   });
   const page=await ctx.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(e.message));
+  page.on("console",message=>{if(message.text().includes("PRESENTER_CHANGE"))console.log(message.text())});
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor();
   assert.equal(await page.locator(".learning-card").count(),4,"Four classroom learning routes");
