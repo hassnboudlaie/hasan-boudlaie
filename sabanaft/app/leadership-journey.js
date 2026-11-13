@@ -13,7 +13,7 @@ const fa=n=>Number(n||0).toLocaleString("fa-IR");
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,Number(n)||0));
 const stages=["جهت‌گیری و مسئله","مفهوم کلیدی اول","تصمیم موقعیتی اول","شواهد و بافت","خودارزیابی بازتابی","تحلیل رفتار رهبری","تصمیم موقعیتی دوم","تمرین گفت‌وگو","تعهد و پیگیری","آزمون فهم و جمع‌بندی"];
 const weights=[4,6,18,8,2,8,18,10,10,16];
-let store={version:1,runs:{},history:[]},activeSession=1,guideVisible=false,storeError=false;
+let store={version:1,runs:{},history:[]},activeSession=1,guideVisible=false,storeError=false,restartApproved=false;
 try{const x=JSON.parse(localStorage.getItem(KEY)||"null");if(x&&x.version===1&&x.runs&&typeof x.runs==="object"){store={version:1,runs:x.runs,history:Array.isArray(x.history)?x.history:[]}}}catch(e){storeError=true}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));storeError=false;return true}catch(e){storeError=true;return false}}
 function session(id){return COURSE.find(s=>s.id===Number(id))}
@@ -122,7 +122,7 @@ function drawBadge(s,r,print){const p=score(r),c=document.createElement("canvas"
  ctx.font="26px Tahoma";ctx.fillText("جلسه "+fa(s.id)+" · "+s.title.slice(0,32),500,529);
  ctx.font="18px Tahoma";ctx.fillText("امتیاز خام "+fa(p.raw)+" | کسر راهنما "+fa(p.guide)+" | کسر زمان "+fa(p.overtime),500,580);
  const url=c.toDataURL("image/png");if(print){const win=g.open("","_blank");if(!win){alert("برای ذخیره PDF اجازه بازشدن صفحه چاپ را بدهید.");return}win.document.write('<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>نشان رهبری من</title><style>body{margin:0;display:grid;place-items:center;min-height:100vh}img{max-width:100%;height:auto}@page{size:A4 landscape;margin:12mm}</style></head><body><img src="'+url+'" onload="window.print()" alt="نشان مهارت‌های رهبری من"></body></html>');win.document.close()}else{const a=document.createElement("a");a.href=url;a.download="my-leadership-skills-session-"+s.id+".png";a.click()}}
-function render(id,showIntro=false){const s=session(id);if(!s||!CASES[s.id])return;activeSession=s.id;normalizePause(runOf(id));
+function render(id,showIntro=false){if(!showIntro)restartApproved=false;const s=session(id);if(!s||!CASES[s.id])return;activeSession=s.id;normalizePause(runOf(id));
  const r=runOf(id);guideVisible=false;
  if(!r||showIntro){root.innerHTML='<div class="lj-wrap"><div class="lj-pagebar"><button data-action="back" type="button">→ بازگشت به جلسه</button><img src="./assets/my-leadership-icon.svg" alt=""><strong>مهارت‌های رهبری من</strong></div>'+overview(s)+'</div>';return}
  let html=header(s,r);
@@ -139,7 +139,8 @@ function render(id,showIntro=false){const s=session(id);if(!s||!CASES[s.id])retu
  root.innerHTML='<div class="lj-wrap">'+html+'</div>';
 }
 function start(mode){const old=runOf(activeSession);
- if(old?.status==="active"&&!confirm("با شروع یک مسیر جدید، پاسخ‌ها و پیشرفت مسیر ناتمام این جلسه پاک می‌شوند. ادامه می‌دهید؟"))return;
+ if(old?.status==="active"&&!restartApproved&&!confirm("با شروع یک مسیر جدید، پاسخ‌ها و پیشرفت مسیر ناتمام این جلسه پاک می‌شوند. ادامه می‌دهید؟"))return;
+ restartApproved=false;
  store.runs[activeSession]=fresh(activeSession,mode);if(!save())alert("هشدار: داده‌ها در حافظه مرورگر ذخیره نشدند.");
  render(activeSession)}
 function switchStudy(){const r=runOf(activeSession);if(!r||r.mode==="study")return;
@@ -200,7 +201,7 @@ root.addEventListener("click",e=>{const b=e.target.closest("[data-action]");if(!
  if(a==="startStudy")return start("study");
  if(a==="resumeJourney")return render(activeSession);
  if(a==="studySwitch")return switchStudy();
- if(a==="restart"){const r=runOf(activeSession);if(r?.status!=="completed"&&!confirm("شروع مجدد، پیشرفت ناتمام این جلسه را پاک می‌کند. سوابق تکمیل‌شده محفوظ می‌مانند. ادامه می‌دهید؟"))return;return render(activeSession,true)}
+ if(a==="restart"){const r=runOf(activeSession);if(r?.status!=="completed"&&!confirm("شروع مجدد، پیشرفت ناتمام این جلسه را پاک می‌کند. سوابق تکمیل‌شده محفوظ می‌مانند. ادامه می‌دهید؟"))return;restartApproved=true;return render(activeSession,true)}
  if(a==="pause")return pause();
  if(a==="resumeTime")return resumeTime();
  if(a==="openGuide")return openGuide();
