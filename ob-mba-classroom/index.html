@@ -7,12 +7,14 @@
 <link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="./style.css?v=11">
-<link rel="stylesheet" href="./guided-learning.css?v=1">
+<link rel="stylesheet" href="./guided-learning.css?v=1"
+<link rel="stylesheet" href="./access-gate.css?v=1">
 <title>مدیریت رفتار سازمانی | MBA دانشگاه علامه طباطبایی</title>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
-<div id="site" class="site">
+<div id="entryGate" class="entrance-root" aria-live="polite"><p>بررسی عضویت…</p></div>
+<div id="site" class="site" hidden>
   <header class="mast">
     <div class="brand"><div class="brand-emblem" aria-hidden="true">OB</div><div class="brand-copy"><span class="eyebrow">MBA · دانشگاه علامه طباطبایی</span><h1>مدیریت رفتار سازمانی</h1></div></div>
     <div class="header-actions">
@@ -29,6 +31,6 @@
   <footer class="footer">مدیریت رفتار سازمانی · MBA</footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-<script defer src="./course-content.js?v=1"></script><script defer src="./lesson-enrichment.js?v=1"></script><script defer src="./guided-learning.js?v=1"></script><script defer src="./app.js?v=11"></script>
+<script defer src="./access-gate.js?v=1"></script>
 <script>if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));</script>
 </body></html>
