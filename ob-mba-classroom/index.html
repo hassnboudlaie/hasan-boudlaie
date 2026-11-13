@@ -2,31 +2,32 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#152740"><meta name="description" content="کلاس مدیریت رفتار سازمانی MBA دانشگاه علامه طباطبایی — برنامه آموزشی تعاملی">
+<meta name="theme-color" content="#faf9f5"><meta name="description" content="کلاس مدیریت رفتار سازمانی MBA دانشگاه علامه طباطبایی — برنامه آموزشی تعاملی">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="stylesheet" href="./style.css?v=8">
+<link rel="stylesheet" href="./style.css?v=10">
 <title>مدیریت رفتار سازمانی | MBA دانشگاه علامه طباطبایی</title>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
 <div id="site" class="site">
   <header class="mast">
-    <div class="brand"><div class="brand-emblem" aria-hidden="true">OB</div><div class="brand-copy"><span class="eyebrow">دانشگاه علامه طباطبایی · دوره MBA</span><h1>مدیریت رفتار سازمانی</h1><span class="brand-sub" lang="en" dir="ltr">Organizational Behavior</span></div></div>
-    <div class="header-actions"><a class="ghost header-hub" href="../hub/" aria-label="بازگشت به اپ‌های من">اپ‌های من</a><a class="ghost install-header" href="./install.html" aria-label="نصب اپلیکیشن روی گوشی">نصب اپ</a><button id="themeToggle" type="button" class="icon-btn" aria-label="تغییر حالت روشن و تاریک">◐</button></div>
+    <div class="brand"><div class="brand-emblem" aria-hidden="true">OB</div><div class="brand-copy"><span class="eyebrow">MBA · دانشگاه علامه طباطبایی</span><h1>مدیریت رفتار سازمانی</h1></div></div>
+    <div class="header-actions">
+      <details class="demo-role-menu"><summary id="roleSummary" aria-label="انتخاب نمای اپ">دانشجو</summary><div class="rolebar" id="rolebar" role="group" aria-label="انتخاب نمای کلاس">
+        <button class="role-tab active" data-role="student" aria-pressed="true">دانشجو</button>
+        <button class="role-tab" data-role="teacher" aria-pressed="false">مدرس</button>
+        <button class="role-tab" data-role="projector" aria-pressed="false">پروژکتور</button>
+      </div></details>
+      <button id="themeToggle" type="button" class="icon-btn" aria-label="تغییر حالت روشن و تاریک">◐</button>
+    </div>
   </header>
-  
-  <details class="demo-role-menu"><summary id="roleSummary">نمای دانشجو</summary><div class="rolebar" id="rolebar" role="group" aria-label="انتخاب نما">
-    <button class="role-tab active" data-role="student" aria-pressed="true">نمای دانشجو</button>
-    <button class="role-tab" data-role="teacher" aria-pressed="false">نمای مدرس</button>
-    <button class="role-tab" data-role="projector" aria-pressed="false">پروژکتور</button>
-  </div></details>
   <main id="main" tabindex="-1"><div id="app" aria-live="polite"></div></main>
   <nav id="bottomNav" class="bottom-nav" aria-label="منوی اصلی"></nav>
   <footer class="footer">مدیریت رفتار سازمانی · MBA</footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-<script defer src="./course-content.js?v=1"></script><script defer src="./lesson-enrichment.js?v=1"></script><script defer src="./app.js?v=8"></script>
+<script defer src="./course-content.js?v=1"></script><script defer src="./lesson-enrichment.js?v=1"></script><script defer src="./app.js?v=10"></script>
 <script>if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));</script>
 </body></html>
