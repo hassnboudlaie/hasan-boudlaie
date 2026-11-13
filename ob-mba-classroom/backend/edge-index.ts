@@ -45,6 +45,13 @@ async function identity(token:unknown,needRole:"student"|"teacher"){
  }
  return {role:"teacher"};
 }
+
+async function guestIdentity(token:unknown) {
+ if(typeof token!=="string"||!/^[0-9a-f]{64}$/.test(token))return null;
+ const {data,error}=await supabase.from("mba_ob_guests").select("id,full_name,approval_status,revoked_at,expires_at").eq("token_hash",await sha256(token)).maybeSingle();
+ if(error||!data||data.revoked_at||Date.parse(data.expires_at)<=Date.now())return null;
+ return {role:"guest",guest_id:data.id,name:data.full_name,approval_status:data.approval_status};
+}
 async function grantSession(role:"student"|"teacher",studentId:string|null){
  const token=randomHex(32);
  const expires=new Date(Date.now()+(role==="teacher"?90:365)*86400000).toISOString();
@@ -63,6 +70,30 @@ async function publicState(){
 }
 async function actionRouter(input:Record<string,unknown>){
  const action=String(input.action||"");
+
+ if(action==="registerGuest"){
+  const name=safeName(input.name);
+  const code=String(input.guest_code||"").trim().toUpperCase().replace(/\s+/g,"");
+  if(!name||!/^OBG-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(code))return fail("invalid_guest_registration",400);
+  const {data:guestCode,error:codeError}=await supabase.from("mba_ob_guest_codes").select("id,active,expires_at,revoked_at").eq("code_hash",await sha256(code)).maybeSingle();
+  if(codeError||!guestCode||!guestCode.active||guestCode.revoked_at||(guestCode.expires_at&&Date.parse(guestCode.expires_at)<=Date.now()))return fail("invalid_guest_code",403);
+  const {count,error:countError}=await supabase.from("mba_ob_guests").select("id",{head:true,count:"exact"}).eq("code_id",guestCode.id).gte("requested_at",new Date(Date.now()-3600000).toISOString());
+  if(countError)throw new Error("guest_registration_lookup_failed");
+  if((count||0)>=60)return fail("guest_registration_limit",429);
+  const token=randomHex(32);
+  const {error:insertError}=await supabase.from("mba_ob_guests").insert({code_id:guestCode.id,full_name:name,token_hash:await sha256(token)});
+  if(insertError)throw new Error("guest_registration_failed");
+  return result({ok:true,role:"guest",token,name,approval_status:"pending"});
+ }
+ if(action==="guestState"){
+  const guest=await guestIdentity(input.token);
+  if(!guest)return fail("session_expired",401);
+  return result({ok:true,role:"guest",approval_status:guest.approval_status,guest:{name:guest.name},server_time:stamp()});
+ }
+ if(action==="accessState"){
+  const guest=await guestIdentity(input.token);
+  if(guest)return result({ok:true,role:"guest",approval_status:guest.approval_status,guest:{name:guest.name},server_time:stamp()});
+ }
  if(action==="status"){return result({ok:true,...await publicState()})}
  if(action==="teacherLogin"){
   const national=digits(input.national_id);
@@ -230,15 +261,51 @@ async function actionRouter(input:Record<string,unknown>){
   return result({ok:true,history:data||[]});
  }
  if(action==="teacherState"){
-  const [students,attend,windows,invites]=await Promise.all([
+  const [students,attend,windows,invites,guests,guestCodes]=await Promise.all([
    supabase.from("mba_ob_students").select("id,full_name,student_number,approval_status,enrolled_at,disabled_at,reviewed_at").order("enrolled_at"),
    supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at").order("checked_at",{ascending:false}),
    supabase.from("mba_ob_windows").select("session_no,opened_at,closes_at,closed_at").order("session_no"),
-   supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at")
+   supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at"),
+   supabase.from("mba_ob_guests").select("id,full_name,approval_status,requested_at,reviewed_at,revoked_at,expires_at").order("requested_at",{ascending:false}).limit(500),
+   supabase.from("mba_ob_guest_codes").select("id,active,created_at,revoked_at,expires_at").order("created_at",{ascending:false}).limit(50)
   ]);
-  if(students.error||attend.error||windows.error||invites.error)throw new Error("roster_lookup_failed");
+  if(students.error||attend.error||windows.error||invites.error||guests.error||guestCodes.error)throw new Error("roster_lookup_failed");
   return result({ok:true,students:students.data||[],attendance:attend.data||[],windows:windows.data||[],
-   unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],server_time:stamp()});
+   unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],guests:guests.data||[],guest_codes:guestCodes.data||[],server_time:stamp()});
+ }
+
+ if(action==="reviewGuest"){
+  const id=String(input.guest_id||""),status=String(input.status||"");
+  if(!/^[0-9a-f-]{36}$/.test(id)||!["approved","rejected"].includes(status))return fail("review_invalid");
+  const {data,error}=await supabase.from("mba_ob_guests").update({approval_status:status,reviewed_at:stamp()})
+   .eq("id",id).is("revoked_at",null).select("id").maybeSingle();
+  if(error||!data)return fail("guest_not_found",404);
+  return result({ok:true,approval_status:status});
+ }
+ if(action==="revokeGuest"){
+  const id=String(input.guest_id||"");
+  if(!/^[0-9a-f-]{36}$/.test(id))return fail("review_invalid");
+  const {data,error}=await supabase.from("mba_ob_guests").update({revoked_at:stamp()})
+   .eq("id",id).is("revoked_at",null).select("id").maybeSingle();
+  if(error||!data)return fail("guest_not_found",404);
+  return result({ok:true});
+ }
+ if(action==="issueGuestCode"){
+  const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes=crypto.getRandomValues(new Uint8Array(12));
+  const raw=Array.from(bytes,b=>alphabet[b%alphabet.length]).join("");
+  const code="OBG-"+raw.slice(0,4)+"-"+raw.slice(4,8)+"-"+raw.slice(8,12);
+  const {error}=await supabase.from("mba_ob_guest_codes").insert({code_hash:await sha256(code)});
+  if(error)throw new Error("guest_code_creation_failed");
+  return result({ok:true,code});
+ }
+ if(action==="revokeGuestCode"){
+  const id=String(input.code_id||"");
+  if(!/^[0-9a-f-]{36}$/.test(id))return fail("review_invalid");
+  const {data,error}=await supabase.from("mba_ob_guest_codes").update({active:false,revoked_at:stamp()})
+   .eq("id",id).eq("active",true).select("id").maybeSingle();
+  if(error||!data)return fail("guest_code_not_found",404);
+  return result({ok:true});
  }
  if(action==="reviewStudent"){
    const id=String(input.student_id||""),status=String(input.status||"");

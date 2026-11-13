@@ -17,8 +17,8 @@ assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScr
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=4')&&html.includes('access-gate.css?v=1')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
-assert.ok(sw.includes('shell-v15')&&sw.includes('app.js?v=14')&&sw.includes('access-gate.js?v=4'),'PWA cache and approved assets');
+assert.ok(html.includes('access-gate.js?v=5')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
+assert.ok(sw.includes('shell-v16')&&sw.includes('app.js?v=15')&&sw.includes('access-gate.js?v=5'),'PWA cache and approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(presenterCss.includes('.presenter-stage:fullscreen')&&presenterCss.includes('.presenter-mode-switch'),'Unified player supports fullscreen and language switch');
@@ -38,7 +38,7 @@ for(const session of [1,2]){
   assert.ok(sw.includes('./materials/original/session-'+no+'/slide-'+String(n).padStart(2,'0')+'.webp'),'English slide cached for offline view');
  }
 }
-assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=3'),'Attendance page is installable');
+assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=4'),'Attendance page is installable');
 assert.ok(attendanceHtml.includes('id="attendanceRoot"')&&attendanceHtml.includes('dir="rtl"'),'RTL attendance portal exists');
 for(const word of ['studentEnroll','teacherLogin','checkIn','openWindow','issueInvites','exportCsv','approvePending','changeTeacherPassword'])assert.ok(attendanceJs.includes(word),'Attendance functionality missing: '+word);
 assert.ok(!attendanceJs.includes('SERVICE_ROLE_KEY'),'No server key in public attendance script');
@@ -48,6 +48,10 @@ assert.ok(!attendanceApi.includes('if(action==="redeem")'),'Legacy invitation ca
 assert.ok(approvalSql.includes('mba_ob_register_by_student_number')&&approvalSql.includes('approval_status')&&approvalSql.includes('mba_ob_check_teacher_device'),'Server enforces student approval and trusted teacher device');
 assert.ok(html.includes('id="entryGate"')&&html.includes('id="site" class="site" hidden'),'Classroom hidden until server approval');
 assert.ok(gateJs.includes('accessState')&&gateJs.includes('registerStudent')&&gateJs.includes('teacherNationalLogin'),'Gate handles student and teacher');
+assert.ok(gateJs.includes('registerGuest')&&gateJs.includes('data-entrance="guest"')&&gateJs.includes('unlock("guest")'),'Guest entry requires approval');
+assert.ok(attendanceJs.includes('reviewGuest')&&attendanceJs.includes('issueGuestCode')&&attendanceJs.includes('revokeGuest'),'Instructor manages guest approvals');
+assert.ok(js.includes('guest-preview-banner')&&js.includes('isGuest()'),'Guest sees limited educational preview');
+assert.ok(caseJs.includes('window.OB_ACCESS?.role==="guest"'),'Guest cannot submit official assignments');
 assert.ok(gateJs.includes('course-content.js?v=2')&&sw.includes('course-content.js?v=2'),'Course content scripts load after approved access');
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
 assert.ok(gateJs.includes('lesson-enrichment.js?v=2')&&sw.includes('lesson-enrichment.js?v=2'),'Enrichment script included in gated loader');
@@ -60,7 +64,7 @@ assert.ok(publicCourse.OB_COURSE_CONTENT.sessions.every(s=>s.quizzes.length===5&
 assert.ok(caseSchema.includes('enable row level security')&&caseSchema.includes('mba_ob_case_reviews')&&caseSchema.includes('mba_ob_submit_case'),'Submission and grading are server-backed with protected data');
 assert.ok(caseJs.includes('caseSubmit')&&caseJs.includes('caseReview')&&caseJs.includes('caseHistory'),'Student submit and instructor history access are present');
 assert.ok(caseJs.includes('!rawScore')&&attendanceApi.includes('rawScore===null'),'Teacher and server both reject accidentally blank grade');
-assert.ok(gateJs.includes('case-portal.js?v=2')&&html.includes('case-portal.css?v=1')&&sw.includes('case-portal.js?v=2')&&sw.includes('./join-qr.svg'),'Case portal and QR bundled with PWA');
+assert.ok(gateJs.includes('case-portal.js?v=3')&&html.includes('case-portal.css?v=1')&&sw.includes('case-portal.js?v=3')&&sw.includes('./join-qr.svg'),'Case portal and QR bundled with PWA');
 assert.ok(qrSvg.includes('viewBox="0 0 49 49"')&&qrSvg.includes('ob-mba-classroom'),'Projector QR links only to Allameh classroom');
 
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.concepts.length>=6&&s.examples.length>=3&&s.caseStudy.questions.length>=4),'Each chapter has complete topic, examples and documented case');
