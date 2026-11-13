@@ -88,8 +88,8 @@ function renderStep(){
 }
 function renderFeedback(){
  var st=D.steps[state.stage],a=state.answers[state.stage],level=a.rating<=2?
- "پایین‌بودن این ارزیابی نشانه آغاز آگاهی است؛ یک رفتار مشخص را برای تمرین انتخاب کنید.":
- a.rating===3?"یک پایه قابل اتکا دارید؛ تلاش کنید آن را با یک تجربه واقعی و بازخورد دیگران محک بزنید.":
+ "خودتان نیاز به تمرین گزارش کرده‌اید؛ یک رفتار مشخص را انتخاب کنید و از یک همکار بازخورد بگیرید.":
+ a.rating===3?"سطح متوسط گزارش کرده‌اید؛ یک نمونه موفق و یک موقعیت دشوار را کنار هم بررسی کنید.":
  "این توانمندی را با شواهد رفتار واقعی و دیدگاه همکاران اعتبارسنجی کنید.";
  var body='<section class="lj-milestone"><span class="lj-milestone-icon">✧</span><span class="lj-kicker">ایستگاه دستاورد · مرحله '+fa(state.stage+1)+'</span>'+
  '<h2>تصمیم و تمرین شما ثبت شد</h2>'+
@@ -133,9 +133,9 @@ function renderEnd(){
  '<div class="lj-score-grid"><div><span>امتیاز خام</span><strong>'+fa(sm.raw)+'</strong></div><div><span>کسر تمدید زمان</span><strong>−'+fa(sm.timePenalty)+'</strong></div><div><span>کسر راهنما</span><strong>−'+fa(sm.hintPenalty)+'</strong></div><div><span>امتیاز نهایی</span><strong>'+fa(sm.net)+'</strong></div></div>'+
  '<p class="lj-result-note">این نشان آموزشی، محلی و خوداظهاری است و مدرک رسمی یا ارزیابی تأییدشده منابع انسانی محسوب نمی‌شود.</p>'+
  '<div class="lj-download"><button type="button" data-lj="png">دریافت نشان PNG</button><button type="button" data-lj="print">چاپ / ذخیره PDF</button><button type="button" data-lj="newMission">مأموریت جدید</button></div></section>'+
- '<section class="lj-result-feedback"><h2>بازخورد توسعه‌ای شما</h2>'+coachCard(sm.net>=85?
- "توانسته‌اید بین فوریت تصمیم، بافت رهبری و مسئولیت اجرا تعادل خوبی برقرار کنید. این الگو را در یک موقعیت واقعی با داده معتبر بیازمایید.":
- sm.net>=70?"پایه تصمیم‌گیری شما قابل اتکاست. برای پیشرفت، بر روشن‌کردن مرز اختیار و کیفیت شواهد پیش از انتخاب ابزار تمرکز کنید.":
+ '<section class="lj-result-feedback"><h2>بازخورد توسعه‌ای شما</h2>'+coachCard(sm.raw>=85?
+ "در سناریوهای این تمرین، بیشتر تصمیم‌های شما با معیار آموزشی هم‌راستا بود. این الگو را در یک موقعیت واقعی با داده معتبر بیازمایید.":
+ sm.raw>=70?"در این تمرین چند تصمیم قابل دفاع ثبت کرده‌اید. برای پیشرفت، بر روشن‌کردن مرز اختیار و کیفیت شواهد پیش از انتخاب ابزار تمرکز کنید.":
  "این تمرین فرصتی برای شناسایی فرضیات تصمیم‌گیری بود. یک موقعیت واقعی کوچک را انتخاب کنید، معیار تصمیم را بنویسید و نتیجه را مرور کنید.")+
  '<h3>تعهد شما برای اقدام بعدی</h3><p>ظرف ۱۴ روز، یک گفت‌وگوی واقعی درباره مرز اختیار یا یک تعهد بین‌واحدی برگزار کنید. اقدام، مالک، موعد و نتیجه قابل‌مشاهده را در «استودیوی رهبری» ثبت و بازبینی کنید.</p>'+
  '<div class="lj-review-practice"><strong>اقدام ثبت‌شده در مرحله دهم</strong><p>'+esc(state.answers[9]?state.answers[9].practice:'')+'</p></div>'+commitmentForm()+
@@ -157,6 +157,7 @@ function renderIntro(){
  '<div class="lj-intro-numbers"><div><strong>۱۰</strong><span>مرحله</span></div><div><strong>۶۰</strong><span>دقیقه رقابتی</span></div><div><strong>۲</strong><span>ایستگاه تمرکز</span></div></div></div>'+
  '<div class="lj-mode-cards"><article><span>۰۱ · مأموریت رقابتی</span><h3>تصمیم بگیر، تمرین کن، پیشرفتت را ببین</h3><p>تایمر ۶۰ دقیقه، امتیاز خام تا ۱۰۰، راهنمای ۲ نوبت رایگان، مکث ۵ دقیقه‌ای و امکان تمدید با کسر امتیاز.</p><button class="lj-primary" type="button" data-lj="startCompetitive">شروع مأموریت ←</button></article>'+
  '<article><span>۰۲ · مطالعه آزاد</span><h3>با سرعت خودت یاد بگیر</h3><p>بدون تایمر، نمره و نشان؛ مطالعه همه مراحل، مرور تحلیل گزینه‌ها، تمرین اختیاری و راهنمای رایگان و نامحدود.</p><button class="lj-secondary" type="button" data-lj="startStudy">ورود به مطالعه آزاد ←</button></article></div>'+
+ '<details class="lj-carry"><summary>قواعد امتیاز و زمان</summary><p>هر مرحله: حداکثر ۸ امتیاز تصمیم و ۲ امتیاز ثبت تمرین؛ خودارزیابی بدون امتیاز. امتیاز خالص: خام منهای جریمه‌ها. نشان طلایی از ۸۵، نقره‌ای از ۷۰ و برنزی زیر ۷۰ است؛ نشان به معنی سنجش شایستگی نیست.</p><p>یک مکث حداکثر ۵ دقیقه‌ای؛ پس از پایان زمان، هر ۵ دقیقه تمدید یا بخشی از آن ۲ امتیاز کسر دارد. دو راهنمای مرحله‌ای رایگان؛ از سومین راهنمای جدید، هر بار ۲ امتیاز کسر. بازکردن دوباره همان راهنما رایگان است. دو ایستگاه ۳۰ ثانیه‌ای بخشی از زمان مأموریت‌اند. شروع مجدد سهمیه و زمان را بازنشانی نمی‌کند.</p></details>'+
  '<p class="lj-privacy">همراه مسیر قاعده‌محور است؛ هوش مصنوعی مولد یا کوچ انسانی نیست. پیشرفت فقط روی همین مرورگر ذخیره می‌شود؛ برای سنجش رسمی یا اطلاعات محرمانه مناسب نیست.</p></section>'+
  (state&&state.history&&state.history.length?'<section class="lj-history"><h2>سوابق قبلی</h2>'+latestResults()+'</section>':'');
  root.innerHTML='<div class="lj-shell" dir="rtl"><header class="lj-banner lj-intro-banner"><div class="lj-brand"><img src="./assets/my-leadership-icon.svg" alt="نشان اپ"><div><span>صبا نفت · مهارت‌های رهبری من</span><h1>سفر تعاملی رهبری بازتابی</h1></div></div><a class="lj-quiet" href="#/course">بازگشت به جلسات</a></header>'+html+'</div>';
@@ -251,8 +252,8 @@ function handleClick(e){
   if(actionText.length<12||!due||evidence.length<8){root.querySelector('#ljCommitmentStatus').textContent='رفتار مشخص، تاریخ و شاهد نتیجه را کامل کنید.';return}
   state.commitment={action:actionText,due:due,evidence:evidence};if(save())root.querySelector('#ljCommitmentStatus').textContent='تعهد روی همین مرورگر ذخیره شد؛ یادآوری خودکار ارسال نمی‌شود.';return;
  }
- if(action==="finishStudy"&&state.mode==="study"){state.studyFinished=true;save();render();return}
- if(action==="reviewStudy"&&state.mode==="study"){state.studyFinished=false;save();render();return}
+ if(action==="finishStudy"&&state.mode==="study"){state.studyFinished=true;state.phase="end";save();render();return}
+ if(action==="reviewStudy"&&state.mode==="study"){state.studyFinished=false;state.phase="step";save();render();return}
  if(action==="newMission"){
    if(!confirm("مأموریت مستقل جدیدی آغاز شود؟ پیشرفت مأموریت فعلی جایگزین می‌شود؛ سوابق تکمیل‌شده حفظ خواهند شد."))return;
    state=startJourney("competitive",state.history);save();render();return;
@@ -261,7 +262,7 @@ function handleClick(e){
  if(action==="nextStudy"&&state.mode==="study"){state.studyFinished=false;state.stage=Math.min(9,state.stage+1);save();render();return}
  if(action==="restart"){
    if(!confirm("پاسخ‌ها و پیشرفت فعلی پاک می‌شود. زمان، جریمه‌ها و سهمیه راهنما/مکث این تلاش بازنشانی نمی‌شوند؛ تنها یک مأموریت مستقل جدید سهمیه تازه دارد. ادامه می‌دهید؟"))return;
-   C.restartSameAttempt(state);save();render();return;
+   C.restartSameAttempt(state);state.studyFinished=false;save();render();return;
  }
  if(action==="switch"){
    if(!confirm("به مطالعه آزاد منتقل شوید؟ این تلاش دیگر امتیاز رقابتی و نشان نخواهد داشت. برای رقابت دوباره، مأموریت مستقلی آغاز کنید."))return;

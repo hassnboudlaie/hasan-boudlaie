@@ -16,14 +16,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Confirm live Pages assets are accessible
+      - name: Wait for the exact reviewed assets on GitHub Pages
         run: |
-          curl --fail --location --retry 3 --retry-delay 2 --silent --show-error \
-            https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/leadership-journey.js \
-            | grep -q "Saba Naft"
-          curl --fail --location --retry 3 --retry-delay 2 --silent --show-error \
-            https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/leadership-journey-content.js \
-            | grep -q "SABA_LEADERSHIP_JOURNEY"
+          for attempt in $(seq 1 60); do
+            match=1
+            for asset in leadership-journey.js leadership-journey-content.js leadership-journey.css sw.js; do
+              curl --fail --location --silent --show-error "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/$asset?release=${GITHUB_SHA}" -o "/tmp/live-$asset" || match=0
+              cmp -s "sabanaft/app/$asset" "/tmp/live-$asset" || match=0
+            done
+            if [ "$match" = 1 ]; then exit 0; fi
+            sleep 5
+          done
+          echo "Reviewed assets are not yet live"
+          exit 1
       - name: Install Chromium browser for true deployment test
         run: |
           npm install --prefix /tmp/saba-live --no-save --no-audit --no-fund playwright@1.56.1
