@@ -1,0 +1,42 @@
+
+/* Life Architecture · approved cross-product brand identity, November 2026 */
+:root { --brand-emerald:#0c665f; --brand-forest:#07474a; --brand-champagne:#d5b078; --brand-cream:#f8f6f0; }
+.brand-mark img,.mobile-brand img {object-fit:contain;display:block;flex:none;}
+.brand-mark{filter:drop-shadow(0 3px 9px rgba(8,68,64,.12))}
+.mobile-brand{min-width:0}
+.mobile-brand img{border-radius:10px;box-shadow:0 2px 9px #0b494522}
+.mobile-brand span{min-width:0;line-height:1.5}
+.brand-words strong{letter-spacing:0;font-weight:900}
+.page-footer::before{content:"";display:block;inline-size:24px;block-size:24px;background:url("./brand-symbol.svg") center/contain no-repeat;flex:none;margin-inline-end:7px}
+.page-footer{justify-content:flex-start;gap:9px}
+.page-footer span:last-child{margin-inline-start:auto}
+.hero::before{content:"";position:absolute;inset-inline-end:30%;top:-50px;width:310px;height:310px;background:url("./brand-symbol.svg") center/contain no-repeat;opacity:.075;pointer-events:none}
+.hero .orbit-center{overflow:hidden;background:#f7f0dc;display:grid;place-items:center}
+.hero .orbit-center img{width:83%;height:83%;object-fit:contain}
+.lb-brand-signature{display:inline-flex;align-items:center;gap:8px;font-weight:800}
+.lb-brand-signature img{width:29px;height:29px;object-fit:contain}
+.lb-cover{position:relative}
+.lb-cover-brand{position:absolute;inset-inline-end:23px;top:20px;width:66px;height:66px;object-fit:contain;opacity:.48;pointer-events:none}
+.lb-home-emblem{background:#0b4849 url("./brand-symbol.svg") center/75% no-repeat!important;font-size:0!important}
+.brand-splash{display:none}
+.has-js .brand-splash{display:grid;place-items:center;position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at 54% 36%,#12645f 0%,#074345 48%,#052e35 100%);color:#fbf7ec;transition:opacity .42s ease,visibility .42s ease;text-align:center;padding:28px;overflow:hidden}
+.brand-splash::before,.brand-splash::after{content:"";pointer-events:none;position:absolute;border:1px solid #d6b78070;border-radius:50%;width:min(86vw,510px);height:min(86vw,510px)}
+.brand-splash::before{transform:translate(40%,-56%);top:0;inset-inline-start:0}
+.brand-splash::after{transform:translate(-40%,52%);bottom:0;inset-inline-end:0}
+.brand-splash.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.brand-splash-panel{display:flex;align-items:center;flex-direction:column;gap:12px;max-width:380px;position:relative;z-index:1}
+.brand-splash-panel img{width:min(63vw,260px);height:min(63vw,260px);object-fit:contain;filter:drop-shadow(0 12px 20px #041a2330);margin-bottom:4px}
+.brand-splash-panel strong{font-weight:900;font-size:clamp(23px,4vw,30px);line-height:1.6}
+.brand-splash-panel small{font-family:"DM Sans",sans-serif;direction:ltr;letter-spacing:1.1px;font-size:13px;color:#e9cd97}
+.brand-splash-line{margin-top:24px;width:95px;height:2px;background:linear-gradient(90deg,transparent,#e4c38d,transparent)}
+:root[data-theme="dark"] .lb-brand-signature{color:#d9deda}
+@media(max-width:700px){
+ .mobile-brand{font-size:12px;gap:7px;font-weight:900}
+ .mobile-brand img{width:35px;height:35px}
+ .page-footer{flex-wrap:wrap}
+ .page-footer::before{inline-size:20px;block-size:20px}
+ .hero::before{inset-inline-end:-25%;top:0}
+ .lb-cover-brand{width:49px;height:49px;inset-inline-end:10px;top:12px;opacity:.28}
+ .lb-brand-signature span{font-size:9px;letter-spacing:.15px}
+}
+@media(prefers-reduced-motion:reduce){.has-js .brand-splash{transition:none}}

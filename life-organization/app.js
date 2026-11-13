@@ -14,7 +14,7 @@
   ];
   const I = {
     fa: {
-      workspace:"فضای کاری من",asideTitle:"زندگی متناسب با من",asideDesc:"یک فضای آرام برای فکر کردن، انتخاب کردن و پیش رفتن.",localOnly:"ذخیره روی این دستگاه",mobileBrand:"سازمان زندگی من",
+      workspace:"فضای کاری من",asideTitle:"زندگی متناسب با من",asideDesc:"یک فضای آرام برای فکر کردن، انتخاب کردن و پیش رفتن.",localOnly:"ذخیره روی این دستگاه",mobileBrand:"سازمان عالی زندگی من",
       home:"خانه",modules:"ماژول‌ها",workbook:"دفتر کار من",coach:"لایف کوچ من",progress:"مسیر من",profile:"پروفایل",
       homeCrumb:"نمای کلی",homeEyebrow:"DESIGN A LIFE THAT FITS",homeTitle:"زندگی من، سازمان من.",homeDesc:"یک فضای شخصی برای شناخت، طراحی و مدیریت زندگی؛ قدم‌به‌قدم، بر اساس آنچه واقعاً برای شما مناسب است.",startJourney:"شروع مسیر من",exploreModules:"کاوش ماژول‌ها",
       moduleKicker:"YOUR LIFE SYSTEM",modulesHeading:"شش بُعد سازمان زندگی",modulesDesc:"هر ماژول یک فضای مستقل است؛ همه در کنار هم یک سیستم یکپارچه می‌سازند.",viewAll:"مشاهده همه",ready:"آماده شروع",started:"در حال کاوش",
@@ -114,7 +114,7 @@
       '<p class="card-desc">'+esc(moduleShort(m))+'</p><div class="card-bottom">'+status(m.id)+'<span class="card-arrow">↗</span></div></button>';
   }
   function orbit(){
-    return '<div class="orbit" aria-hidden="true"><div class="orbit-ring"></div><div class="orbit-ring two"></div><div class="orbit-center">L</div>'+
+    return '<div class="orbit" aria-hidden="true"><div class="orbit-ring"></div><div class="orbit-ring two"></div><div class="orbit-center"><img src="./brand-symbol.svg" alt="" width="70" height="70"></div>'+
     MODULES.map((m,i)=>'<span class="orbit-node n'+(i+1)+'">'+icons(m.icon)+'</span>').join("")+'</div>';
   }
   function homePage(){
@@ -252,4 +252,12 @@
   if(window.matchMedia)matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if(state.theme==="system")applyTheme()});
   if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
   render();
+  const splash=document.getElementById("brand-splash");
+  if(splash){
+    const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(()=>{
+      splash.classList.add("is-hidden");
+      window.setTimeout(()=>splash.remove(),reducedMotion?0:500);
+    },reducedMotion?30:950);
+  }
 })();

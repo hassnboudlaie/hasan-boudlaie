@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" role="img" aria-labelledby="logo-title logo-desc"><title id="logo-title">سازمان عالی زندگی من — Life Architecture</title><desc id="logo-desc">Interlocking architectural forms surround a growing human figure, symbolizing an intelligent, integrated life organization.</desc>
+<defs>
+ <linearGradient id="backTeal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#087b74"/><stop offset=".53" stop-color="#08504e"/><stop offset="1" stop-color="#002d33"/></linearGradient>
+ <linearGradient id="frontTeal" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#23b6a3"/><stop offset=".48" stop-color="#0a7f78"/><stop offset="1" stop-color="#075052"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffefba"/><stop offset=".40" stop-color="#ddac63"/><stop offset=".73" stop-color="#f4dc9c"/><stop offset="1" stop-color="#b88643"/></linearGradient>
+ <linearGradient id="tealSide" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#36b29c"/><stop offset="1" stop-color="#0b655f"/></linearGradient>
+ <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0e5554"/><stop offset=".6" stop-color="#073d40"/><stop offset="1" stop-color="#05282f"/></linearGradient>
+</defs>
+<g transform="translate(0 62)">
+ <path d="M44 388V207Q44 185 63 175L144 128V207L110 227Q98 235 98 248V388Z" fill="url(#gold)"/>
+ <path d="M404 125L500 177Q514 185 514 205V390H460V247Q460 234 447 227L404 203Z" fill="url(#tealSide)"/>
+ <path d="M144 310V156Q144 133 166 121L257 68Q279 56 301 68L393 121Q415 133 415 156V309H361V165L279 117L198 165V308Z" fill="url(#backTeal)"/>
+ <path d="M278 68L393 121Q415 133 415 156V309H361V165L279 117Z" fill="#19a38f" opacity=".21"/>
+ <circle cx="281" cy="187" r="25" fill="url(#gold)"/>
+ <path d="M256 406V281Q256 264 248 253C237 240 222 231 206 217Q194 207 198 179L242 205Q266 221 281 248Q297 219 323 204L365 180Q367 204 350 218L314 246Q303 257 303 281V406Z" fill="url(#gold)"/>
+ <path d="M52 409V336Q52 313 72 300L206 224Q233 209 249 231Q256 239 256 254V391H200V289L128 330Q107 342 107 360V409Z" fill="url(#frontTeal)"/>
+ <path d="M308 269L402 218Q426 205 444 215L490 240Q515 254 516 279V411H459V301Q459 290 446 284L411 265L335 309Z" fill="url(#gold)"/>
+ <path d="M149 414L437 271Q454 262 466 277Q480 296 458 308L260 414Z" fill="url(#frontTeal)"/>
+ <path d="M149 414L437 271" fill="none" stroke="#50c6ad" stroke-width="3" opacity=".62"/>
+</g></svg>

@@ -110,7 +110,7 @@ function progressText(n,lang){
  return T(lang,"مرور "+completed(n)+" از "+totalTalks(n)+" گفتار","Reviewed "+completed(n)+" of "+totalTalks(n)+" sections");
 }
 function masthead(lang){
- return '<div class="lb-topline"><span>'+T(lang,"کتاب اول / بخش اول","Book One / Part One")+'</span><span dir="ltr">THE LIFE ORGANIZATION</span></div>';
+ return '<div class="lb-topline"><span>'+T(lang,"کتاب اول / بخش اول","Book One / Part One")+'</span><span class="lb-brand-signature"><img src="./brand-symbol.svg" alt="" width="29" height="29"><span dir="ltr">THE LIFE ORGANIZATION</span></span></div>';
 }
 function progressTrack(n){
  return '<div class="lb-track" aria-hidden="true"><div style="width:'+Math.round(100*completed(n)/totalTalks(n))+'%"></div></div>';
@@ -133,7 +133,7 @@ function landing(lang){
    '<button class="lb-button lb-button-quiet" type="button" data-route="book1/'+n+'/workbook">'+T(lang,"ابزار فصل","Worksheet")+'</button></div></article>';
  }).join("");
  return '<div class="lb-root lb-landing">'+masthead(lang)+
- '<section class="lb-cover"><div class="lb-cover-orbit" aria-hidden="true"><span>01</span><i></i><i></i><i></i></div><div class="lb-cover-copy"><p class="lb-eyebrow">BOOK I · THE FOUNDATION</p>'+
+ '<section class="lb-cover"><img class="lb-cover-brand" src="./brand-symbol.svg" alt="" loading="lazy"><div class="lb-cover-orbit" aria-hidden="true"><span>01</span><i></i><i></i><i></i></div><div class="lb-cover-copy"><p class="lb-eyebrow">BOOK I · THE FOUNDATION</p>'+
  '<h1>'+T(lang,"من کجای زندگی ایستاده‌ام؟","Where do I stand in my life?")+'</h1>'+
  '<p class="lb-cover-intro">'+T(lang,"بخش اول: دیدن سازمان زندگی. پیش از تغییر، یاد می‌گیریم چگونه زندگی را ببینیم، معیارهای خود را روشن کنیم و درباره فاصله‌ها با شواهد حرف بزنیم.","Part One: Seeing your life organization. Before changing it, learn to observe, define your criteria and compare states with evidence.")+'</p>'+
  '<div class="lb-cover-buttons"><button class="lb-button lb-button-light" type="button" data-route="book1/1">'+T(lang,"شروع فصل اول","Start Chapter 1")+'</button>'+
