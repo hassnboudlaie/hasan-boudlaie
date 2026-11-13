@@ -142,6 +142,31 @@ async function run(){
  await noOverflow(pendingPage,"mobile auth gate");
  await save(pendingPage,"android-390-07-approved-entry");
  await pendingCtx.close();
+ // Teacher authority: pending student appears in admin list and only verified teacher can approve.
+ const instructorCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await instructorCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"teacher",token:"qa-teacher-session"})));
+ let reviewed=false;
+ await instructorCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
+  const req=JSON.parse(route.request().postData()||"{}");
+  let out={ok:false,error:"invalid_action"};
+  if(req.action==="accessState")out={ok:true,role:"teacher",approval_status:"approved"};
+  if(req.action==="teacherState")out={ok:true,students:[{id:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",full_name:"دانشجوی منتظر",student_number:"991122334",approval_status:reviewed?"approved":"pending",disabled_at:null}],attendance:[],windows:[],invites:[],unredeemed:0,server_time:new Date().toISOString()};
+  if(req.action==="reviewStudent"){assert.equal(req.status,"approved");reviewed=true;out={ok:true,approval_status:"approved"}}
+  await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(out)});
+ });
+ const instructorPage=await instructorCtx.newPage();
+ await instructorPage.goto(url,{waitUntil:"domcontentloaded"});
+ await instructorPage.locator(".page").waitFor();
+ assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
+ await instructorPage.goto(url+"attendance.html",{waitUntil:"domcontentloaded"});
+ await instructorPage.getByText("درخواست‌های عضویت").waitFor();
+ assert.ok((await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').count())===1,"Teacher sees pending student");
+ await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').click();
+ await instructorPage.getByText("درخواست جدیدی وجود ندارد.").waitFor();
+ assert.equal(reviewed,true,"Teacher approval sent to server");
+ await save(instructorPage,"android-390-08-teacher-approval");
+ await instructorCtx.close();
+
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 }
 run().catch(err=>{console.error(err);process.exitCode=1;server.close()});
