@@ -24,6 +24,13 @@ function result(body:Record<string,unknown>,status=200,origin=allowedOrigin) {
 function fail(error:string,status=400){return result({ok:false,error},status)}
 function safeName(n:unknown){const v=String(n||"").replace(/\s+/g," ").trim();return v.length>=3&&v.length<=90?v:""}
 function isInt(x:unknown,min:number,max:number){return Number.isInteger(x)&&Number(x)>=min&&Number(x)<=max}
+const digits=(value:unknown)=>String(value??"").replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776)).replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).trim();
+function validNationalID(value:string){
+ if(!/^[0-9]{10}$/.test(value)||/^(.)\1{9}$/.test(value))return false;
+ let sum=0;for(let i=0;i<9;i++)sum+=Number(value[i])*(10-i);
+ const rem=sum%11,last=Number(value[9]);
+ return rem<2?last===rem:last===11-rem;
+}
 async function identity(token:unknown,needRole:"student"|"teacher"){
  if(typeof token!=="string"||token.length<40||token.length>128)return null;
  const hash=await sha256(token);
@@ -32,9 +39,9 @@ async function identity(token:unknown,needRole:"student"|"teacher"){
  if(error||!data||data.role!==needRole||data.revoked_at||Date.parse(data.expires_at)<=Date.now())return null;
  if(needRole==="student"){
   const {data:student}=await supabase.from("mba_ob_students")
-   .select("id,full_name,disabled_at").eq("id",data.student_id).maybeSingle();
+   .select("id,full_name,student_number,approval_status,disabled_at").eq("id",data.student_id).maybeSingle();
   if(!student||student.disabled_at)return null;
-  return {role:"student",student_id:student.id,name:student.full_name};
+  return {role:"student",student_id:student.id,name:student.full_name,student_number:student.student_number,approval_status:student.approval_status};
  }
  return {role:"teacher"};
 }
@@ -58,8 +65,28 @@ async function actionRouter(input:Record<string,unknown>){
  const action=String(input.action||"");
  if(action==="status"){return result({ok:true,...await publicState()})}
  if(action==="teacherLogin"){
-  if(typeof input.password!=="string"||input.password.length<30||input.password.length>100)return fail("invalid_credentials",401);
+  if(typeof input.password!=="string"||input.password.length<16||input.password.length>100)return fail("invalid_credentials",401);
   const {data,error}=await supabase.rpc("mba_ob_check_teacher",{p_password:input.password});
+  if(error||data!==true)return fail("invalid_credentials",401);
+  return result({ok:true,role:"teacher",...await grantSession("teacher",null)});
+ }
+ if(action==="registerStudent"){
+  const number=digits(input.student_number),name=safeName(input.name);
+  if(!/^[0-9]{6,16}$/.test(number)||!name)return fail("invalid_registration");
+  const token=randomHex(32);
+  const {data,error}=await supabase.rpc("mba_ob_register_by_student_number",{
+   p_student_number:number,p_name:name,p_session_hash:await sha256(token)
+  });
+  if(error||!data?.ok)return fail(String(data?.error||"registration_failed"),409);
+  return result({ok:true,role:"student",token,name,student_number:number,
+    approval_status:"pending",expires_at:new Date(Date.now()+365*86400000).toISOString()});
+ }
+ if(action==="teacherNationalLogin"){
+  const number=digits(input.national_id),trusted=String(input.device_token||"");
+  if(!validNationalID(number)||!(/^[0-9a-f]{64}$/).test(trusted))return fail("invalid_credentials",401);
+  const {data,error}=await supabase.rpc("mba_ob_check_teacher_device",{
+    p_number:number,p_token_hash:await sha256(trusted)
+  });
   if(error||data!==true)return fail("invalid_credentials",401);
   return result({ok:true,role:"teacher",...await grantSession("teacher",null)});
  }
@@ -76,18 +103,25 @@ async function actionRouter(input:Record<string,unknown>){
   return result({ok:true,role:"student",token,name:data.name,student_id:data.student_id,
    expires_at:new Date(Date.now()+365*86400000).toISOString(),...await publicState()});
  }
- if(action==="studentState"){
+ if(action==="studentState"||action==="accessState"){
   const user=await identity(input.token,"student");
   if(!user)return fail("session_expired",401);
+  if(user.approval_status!=="approved"){
+    return result({ok:true,role:"student",approval_status:user.approval_status,
+      student:{id:user.student_id,name:user.name,student_number:user.student_number},
+      attendance:[],active:null,server_time:stamp()});
+  }
   const {data,error}=await supabase.from("mba_ob_attendance")
    .select("session_no,status,checked_at").eq("student_id",user.student_id).order("session_no");
   if(error)throw new Error("attendance_lookup_failed");
-  return result({ok:true,student:{id:user.student_id,name:user.name},
+  return result({ok:true,role:"student",approval_status:"approved",
+   student:{id:user.student_id,name:user.name,student_number:user.student_number},
    attendance:data||[],...await publicState()});
  }
  if(action==="checkIn"){
   const user=await identity(input.token,"student");
   if(!user)return fail("session_expired",401);
+  if(user.approval_status!=="approved")return fail("approval_required",403);
   const lesson=Number(input.session);
   const code=String(input.code||"").trim();
   if(!isInt(lesson,1,16)||!/^[0-9]{6}$/.test(code))return fail("invalid_code");
@@ -99,6 +133,20 @@ async function actionRouter(input:Record<string,unknown>){
  }
  const teacher=await identity(input.token,"teacher");
  if(!teacher)return fail("teacher_auth_required",401);
+ if(action==="accessState"){return result({ok:true,role:"teacher",approval_status:"approved"})}
+ if(action==="teacherBindNational"){
+   const number=digits(input.national_id);
+   if(!validNationalID(number))return fail("invalid_national_id");
+   const {data,error}=await supabase.rpc("mba_ob_set_teacher_national",{p_number:number});
+   if(error||data!==true)throw new Error("teacher_binding_failed");
+   const deviceToken=randomHex(32);
+   const {error:insertError}=await supabase.from("mba_ob_teacher_devices").insert({
+     token_hash:await sha256(deviceToken)
+   });
+   if(insertError)throw new Error("teacher_binding_failed");
+   return result({ok:true,role:"teacher",device_token:deviceToken});
+ }
+
  if(action==="changeTeacherPassword"){
   const password=String(input.password||"");
   if(password.length<16||password.length>100)return fail("password_too_short");
@@ -109,7 +157,7 @@ async function actionRouter(input:Record<string,unknown>){
  }
  if(action==="teacherState"){
   const [students,attend,windows,invites]=await Promise.all([
-   supabase.from("mba_ob_students").select("id,full_name,enrolled_at,disabled_at").order("enrolled_at"),
+   supabase.from("mba_ob_students").select("id,full_name,student_number,approval_status,enrolled_at,disabled_at,reviewed_at").order("enrolled_at"),
    supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at").order("checked_at",{ascending:false}),
    supabase.from("mba_ob_windows").select("session_no,opened_at,closes_at,closed_at").order("session_no"),
    supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at")
@@ -117,6 +165,15 @@ async function actionRouter(input:Record<string,unknown>){
   if(students.error||attend.error||windows.error||invites.error)throw new Error("roster_lookup_failed");
   return result({ok:true,students:students.data||[],attendance:attend.data||[],windows:windows.data||[],
    unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],server_time:stamp()});
+ }
+ if(action==="reviewStudent"){
+   const id=String(input.student_id||""),status=String(input.status||"");
+   if(!/^[0-9a-f-]{36}$/.test(id)||!["approved","rejected"].includes(status))return fail("review_invalid");
+   const {data,error}=await supabase.from("mba_ob_students")
+    .update({approval_status:status,reviewed_at:stamp()})
+    .eq("id",id).is("disabled_at",null).select("id").maybeSingle();
+   if(error||!data)return fail("student_not_found",404);
+   return result({ok:true,approval_status:status});
  }
  if(action==="issueInvites"){
   const provided=Array.isArray(input.names)?input.names:null;
