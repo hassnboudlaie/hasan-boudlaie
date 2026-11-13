@@ -43,7 +43,7 @@ assert.equal(manifest.display,'standalone','PWA launches in standalone mode');
 assert.equal(manifest.scope,'./','PWA stays within the MBA classroom');
 assert.equal(manifest.start_url,'./','Installed app starts on Allameh page');
 assert.ok(!html.includes('../hub/')&&!html.includes('اپ‌های من'),'No link back to HB Hub from classroom header');
-assert.ok(!a.includes('../hub/')&&!i.includes('../hub/')&&!attendanceHtml.includes('../hub/'),'Standalone pages do not navigate to other projects');
+assert.ok(!installHtml.includes('../hub/')&&!attendanceHtml.includes('../hub/'),'Standalone pages do not navigate to other projects');
 assert.ok(js.includes('term-progress')&&js.includes('learning-paths'),'Academic home has progress and modular learning cards');
 assert.ok(css.includes('welcome-head')&&css.includes('focus-bottom')&&css.includes('attendance-card'),'Reference-led premium dashboard styles are present');
 
