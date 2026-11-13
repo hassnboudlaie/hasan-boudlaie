@@ -239,3 +239,13 @@
  #journeyView .lj-intro-numbers{justify-content:space-between;gap:8px}
 }
 @media print{#journeyView .lj-pagebar{display:none!important}}
+
+#journeyView .lj-pagebar{top:var(--lj-topbar-height,74px);scroll-margin-top:calc(var(--lj-topbar-height,74px) + 8px)}
+#journeyView .lj-content input,#journeyView .lj-content textarea,#journeyView .lj-content select{scroll-margin-top:calc(var(--lj-topbar-height,74px) + 155px)}
+@media(max-width:720px){
+ #journeyView .lj-pagebar{display:grid;grid-template-columns:minmax(0,1fr) auto}
+ #journeyView .lj-panel-tabs{grid-column:1/-1}
+ #journeyView .lj-pagebar .lj-clock{min-width:0;justify-content:center}
+ #journeyView .lj-float-guide{white-space:nowrap;font-size:14px;padding:7px 8px}
+}
+@media(max-width:360px){#journeyView .lj-pagebar .lj-clock span{display:none}}

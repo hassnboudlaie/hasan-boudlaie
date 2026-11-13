@@ -37,7 +37,7 @@ function frame(inner,opts){
  '</div></header>'+
  '<div class="lj-topline"><span>'+(competitive?"مأموریت رقابتی":"مطالعه آزاد")+'</span><span>مرحله '+fa(Math.min(10,state.stage+1))+' از ۱۰ · '+fa(state.finished?100:(state.stage+(state.phase!=="step"?1:0))*10)+'٪</span>'+
  (competitive?'<span>امتیاز خام: '+fa(summary.raw)+' · سکه تمرین: '+fa(summary.coins)+'</span>':'<span>بدون محدودیت زمانی</span>')+'</div>'+
- '<div class="lj-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+(state.finished?100:Math.min(100,(state.stage+(state.phase!=="step"?1:0))*10))+'"><i style="width:'+(state.finished?100:Math.min(100,(state.stage+(state.phase!=="step"?1:0))*10))+'%"></i></div>'+
+ '<div class="lj-track" role="progressbar" aria-label="پیشرفت سفر رهبری" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+(state.finished?100:Math.min(100,(state.stage+(state.phase!=="step"?1:0))*10))+'"><i style="width:'+(state.finished?100:Math.min(100,(state.stage+(state.phase!=="step"?1:0))*10))+'%"></i></div>'+
  inner+'</div>';
 }
 function coachCard(text,kind){
@@ -79,6 +79,7 @@ function renderStep(){
  bar.innerHTML='<nav class="lj-panel-tabs" aria-label="بخش‌های مرحله">'+['یادگیری','تصمیم','تمرین'].map(function(label,i){return '<button type="button" data-lj-panel="'+i+'" aria-current="'+(current===i?'step':'false')+'">'+fa(i+1)+' · '+label+'</button>'}).join('')+'</nav>';
  var guide=root.querySelector('.lj-float-guide'),clock=root.querySelector('.lj-clock');if(clock)bar.appendChild(clock);bar.appendChild(guide);
  root.querySelector('.lj-content').before(bar);
+ if(current>0){var bridge=root.querySelector(".lj-bridge");if(bridge)bridge.hidden=true;}
  panels.forEach(function(panel,i){panel.hidden=i!==current});
  var submit=root.querySelector('.lj-actions-bottom');if(submit&&!study)submit.hidden=current!==2;
  var pager=document.createElement('div');pager.className='lj-panel-pager';pager.innerHTML=(current>0?'<button type="button" class="lj-secondary" data-lj-panel="'+(current-1)+'">بازگشت</button>':'')+(current<2?'<button type="button" class="lj-primary" data-lj-panel="'+(current+1)+'">'+(current===0?'بررسی موقعیت و انتخاب تصمیم':'نوشتن تمرین و خودارزیابی')+' ←</button>':'');
@@ -239,7 +240,7 @@ function handleClick(e){
  if(panelBtn&&root.contains(panelBtn)&&state){var panel=Number(panelBtn.dataset.ljPanel);if(panel>=0&&panel<=2){var draft=state.drafts[state.stage]||{};draft.panel=panel;state.drafts[state.stage]=draft;save();render();var bar=root.querySelector('.lj-pagebar');if(bar&&bar.scrollIntoView)bar.scrollIntoView({block:'start'});}return}
 
  var stageBtn=e.target.closest("[data-lj-stage]");
- if(stageBtn&&root.contains(stageBtn)&&state&&state.mode==="study"){state.studyFinished=false;state.stage=Math.max(0,Math.min(9,Number(stageBtn.dataset.ljStage)));save();render();return}
+ if(stageBtn&&root.contains(stageBtn)&&state&&state.mode==="study"){state.studyFinished=false;state.phase="step";state.stage=Math.max(0,Math.min(9,Number(stageBtn.dataset.ljStage)));save();render();return}
  var b=e.target.closest("[data-lj]");if(!b||!root.contains(b))return;
  var action=b.dataset.lj;
  if(action==="startCompetitive"||action==="startStudy"){
@@ -258,8 +259,8 @@ function handleClick(e){
    if(!confirm("مأموریت مستقل جدیدی آغاز شود؟ پیشرفت مأموریت فعلی جایگزین می‌شود؛ سوابق تکمیل‌شده حفظ خواهند شد."))return;
    state=startJourney("competitive",state.history);save();render();return;
  }
- if(action==="prev"&&state.mode==="study"){state.studyFinished=false;state.stage=Math.max(0,state.stage-1);save();render();return}
- if(action==="nextStudy"&&state.mode==="study"){state.studyFinished=false;state.stage=Math.min(9,state.stage+1);save();render();return}
+ if(action==="prev"&&state.mode==="study"){state.studyFinished=false;state.phase="step";state.stage=Math.max(0,state.stage-1);save();render();return}
+ if(action==="nextStudy"&&state.mode==="study"){state.studyFinished=false;state.phase="step";state.stage=Math.min(9,state.stage+1);save();render();return}
  if(action==="restart"){
    if(!confirm("پاسخ‌ها و پیشرفت فعلی پاک می‌شود. زمان، جریمه‌ها و سهمیه راهنما/مکث این تلاش بازنشانی نمی‌شوند؛ تنها یک مأموریت مستقل جدید سهمیه تازه دارد. ادامه می‌دهید؟"))return;
    C.restartSameAttempt(state);state.studyFinished=false;save();render();return;
@@ -326,5 +327,7 @@ root.addEventListener("input",function(e){
 root.addEventListener("change",function(e){if(e.target.matches('input[name="ljDecision"],#ljPractice,#ljRating'))saveDraft()});
 window.addEventListener("hashchange",function(){if(active())render()});
 window.addEventListener("storage",function(e){if(e.key===KEY){state=load();if(active())render();else updatePassport()}});
+var topbar=document.querySelector('.topbar');
+if(topbar&&window.ResizeObserver){new ResizeObserver(function(){root.style.setProperty('--lj-topbar-height',topbar.getBoundingClientRect().height+'px')}).observe(topbar)}
 state=load();render();ticker=setInterval(tick,1000);
 })();

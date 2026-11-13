@@ -7,7 +7,13 @@ const KEY='sabanaft_leadership_journey_v1';
 const logs=[];const read=p=>p.evaluate(k=>JSON.parse(localStorage.getItem(k)),KEY);
 const click=(p,a)=>p.locator('[data-lj="'+a+'"]').click();
 const panel=(p,n)=>p.locator('[data-lj-panel="'+n+'"]').first().click();
-async function shot(p,name){await p.screenshot({path:path.join(OUT,name+'.png'),fullPage:true});}
+async function shot(p,name){const pos=await p.evaluate(()=>scrollY);await p.screenshot({path:path.join(OUT,name+'-viewport.png')});await p.evaluate(()=>scrollTo(0,0));await p.screenshot({path:path.join(OUT,name+'.png'),fullPage:true});await p.evaluate(y=>scrollTo(0,y),pos);}
+async function accessibility(p){
+ await p.addScriptTag({path:require.resolve('axe-core/axe.min.js')});
+ const result=await p.evaluate(async()=>await axe.run(document.querySelector('#journeyView'),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}}));
+ fs.writeFileSync(path.join(OUT,'accessibility-'+p.viewportSize().width+'.json'),JSON.stringify(result.violations,null,2));
+ assert.deepEqual(result.violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})),[],'No serious/critical automated accessibility findings');
+}
 async function layout(p){
  const bad=await p.locator('#journeyRoot').evaluate(root=>Array.from(root.querySelectorAll('*')).filter(e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width&&r.height&&s.visibility!=='hidden'&&(r.left< -1||r.right>innerWidth+1)}).map(e=>e.className||e.tagName));
  assert.deepEqual(bad,[],'Journey must fit viewport without clipping');
@@ -17,7 +23,7 @@ async function fullJourney(browser,name,width){
  const ctx=await browser.newContext({viewport:{width,height:900},locale:'fa-IR',reducedMotion:'reduce',acceptDownloads:true});let p=await open(ctx);const errors=[];p.on('pageerror',e=>errors.push(e.message));
  await p.locator('[data-lj="startCompetitive"]').waitFor();await layout(p);await shot(p,name+'-intro');
  const annual=await p.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/gamification|passport/i.test(k))));
- await click(p,'startCompetitive');await layout(p);await shot(p,name+'-learning');
+ await click(p,'startCompetitive');await layout(p);await shot(p,name+'-learning');await accessibility(p);
  await click(p,'pause');assert.ok(await p.locator('#ljPauseClock').isVisible());await p.clock.fastForward(10000);await click(p,'resume');assert.equal((await read(p)).pause.used,true);
  let expected=0;const points=[8,6,4,2,8,6,8,4,8,8];
  for(let i=0;i<10;i++){
@@ -38,12 +44,12 @@ async function fullJourney(browser,name,width){
   if(i===3||i===7){assert.ok(await p.locator('.lj-recovery').isVisible());assert.equal(await p.locator('[data-lj="breakContinue"]').isDisabled(),true);await shot(p,name+'-recovery-'+i);await p.clock.fastForward(30001);await click(p,'breakContinue');}
  }
  const state=await read(p);assert.equal(state.finished,true);assert.equal(Object.keys(state.answers).length,10);assert.equal(state.history.at(-1).net,expected-6);assert.equal(state.history.at(-1).badge,'نقره‌ای');assert.equal(await p.locator('.lj-review-item').count(),10);assert.equal(await p.locator('.lj-option-review').count(),40);assert.equal(state.breaksDone.length,2);
- await p.locator('.lj-review-item summary').first().click();await layout(p);await shot(p,name+'-result');
+ await accessibility(p);await p.locator('.lj-review-item summary').first().click();await layout(p);await shot(p,name+'-result');
  await p.locator('#ljAction').fill('در جلسه هفتگی، اختیار تغییر ترتیب کار را با سرپرست روشن می‌کنم.');await p.locator('#ljDue').fill('2026-11-27');await p.locator('#ljEvidence').fill('ثبت دو تصمیم مستقل و بازخورد سرپرست');await click(p,'saveCommitment');await p.reload({waitUntil:'domcontentloaded'});assert.match(await p.locator('#ljAction').inputValue(),/جلسه هفتگی/);
  const dl=p.waitForEvent('download');await click(p,'png');const download=await dl;const file=path.join(OUT,name+'-badge.png');await download.saveAs(file);assert.ok(fs.statSync(file).size>1000);
  await p.evaluate(()=>{window.__printed=0;window.print=()=>{window.__printed++}});await click(p,'print');assert.equal(await p.evaluate(()=>window.__printed),1);await p.emulateMedia({media:'print'});await p.pdf({path:path.join(OUT,name+'-badge.pdf'),printBackground:true});await p.emulateMedia({media:'screen'});
  for(const route of ['course','passport','stage/idea','stage/relationship','stage/tools','stage/reflection','context','studio/cases','coach','home']){await p.goto(BASE.replace('#/journey','#/'+route),{waitUntil:'domcontentloaded'});assert.ok(await p.locator('.view.active').count()>0);}
- await p.goto(BASE,{waitUntil:'domcontentloaded'});assert.ok((await read(p)).finished);assert.deepEqual(await p.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/gamification|passport/i.test(k)))),annual,'Journey must not alter annual score storage');
+ await p.goto(BASE,{waitUntil:'domcontentloaded'});assert.ok((await read(p)).finished);await p.evaluate(()=>navigator.serviceWorker.ready);await ctx.setOffline(true);await p.reload({waitUntil:'domcontentloaded'});await p.locator('.lj-result').waitFor();assert.ok((await read(p)).finished);await ctx.setOffline(false);assert.deepEqual(await p.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/gamification|passport/i.test(k)))),annual,'Journey must not alter annual score storage');
  assert.deepEqual(errors,[]);logs.push({name,width,completed:10,raw:expected,penalty:6,net:expected-6,exports:['PNG','print','PDF'],routes:10});await ctx.close();
 }
 async function edges(browser){

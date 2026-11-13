@@ -31,7 +31,7 @@ jobs:
           exit 1
       - name: Install Chromium browser for true deployment test
         run: |
-          npm install --prefix /tmp/saba-live --no-save --no-audit --no-fund playwright@1.56.1
+          npm install --prefix /tmp/saba-live --no-save --no-audit --no-fund playwright@1.56.1 axe-core@4.10.3
           /tmp/saba-live/node_modules/.bin/playwright install --with-deps chromium
       - name: Audit published Journey at mobile and desktop widths
         env:
