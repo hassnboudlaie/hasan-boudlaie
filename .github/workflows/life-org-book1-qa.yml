@@ -20,3 +20,25 @@ jobs:
           node-version: "22"
       - name: Validate chapter app and source alignment
         run: node life-organization/book1-smoke-test.cjs
+  visual-browser:
+    runs-on: ubuntu-latest
+    needs: book1-smoke
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Playwright
+        run: npm install --no-save playwright
+      - name: Install Chromium for browser audit
+        run: npx playwright install --with-deps chromium
+      - name: Check Android and desktop layouts, flow and screenshots
+        run: node life-organization/book1-visual-qa.cjs
+      - name: Save visual audit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-org-v03-visual-audit
+          path: qa-artifacts/life-org-v03/*.png
+          if-no-files-found: ignore
