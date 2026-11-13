@@ -97,6 +97,8 @@
     const h=decodeURIComponent(location.hash.replace(/^#/,""))||"home";
     const parts=h.split("/");
     if(parts[0]==="module"&&/^[1-6]$/.test(parts[1]||""))return {page:"module",id:Number(parts[1])};
+    if(parts[0]==="book1"&&parts[1]==="workbook"&&parts.length===2)return {page:"book1",id:0,mode:"workbook"};
+    if(parts[0]==="book1"&&/^[1-3]$/.test(parts[1]||"")&&(parts.length===2||(parts.length===3&&parts[2]==="workbook")))return {page:"book1",id:Number(parts[1]),mode:parts[2]==="workbook"?"workbook":"read"};
     if(["home","modules","workbook","coach","progress","profile"].includes(h))return {page:h};
     return {page:"home"};
   }
@@ -120,7 +122,7 @@
     return '<section class="hero"><div class="hero-copy"><div class="eyebrow">'+t("homeEyebrow")+'</div>'+
       '<h1>'+t("homeTitle")+'</h1><p class="hero-sub">'+t("homeDesc")+'</p><div class="hero-buttons">'+
       '<button class="btn btn-hero" data-route="module/'+next.id+'">'+t("startJourney")+' <span aria-hidden="true">↗</span></button>'+
-      '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+
+      '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+(window.LifeBook?window.LifeBook.homeFeature(state.lang):'')+
       '<section><div class="section-heading"><div><div class="section-kicker">'+t("moduleKicker")+'</div><h2>'+t("modulesHeading")+'</h2><p>'+t("modulesDesc")+'</p></div><button class="inline-link" data-route="modules">'+t("viewAll")+' ↗</button></div>'+
       '<div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div></section>'+
       '<section class="life-coach-teaser"><div><span class="section-kicker">MY AI LIFE COACH</span><h2>'+(state.lang==="fa"?"مربی هوش مصنوعی زندگی من":"My AI Life Coach")+'</h2><p>'+(state.lang==="fa"?"فضایی برای Reflection، انتخاب آگاهانه و طراحی زندگی؛ به‌زودی.":"A place to reflect, clarify choices and move forward — coming soon.")+'</p></div><button type="button" class="btn btn-primary" data-route="coach">'+(state.lang==="fa"?"مشاهده · به‌زودی":"Explore · Coming soon")+' ↗</button></section>'+
@@ -131,6 +133,7 @@
     '<div class="section-heading"><div><h2>'+t("moduleBrowse")+'</h2></div></div><div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div>';
   }
   function modulePage(id){
+    if(id===1&&window.LifeBook)return window.LifeBook.landing(state.lang);
     const m=MODULES[id-1];
     return '<section class="module-hero module-'+id+'"><div class="module-hero-main">'+moduleIcon(m)+'<div class="module-overline">'+t("moduleTag")+' 0'+id+' / 06</div>'+
       '<h1>'+esc(moduleName(m))+'</h1><div class="en-title">'+esc(m.en)+'</div><p>'+esc(moduleIntro(m))+'</p></div>'+
@@ -188,15 +191,15 @@
     const themeBtn=$("#theme-btn"); if(themeBtn)themeBtn.innerHTML=icons(dark?"sun":"moon");
   }
   function render(){
-    const r=route(), active=r.page==="module"?"modules":r.page;
+    const r=route(), active=(r.page==="module"||r.page==="book1")?"modules":r.page;
     document.documentElement.lang=state.lang;
     document.documentElement.dir=state.lang==="fa"?"rtl":"ltr";
     document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
     $("#side-nav").innerHTML=navHtml(active);
     $("#bottom-nav").innerHTML=navHtml(active,true);
-    const crumb=r.page==="module"?moduleName(MODULES[r.id-1]):t(r.page==="home"?"homeCrumb":r.page);
+    const crumb=r.page==="module"?moduleName(MODULES[r.id-1]):r.page==="book1"?(state.lang==="fa"?"جلد اول / دیدن سازمان زندگی":"Book One / Seeing Your Life Organization"):t(r.page==="home"?"homeCrumb":r.page);
     $("#breadcrumbs").innerHTML='<span>'+t("home")+'</span><span class="crumb-sep">/</span><strong>'+esc(crumb)+'</strong>';
-    $("#page").innerHTML=r.page==="module"?modulePage(r.id):pageFn[r.page]();
+    $("#page").innerHTML=r.page==="module"?modulePage(r.id):r.page==="book1"&&window.LifeBook?(r.id===0?window.LifeBook.workbook(state.lang):r.mode==="workbook"?window.LifeBook.worksheet(r.id,state.lang):window.LifeBook.chapter(r.id,state.lang)):pageFn[r.page]();
     $("#language-btn").textContent=state.lang==="fa"?"EN":"فا";
     $("#avatar-letter").textContent=(state.name.trim()||t("anonymous")).charAt(0).toUpperCase();
     $("#install-title").textContent=t("installation");$("#install-body").textContent=t("installHelp");
@@ -209,7 +212,7 @@
     toastTimeout=setTimeout(()=>el.classList.remove("visible"),2400);
   }
   function downloadNotes(){
-    const payload={app:"The Life Organization",exportedAt:new Date().toISOString(),formatVersion:1,notes:state.notes,startedModules:state.started};
+    const payload={app:"The Life Organization",exportedAt:new Date().toISOString(),formatVersion:2,notes:state.notes,startedModules:state.started,book1:window.LifeBook?window.LifeBook.exportData():null};
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
     const a=document.createElement("a");a.href=url;a.download="life-organization-notes.json";
     document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(t("exportDone"));
@@ -226,7 +229,7 @@
       }
       case "save-name":state.name=($("#name-input")?.value||"").trim().slice(0,80);persist();render();toast(t("nameSaved"));break;
       case "export":downloadNotes();break;
-      case "reset":if(confirm(t("resetAsk"))){const lang=state.lang,theme=state.theme;state=blank();state.lang=lang;state.theme=theme;persist();render();toast(t("resetDone"))}break;
+      case "reset":if(confirm(t("resetAsk"))){const lang=state.lang,theme=state.theme;state=blank();state.lang=lang;state.theme=theme;if(window.LifeBook)window.LifeBook.resetAll();persist();render();toast(t("resetDone"))}break;
       case "install":if(installPrompt){installPrompt.prompt();installPrompt.userChoice.finally(()=>{installPrompt=null})}else $("#install-dialog").showModal();break;
     }
   });
