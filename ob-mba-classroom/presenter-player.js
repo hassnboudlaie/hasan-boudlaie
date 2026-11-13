@@ -34,7 +34,7 @@ function render({session:s,variant="fa",index=0}){
  const en=variant==="en"&&supportsOriginal(s),mode=en?"en":"fa",length=count(s,mode);
  const n=Math.max(0,Math.min(Math.max(0,length-1),Number(index)||0));
  const pick='<label class="presenter-page-select">اسلاید <select id="presenterPageSelect" data-action="presenterGo" aria-label="رفتن به شماره اسلاید">'+
- Array.from({length},(_,i)=>'<option value="'+i+'" '+(i===n?'selected':'')+'>'+(i+1)+'</option>').join("")+'</select></label>';
+ Array.from({length},(_,i)=>'<option value="'+(i+1)+'" '+(i===n?'selected':'')+'>'+(i+1)+'</option>').join("")+'</select></label>';
  const active=m=>mode===m?' aria-pressed="true" class="presenter-mode active"':' aria-pressed="false" class="presenter-mode"';
  const modeSwitch='<div class="presenter-mode-switch" role="group" aria-label="انتخاب نسخه ارائه">'+
  '<button type="button" data-action="presenterLanguage" data-language="fa"'+active("fa")+'>فارسی</button>'+
@@ -70,9 +70,9 @@ function update({session:s,variant="fa",index=0}){
  const select=stage.querySelector("#presenterPageSelect");
  if(select){
   if(select.options.length!==total){
-   select.innerHTML=Array.from({length:total},(_,i)=>'<option value="'+i+'">'+(i+1)+'</option>').join("");
+   select.innerHTML=Array.from({length:total},(_,i)=>'<option value="'+(i+1)+'">'+(i+1)+'</option>').join("");
   }
-  select.value=String(n);
+  select.value=String(n+1);
  }
  const progress=stage.querySelector(".presenter-progress>span");if(progress)progress.style.width=(100*(n+1)/Math.max(1,total)).toFixed(1)+"%";
  const downloadSection=document.querySelector(".presenter-bottom .presenter-files");if(downloadSection)downloadSection.outerHTML=downloads(s,mode);
