@@ -13,8 +13,8 @@ assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScr
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('style.css?v=8')&&html.includes('app.js?v=8'),'New CSS/JS bust old cache');
-assert.ok(sw.includes('shell-v9')&&sw.includes('style.css?v=8')&&sw.includes('app.js?v=8'),'Service-worker cache bump');
+assert.ok(html.includes('style.css?v=10')&&html.includes('app.js?v=10'),'New CSS/JS bust old cache');
+assert.ok(sw.includes('shell-v10')&&sw.includes('style.css?v=10')&&sw.includes('app.js?v=10'),'Service-worker cache bump');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=2'),'Attendance page is installable');
@@ -33,13 +33,20 @@ assert.equal(publicCourse.OB_COURSE_CONTENT.sessions.length,2,'Only Robbins sess
 assert.equal(publicCourse.OB_COURSE_CONTENT.sessions[0].presentation.length,16,'Session 1 slide count matches source deck');
 assert.equal(publicCourse.OB_COURSE_CONTENT.sessions[1].presentation.length,14,'Session 2 slide count matches source deck');
 assert.ok(publicCourse.OB_COURSE_CONTENT.sessions.every(s=>s.quizzes.length===5&&s.published),'Each published session has five practice questions');
-assert.ok(html.includes('href="./install.html"'),'App must link its installer');
-assert.ok(sw.includes('./install.html')&&sw.includes('./install.js?v=2'),'Install page must be cached by the PWA');
+assert.ok(js.includes('href="./install.html"'),'App must link its installer within the classroom');
+assert.ok(sw.includes('./install.html')&&sw.includes('./install.js?v=2')&&sw.includes('./install.css?v=3'),'Install page must be cached by the PWA');
 assert.ok(installHtml.includes('id="installAction"')&&installHtml.includes('Add to Home Screen'),'Installer offers concise device-specific help');
-assert.ok(installHtml.includes('<details id="instructions"')&&installHtml.includes('<details class="about-demo"'),'Install help and version notice stay collapsed');
+assert.ok(installHtml.includes('<details id="instructions"')&&!installHtml.includes('about-demo'),'Install help stays collapsed and redundant version details are removed');
 assert.ok(!installHtml.includes('وضعیت فعلی اپ')&&!installHtml.includes('آیکون «مدیریت رفتار سازمانی» اضافه می‌شود'),'Verbose install copy removed');
 assert.ok(installJs.includes('beforeinstallprompt')&&installJs.includes('appinstalled'),'Installer handles supported and fallback paths');
 assert.equal(manifest.display,'standalone','PWA launches in standalone mode');
+assert.equal(manifest.scope,'./','PWA stays within the MBA classroom');
+assert.equal(manifest.start_url,'./','Installed app starts on Allameh page');
+assert.ok(!html.includes('../hub/')&&!html.includes('اپ‌های من'),'No link back to HB Hub from classroom header');
+assert.ok(!installHtml.includes('../hub/')&&!attendanceHtml.includes('../hub/'),'Standalone pages do not navigate to other projects');
+assert.ok(js.includes('term-progress')&&js.includes('learning-paths'),'Academic home has progress and modular learning cards');
+assert.ok(css.includes('welcome-head')&&css.includes('focus-bottom')&&css.includes('attendance-card'),'Reference-led premium dashboard styles are present');
+
 assert.equal(manifest.icons.some(i=>i.sizes==='512x512'),true,'PWA icon supports 512x512');
 assert.ok(!js.includes('UPGRADE'),'No forced ads or paid upsell in classroom');
 assert.ok(js.includes('sessionPicker'),'Lesson content must be selectable');
@@ -123,4 +130,4 @@ assert.ok(ratio('#ffffff','#086973')>=4.5,'Student concepts card must meet AA co
 assert.ok(ratio('#ffffff','#186d73')>=4.5,'Student practice card must meet AA contrast');
 assert.ok(css.includes('learning-card')&&css.includes('lesson-track'),'High contrast card UI included');
 assert.ok(installCss.includes('@media(max-width:650px)'),'Installer is mobile responsive');
-console.log('PASS OB MBA Classroom: concise slides, secure attendance portal, 16 lessons, protected backend migration and PWA v8.');
+console.log('PASS Allameh MBA Classroom: scope isolation, premium dashboard, secure attendance, lesson flows, PWA v10.');
