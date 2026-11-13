@@ -205,7 +205,7 @@ function worksheetPage(n,lang){
  '<p>'+T(lang,"این یک برگه مشاهده و بازاندیشی است، نه آزمون یا نمره زندگی. پاسخ‌ها فقط در دستگاه شما ذخیره می‌شوند.","This is a learning and reflection worksheet, not a diagnostic test or life score. Answers remain on this device.")+'</p>'+
  '<div class="lb-worksheet-meta"><strong>'+T(lang,fieldsFilled(n)+" از "+total+" بخش دارای یادداشت",fieldsFilled(n)+" of "+total+" prompts filled")+'</strong><span id="lb-save-status" role="status">'+T(lang,"ذخیره محلی خودکار","Auto-saved locally")+'</span></div></section>'+
  '<div class="lb-workbook-nav"><button class="lb-button lb-button-quiet" data-route="book1/'+n+'">'+T(lang,"مطالعه متن اصلی","Read original chapter")+'</button><button class="lb-button lb-button-quiet" data-route="book1/workbook">'+T(lang,"نمای کلی دفتر کار","Workbook overview")+'</button></div>'+
- '<form class="lb-workbook-form" autocomplete="off" onsubmit="return false;">'+fields+'</form>'+
+ '<form class="lb-workbook-form" autocomplete="off">'+fields+'</form>'+
  '<div class="lb-workbook-actions"><button class="lb-button lb-button-quiet" type="button" data-lb-action="download-text">'+T(lang,"دریافت نسخه متنی سه فصل","Export readable workbook")+'</button>'+
  '<button class="lb-button lb-button-quiet" type="button" data-lb-action="download-json">'+T(lang,"پشتیبان داده‌ها JSON","Backup JSON")+'</button>'+
  '<button class="lb-button lb-button-danger" type="button" data-lb-action="clear-chapter" data-chapter="'+n+'">'+T(lang,"پاک‌کردن پاسخ‌های این فصل","Clear this chapter’s answers")+'</button></div>'+
@@ -261,6 +261,7 @@ function updateProgress(n){
  const track=document.querySelector(".lb-chapter-hero .lb-track>div");
  if(track)track.style.width=Math.round(100*completed(n)/totalTalks(n))+"%";
 }
+document.addEventListener("submit",function(e){if(e.target.matches(".lb-workbook-form"))e.preventDefault();});
 document.addEventListener("input",function(e){
  const field=e.target.closest("[data-lb-field]");
  if(!field)return;
@@ -269,7 +270,8 @@ document.addEventListener("input",function(e){
  if(!state.fields[n]||typeof state.fields[n]!=="object")state.fields[n]={};
  state.fields[n][key]=field.value.slice(0,1800);
  const status=document.getElementById("lb-save-status");
- if(status)status.textContent=persist()?"ذخیره شد · Saved locally":"ذخیره ممکن نشد · Export now";
+ const saved=persist();
+ if(status)status.textContent=saved?"ذخیره شد · Saved locally":"ذخیره ممکن نشد · Export now";
 });
 document.addEventListener("click",function(e){
  const el=e.target.closest("[data-lb-action]");
