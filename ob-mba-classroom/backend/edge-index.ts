@@ -73,8 +73,8 @@ async function actionRouter(input:Record<string,unknown>){
 
  if(action==="registerGuest"){
   // Open application, but approval remains entirely teacher-controlled.
-  const first=safeName(input.first_name),last=safeName(input.last_name);
-  if(!first||!last||first.length<2||last.length<2)return fail("invalid_guest_registration",400);
+  const first=String(input.first_name||"").replace(/\s+/g," ").trim(),last=String(input.last_name||"").replace(/\s+/g," ").trim();
+  if(first.length<2||last.length<2||first.length>45||last.length>45)return fail("invalid_guest_registration",400);
   const name=safeName(first+" "+last);
   if(!name)return fail("invalid_guest_registration",400);
   const {count,error:countError}=await supabase.from("mba_ob_guests").select("id",{head:true,count:"exact"})
