@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "source": "Uploaded original PowerPoint decks (publisher slides, 2000)",
+  "sessions": {
+    "1": {
+      "slides": 16,
+      "format": "webp",
+      "aspect": "4:3",
+      "pagePattern": "materials/original/session-01/slide-%02d.webp",
+      "pdf": "materials/original/session-01.pdf",
+      "powerpoint": "materials/original/session-01-robbins.ppt"
+    },
+    "2": {
+      "slides": 14,
+      "format": "webp",
+      "aspect": "4:3",
+      "pagePattern": "materials/original/session-02/slide-%02d.webp",
+      "pdf": "materials/original/session-02.pdf",
+      "powerpoint": "materials/original/session-02-robbins.ppt"
+    }
+  }
+}

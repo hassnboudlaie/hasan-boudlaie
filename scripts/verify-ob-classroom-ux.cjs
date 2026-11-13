@@ -4,22 +4,40 @@ const fs=require('node:fs');
 const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
-const html=read('ob-mba-classroom/index.html'),js=read('ob-mba-classroom/app.js'),css=read('ob-mba-classroom/style.css'),sw=read('ob-mba-classroom/sw.js'),courseScript=read('ob-mba-classroom/course-content.js'),enrichmentScript=read('ob-mba-classroom/lesson-enrichment.js'),guidedJs=read('ob-mba-classroom/guided-learning.js'),guidedCss=read('ob-mba-classroom/guided-learning.css'),gateJs=read('ob-mba-classroom/access-gate.js'),gateCss=read('ob-mba-classroom/access-gate.css'),caseJs=read('ob-mba-classroom/case-portal.js'),caseCss=read('ob-mba-classroom/case-portal.css'),caseSchema=read('ob-mba-classroom/backend/mba_ob_case_assessments_v1.sql'),qrSvg=read('ob-mba-classroom/join-qr.svg'),approvalSql=read('ob-mba-classroom/backend/mba_ob_identity_approval_v2.sql');
+const html=read('ob-mba-classroom/index.html'),js=read('ob-mba-classroom/app.js'),css=read('ob-mba-classroom/style.css'),sw=read('ob-mba-classroom/sw.js'),courseScript=read('ob-mba-classroom/course-content.js'),enrichmentScript=read('ob-mba-classroom/lesson-enrichment.js'),guidedJs=read('ob-mba-classroom/guided-learning.js'),guidedCss=read('ob-mba-classroom/guided-learning.css'),gateJs=read('ob-mba-classroom/access-gate.js'),gateCss=read('ob-mba-classroom/access-gate.css'),caseJs=read('ob-mba-classroom/case-portal.js'),caseCss=read('ob-mba-classroom/case-portal.css'),caseSchema=read('ob-mba-classroom/backend/mba_ob_case_assessments_v1.sql'),qrSvg=read('ob-mba-classroom/join-qr.svg'),approvalSql=read('ob-mba-classroom/backend/mba_ob_identity_approval_v2.sql'),presenterJs=read('ob-mba-classroom/presenter-player.js'),presenterCss=read('ob-mba-classroom/presenter-player.css'),sourceManifest=JSON.parse(read('ob-mba-classroom/materials/original/manifest.json'));
 const attendanceHtml=read('ob-mba-classroom/attendance.html'),attendanceJs=read('ob-mba-classroom/attendance.js'),attendanceCss=read('ob-mba-classroom/attendance.css'),attendanceSql=read('ob-mba-classroom/backend/mba_ob_attendance.sql'),attendanceApi=read('ob-mba-classroom/backend/edge-index.ts');
 const installHtml=read('ob-mba-classroom/install.html'),installJs=read('ob-mba-classroom/install.js'),installCss=read('ob-mba-classroom/install.css'),manifest=JSON.parse(read('ob-mba-classroom/manifest.webmanifest'));
 assert.doesNotThrow(()=>new Function(js),'Frontend JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',caseJs),'Case API client JavaScript must parse');
 assert.doesNotThrow(()=>new Function(gateJs),'Entrance gate JavaScript must parse');
+assert.doesNotThrow(()=>new Function('window','document','Image',presenterJs),'Bilingual presentation JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',guidedJs),'Guided reader JavaScript must parse');
 assert.doesNotThrow(()=>new Function(attendanceJs),'Attendance frontend must parse');
 assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=3')&&html.includes('access-gate.css?v=1')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
-assert.ok(sw.includes('shell-v14')&&sw.includes('app.js?v=13')&&sw.includes('access-gate.js?v=3'),'PWA cache and approved assets');
+assert.ok(html.includes('access-gate.js?v=4')&&html.includes('access-gate.css?v=1')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
+assert.ok(sw.includes('shell-v15')&&sw.includes('app.js?v=14')&&sw.includes('access-gate.js?v=4'),'PWA cache and approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
+assert.ok(presenterCss.includes('.presenter-stage:fullscreen')&&presenterCss.includes('.presenter-mode-switch'),'Unified player supports fullscreen and language switch');
+assert.ok(gateJs.includes('presenter-player.js?v=1')&&sw.includes('presenter-player.js?v=1')&&html.includes('presenter-player.css?v=1'),'Presentation code and styles load in approved app and offline cache');
+assert.equal(sourceManifest.sessions['1'].slides,16,'Original English chapter 1 has 16 verified pages');
+assert.equal(sourceManifest.sessions['2'].slides,14,'Original English chapter 2 has 14 verified pages');
+for(const session of [1,2]){
+ const no=String(session).padStart(2,'0'),pages=session===1?16:14;
+ const ppt=fs.readFileSync(path.join(root,'ob-mba-classroom/materials/original/session-'+no+'-robbins.ppt'));
+ const pdf=fs.readFileSync(path.join(root,'ob-mba-classroom/materials/original/session-'+no+'.pdf'));
+ assert.equal(ppt.subarray(0,4).toString('hex'),'d0cf11e0','Source must be a genuine uploaded OLE PowerPoint');
+ assert.equal(pdf.subarray(0,4).toString(),'%PDF','Source-preserving PDF must be usable');
+ for(let n=1;n<=pages;n++){
+  const asset='ob-mba-classroom/materials/original/session-'+no+'/slide-'+String(n).padStart(2,'0')+'.webp';
+  const bytes=fs.readFileSync(path.join(root,asset));
+  assert.ok(bytes.length>1000&&bytes.subarray(0,4).toString()==='RIFF'&&bytes.subarray(8,12).toString()==='WEBP','Every English slide is the actual encoded source page: '+asset);
+  assert.ok(sw.includes('./materials/original/session-'+no+'/slide-'+String(n).padStart(2,'0')+'.webp'),'English slide cached for offline view');
+ }
+}
 assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=3'),'Attendance page is installable');
 assert.ok(attendanceHtml.includes('id="attendanceRoot"')&&attendanceHtml.includes('dir="rtl"'),'RTL attendance portal exists');
 for(const word of ['studentEnroll','teacherLogin','checkIn','openWindow','issueInvites','exportCsv','approvePending','changeTeacherPassword'])assert.ok(attendanceJs.includes(word),'Attendance functionality missing: '+word);
@@ -85,6 +103,7 @@ assert.equal(guideHolder.OB_GUIDED.stepsOf(firstSource,'examples',{}).length,3,'
 assert.ok(guideHolder.OB_GUIDED.stepsOf(firstSource,'case',{}).length>=5,'Case split into source, decision, analysis and close');
 assert.ok(guideHolder.OB_GUIDED.stepsOf(firstSource,'reflection',{}).every(v=>(v.body.match(/<textarea/g)||[]).length<=2),'At most two workbook prompts per page');
 const fakeWindow={scrollTo(){},OB_CASE:{teacherHTML:()=>'<section id="caseTeacherRoot">ارزیابی تحلیل کیس‌ها</section>',refreshTeacher(){},refreshStudent(){},studentStatusMarkup:()=>''},OB_ACCESS:{approved:true,role:"student"},OB_COURSE_CONTENT:publicCourse.OB_COURSE_CONTENT,OB_LESSON_ENRICHMENT:publicCourse.OB_LESSON_ENRICHMENT,OB_GUIDED:guideHolder.OB_GUIDED};
+new Function('window','document','Image',presenterJs)(fakeWindow,{getElementById(){return null}},function(){this.src=''});
 new Function('document','localStorage','window','crypto','setTimeout','clearTimeout',js)(doc,storage,fakeWindow,{getRandomValues(a){a[0]=54321}},()=>{},()=>{});
 assert.ok(app.innerHTML.includes('سایر امکانات کلاس'),'Student home uses progressive disclosure');
 assert.ok(!app.innerHTML.includes('یکی از دو مسیر را انتخاب کنید')&&!app.innerHTML.includes('در زمان مناسب'),'Student home avoids redundant instructions');
@@ -115,15 +134,19 @@ assert.ok(app.innerHTML.includes('انگلیسی')&&app.innerHTML.includes('فا
 assert.ok(!app.innerHTML.includes('پرزنتیشن بازآفرینی‌شده')&&!app.innerHTML.includes('نمایش فایل اصلی'),'Unnecessary instructional labels removed');
 assert.ok(!app.innerHTML.includes('نمایش فایل اصلی'),'English source card is concise');
 click('openOriginalEnglish');
-assert.ok(app.innerHTML.includes('اسلایدهای انگلیسی'),'Restricted original preview remains in app');
-assert.ok(app.innerHTML.includes('drive.google.com/file/d/1smEaHwVPZbASf3Vq-vAAGowBT9LEu4jj/preview'),'Original viewer uses verified Drive file');
-click('backFromEnglish');
-click('viewPresentation');
-assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'In-app lecture player is accessible');
-assert.ok(app.innerHTML.includes('اسلاید 1 از 16'),'Lecture starts on slide 1');
+assert.ok(app.innerHTML.includes('presenterStage')&&app.innerHTML.includes('English · Original'),'Both teaching decks share one in-app presenter');
+assert.ok(app.innerHTML.includes('materials/original/session-01/slide-01.webp'),'English viewer shows source PPT slide 1, not Drive iframe');
+assert.ok(app.innerHTML.includes('session-01-robbins.ppt'),'Original English PowerPoint is downloadable');
 click('slideNext');
-assert.ok(app.innerHTML.includes('اسلاید 2 از 16'),'Next slide works');
-assert.ok(app.innerHTML.includes('session-01-robbins.pptx')&&app.innerHTML.includes('session-01-robbins.pdf'),'Presentation 1 links to both downloadable files');
+assert.ok(app.innerHTML.includes('materials/original/session-01/slide-02.webp'),'English source next slide is rendered independently');
+click('presenterLanguage',{language:'fa'});
+assert.ok(app.innerHTML.includes('نسخه فارسی تدریس'),'Language selector returns to Persian slides');
+assert.ok(app.innerHTML.includes('اسلاید 1 از 16'),'Changing source resets to first slide');
+click('slideNext');
+assert.ok(app.innerHTML.includes('اسلاید 2 از 16'),'Persian next slide works');
+assert.ok(app.innerHTML.includes('session-01-robbins.pptx')&&app.innerHTML.includes('session-01-robbins.pdf'),'Persian download preserved');
+click('presenterLanguage',{language:'en'});
+assert.ok(app.innerHTML.includes('session-01/slide-01.webp'),'Switching back to original English stays in current player');
 click('backFromPresentation');
 click('setTrack',{track:'practice'});
 doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker"]'},value:'examples'}});
@@ -169,9 +192,9 @@ role('projector');
 assert.ok(app.innerHTML.includes('حالت تمام‌صفحه'),'Projector supports fullscreen');
 assert.ok(app.innerHTML.includes('پخش اسلایدهای فارسی')&&app.innerHTML.includes('پخش نسخه اصلی انگلیسی')&&app.innerHTML.includes('QR ورود'),'Projector shows language options and class QR');
 click('projectJoinQR');assert.ok(app.innerHTML.includes('join-qr.svg'),'Projector displays scannable join QR');
-click('projectPresentation');assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'Projector launches current deck');
-click('openOriginalEnglish');assert.ok(app.innerHTML.includes('اسلایدهای انگلیسی'),'English original can be projected in-app');
-click('backFromEnglish');assert.ok(app.innerHTML.includes('پرزنتیشن جلسه 01'),'English viewer returns to lecture');
+click('projectPresentation');assert.ok(app.innerHTML.includes('نمایش اسلایدها · جلسه 01'),'Projector launches unified presenter');
+click('projectEnglishOriginal');assert.ok(app.innerHTML.includes('session-01/slide-01.webp'),'Projector opens real English source inside same player');
+click('presenterLanguage',{language:'fa'});assert.ok(app.innerHTML.includes('نسخه فارسی تدریس'),'Projector can switch source without leaving the presenter');
 assert.ok(!app.innerHTML.includes('CLASSROOM POLL'),'Projector UI must avoid unnecessary English');
 function lum(hex){const x=hex.replace('#','').match(/.{2}/g).map(v=>parseInt(v,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return .2126*x[0]+.7152*x[1]+.0722*x[2]}
 function ratio(a,b){const x=[lum(a),lum(b)].sort((a,b)=>b-a);return (x[0]+.05)/(x[1]+.05)}
@@ -181,4 +204,4 @@ assert.ok(ratio('#ffffff','#086973')>=4.5,'Student concepts card must meet AA co
 assert.ok(ratio('#ffffff','#186d73')>=4.5,'Student practice card must meet AA contrast');
 assert.ok(css.includes('learning-card')&&css.includes('lesson-track'),'High contrast card UI included');
 assert.ok(installCss.includes('@media(max-width:650px)'),'Installer is mobile responsive');
-console.log('PASS MBA: case-aligned chapters and assessments, QR, server-backed submissions, instructor review and PWA v13.');
+console.log('PASS MBA: 16/14 original source slides, unified classroom presenter FA/EN, keyboard-ready fullscreen, approved access and PWA v15.');

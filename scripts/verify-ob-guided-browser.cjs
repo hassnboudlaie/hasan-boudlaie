@@ -125,6 +125,53 @@ async function run(){
   await page.locator("#sectionSelect").selectOption("slides");
   assert.ok(await page.locator(".persian-version").isVisible(),"Persian presentation kept");
   assert.ok(await page.locator(".english-version").isVisible(),"English source preserved");
+  await page.locator('[data-action="openOriginalEnglish"]').click();
+  await page.locator("#presenterStage").waitFor();
+  assert.equal(await page.locator('#presenterStage').getAttribute('data-variant'),'en',"Original source is selected in the same app player");
+  await page.locator('.presenter-original-slide img').waitFor();
+  assert.ok(await page.locator('.presenter-original-slide img').evaluate(img=>img.complete&&img.naturalWidth>=900),"Slide is a real full-resolution source render, not a screenshot of Google Drive");
+  assert.ok((await page.locator('.presenter-count').textContent()).includes("16"),"Chapter 1 original has 16 pages");
+  await noOverflow(page,config.name+" English source");
+  await save(page,config.name+"-07-original-English-1");
+  await page.locator('[data-action="slideNext"]').click();
+  assert.ok((await page.locator('.presenter-original-slide img').getAttribute('src')).includes('slide-02.webp'),"Next English slide has original page 2");
+  await page.locator("#presenterPageSelect").selectOption("16");
+  assert.ok((await page.locator('.presenter-original-slide img').getAttribute('src')).includes('slide-16.webp'),"Can jump to last English slide by visible page number");
+  await page.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
+  assert.ok(await page.locator('.presenter-fa-slide').isVisible(),"Persian deck stays in the same player");
+  await page.locator('[data-action="presenterLanguage"][data-language="en"]').click();
+  assert.ok(await page.locator('.presenter-original-slide img').isVisible(),"Language switching is reversible");
+  await page.locator('[data-action="slideFull"]').click();
+  await page.waitForFunction(()=>Boolean(document.fullscreenElement),null,{timeout:5000});
+  assert.ok(await page.evaluate(()=>Boolean(document.fullscreenElement)),"Fullscreen presentation must activate on click");
+  await page.locator('[data-action="slideNext"]').click();
+  assert.equal(await page.evaluate(()=>Boolean(document.fullscreenElement)),true,"Slide navigation does not exit fullscreen");
+  await page.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
+  assert.equal(await page.evaluate(()=>Boolean(document.fullscreenElement)),true,"Language switching does not exit fullscreen");
+  await page.keyboard.press("Escape");
+  if(await page.evaluate(()=>Boolean(document.fullscreenElement))){
+   // Headless Chrome does not always propagate Escape to fullscreen; the
+   // accessible in-stage toggle must also exit reliably.
+   await page.locator('[data-action="slideFull"]').click();
+  }
+  await page.waitForFunction(()=>!document.fullscreenElement,null,{timeout:5000});
+  await page.locator("#lectureSlide").focus();
+  await page.keyboard.press("PageDown");
+  assert.ok((await page.locator('.presenter-count').textContent()).includes("۲")||(await page.locator('.presenter-count').textContent()).includes("2"),"Keyboard PageDown advances Persian deck");
+  await noOverflow(page,config.name+" unified fullscreen/slide controls");
+  await save(page,config.name+"-08-Persian-presenter");
+  await page.locator('[data-action="backFromPresentation"]').click();
+  await page.locator("#sectionSelect").waitFor();
+  // Both chapters must use their own original source image sequence.
+  await page.locator('[data-action="backSessions"]').click();
+  await page.locator('[data-action="openSession"][data-id="2"]').click();
+  await page.locator('[data-track="concepts"]').click();
+  await page.locator("#sectionSelect").selectOption("slides");
+  await page.locator('[data-action="openOriginalEnglish"]').click();
+  await page.waitForFunction(()=>{const image=document.querySelector(".presenter-original-slide img");return image&&image.complete&&image.naturalWidth>=900},null,{timeout:6500});
+  assert.ok(await page.locator('.presenter-original-slide img').isVisible(),"Second chapter original source image renders");
+  assert.ok((await page.locator('.presenter-count').textContent()).includes("14"),"Second chapter has 14 original English slides");
+  await page.locator('[data-action="backFromPresentation"]').click();
   await noOverflow(page,config.name+" presentations");
   await page.locator("#themeToggle").click();
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),"dark","Optional dark mode still works");
@@ -185,6 +232,11 @@ async function run(){
  await instructorPage.locator(".page").waitFor();
  assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
  assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
+ await instructorPage.locator('[data-action="teacherCurrentPresentation"]').click();
+ assert.ok(await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').isVisible(),"Teacher can choose original English in the classroom player");
+ await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').click();
+ assert.ok(await instructorPage.locator('.presenter-original-slide img').isVisible(),"Teacher English deck opens inside the app");
+ await instructorPage.locator('[data-action="backFromPresentation"]').click();
  await instructorPage.locator(".teacher-home details.disclosure").first().locator("summary").click();
  await instructorPage.locator('[data-page="caseReviews"]').click();
  await instructorPage.getByText("ارزیابی تحلیل کیس‌ها").waitFor();

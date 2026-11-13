@@ -1,0 +1,36 @@
+name: OB Original Robbins Slide Render
+on:
+  push:
+    paths:
+      - "ob-mba-classroom/materials/original/*.ppt"
+      - "scripts/build-ob-original-decks.py"
+      - ".github/workflows/ob-original-slides.yml"
+permissions:
+  contents: write
+jobs:
+  render-originals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install slide conversion tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libreoffice-impress poppler-utils
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Render uploaded original PowerPoints to slide faithful PDFs and WebP
+        run: python scripts/build-ob-original-decks.py
+      - name: Commit slide assets to source branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ob-mba-classroom/materials/original
+          if ! git diff --cached --quiet; then
+            git commit -m "Render and verify 16+14 original Robbins slides for classroom player"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
