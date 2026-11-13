@@ -136,7 +136,9 @@ async function run(){
   await page.locator('[data-action="slideNext"]').click();
   assert.ok((await page.locator('.presenter-original-slide img').getAttribute('src')).includes('slide-02.webp'),"Next English slide has original page 2");
   await page.locator("#presenterPageSelect").selectOption("15");
-  assert.ok((await page.locator('.presenter-original-slide img').getAttribute('src')).includes('slide-16.webp'),"Can jump to last English slide without switching page");
+  const jumpInfo={src:await page.locator('.presenter-original-slide img').getAttribute('src'),selected:await page.locator('#presenterPageSelect').inputValue(),count:await page.locator('.presenter-count').textContent()};
+  console.log('PRESENTER_JUMP_DIAGNOSTIC',JSON.stringify(jumpInfo));
+  assert.ok(jumpInfo.src.includes('slide-16.webp'),"Can jump to last English slide without switching page");
   await page.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
   assert.ok(await page.locator('.presenter-fa-slide').isVisible(),"Persian deck stays in the same player");
   await page.locator('[data-action="presenterLanguage"][data-language="en"]').click();
