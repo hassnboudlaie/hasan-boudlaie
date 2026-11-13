@@ -15,6 +15,7 @@ async function run(){await new Promise(ok=>server.listen(0,"127.0.0.1",ok));
   const context=await browser.newContext({viewport:{width:size.width,height:size.height},isMobile:size.mobile,hasTouch:size.mobile,deviceScaleFactor:1});
   const page=await context.newPage(),errors=[];
   page.on("pageerror",err=>errors.push(err.message));
+  page.on("dialog",dialog=>dialog.accept()); // Accept the learner-confirmed switch to free mode
   await page.goto(origin+"#/session/1",{waitUntil:"domcontentloaded"});
   const launch=page.locator("#launchJourney");
   await launch.waitFor();
