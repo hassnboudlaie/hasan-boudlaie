@@ -16,8 +16,8 @@ assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScr
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=2')&&html.includes('access-gate.css?v=1')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
-assert.ok(sw.includes('shell-v13')&&sw.includes('app.js?v=13')&&sw.includes('access-gate.js?v=2'),'PWA cache and approved assets');
+assert.ok(html.includes('access-gate.js?v=3')&&html.includes('access-gate.css?v=1')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
+assert.ok(sw.includes('shell-v14')&&sw.includes('app.js?v=13')&&sw.includes('access-gate.js?v=3'),'PWA cache and approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=3'),'Attendance page is installable');
@@ -41,7 +41,8 @@ assert.ok(!enrichmentScript.includes('فولکس‌واگن: کیفیت')&&!enri
 assert.ok(publicCourse.OB_COURSE_CONTENT.sessions.every(s=>s.quizzes.length===5&&s.quizzes.every(q=>q.options.length===4&&q.why.length>20)),'Chapter questions have plausible reasoning-based distractors');
 assert.ok(caseSchema.includes('enable row level security')&&caseSchema.includes('mba_ob_case_reviews')&&caseSchema.includes('mba_ob_submit_case'),'Submission and grading are server-backed with protected data');
 assert.ok(caseJs.includes('caseSubmit')&&caseJs.includes('caseReview')&&caseJs.includes('caseHistory'),'Student submit and instructor history access are present');
-assert.ok(gateJs.includes('case-portal.js?v=1')&&html.includes('case-portal.css?v=1')&&sw.includes('case-portal.js?v=1')&&sw.includes('./join-qr.svg'),'Case portal and QR bundled with PWA');
+assert.ok(caseJs.includes('!rawScore')&&attendanceApi.includes('rawScore===null'),'Teacher and server both reject accidentally blank grade');
+assert.ok(gateJs.includes('case-portal.js?v=2')&&html.includes('case-portal.css?v=1')&&sw.includes('case-portal.js?v=2')&&sw.includes('./join-qr.svg'),'Case portal and QR bundled with PWA');
 assert.ok(qrSvg.includes('viewBox="0 0 49 49"')&&qrSvg.includes('ob-mba-classroom'),'Projector QR links only to Allameh classroom');
 
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.concepts.length>=6&&s.examples.length>=3&&s.caseStudy.questions.length>=4),'Each chapter has complete topic, examples and documented case');
