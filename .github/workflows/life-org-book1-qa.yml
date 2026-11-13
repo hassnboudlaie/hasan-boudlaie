@@ -1,0 +1,22 @@
+name: Life Organization Book I QA
+on:
+  push:
+    paths:
+      - "life-organization/**"
+      - ".github/workflows/life-org-book1-qa.yml"
+  pull_request:
+    paths:
+      - "life-organization/**"
+      - ".github/workflows/life-org-book1-qa.yml"
+permissions:
+  contents: read
+jobs:
+  book1-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate chapter app and source alignment
+        run: node life-organization/book1-smoke-test.cjs
