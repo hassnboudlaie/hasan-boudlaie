@@ -2,11 +2,16 @@
 const KEY="ob-mba-classroom-demo-v1";const ss=n=>({id:n,title:"",outcomes:"",theory:"",model:"",slides:"",caseText:"",caseQuestion:"",roleplay:"",reflection:"",quizQuestion:"",quizOptions:["","","",""],quizAnswer:0,published:false});
 const courseBundle=window.OB_COURSE_CONTENT&&Array.isArray(window.OB_COURSE_CONTENT.sessions)?window.OB_COURSE_CONTENT:{version:1,sessions:[]};
 const seedLesson=n=>{const source=courseBundle.sessions.find(x=>x.id===n);return {...ss(n),...(source||{}),id:n}};
-const fresh=()=>({version:2,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
+const fresh=()=>({version:3,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
 const locallyEdited=x=>Boolean(x&&(x.title||x.outcomes||x.theory||x.model||x.slides||x.caseText||x.caseQuestion||x.roleplay||x.reflection||x.quizQuestion||x.published));
 function load(){const base=fresh();try{const raw=JSON.parse(localStorage.getItem(KEY));if(!raw||!Array.isArray(raw.sessions)||raw.sessions.length!==16)return base;
-const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;return {...seed,...old,id:n}});
-return {...base,...raw,version:2,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
+const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
+if(n<=2&&Number(raw.version||1)<3){
+ const managed=["caseText","caseQuestion","roleplay","reflection","quizQuestion","quizOptions","quizAnswer","quizzes","caseSource","caseSourceLabel"];
+ for(const key of managed)merged[key]=seed[key];
+}
+return merged});
+return {...base,...raw,version:3,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,activityMode:"group"};
 document.documentElement.dataset.theme=ui.theme;
 const app=document.querySelector("#app"),nav=document.querySelector("#bottomNav"),rolebar=document.querySelector("#rolebar");
