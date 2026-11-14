@@ -154,6 +154,7 @@ const resourceFields=r=>{
  +field("نویسنده / ارائه‌دهنده","author",r.author)
  +field("لینک منبع (اختیاری برای کتاب)","url",r.url)
  +field("لینک معرفی ترجمه فارسی (در صورت وجود)","urlFa",r.urlFa)
+ +(r.url||r.urlFa?resourceLinks(r):"")
  +field("تصویر جلد فارسی (آدرس تصویر)","coverFa",r.coverFa)
  +field("تصویر جلد انگلیسی (آدرس تصویر)","coverEn",r.coverEn)
  +field("ارتباط با کدام مبحث این جلسه؟","topic",r.topic,true)
@@ -168,7 +169,7 @@ function teacherResources(){
  +'<section class="card stack"><h3>افزودن کتاب، ویدئو، مقاله یا لینک</h3><p class="section-note resource-warning">منابع جدیدی که از فرم مدرس اضافه می‌کنید فعلاً فقط روی همین مرورگر ذخیره می‌شوند. منابع رسمی منتشرشده برای همه، مانند ویدئوی Trost و کتاب دنهارت، به صورت مستقل در محتوای عمومی اپ قرار گرفته‌اند.</p><form data-form="resource" data-index="-1" class="stack">'+resourceFields({})+'<button type="submit" class="btn gold">افزودن منبع</button></form></section>'
  +'<section class="card stack"><h3>منابع ثبت‌شده ('+list.length+')</h3>'+(list.length?list.map((r,i)=>'<div class="resource-admin-item"><div class="page-head"><div><strong>'+esc(r.title)+'</strong><p>'+esc(resourceType(r.type))+' · '+esc(r.topic||"بدون مبحث")+'</p></div>'+button("حذف","deleteResource","btn danger sm",'data-index="'+i+'"')+'</div>'
  +resourceLinks(r)
- +'<details class="disclosure"><summary>ویرایش منبع</summary><div class="disclosure-body"><form data-form="resource" data-index="'+i+'" class="stack">'+resourceFields(r)+resourceLinks(r)+'<button type="submit" class="btn">ذخیره تغییرات</button></form></div></details></div>').join(""):'<p>هنوز منبعی ثبت نشده است.</p>')+'</section></div>';
+ +'<details class="disclosure"><summary>ویرایش منبع</summary><div class="disclosure-body"><form data-form="resource" data-index="'+i+'" class="stack">'+resourceFields(r)+'<button type="submit" class="btn">ذخیره تغییرات</button></form></div></details></div>').join(""):'<p>هنوز منبعی ثبت نشده است.</p>')+'</section></div>';
 }
 
 function sessionStudent(){const s=current(),x=enriched(s),hasSlides=Array.isArray(s.presentation)&&s.presentation.length>0,track=ui.track==="practice"?"practice":"concepts";
