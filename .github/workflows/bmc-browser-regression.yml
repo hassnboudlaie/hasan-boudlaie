@@ -7,6 +7,12 @@ on:
       - 'scripts/bmc-browser-qa.mjs'
       - 'scripts/toy-business-plan-qa.mjs'
       - '.github/workflows/bmc-browser-regression.yml'
+  pull_request:
+    paths:
+      - 'business-model-canvas/**'
+      - 'scripts/bmc-browser-qa.mjs'
+      - 'scripts/toy-business-plan-qa.mjs'
+      - '.github/workflows/bmc-browser-regression.yml'
   workflow_dispatch:
 permissions:
   contents: read

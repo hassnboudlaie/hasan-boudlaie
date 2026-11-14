@@ -55,7 +55,8 @@ async function runCase(item,index){
    const res=await page.goto(ROOT+'studio.html',{waitUntil:'domcontentloaded',timeout:30000});
    assert(res && res.ok(),'Cannot open app');
    await page.locator('#page-dashboard.active').waitFor({timeout:10000});
-   assert.equal(await page.locator('.dash-action').count(),3,'Three dashboard actions');
+   assert.equal(await page.locator('.dash-action').count(),4,'Four dashboard actions, including Feasibility Study');
+   assert.equal(await page.locator('a.dash-action.fs-entry[href^="./fs.html"]').count(),1,'Feasibility Study link must remain available');
    assert.equal(await page.locator('#special-entry').count(),0,'Child culture spotlight must not dominate general home');
    assert.equal(await page.locator('#specializedModels').count(),1,'Missing optional specialized-model catalog');
    assert(!(await page.locator('#specializedModels').evaluate(el=>el.open)),'Specialized catalog must be collapsed by default');
@@ -131,7 +132,9 @@ async function runCase(item,index){
      page.once('dialog',async d=>{assert.equal(d.type(),'prompt');await d.accept('شخص دوم')});
      await page.locator('details.header-menu summary').click();
      await page.locator('#newWorkspace').click();
-     assert.equal(await page.locator('#businessName').inputValue(),'','New project still has old data');
+     assert.equal(await page.locator('#businessName').inputValue(),'شخص دوم','New project should use the name supplied in the creation prompt');
+     assert.equal(await page.locator('#ownerName').inputValue(),'','Previous project owner carried over');
+     assert.equal(await page.locator('#workspaceSelect option').count(),2,'The original model must remain available as a separate workspace');
      test('ساخت مدل دوم مستقل بدون انتقال اطلاعات نفر اول',true);
      page.on('dialog',async d=>{await d.accept()});
      await page.locator('#importFile').setInputFiles(backupPath);
