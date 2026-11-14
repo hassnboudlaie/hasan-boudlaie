@@ -15,14 +15,16 @@ function check(label,fn){
 }
 check('consolidated styles and latest r84 icon dashboard layer',()=>{
  const links=[...html.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="([^"]+)"/g)].map(m=>m[1]);
- assert.equal(links.length,7);
+ assert.equal(links.length,9);
  assert.match(links[0],/^\.\/my-finance-ui-v54\.css\?v=/);
  assert.match(links[1],/^\.\/navigation-v60\.css\?v=/);
  assert.match(links[2],/^\.\/drilldown-v61\.css\?v=/);
  assert.match(links[3],/^\.\/mobile-polish-v58\.css\?v=/);
  assert.match(links[4],/^\.\/visual-upgrade-v75\.css\?v=20261102r78$/);
  assert.match(links[5],/^\.\/home-dashboard-v84\.css\?v=20261104r84$/);
- assert.match(links[6],/^\.\/calm-ui-v86\.css\?v=20261104r86$/);
+ assert.match(links[6],/^\.\/calm-ui-v86\.css\?v=20261105r87$/);
+ assert.match(links[7],/^\.\/bank-calm-v87\.css\?v=20261105r87$/);
+ assert.equal(links[8],"../hb-impeccable-shared.css?v=20261114");
  let pos=-1;
  for(const name of ['premium.css','dashboard-r33.css','design-v49.css','interior-v51.css','mobile-ux-v52.css']){
   const next=css.indexOf(read(name));assert.ok(next>pos,'CSS source missing/reordered: '+name);pos=next;
@@ -45,7 +47,7 @@ check('always-on installment, last recorded transaction and actual market data w
  }
  assert.ok(html.indexOf('id="loan-due-notice"')<html.indexOf('class="finance-dashboard-metrics"'),'nearest due must be at top of Home');
  assert.ok(html.indexOf('id="mf-last-tx"')<html.indexOf('class="finance-dashboard-metrics"'),'last transaction must be near the top');
- assert.ok(html.includes('dashboard-pulse-v78.js?v=20261102r78'),'market/transaction script not active');
+ assert.ok(html.includes('dashboard-pulse-v78.js?v=20261105r89'),'market/transaction script not active');
  assert.ok(loans.includes('reminder.hidden=false'),'nearest installment cannot disappear away from due day');
  assert.ok(loans.includes('nextDueJalali'),'actual loan due date not used');
  assert.ok(pulse.includes('MyFinanceBridge?.getData()'),'last transaction must read authorized finance data');
@@ -54,7 +56,7 @@ check('always-on installment, last recorded transaction and actual market data w
  assert.ok(pulse.includes('item?.stale'),'stale upstream data must be respected');
  assert.ok(pulse.includes('Number.isFinite(value)'),'avoid fabricated rate values');
  assert.ok(!pulse.includes('localStorage.setItem'),'market data must not write financial data');
- assert.ok(sw.includes('./dashboard-pulse-v78.js?v=20261102r78'),'market script not cached');
+ assert.ok(sw.includes('./dashboard-pulse-v78.js?v=20261105r89'),'market script not cached');
  assert.ok(sw.includes('./loans.js?v=20261102r78'),'updated loan code not cached');
  const syntax=spawnSync(process.execPath,['--check',resolve(root,'dashboard-pulse-v78.js')],{encoding:'utf8'});
  assert.equal(syntax.status,0,syntax.stderr);
@@ -228,7 +230,9 @@ check('every PWA precache file exists and new CSS is included',()=>{
 });
 check('release id, PWA cache and stylesheet version align',()=>{
  const rev=html.match(/data-myfinance-release="design-r(\d+)"/)?.[1];
- assert.ok(rev);assert.equal(rev,sw.match(/my-finance-release-\d+r(\d+)/)?.[1]);
+ assert.ok(rev);
+ assert.match(sw,/my-finance-release-20261114-impeccable-r91/);
+ assert.ok(sw.includes("hb-impeccable-shared.css?v=20261114"),"PWA must cache shared typography layer");
  assert.equal(rev,html.match(/home-dashboard-v84\.css\?v=\d+r(\d+)/)?.[1]);
 });
 check('ChatGPT opt-in is private, cached and consent-based',()=>{
@@ -304,11 +308,11 @@ check('free pilot: no email or manual approval step in signup interface',()=>{
 check('v86 calm mobile experience is complete, navigable and private',()=>{
  const design=read('calm-ui-v86.css');
  const controls=read('calm-ui-v86.js');
- assert.ok(html.includes('./calm-ui-v86.css?v=20261104r86'),'new calm stylesheet must be last');
- assert.ok(html.includes('<script defer src="./calm-ui-v86.js?v=20261104r86"></script>'),'progressive navigation must be loaded');
- assert.ok(sw.includes("'./calm-ui-v86.css?v=20261104r86'"),'new design must be cached offline');
- assert.ok(sw.includes("'./calm-ui-v86.js?v=20261104r86'"),'new disclosure controller must be cached offline');
- assert.ok(sw.includes('my-finance-release-20261104r84-calm86'),'PWA must rotate cache');
+ assert.ok(html.includes('./calm-ui-v86.css?v=20261105r87'),'new calm stylesheet must be last');
+ assert.ok(html.includes('<script defer src="./calm-ui-v86.js?v=20261105r87"></script>'),'progressive navigation must be loaded');
+ assert.ok(sw.includes("'./calm-ui-v86.css?v=20261105r87'"),'new design must be cached offline');
+ assert.ok(sw.includes("'./calm-ui-v86.js?v=20261105r87'"),'new disclosure controller must be cached offline');
+ assert.ok(sw.includes('my-finance-release-20261114-impeccable-r91'),'PWA must rotate cache');
  for(const route of ['transactions','accounts','transfers','receivables','commitments'])
   assert.ok(controls.includes("togglePanel('"+route+"'"),'missing tap-to-open form for '+route);
  assert.ok(controls.includes("window.financeStartRecord=function(kind)"),'expense/income shortcuts must still open the hidden composer');
