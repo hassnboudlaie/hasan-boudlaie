@@ -1,7 +1,7 @@
 /* Private classroom quizzes: 10 items, 24 hours from instructor's class-end timestamp. */
 (()=>{
 "use strict";
-const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",KEY="ob-mba-classroom-attendance-identity-v1",MAIL="hasanboudlaie@gmail.com";
+const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",KEY="mba-ob-classroom-attendance-identity-v1",MAIL="hasanboudlaie@gmail.com";
 const safe=v=>String(v??"").replace(/[&<>"']/g,c=>c==="&"?"&amp;":c==="<"?"&lt;":c===">"?"&gt;":c==='"'?"&quot;":"&#39;");
 const digits=n=>Number(n).toLocaleString("fa-IR");
 const date=t=>t?new Intl.DateTimeFormat("fa-IR",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Tehran"}).format(new Date(t)):"—";
