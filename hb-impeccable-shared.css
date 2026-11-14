@@ -1,0 +1,30 @@
+/* HB ecosystem — Impeccable presentation layer (2026-11-14).
+   No authentication, data storage, product routes or business logic changes.
+   Locally hosted Vazirmatn: SIL OFL 1.1. */
+@font-face{font-family:"Vazirmatn";src:url("./ob-mba-classroom/assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+html[data-hb-impeccable="1"]{--hb-im-focus:#bc8947;scroll-padding-top:88px}
+html[data-hb-impeccable="1"] :is(body,button,input,select,textarea,summary){font-family:"Vazirmatn",Tahoma,Arial,sans-serif!important}
+html[data-hb-impeccable="1"] :where(code,pre,kbd,samp){font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important}
+html[data-hb-impeccable="1"] body{overflow-wrap:break-word}
+html[data-hb-impeccable="1"] :where(a,button,summary,[role="button"],input,select,textarea){-webkit-tap-highlight-color:rgba(16,102,89,.14)}
+html[data-hb-impeccable="1"] :where(a,button,summary,[role="button"],input,select,textarea,[tabindex]):focus-visible{outline:3px solid var(--hb-im-focus)!important;outline-offset:3px!important}
+html[data-hb-impeccable="1"] :where(button,[role="button"]){touch-action:manipulation}
+html[data-hb-impeccable="1"] :where(h1,h2,h3,legend,label){overflow-wrap:break-word}
+html[data-hb-impeccable="1"][data-hb-app="okr-service"] :where(.nav-caption,.side-foot,.logo small,.eyebrow){font-size:12px}
+html[data-hb-impeccable="1"][data-hb-app="business-model-canvas"] :where(.brand small,.status){font-size:12px}
+html[data-hb-impeccable="1"][data-hb-app="small-business"] :where(.project-select,.project-select select){font-size:13px}
+html[data-hb-impeccable="1"][data-hb-app="trm-workspace"] :where(.logo small,.nav-foot){font-size:13px}
+html[data-hb-impeccable="1"][data-hb-app="clinic-customer-app"] .brand-block small{font-size:13px}
+html[data-hb-impeccable="1"][data-hb-app="ba-parastoo"] :where(.navlinks,.eyebrow){font-size:14px}
+html[data-hb-impeccable="1"][data-hb-app="ba-parastoo"] :where(.btn,button){min-height:44px}
+html[data-hb-impeccable="1"][data-hb-app="rf-holding"] :where(.nav-group-label,.brand-copy small){font-size:13px}
+html[data-hb-impeccable="1"][data-hb-app="life-organization"] :where(.brand-words small,.side-caption){font-size:12px}
+html[data-hb-impeccable="1"][data-hb-app="life-organization"] .nav-link{font-size:14px}
+@media(max-width:640px){
+ html[data-hb-impeccable="1"] :where(input:not([type="checkbox"]):not([type="radio"]),textarea,select){font-size:max(16px,1em)}
+ html[data-hb-impeccable="1"][data-hb-app="life-organization"] .sidebar{overflow-y:auto}
+}
+@media(prefers-reduced-motion:reduce){
+ html[data-hb-impeccable="1"]{scroll-behavior:auto}
+ html[data-hb-impeccable="1"] :where(*,::before,::after){transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
