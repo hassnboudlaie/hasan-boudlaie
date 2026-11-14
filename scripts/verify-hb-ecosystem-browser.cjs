@@ -133,10 +133,12 @@ async function appsCheck(browser){
      assert.equal(await page.locator("#modal.show").count(),0);
      assert.equal(await button.evaluate(el=>document.activeElement===el),true,"Modal return focus missing");
     }
-    assert.equal(serious.length,0,p+" serious/critical WCAG violations; see AUDIT line");
+    if(serious.length)console.warn("A11Y_PENDING",p,serious.map(v=>v.id).join(","));
     console.log("PASS app",p,"Vazirmatn, axe serious/critical=0");
    }finally{await page.close()}
   }
+  const remaining=audit.filter(x=>x.serious.length>0);
+  assert.deepEqual(remaining,[],"Unresolved serious/critical WCAG findings; inspect a11y-findings.json and AUDIT logs");
  }finally{
   fs.writeFileSync(path.join(OUT,"a11y-findings.json"),JSON.stringify(audit,null,2));
   await ctx.close();
