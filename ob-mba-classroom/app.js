@@ -17,6 +17,20 @@ if(n<=2&&Number(raw.version||1)<3){
 return merged});
 return {...base,...raw,version:4,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
+/* Auth-gated deep link: ?session=2&tab=resources. Teacher opens the resource editor;
+   students/approved guests see the published session's resource library. */
+try{
+ const params=new URLSearchParams(window.location.search);
+ const sid=Number(params.get("session"));
+ if(Number.isInteger(sid)&&sid>=1&&sid<=16){
+  ui.session=sid;
+  if(params.get("tab")==="resources"){
+   ui.page=window.OB_ACCESS?.role==="teacher"?"resources":"session";
+   ui.tab="resources";
+  }
+ }
+}catch{}
+
 document.documentElement.dataset.theme=ui.theme;
 const isGuest=()=>window.OB_ACCESS?.role==="guest";
 const app=document.querySelector("#app"),nav=document.querySelector("#bottomNav"),rolebar=document.querySelector("#rolebar");
