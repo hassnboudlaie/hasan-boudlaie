@@ -6,7 +6,7 @@ const xml=esc; // Numeric HTML entities are XML-compatible.
 const steps=x=>Array.isArray(x?.caseFramework?.steps)?x.caseFramework.steps:[];
 function build(lesson,enrichment,work){
  const st=steps(enrichment);
- let user={};try{user=JSON.parse(localStorage.getItem("ob-mba-classroom-attendance-identity-v1")||"{}")}catch{}
+ let user={};try{user=JSON.parse(localStorage.getItem("mba-ob-classroom-attendance-identity-v1")||"{}")}catch{}
  const rows=st.map(s=>({title:s.title,english:s.en||"",answer:String(work?.guidedAnswers?.["case-"+s.key]||"").trim()}));
  return {title:"گزارش تحلیل کیس · جلسه "+lesson,caseTitle:enrichment?.caseStudy?.title||"",student:user.name||user.full_name||"دانشجو",rows,completed:rows.filter(s=>s.answer.length>=8).length};
 }
