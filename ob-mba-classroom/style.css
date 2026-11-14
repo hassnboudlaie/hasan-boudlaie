@@ -681,3 +681,5 @@ html[data-theme=dark] .resource-cover img{background:#f7f7f5}
  .resource-covers{grid-template-columns:1fr}
  .resource-cover img{height:230px;max-height:65vw}
 }
+
+.resource-management .resource-edit-grid>.resource-actions{grid-column:1/-1;margin:0 0 7px}
