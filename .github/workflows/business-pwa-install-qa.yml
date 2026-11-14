@@ -9,6 +9,14 @@ on:
       - 'downloads/install.html'
       - 'scripts/business-pwa-install-qa.mjs'
       - '.github/workflows/business-pwa-install-qa.yml'
+  pull_request:
+    paths:
+      - 'business-model-canvas/**'
+      - 'small-business/**'
+      - 'okr-service/**'
+      - 'downloads/install.html'
+      - 'scripts/business-pwa-install-qa.mjs'
+      - '.github/workflows/business-pwa-install-qa.yml'
   workflow_dispatch:
 permissions:
   contents: read
