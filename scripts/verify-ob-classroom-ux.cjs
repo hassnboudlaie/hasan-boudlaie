@@ -16,6 +16,10 @@ assert.doesNotThrow(()=>new Function(attendanceJs),'Attendance frontend must par
 assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
+for(const file of ['ob-mba-classroom/session-case-choices.js','ob-mba-classroom/case-export.js','ob-mba-classroom/quiz-portal.js']){
+ assert.doesNotThrow(()=>new Function(read(file)),file+' must parse');
+}
+
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
 const gateVersion=html.match(/access-gate\.js\?v=(\d+)/)?.[1];
 const appVersion=gateJs.match(/app\.js\?v=(\d+)/)?.[1];
