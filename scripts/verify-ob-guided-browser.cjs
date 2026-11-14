@@ -47,6 +47,22 @@ async function run(){
    }
    await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
   });
+  // Synthetic protected quiz backend: test 10 required choices, one submission, immediate grading and detailed feedback.
+  let quizAttempt=null;
+  await ctx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",async route=>{
+   const params=JSON.parse(route.request().postData()||"{}");
+   let result={ok:false,error:"invalid_action"};
+   if(params.action==="get")result={ok:true,session:1,status:"open",opens_at:new Date().toISOString(),closes_at:new Date(Date.now()+86400000).toISOString(),
+    questions:quizAttempt?[]:Array.from({length:10},(_,i)=>({no:i+1,text:"سؤال آزمایشی "+(i+1)+" درباره مفاهیم مقدماتی رفتار سازمانی چیست؟",options:["پاسخ صحیح","گزینه دوم","گزینه سوم","گزینه چهارم"]})),
+    attempt:quizAttempt};
+   if(params.action==="submit"&&Array.isArray(params.answers)&&params.answers.length===10){
+    quizAttempt={id:"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",submitted_at:new Date().toISOString(),score:20,correct_count:10,
+     review:Array.from({length:10},(_,i)=>({no:i+1,text:"سؤال آزمایشی "+(i+1)+" درباره مفاهیم مقدماتی رفتار سازمانی چیست؟",answer:params.answers[i],correct_index:0,options:["پاسخ صحیح","گزینه دوم","گزینه سوم","گزینه چهارم"],explanation:"توضیح تشریحی علمی برای ارزیابی پاسخ به سؤال "+(i+1)}))};
+    result={ok:true,receipt:{id:quizAttempt.id,session:1}};
+   }
+   if(params.action==="my")result={ok:true,attempts:quizAttempt?[{session:1,score:20,correct_count:10,submitted_at:quizAttempt.submitted_at}]:[]};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
+  });
   const page=await ctx.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
@@ -112,8 +128,16 @@ async function run(){
   assert.equal(await page.locator(".gr-turn").count(),2,"Dialogue shown in manageable two-turn steps");
   await save(page,config.name+"-05-roleplay");
   await page.locator('[data-action="guidedMode"][data-mode="quiz"]').click();
-  await page.locator(".quiz-workshop").waitFor();
-  assert.ok(await page.locator(".quiz-question").isVisible(),"Original chapter quiz intact");
+  await page.locator("#quizFinalForm .quiz-question").first().waitFor();
+  assert.equal(await page.locator("#quizFinalForm .quiz-question").count(),10,"All ten approved assessment items available");
+  assert.equal(await page.locator(".quiz-submit").isDisabled(),true,"Cannot submit before answering all ten");
+  for(let i=0;i<10;i++)await page.locator('input[name="q'+i+'"][value="0"]').check();
+  assert.equal(await page.locator(".quiz-submit").isEnabled(),true,"Final submission activates after 10 responses");
+  page.once("dialog",dialog=>dialog.accept());
+  await page.locator(".quiz-submit").click();
+  await page.getByText("نمره قطعی:").waitFor();
+  assert.ok(await page.getByText("۲۰ از ۲۰").first().isVisible(),"Grade appears immediately after final submit");
+  assert.equal(await page.locator(".quiz-answer-review").count(),10,"Explanatory answer key available only after final submission");
   await page.locator("#sectionSelect").selectOption("reflection");
   await page.locator('.gr-shell[data-guided-mode="reflection"]').waitFor();
   await page.locator('[data-action="guidedNext"]').click();
