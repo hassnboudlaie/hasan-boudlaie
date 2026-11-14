@@ -2,20 +2,20 @@
 const KEY="ob-mba-classroom-demo-v1";const ss=n=>({id:n,title:"",outcomes:"",theory:"",model:"",slides:"",caseText:"",caseQuestion:"",roleplay:"",reflection:"",quizQuestion:"",quizOptions:["","","",""],quizAnswer:0,published:false,resources:[]});
 const courseBundle=window.OB_COURSE_CONTENT&&Array.isArray(window.OB_COURSE_CONTENT.sessions)?window.OB_COURSE_CONTENT:{version:1,sessions:[]};
 const seedLesson=n=>{const source=courseBundle.sessions.find(x=>x.id===n);return {...ss(n),...(source||{}),id:n}};
-const fresh=()=>({version:4,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
+const fresh=()=>({version:5,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
 const locallyEdited=x=>Boolean(x&&(x.title||x.outcomes||x.theory||x.model||x.slides||x.caseText||x.caseQuestion||x.roleplay||x.reflection||x.quizQuestion||x.published));
 function load(){const base=fresh();try{const raw=JSON.parse(localStorage.getItem(KEY));if(!raw||!Array.isArray(raw.sessions)||raw.sessions.length!==16)return base;
 const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
 const seedResources=Array.isArray(seed.resources)?seed.resources:[];
 const oldResources=Array.isArray(old.resources)?old.resources:[];
-const migrated=Number(raw.version||1)<4;
+const migrated=Number(raw.version||1)<5;
 merged.resources=migrated?[...seedResources,...oldResources.filter(x=>!seedResources.some(y=>y.id===x?.id||(y.url&&y.url===x?.url)))]:Array.isArray(old.resources)?oldResources:seedResources;
 if(n<=2&&Number(raw.version||1)<3){
  const managed=["caseText","caseQuestion","roleplay","reflection","quizQuestion","quizOptions","quizAnswer","quizzes","caseSource","caseSourceLabel"];
  for(const key of managed)merged[key]=seed[key];
 }
 return merged});
-return {...base,...raw,version:4,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
+return {...base,...raw,version:5,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
 /* Auth-gated deep link: ?session=2&tab=resources. Teacher opens the resource editor;
    students/approved guests see the published session's resource library. */
@@ -116,20 +116,46 @@ const guidedActivity=(s,x)=>{
 const RESOURCE_TYPES=[["video","ویدئو"],["book","کتاب"],["article","مقاله"],["link","لینک مفید"],["podcast","پادکست"],["other","سایر"]];
 const resourcesOf=s=>Array.isArray(s.resources)?s.resources:[];
 const safeResourceURL=value=>{try{const u=new URL(String(value||""));return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return""}};
+
 const resourceType=t=>RESOURCE_TYPES.find(x=>x[0]===t)?.[1]||"منبع";
+const resourceImageURL=value=>{
+ const s=String(value||"").trim();
+ return /^\.\/materials\/book-covers\/[a-z0-9_-]+\.jpe?g$/i.test(s)?s:safeResourceURL(s);
+};
+const resourceLinks=x=>{
+ const url=safeResourceURL(x.url),fa=safeResourceURL(x.urlFa);
+ const controls=(href,openLabel,copyLabel)=>'<span class="resource-link-pair"><a class="btn secondary resource-open" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+openLabel+' <span aria-hidden="true">↗</span></a>'+button(copyLabel,"copyResourceUrl","btn secondary resource-copy",'data-url="'+esc(href)+'"')+'</span>';
+ return '<div class="resource-actions" aria-label="لینک‌های فعال منبع">'+(url?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"صفحه نسخه انگلیسی":"بازکردن منبع","کپی لینک"):"")+(fa&&fa!==url?controls(fa,"معرفی ترجمه فارسی","کپی لینک فارسی"):"")+'</div>';
+};
+const resourceCovers=x=>{
+ if(x.type!=="book")return "";
+ const fa=resourceImageURL(x.coverFa),en=resourceImageURL(x.coverEn);
+ if(!fa&&!en)return "";
+ const image=(src,label)=>'<figure class="resource-cover"><img src="'+esc(src)+'" alt="'+esc(label+" — "+x.title)+'" loading="lazy" decoding="async"><figcaption>'+esc(label)+'</figcaption></figure>';
+ return '<div class="resource-covers" aria-label="تصاویر جلد کتاب">'+(fa?image(fa,"جلد ترجمه فارسی"):"")+(en?image(en,"جلد نسخه اصلی انگلیسی"):"")+'</div>';
+};
 const resourcePanel=s=>{
  const list=resourcesOf(s);
  return '<section class="card resource-panel" aria-label="منابع تکمیلی جلسه"><div class="resource-panel-head"><div><span class="resource-caption">Additional Resources</span><h3>منابع تکمیلی جلسه '+pf(s.id)+'</h3><p>منابع انتخابی مدرس، همراه با ارتباط آن‌ها با مباحث درس</p></div><span class="pill">'+list.length+' منبع</span></div>'
- +(list.length?'<div class="resource-list">'+list.map((x,i)=>{const url=safeResourceURL(x.url);
- return '<article class="resource-item"><div class="resource-item-top"><span class="resource-kind">'+esc(resourceType(x.type))+'</span>'+(x.duration?'<span class="resource-duration">'+esc(x.duration)+'</span>':"")+'</div><h4>'+esc(x.title)+'</h4>'+(x.author?'<p class="resource-author">'+esc(x.author)+'</p>':"")+(x.topic?'<p class="resource-topic"><strong>مرتبط با:</strong> '+esc(x.topic)+'</p>':"")+(x.note?'<p class="resource-note">'+esc(x.note)+'</p>':"")+(x.prompt?'<p class="resource-prompt"><strong>پرسش برای گفت‌وگوی کلاسی:</strong> '+esc(x.prompt)+'</p>':"")+(x.relatedSession?'<span class="resource-related">پیوند تکمیلی: جلسه '+pf(x.relatedSession)+'</span>':"")+(url?'<a class="btn secondary resource-open" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">مشاهده منبع <span aria-hidden="true">↗</span></a>':"")+'</article>';}).join("")+'</div>':'<div class="resource-empty"><h4>هنوز منبع تکمیلی ثبت نشده است.</h4><p>کتاب‌ها، مقالات و ویدئوهای منتخب مدرس در این بخش قرار می‌گیرند.</p></div>')
- +'</section>';
+ +(list.length?'<div class="resource-list">'+list.map(x=>
+ '<article class="resource-item"><div class="resource-item-top"><span class="resource-kind">'+esc(resourceType(x.type))+'</span>'+(x.duration?'<span class="resource-duration">'+esc(x.duration)+'</span>':"")+'</div>'
+ +'<h4>'+esc(x.title)+'</h4>'+(x.sourceEnTitle?'<p class="resource-original-title" lang="en" dir="ltr">'+esc(x.sourceEnTitle)+'</p>':"")
+ +(x.author?'<p class="resource-author">'+esc(x.author)+'</p>':"")+resourceCovers(x)
+ +(x.topic?'<p class="resource-topic"><strong>مرتبط با:</strong> '+esc(x.topic)+'</p>':"")
+ +(x.note?'<p class="resource-note">'+esc(x.note)+'</p>':"")
+ +(x.prompt?'<p class="resource-prompt"><strong>پرسش برای گفت‌وگوی کلاسی:</strong> '+esc(x.prompt)+'</p>':"")
+ +(x.relatedSession?'<span class="resource-related">پیوند تکمیلی: جلسه '+pf(x.relatedSession)+'</span>':"")
+ +resourceLinks(x)+'</article>').join("")+'</div>':'<div class="resource-empty"><h4>هنوز منبع تکمیلی ثبت نشده است.</h4><p>کتاب‌ها، مقالات و ویدئوهای منتخب مدرس در این بخش قرار می‌گیرند.</p></div>')+'</section>';
 };
 const resourceFields=r=>{
  const field=(label,key,value,required=false,textarea=false)=>'<div class="field"><label>'+label+(required?' *':'')+'</label>'+(textarea?'<textarea name="'+key+'" rows="3" maxlength="1200">'+esc(value||"")+'</textarea>':'<input name="'+key+'" class="input" maxlength="800" '+(required?'required ':'')+'value="'+esc(value||"")+'">')+'</div>';
  return '<div class="resource-edit-grid"><div class="field"><label>نوع منبع *</label><select name="type">'+RESOURCE_TYPES.map(([id,label])=>'<option value="'+id+'" '+(id===(r.type||"link")?'selected':'')+'>'+label+'</option>').join("")+'</select></div>'
  +field("عنوان منبع","title",r.title,true)
  +field("نویسنده / ارائه‌دهنده","author",r.author)
- +field("لینک معتبر (اختیاری برای کتاب)","url",r.url)
+ +field("لینک منبع (اختیاری برای کتاب)","url",r.url)
+ +field("لینک معرفی ترجمه فارسی (در صورت وجود)","urlFa",r.urlFa)
+ +field("تصویر جلد فارسی (آدرس تصویر)","coverFa",r.coverFa)
+ +field("تصویر جلد انگلیسی (آدرس تصویر)","coverEn",r.coverEn)
  +field("ارتباط با کدام مبحث این جلسه؟","topic",r.topic,true)
  +field("نکته آموزشی و دلیل معرفی","note",r.note,false,true)
  +field("پرسش پیشنهادی برای بحث","prompt",r.prompt,false,true)
@@ -139,8 +165,10 @@ function teacherResources(){
  if(window.OB_ACCESS?.role!=="teacher")return '<section class="page"><h2>دسترسی مخصوص مدرس</h2></section>';
  const s=current(),list=resourcesOf(s);
  return '<div class="page resource-management"><div class="page-head"><div><span class="resource-caption">Resource Library</span><h2>منابع تکمیلی جلسه '+pf(s.id)+'</h2><p>'+esc(titleOf(s))+'</p></div>'+button("بازگشت به ویرایش جلسه","backToEditor","btn secondary")+'</div>'
- +'<section class="card stack"><h3>افزودن کتاب، ویدئو، مقاله یا لینک</h3><p class="section-note resource-warning">توجه: تغییرات این صفحه در نسخه فعلی فقط روی همین مرورگر ذخیره می‌شوند و خودکار برای سایر دانشجویان منتشر نمی‌شوند. منابع عمومی تأییدشده باید در محتوای مرکزی اپ نیز ثبت شوند.</p><form data-form="resource" data-index="-1" class="stack">'+resourceFields({})+'<button type="submit" class="btn gold">افزودن منبع</button></form></section>'
- +'<section class="card stack"><h3>منابع ثبت‌شده ('+list.length+')</h3>'+(list.length?list.map((r,i)=>'<div class="resource-admin-item"><div class="page-head"><div><strong>'+esc(r.title)+'</strong><p>'+esc(resourceType(r.type))+' · '+esc(r.topic||"بدون مبحث")+'</p></div>'+button("حذف","deleteResource","btn danger sm",'data-index="'+i+'"')+'</div><details class="disclosure"><summary>ویرایش منبع</summary><div class="disclosure-body"><form data-form="resource" data-index="'+i+'" class="stack">'+resourceFields(r)+'<button type="submit" class="btn">ذخیره تغییرات</button></form></div></details></div>').join(""):'<p>هنوز منبعی ثبت نشده است.</p>')+'</section></div>';
+ +'<section class="card stack"><h3>افزودن کتاب، ویدئو، مقاله یا لینک</h3><p class="section-note resource-warning">منابع جدیدی که از فرم مدرس اضافه می‌کنید فعلاً فقط روی همین مرورگر ذخیره می‌شوند. منابع رسمی منتشرشده برای همه، مانند ویدئوی Trost و کتاب دنهارت، به صورت مستقل در محتوای عمومی اپ قرار گرفته‌اند.</p><form data-form="resource" data-index="-1" class="stack">'+resourceFields({})+'<button type="submit" class="btn gold">افزودن منبع</button></form></section>'
+ +'<section class="card stack"><h3>منابع ثبت‌شده ('+list.length+')</h3>'+(list.length?list.map((r,i)=>'<div class="resource-admin-item"><div class="page-head"><div><strong>'+esc(r.title)+'</strong><p>'+esc(resourceType(r.type))+' · '+esc(r.topic||"بدون مبحث")+'</p></div>'+button("حذف","deleteResource","btn danger sm",'data-index="'+i+'"')+'</div>'
+ +resourceLinks(r)
+ +'<details class="disclosure"><summary>ویرایش منبع</summary><div class="disclosure-body"><form data-form="resource" data-index="'+i+'" class="stack">'+resourceFields(r)+resourceLinks(r)+'<button type="submit" class="btn">ذخیره تغییرات</button></form></div></details></div>').join(""):'<p>هنوز منبعی ثبت نشده است.</p>')+'</section></div>';
 }
 
 function sessionStudent(){const s=current(),x=enriched(s),hasSlides=Array.isArray(s.presentation)&&s.presentation.length>0,track=ui.track==="practice"?"practice":"concepts";
