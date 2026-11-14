@@ -2,20 +2,20 @@
 const KEY="ob-mba-classroom-demo-v1";const ss=n=>({id:n,title:"",outcomes:"",theory:"",model:"",slides:"",caseText:"",caseQuestion:"",roleplay:"",reflection:"",quizQuestion:"",quizOptions:["","","",""],quizAnswer:0,published:false,resources:[]});
 const courseBundle=window.OB_COURSE_CONTENT&&Array.isArray(window.OB_COURSE_CONTENT.sessions)?window.OB_COURSE_CONTENT:{version:1,sessions:[]};
 const seedLesson=n=>{const source=courseBundle.sessions.find(x=>x.id===n);return {...ss(n),...(source||{}),id:n}};
-const fresh=()=>({version:7,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
+const fresh=()=>({version:8,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
 const locallyEdited=x=>Boolean(x&&(x.title||x.outcomes||x.theory||x.model||x.slides||x.caseText||x.caseQuestion||x.roleplay||x.reflection||x.quizQuestion||x.published));
 function load(){const base=fresh();try{const raw=JSON.parse(localStorage.getItem(KEY));if(!raw||!Array.isArray(raw.sessions)||raw.sessions.length!==16)return base;
 const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
 const seedResources=Array.isArray(seed.resources)?seed.resources:[];
 const oldResources=Array.isArray(old.resources)?old.resources:[];
-const migrated=Number(raw.version||1)<7;
+const migrated=Number(raw.version||1)<8;
 merged.resources=migrated?[...seedResources,...oldResources.filter(x=>!seedResources.some(y=>y.id===x?.id||(y.url&&y.url===x?.url)))]:Array.isArray(old.resources)?oldResources:seedResources;
 if(n<=2&&Number(raw.version||1)<3){
  const managed=["caseText","caseQuestion","roleplay","reflection","quizQuestion","quizOptions","quizAnswer","quizzes","caseSource","caseSourceLabel"];
  for(const key of managed)merged[key]=seed[key];
 }
 return merged});
-return {...base,...raw,version:7,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
+return {...base,...raw,version:8,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
 /* Auth-gated deep link: ?session=2&tab=resources. Teacher opens the resource editor;
    students/approved guests see the published session's resource library. */
@@ -113,7 +113,7 @@ const guidedActivity=(s,x)=>{
 };
 
 
-const RESOURCE_TYPES=[["video","ویدئو"],["book","کتاب"],["article","مقاله"],["link","لینک مفید"],["podcast","پادکست"],["document","فایل PDF / جزوه"],["other","سایر"]];
+const RESOURCE_TYPES=[["video","ویدئو"],["book","کتاب"],["article","مقاله"],["link","لینک مفید"],["podcast","پادکست"],["document","فایل PDF / جزوه"],["presentation","اسلاید PowerPoint"],["other","سایر"]];
 const resourcesOf=s=>Array.isArray(s.resources)?s.resources:[];
 const safeResourceURL=value=>{try{const u=new URL(String(value||""));return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return""}};
 
@@ -124,11 +124,13 @@ const resourceImageURL=value=>{
 };
 const resourceLinks=x=>{
  const url=safeResourceURL(x.url),fa=safeResourceURL(x.urlFa),dl=safeResourceURL(x.downloadUrl);
- const localDownload=dl&&/^https:\/\/hassnboudlaie\.github\.io\/hasan-boudlaie\/ob-mba-classroom\/materials\/readings\/[a-z0-9_-]+\.pdf$/i.test(dl);
- const controls=(href,openLabel,copyLabel,fileName="")=>'<span class="resource-link-pair"><a class="btn secondary resource-open" href="'+esc(href)+'" '+(fileName?'download="'+esc(fileName)+'"':'target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"')+'>'+openLabel+' <span aria-hidden="true">↗</span></a>'+button(copyLabel,"copyResourceUrl","btn secondary resource-copy",'data-url="'+esc(href)+'"')+'</span>';
- const download=dl?controls(dl,"دانلود خلاصه PDF","کپی لینک دانلود",localDownload?"Robbins-Persian-Summary.pdf":""):"";
+ const match=dl&&dl.match(/^https:\/\/hassnboudlaie\.github\.io\/hasan-boudlaie\/ob-mba-classroom\/materials\/readings\/([a-z0-9_-]+\.(?:pdf|pptx))$/i);
+ const localDownload=Boolean(match),fileName=match?match[1]:"";
+ const isPptx=/\.pptx(?:$|[?#])/i.test(dl),downloadLabel=isPptx?"دانلود PowerPoint":"دانلود خلاصه PDF";
+ const controls=(href,openLabel,copyLabel,file="")=>'<span class="resource-link-pair"><a class="btn secondary resource-open" href="'+esc(href)+'" '+(file?'download="'+esc(file)+'"':'target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"')+'>'+openLabel+' <span aria-hidden="true">↗</span></a>'+button(copyLabel,"copyResourceUrl","btn secondary resource-copy",'data-url="'+esc(href)+'"')+'</span>';
+ const download=dl?controls(dl,downloadLabel,"کپی لینک دانلود",localDownload?fileName:""):"";
  return '<div class="resource-actions" aria-label="لینک‌های فعال منبع">'+download
- +(url?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"اطلاعات و معرفی کتاب":x.type==="document"?"مشاهده PDF":"بازکردن منبع","کپی لینک"):"")
+ +(url&&(!isPptx||url!==dl)?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"اطلاعات و معرفی کتاب":x.type==="document"?"مشاهده PDF":"بازکردن منبع","کپی لینک"):"")
  +(fa&&fa!==url?controls(fa,"معرفی ترجمه فارسی","کپی لینک فارسی"):"")+'</div>';
 };
 const resourceCovers=x=>{
@@ -145,7 +147,7 @@ const resourcePanel=s=>{
  '<article class="resource-item"><div class="resource-item-top"><span class="resource-kind">'+esc(resourceType(x.type))+'</span>'+(x.duration?'<span class="resource-duration">'+esc(x.duration)+'</span>':"")+'</div>'
  +'<h4>'+esc(x.title)+'</h4>'+(x.sourceEnTitle?'<p class="resource-original-title" lang="en" dir="ltr">'+esc(x.sourceEnTitle)+'</p>':"")
  +(x.author?'<p class="resource-author">'+esc(x.author)+'</p>':"")+resourceCovers(x)
- +(x.fileType?'<p class="resource-filemeta">'+esc(x.fileType)+(x.pages?' · '+esc(String(x.pages))+' صفحه':"")+(x.fileSize?' · '+esc(x.fileSize):"")+'</p>':"")
+ +(x.fileType?'<p class="resource-filemeta">'+esc(x.fileType)+(x.pages?' · '+esc(String(x.pages))+' صفحه':"")+(x.slides?' · '+esc(String(x.slides))+' اسلاید':"")+(x.fileSize?' · '+esc(x.fileSize):"")+'</p>':"")
  +(x.topic?'<p class="resource-topic"><strong>مرتبط با:</strong> '+esc(x.topic)+'</p>':"")
  +(x.note?'<p class="resource-note">'+esc(x.note)+'</p>':"")
  +(x.prompt?'<p class="resource-prompt"><strong>پرسش برای گفت‌وگوی کلاسی:</strong> '+esc(x.prompt)+'</p>':"")
@@ -160,7 +162,7 @@ const resourceFields=r=>{
  +field("نویسنده / ارائه‌دهنده","author",r.author)
  +field("لینک منبع (اختیاری برای کتاب)","url",r.url)
  +field("لینک معرفی ترجمه فارسی (در صورت وجود)","urlFa",r.urlFa)
- +field("لینک دانلود PDF (اگر وجود دارد)","downloadUrl",r.downloadUrl)
+ +field("لینک دانلود فایل (PDF یا PowerPoint)","downloadUrl",r.downloadUrl)
  +(r.url||r.urlFa?resourceLinks(r):"")
  +field("تصویر جلد فارسی (آدرس تصویر)","coverFa",r.coverFa)
  +field("تصویر جلد انگلیسی (آدرس تصویر)","coverEn",r.coverEn)
@@ -173,7 +175,7 @@ function teacherResources(){
  if(window.OB_ACCESS?.role!=="teacher")return '<section class="page"><h2>دسترسی مخصوص مدرس</h2></section>';
  const s=current(),list=resourcesOf(s);
  return '<div class="page resource-management"><div class="page-head"><div><span class="resource-caption">Resource Library</span><h2>منابع تکمیلی جلسه '+pf(s.id)+'</h2><p>'+esc(titleOf(s))+'</p></div>'+button("بازگشت به ویرایش جلسه","backToEditor","btn secondary")+'</div>'
- +'<section class="card stack"><h3>افزودن کتاب، ویدئو، مقاله یا لینک</h3><p class="section-note resource-warning">منابع جدیدی که از فرم مدرس اضافه می‌کنید فعلاً فقط روی همین مرورگر ذخیره می‌شوند. منابع رسمی منتشرشده برای همه، مانند ویدئوی Trost و کتاب دنهارت، به صورت مستقل در محتوای عمومی اپ قرار گرفته‌اند.</p><form data-form="resource" data-index="-1" class="stack">'+resourceFields({})+'<button type="submit" class="btn gold">افزودن منبع</button></form></section>'
+ +'<section class="card stack"><h3>افزودن کتاب، ویدئو، PowerPoint، مقاله یا لینک</h3><p class="section-note resource-warning">منابع جدیدی که از فرم مدرس اضافه می‌کنید فعلاً فقط روی همین مرورگر ذخیره می‌شوند. منابع رسمی منتشرشده برای همه، مانند ویدئوی Trost و کتاب دنهارت، به صورت مستقل در محتوای عمومی اپ قرار گرفته‌اند.</p><form data-form="resource" data-index="-1" class="stack">'+resourceFields({})+'<button type="submit" class="btn gold">افزودن منبع</button></form></section>'
  +'<section class="card stack"><h3>منابع ثبت‌شده ('+list.length+')</h3>'+(list.length?list.map((r,i)=>'<div class="resource-admin-item"><div class="page-head"><div><strong>'+esc(r.title)+'</strong><p>'+esc(resourceType(r.type))+' · '+esc(r.topic||"بدون مبحث")+'</p></div>'+button("حذف","deleteResource","btn danger sm",'data-index="'+i+'"')+'</div>'
  +resourceLinks(r)
  +'<details class="disclosure"><summary>ویرایش منبع</summary><div class="disclosure-body"><form data-form="resource" data-index="'+i+'" class="stack">'+resourceFields(r)+'<button type="submit" class="btn">ذخیره تغییرات</button></form></div></details></div>').join(""):'<p>هنوز منبعی ثبت نشده است.</p>')+'</section></div>';
