@@ -2,7 +2,7 @@
 (()=>{
 "use strict";
 const esc=x=>String(x??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-const xml=x=>String(x??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;":"&quot;","'":"&apos;"}[ch]));
+const xml=esc; // Numeric HTML entities are XML-compatible.
 const steps=x=>Array.isArray(x?.caseFramework?.steps)?x.caseFramework.steps:[];
 function build(lesson,enrichment,work){
  const st=steps(enrichment);
