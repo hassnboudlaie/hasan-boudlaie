@@ -412,7 +412,7 @@ window.OB_COURSE_CONTENT={
    sourceEnTitle:"The Truth About Managing People ... and Nothing But the Truth",
    author:"Stephen P. Robbins (استیفن پی. رابینز) | Financial Times / Prentice Hall",
    url:"https://www.oreilly.com/library/view/the-truth-about/0131838474/",
-   coverEn:"https://images.pangobooks.com/images/7016ee19-67e1-47c1-9586-10a9ee68d5f1?crop=1%3A1%26quality=85%26width=1200",
+   coverEn:"https://images.pangobooks.com/images/7016ee19-67e1-47c1-9586-10a9ee68d5f1?crop=1%3A1&quality=85&width=1200",
    topic:"جلسه اول | چیستی رفتار سازمانی، تصمیم‌گیری مدیریتی مبتنی بر پژوهش و کاربرد دانش رفتار در محیط کار",
    note:"کتاب رابینز یافته‌های پژوهشی درباره استخدام، انگیزش، رهبری، ارتباطات، تیم‌سازی، تعارض و تغییر را به توصیه‌های کاربردی برای مدیران تبدیل می‌کند. تصویر جلد مربوط به نسخه اصلی انگلیسی است، نه فایل خلاصه فارسی.",
    prompt:"کدام باور رایج درباره مدیریت کارکنان را باید با شواهد رفتاری بررسی کنیم؟",
