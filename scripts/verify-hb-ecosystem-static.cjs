@@ -28,6 +28,14 @@ assert.match(clinic,/keys\.filter\(k=>k\.startsWith\(PREFIX\)&&k!==CACHE\)/,"Uns
 const hub=read("hub/index.html");
 assert.match(hub,/impeccable\.css\?v=20261114/);
 assert.match(hub,/superResultCount/);
+assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
+assert.match(hub,/catalog\.js\?v=4/,"Hub must load deep-audit search");
+const search=read("hub/catalog.js");
+for(const token of ["normalize('NFKC')","replace(/[يى]/g","replace(/ك/g","superReset","menu-toggle","Escape"])
+ assert.ok(search.includes(token),"Hub search/navigation regression: "+token);
+const parastoo=read("ba-parastoo/index.html");
+for(const token of ['id="mobileNavToggle"','id="mobileNav"','class="skip-link"','modalReturnFocus','setMobileNav'])
+ assert.ok(parastoo.includes(token),"Ba Parastoo mobile/focus flow missing "+token);
 const links=[...hub.matchAll(/<a class="super-app-link" href="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(links.length,21,"HB Hub must preserve all 21 entries");
 assert.equal(new Set(links).size,21,"Hub has duplicate entries");

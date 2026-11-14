@@ -65,7 +65,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hb-ecosystem-impeccable-screenshots
-          path: qa-artifacts/hb-impeccable/*.png
+          path: |
+            qa-artifacts/hb-impeccable/*.png
+            qa-artifacts/hb-impeccable/a11y-findings.json
           if-no-files-found: ignore
   production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -86,11 +88,15 @@ jobs:
                curl -fsSL --max-time 25 "$base/hb-impeccable-shared.css" -o /tmp/hb-shared &&
                curl -fsSL --max-time 25 "$base/okr-system/index.html" -o /tmp/hb-okr &&
                curl -fsSL --max-time 25 "$base/my-finance/index.html" -o /tmp/hb-finance &&
+               curl -fsSL --max-time 25 "$base/assets/fonts/Vazirmatn.woff2" -o /tmp/hb-vazirmatn &&
+               curl -fsSL --max-time 25 "$base/ba-parastoo/index.html" -o /tmp/hb-parastoo &&
                cmp -s hub/index.html /tmp/hb-index &&
                cmp -s hub/impeccable.css /tmp/hb-css &&
                cmp -s hb-impeccable-shared.css /tmp/hb-shared &&
                cmp -s okr-system/index.html /tmp/hb-okr &&
-               cmp -s my-finance/index.html /tmp/hb-finance; then
+               cmp -s my-finance/index.html /tmp/hb-finance &&
+               cmp -s assets/fonts/Vazirmatn.woff2 /tmp/hb-vazirmatn &&
+               cmp -s ba-parastoo/index.html /tmp/hb-parastoo; then
               matched=1
               echo "PASS: published Hub, shared CSS, Kish OKR and My Finance match release."
               break
