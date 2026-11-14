@@ -64,7 +64,7 @@ assert.ok(caseJs.includes('window.OB_ACCESS?.role==="guest"'),'Guest cannot subm
 assert.ok(gateJs.includes('course-content.js?v=7')&&sw.includes('course-content.js?v=7'),'Course content scripts load after approved access');
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
 assert.ok(gateJs.includes('lesson-enrichment.js?v=2')&&sw.includes('lesson-enrichment.js?v=2'),'Enrichment script included in gated loader');
-assert.ok(gateJs.includes('guided-learning.js?v=3')&&html.includes('guided-learning.css?v=1')&&sw.includes('guided-learning.js?v=3')&&sw.includes('guided-learning.css?v=1'),'Guided assets loaded after authentication and cached');
+assert.ok(gateJs.includes('guided-learning.js?v=3')&&html.includes('guided-learning.css?v=2')&&sw.includes('guided-learning.js?v=3')&&sw.includes('guided-learning.css?v=2'),'Guided assets loaded after authentication and cached');
 assert.equal(publicCourse.OB_LESSON_ENRICHMENT.sessions.length,2,'Both source chapters enriched');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseFramework.steps.length===6&&s.caseFramework.steps.reduce((n,p)=>n+p.points,0)===20),'Both case rubrics have six stages and 20 points');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseStudy.tag.includes('فرضی')&&s.caseStudy.dataTable.length>=4),'Cases are honest data-led hypothetical scenarios');
