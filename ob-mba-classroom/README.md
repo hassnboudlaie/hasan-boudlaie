@@ -11,6 +11,13 @@ Independent GitHub Pages PWA in the main HB Hub repository.
 - Indexed under HB Hub and the applications catalog.
 
 
+## November 14, 2026 — Robbins book cover + downloadable 29-page handout
+- Session 1 now includes two separate, accurately labeled supplementary items: the original Stephen P. Robbins book *The Truth About Managing People ... and Nothing But the Truth* with a verified first-edition-cover photo and publisher/editorial listing; and the instructor-supplied **29-page Persian summary** titled «کلیدهای طلایی مدیریت منابع انسانی» (not the full book).
+- The uploaded source PDF bytes are published unchanged under `materials/readings/robbins-truth-about-managing-people-persian-summary.pdf`. Its Git blob SHA is `02ba7a535ebee57669acd1babee598ea37d8adf9` and original size is 1,343,727 bytes.
+- The session 1 PDF card provides "دانلود خلاصه PDF" via a same-origin GitHub Pages file URL and HTML `download` attribute, plus preview and copy-link options. No Google Drive permission request is needed for the published repository copy.
+- The source file's first page credits Robbins as author, Gholamhossein Khaneqai as Persian translator of the referred book, Mahsa Almoeinnejad as summarizer, and Mehrab Partovi Deylami as compiler (Placabi).
+- The app's PWA shell cache was updated to `v26` with the PDF for offline use. Public live-browser acceptance testing was not performed; JS render and resource controls should be tested against a student login after GitHub Pages deployment.
+
 ## November 14, 2026 — verified resource links & Denhardt book covers
 - Active **Open Link** and **Copy Link** controls appear in student resource cards, instructor resource lists, and directly under URL fields in each editable resource form. YouTube watch URLs remain ordinary HTTPS links and open in a new tab. Copy uses the browser Clipboard API with an on-page fallback.
 - Session 2: Armin Trost, *Don't change Culture by changing the Culture*, verified watch URL https://www.youtube.com/watch?v=ceud2z_HziU.
