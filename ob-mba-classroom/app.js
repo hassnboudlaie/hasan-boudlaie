@@ -2,20 +2,20 @@
 const KEY="ob-mba-classroom-demo-v1";const ss=n=>({id:n,title:"",outcomes:"",theory:"",model:"",slides:"",caseText:"",caseQuestion:"",roleplay:"",reflection:"",quizQuestion:"",quizOptions:["","","",""],quizAnswer:0,published:false,resources:[]});
 const courseBundle=window.OB_COURSE_CONTENT&&Array.isArray(window.OB_COURSE_CONTENT.sessions)?window.OB_COURSE_CONTENT:{version:1,sessions:[]};
 const seedLesson=n=>{const source=courseBundle.sessions.find(x=>x.id===n);return {...ss(n),...(source||{}),id:n}};
-const fresh=()=>({version:6,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
+const fresh=()=>({version:7,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
 const locallyEdited=x=>Boolean(x&&(x.title||x.outcomes||x.theory||x.model||x.slides||x.caseText||x.caseQuestion||x.roleplay||x.reflection||x.quizQuestion||x.published));
 function load(){const base=fresh();try{const raw=JSON.parse(localStorage.getItem(KEY));if(!raw||!Array.isArray(raw.sessions)||raw.sessions.length!==16)return base;
 const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
 const seedResources=Array.isArray(seed.resources)?seed.resources:[];
 const oldResources=Array.isArray(old.resources)?old.resources:[];
-const migrated=Number(raw.version||1)<6;
+const migrated=Number(raw.version||1)<7;
 merged.resources=migrated?[...seedResources,...oldResources.filter(x=>!seedResources.some(y=>y.id===x?.id||(y.url&&y.url===x?.url)))]:Array.isArray(old.resources)?oldResources:seedResources;
 if(n<=2&&Number(raw.version||1)<3){
  const managed=["caseText","caseQuestion","roleplay","reflection","quizQuestion","quizOptions","quizAnswer","quizzes","caseSource","caseSourceLabel"];
  for(const key of managed)merged[key]=seed[key];
 }
 return merged});
-return {...base,...raw,version:6,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
+return {...base,...raw,version:7,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
 /* Auth-gated deep link: ?session=2&tab=resources. Teacher opens the resource editor;
    students/approved guests see the published session's resource library. */
@@ -124,10 +124,11 @@ const resourceImageURL=value=>{
 };
 const resourceLinks=x=>{
  const url=safeResourceURL(x.url),fa=safeResourceURL(x.urlFa),dl=safeResourceURL(x.downloadUrl);
- const controls=(href,openLabel,copyLabel)=>'<span class="resource-link-pair"><a class="btn secondary resource-open" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+openLabel+' <span aria-hidden="true">↗</span></a>'+button(copyLabel,"copyResourceUrl","btn secondary resource-copy",'data-url="'+esc(href)+'"')+'</span>';
- const download=dl?controls(dl,"دریافت فایل PDF","کپی لینک دانلود"):"";
+ const localDownload=dl&&/^https:\/\/hassnboudlaie\.github\.io\/hasan-boudlaie\/ob-mba-classroom\/materials\/readings\/[a-z0-9_-]+\.pdf$/i.test(dl);
+ const controls=(href,openLabel,copyLabel,fileName="")=>'<span class="resource-link-pair"><a class="btn secondary resource-open" href="'+esc(href)+'" '+(fileName?'download="'+esc(fileName)+'"':'target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"')+'>'+openLabel+' <span aria-hidden="true">↗</span></a>'+button(copyLabel,"copyResourceUrl","btn secondary resource-copy",'data-url="'+esc(href)+'"')+'</span>';
+ const download=dl?controls(dl,"دانلود خلاصه PDF","کپی لینک دانلود",localDownload?"Robbins-Persian-Summary.pdf":""):"";
  return '<div class="resource-actions" aria-label="لینک‌های فعال منبع">'+download
- +(url?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"اطلاعات و معرفی کتاب":x.type==="document"?"مشاهده فایل در Google Drive":"بازکردن منبع","کپی لینک"):"")
+ +(url?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"اطلاعات و معرفی کتاب":x.type==="document"?"مشاهده PDF":"بازکردن منبع","کپی لینک"):"")
  +(fa&&fa!==url?controls(fa,"معرفی ترجمه فارسی","کپی لینک فارسی"):"")+'</div>';
 };
 const resourceCovers=x=>{
