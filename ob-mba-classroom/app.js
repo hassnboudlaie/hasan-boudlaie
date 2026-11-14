@@ -416,7 +416,7 @@ function attachAddon(src){
   document.head.appendChild(element);
  });
 }
-Promise.all(addons.map(attachAddon)).then(()=>{
+if(document.head&&typeof document.createElement==="function")Promise.all(addons.map(attachAddon)).then(()=>{
  if(window.OB_ACCESS?.approved)render();
 }).catch(()=>toast("بخشی از امکانات جدید بارگذاری نشد. اتصال اینترنت را بررسی کنید و صفحه را تازه‌سازی کنید."));
 })();
