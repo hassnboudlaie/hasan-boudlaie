@@ -84,7 +84,8 @@ for(const site of sites){
   if(site.slug==='okr-service'){
     await page.locator('#pageTitle').waitFor({state:'visible',timeout:15000});
     await page.locator('aside.sidebar strong').filter({hasText:'اهداف و نتایج کلیدی'}).waitFor({state:'attached',timeout:15000}); // Mobile sidebar is intentionally collapsed
-    assert((await page.locator('body').innerText()).includes('اهداف و نتایج کلیدی'),'OKR app identity missing');
+    assert((await page.locator('aside.sidebar strong').textContent()).includes('اهداف و نتایج کلیدی'),'OKR app identity missing in responsive navigation');
+    assert((await page.locator('#pageTitle').innerText()).includes('OKR'),'OKR app dashboard heading missing');
   }else{
     await page.waitForFunction(needle=>document.body.innerText.includes(needle),site.name==='Business Model Canvas'?'بوم':'کسب‌وکار',{timeout:12000});
   }
