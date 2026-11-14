@@ -117,7 +117,7 @@ assert.ok(js.includes('lectureDownloads(s)')&&js.includes('projectPresentation')
 const makeEl=()=>({innerHTML:'',style:{},hidden:false,textContent:'',dataset:{},open:false,classList:{toggle(){}},setAttribute(){},querySelectorAll(){return []},querySelector(){return null},addEventListener(n,fn){this.handlers??={};this.handlers[n]=fn;}});
 const app=makeEl(),nav=makeEl(),roles=makeEl(),theme=makeEl(),toast=makeEl(),summary=makeEl(),menu=makeEl();
 roles.querySelectorAll=()=>['student','teacher','projector'].map(role=>({dataset:{role},classList:{toggle(){}},setAttribute(){}}));
-const doc={documentElement:{dataset:{}},listeners:{},querySelector(sel){return ({'#app':app,'#bottomNav':nav,'#rolebar':roles,'#themeToggle':theme,'#toast':toast,'#roleSummary':summary,'.demo-role-menu':menu})[sel]||null},addEventListener(n,fn){this.listeners[n]=fn}};
+const doc={documentElement:{dataset:{}},listeners:{},querySelector(sel){return ({'#app':app,'#bottomNav':nav,'#rolebar':roles,'#themeToggle':theme,'#toast':toast,'#roleSummary':summary,'.demo-role-menu':menu})[sel]||null},addEventListener(n,fn){const old=this.listeners[n];this.listeners[n]=old?(e=>{old(e);fn(e)}):fn}};
 const saved={};const storage={getItem(k){return saved[k]??null},setItem(k,v){saved[k]=String(v)}};
 const guideHolder={};new Function('window',guidedJs)(guideHolder);
 assert.ok(guideHolder.OB_GUIDED,'Reusable guided reader exported');
