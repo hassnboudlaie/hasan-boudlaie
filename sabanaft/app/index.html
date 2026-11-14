@@ -12,14 +12,14 @@
 <link rel="stylesheet" href="./ch5-product-shell.css?v=4">
 <link rel="stylesheet" href="./gamification.css?v=1">
 <link rel="stylesheet" href="./premium-v2.css?v=1">
-<link rel="stylesheet" href="./executive-learning-ux.css?v=20261113">
+<link rel="stylesheet" href="./executive-learning-ux.css?v=20261114">
 <link rel="stylesheet" href="./leadership-journey.css?v=1">
 <link rel="stylesheet" href="./brand-splash.css?v=1">
 <title>مهارت‌های رهبری من | صبا نفت</title>
 
 
 </head>
-<body><div id="brandSplash" class="brand-splash" role="status" aria-label="صفحه آغازین مهارت‌های رهبری من" hidden><img class="brand-splash__icon" src="./assets/my-leadership-icon.svg" alt="قطب‌نمای رهبری"><h1>مهارت‌های رهبری من</h1><p class="brand-splash__tagline">یادگیری، بازاندیشی و اقدام در رهبری</p><p class="brand-splash__organization">نسخه اختصاصی مدیران صبا نفت</p><button id="splashEnter" class="brand-splash__action" type="button">ورود به برنامه ←</button></div><div class="app-shell">
+<body><a class="skip-link" href="#main">رفتن به محتوای صفحه</a><div id="brandSplash" class="brand-splash" role="status" aria-label="صفحه آغازین مهارت‌های رهبری من" hidden><img class="brand-splash__icon" src="./assets/my-leadership-icon.svg" alt="قطب‌نمای رهبری"><h1>مهارت‌های رهبری من</h1><p class="brand-splash__tagline">یادگیری، بازاندیشی و اقدام در رهبری</p><p class="brand-splash__organization">نسخه اختصاصی مدیران صبا نفت</p><button id="splashEnter" class="brand-splash__action" type="button">ورود به برنامه ←</button></div><div class="app-shell">
 <header class="topbar">
 <button type="button" id="modelNavToggle" class="model-nav-toggle" aria-controls="modelSideNav" aria-expanded="false" aria-label="بازکردن فهرست مدل رهبری"><span aria-hidden="true">☰</span><span>مدل</span></button>
 <a class="brand" href="#/home" aria-label="خانه رهبری بازتابی صبا نفت"><img src="./assets/my-leadership-icon.svg" alt="نشان قطب‌نمای مهارت‌های رهبری من"><span><strong>مهارت‌های رهبری من</strong><small>نسخه اختصاصی مدیران صبا نفت</small></span></a>
@@ -47,13 +47,12 @@
   <p class="model-side-note">بازاندیشی در همه بخش‌ها جریان دارد. امتیاز با ثبت فعالیت واقعی تعلق می‌گیرد.</p>
 </aside>
 
-<main id="main">
+<main id="main" tabindex="-1">
 <section id="homeView" class="view" aria-label="خانه رهبری بازتابی صبا نفت">
  <div class="saba-home-photo" aria-hidden="true"><img src="../assets/sabanaft-meeting.jpg" alt="" fetchpriority="high" decoding="async"></div>
  <div class="saba-home-scrim" aria-hidden="true"></div>
  <div class="saba-home-content">
   <header class="saba-home-heading">
-   <span class="saba-home-overline">مسیر توسعه مهارت‌های رهبری</span>
    <h1>مهارت‌های رهبری من</h1>
    <p>یک مسئله واقعی را بررسی کنید یا مسیر توسعه رهبری خود را انتخاب کنید.</p>
   </header>
@@ -154,6 +153,7 @@
      <button type="button" class="cj-secondary" id="cj-send-studio">ادامه همین کیس در استودیو</button>
     </div>
     <p class="cj-note">راهنمای اولیه این صفحه مبتنی بر قواعد آموزشی کتاب است؛ تحلیل هوش مصنوعی یا ارزیابی واقعی عملکرد افراد نیست.</p>
+    <div id="cj-save-warning" class="save-warning" role="alert" hidden><p>پیش‌نویس ذخیره نشد. پیش از بستن صفحه، متن مسئله را کپی کنید یا دوباره ذخیره کنید.</p><button type="button" id="cj-retry-save">تلاش دوباره برای ذخیره</button></div>
     <div id="cj-output" class="cj-result" role="region" aria-live="polite" hidden></div>
    </section>
    <section class="cj-card cj-steps" aria-labelledby="cj-next-title">
@@ -201,7 +201,7 @@
 </main>
 <nav class="saba-tabbar" aria-label="دسترسی سریع به بخش‌های اصلی اپ">
  <button type="button" data-go="home" aria-label="خانه" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21h-6v-7H9v7H3z"/></svg><span>خانه</span></button>
- <button type="button" data-go="course" aria-label="جلسات یادگیری"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1m0-15v15"/></svg><span>یادگیری</span></button>
+ <button type="button" data-go="course" aria-label="مسیر یادگیری"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1m0-15v15"/></svg><span>مسیر یادگیری</span></button>
  <button type="button" data-go="coach" aria-label="بررسی مسئله رهبری"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4z"/><path d="M8 9h8M8 13h5"/></svg><span>مسئله من</span></button>
  <button type="button" data-go="passport" aria-label="پیشرفت و نشان‌های من"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><span>پیشرفت من</span></button>
 </nav>
@@ -212,9 +212,9 @@
 <script src="./gamification.js?v=1"></script>
 <script src="./leadership-journey-core.js?v=1"></script>
 <script src="./leadership-journey-content.js?v=1"></script>
-<script src="./app.js?v=7"></script>
+<script src="./app.js?v=8"></script>
 <script src="./leadership-journey.js?v=1"></script>
-<script src="./coaching-journey.js?v=1"></script>
+<script src="./coaching-journey.js?v=2"></script>
 <script src="./ai-connector.js?v=1"></script>
 <script src="./brand-splash.js?v=1"></script>
 </body></html>

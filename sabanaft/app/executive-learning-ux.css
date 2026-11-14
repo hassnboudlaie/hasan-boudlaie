@@ -39,7 +39,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible,textarea:focus-visibl
 .model-side-extras h3{font-size:18px!important;color:#e5f2f7!important}
 .model-side-list button>span{background:#f1f7ff26;color:#fff}
 #modelNavClose{color:#fff;background:#ffffff23;border-color:#ffffff48}
-body:not(.model-nav-open) .model-side-nav{pointer-events:none}
+@media(max-width:1459px){body:not(.model-nav-open) .model-side-nav{pointer-events:none}}
 .view.active{animation:uxAppear .16s ease both}
 @keyframes uxAppear{from{opacity:.76}to{opacity:1}}
 .view h1,.view h2,.view h3{letter-spacing:0!important;line-height:1.48!important}
@@ -425,7 +425,8 @@ body.saba-home #homeView .saba-home-achievement strong{color:#185747!important}
 .course-card:nth-child(3n+2){background:#e0eee4!important;border-color:#bad8c5!important}
 .course-card:nth-child(3n){background:#f3e9d6!important;border-color:#e0d1b1!important}
 .course-card>img{filter:saturate(.89)}
-.course-card .eyebrow,.page-heading .eyebrow{color:#e7c895!important}
+.course-card .eyebrow{color:#245647!important}
+.page-heading .eyebrow{color:#e7c895!important}
 .reader-top{background:#e0eee4!important;border-color:#c3dccb!important}
 .reader-info strong{color:#124d40!important}
 .lesson-card{background:#e8f2e9!important;border-color:#c7ddca!important}
@@ -484,3 +485,31 @@ body.saba-home #homeView .saba-home-achievement strong{color:#185747!important}
 .brand strong,body.saba-home .brand strong{font-size:clamp(17px,2.3vw,21px)!important;letter-spacing:0!important}
 .brand small,body.saba-home .brand small{font-size:13px!important;letter-spacing:0!important;white-space:normal!important}
 @media(max-width:700px){.brand img,body.saba-home .topbar .brand img{width:46px!important;height:46px!important;flex-basis:46px!important}.brand strong,body.saba-home .brand strong{font-size:16px!important}.brand small,body.saba-home .brand small{display:block!important;font-size:11px!important;line-height:1.35!important}.topbar-actions{gap:4px!important}.global-score{max-width:84px!important;padding:6px!important}.global-score span{display:none!important}}
+
+/* Impeccable refinement: incumbent pine/jade identity, shared readable states. */
+:root{--saba-pine:#153f36;--saba-jade:#12644f;--saba-paper:#f5f7ef;--saba-focus:#85591d;--saba-space:clamp(16px,3vw,28px)}
+::selection{background:#c7e5d4;color:var(--saba-pine)}
+input,textarea{caret-color:var(--saba-jade)}
+a{text-underline-offset:.22em}
+.skip-link{position:fixed;top:8px;inset-inline-start:12px;transform:translateY(-180%);z-index:200;background:var(--saba-paper);color:var(--saba-pine);padding:12px 18px;border-radius:10px}
+.skip-link:focus{transform:none}
+.view :is(h1,h2)[tabindex="-1"]:focus-visible{outline:3px solid var(--saba-focus);outline-offset:5px}
+.save-warning{background:#fff0d6;color:#633e13;border:1px solid #ad7732;padding:16px;border-radius:12px;margin-block:16px}
+.save-warning[hidden]{display:none}
+.save-warning button{font:inherit;min-height:44px;padding:8px 16px;background:#633e13;color:#fff;border:0;border-radius:8px}
+#modelNavClose{min-width:44px;min-height:44px}
+body.saba-home #homeView .saba-home-tile{border-right-width:1px!important;box-shadow:none!important;border-radius:14px!important}
+body.saba-home #homeView .saba-reflection-band{border-right-width:1px!important}
+@media(min-width:801px){
+ .saba-tabbar{display:flex;justify-content:center;gap:8px;padding:12px;position:sticky;bottom:0;z-index:70;background:var(--saba-paper);border-top:1px solid #c2d8c7}
+ .saba-tabbar button{display:flex;align-items:center;gap:8px;min-height:48px;padding:10px 22px;background:transparent;color:var(--saba-pine);font:700 16px Vazirmatn,sans-serif;border:0;border-radius:10px;cursor:pointer}
+ .saba-tabbar svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
+ .saba-tabbar [aria-current="page"]{background:#d9ecdf}
+}
+@media(max-width:800px){
+ body.saba-home #homeView .saba-home-tile{min-height:136px!important}
+ .saba-tabbar button{font-size:14px}
+ .saba-tabbar button[aria-current="page"]{box-shadow:inset 0 -3px var(--saba-jade)}
+ .view.active{scroll-margin-top:90px}
+}
+@media(prefers-reduced-motion:reduce){.view.active{animation:none}.model-side-nav,.saba-home-tile{transition:none!important}html{scroll-behavior:auto}}

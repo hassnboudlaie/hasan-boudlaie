@@ -49,8 +49,8 @@ function renderStage(key){
  E("stageProgress").textContent=point?fa(point.points)+" امتیاز از فعالیت‌های این بخش ثبت کرده‌اید.":"با ثبت فعالیت‌ها و پیگیری نتیجه، امتیاز و نشان بگیرید.";
  E("stageActionList").innerHTML=d.actions.map(function(a){return '<button type="button" class="stage-action" data-go-stage="'+escapeText(a[0])+'"><span class="stage-action-num">'+escapeText(a[3])+'</span><span class="stage-action-copy"><strong>'+escapeText(a[1])+'</strong><small>'+escapeText(a[2])+'</small></span><span class="stage-action-arrow" aria-hidden="true">←</span></button>'}).join("");
 }
-function renderCourse(){var state=courseState(),out=parts.map(function(s){var c=count(s,state),pic=pics[(s.id-1)%pics.length];return '<button class="course-card" type="button" data-session="'+s.id+'"><img src="../assets/'+pic+'" alt="" loading="lazy"><span class="course-card-body"><span class="eyebrow">جلسه '+fa(s.id)+'</span><strong>جلسه '+fa(s.id)+' · '+escapeText(s.title)+'</strong><p>'+escapeText(s.subtitle)+'</p><span class="course-card-bottom"><span>'+fa(s.sections.length)+' بخش</span><span>'+fa(c)+' مرورشده</span></span><span class="track"><span style="width:'+(100*c/s.sections.length)+'%"></span></span></span></button>'}).join("");E("courseGrid").innerHTML=out}
-function renderSession(n){var s=session(n),state=courseState();E("sessionKicker").textContent="جلسه "+fa(n)+" · "+fa(s.sections.length)+" بخش";E("sessionTitle").textContent="جلسه "+fa(n)+" · "+s.title;E("sessionSubtitle").textContent=s.subtitle;E("sessionOutput").textContent=s.output;E("sessionJourneyEntry").hidden=n!==9;E("lessonList").innerHTML=s.sections.map(function(x,i){var d=state.done.has(doneKey(n,x.id));return '<button type="button" class="lesson-card" data-lesson="'+escapeText(x.id)+'"><span class="lesson-number">'+fa(i+1)+'</span><span class="lesson-text"><strong>'+escapeText(x.title)+'</strong><small>'+(d?'✓ مرورشده':'ورود به درس و تمرین')+'</small></span><span class="lesson-arrow" aria-hidden="true">←</span></button>'}).join("")}
+function renderCourse(){var state=courseState(),out=parts.map(function(s){var c=count(s,state),pic=pics[(s.id-1)%pics.length];return '<button class="course-card" type="button" data-session="'+s.id+'"><img src="../assets/'+pic+'" alt="" loading="lazy"><span class="course-card-body"><span class="eyebrow">جلسه '+fa(s.id)+'</span><strong>جلسه '+fa(s.id)+' · '+escapeText(s.title)+'</strong><p>'+escapeText(s.subtitle)+'</p><span class="course-card-bottom"><span>'+fa(s.sections.length)+' بخش</span><span>'+fa(c)+' تکمیل‌شده</span></span><span class="track"><span style="width:'+(100*c/s.sections.length)+'%"></span></span></span></button>'}).join("");E("courseGrid").innerHTML=out}
+function renderSession(n){var s=session(n),state=courseState();E("sessionKicker").textContent="جلسه "+fa(n)+" · "+fa(s.sections.length)+" بخش";E("sessionTitle").textContent="جلسه "+fa(n)+" · "+s.title;E("sessionSubtitle").textContent=s.subtitle;E("sessionOutput").textContent=s.output;E("sessionJourneyEntry").hidden=n!==9;E("lessonList").innerHTML=s.sections.map(function(x,i){var d=state.done.has(doneKey(n,x.id));return '<button type="button" class="lesson-card" data-lesson="'+escapeText(x.id)+'"><span class="lesson-number">'+fa(i+1)+'</span><span class="lesson-text"><strong>'+escapeText(x.title)+'</strong><small>'+(d?'✓ تکمیل‌شده':'ورود به درس و تمرین')+'</small></span><span class="lesson-arrow" aria-hidden="true">←</span></button>'}).join("")}
 function contentUrl(s,p){var u=new URL("index.html",base);u.hash="s/"+s+"/"+p;return u}
 function studioUrl(tab){var u=new URL("leadership-studio.html",base);u.hash=tab;return u}
 
@@ -107,6 +107,10 @@ sel.dataset.boundToBase='yes';var valid=function(id){return Array.from(sel.optio
 }
 function setModelNavOpen(open,restoreFocus){
  var button=E("modelNavToggle"),scrim=E("modelNavScrim");
+ var modal=!!open && !(window.matchMedia&&window.matchMedia&&window.matchMedia("(min-width:1460px)").matches);
+ [E("main"),document.querySelector(".topbar"),document.querySelector(".saba-tabbar")].forEach(function(el){if(el)el.inert=modal;});
+ E("modelSideNav").setAttribute("role",modal?"dialog":"complementary");
+ if(modal)E("modelSideNav").setAttribute("aria-modal","true");else E("modelSideNav").removeAttribute("aria-modal");
  document.body.classList.toggle("model-nav-open",!!open);
  if(button)button.setAttribute("aria-expanded",open?"true":"false");
  if(scrim)scrim.hidden=!open;
@@ -128,7 +132,23 @@ E("modelNavToggle").addEventListener("click",function(){setModelNavOpen(!documen
 E("modelNavClose").addEventListener("click",function(){setModelNavOpen(false,true);});
 E("modelNavScrim").addEventListener("click",function(){setModelNavOpen(false,true);});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("model-nav-open"))setModelNavOpen(false,true);});
-function render(){var r=route();var gam=globalThis.SabaGamification?.collect();if(E("globalScore")&&gam)E("globalScore").innerHTML="⭐ <span>"+fa(gam.annualScore)+" امتیاز · "+escapeText(gam.level)+"</span>";if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);highlightModelNav(r);document.querySelectorAll(".saba-tabbar [data-go]").forEach(function(b){var active=(b.dataset.go==="course"&&["course","session","reader","journey"].includes(r.page))||(b.dataset.go==="coach"&&["coach","studio"].includes(r.page))||(b.dataset.go==="home"&&["home","stage","context"].includes(r.page))||(b.dataset.go==="passport"&&r.page==="passport");if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");if(r.page==="home")renderHome();if(r.page==="stage")renderStage(r.stage);if(r.page==="coach")syncCoachTeams();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0)}
+var previousRoute=null;
+function focusRoute(){
+ var heading=document.querySelector(".view.active h1, .view.active h2")||document.querySelector(".view.active");
+ if(heading&&!document.querySelector('[aria-modal="true"]')){heading.setAttribute("tabindex","-1");heading.focus({preventScroll:true});}
+}
+document.addEventListener("keydown",function(e){
+ if(e.key!=="Tab"||E("modelSideNav").getAttribute("aria-modal")!=="true")return;
+ var nodes=Array.from(E("modelSideNav").querySelectorAll('button,a[href]')).filter(function(n){return n.getClientRects().length&&!n.disabled;});
+ var first=nodes[0],last=nodes[nodes.length-1];
+ if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+ else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+});
+window.addEventListener("resize",function(){if(document.body.classList.contains("model-nav-open")&&window.matchMedia&&window.matchMedia("(min-width:1460px)").matches)setModelNavOpen(false);});
+function render(){var r=route();var gam=globalThis.SabaGamification?.collect();if(E("globalScore")&&gam)E("globalScore").innerHTML="⭐ <span>"+fa(gam.annualScore)+" امتیاز · "+escapeText(gam.level)+"</span>";if(document.body.classList.contains("model-nav-open"))setModelNavOpen(false);highlightModelNav(r);document.querySelectorAll(".saba-tabbar [data-go]").forEach(function(b){var active=(b.dataset.go==="course"&&["course","session","reader","journey"].includes(r.page))||(b.dataset.go==="coach"&&["coach","studio"].includes(r.page))||(b.dataset.go==="home"&&["home","stage","context"].includes(r.page))||(b.dataset.go==="passport"&&r.page==="passport");if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});document.body.classList.toggle('saba-home',r.page==='home');document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("active",v.id===(r.page==="reader"?"reader":r.page)+"View")});document.body.classList.toggle("studio-mode",r.page==="studio");if(r.page==="home")renderHome();if(r.page==="stage")renderStage(r.stage);if(r.page==="coach")syncCoachTeams();if(r.page==="course")renderCourse();if(r.page==="session")renderSession(r.s);if(r.page==="reader")renderReader(r.s,r.p);if(r.page==="studio")setStudio(r.tab);if(r.page==="context")setContext();if(r.page==="passport")renderPassport();window.scrollTo(0,0);var current=location.hash;
+ if(previousRoute!==null&&previousRoute!==current)(window.requestAnimationFrame||window.setTimeout)(focusRoute);
+ previousRoute=current;
+}
 courseFrame.addEventListener("load",function(){courseReady=true;try{courseLast=courseFrame.contentWindow.location.href}catch(e){}injectCourseStyles();E("courseLoader").hidden=true;sizeEmbedded(courseFrame,"course")});
 studioFrame.addEventListener("load",function(){studioReady=true;try{studioLast=studioFrame.contentWindow.location.href}catch(e){}E("studioLoader").hidden=true;sizeEmbedded(studioFrame,"studio")});
 document.querySelectorAll("[data-nav]").forEach(function(b){b.addEventListener("click",function(){go(b.dataset.nav)})});
