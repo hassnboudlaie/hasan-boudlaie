@@ -2,7 +2,7 @@
 (()=>{
 "use strict";
 const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",KEY="ob-mba-classroom-attendance-identity-v1",MAIL="hasanboudlaie@gmail.com";
-const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;":"&quot;","'":"&#39;"}[c]));
+const safe=v=>String(v??"").replace(/[&<>"']/g,c=>c==="&"?"&amp;":c==="<"?"&lt;":c===">"?"&gt;":c==='"'?"&quot;":"&#39;");
 const digits=n=>Number(n).toLocaleString("fa-IR");
 const date=t=>t?new Intl.DateTimeFormat("fa-IR",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Tehran"}).format(new Date(t)):"—";
 const local=t=>{if(!t)return "";const d=new Date(t),pad=x=>String(x).padStart(2,"0");return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes())};
