@@ -69,3 +69,9 @@ html{scroll-padding-top:100px}body{overflow-wrap:break-word}
 .menu-toggle[aria-expanded="true"] .hub-close-icon{display:block}
 @media(max-width:630px){.super-no-results{align-items:stretch}.super-reset{width:100%}}
 @media(forced-colors:active){.super-app-link,.super-search input,.super-filters button,.super-reset{border:1px solid CanvasText}}
+
+/* 320px browser finding: no off-screen-only filter chips on touch widths. */
+@media(max-width:630px){
+ .super-filters{flex-wrap:wrap;overflow:visible;scroll-snap-type:none;max-width:100%;padding:0;gap:8px}
+ .super-filters button{flex:0 1 auto;white-space:normal;max-width:100%;min-height:44px;font-size:.86rem;line-height:1.45;text-align:center}
+}
