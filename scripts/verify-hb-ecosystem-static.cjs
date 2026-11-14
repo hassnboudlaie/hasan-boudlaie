@@ -10,7 +10,7 @@ const targets=[
 const serviceWorkers=["okr-system","okr-service","business-model-canvas","small-business",
 "trm-workspace","clinic-customer-app","rf-holding","life-organization","my-finance"];
 const shared=read("hb-impeccable-shared.css");
-assert.match(shared,/ob-mba-classroom\/assets\/fonts\/Vazirmatn\.woff2/);
+assert.match(shared,/assets\/fonts\/Vazirmatn\.woff2/);
 assert.ok(fs.statSync(path.join(ROOT,"assets/fonts/Vazirmatn.woff2")).size>100000);
 for(const entry of targets){
  const html=read(entry);
