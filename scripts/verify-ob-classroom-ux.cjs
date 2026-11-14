@@ -17,7 +17,10 @@ assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScr
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=16')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
+const gateVersion=html.match(/access-gate\\.js\\?v=(\\d+)/)?.[1];
+const appVersion=gateJs.match(/app\\.js\\?v=(\\d+)/)?.[1];
+assert.ok(gateVersion&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'),'Course JS must load after authorization');
+assert.ok(/shell-v\\d+/.test(sw)&&appVersion&&sw.includes('app.js?v='+appVersion)&&sw.includes('access-gate.js?v='+gateVersion),'PWA cache references approved assets');
 assert.ok(sw.includes('shell-v27')&&sw.includes('app.js?v=25')&&sw.includes('access-gate.js?v=16'),'PWA cache and approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
