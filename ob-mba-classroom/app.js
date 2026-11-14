@@ -2,20 +2,20 @@
 const KEY="ob-mba-classroom-demo-v1";const ss=n=>({id:n,title:"",outcomes:"",theory:"",model:"",slides:"",caseText:"",caseQuestion:"",roleplay:"",reflection:"",quizQuestion:"",quizOptions:["","","",""],quizAnswer:0,published:false,resources:[]});
 const courseBundle=window.OB_COURSE_CONTENT&&Array.isArray(window.OB_COURSE_CONTENT.sessions)?window.OB_COURSE_CONTENT:{version:1,sessions:[]};
 const seedLesson=n=>{const source=courseBundle.sessions.find(x=>x.id===n);return {...ss(n),...(source||{}),id:n}};
-const fresh=()=>({version:5,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
+const fresh=()=>({version:6,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
 const locallyEdited=x=>Boolean(x&&(x.title||x.outcomes||x.theory||x.model||x.slides||x.caseText||x.caseQuestion||x.roleplay||x.reflection||x.quizQuestion||x.published));
 function load(){const base=fresh();try{const raw=JSON.parse(localStorage.getItem(KEY));if(!raw||!Array.isArray(raw.sessions)||raw.sessions.length!==16)return base;
 const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
 const seedResources=Array.isArray(seed.resources)?seed.resources:[];
 const oldResources=Array.isArray(old.resources)?old.resources:[];
-const migrated=Number(raw.version||1)<5;
+const migrated=Number(raw.version||1)<6;
 merged.resources=migrated?[...seedResources,...oldResources.filter(x=>!seedResources.some(y=>y.id===x?.id||(y.url&&y.url===x?.url)))]:Array.isArray(old.resources)?oldResources:seedResources;
 if(n<=2&&Number(raw.version||1)<3){
  const managed=["caseText","caseQuestion","roleplay","reflection","quizQuestion","quizOptions","quizAnswer","quizzes","caseSource","caseSourceLabel"];
  for(const key of managed)merged[key]=seed[key];
 }
 return merged});
-return {...base,...raw,version:5,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
+return {...base,...raw,version:6,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
 /* Auth-gated deep link: ?session=2&tab=resources. Teacher opens the resource editor;
    students/approved guests see the published session's resource library. */
@@ -113,7 +113,7 @@ const guidedActivity=(s,x)=>{
 };
 
 
-const RESOURCE_TYPES=[["video","ویدئو"],["book","کتاب"],["article","مقاله"],["link","لینک مفید"],["podcast","پادکست"],["other","سایر"]];
+const RESOURCE_TYPES=[["video","ویدئو"],["book","کتاب"],["article","مقاله"],["link","لینک مفید"],["podcast","پادکست"],["document","فایل PDF / جزوه"],["other","سایر"]];
 const resourcesOf=s=>Array.isArray(s.resources)?s.resources:[];
 const safeResourceURL=value=>{try{const u=new URL(String(value||""));return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return""}};
 
@@ -123,9 +123,12 @@ const resourceImageURL=value=>{
  return /^\.\/materials\/book-covers\/[a-z0-9_-]+\.jpe?g$/i.test(s)?s:safeResourceURL(s);
 };
 const resourceLinks=x=>{
- const url=safeResourceURL(x.url),fa=safeResourceURL(x.urlFa);
+ const url=safeResourceURL(x.url),fa=safeResourceURL(x.urlFa),dl=safeResourceURL(x.downloadUrl);
  const controls=(href,openLabel,copyLabel)=>'<span class="resource-link-pair"><a class="btn secondary resource-open" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+openLabel+' <span aria-hidden="true">↗</span></a>'+button(copyLabel,"copyResourceUrl","btn secondary resource-copy",'data-url="'+esc(href)+'"')+'</span>';
- return '<div class="resource-actions" aria-label="لینک‌های فعال منبع">'+(url?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"صفحه نسخه انگلیسی":"بازکردن منبع","کپی لینک"):"")+(fa&&fa!==url?controls(fa,"معرفی ترجمه فارسی","کپی لینک فارسی"):"")+'</div>';
+ const download=dl?controls(dl,"دریافت فایل PDF","کپی لینک دانلود"):"";
+ return '<div class="resource-actions" aria-label="لینک‌های فعال منبع">'+download
+ +(url?controls(url,x.type==="video"?"تماشای ویدئو در YouTube":x.type==="book"?"اطلاعات و معرفی کتاب":x.type==="document"?"مشاهده فایل در Google Drive":"بازکردن منبع","کپی لینک"):"")
+ +(fa&&fa!==url?controls(fa,"معرفی ترجمه فارسی","کپی لینک فارسی"):"")+'</div>';
 };
 const resourceCovers=x=>{
  if(x.type!=="book")return "";
@@ -141,10 +144,12 @@ const resourcePanel=s=>{
  '<article class="resource-item"><div class="resource-item-top"><span class="resource-kind">'+esc(resourceType(x.type))+'</span>'+(x.duration?'<span class="resource-duration">'+esc(x.duration)+'</span>':"")+'</div>'
  +'<h4>'+esc(x.title)+'</h4>'+(x.sourceEnTitle?'<p class="resource-original-title" lang="en" dir="ltr">'+esc(x.sourceEnTitle)+'</p>':"")
  +(x.author?'<p class="resource-author">'+esc(x.author)+'</p>':"")+resourceCovers(x)
+ +(x.fileType?'<p class="resource-filemeta">'+esc(x.fileType)+(x.pages?' · '+esc(String(x.pages))+' صفحه':"")+(x.fileSize?' · '+esc(x.fileSize):"")+'</p>':"")
  +(x.topic?'<p class="resource-topic"><strong>مرتبط با:</strong> '+esc(x.topic)+'</p>':"")
  +(x.note?'<p class="resource-note">'+esc(x.note)+'</p>':"")
  +(x.prompt?'<p class="resource-prompt"><strong>پرسش برای گفت‌وگوی کلاسی:</strong> '+esc(x.prompt)+'</p>':"")
  +(x.relatedSession?'<span class="resource-related">پیوند تکمیلی: جلسه '+pf(x.relatedSession)+'</span>':"")
+ +(x.accessNote?'<p class="resource-access-note">'+esc(x.accessNote)+'</p>':"")
  +resourceLinks(x)+'</article>').join("")+'</div>':'<div class="resource-empty"><h4>هنوز منبع تکمیلی ثبت نشده است.</h4><p>کتاب‌ها، مقالات و ویدئوهای منتخب مدرس در این بخش قرار می‌گیرند.</p></div>')+'</section>';
 };
 const resourceFields=r=>{
@@ -154,6 +159,7 @@ const resourceFields=r=>{
  +field("نویسنده / ارائه‌دهنده","author",r.author)
  +field("لینک منبع (اختیاری برای کتاب)","url",r.url)
  +field("لینک معرفی ترجمه فارسی (در صورت وجود)","urlFa",r.urlFa)
+ +field("لینک دانلود PDF (اگر وجود دارد)","downloadUrl",r.downloadUrl)
  +(r.url||r.urlFa?resourceLinks(r):"")
  +field("تصویر جلد فارسی (آدرس تصویر)","coverFa",r.coverFa)
  +field("تصویر جلد انگلیسی (آدرس تصویر)","coverEn",r.coverEn)
@@ -300,15 +306,16 @@ document.addEventListener("submit",e=>{const form=e.target.closest("form[data-fo
   const title=String(fd.get("title")||"").trim().slice(0,180),topic=String(fd.get("topic")||"").trim().slice(0,240);
   const rawUrl=String(fd.get("url")||"").trim(),url=rawUrl?safeResourceURL(rawUrl):"";
   const rawFa=String(fd.get("urlFa")||"").trim(),urlFa=rawFa?safeResourceURL(rawFa):"";
+  const rawDownload=String(fd.get("downloadUrl")||"").trim(),downloadUrl=rawDownload?safeResourceURL(rawDownload):"";
   const rawCoverFa=String(fd.get("coverFa")||"").trim(),coverFa=rawCoverFa?resourceImageURL(rawCoverFa):"";
   const rawCoverEn=String(fd.get("coverEn")||"").trim(),coverEn=rawCoverEn?resourceImageURL(rawCoverEn):"";
   if(!title||!topic){toast("عنوان و ارتباط منبع با مبحث درس الزامی است.");return}
-  if((rawUrl&&!url)||(rawFa&&!urlFa)||(rawCoverFa&&!coverFa)||(rawCoverEn&&!coverEn)){toast("آدرس لینک یا تصویر باید معتبر و امن باشد.");return}
+  if((rawUrl&&!url)||(rawFa&&!urlFa)||(rawDownload&&!downloadUrl)||(rawCoverFa&&!coverFa)||(rawCoverEn&&!coverEn)){toast("آدرس لینک یا تصویر باید معتبر و امن باشد.");return}
   const type=String(fd.get("type")||"link");
   const existing=Number.isInteger(index)&&index>=0?list[index]:null;
   if(index>=0&&!existing){toast("منبع برای ویرایش پیدا نشد.");return}
   const resource={...existing,id:existing?.id||("custom-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7)),
-  type:RESOURCE_TYPES.some(x=>x[0]===type)?type:"other",title,topic,url,urlFa,coverFa,coverEn,
+  type:RESOURCE_TYPES.some(x=>x[0]===type)?type:"other",title,topic,url,urlFa,downloadUrl,coverFa,coverEn,
   author:String(fd.get("author")||"").trim().slice(0,180),note:String(fd.get("note")||"").trim().slice(0,1200),
   prompt:String(fd.get("prompt")||"").trim().slice(0,1200)};
   if(index>=0){list[index]=resource}else list.push(resource);
