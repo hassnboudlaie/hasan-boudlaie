@@ -52,3 +52,16 @@ html[data-hb-app="my-finance"] .auth-brand small{color:var(--fg)!important;opaci
 @media(forced-colors:active){
  html[data-hb-impeccable="1"] :where(button,a,select,input,textarea){border-color:ButtonText}
 }
+
+/* Second axe batch: exposed below-threshold text on remaining three entrypoints. */
+html[data-hb-app="okr-service"] .section-title p,
+html[data-hb-app="okr-service"] .footer > span{color:#314858!important;font-size:13px;line-height:1.7}
+html[data-hb-app="okr-service"] .mobile-nav button:not([aria-current="page"]){color:#21465c!important;font-size:13px}
+html[data-hb-app="trm-workspace"] .footer-note{color:#304b45!important;font-size:13px;line-height:1.8}
+html[data-hb-app="trm-workspace"] .bottombar button{color:#31534a!important;font-size:13px;min-height:47px}
+html[data-hb-app="trm-workspace"] .bottombar button.active{color:#075a50!important}
+html[data-hb-app="my-finance"] #auth-gate .auth-card p,
+html[data-hb-app="my-finance"] #auth-gate .auth-card label,
+html[data-hb-app="my-finance"] #auth-gate .auth-hint{color:var(--fg)!important;font-size:14px;line-height:1.75}
+html[data-hb-app="my-finance"] #auth-login{background:#075a57!important;color:#fff!important}
+html[data-hb-app="my-finance"] #auth-login:disabled{opacity:.65}
