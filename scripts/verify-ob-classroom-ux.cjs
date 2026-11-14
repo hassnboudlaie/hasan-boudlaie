@@ -110,7 +110,11 @@ assert.ok(css.includes('welcome-head')&&css.includes('focus-bottom')&&css.includ
 assert.equal(manifest.icons.some(i=>i.sizes==='512x512'),true,'PWA icon supports 512x512');
 assert.ok(!js.includes('UPGRADE'),'No forced ads or paid upsell in classroom');
 assert.ok(js.includes('sessionPicker'),'Lesson content must be selectable');
-assert.ok(js.includes('۶. جمع‌بندی و تأمل فردی'),'Editor must be grouped in sections');
+assert.ok(js.includes('["activity","تمرین عملی و نقش‌آفرینی"]')&&js.includes('["finalQuiz","آزمون پایان جلسه"]'),"Student practice and submitted test use distinct places");
+const quizClient=read("ob-mba-classroom/quiz-portal.js"),quizAPI=read("ob-mba-classroom/backend/edge-quizzes.ts");
+assert.ok(quizClient.includes('refreshTeacherPreview')&&quizClient.includes('quiz-preview-key')&&quizClient.includes('teacherPreview'),"Teacher can view all questions and marked answer key");
+assert.ok(quizAPI.includes('action==="teacherPreview"')&&quizAPI.includes('u.role!=="teacher"'),"Teacher question preview is server-authenticated");
+assert.ok(js.includes('۶. آزمون جلسه ')&&js.includes('۷. جمع‌بندی و تأمل فردی')&&js.includes('data-quiz-teacher-preview'),'Teacher editor separates full private session exam from activity and reflection');
 const materials=["ob-mba-classroom/materials/session-01-robbins.pptx","ob-mba-classroom/materials/session-01-robbins.pdf","ob-mba-classroom/materials/session-02-robbins.pptx","ob-mba-classroom/materials/session-02-robbins.pdf"];
 for(const p of materials){const file=fs.readFileSync(path.join(root,p));assert.ok(file.length>5000,"Nonempty download: "+p);assert.ok(p.endsWith(".pdf")?file.subarray(0,4).toString()==="%PDF":file.subarray(0,2).toString()==="PK","Valid signature: "+p)}
 assert.ok(js.includes('lectureDownloads(s)')&&js.includes('projectPresentation'),'Download and projector UI actions must exist');
