@@ -127,7 +127,8 @@ async function run(){
   await page.locator('[data-action="guidedNext"]').click();
   assert.equal(await page.locator(".gr-turn").count(),2,"Dialogue shown in manageable two-turn steps");
   await save(page,config.name+"-05-roleplay");
-  await page.locator('[data-action="guidedMode"][data-mode="quiz"]').click();
+  assert.equal(await page.locator('[data-action="guidedMode"][data-mode="quiz"]').count(),0,"Practice has no duplicate quiz button");
+   await page.locator("#sectionSelect").selectOption("finalQuiz");
   await page.locator("#quizFinalForm .quiz-question").first().waitFor();
   assert.equal(await page.locator("#quizFinalForm .quiz-question").count(),10,"All ten approved assessment items available");
   assert.equal(await page.locator(".quiz-submit").isDisabled(),true,"Cannot submit before answering all ten");
