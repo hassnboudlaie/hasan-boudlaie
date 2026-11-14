@@ -196,7 +196,7 @@ assert.ok(app.innerHTML.includes('تمرین گروهی'),'Group practice is ava
 click('guidedMode',{mode:'roleplay'});
 assert.ok(app.innerHTML.includes('نقش‌آفرینی'),'Role-play is available from activity switcher');
 assert.ok(!app.innerHTML.includes('آزمون نهایی ۱۰سؤالی'),'Group activity no longer duplicates the official assessment');
-fakeWindow.OB_QUIZ={studentHTML:session=>'<section class="quiz-portal">آزمون پایانی جلسه '+session+'</section>'};
+fakeWindow.OB_QUIZ={studentHTML:session=>'<section class="quiz-portal">آزمون پایانی جلسه '+session+'</section>',refreshStudent(){},refreshTeacherPreview(){}};
 doc.listeners.change({target:{matches:x=>x==='[data-action="sessionPicker"]',value:'finalQuiz'}});
 assert.ok(app.innerHTML.includes('آزمون پایانی جلسه 1'),'Student sees official 10-question quiz only in dedicated assessment tab');
 assert.ok(!app.innerHTML.includes('پاسخ صحیح'),'Student assessment tab does not reveal the answer key');
