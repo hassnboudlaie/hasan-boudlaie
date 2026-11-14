@@ -1,0 +1,96 @@
+"use strict";
+/* Synthetic static-server browser QA. Never accesses live production accounts. */
+const {chromium,webkit}=require("playwright");
+const AxeBuilder=require("@axe-core/playwright").default;
+const http=require("node:http"),fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict");
+const ROOT=path.resolve(__dirname,".."),OUT=path.join(ROOT,"qa-artifacts","hb-impeccable");
+fs.mkdirSync(OUT,{recursive:true});
+const mime={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",
+".css":"text/css; charset=utf-8",".woff2":"font/woff2",".svg":"image/svg+xml",
+".png":"image/png",".webmanifest":"application/manifest+json",".json":"application/json"};
+const server=http.createServer((req,res)=>{
+ try{
+  let p=decodeURIComponent(new URL(req.url,"http://127.0.0.1").pathname).replace(/^\/hasan-boudlaie\//,"/");
+  if(p.endsWith("/"))p+="index.html";
+  const f=path.resolve(ROOT,"."+p);
+  if(!f.startsWith(ROOT+path.sep)){res.writeHead(403);res.end();return}
+  fs.readFile(f,(err,body)=>{if(err){res.writeHead(404);res.end("Not found");return}
+   res.writeHead(200,{"Content-Type":mime[path.extname(f)]||"application/octet-stream","Cache-Control":"no-store"});
+   res.end(body);
+  });
+ }catch(e){res.writeHead(500);res.end(String(e))}
+});
+const base=()=> "http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/";
+async function makeContext(browser,width,height){
+ const context=await browser.newContext({viewport:{width,height},deviceScaleFactor:1,isMobile:width<=390,hasTouch:width<=390});
+ await context.addInitScript(()=>{try{localStorage.setItem("hb-lang","fa")}catch(e){}});
+ return context;
+}
+async function checkFont(page,tag){
+ const m=await page.evaluate(async()=>{
+  await document.fonts.load('400 16px "Vazirmatn"');
+  return {loaded:document.fonts.check('400 16px "Vazirmatn"'),
+   font:getComputedStyle(document.body).fontFamily,
+   overflow:document.documentElement.scrollWidth-innerWidth};
+ });
+ assert.ok(m.loaded,tag+" Vazirmatn failed");
+ assert.match(m.font,/Vazirmatn/,tag+" computed font");
+ return m;
+}
+async function hubCheck(browser,name,w,h){
+ const ctx=await makeContext(browser,w,h);
+ try{
+  const page=await ctx.newPage(),errors=[];
+  page.on("pageerror",e=>errors.push(e.message));
+  const rsp=await page.goto(base()+"hub/",{waitUntil:"domcontentloaded",timeout:30000});
+  assert.equal(rsp.status(),200);
+  await page.locator("#superResultCount").filter({hasText:"21"}).waitFor({timeout:25000});
+  const metric=await checkFont(page,name+" Hub "+w);
+  assert.equal(await page.locator(".super-app-link").count(),21);
+  assert.ok(metric.overflow<=2,name+" Hub "+w+" overflow="+metric.overflow);
+  const axe=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
+  const high=axe.violations.filter(v=>["serious","critical"].includes(v.impact));
+  if(high.length)throw Error("Hub "+name+" "+w+" accessibility "+high.map(v=>v.id+":"+v.nodes.map(n=>n.target.join(" ")).slice(0,2).join(",")).join("; "));
+  if(w===390||w===1366)await page.screenshot({path:path.join(OUT,name+"-"+w+"-hub.png"),fullPage:true});
+  await page.locator("#superSearch").fill("my finance");
+  assert.equal(await page.locator(".super-app-link:visible").count(),1);
+  await page.locator("#superSearch").fill("");
+  await page.locator('[data-super-filter="personal"]').click();
+  assert.equal(await page.locator(".super-app-link:visible").count(),2);
+  await page.locator('[data-super-filter="all"]').click();
+  assert.equal(await page.locator(".super-app-link:visible").count(),21);
+  assert.deepEqual(errors,[],"Hub runtime errors");
+  console.log("PASS Hub",name,w,"font, 21 links, search/filter, RTL layout, axe high=0");
+ }finally{await ctx.close()}
+}
+const entries=["okr-system/","okr-service/","business-model-canvas/studio.html","small-business/",
+"trm-workspace/","clinic-customer-app/","ba-parastoo/","rf-holding/","life-organization/","my-finance/"];
+async function appsCheck(browser){
+ const ctx=await makeContext(browser,390,844);
+ try{
+  for(const p of entries){
+   const page=await ctx.newPage();
+   try{
+    const rsp=await page.goto(base()+p,{waitUntil:"domcontentloaded",timeout:35000});
+    assert.equal(rsp.status(),200,p+" missing");
+    const metric=await checkFont(page,p);
+    const label=p.replace(/[^a-z0-9]+/gi,"-");
+    await page.screenshot({path:path.join(OUT,"app-"+label+".png"),fullPage:false,timeout:20000});
+    console.log("PASS app",p,"Vazirmatn, overflow="+metric.overflow);
+   }finally{await page.close()}
+  }
+ }finally{await ctx.close()}
+}
+async function main(){
+ await new Promise(done=>server.listen(0,"127.0.0.1",done));
+ try{
+  const c=await chromium.launch({headless:true});
+  try{
+   for(const [w,h] of [[360,800],[390,844],[768,1024],[1366,900]])await hubCheck(c,"chromium",w,h);
+   await appsCheck(c);
+  }finally{await c.close()}
+  const w=await webkit.launch({headless:true});
+  try{await hubCheck(w,"webkit",390,844)}finally{await w.close()}
+ }finally{server.close()}
+}
+main().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,0 +1,100 @@
+name: HB Ecosystem Impeccable QA
+on:
+  pull_request:
+    paths:
+      - 'hub/**'
+      - 'hb-impeccable-shared.css'
+      - 'okr-system/**'
+      - 'okr-service/**'
+      - 'business-model-canvas/**'
+      - 'small-business/**'
+      - 'trm-workspace/**'
+      - 'clinic-customer-app/**'
+      - 'ba-parastoo/**'
+      - 'rf-holding/**'
+      - 'life-organization/**'
+      - 'my-finance/**'
+      - 'scripts/verify-hb-ecosystem-*.cjs'
+      - '.github/workflows/hb-ecosystem-impeccable.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'hub/**'
+      - 'hb-impeccable-shared.css'
+      - 'okr-system/**'
+      - 'okr-service/**'
+      - 'business-model-canvas/**'
+      - 'small-business/**'
+      - 'trm-workspace/**'
+      - 'clinic-customer-app/**'
+      - 'ba-parastoo/**'
+      - 'rf-holding/**'
+      - 'life-organization/**'
+      - 'my-finance/**'
+      - 'scripts/verify-hb-ecosystem-*.cjs'
+      - '.github/workflows/hb-ecosystem-impeccable.yml'
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate app scope, fonts, linked routes and PWA cache ownership
+        run: node scripts/verify-hb-ecosystem-static.cjs
+  browsers:
+    needs: static
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser QA toolchain
+        run: npm install --no-save playwright @axe-core/playwright
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Check Vazirmatn, responsive, Hub search/filter and axe
+        run: node scripts/verify-hb-ecosystem-browser.cjs
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hb-ecosystem-impeccable-screenshots
+          path: qa-artifacts/hb-impeccable/*.png
+          if-no-files-found: ignore
+  production:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: browsers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm GitHub Pages actually deployed target bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://hassnboudlaie.github.io/hasan-boudlaie"
+          matched=0
+          for attempt in $(seq 1 25); do
+            if curl -fsSL --max-time 25 "$base/hub/index.html" -o /tmp/hb-index &&
+               curl -fsSL --max-time 25 "$base/hub/impeccable.css" -o /tmp/hb-css &&
+               curl -fsSL --max-time 25 "$base/hb-impeccable-shared.css" -o /tmp/hb-shared &&
+               curl -fsSL --max-time 25 "$base/okr-system/index.html" -o /tmp/hb-okr &&
+               curl -fsSL --max-time 25 "$base/my-finance/index.html" -o /tmp/hb-finance &&
+               cmp -s hub/index.html /tmp/hb-index &&
+               cmp -s hub/impeccable.css /tmp/hb-css &&
+               cmp -s hb-impeccable-shared.css /tmp/hb-shared &&
+               cmp -s okr-system/index.html /tmp/hb-okr &&
+               cmp -s my-finance/index.html /tmp/hb-finance; then
+              matched=1
+              echo "PASS: published Hub, shared CSS, Kish OKR and My Finance match release."
+              break
+            fi
+            sleep 12
+          done
+          test "$matched" -eq 1 || { echo "::error::Production assets did not match this release"; exit 1; }
