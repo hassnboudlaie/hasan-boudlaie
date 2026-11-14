@@ -1,6 +1,6 @@
 /* Robbins chapters 1–2: revised case-aligned examples, assignments and assessment questions. */
 window.OB_COURSE_CONTENT={
-  "version": 5,
+  "version": 6,
   "sessions": [
     {
       "id": 1,
@@ -424,15 +424,15 @@ window.OB_COURSE_CONTENT={
    title:"خلاصه فارسی کتاب رابینز — کلیدهای طلایی مدیریت منابع انسانی",
    sourceEnTitle:"A 29-page Persian summary of The Truth About Managing People",
    author:"استیفن پی. رابینز؛ ترجمه اثر: غلامحسین خانقایی؛ خلاصه‌سازی: مهسا المعی‌نژاد؛ تدوین: مهراب پرتوی دیلمی / شرکت پلاک آبی",
-   url:"https://drive.google.com/file/d/1dg9VGSrFWYWofgCp74j4qIq2YN_L3aD3/view",
-   downloadUrl:"https://drive.google.com/uc?export=download&id=1dg9VGSrFWYWofgCp74j4qIq2YN_L3aD3",
+   url:"https://hassnboudlaie.github.io/hasan-boudlaie/ob-mba-classroom/materials/readings/robbins-truth-about-managing-people-persian-summary.pdf",
+   downloadUrl:"https://hassnboudlaie.github.io/hasan-boudlaie/ob-mba-classroom/materials/readings/robbins-truth-about-managing-people-persian-summary.pdf",
    pages:29,
    fileType:"PDF",
    fileSize:"۱٫۳۴ مگابایت",
-   fileAccess:"permission_required",
+   fileAccess:"public",
    topic:"جلسه اول | مروری بر قلمرو رفتار سازمانی و کاربرد شواهد پژوهشی در مدیریت انسان‌ها",
    note:"فایل ارائه‌شده توسط مدرس، خلاصه ۲۹ صفحه‌ای است و نسخه کامل کتاب رابینز نیست. فهرست آن موضوعات استخدام، انگیزش، رهبری، ارتباطات، گروه‌ها، تعارض، طراحی شغل، ارزیابی عملکرد و تغییر را پوشش می‌دهد.",
    prompt:"از میان حقایق مطرح‌شده، یک ادعای مدیریتی را انتخاب کنید؛ برای ارزیابی آن چه شواهدی لازم است؟",
-   accessNote:"فایل در Google Drive مدرس قرار گرفته است؛ دسترسی دانلود عمومی هنوز فعال نشده و ممکن است درخواست اجازه نمایش داده شود. برای دسترسی همه دانشجویان، مدرس باید General access را روی Anyone with the link → Viewer قرار دهد."
+   accessNote:"این خلاصه ۲۹ صفحه‌ای برای مطالعه و دانلود مستقیم در اپلیکیشن کلاس قرار گرفته است؛ فایل اصلی با فرمت PDF و بدون تغییر محتوای صفحات ارائه می‌شود."
  });
 })();
