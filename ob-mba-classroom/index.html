@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="stylesheet" href="./style.css?v=16">
+<link rel="stylesheet" href="./style.css?v=17">
 <link rel="stylesheet" href="./syllabus.css?v=1">
 <link rel="stylesheet" href="./guided-learning.css?v=1">
 <link rel="stylesheet" href="./case-portal.css?v=1">
@@ -30,11 +30,18 @@
       <button id="themeToggle" type="button" class="icon-btn" aria-label="تغییر حالت روشن و تاریک">◐</button>
     </div>
   </header>
+  <nav id="contextNav" class="context-nav" aria-label="راهبری صفحات داخل اپ" hidden>
+    <div class="context-nav-actions">
+      <button type="button" id="contextBack" data-action="navBack" aria-label="بازگشت به صفحه قبل"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>بازگشت</button>
+      <button type="button" id="contextHome" data-action="navHome" aria-label="بازگشت به خانه"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v11H3V10Z"/><path d="M9 21v-8h6v8"/></svg>خانه</button>
+    </div>
+    <span id="contextLocation" class="context-location" aria-live="polite">خانه</span>
+  </nav>
   <main id="main" tabindex="-1"><div id="app" aria-live="polite"></div></main>
   <nav id="bottomNav" class="bottom-nav" aria-label="منوی اصلی"></nav>
   <footer class="footer">مدیریت رفتار سازمانی · MBA</footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-<script defer src="./access-gate.js?v=16"></script>
+<script defer src="./access-gate.js?v=17"></script>
 <script>if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));</script>
 </body></html>
