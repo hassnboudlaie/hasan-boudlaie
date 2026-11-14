@@ -1,0 +1,77 @@
+/* Allameh MBA private assignments — responsive, RTL, high-contrast */
+.as-student{display:grid;gap:18px;border:1.5px solid var(--line);border-radius:20px;padding:clamp(17px,3vw,27px);background:var(--panel)}
+.as-head{display:flex;justify-content:space-between;align-items:start;gap:18px;flex-wrap:wrap}
+.as-head h3{font-size:clamp(23px,3vw,29px);font-weight:900;line-height:1.45}
+.as-head p{font-size:18px;color:var(--muted);line-height:1.8}
+.as-caption{font:800 14px Arial,sans-serif;color:var(--ok);direction:ltr;display:inline-block;margin-bottom:9px}
+.as-count{font-size:16px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-weight:850;white-space:nowrap}
+.as-form{display:grid;gap:13px}
+.as-form>label,.as-file-control>label{font-size:20px;font-weight:900}
+.as-form textarea,.as-file-control input{background:var(--panel);border:1.5px solid var(--line);border-radius:13px;color:var(--text);width:100%;padding:14px 16px;font-size:19px}
+.as-form textarea{resize:vertical;min-height:195px;line-height:1.85}
+.as-file-control{padding:17px;border:1px dashed var(--gold);background:var(--soft);border-radius:14px;display:grid;gap:10px}
+.as-file-control small{font-size:15px;color:var(--muted);line-height:1.8}
+.as-file-control input{background:var(--panel);min-height:59px;padding:9px}
+.as-file-control input::file-selector-button{border:1px solid var(--line);border-radius:9px;background:var(--navy);color:white;padding:9px 15px;font-weight:850;cursor:pointer;margin-inline-end:12px}
+.as-hint{font-size:17px;line-height:1.8;color:var(--muted)}
+.as-submit{font-size:19px;min-height:59px}
+.as-submit[disabled]{opacity:.55;cursor:wait}
+.as-form-notice{font-size:17px;line-height:1.7;font-weight:800;color:var(--ok)}
+.as-alert,.as-error{padding:14px 17px;border-radius:12px;background:var(--soft);border-inline-start:4px solid var(--gold);font-size:18px}
+.as-student .as-live{display:grid;gap:9px;line-height:1.8}
+.as-pill{display:inline-flex;align-items:center;width:max-content;border-radius:40px;padding:5px 13px;font-size:15px;background:var(--soft);font-weight:900;line-height:1.6}
+.as-pill.reviewed{background:#d4f1e1;color:#12563d}
+.as-pill.revision_requested{background:#fff1d5;color:#835318}
+.as-pill.submitted{background:#dcecf6;color:#18516e}
+.as-status{display:grid;gap:12px}
+.as-status>p{color:var(--muted);font-size:17px}
+.as-feedback{border:1px solid var(--line);border-right:4px solid var(--gold);padding:16px;background:var(--soft);border-radius:13px;display:grid;gap:7px}
+.as-feedback strong{font-size:19px}
+.as-feedback p{white-space:pre-wrap;font-size:18px}
+.as-attachments{display:grid;gap:12px;border:1px solid var(--line);padding:16px;border-radius:14px}
+.as-attachments>strong{font-size:19px}
+.as-attachment{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:16px;overflow-wrap:anywhere}
+.as-attachment span{min-width:0;flex:1}
+.as-email{display:grid;gap:9px;border-top:1px solid var(--line);padding-top:15px}
+.as-email>strong{font-size:20px}
+.as-email p{font-size:16px;line-height:1.8;color:var(--muted)}
+.as-email .btn{justify-self:start;display:inline-flex;align-items:center;text-decoration:none;min-height:46px}
+.as-teacher{gap:18px}
+.as-teacher>.page-head h2{font-size:clamp(24px,3.3vw,31px)}
+.as-teacher>.page-head p{font-size:17px;color:var(--muted)}
+.as-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:15px;background:var(--panel);border-radius:15px;border:1px solid var(--line)}
+.as-toolbar label{font-size:17px;font-weight:900}
+.as-toolbar select{padding:10px 15px;background:var(--panel);color:var(--text);border-radius:12px;border:1px solid var(--line);font-size:18px;min-height:48px}
+.as-review-list{display:grid;gap:16px}
+.as-metrics{display:flex;gap:10px;flex-wrap:wrap}
+.as-metrics span{font-size:17px;font-weight:850;padding:7px 14px;background:var(--soft);border-radius:99px;border:1px solid var(--line)}
+.as-record{background:var(--panel);border:1px solid var(--line);border-radius:17px;overflow:hidden}
+.as-record summary{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;cursor:pointer;list-style:none;padding:18px 21px;background:var(--soft)}
+.as-record summary::-webkit-details-marker{display:none}
+.as-record summary strong{display:block;font-size:22px;font-weight:900}
+.as-record summary small{font-size:15px;color:var(--muted)}
+.as-record-body{display:grid;gap:18px;padding:20px}
+.as-date{font-size:15px;color:var(--muted)}
+.as-text-answer{display:grid;gap:8px;background:var(--soft);padding:18px;border-radius:14px}
+.as-text-answer strong{font-size:19px}
+.as-text-answer p{font-size:18px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}
+.as-review-form{display:grid;gap:13px;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.as-review-form h4{font-size:22px;margin:0}
+.as-review-form label{display:grid;gap:6px;font-size:18px;font-weight:850}
+.as-review-form select,.as-review-form input,.as-review-form textarea{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:11px;padding:12px;font-size:18px}
+.as-review-form textarea{min-height:125px;resize:vertical}
+.as-loading{padding:20px;font-size:18px;color:var(--muted)}
+@media(max-width:640px){
+ .as-student{padding:16px}
+ .as-file-control{padding:14px}
+ .as-form textarea{font-size:18px}
+ .as-toolbar select{flex:1;min-width:100px}
+ .as-record summary{padding:14px}
+ .as-record-body{padding:14px}
+ .as-email .btn{width:100%;justify-content:center}
+ .as-attachment .btn{flex:none}
+ .as-review-form{padding:14px}
+}
+html[data-theme=dark] .as-pill.reviewed{background:#214d3b;color:#d9fae7}
+html[data-theme=dark] .as-pill.revision_requested{background:#553c20;color:#ffe1b4}
+html[data-theme=dark] .as-pill.submitted{background:#244457;color:#e1f5ff}
