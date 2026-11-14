@@ -690,3 +690,35 @@ html[data-theme=dark] .resource-cover img{background:#f7f7f5}
 .resource-item .resource-actions{margin-top:4px}
 .resource-item .resource-link-pair:first-child .resource-open{background:#145d54;color:#fff}
 @media(max-width:650px){.resource-access-note{font-size:15px}.resource-filemeta{font-size:14px}}
+
+/* In-app Back and Home — persistent contextual navigation for Android/mobile. */
+.context-nav[hidden]{display:none!important}
+.context-nav{
+ position:sticky;top:8px;z-index:24;
+ margin:12px 0 16px;padding:10px 13px;
+ background:var(--panel);color:var(--text);
+ border:1.5px solid var(--line);border-radius:16px;
+ box-shadow:0 7px 20px rgba(17,48,48,.12);
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ direction:rtl;
+}
+.context-nav-actions{display:flex;align-items:center;gap:9px;flex-wrap:nowrap}
+.context-nav button{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ border:1.5px solid var(--line);border-radius:12px;min-height:49px;
+ padding:9px 17px;background:var(--soft);color:var(--text);
+ font:800 17px/1.4 Vazirmatn,"Noto Sans Arabic",Tahoma,Arial,sans-serif;
+ white-space:nowrap;cursor:pointer;
+}
+.context-nav button#contextBack{background:var(--navy);color:#fff;border-color:var(--navy)}
+.context-nav button svg{width:19px;height:19px;flex-shrink:0}
+.context-nav button:disabled{opacity:.48;cursor:default}
+.context-location{font-size:16px;font-weight:800;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:700px){
+ .context-nav{top:5px;margin:10px 0 14px;padding:8px 9px;gap:7px;border-radius:13px}
+ .context-nav button{min-height:49px;padding:8px 12px;font-size:16px;gap:6px}
+ .context-nav button svg{width:18px;height:18px}
+ .context-nav-actions{gap:6px}
+ .context-location{font-size:14px;max-width:32%;text-align:left}
+}
+@media(max-width:360px){.context-location{display:none}.context-nav button{padding:8px 10px}}
