@@ -51,7 +51,7 @@ async function hubCheck(browser,name,w,h){
   const axe=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
   const high=axe.violations.filter(v=>["serious","critical"].includes(v.impact));
   if(high.length)throw Error("Hub "+name+" "+w+" accessibility "+high.map(v=>v.id+":"+v.nodes.map(n=>n.target.join(" ")).slice(0,2).join(",")).join("; "));
-  if(w===390||w===1366)await page.screenshot({path:path.join(OUT,name+"-"+w+"-hub.png"),fullPage:true});
+  if(w===320||w===390||w===1366)await page.screenshot({path:path.join(OUT,name+"-"+w+"-hub.png"),fullPage:true});
   await page.locator("#superSearch").fill("my finance");
   assert.equal(await page.locator(".super-app-link:visible").count(),1);
   
@@ -64,6 +64,15 @@ async function hubCheck(browser,name,w,h){
   assert.equal(await page.locator("#superReset:visible").count(),1,"No reset action in empty state");
   await page.locator("#superReset").click();
   assert.equal(await page.locator(".super-app-link:visible").count(),21,"Reset did not restore directory");
+  console.log("FILTER_DIAG",JSON.stringify(await page.evaluate(()=>{
+   const b=document.querySelector('[data-super-filter="personal"]'),p=b?.parentElement;
+   const r=b?.getBoundingClientRect(),pr=p?.getBoundingClientRect();
+   const mid=r?{x:r.x+r.width/2,y:r.y+r.height/2}:null;
+   const e=mid?document.elementFromPoint(mid.x,mid.y):null;
+   return {vw:innerWidth,scrollY,button:r?.toJSON(),parent:pr?.toJSON(),
+    parentStyle:{display:getComputedStyle(p).display,flexWrap:getComputedStyle(p).flexWrap,overflow:getComputedStyle(p).overflow},
+    targetAtMid:e?.outerHTML?.slice(0,170),clickedLabel:b?.textContent};
+  })));
   await page.locator('[data-super-filter="personal"]').click();
   assert.equal(await page.locator(".super-app-link:visible").count(),2);
   await page.locator('[data-super-filter="all"]').click();
