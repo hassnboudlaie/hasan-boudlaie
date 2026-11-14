@@ -55,10 +55,20 @@ for(const site of sites){
   }
   const sw=await page.evaluate(async()=>{
     if(!('serviceWorker' in navigator))return null;
-    return Promise.race([
-      navigator.serviceWorker.ready.then(x=>({scope:x.scope,state:x.active?.state})),
-      new Promise(resolve=>setTimeout(()=>resolve({timeout:true}),10000))
-    ]);
+    const activated=async()=>{
+      const registration=await navigator.serviceWorker.ready;
+      const worker=registration.active;
+      if(!worker)return {scope:registration.scope,state:'missing-active-worker'};
+      if(worker.state==='activated')return {scope:registration.scope,state:worker.state};
+      return new Promise(resolve=>{
+        const done=()=>{worker.removeEventListener('statechange',done);resolve({scope:registration.scope,state:worker.state})};
+        worker.addEventListener('statechange',()=>{
+          if(worker.state==='activated'||worker.state==='redundant')done();
+        });
+        if(worker.state==='activated')done();
+      });
+    };
+    return Promise.race([activated(),new Promise(resolve=>setTimeout(()=>resolve({timeout:true}),12000))]);
   });
   assert(sw && !sw.timeout && sw.state==='activated','Service worker not active: '+JSON.stringify(sw));
   assert.equal(sw.scope,base,'Service worker scope leaked');
@@ -71,7 +81,13 @@ for(const site of sites){
   await launcher.click();
   await page.waitForURL(base+site.entry,{timeout:10000});
   await page.locator('body').waitFor();
-  assert((await page.locator('body').innerText()).includes(site.slug==='okr-service'?'اهداف و نتایج کلیدی':site.name==='Business Model Canvas'?'بوم':'کسب‌وکار'),'App page failed');
+  if(site.slug==='okr-service'){
+    await page.locator('#pageTitle').waitFor({state:'visible',timeout:15000});
+    await page.locator('aside.sidebar strong').filter({hasText:'اهداف و نتایج کلیدی'}).waitFor({state:'visible',timeout:15000});
+    assert((await page.locator('body').innerText()).includes('اهداف و نتایج کلیدی'),'OKR app identity missing');
+  }else{
+    await page.waitForFunction(needle=>document.body.innerText.includes(needle),site.name==='Business Model Canvas'?'بوم':'کسب‌وکار',{timeout:12000});
+  }
   await page.screenshot({path:path.join(dir,site.slug+'.png'),fullPage:true});
   record(site.name+' installation page, manifest, scoped service worker, and correct app',true);
  }catch(error){

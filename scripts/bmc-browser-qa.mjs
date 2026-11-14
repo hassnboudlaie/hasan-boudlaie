@@ -55,7 +55,8 @@ async function runCase(item,index){
    const res=await page.goto(ROOT+'studio.html',{waitUntil:'domcontentloaded',timeout:30000});
    assert(res && res.ok(),'Cannot open app');
    await page.locator('#page-dashboard.active').waitFor({timeout:10000});
-   assert.equal(await page.locator('.dash-action').count(),3,'Three dashboard actions');
+   assert.equal(await page.locator('.dash-action').count(),4,'Four dashboard actions, including Feasibility Study');
+   assert.equal(await page.locator('a.dash-action.fs-entry[href^="./fs.html"]').count(),1,'Feasibility Study link must remain available');
    assert.equal(await page.locator('#special-entry').count(),0,'Child culture spotlight must not dominate general home');
    assert.equal(await page.locator('#specializedModels').count(),1,'Missing optional specialized-model catalog');
    assert(!(await page.locator('#specializedModels').evaluate(el=>el.open)),'Specialized catalog must be collapsed by default');
