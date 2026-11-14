@@ -222,19 +222,76 @@ const navIcon=id=>{
  };
  return '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+(paths[id]||paths.home)+'</svg>';
 };
+
+// Navigation state is kept inside the classroom instead of leaving the app.
+// It also supports the Android/browser Back gesture after SPA transitions.
+const contextNav=document.querySelector("#contextNav"),contextBack=document.querySelector("#contextBack"),contextHome=document.querySelector("#contextHome"),contextLocation=document.querySelector("#contextLocation");
+const captureView=()=>({role:ui.role,page:ui.page,session:ui.session,tab:ui.tab,track:ui.track,presentationVariant:ui.presentationVariant,slideIndex:ui.slideIndex,activityMode:ui.activityMode,quizIndex:ui.quizIndex});
+let viewHistory=[captureView()],viewHistoryIndex=0,appHistoryEnabled=false,editorBaseline=null;
+try{window.history.replaceState({...window.history.state,obMbaApp:true,obMbaIndex:0},"",window.location.href);appHistoryEnabled=true}catch{}
+const editorSignature=()=>{const f=app.querySelector('form[data-form="session"]');return f?JSON.stringify(Array.from(new FormData(f).entries())):null};
+function confirmEditorExit(){
+ if(ui.role!=="teacher"||ui.page!=="edit"||editorBaseline===null||editorSignature()===editorBaseline)return true;
+ return window.confirm("تغییرات این جلسه هنوز ذخیره نشده‌اند. بدون ذخیره از صفحه خارج می‌شوید؟");
+}
+function restoreView(index){
+ if(!Number.isInteger(index)||!viewHistory[index]||index===viewHistoryIndex)return;
+ if(!confirmEditorExit()){
+  if(appHistoryEnabled)window.history.go(viewHistoryIndex-index);
+  return;
+ }
+ viewHistory[viewHistoryIndex]=captureView();
+ viewHistoryIndex=index;Object.assign(ui,viewHistory[index]);
+ render();window.scrollTo({top:0,behavior:"instant"});
+}
+function goBackInsideApp(){
+ if(viewHistoryIndex>0){
+  if(appHistoryEnabled){window.history.back();return}
+  restoreView(viewHistoryIndex-1);return;
+ }
+ const fallback=ui.page==="resources"?"edit":["edit","session","presentation","original"].includes(ui.page)?"sessions":"home";
+ if(ui.page!==fallback)navigate(fallback);
+}
+window.addEventListener("popstate",event=>{
+ if(event.state?.obMbaApp===true)restoreView(Number(event.state.obMbaIndex));
+});
+function updateContextNav(){
+ if(!contextNav)return;
+ const label=ui.page==="edit"?"ویرایش جلسه "+pf(ui.session):
+ ui.page==="resources"?"منابع جلسه "+pf(ui.session):
+ ui.page==="session"?"جلسه "+pf(ui.session):
+ ui.page==="presentation"||ui.page==="original"?"نمایش اسلایدها":
+ ({home:"خانه",sessions:"جلسات درس",syllabus:"طرح درس",attendance:"حضور و غیاب",students:"دانشجویان",live:"حضور",grades:"نمرات",results:"عملکرد",groups:"گروه‌ها",feedback:"بازخوردها",caseReviews:"تحلیل کیس"}[ui.page]||"فضای کلاس");
+ contextNav.hidden=false;contextLocation.textContent=label;
+ contextHome.disabled=ui.page==="home";
+ contextBack.disabled=ui.page==="home"&&viewHistoryIndex===0;
+}
+
 function navRender(){
+ updateContextNav();
  if(ui.role==="projector"||ui.page==="presentation"||ui.page==="original"){nav.innerHTML="";nav.style.display="none";return}
  nav.style.display="";
  const items=ui.role==="student"?(isGuest()?[["home","خانه"],["sessions","جلسات"]]:[["home","خانه"],["sessions","جلسات"],["live","حضور"],["results","عملکرد"]]):[["home","خانه"],["sessions","جلسات"],["attendance","حضور"],["grades","نمرات"]];
  nav.innerHTML=items.map(([id,label])=>'<button data-action="'+(["live","attendance"].includes(id)?"liveAttendance":"navigate")+'" data-page="'+id+'" class="'+(ui.page===id||ui.page==="session"&&id==="sessions"||ui.page==="edit"&&id==="sessions"?"active":"")+'" aria-label="'+label+'"><span class="nav-icon" aria-hidden="true">'+navIcon(id)+'</span>'+label+'</button>').join("");
 }
-function render(){if(isGuest()&&["live","results"].includes(ui.page))ui.page="home";if(!window.OB_ACCESS?.approved){app.innerHTML="";nav.innerHTML="";return}const summary=document.querySelector("#roleSummary");if(summary)summary.textContent=(ui.role==="student"?"دانشجو":ui.role==="teacher"?"مدرس":"پروژکتور");rolebar.querySelectorAll("[data-role]").forEach(b=>{const active=b.dataset.role===ui.role;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});app.innerHTML=ui.role==="student"?(ui.page==="syllabus"?syllabusRender():ui.page==="sessions"?sessionsStudent():ui.page==="session"?sessionStudent():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():ui.page==="live"?liveStudent():ui.page==="results"?performanceStudent():ui.page==="feedback"?feedbackStudent():homeStudent()):ui.role==="teacher"?teacherRender():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():projectRender();navRender();if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&ui.tab==="case")window.OB_CASE?.refreshStudent(ui.session);if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&["case","reflection"].includes(ui.tab))window.OB_ASSIGNMENTS?.refreshStudent(ui.session);if(ui.role==="teacher"&&ui.page==="caseReviews"){window.OB_CASE?.refreshTeacher();window.OB_ASSIGNMENTS?.refreshTeacher()}}
-function navigate(page){if(isGuest()&&["live","results"].includes(page))return;ui.page=page;ui.quizChoice=-1;render();window.scrollTo({top:0,behavior:"instant"})}
+function render(){if(isGuest()&&["live","results"].includes(ui.page))ui.page="home";if(!window.OB_ACCESS?.approved){app.innerHTML="";nav.innerHTML="";return}const summary=document.querySelector("#roleSummary");if(summary)summary.textContent=(ui.role==="student"?"دانشجو":ui.role==="teacher"?"مدرس":"پروژکتور");rolebar.querySelectorAll("[data-role]").forEach(b=>{const active=b.dataset.role===ui.role;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});app.innerHTML=ui.role==="student"?(ui.page==="syllabus"?syllabusRender():ui.page==="sessions"?sessionsStudent():ui.page==="session"?sessionStudent():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():ui.page==="live"?liveStudent():ui.page==="results"?performanceStudent():ui.page==="feedback"?feedbackStudent():homeStudent()):ui.role==="teacher"?teacherRender():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():projectRender();navRender();if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&ui.tab==="case")window.OB_CASE?.refreshStudent(ui.session);if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&["case","reflection"].includes(ui.tab))window.OB_ASSIGNMENTS?.refreshStudent(ui.session);if(ui.role==="teacher"&&ui.page==="caseReviews"){window.OB_CASE?.refreshTeacher();window.OB_ASSIGNMENTS?.refreshTeacher()}editorBaseline=editorSignature()}
+function navigate(page){
+ if(!page||isGuest()&&["live","results"].includes(page))return;
+ if(page===ui.page){window.scrollTo({top:0,behavior:"instant"});return}
+ if(!confirmEditorExit())return;
+ const previous=captureView();
+ ui.page=page;ui.quizChoice=-1;
+ viewHistory[viewHistoryIndex]=previous;
+ viewHistory=viewHistory.slice(0,viewHistoryIndex+1);
+ viewHistory.push(captureView());viewHistoryIndex++;
+ if(appHistoryEnabled)try{window.history.pushState({...window.history.state,obMbaApp:true,obMbaIndex:viewHistoryIndex},"",window.location.href)}catch{appHistoryEnabled=false}
+ render();window.scrollTo({top:0,behavior:"instant"});
+}
 function switchRole(role){if(!["student","teacher","projector"].includes(role))return;
- if(role!=="student"&&window.OB_ACCESS?.role!=="teacher")return;ui.role=role;ui.page="home";render();const menu=document.querySelector(".demo-role-menu");if(menu)menu.open=false;window.scrollTo({top:0,behavior:"instant"})}
+ if(role!=="student"&&window.OB_ACCESS?.role!=="teacher")return;if(!confirmEditorExit())return;ui.role=role;ui.page="home";viewHistory=[captureView()];viewHistoryIndex=0;try{window.history.replaceState({...window.history.state,obMbaApp:true,obMbaIndex:0},"",window.location.href)}catch{}render();const menu=document.querySelector(".demo-role-menu");if(menu)menu.open=false;window.scrollTo({top:0,behavior:"instant"})}
 rolebar.addEventListener("click",e=>{const b=e.target.closest("[data-role]");if(b)switchRole(b.dataset.role)});
 document.querySelector("#themeToggle").addEventListener("click",()=>{ui.theme=ui.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=ui.theme;localStorage.setItem("ob-mba-theme",ui.theme)});
-document.addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;const a=b.dataset.action,n=Number(b.dataset.id||0),idx=Number(b.dataset.index||0);if(a==="navigate")navigate(b.dataset.page);else if(a==="liveAttendance"){window.location.href="./attendance.html"}else if(a==="openActive"){ui.session=state.active;ui.track="concepts";ui.tab="theory";navigate("session")}else if(a==="openTrack"){ui.session=state.active;ui.track=b.dataset.track==="practice"?"practice":"concepts";ui.tab=ui.track==="practice"?"case":"theory";navigate("session")}else if(a==="openResources"){ui.track="concepts";ui.tab="resources";render()}else if(a==="setTrack"){ui.track=b.dataset.track==="practice"?"practice":"concepts";ui.tab=ui.track==="practice"?"case":"theory";render()}else if(a==="openSession"){ui.session=n;ui.track="concepts";ui.tab="theory";navigate("session")}else if(a==="copyResourceUrl"){
+document.addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;const a=b.dataset.action,n=Number(b.dataset.id||0),idx=Number(b.dataset.index||0);if(a==="navBack")goBackInsideApp();else if(a==="navHome")navigate("home");else if(a==="navigate")navigate(b.dataset.page);else if(a==="liveAttendance"){window.location.href="./attendance.html"}else if(a==="openActive"){ui.session=state.active;ui.track="concepts";ui.tab="theory";navigate("session")}else if(a==="openTrack"){ui.session=state.active;ui.track=b.dataset.track==="practice"?"practice":"concepts";ui.tab=ui.track==="practice"?"case":"theory";navigate("session")}else if(a==="openResources"){ui.track="concepts";ui.tab="resources";render()}else if(a==="setTrack"){ui.track=b.dataset.track==="practice"?"practice":"concepts";ui.tab=ui.track==="practice"?"case":"theory";render()}else if(a==="openSession"){ui.session=n;ui.track="concepts";ui.tab="theory";navigate("session")}else if(a==="copyResourceUrl"){
  const url=safeResourceURL(b.dataset.url);
  if(!url){toast("آدرس معتبر برای کپی پیدا نشد.");return}
  const fallback=()=>{
@@ -246,7 +303,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("button[data-acti
   window.prompt("لینک را انتخاب و کپی کنید:",url);
  };
  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>toast("لینک کپی شد.")).catch(fallback)}else fallback();
-}else if(a==="manageResources"){navigate("resources")}else if(a==="backToEditor"){navigate("edit")}else if(a==="deleteResource"){if(window.OB_ACCESS?.role==="teacher"&&Number.isInteger(idx)&&resourcesOf(current())[idx]&&confirm("این منبع از فهرست محلی حذف شود؟")){current().resources.splice(idx,1);saved();render();toast("منبع از این دستگاه حذف شد.")}}else if(a==="editSession"){ui.session=n;navigate("edit")}else if(a==="editActive"){ui.session=state.active;navigate("edit")}else if(a==="setActiveSession"){state.active=ui.session;saved();toast("جلسه "+pf(ui.session)+" جاری شد.");render()}else if(a==="teacherPresent"){ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="teacherCurrentPresentation"){ui.session=state.active;ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="projectPresentation"){ui.session=state.active;ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="projectEnglishOriginal"){ui.session=state.active;ui.presentationVariant="en";ui.slideIndex=0;navigate("presentation")}else if(a==="backSessions")navigate("sessions");else if(a==="backTeacherSessions")navigate("sessions");else if(a==="sessionTab"){ui.tab=b.dataset.tab;render()}else if(a==="quizChoice"){ui.quizChoice=idx;render()}else if(a==="viewPresentation"){ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="openOriginalEnglish"){ui.presentationVariant="en";ui.slideIndex=0;navigate("presentation")}else if(a==="backFromEnglish"){ui.presentationVariant="fa";ui.slideIndex=0;updatePresentation()}else if(a==="backFromPresentation"){if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});if(ui.role==="projector")navigate("home");else{ui.tab="slides";ui.track="concepts";navigate("session")}}else if(a==="presenterLanguage"){const v=b.dataset.language;if(!["fa","en"].includes(v))return;if(v==="en"&&!window.OB_PRESENTER?.supportsOriginal(current()))return;ui.presentationVariant=v;ui.slideIndex=0;updatePresentation()}
+}else if(a==="manageResources"){navigate("resources")}else if(a==="backToEditor"){navigate("edit")}else if(a==="deleteResource"){if(window.OB_ACCESS?.role==="teacher"&&Number.isInteger(idx)&&resourcesOf(current())[idx]&&confirm("این منبع از فهرست محلی حذف شود؟")){current().resources.splice(idx,1);saved();render();toast("منبع از این دستگاه حذف شد.")}}else if(a==="editSession"){ui.session=n;navigate("edit")}else if(a==="editActive"){ui.session=state.active;navigate("edit")}else if(a==="setActiveSession"){if(!confirmEditorExit())return;state.active=ui.session;saved();toast("جلسه "+pf(ui.session)+" جاری شد.");render()}else if(a==="teacherPresent"){ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="teacherCurrentPresentation"){ui.session=state.active;ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="projectPresentation"){ui.session=state.active;ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="projectEnglishOriginal"){ui.session=state.active;ui.presentationVariant="en";ui.slideIndex=0;navigate("presentation")}else if(a==="backSessions")navigate("sessions");else if(a==="backTeacherSessions")navigate("sessions");else if(a==="sessionTab"){ui.tab=b.dataset.tab;render()}else if(a==="quizChoice"){ui.quizChoice=idx;render()}else if(a==="viewPresentation"){ui.presentationVariant="fa";ui.slideIndex=0;navigate("presentation")}else if(a==="openOriginalEnglish"){ui.presentationVariant="en";ui.slideIndex=0;navigate("presentation")}else if(a==="backFromEnglish"){ui.presentationVariant="fa";ui.slideIndex=0;updatePresentation()}else if(a==="backFromPresentation"){if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});if(ui.role==="projector")navigate("home");else{ui.tab="slides";ui.track="concepts";navigate("session")}}else if(a==="presenterLanguage"){const v=b.dataset.language;if(!["fa","en"].includes(v))return;if(v==="en"&&!window.OB_PRESENTER?.supportsOriginal(current()))return;ui.presentationVariant=v;ui.slideIndex=0;updatePresentation()}
 else if(a==="slidePrev"){ui.slideIndex=Math.max(0,ui.slideIndex-1);updatePresentation()}
 else if(a==="slideNext"){ui.slideIndex=Math.min(Math.max(0,(window.OB_PRESENTER?.count(current(),ui.presentationVariant)||1)-1),ui.slideIndex+1);updatePresentation()}
 else if(a==="slideFull"){const stage=document.querySelector("#presenterStage");if(stage?.requestFullscreen){if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});else stage.requestFullscreen().catch(()=>toast("تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود."))}else toast("این مرورگر حالت تمام‌صفحه ندارد.")}else if(a==="quizPrev"){ui.quizIndex=Math.max(0,ui.quizIndex-1);render()}else if(a==="quizNext"){ui.quizIndex=Math.min(Math.max(0,(current().quizzes||[]).length-1),ui.quizIndex+1);render()}else if(a==="answerLessonQuiz"){const w=studentWork(current());w.quizAnswers=w.quizAnswers||{};w.quizAnswers[ui.quizIndex]=idx;saved();render()}else if(a==="guidedMode"){ui.activityMode=["group","roleplay","quiz"].includes(b.dataset.mode)?b.dataset.mode:"group";render()}
