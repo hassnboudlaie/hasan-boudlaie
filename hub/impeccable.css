@@ -75,3 +75,17 @@ html{scroll-padding-top:100px}body{overflow-wrap:break-word}
  .super-filters{flex-wrap:wrap;overflow:visible;scroll-snap-type:none;max-width:100%;padding:0;gap:8px}
  .super-filters button{flex:0 1 auto;white-space:normal;max-width:100%;min-height:44px;font-size:.86rem;line-height:1.45;text-align:center}
 }
+
+/* Responsive root-cause hardening: compact sticky header inside 320px devices. */
+@media(max-width:630px){
+ .topbar .nav-wrap{gap:7px;min-width:0}
+ .topbar .brand{flex:1 1 0;min-width:0;gap:8px}
+ .topbar .brand-mark{width:36px;height:36px;flex:0 0 36px;border-radius:11px}
+ .topbar .brand-info{min-width:0;overflow:hidden}
+ .topbar .brand-info strong{display:block;min-width:0;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .topbar .brand-info small{display:none}
+ .topbar .header-actions{flex:none;min-width:0;gap:5px}
+ .topbar .lang-toggle button{padding:6px 7px;font-size:.72rem}
+ .topbar .menu-toggle{width:44px;height:44px;flex:none}
+ .hub-card,.super-controls,.super-directory{min-width:0}
+}

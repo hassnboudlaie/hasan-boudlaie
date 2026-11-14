@@ -46,6 +46,17 @@ async function hubCheck(browser,name,w,h){
   assert.equal(rsp.status(),200);
   await page.locator("#superResultCount").filter({hasText:/21|۲۱/}).waitFor({timeout:25000});
   const metric=await checkFont(page,name+" Hub "+w);
+  if(w===320){
+   const dimensions=await page.evaluate(()=>{
+    const rect=s=>{const el=document.querySelector(s);return el?.getBoundingClientRect()?.toJSON()};
+    return {innerWidth,screenWidth:screen.width,clientWidth:document.documentElement.clientWidth,
+      scrollWidth:document.documentElement.scrollWidth,visualWidth:visualViewport?.width,
+      nav:rect(".nav-wrap"),brand:rect(".brand"),actions:rect(".header-actions"),header:rect(".topbar"),
+      main:rect("#main"),filter:rect(".super-filters")};
+   });
+   console.log("MOBILE_LAYOUT_DIAG",JSON.stringify(dimensions));
+   assert.ok(dimensions.innerWidth<=w+2,"320px layout viewport expanded to "+dimensions.innerWidth);
+  }
   assert.equal(await page.locator(".super-app-link").count(),21);
   assert.ok(metric.overflow<=2,name+" Hub "+w+" overflow="+metric.overflow);
   const axe=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
