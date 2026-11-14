@@ -1,6 +1,6 @@
 /* Robbins chapters 1–2: revised case-aligned examples, assignments and assessment questions. */
 window.OB_COURSE_CONTENT={
-  "version": 4,
+  "version": 5,
   "sessions": [
     {
       "id": 1,
@@ -397,4 +397,42 @@ window.OB_COURSE_CONTENT={
    publisher:"نگرش مدیران",
    pubYear:"۱۴۰۱"
  }];
+})();
+
+/* Session 1 — original Robbins book and user-supplied 29-page Persian study summary.
+   Drive file needs owner-enabled 'Anyone with the link' to be universally downloadable. */
+(function(){
+ const first=window.OB_COURSE_CONTENT.sessions.find(x=>x.id===1);
+ if(!first)return;
+ if(!Array.isArray(first.resources))first.resources=[];
+ first.resources.push({
+   id:"robbins-truth-about-managing-people-2003",
+   type:"book",
+   title:"حقایقی درباره مدیریت افراد",
+   sourceEnTitle:"The Truth About Managing People ... and Nothing But the Truth",
+   author:"Stephen P. Robbins (استیفن پی. رابینز) | Financial Times / Prentice Hall",
+   url:"https://www.oreilly.com/library/view/the-truth-about/0131838474/",
+   coverEn:"https://images.pangobooks.com/images/7016ee19-67e1-47c1-9586-10a9ee68d5f1?crop=1%3A1%26quality=85%26width=1200",
+   topic:"جلسه اول | چیستی رفتار سازمانی، تصمیم‌گیری مدیریتی مبتنی بر پژوهش و کاربرد دانش رفتار در محیط کار",
+   note:"کتاب رابینز یافته‌های پژوهشی درباره استخدام، انگیزش، رهبری، ارتباطات، تیم‌سازی، تعارض و تغییر را به توصیه‌های کاربردی برای مدیران تبدیل می‌کند. تصویر جلد مربوط به نسخه اصلی انگلیسی است، نه فایل خلاصه فارسی.",
+   prompt:"کدام باور رایج درباره مدیریت کارکنان را باید با شواهد رفتاری بررسی کنیم؟",
+   pubYear:"۲۰۰۳"
+ });
+ first.resources.push({
+   id:"robbins-truth-persian-summary-tallaei",
+   type:"document",
+   title:"خلاصه فارسی کتاب رابینز — کلیدهای طلایی مدیریت منابع انسانی",
+   sourceEnTitle:"A 29-page Persian summary of The Truth About Managing People",
+   author:"استیفن پی. رابینز؛ ترجمه اثر: غلامحسین خانقایی؛ خلاصه‌سازی: مهسا المعی‌نژاد؛ تدوین: مهراب پرتوی دیلمی / شرکت پلاک آبی",
+   url:"https://drive.google.com/file/d/1dg9VGSrFWYWofgCp74j4qIq2YN_L3aD3/view",
+   downloadUrl:"https://drive.google.com/uc?export=download&id=1dg9VGSrFWYWofgCp74j4qIq2YN_L3aD3",
+   pages:29,
+   fileType:"PDF",
+   fileSize:"۱٫۳۴ مگابایت",
+   fileAccess:"permission_required",
+   topic:"جلسه اول | مروری بر قلمرو رفتار سازمانی و کاربرد شواهد پژوهشی در مدیریت انسان‌ها",
+   note:"فایل ارائه‌شده توسط مدرس، خلاصه ۲۹ صفحه‌ای است و نسخه کامل کتاب رابینز نیست. فهرست آن موضوعات استخدام، انگیزش، رهبری، ارتباطات، گروه‌ها، تعارض، طراحی شغل، ارزیابی عملکرد و تغییر را پوشش می‌دهد.",
+   prompt:"از میان حقایق مطرح‌شده، یک ادعای مدیریتی را انتخاب کنید؛ برای ارزیابی آن چه شواهدی لازم است؟",
+   accessNote:"فایل در Google Drive مدرس قرار گرفته است؛ دسترسی دانلود عمومی هنوز فعال نشده و ممکن است درخواست اجازه نمایش داده شود. برای دسترسی همه دانشجویان، مدرس باید General access را روی Anyone with the link → Viewer قرار دهد."
+ });
 })();
