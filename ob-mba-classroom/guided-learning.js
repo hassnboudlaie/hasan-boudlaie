@@ -43,8 +43,8 @@ const stepsOf=(x,mode,work)=>{
     body:part("مأموریت شما",c.decision,"gr-definition")+part("خروجی نهایی","برای هر یک از شش مرحله چارچوب پاسخ بنویسید. در انتها پاسخ‌ها را برای ارزیابی مدرس ارسال کنید.")+
     originalDraft("پیش‌نویس قبلی من",work?.case||"")},
    ...itemSteps,
-   {kicker:"ثبت تکلیف",title:"تحویل تحلیل کیس به استاد",sub:"Assignment Submission",
-    body:'<div class="gr-case-submit"><h4>ثبت نهایی تحلیل شش‌مرحله‌ای</h4><p>پاسخ‌های شما در این دستگاه ذخیره شده‌اند. پس از ارسال نهایی، استاد می‌تواند آن‌ها را بررسی، نمره‌گذاری یا برای اصلاح برگرداند.</p><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
+   {kicker:"ثبت تکلیف",title:"تحویل تمرین ساختارمند شش‌مرحله‌ای",sub:"Structured Case Exercise",
+    body:'<div class="gr-case-submit"><h4>ثبت تمرین شش‌مرحله‌ای (مسیر جداگانه)</h4><p>این مسیر ویژه تمرین ساختارمند شش‌مرحله‌ای جلسات ۱ و ۲ است و مستقل از فرم «ارسال تحلیل کیس و فایل» بالای صفحه ارزیابی می‌شود. پاسخ‌های مرحله‌ای شما در این دستگاه ذخیره می‌شوند و با ارسال نهایی به استاد تحویل داده خواهند شد.</p><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
   ];
  }
  if(mode==="group"){
