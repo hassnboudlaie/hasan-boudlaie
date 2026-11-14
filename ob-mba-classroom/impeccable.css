@@ -74,7 +74,7 @@ button,summary,a,input,select,textarea{ -webkit-tap-highlight-color:rgba(16,98,8
   #app .page-head h2{font-size:clamp(23px,6vw,28px)}
   #app .gr-shell{padding:clamp(14px,4vw,22px)}
   #app .gr-header{padding:clamp(17px,4vw,24px)}
-  #app .gr-stage .gr-part p{font-size:max(18px,1rem)}
+  #app .gr-stage .gr-part p{font-size:20px}
   #app .quiz-question legend{font-size:20px}
   .entrance-card{padding:clamp(18px,4vw,25px)}
   .entrance-tabs button{min-height:48px}
