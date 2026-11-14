@@ -707,3 +707,71 @@ body:has(.s4-root){background:radial-gradient(circle at 92% 15%,#c3ddd8 0%,trans
  .s4-root .s4-final-exam .s4e-main{background:#fff!important}
 }
 @media(prefers-reduced-motion:reduce){.s4-root .s4-screen-head,.s4-root .s4-overview,.s4-root .s4-lab,.s4-root .s4-final-exam{animation:none!important}}
+
+/* IMPECCABLE R1 — executable micro-practice, observation and accessible route states.
+   One purposeful interaction per technique, no separate information wall. */
+.s4-root .s4-tech-challenge{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+ gap:12px 20px;margin-top:22px;padding:24px 27px;
+ background:#173d55;color:#fff;border:1px solid #416c82;
+ border-radius:16px;box-shadow:0 9px 22px rgba(14,39,59,.14)
+}
+.s4-root .s4-tech-challenge h4{grid-column:1/-1;font-size:clamp(23px,2.2vw,29px);margin:0;color:#f6dfac!important;font-weight:900}
+.s4-root .s4-tech-challenge p{grid-column:1/-1;margin:0;font-size:clamp(20px,2vw,25px);line-height:1.85;color:#f0f8fc;font-weight:700;max-width:75ch}
+.s4-root .s4-tech-challenge button{
+ width:max-content;min-height:59px;border:1px solid #f5d69d;
+ border-radius:12px;background:#f6dcac;color:#1c3545;
+ padding:12px 21px;font-size:20px;font-weight:900
+}
+.s4-root .s4-tech-challenge button[aria-pressed="true"]{
+ background:#c4eddb;border-color:#93d5b8;color:#124b36
+}
+.s4-root .s4-tech-progress{font-size:18px;font-weight:850;color:#e3f3fc;text-align:end}
+.s4-root .s4-tech-challenge button:focus-visible,
+.s4-root .s4-observation-option:focus-within{
+ outline:3px solid #e7bf78;outline-offset:3px
+}
+.s4-root .s4-behavior-check ul{list-style:none;padding:0;margin:14px 0}
+.s4-root .s4-behavior-check li{margin:5px 0;padding:0}
+.s4-root .s4-observation-option{
+ display:flex;gap:13px;align-items:flex-start;text-align:right;cursor:pointer;
+ padding:12px 15px;border-radius:11px;background:#f2f8fa;color:#183d50;
+ border:1px solid #b8d3d9;font-size:clamp(19px,1.9vw,23px);
+ font-weight:750;line-height:1.72
+}
+.s4-root .s4-observation-option:has(input:checked){background:#d4ecdf;border-color:#76ae93;color:#14503b}
+.s4-root .s4-observation-option input{
+ width:24px;height:24px;flex:none;accent-color:#086c60;margin-top:5px;cursor:pointer
+}
+.s4-root .s4-observation-progress{
+ display:inline-block;padding:9px 15px;margin:5px 0 0;
+ background:#173e54;color:#fff;border-radius:10px;
+ font-size:18px;font-weight:850
+}
+.s4-root #s4-screen-title:focus{outline:none}
+.s4-root #s4-screen-title:focus-visible{outline:3px solid #f0c77b;outline-offset:5px;border-radius:4px}
+.s4-root .s4-page-flip button:focus-visible,
+.s4-root .s4-mobile-nav button:focus-visible{outline:3px solid #efc47d;outline-offset:3px}
+.s4-root .s4-tabs button{overflow-wrap:anywhere}
+.s4-root .s4-case-pagination button,.s4-root .s4-tech-flipper button{min-height:55px}
+.s4-root [data-s4-advance]:disabled{opacity:.42;cursor:not-allowed}
+@media(max-width:760px){
+ .s4-root .s4-tech-challenge{grid-template-columns:1fr;padding:20px 17px}
+ .s4-root .s4-tech-challenge p{font-size:22px;line-height:1.83}
+ .s4-root .s4-tech-challenge button{width:100%;font-size:19px;min-height:58px}
+ .s4-root .s4-tech-progress{text-align:center;font-size:18px}
+ .s4-root .s4-observation-option{font-size:20px;padding:12px}
+ .s4-root .s4-observation-progress{font-size:18px}
+}
+@media(max-width:370px){
+ .s4-root .s4-path-card .s4-path-copy strong{font-size:23px}
+ .s4-root .s4-role-tile-copy strong{font-size:23px}
+ .s4-root .s4-page-flip button{font-size:17px}
+}
+@media print{
+ .s4-root .s4-tech-challenge button,.s4-root .s4-tech-progress{display:none!important}
+ .s4-root .s4-observation-option input{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .s4-root .s4-path-card,.s4-root .s4-role-tile,.s4-root button.s4-tech{transition:none!important;transform:none!important}
+}
