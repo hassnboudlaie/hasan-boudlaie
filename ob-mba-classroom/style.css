@@ -596,3 +596,49 @@ main{min-height:0}
 .guest-preview-banner strong{font-size:clamp(20px,2.4vw,25px);font-weight:900;color:#f5dbad}
 .guest-preview-banner span{font-size:clamp(17px,1.9vw,21px);font-weight:700;line-height:1.7;color:#fff}
 @media(max-width:600px){.guest-preview-banner{padding:17px 16px}}
+
+
+/* Session resource library | Allameh MBA — RTL, readable, responsive */
+.resource-panel{display:grid;gap:20px}
+.resource-panel-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px}
+.resource-panel-head h3{font-size:clamp(23px,3vw,30px);font-weight:900;line-height:1.5}
+.resource-panel-head p{font-size:17px;color:var(--muted);line-height:1.8}
+.resource-caption{font:800 13px/1.8 Arial,sans-serif;letter-spacing:.08em;color:var(--ok);direction:ltr;display:inline-block;text-align:left}
+.resource-list{display:grid;gap:16px}
+.resource-item{border:1px solid var(--line);border-radius:19px;padding:clamp(17px,2.5vw,27px);display:grid;gap:11px;background:var(--panel);min-width:0;box-shadow:0 8px 24px #162a390d}
+.resource-item-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.resource-kind{font-size:15px;font-weight:900;border-radius:99px;padding:4px 14px;background:var(--soft);color:var(--text)}
+.resource-duration{font-weight:800;color:var(--muted);font-size:15px}
+.resource-item h4{font-size:clamp(21px,2.7vw,25px);font-weight:900;line-height:1.55;margin:0;overflow-wrap:anywhere;unicode-bidi:plaintext}
+.resource-author{color:var(--muted);font-size:16px;font-weight:700}
+.resource-topic{background:var(--soft);border-inline-start:4px solid var(--gold);border-radius:11px;padding:12px 15px;line-height:1.85;font-size:17px}
+.resource-topic strong,.resource-prompt strong{font-weight:900}
+.resource-note{font-size:18px;line-height:1.9}
+.resource-prompt{font-size:17px;line-height:1.85;border-top:1px solid var(--line);padding-top:11px}
+.resource-related{font-size:15px;font-weight:800;color:var(--ok)}
+.resource-open{justify-self:start;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}
+.resource-empty{padding:22px;background:var(--soft);border-radius:15px;display:grid;gap:7px}
+.resource-empty h4{font-size:20px;margin:0}
+.resource-empty p{font-size:17px;color:var(--muted)}
+.resource-management{max-width:1050px;margin-inline:auto}
+.resource-management .page-head p{font-size:17px}
+.resource-management form{display:grid;gap:15px}
+.resource-management .field{display:grid;gap:6px;min-width:0}
+.resource-management input,.resource-management select,.resource-management textarea{width:100%;min-height:47px;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:var(--panel);color:var(--text);font-size:17px}
+.resource-management textarea{min-height:110px;resize:vertical;line-height:1.9}
+.resource-management label{font-size:17px;font-weight:900}
+.resource-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.resource-edit-grid .field:nth-last-child(-n+2){grid-column:1/-1}
+.resource-warning{background:var(--soft);border-inline-start:4px solid var(--gold);padding:13px 16px;border-radius:11px}
+.resource-admin-item{border:1px solid var(--line);border-radius:15px;padding:15px;display:grid;gap:14px}
+.resource-admin-item .page-head strong{font-size:19px;overflow-wrap:anywhere}
+.resource-admin-item details{margin:0}
+@media(max-width:650px){
+ .resource-panel{padding:16px}
+ .resource-item{padding:16px}
+ .resource-edit-grid{grid-template-columns:1fr}
+ .resource-edit-grid .field:nth-last-child(-n+2){grid-column:auto}
+ .resource-management .page-head{align-items:flex-start}
+ .resource-management .page-head .btn{width:100%}
+ .resource-open{width:100%;justify-self:stretch}
+}
