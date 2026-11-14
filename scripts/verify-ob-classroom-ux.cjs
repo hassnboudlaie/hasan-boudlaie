@@ -16,9 +16,15 @@ assert.doesNotThrow(()=>new Function(attendanceJs),'Attendance frontend must par
 assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
+for(const file of ['ob-mba-classroom/session-case-choices.js','ob-mba-classroom/case-export.js','ob-mba-classroom/quiz-portal.js']){
+ assert.doesNotThrow(()=>new Function(read(file)),file+' must parse');
+}
+
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=16')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
-assert.ok(sw.includes('shell-v27')&&sw.includes('app.js?v=25')&&sw.includes('access-gate.js?v=16'),'PWA cache and approved assets');
+const gateVersion=html.match(/access-gate\.js\?v=(\d+)/)?.[1];
+const appVersion=gateJs.match(/app\.js\?v=(\d+)/)?.[1];
+assert.ok(gateVersion&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'),'Course JS must load after authorization');
+assert.ok(/shell-v\d+/.test(sw)&&appVersion&&sw.includes('app.js?v='+appVersion)&&sw.includes('access-gate.js?v='+gateVersion),'PWA cache references approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(presenterCss.includes('.presenter-stage:fullscreen')&&presenterCss.includes('.presenter-mode-switch'),'Unified player supports fullscreen and language switch');
@@ -58,7 +64,7 @@ assert.ok(caseJs.includes('window.OB_ACCESS?.role==="guest"'),'Guest cannot subm
 assert.ok(gateJs.includes('course-content.js?v=7')&&sw.includes('course-content.js?v=7'),'Course content scripts load after approved access');
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
 assert.ok(gateJs.includes('lesson-enrichment.js?v=2')&&sw.includes('lesson-enrichment.js?v=2'),'Enrichment script included in gated loader');
-assert.ok(gateJs.includes('guided-learning.js?v=3')&&html.includes('guided-learning.css?v=1')&&sw.includes('guided-learning.js?v=3')&&sw.includes('guided-learning.css?v=1'),'Guided assets loaded after authentication and cached');
+assert.ok(gateJs.includes('guided-learning.js?v=3')&&html.includes('guided-learning.css?v=2')&&sw.includes('guided-learning.js?v=3')&&sw.includes('guided-learning.css?v=2'),'Guided assets loaded after authentication and cached');
 assert.equal(publicCourse.OB_LESSON_ENRICHMENT.sessions.length,2,'Both source chapters enriched');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseFramework.steps.length===6&&s.caseFramework.steps.reduce((n,p)=>n+p.points,0)===20),'Both case rubrics have six stages and 20 points');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseStudy.tag.includes('فرضی')&&s.caseStudy.dataTable.length>=4),'Cases are honest data-led hypothetical scenarios');
@@ -108,10 +114,10 @@ assert.ok(js.includes('۶. جمع‌بندی و تأمل فردی'),'Editor must
 const materials=["ob-mba-classroom/materials/session-01-robbins.pptx","ob-mba-classroom/materials/session-01-robbins.pdf","ob-mba-classroom/materials/session-02-robbins.pptx","ob-mba-classroom/materials/session-02-robbins.pdf"];
 for(const p of materials){const file=fs.readFileSync(path.join(root,p));assert.ok(file.length>5000,"Nonempty download: "+p);assert.ok(p.endsWith(".pdf")?file.subarray(0,4).toString()==="%PDF":file.subarray(0,2).toString()==="PK","Valid signature: "+p)}
 assert.ok(js.includes('lectureDownloads(s)')&&js.includes('projectPresentation'),'Download and projector UI actions must exist');
-const makeEl=()=>({innerHTML:'',style:{},hidden:false,textContent:'',dataset:{},open:false,classList:{toggle(){}},setAttribute(){},querySelectorAll(){return []},addEventListener(n,fn){this.handlers??={};this.handlers[n]=fn;}});
+const makeEl=()=>({innerHTML:'',style:{},hidden:false,textContent:'',dataset:{},open:false,classList:{toggle(){}},setAttribute(){},querySelectorAll(){return []},querySelector(){return null},addEventListener(n,fn){this.handlers??={};this.handlers[n]=fn;}});
 const app=makeEl(),nav=makeEl(),roles=makeEl(),theme=makeEl(),toast=makeEl(),summary=makeEl(),menu=makeEl();
 roles.querySelectorAll=()=>['student','teacher','projector'].map(role=>({dataset:{role},classList:{toggle(){}},setAttribute(){}}));
-const doc={documentElement:{dataset:{}},listeners:{},querySelector(sel){return ({'#app':app,'#bottomNav':nav,'#rolebar':roles,'#themeToggle':theme,'#toast':toast,'#roleSummary':summary,'.demo-role-menu':menu})[sel]||null},addEventListener(n,fn){this.listeners[n]=fn}};
+const doc={documentElement:{dataset:{}},listeners:{},querySelector(sel){return ({'#app':app,'#bottomNav':nav,'#rolebar':roles,'#themeToggle':theme,'#toast':toast,'#roleSummary':summary,'.demo-role-menu':menu})[sel]||null},addEventListener(n,fn){const old=this.listeners[n];this.listeners[n]=old?(e=>{old(e);fn(e)}):fn}};
 const saved={};const storage={getItem(k){return saved[k]??null},setItem(k,v){saved[k]=String(v)}};
 const guideHolder={};new Function('window',guidedJs)(guideHolder);
 assert.ok(guideHolder.OB_GUIDED,'Reusable guided reader exported');
@@ -120,7 +126,7 @@ assert.equal(guideHolder.OB_GUIDED.stepsOf(firstSource,'concepts',{}).length,7,'
 assert.equal(guideHolder.OB_GUIDED.stepsOf(firstSource,'examples',{}).length,3,'All 3 examples accessible');
 assert.ok(guideHolder.OB_GUIDED.stepsOf(firstSource,'case',{}).length>=5,'Case split into source, decision, analysis and close');
 assert.ok(guideHolder.OB_GUIDED.stepsOf(firstSource,'reflection',{}).every(v=>(v.body.match(/<textarea/g)||[]).length<=2),'At most two workbook prompts per page');
-const fakeWindow={scrollTo(){},OB_CASE:{teacherHTML:()=>'<section id="caseTeacherRoot">ارزیابی تحلیل کیس‌ها</section>',refreshTeacher(){},refreshStudent(){},studentStatusMarkup:()=>''},OB_ACCESS:{approved:true,role:"student"},OB_COURSE_CONTENT:publicCourse.OB_COURSE_CONTENT,OB_LESSON_ENRICHMENT:publicCourse.OB_LESSON_ENRICHMENT,OB_GUIDED:guideHolder.OB_GUIDED};
+const fakeWindow={scrollTo(){},addEventListener(){},OB_CASE:{teacherHTML:()=>'<section id="caseTeacherRoot">ارزیابی تحلیل کیس‌ها</section>',refreshTeacher(){},refreshStudent(){},studentStatusMarkup:()=>''},OB_ACCESS:{approved:true,role:"student"},OB_COURSE_CONTENT:publicCourse.OB_COURSE_CONTENT,OB_LESSON_ENRICHMENT:publicCourse.OB_LESSON_ENRICHMENT,OB_GUIDED:guideHolder.OB_GUIDED};
 new Function('window','document','Image',presenterJs)(fakeWindow,{getElementById(){return null}},function(){this.src=''});
 new Function('document','localStorage','window','crypto','setTimeout','clearTimeout',js)(doc,storage,fakeWindow,{getRandomValues(a){a[0]=54321}},()=>{},()=>{});
 assert.ok(app.innerHTML.includes('سایر امکانات کلاس'),'Student home uses progressive disclosure');

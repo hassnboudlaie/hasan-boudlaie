@@ -11,6 +11,18 @@ const list=(arr,ordered=false)=>{
  return '<'+tag+' class="gr-list">'+cleanArray(arr).map(x=>'<li>'+escapeHtml(x)+'</li>').join("")+'</'+tag+'>';
 };
 const note=(key,prompt,work,small="")=>'<div class="gr-note"><label for="gr-'+escapeHtml(key)+'">'+escapeHtml(prompt)+'</label><textarea id="gr-'+escapeHtml(key)+'" data-guided-key="'+escapeHtml(key)+'" maxlength="3500" rows="4" placeholder="پاسخ خود را بنویسید...">'+escapeHtml(work?.guidedAnswers?.[key]||"")+'</textarea>'+(small?'<small>'+escapeHtml(small)+'</small>':"")+'</div>';
+const caseSelect=(lessonId,item,work)=>{
+ const cfg=window.OB_CASE_CHOICES?.[lessonId]?.steps?.[item.key];
+ if(!cfg)return note("case-"+item.key,"تحلیل شما با استفاده از مفهوم جلسه",work,"معیار ارزیابی: "+item.rubric+" · "+item.points+" امتیاز");
+ const key="case-"+item.key, current=String(work?.guidedAnswers?.[key]||"");
+ return '<div class="gr-note gr-choice"><label for="gr-'+escapeHtml(key)+'">از میان چهار تحلیل، گزینه دقیق‌تر را انتخاب کنید</label>'+
+ '<p class="gr-choice-hint">'+escapeHtml(cfg.hint)+'</p>'+
+ '<select id="gr-'+escapeHtml(key)+'" data-guided-key="'+escapeHtml(key)+'" aria-label="'+escapeHtml(item.title)+'">'+
+ '<option value="">انتخاب پاسخ تحلیلی…</option>'+
+ cfg.options.map((v,i)=>'<option value="'+escapeHtml(v)+'" '+(v===current?'selected':'')+'>'+["الف","ب","پ","ت"][i]+' — '+escapeHtml(v)+'</option>').join('')+'</select>'+
+ '<p class="gr-choice-result" role="status">'+(current?escapeHtml(current):'پس از انتخاب، پاسخ کامل این مرحله اینجا نمایش داده می‌شود.')+'</p>'+
+ '<small>پاسخ‌ها در همین دستگاه ذخیره می‌شوند؛ پس از تکمیل هر شش مرحله، ثبت نهایی برای استاد را انجام دهید.</small></div>';
+};
 const originalDraft=(label,value)=>value?'<details class="gr-prior"><summary>'+escapeHtml(label)+'</summary><p>'+escapeHtml(value)+'</p></details>':"";
 const stepsOf=(x,mode,work)=>{
  if(!x)return [];
@@ -31,20 +43,20 @@ const stepsOf=(x,mode,work)=>{
   const itemSteps=cleanArray(framework.steps).map((item,i)=>({
    kicker:"تحلیل کیس · مرحله "+(i+1),
    title:item.title,sub:item.en||"",
-   body:part("سؤال راهنما",item.prompt,"gr-definition")+note("case-"+item.key,"تحلیل شما با استفاده از مفهوم جلسه",work,"معیار ارزیابی: "+item.rubric+" · "+item.points+" امتیاز")
+   body:part("سؤال راهنما",item.prompt,"gr-definition")+caseSelect(x.id,item,work)
   }));
   return [
    {kicker:"کیس جلسه "+x.id,title:c.title,sub:c.tag||"",
-    body:part("موقعیت",c.facts[0],"gr-definition")+'<h4 class="gr-section">اطلاعات کیس</h4>'+list(c.facts.slice(1))+table+part("یادداشت مدرس",c.teachingNote)},
+    body:part("موقعیت",c.facts[0],"gr-definition")+(window.OB_CASE_CHOICES?.[x.id]?part("راهنمای جلسه اول",window.OB_CASE_CHOICES[x.id].introduction,"gr-takeaway"):"")+'<h4 class="gr-section">اطلاعات کیس</h4>'+list(c.facts.slice(1))+table+part("یادداشت مدرس",c.teachingNote)},
    {kicker:"ابزار تحلیل",title:framework.title,sub:"Concept Toolkit · Robbins",
     body:part("هدف",framework.description,"gr-takeaway")+concepts+
     '<h4 class="gr-section">شش مرحله تحلیل</h4>'+list(framework.steps.map(item=>item.title),true)},
    {kicker:"تصمیم مدیریتی",title:"مسئله تصمیم‌گیری",sub:c.title,
-    body:part("مأموریت شما",c.decision,"gr-definition")+part("خروجی نهایی","برای هر یک از شش مرحله چارچوب پاسخ بنویسید. در انتها پاسخ‌ها را برای ارزیابی مدرس ارسال کنید.")+
+    body:part("مأموریت شما",window.OB_CASE_CHOICES?.[x.id]?"با تکیه بر مفاهیم مقدماتی فصل اول، در هر یک از شش مرحله یک برداشت مستدل‌تر را انتخاب کنید.":"برای هر یک از شش مرحله پاسخ شواهدمحور بنویسید و پس از بازبینی برای استاد ارسال کنید.","gr-definition")+part("خروجی نهایی","شش مرحله را تکمیل کنید، گزارش یکپارچه را پیش‌نمایش و در قالب Word یا PDF دریافت کنید و پاسخ‌ها را برای استاد ارسال کنید.")+
     originalDraft("پیش‌نویس قبلی من",work?.case||"")},
    ...itemSteps,
    {kicker:"ثبت تکلیف",title:"تحویل تمرین ساختارمند شش‌مرحله‌ای",sub:"Structured Case Exercise",
-    body:'<div class="gr-case-submit"><h4>ثبت تمرین شش‌مرحله‌ای (مسیر جداگانه)</h4><p>این مسیر ویژه تمرین ساختارمند شش‌مرحله‌ای جلسات ۱ و ۲ است و مستقل از فرم «ارسال تحلیل کیس و فایل» بالای صفحه ارزیابی می‌شود. پاسخ‌های مرحله‌ای شما در این دستگاه ذخیره می‌شوند و با ارسال نهایی به استاد تحویل داده خواهند شد.</p><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
+    body:'<div class="gr-case-submit"><h4>پیش‌نمایش و تحویل تحلیل شش‌مرحله‌ای</h4><p>هر مرحله یک پاسخ جداگانه دارد. پس از تکمیل می‌توانید گزارش یکپارچه را ببینید، Word یا PDF تهیه کنید و در سامانه استاد ثبت کنید. مسیر نوشتن تحلیل آزاد و آپلود فایل نیز جداگانه در بالای همین صفحه موجود است.</p><div class="gr-report-actions"><button type="button" class="gr-next" data-action="casePreview">پیش‌نمایش گزارش کامل</button><button type="button" class="gr-prev" data-action="caseDownloadWord">دریافت Word</button><button type="button" class="gr-prev" data-action="casePrintPDF">دریافت PDF</button></div><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
   ];
  }
  if(mode==="group"){
@@ -72,7 +84,7 @@ const stepsOf=(x,mode,work)=>{
   if(!fw||!a)return [];
   return [
    {kicker:"تکلیف جلسه "+x.id,title:a.title,sub:"Case-Based Assignment",
-    body:part("صورت تکلیف",a.instruction,"gr-definition")+part("خروجی مورد انتظار",a.submit)+part("معیار یک پاسخ خوب",a.quality)},
+    body:part("صورت تکلیف",window.OB_CASE_CHOICES?.[x.id]?"برای هر یک از شش مرحله تحلیل کیس، از بین چهار گزینه یک برداشت علمی‌تر را برگزینید. در بخش «کیس مدیریتی» همه شش مرحله و کادر انتخاب پاسخ را خواهید دید.":a.instruction,"gr-definition")+part("خروجی مورد انتظار",window.OB_CASE_CHOICES?.[x.id]?"شش انتخاب تحلیلی همراه با گزارش یکپارچه قابل پیش‌نمایش، Word/PDF و ثبت برای استاد":a.submit)+part("معیار یک پاسخ خوب",a.quality)},
    {kicker:"الگوی تحویل",title:"شش مرحله تحلیل کیس",sub:"Framework",
     body:list(fw.steps.map(st=>st.title+" — "+st.rubric),true)+
       '<button type="button" class="gr-next gr-case-open" data-action="jumpToCase">ورود به تحلیل و ثبت تکلیف ←</button>'+

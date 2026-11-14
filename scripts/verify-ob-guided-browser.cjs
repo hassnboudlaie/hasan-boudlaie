@@ -79,22 +79,23 @@ async function run(){
   assert.ok(await page.getByText("Three Levels of OB").first().isVisible(),"Theory toolbox links case to Robbins");
   await page.locator('[data-action="guidedNext"]').click();
   await page.locator('[data-action="guidedNext"]').click();
-  assert.equal(await page.locator(".gr-stage textarea").count(),1,"Case workbook shows one rubric section per stage");
-  await page.locator('[data-guided-key="case-problem"]').fill("آزمون ثبت پاسخ کیس که به داده های همین جلسه مربوط است");
+   assert.equal(await page.locator(".gr-stage select[data-guided-key]").count(),1,"Introductory case shows one analytical dropdown per stage");
+   const initialChoice=await page.locator('[data-guided-key="case-problem"] option').nth(1).getAttribute("value");
+   await page.locator('[data-guided-key="case-problem"]').selectOption({index:1});
   await page.locator('[data-action="guidedNext"]').click();
   await page.locator('[data-action="guidedPrev"]').click();
-  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),"آزمون ثبت پاسخ کیس که به داده های همین جلسه مربوط است","Autosave across stages");
+  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),initialChoice,"Autosave across stages");
   await noOverflow(page,config.name+" case worksheet");
   await save(page,config.name+"-04-case-workbook");
   await page.reload({waitUntil:"domcontentloaded"});
   await page.locator('.student-focus button[data-action="openActive"]').click();
   await page.locator('[data-track="practice"]').click();
   await page.locator("#sectionSelect").selectOption("case");
-  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),"آزمون ثبت پاسخ کیس که به داده های همین جلسه مربوط است","Session text survives refresh");
+  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),initialChoice,"Session text survives refresh");
   const keys=["problem","evidence","levels","explain","intervention","measurement"];
   for(let i=0;i<keys.length;i++){
    await page.locator('[data-action="guidedJump"][data-index="'+(i+3)+'"]').click();
-   await page.locator('[data-guided-key="case-'+keys[i]+'"]').fill("پاسخ تحلیلی مستند و مرتبط با کیس برای "+keys[i]);
+    await page.locator('[data-guided-key="case-'+keys[i]+'"]').selectOption({index:1+(i%4)});
   }
   await page.locator('[data-action="guidedJump"][data-index="9"]').click();
   await page.locator('[data-action="submitCase"]').click();
