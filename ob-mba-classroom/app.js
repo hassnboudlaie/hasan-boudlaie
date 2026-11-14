@@ -404,5 +404,19 @@ document.addEventListener("change",event=>{
  if(status)status.textContent="پاسخ انتخابی ذخیره شد · فقط در همین دستگاه";
 });
 
+
 render();
+/* These modules are loaded only after the approved access-gate has loaded app.js.
+   Keep supplementary case and quiz code out of the unauthenticated shell. */
+const addons=["./session-case-choices.js?v=1","./case-export.js?v=1","./quiz-portal.js?v=1"];
+function attachAddon(src){
+ return new Promise((resolve,reject)=>{
+  const element=document.createElement("script");element.src=src;element.async=false;
+  element.onload=resolve;element.onerror=()=>reject(Error("addon_load_failed"));
+  document.head.appendChild(element);
+ });
+}
+Promise.all(addons.map(attachAddon)).then(()=>{
+ if(window.OB_ACCESS?.approved)render();
+}).catch(()=>toast("بخشی از امکانات جدید بارگذاری نشد. اتصال اینترنت را بررسی کنید و صفحه را تازه‌سازی کنید."));
 })();
