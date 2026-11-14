@@ -11,6 +11,15 @@ Independent GitHub Pages PWA in the main HB Hub repository.
 - Indexed under HB Hub and the applications catalog.
 
 
+## November 14, 2026 — verified resource links & Denhardt book covers
+- Active **Open Link** and **Copy Link** controls appear in student resource cards, instructor resource lists, and directly under URL fields in each editable resource form. YouTube watch URLs remain ordinary HTTPS links and open in a new tab. Copy uses the browser Clipboard API with an on-page fallback.
+- Session 2: Armin Trost, *Don't change Culture by changing the Culture*, verified watch URL https://www.youtube.com/watch?v=ceud2z_HziU.
+- Session 1: *مدیریت رفتار سازمانی در سازمان‌های دولتی و غیرانتفاعی — جلد اول: سطح فردی* (Denhardt et al.; Persian translation: Hassan Boudlaie, Mohammad Hossein Kenarroudi, Mohammad Mahdi Ranjbar Fardoei; Negah-e Modiran, 1401) is included as a recommended supplementary book, with an explanation tied to organizational behavior foundations and public/nonprofit context.
+- **Both verified covers** are hosted locally as \`materials/book-covers/denhardt-persian-cover.jpg\` (published translation cover spread, from its public LinkedIn announcement) and \`materials/book-covers/denhardt-original-cover.jpg\` (fifth-edition original from SAGE publisher). Visual assets were retrieved from actual publication sources, not generated or substituted with unrelated books.
+- Reference links: English publisher https://www.sagepub.com/shop/buy-a-book/managing-human-behavior-in-public-and-nonprofit-organizations-5-257430; Persian release announcement https://www.linkedin.com/posts/mohammad-mahdi-ranjbar-fordoei-742784154_%DA%A9%D8%AA%D8%A7%D8%A8-%D9%85%D8%AF%DB%8C%D8%B1%DB%8C%D8%AA-%D8%B1%D9%81%D8%AA%D8%A7%D8%B1-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86%DB%8C-%D8%AF%D8%B1-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86-%D9%87%D8%A7%DB%8C-%D8%AF%D9%88%D9%84%D8%AA%DB%8C-activity-7044650110139420672-w2iz.
+- Demo migration version 5 merges the new official book into locally saved student/teacher states and preserves a single copy of the Trost resource.
+- Local instructor edits are still not synchronized across devices: published seed sources are repository-backed; ad hoc form changes remain browser-local pending a central resource publisher.
+
 ## Session-level additional resources — November 2026
 - All 16 sessions now support a dedicated **منابع تکمیلی | Additional Resources** learning section with contextual notes linked to specific class topics.
 - The instructor-side session editor includes a seventh section for resource management. A separate form supports adding, editing, and deleting books, journal articles, videos, podcasts and web links; URL is optional for books and restricted to HTTP(S).
