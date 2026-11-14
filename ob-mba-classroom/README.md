@@ -4,7 +4,7 @@ Independent GitHub Pages PWA in the main HB Hub repository.
 
 ## Scope
 - RTL, mobile-first Executive Premium design; optional dark theme.
-- 16 blank 3-hour sessions. **No course syllabus is pre-populated.** The instructor supplies content later.
+- An approved-instructor 48-hour MBA **course syllabus** is published in the app (16 three-hour sessions, three analytical levels, learning outcomes, teaching methods, proposed assessment, and references). Individual session teaching materials are managed separately: sessions 1–2 currently have lesson materials; sessions 3–16 remain placeholders.
 - Local classroom prototype: lesson authoring and publish toggle, slides, case, quiz, poll, attendance code with teacher confirmation, group cards, weights/grades, projector display, student feedback tracking.
 - Classroom projector uses Persian-only interface copy; academic English terminology may be present in teacher-supplied content.
 - Standalone PWA manifest and scope-limited service worker.
@@ -27,4 +27,4 @@ A separate authenticated backend with robust access control and RLS must be prov
 1. Confirm the standalone frontend and Hub card work.
 2. Provision a **new, isolated** backend (do not modify My Finance or unrelated Supabase projects); securely configure authenticated invitations, course-specific roles and roster, row-level policies and access logs.
 3. Test live collaboration, attendance and grades on separate devices before real use.
-4. Instructor supplies the exact session content incrementally; do not auto-generate 16 weekly topics.
+4. Develop and publish session-specific teaching materials aligned to the now-documented 16-session syllabus; keep existing lesson work and access controls intact.
