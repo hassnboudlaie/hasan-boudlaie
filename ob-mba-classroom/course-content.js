@@ -1,6 +1,6 @@
 /* Robbins chapters 1–2: revised case-aligned examples, assignments and assessment questions. */
 window.OB_COURSE_CONTENT={
-  "version": 2,
+  "version": 3,
   "sessions": [
     {
       "id": 1,
@@ -357,3 +357,21 @@ window.OB_COURSE_CONTENT={
     }
   ]
 };
+
+/* Official complementary resource, shared by all approved classroom visitors. */
+(function(){
+ const second=window.OB_COURSE_CONTENT.sessions.find(s=>s.id===2);
+ if(!second)return;
+ second.resources=[{
+   id:"armin-trost-2019-culture",
+   type:"video",
+   title:"Don't change Culture by changing the Culture",
+   author:"Armin Trost",
+   url:"https://www.youtube.com/watch?v=ceud2z_HziU",
+   topic:"جلسه دوم | رابطه نگرش و رفتار (Attitude–Behavior Relationship)",
+   note:"این ویدئو نشان می‌دهد که تغییر نگرش و باورها لزوماً نقطه آغاز تغییر رفتار نیست. مدیر می‌تواند ابتدا ساختار، نظام پاداش و شرایط کار را اصلاح کند تا رفتارهای تازه شکل بگیرند و سپس نگرش‌ها و هنجارهای سازمانی به‌تدریج تغییر کنند. این منبع یک پیوند تکمیلی با مبحث فرهنگ سازمانی در جلسه پانزدهم هم دارد.",
+   prompt:"پرسش بحث: آیا تغییر رفتار می‌تواند مقدم بر تغییر نگرش باشد؟ برای پاسخ، یک مثال از سازمان و نقش نظام پاداش یا ساختار کار ارائه کنید.",
+   duration:"۴:۴۳",
+   relatedSession:15
+ }];
+})();
