@@ -55,3 +55,17 @@ html{scroll-padding-top:100px}body{overflow-wrap:break-word}
  .super-directory{gap:26px}
 }
 @media(prefers-reduced-motion:reduce){.super-app-link{transition:none}.super-app-link:hover{transform:none}}
+
+/* Deep audit: directory recovery, real search icon and mobile keyboard navigation. */
+.super-search-icon{display:grid;place-items:center;pointer-events:none;line-height:0}
+.super-search-icon svg{width:22px;height:22px}
+.super-no-results{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+.super-no-results p{margin:0;max-width:55ch;line-height:1.8}
+.super-reset{font:inherit;font-weight:700;font-size:.92rem;color:#fff;background:#123c35;border:1px solid #123c35;border-radius:12px;min-height:44px;padding:10px 16px}
+.super-reset:hover{background:#1f604f;border-color:#1f604f}
+.menu-toggle svg{grid-area:1/1;place-self:center}
+.menu-toggle .hub-close-icon{display:none}
+.menu-toggle[aria-expanded="true"] .hub-menu-icon{display:none}
+.menu-toggle[aria-expanded="true"] .hub-close-icon{display:block}
+@media(max-width:630px){.super-no-results{align-items:stretch}.super-reset{width:100%}}
+@media(forced-colors:active){.super-app-link,.super-search input,.super-filters button,.super-reset{border:1px solid CanvasText}}
