@@ -17,8 +17,8 @@ assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScr
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
 for(const token of ['dir="rtl"','demo-role-menu','viewport-fit=cover'])assert.ok(html.includes(token),'Missing HTML: '+token);
-assert.ok(html.includes('access-gate.js?v=6')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
-assert.ok(sw.includes('shell-v17')&&sw.includes('app.js?v=15')&&sw.includes('access-gate.js?v=6'),'PWA cache and approved assets');
+assert.ok(html.includes('access-gate.js?v=16')&&html.includes('access-gate.css?v=2')&&!html.includes('<script defer src="./app.js'), 'Course JS must load after authorization');
+assert.ok(sw.includes('shell-v27')&&sw.includes('app.js?v=25')&&sw.includes('access-gate.js?v=16'),'PWA cache and approved assets');
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(presenterCss.includes('.presenter-stage:fullscreen')&&presenterCss.includes('.presenter-mode-switch'),'Unified player supports fullscreen and language switch');
@@ -55,10 +55,10 @@ assert.ok(attendanceJs.includes('reviewGuest')&&attendanceJs.includes('revokeGue
 assert.ok(attendanceApi.includes('input.first_name')&&attendanceApi.includes('input.last_name')&&!attendanceApi.includes('input.guest_code'),'Server accepts first and family names without an invitation code');
 assert.ok(js.includes('guest-preview-banner')&&js.includes('isGuest()'),'Guest sees limited educational preview');
 assert.ok(caseJs.includes('window.OB_ACCESS?.role==="guest"'),'Guest cannot submit official assignments');
-assert.ok(gateJs.includes('course-content.js?v=2')&&sw.includes('course-content.js?v=2'),'Course content scripts load after approved access');
+assert.ok(gateJs.includes('course-content.js?v=7')&&sw.includes('course-content.js?v=7'),'Course content scripts load after approved access');
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
 assert.ok(gateJs.includes('lesson-enrichment.js?v=2')&&sw.includes('lesson-enrichment.js?v=2'),'Enrichment script included in gated loader');
-assert.ok(gateJs.includes('guided-learning.js?v=2')&&html.includes('guided-learning.css?v=1')&&sw.includes('guided-learning.js?v=2')&&sw.includes('guided-learning.css?v=1'),'Guided assets loaded after authentication and cached');
+assert.ok(gateJs.includes('guided-learning.js?v=3')&&html.includes('guided-learning.css?v=1')&&sw.includes('guided-learning.js?v=3')&&sw.includes('guided-learning.css?v=1'),'Guided assets loaded after authentication and cached');
 assert.equal(publicCourse.OB_LESSON_ENRICHMENT.sessions.length,2,'Both source chapters enriched');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseFramework.steps.length===6&&s.caseFramework.steps.reduce((n,p)=>n+p.points,0)===20),'Both case rubrics have six stages and 20 points');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseStudy.tag.includes('فرضی')&&s.caseStudy.dataTable.length>=4),'Cases are honest data-led hypothetical scenarios');
@@ -70,6 +70,17 @@ assert.ok(caseJs.includes('!rawScore')&&attendanceApi.includes('rawScore===null'
 assert.ok(gateJs.includes('case-portal.js?v=3')&&html.includes('case-portal.css?v=1')&&sw.includes('case-portal.js?v=3')&&sw.includes('./join-qr.svg'),'Case portal and QR bundled with PWA');
 assert.ok(qrSvg.includes('viewBox="0 0 49 49"')&&qrSvg.includes('ob-mba-classroom'),'Projector QR links only to Allameh classroom');
 
+// Keep source-attached teaching resources aligned with the published app and uploaded file.
+const session2Sources=publicCourse.OB_COURSE_CONTENT.sessions[1].resources||[];
+assert.ok(session2Sources.some(r=>r.id==='armin-trost-2019-culture'),'Existing Trost video remains in session 2');
+const perception=session2Sources.find(r=>r.id==='perception-session-02-pptx');
+assert.ok(perception&&perception.type==='presentation'&&perception.slides===41,'Session 2 offers 41-slide Perception PowerPoint');
+assert.ok(perception.downloadUrl.endsWith('/materials/readings/perception-session-02.pptx'),'Perception download URL points to public classroom asset');
+const perceptionBytes=fs.readFileSync(path.join(root,'ob-mba-classroom/materials/readings/perception-session-02.pptx'));
+assert.equal(perceptionBytes.subarray(0,2).toString(),'PK','Uploaded PowerPoint keeps original PPTX signature');
+assert.equal(require('node:crypto').createHash('sha256').update(perceptionBytes).digest('hex'),'104a394687ce3a4ed61222f0b3b58332a785847cd67c6b134d1daee9b1ba5579','Exact user-uploaded presentation remains unchanged');
+assert.ok(js.includes('دانلود PowerPoint')&&js.includes('perception-session-02.pptx')===false,'Download control derives PowerPoint type generically');
+assert.ok(js.includes('resourceLinks(x)')&&js.includes('fileName'),'PPTX download is rendered through the resource card');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.concepts.length>=6&&s.examples.length>=3&&s.caseStudy.questions.length>=4),'Each chapter has complete topic, examples and documented case');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.groupWork.steps.length>=5&&s.rolePlay.dialogue.length>=4),'Group exercise and role-play are fully structured');
 assert.equal(publicCourse.OB_COURSE_CONTENT.sessions.length,2,'Only Robbins sessions 1 and 2 populated');
