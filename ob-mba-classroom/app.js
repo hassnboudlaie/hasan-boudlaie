@@ -410,7 +410,7 @@ document.addEventListener("change",event=>{
 render();
 /* These modules are loaded only after the approved access-gate has loaded app.js.
    Keep supplementary case and quiz code out of the unauthenticated shell. */
-const addons=["./session-case-choices.js?v=1","./case-export.js?v=1","./quiz-portal.js?v=2"];
+const addons=["./session-case-choices.js?v=1","./case-export.js?v=1","./quiz-portal.js?v=3"];
 function attachAddon(src){
  return new Promise((resolve,reject)=>{
   const element=document.createElement("script");element.src=src;element.async=false;
