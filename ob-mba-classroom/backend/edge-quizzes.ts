@@ -1,4 +1,4 @@
-/* MBA OB private per-session quizzes; no answer key exposed to student clients before closing. */
+/* MBA OB private per-session quizzes; correct answers are withheld until submission (session 1) or closing (other sessions). */
 import {createClient} from "npm:@supabase/supabase-js@2.57.0";
 const db=createClient(Deno.env.get("SUPABASE_URL")!,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,{auth:{persistSession:false,autoRefreshToken:false}});
 const ORIGIN="https://hassnboudlaie.github.io",encoder=new TextEncoder();
@@ -34,10 +34,10 @@ async function responseForStudent(session:number,user:Ident){
  const now=Date.now(),opens=window?Date.parse(window.opens_at):0,closes=window?Date.parse(window.closes_at):0;
  const isReady=questions.length===10;
  const status=!isReady?"not_ready":!window?"unscheduled":now<opens?"upcoming":now>=closes?"closed":"open";
- const hasAttempt=Boolean(attempt),showResult=Boolean(attempt&&now>=closes);
+ const showResult=Boolean(attempt&&(session===1||now>=closes));
  return reply({ok:true,session,status,opens_at:window?.opens_at||null,closes_at:window?.closes_at||null,
   questions:status==="open"&&!attempt?publicQuestions(questions):[],
-  attempt:attempt?{id:attempt.id,submitted_at:attempt.submitted_at,...(showResult?{score:attempt.score,correct_count:attempt.correct_count,review:questions.map((q,i)=>({no:q.question_no,answer:Number(attempt.answers[i]),correct_index:q.correct_index,explanation:q.explanation}))}:{})}:null});
+  attempt:attempt?{id:attempt.id,submitted_at:attempt.submitted_at,...(showResult?{score:attempt.score,correct_count:attempt.correct_count,review:questions.map((q,i)=>({no:q.question_no,answer:Number(attempt.answers[i]),correct_index:q.correct_index,text:q.prompt,options:q.options,explanation:q.explanation}))}:{})}:null});
 }
 async function route(body:Record<string,unknown>){
  const u=await identity(body.token);if(!u)return fail("session_expired",401);
@@ -47,7 +47,7 @@ async function route(body:Record<string,unknown>){
   const [a,w]=await Promise.all([db.from("mba_ob_quiz_attempts").select("session_no,id,submitted_at,score,correct_count").eq("student_id",u.id).order("session_no"),db.from("mba_ob_quiz_windows").select("session_no,closes_at")]);
   if(a.error||w.error)throw Error("profile_failed");
   const closeMap=new Map((w.data||[]).map(x=>[x.session_no,Date.parse(x.closes_at)]));
-  return reply({ok:true,attempts:(a.data||[]).map(x=>({session:x.session_no,id:x.id,submitted_at:x.submitted_at,score:Date.now()>=(closeMap.get(x.session_no)||Infinity)?x.score:null,correct_count:Date.now()>=(closeMap.get(x.session_no)||Infinity)?x.correct_count:null}))});
+  return reply({ok:true,attempts:(a.data||[]).map(x=>({session:x.session_no,id:x.id,submitted_at:x.submitted_at,score:x.session_no===1||Date.now()>=(closeMap.get(x.session_no)||Infinity)?x.score:null,correct_count:x.session_no===1||Date.now()>=(closeMap.get(x.session_no)||Infinity)?x.correct_count:null}))});
  }
  if(action==="teacherStatus"){
   if(u.role!=="teacher")return fail("teacher_only",403);
@@ -82,7 +82,7 @@ async function route(body:Record<string,unknown>){
   const correct=grade(q,answers),score=correct*2;
   const {data,error}=await db.from("mba_ob_quiz_attempts").insert({student_id:u.id,session_no:session,answers,correct_count:correct,score}).select("id,submitted_at").single();
   if(error){if(error.code==="23505")return fail("already_submitted",409);throw Error("attempt_save_failed")}
-  return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:"ثبت نهایی شد. پاسخنامه تحلیلی پس از پایان مهلت آزمون قابل مشاهده است."});
+  return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:session===1?"ثبت نهایی شد. نمره قطعی و پاسخنامه تشریحی هم‌اکنون قابل مشاهده است.":"ثبت نهایی شد. پاسخنامه تحلیلی پس از پایان مهلت آزمون قابل مشاهده است."});
  }
  if(action==="list"){
   if(u.role!=="teacher")return fail("teacher_only",403);

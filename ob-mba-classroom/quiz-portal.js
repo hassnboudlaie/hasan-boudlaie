@@ -1,4 +1,4 @@
-/* Private classroom quizzes: 10 items, 24 hours from instructor's class-end timestamp. */
+/* Private classroom quizzes: one-time submission, server grading; session 1 reviews visible immediately after submission. */
 (()=>{
 "use strict";
 const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",KEY="mba-ob-classroom-attendance-identity-v1",MAIL="hasanboudlaie@gmail.com";
@@ -24,14 +24,14 @@ function emailHref(session,id){
 }
 function studentHTML(session){
  if(window.OB_ACCESS?.role==="guest")return '<section class="quiz-portal"><h3>آزمون پایان جلسه</h3><p class="quiz-locked">مهمان‌ها می‌توانند محتوای آموزشی را ببینند؛ شرکت در آزمون و ثبت نمره فقط برای دانشجویان تأییدشده است.</p></section>';
- return '<section class="quiz-portal" id="quizPortal" data-quiz-session="'+session+'"><div class="quiz-portal-header"><div><span class="quiz-eyebrow">End-of-Session Assessment</span><h3>آزمون پایانی جلسه '+digits(session)+'</h3><p>۱۰ سؤال چهارگزینه‌ای · ۲۰ نمره · فقط یک بار ثبت نهایی</p></div><span class="quiz-window-tag">مهلت ۲۴ساعته</span></div><div id="quizPortalContent" class="quiz-content"><p>در حال بررسی وضعیت آزمون و مهلت پاسخ‌گویی…</p></div></section>';
+ return '<section class="quiz-portal" id="quizPortal" data-quiz-session="'+session+'"><div class="quiz-portal-header"><div><span class="quiz-eyebrow">End-of-Session Assessment</span><h3>آزمون پایانی جلسه '+digits(session)+'</h3><p>۱۰ سؤال چهارگزینه‌ای · ۲۰ نمره · فقط یک بار ثبت نهایی</p>'+(Number(session)===1?'<p>پس از پاسخ به هر ۱۰ سؤال و ثبت نهایی، نمره قطعی و پاسخنامه تشریحی بلافاصله در همین صفحه و پرونده آموزشی شما ثبت و نمایش داده می‌شود.</p>':'')+'</div><span class="quiz-window-tag">مهلت ۲۴ساعته</span></div><div id="quizPortalContent" class="quiz-content"><p>در حال بررسی وضعیت آزمون و مهلت پاسخ‌گویی…</p></div></section>';
 }
 function studentView(s){
  const a=s.attempt;
  const windowInfo=s.opens_at?'<p class="quiz-window-details"><strong>شروع:</strong> '+date(s.opens_at)+' <strong>پایان مهلت:</strong> '+date(s.closes_at)+'</p>':"";
  if(a){
   return '<div class="quiz-confirm"><h4>پاسخ‌ها ثبت نهایی شدند</h4><p>شناسه ثبت: <code dir="ltr">'+safe(a.id)+'</code></p><p>تاریخ: '+date(a.submitted_at)+'</p>'+
-  (a.score!=null?'<strong>نتیجه آزمون: '+digits(a.score)+' از ۲۰ · '+digits(a.correct_count)+' پاسخ درست</strong><details class="quiz-review"><summary>مشاهده پاسخنامه تحلیلی</summary>'+a.review.map(q=>'<p>سؤال '+digits(q.no)+' · پاسخ شما: '+digits(q.answer+1)+' · گزینه صحیح: '+digits(q.correct_index+1)+'<br>'+safe(q.explanation)+'</p>').join("")+'</details>':'<p>نمره و پاسخنامه پس از پایان مهلت ۲۴ساعته نمایش داده می‌شوند.</p>')+
+  (a.score!=null?'<strong>نمره قطعی: '+digits(a.score)+' از ۲۰ · '+digits(a.correct_count)+' پاسخ درست از ۱۰ سؤال</strong><details class="quiz-review" open><summary>مشاهده پاسخنامه تشریحی و ارزیابی تک‌تک سؤال‌ها</summary>'+a.review.map(q=>'<div class="quiz-answer-review"><strong>سؤال '+digits(q.no)+': '+safe(q.text||"")+'</strong><p>پاسخ شما: '+safe(q.options?.[q.answer]||("گزینه "+digits(q.answer+1)))+'</p><p>پاسخ صحیح: '+safe(q.options?.[q.correct_index]||("گزینه "+digits(q.correct_index+1)))+'</p><p><strong>توضیح علمی:</strong> '+safe(q.explanation)+'</p></div>').join("")+'</details>':'<p>نمره و پاسخنامه پس از پایان مهلت آزمون نمایش داده می‌شوند.</p>')+
   windowInfo+'<p>این تکلیف در پرونده آموزشی شما و صفحه ارزیابی مدرس ثبت شده است.</p><p class="quiz-mail-help">در صورت نیاز، برای ارسال رسید به Gmail استاد از گزینه زیر استفاده کنید؛ خودتان باید دکمه Send را بزنید.</p><a href="'+safe(emailHref(s.session,a.id))+'" target="_blank" rel="noopener noreferrer" class="quiz-mail">تهیه ایمیل رسید برای استاد</a></div>';
  }
  if(s.status==="not_ready")return '<p class="quiz-locked">سؤالات این جلسه هنوز با محتوای پاورپوینت نهایی تطبیق داده نشده‌اند؛ آزمون فعال نیست.</p>';
@@ -40,8 +40,8 @@ function studentView(s){
  if(s.status==="closed")return '<p class="quiz-locked">مهلت این آزمون به پایان رسیده و پاسخ جدید پذیرفته نمی‌شود.</p>'+windowInfo;
  return windowInfo+'<form id="quizFinalForm" data-quiz-session="'+s.session+'" class="quiz-questions">'+s.questions.map((q,i)=>
  '<fieldset class="quiz-question"><legend><span class="quiz-question-no">سؤال '+digits(i+1)+'</span> '+safe(q.text)+'</legend>'+
- q.options.map((v,j)=>'<label class="quiz-option"><input type="radio" name="q'+i+'" value="'+j+'" required><span><b>'+["الف","ب","پ","ت"][j]+'.</b> '+safe(v)+'</span></label>').join("")+'</fieldset>').join("")+
- '<p class="quiz-final-warning">بعد از ثبت نهایی، امکان ویرایش پاسخ‌ها وجود ندارد. قبل از ارسال، هر ۱۰ سؤال را بررسی کنید.</p><button type="submit" class="quiz-submit">ثبت نهایی پاسخ‌های ۱۰ سؤال</button><p class="quiz-form-status" role="status" aria-live="polite"></p></form>';
+ q.options.map((v,j)=>'<label class="quiz-option"><input type="radio" name="q'+i+'" value="'+j+'" required><span><b>'+["الف","ب","ج","د"][j]+'.</b> '+safe(v)+'</span></label>').join("")+'</fieldset>').join("")+
+ '<p class="quiz-final-warning">بعد از ثبت نهایی، امکان ویرایش پاسخ‌ها وجود ندارد. قبل از ارسال، هر ۱۰ سؤال را بررسی کنید.</p><p class="quiz-form-status" id="quizCompletion" role="status" aria-live="polite">۰ از ۱۰ سؤال پاسخ داده شده است.</p><button type="submit" class="quiz-submit" disabled>ثبت نهایی پاسخ‌های ۱۰ سؤال</button><p class="quiz-form-status" role="status" aria-live="polite"></p></form>';
 }
 async function refreshStudent(session){
  const el=document.getElementById("quizPortalContent");if(!el||Number(el.closest("#quizPortal")?.dataset.quizSession)!==Number(session))return;
@@ -59,7 +59,7 @@ async function submit(form){
  catch(e){status.textContent=error(e);btn.disabled=false}
 }
 function profileHTML(){
- return '<section class="quiz-profile" id="obQuizProfile"><h3>پرونده آزمون‌های پایان جلسه</h3><p>نمرات آزمون‌ها پس از پایان مهلت هر جلسه نمایش داده می‌شوند.</p><div id="obQuizProfileContents">در حال دریافت سوابق…</div></section>';
+ return '<section class="quiz-profile" id="obQuizProfile"><h3>پرونده آزمون‌های پایان جلسه</h3><p>نمره نهایی جلسه اول بلافاصله پس از ثبت ۱۰ پاسخ نمایش داده می‌شود؛ نمره سایر جلسات طبق زمان‌بندی آن‌ها منتشر می‌شود.</p><div id="obQuizProfileContents">در حال دریافت سوابق…</div></section>';
 }
 async function refreshProfile(){
  const t=document.getElementById("obQuizProfileContents");if(!t)return;
@@ -111,6 +111,6 @@ async function schedule(){
 }
 document.addEventListener("submit",e=>{const form=e.target;if(form?.id!=="quizFinalForm")return;e.preventDefault();submit(form)});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-quiz-action]");if(b?.dataset.quizAction==="schedule")schedule()});
-document.addEventListener("change",e=>{if(e.target?.id==="quizTeacherSession"){teacherSession=Number(e.target.value);drawTeacher();refreshRoster()}});
+document.addEventListener("change",e=>{if(e.target?.id==="quizTeacherSession"){teacherSession=Number(e.target.value);drawTeacher();refreshRoster()}if(e.target?.matches?.("#quizFinalForm input[type=radio]")){const form=e.target.closest("#quizFinalForm");const count=Array.from({length:10},(_,i)=>form.querySelector('input[name="q'+i+'"]:checked')).filter(Boolean).length;const progress=form.querySelector("#quizCompletion"),btn=form.querySelector(".quiz-submit");if(progress)progress.textContent=digits(count)+" از ۱۰ سؤال پاسخ داده شده است."+(count===10?" آماده ثبت نهایی.":"");if(btn)btn.disabled=count!==10}});
 window.OB_QUIZ={studentHTML,refreshStudent,profileHTML,refreshProfile,teacherHTML,refreshTeacher};
 })();
