@@ -92,7 +92,7 @@ async function refreshTeacherPreview(session){
 
 function teacherHTML(){
  return '<section class="quiz-teacher" id="obQuizTeacher"><div class="quiz-portal-header"><div><span class="quiz-eyebrow">Instructor Assessment Console</span><h2>آزمون‌های ۲۴ساعته پایان جلسه</h2><p>انتشار زمان پایان کلاس، مشاهده پاسخ‌ها و پرونده ارزیابی دانشجویان</p></div></div>'+
- '<div class="quiz-admin-panel"><label>انتخاب جلسه<select id="quizTeacherSession">'+Array.from({length:16},(_,i)=>'<option value="'+(i+1)+'">جلسه '+digits(i+1)+'</option>').join("")+'</select></label>'+
+ '<div class="quiz-admin-panel"><label>انتخاب جلسه<select id="quizTeacherSession">'+Array.from({length:16},(_,i)=>'<option value="'+(i+1)+'" '+(teacherSession===i+1?'selected':'')+'>جلسه '+digits(i+1)+'</option>').join("")+'</select></label>'+
  '<label>تاریخ و ساعت پایان واقعی کلاس<input id="quizClassEnd" type="datetime-local"></label>'+
  '<button type="button" class="quiz-submit" data-quiz-action="schedule">فعال‌سازی آزمون برای ۲۴ ساعت پس از پایان کلاس</button><p id="quizTeacherNote" role="status"></p></div>'+
  '<div id="quizTeacherStatus">در حال دریافت وضعیت بانک سؤالات و آزمون‌ها…</div>'+
@@ -136,5 +136,6 @@ async function schedule(){
 document.addEventListener("submit",e=>{const form=e.target;if(form?.id!=="quizFinalForm")return;e.preventDefault();submit(form)});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-quiz-action]");if(b?.dataset.quizAction==="schedule")schedule()});
 document.addEventListener("change",e=>{if(e.target?.id==="quizTeacherSession"){teacherSession=Number(e.target.value);drawTeacher();const preview=document.getElementById("quizTeacherPreview");if(preview){preview.dataset.quizTeacherPreview=String(teacherSession);preview.innerHTML="در حال دریافت آزمون این جلسه…"}refreshRoster();refreshTeacherPreview(teacherSession)}if(e.target?.matches?.("#quizFinalForm input[type=radio]")){const form=e.target.closest("#quizFinalForm");const count=Array.from({length:10},(_,i)=>form.querySelector('input[name="q'+i+'"]:checked')).filter(Boolean).length;const progress=form.querySelector("#quizCompletion"),btn=form.querySelector(".quiz-submit");if(progress)progress.textContent=digits(count)+" از ۱۰ سؤال پاسخ داده شده است."+(count===10?" آماده ثبت نهایی.":"");if(btn)btn.disabled=count!==10}});
-window.OB_QUIZ={studentHTML,refreshStudent,profileHTML,refreshProfile,teacherHTML,refreshTeacher,refreshTeacherPreview};
+function setTeacherSession(session){const n=Number(session);if(Number.isInteger(n)&&n>=1&&n<=16)teacherSession=n}
+window.OB_QUIZ={studentHTML,refreshStudent,profileHTML,refreshProfile,teacherHTML,refreshTeacher,refreshTeacherPreview,setTeacherSession};
 })();
