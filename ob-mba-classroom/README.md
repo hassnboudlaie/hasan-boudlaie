@@ -10,6 +10,14 @@ Independent GitHub Pages PWA in the main HB Hub repository.
 - Standalone PWA manifest and scope-limited service worker.
 - Indexed under HB Hub and the applications catalog.
 
+
+## Session-level additional resources — November 2026
+- All 16 sessions now support a dedicated **منابع تکمیلی | Additional Resources** learning section with contextual notes linked to specific class topics.
+- The instructor-side session editor includes a seventh section for resource management. A separate form supports adding, editing, and deleting books, journal articles, videos, podcasts and web links; URL is optional for books and restricted to HTTP(S).
+- **Session 2 ships with an official, publicly versioned reference:** Armin Trost (2019), “Don't change Culture by changing the Culture” (4:43), https://www.youtube.com/watch?v=ceud2z_HziU. This supplements the attitude–behavior relationship, including how organizational conditions and changed behavior can precede attitude change. Cross-reference to session 15 culture.
+- Shareable deep link after approved sign-in: `?session=2&tab=resources`. Instructor sees management view; students and approved guests see published resources.
+- **Publishing limitation:** Teacher-created resource edits inside the existing classroom editor still persist *only to that device's browser*. They are not shared with other devices/students automatically. To distribute new items to everyone, commit them to the published course content or implement a properly authenticated central content backend. This avoids falsely implying live shared resource publishing.
+
 ## Guest access — November 2026
 
 The entrance provides a Guest role with two fields (first name and family name), no guest code or invitation. Submission creates a server-backed pending request on the visitor device; the authenticated instructor can approve, reject or revoke access from the attendance dashboard, across devices. Only approved guests can preview published educational content; they cannot submit official attendance, access student grades or private submissions, or use instructor tools. Guest sessions expire after 30 days. Requests are rate-limited and legacy guest-code records are retained only for historical compatibility.
