@@ -20,3 +20,4 @@ jobs:
           node-version: '22'
       - run: node --check ob-mba-classroom/app.js
       - run: node scripts/verify-ob-classroom-ux.cjs
+      - run: node scripts/verify-ob-impeccable.cjs

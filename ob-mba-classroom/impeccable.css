@@ -1,0 +1,98 @@
+/* Allameh OB MBA — Impeccable accessibility and typography layer.
+   Scoped improvements only; does not touch course, access or scoring state.
+   Font source: Vazirmatn (SIL OFL 1.1), locally hosted in this repository. */
+@font-face{
+  font-family:"Vazirmatn";
+  src:url("./assets/fonts/Vazirmatn.woff2") format("woff2");
+  font-weight:100 900;
+  font-style:normal;
+  font-display:swap;
+}
+:root{
+  --ob-font:"Vazirmatn","Noto Sans Arabic",Tahoma,Arial,sans-serif;
+  --ob-focus:#be934d;
+  --ob-motion:180ms;
+}
+html{font-family:var(--ob-font);scroll-padding-top:100px}
+body,button,input,select,textarea,summary,option{font-family:var(--ob-font)}
+body{font-feature-settings:"ss01" 1;overflow-wrap:break-word}
+button,input,select,textarea{font-size:inherit}
+button,summary,a,input,select,textarea{ -webkit-tap-highlight-color:rgba(16,98,85,.12)}
+:where(a,button,summary,input,textarea,select,[tabindex]):focus-visible{
+  outline:3px solid var(--ob-focus);
+  outline-offset:3px;
+  border-radius:4px;
+}
+::selection{background:#bfe2d2;color:#143d3b}
+#main:focus{outline:none}
+#main:focus-visible{outline:3px solid var(--ob-focus);outline-offset:4px}
+#app,.page,.card,.gr-stage,.lesson-panel,.quiz-question{min-width:0}
+#app :is(p,li,h2,h3,h4,strong,summary,button,label){overflow-wrap:anywhere}
+#app :is(p,li,.gr-part,.lesson-line){line-height:1.85}
+#app :is(h2,h3,h4){font-weight:850;line-height:1.5}
+#app p:not(.resource-original-title){text-wrap:pretty}
+#app :is(.gr-stage-tab,.gr-next,.gr-prev,.btn,.tab,.role-tab,.lesson-track){min-height:44px}
+#app :is(.gr-stage-tab,.gr-next,.gr-prev,.btn,.tab,.lesson-track):focus-visible{
+  outline-color:var(--ob-focus);outline-offset:3px
+}
+#app :is(.lesson-answer-form textarea,.field textarea,.case-review-form textarea){
+  width:100%;max-width:100%;font-size:max(18px,1rem);line-height:1.85
+}
+#app input,#app select,#app textarea{min-width:0}
+#app :is(.lesson-panel,.disclosure,.session-section)>summary{min-height:48px}
+#app .gr-step-rail{scrollbar-gutter:stable;max-width:100%}
+#app .gr-step-navigation{flex-wrap:wrap}
+#app .gr-header h3{hyphens:none}
+#app .resource-cover img{height:auto;aspect-ratio:3 / 4;max-height:265px;object-fit:contain}
+.context-nav{scroll-margin-top:10px}
+.context-location{font-size:16px;min-width:0}
+.bottom-nav button{min-height:48px}
+.entrance-root,.entrance-card,.entrance-form,.entrance-form input,
+.entrance-tabs button,.entrance-primary,.entrance-secondary{font-family:var(--ob-font)}
+.entrance-tabs button{font-size:clamp(17px,3.9vw,21px);font-weight:850;line-height:1.45}
+.entrance-form input{font-size:21px;line-height:1.65}
+.entrance-root :is(button,input):focus-visible{outline-color:var(--ob-focus)}
+.attendance-main,.attendance-header,.install-shell{min-width:0}
+.attendance-main :is(h1,h2,h3,p,label,button),.install-shell :is(h1,h2,p,button){
+ overflow-wrap:anywhere
+}
+.attendance-main .roster-table{font-variant-numeric:tabular-nums}
+.attendance-main .table-scroll{max-width:100%;overscroll-behavior-inline:contain}
+.attendance-main .field input,.attendance-main .field textarea{min-width:0}
+@media(max-width:700px){
+  .site{padding-inline:clamp(9px,3vw,16px);padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+  .mast{padding:15px;gap:10px;min-width:0}
+  .brand{gap:11px;min-width:0}
+  .brand-copy{min-width:0}
+  .brand-copy h1{font-size:clamp(19px,5vw,23px)}
+  .brand-emblem{width:50px;height:50px;flex:0 0 50px;font-size:20px}
+  .header-actions{gap:6px;flex-shrink:0}
+  .context-nav{position:sticky;top:4px}
+  .context-location{max-width:30%;font-size:14px}
+  #app .page{gap:16px}
+  #app .page-head{gap:11px}
+  #app .page-head h2{font-size:clamp(23px,6vw,28px)}
+  #app .gr-shell{padding:clamp(14px,4vw,22px)}
+  #app .gr-header{padding:clamp(17px,4vw,24px)}
+  #app .gr-stage .gr-part p{font-size:max(18px,1rem)}
+  #app .quiz-question legend{font-size:20px}
+  .entrance-card{padding:clamp(18px,4vw,25px)}
+  .entrance-tabs button{min-height:48px}
+}
+@media(max-width:390px){
+  .mast{padding:12px 10px}
+  .brand{gap:8px}
+  .brand-emblem{width:43px;height:43px;flex-basis:43px;border-radius:11px;font-size:17px}
+  .brand-copy .eyebrow{font-size:11px}
+  .header-actions .icon-btn{padding:7px;min-width:44px}
+  .context-nav{gap:6px;padding:7px}
+  .context-nav button{padding-inline:9px}
+  .context-location{display:none}
+  #app .card{padding:clamp(14px,4vw,18px)}
+  #app .gr-step-navigation button{flex:1 1 100px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .gr-meter>span{transition:none}
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
