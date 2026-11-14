@@ -67,12 +67,36 @@ async function refreshProfile(){
  '<div class="quiz-profile-row"><span>جلسه '+digits(a.session)+'<small> · ثبت: '+date(a.submitted_at)+'</small></span><strong>'+(a.score!=null?digits(a.score)+' / ۲۰':'در انتظار پایان مهلت')+'</strong></div>').join("")+'</div>':'<p>هنوز آزمون پایان جلسه‌ای ثبت نکرده‌اید.</p>'}
  catch(e){if(t.isConnected)t.textContent=error(e)}
 }
+
+let previewCache=new Map();
+function previewMarkup(data){
+ const n=Number(data?.question_count||0),rows=Array.isArray(data?.questions)?data.questions:[];
+ if(!n)return '<p class="quiz-locked">برای این جلسه هنوز بانک آزمون تأییدشده ثبت نشده است. پس از تکمیل پاورپوینت جلسه، بانک ۱۰ سؤال طراحی می‌شود.</p>';
+ return '<div class="quiz-preview-heading"><strong>پیش‌نمایش آزمون جلسه '+digits(data.session)+' · '+digits(n)+' سؤال از ۱۰</strong><small>فقط مدرس؛ کلید پاسخ و توضیح علمی برای دانشجو پیش از ثبت نهایی نمایش داده نمی‌شوند.</small></div>'+
+ '<div class="quiz-preview-list">'+rows.map(q=>'<details class="quiz-preview-question"><summary><strong>سؤال '+digits(q.no)+'</strong> '+safe(q.text)+'</summary><div class="quiz-preview-options">'+q.options.map((option,j)=>
+ '<p class="quiz-preview-option '+(j===q.correct_index?'is-correct':'')+'"><strong>'+["الف","ب","ج","د"][j]+'.</strong> '+safe(option)+(j===q.correct_index?' <span class="quiz-preview-key">پاسخ صحیح</span>':'')+'</p>').join("")+
+ '</div><div class="quiz-preview-explanation"><strong>پاسخنامه تشریحی:</strong> '+safe(q.explanation)+'</div></details>').join("")+'</div>';
+}
+async function refreshTeacherPreview(session){
+ const nodes=[...document.querySelectorAll('[data-quiz-teacher-preview="'+Number(session)+'"]')];
+ if(!nodes.length||window.OB_ACCESS?.role!=="teacher")return;
+ nodes.forEach(node=>{if(!previewCache.has(session))node.innerHTML='<p class="quiz-preview-loading">در حال دریافت آزمون ۱۰سؤالی از سامانه امن مدرس…</p>'});
+ try{
+  let preview=previewCache.get(session);
+  if(!preview){preview=await request("teacherPreview",{session});previewCache.set(session,preview)}
+  for(const node of nodes)if(node.isConnected)node.innerHTML=previewMarkup(preview);
+ }catch(e){
+  for(const node of nodes)if(node.isConnected)node.innerHTML='<p class="quiz-error">'+safe(error(e))+'</p>';
+ }
+}
+
 function teacherHTML(){
  return '<section class="quiz-teacher" id="obQuizTeacher"><div class="quiz-portal-header"><div><span class="quiz-eyebrow">Instructor Assessment Console</span><h2>آزمون‌های ۲۴ساعته پایان جلسه</h2><p>انتشار زمان پایان کلاس، مشاهده پاسخ‌ها و پرونده ارزیابی دانشجویان</p></div></div>'+
  '<div class="quiz-admin-panel"><label>انتخاب جلسه<select id="quizTeacherSession">'+Array.from({length:16},(_,i)=>'<option value="'+(i+1)+'">جلسه '+digits(i+1)+'</option>').join("")+'</select></label>'+
  '<label>تاریخ و ساعت پایان واقعی کلاس<input id="quizClassEnd" type="datetime-local"></label>'+
  '<button type="button" class="quiz-submit" data-quiz-action="schedule">فعال‌سازی آزمون برای ۲۴ ساعت پس از پایان کلاس</button><p id="quizTeacherNote" role="status"></p></div>'+
  '<div id="quizTeacherStatus">در حال دریافت وضعیت بانک سؤالات و آزمون‌ها…</div>'+
+ '<section class="quiz-teacher-bank"><h3>پیش‌نمایش کامل آزمون و کلید پاسخ — مخصوص مدرس</h3><div id="quizTeacherPreview" data-quiz-teacher-preview="1">در حال دریافت سؤالات…</div></section>'+
  '<h3>پاسخ‌ها و ارزیابی دانشجویان</h3><div id="quizTeacherRoster">ابتدا جلسه را انتخاب کنید.</div></section>';
 }
 function drawTeacher(){
@@ -87,7 +111,7 @@ function drawTeacher(){
 }
 async function refreshTeacher(){
  if(!document.getElementById("obQuizTeacher"))return;
- try{teacherStatus=await request("teacherStatus");drawTeacher();await refreshRoster()}
+ try{teacherStatus=await request("teacherStatus");drawTeacher();await Promise.all([refreshRoster(),refreshTeacherPreview(teacherSession)])}
  catch(e){const t=document.getElementById("quizTeacherStatus");if(t)t.textContent=error(e)}
 }
 async function refreshRoster(){
@@ -111,6 +135,6 @@ async function schedule(){
 }
 document.addEventListener("submit",e=>{const form=e.target;if(form?.id!=="quizFinalForm")return;e.preventDefault();submit(form)});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-quiz-action]");if(b?.dataset.quizAction==="schedule")schedule()});
-document.addEventListener("change",e=>{if(e.target?.id==="quizTeacherSession"){teacherSession=Number(e.target.value);drawTeacher();refreshRoster()}if(e.target?.matches?.("#quizFinalForm input[type=radio]")){const form=e.target.closest("#quizFinalForm");const count=Array.from({length:10},(_,i)=>form.querySelector('input[name="q'+i+'"]:checked')).filter(Boolean).length;const progress=form.querySelector("#quizCompletion"),btn=form.querySelector(".quiz-submit");if(progress)progress.textContent=digits(count)+" از ۱۰ سؤال پاسخ داده شده است."+(count===10?" آماده ثبت نهایی.":"");if(btn)btn.disabled=count!==10}});
-window.OB_QUIZ={studentHTML,refreshStudent,profileHTML,refreshProfile,teacherHTML,refreshTeacher};
+document.addEventListener("change",e=>{if(e.target?.id==="quizTeacherSession"){teacherSession=Number(e.target.value);drawTeacher();const preview=document.getElementById("quizTeacherPreview");if(preview){preview.dataset.quizTeacherPreview=String(teacherSession);preview.innerHTML="در حال دریافت آزمون این جلسه…"}refreshRoster();refreshTeacherPreview(teacherSession)}if(e.target?.matches?.("#quizFinalForm input[type=radio]")){const form=e.target.closest("#quizFinalForm");const count=Array.from({length:10},(_,i)=>form.querySelector('input[name="q'+i+'"]:checked')).filter(Boolean).length;const progress=form.querySelector("#quizCompletion"),btn=form.querySelector(".quiz-submit");if(progress)progress.textContent=digits(count)+" از ۱۰ سؤال پاسخ داده شده است."+(count===10?" آماده ثبت نهایی.":"");if(btn)btn.disabled=count!==10}});
+window.OB_QUIZ={studentHTML,refreshStudent,profileHTML,refreshProfile,teacherHTML,refreshTeacher,refreshTeacherPreview};
 })();
