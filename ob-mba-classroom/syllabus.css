@@ -1,0 +1,87 @@
+/* MBA course syllabus — high-contrast, RTL responsive page */
+.sy-page{max-width:1100px;margin-inline:auto;gap:23px;text-align:right}
+.sy-page [dir=ltr]{unicode-bidi:isolate;text-align:left}
+.sy-hero{background:linear-gradient(135deg,#172b46 0%,#214b61 65%,#1d6b68 100%);color:#fff;border-radius:25px;padding:clamp(22px,4vw,43px);border:1px solid #597a8b;display:grid;gap:14px}
+.sy-eyebrow{font-size:16px;font-weight:800;color:#eacb96}
+.sy-hero h2{font-size:clamp(27px,4.4vw,39px);font-weight:900;line-height:1.55;color:#fff}
+.sy-en-title{font-size:clamp(15px,2vw,19px);color:#e2eaf0;line-height:1.5;direction:ltr;justify-self:start}
+.sy-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-block:12px}
+.sy-metrics>div{padding:14px;border:1px solid #78949e;border-radius:16px;background:#ffffff17;display:grid;gap:1px;min-width:0}
+.sy-metrics strong{font-size:clamp(28px,4vw,39px);font-weight:900;line-height:1.3;color:#fff}
+.sy-metrics span{font-size:clamp(14px,1.7vw,18px);font-weight:700;color:#e9eef3}
+.sy-hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.sy-hero-actions .btn{min-height:47px}
+.sy-block{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,3vw,28px);display:grid;gap:21px;box-shadow:var(--shadow)}
+.sy-section-head{display:grid;gap:5px}
+.sy-section-head h3{font-size:clamp(23px,3vw,29px);font-weight:900;line-height:1.5}
+.sy-section-head p{font-size:17px;color:var(--muted)}
+.sy-label{color:var(--ok);font-size:14px;letter-spacing:.04em;font-weight:900;direction:ltr;justify-self:start}
+.sy-outcomes{list-style:persian;display:grid;gap:12px;margin:0;padding:0 27px 0 0}
+.sy-outcomes li{font-size:18px;line-height:1.85;padding:6px 8px;font-weight:600}
+.sy-group{display:grid;gap:0;border-radius:19px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}
+.sy-group+.sy-group{margin-top:10px}
+.sy-group-head{background:var(--soft);padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.sy-group-head h4{font-size:clamp(20px,2.7vw,26px);line-height:1.45;margin:4px 0;font-weight:900}
+.sy-group-head [lang=en]{font-size:14px;color:var(--muted);display:block}
+.sy-group-kicker{font-size:14px;font-weight:800;color:var(--ok)}
+.sy-group-meta{font-size:15px;text-align:center;font-weight:800;white-space:nowrap;display:grid;gap:2px}
+.sy-group-meta small{font-size:14px;color:var(--muted)}
+.sy-accordion{padding:9px;display:grid;gap:8px}
+.sy-session{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sy-session[open]{border-color:var(--gold)}
+.sy-session summary{cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 14px;min-height:76px;list-style:none}
+.sy-session summary::-webkit-details-marker{display:none}
+.sy-session summary:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+.sy-session summary:after{content:"⌄";font-size:23px;font-weight:900;color:var(--muted);margin-inline-start:3px;transition:transform .2s}
+.sy-session[open] summary:after{transform:rotate(180deg)}
+.sy-number{width:48px;height:48px;flex:none;background:var(--navy);color:#fff;border-radius:13px;display:grid;place-items:center;font-size:21px;font-weight:900}
+.sy-session-name{flex:1;min-width:0;display:grid;gap:3px}
+.sy-session-name strong{font-size:clamp(18px,2.3vw,21px);line-height:1.6;font-weight:900;color:var(--text)}
+.sy-session-name [lang=en]{font-size:14px;line-height:1.5;color:var(--muted);direction:ltr;justify-self:start;max-width:100%}
+.sy-session-hours{color:var(--muted);font-size:14px;font-weight:800;white-space:nowrap}
+.sy-session-body{border-top:1px solid var(--line);padding:20px 23px;display:grid;gap:19px}
+.sy-session-body h4{font-size:18px;font-weight:900;margin:0 0 5px}
+.sy-session-body p{font-size:17px;line-height:1.85;margin:0}
+.sy-activity{background:var(--soft);padding:15px 17px;border-radius:13px;border-right:4px solid var(--gold)}
+.sy-activity strong{font-size:17px}
+.sy-methods{display:grid;gap:17px}
+.sy-method{display:grid;grid-template-columns:1fr auto;gap:5px 15px;align-items:center}
+.sy-method>div:first-child{display:grid;gap:3px}
+.sy-method strong{font-size:19px}
+.sy-method small{font-size:13px;color:var(--muted)}
+.sy-method b{font-size:18px;white-space:nowrap}
+.sy-meter{grid-column:1/-1;height:10px;background:var(--soft);border-radius:20px;overflow:hidden}
+.sy-meter>span{display:block;height:100%;background:linear-gradient(90deg,#bd985d,#206f6d);border-radius:20px}
+.sy-assess{display:grid;gap:0;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.sy-assess>div{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:18px}
+.sy-assess>div:last-child{border:0}
+.sy-assess strong{font-size:20px;white-space:nowrap}
+.sy-assess-total{background:var(--soft);font-weight:900}
+.sy-readings{display:grid;gap:14px}
+.sy-readings>div{border:1px solid var(--line);border-radius:13px;padding:15px;display:grid;gap:7px}
+.sy-readings strong{font-size:18px}
+.sy-readings p{font-size:16px;line-height:1.8;overflow-wrap:anywhere}
+.sy-note{font-size:16px;line-height:1.85;color:var(--muted)}
+.sy-home-link{border:1px solid var(--line);border-radius:17px;background:var(--panel);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.sy-home-link strong{font-size:clamp(20px,2.5vw,24px);display:block;font-weight:900}
+.sy-home-link p{font-size:16px;color:var(--muted);margin-top:2px}
+.sy-home-link button{flex:none}
+.sy-inline-action{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media(max-width:650px){
+.sy-hero{padding:22px 18px;border-radius:20px}
+.sy-metrics{gap:7px}
+.sy-metrics>div{padding:11px 7px}
+.sy-metrics span{font-size:13px}
+.sy-hero-actions .btn{flex:1}
+.sy-block{padding:17px 13px}
+.sy-group-head{padding:17px 12px}
+.sy-group-meta{font-size:13px}
+.sy-session summary{gap:9px;padding:13px 9px}
+.sy-number{width:40px;height:44px;font-size:19px}
+.sy-session-hours{display:none}
+.sy-session-body{padding:17px 13px}
+.sy-home-link{padding:15px;align-items:stretch;flex-direction:column}
+.sy-home-link button{width:100%}
+.sy-readings p{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){.sy-session summary:after{transition:none}}
