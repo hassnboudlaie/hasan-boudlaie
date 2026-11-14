@@ -132,7 +132,9 @@ async function runCase(item,index){
      page.once('dialog',async d=>{assert.equal(d.type(),'prompt');await d.accept('شخص دوم')});
      await page.locator('details.header-menu summary').click();
      await page.locator('#newWorkspace').click();
-     assert.equal(await page.locator('#businessName').inputValue(),'','New project still has old data');
+     assert.equal(await page.locator('#businessName').inputValue(),'شخص دوم','New project should use the name supplied in the creation prompt');
+     assert.equal(await page.locator('#ownerName').inputValue(),'','Previous project owner carried over');
+     assert.equal(await page.locator('#workspaceSelect option').count(),2,'The original model must remain available as a separate workspace');
      test('ساخت مدل دوم مستقل بدون انتقال اطلاعات نفر اول',true);
      page.on('dialog',async d=>{await d.accept()});
      await page.locator('#importFile').setInputFiles(backupPath);
