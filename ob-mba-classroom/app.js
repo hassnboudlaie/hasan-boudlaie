@@ -107,9 +107,9 @@ const guidedPanel=(s,x,mode)=>{
  return window.OB_GUIDED?.render({enrichment:x,mode,work:w,index,lessonId:s.id})||"";
 };
 const guidedActivity=(s,x)=>{
- const modes=[["group","تمرین گروهی"],["roleplay","نقش‌آفرینی"],["quiz","آزمون"]];
+ const modes=[["group","تمرین گروهی"],["roleplay","نقش‌آفرینی"],["quiz",s.id===1?"آزمون نهایی ۱۰سؤالی":"آزمون"]];
  return '<div class="gr-mode-switch" role="group" aria-label="نوع فعالیت">'+modes.map(([value,label])=>'<button type="button" data-action="guidedMode" data-mode="'+value+'" aria-pressed="'+(ui.activityMode===value)+'" class="'+(ui.activityMode===value?'active':'')+'">'+label+'</button>').join("")+'</div>'+
- (ui.activityMode==="quiz"?quizPanel(s):guidedPanel(s,x,ui.activityMode));
+ (ui.activityMode==="quiz"?(s.id===1?(window.OB_QUIZ?.studentHTML(s.id)||'<p>سامانه آزمون در حال بارگذاری است.</p>'):quizPanel(s)):guidedPanel(s,x,ui.activityMode));
 };
 
 
@@ -275,7 +275,7 @@ function navRender(){
  const items=ui.role==="student"?(isGuest()?[["home","خانه"],["sessions","جلسات"]]:[["home","خانه"],["sessions","جلسات"],["live","حضور"],["results","عملکرد"]]):[["home","خانه"],["sessions","جلسات"],["attendance","حضور"],["grades","نمرات"]];
  nav.innerHTML=items.map(([id,label])=>'<button data-action="'+(["live","attendance"].includes(id)?"liveAttendance":"navigate")+'" data-page="'+id+'" class="'+(ui.page===id||ui.page==="session"&&id==="sessions"||ui.page==="edit"&&id==="sessions"?"active":"")+'" aria-label="'+label+'"><span class="nav-icon" aria-hidden="true">'+navIcon(id)+'</span>'+label+'</button>').join("");
 }
-function render(){if(isGuest()&&["live","results"].includes(ui.page))ui.page="home";if(!window.OB_ACCESS?.approved){app.innerHTML="";nav.innerHTML="";return}const summary=document.querySelector("#roleSummary");if(summary)summary.textContent=(ui.role==="student"?"دانشجو":ui.role==="teacher"?"مدرس":"پروژکتور");rolebar.querySelectorAll("[data-role]").forEach(b=>{const active=b.dataset.role===ui.role;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});app.innerHTML=ui.role==="student"?(ui.page==="syllabus"?syllabusRender():ui.page==="sessions"?sessionsStudent():ui.page==="session"?sessionStudent():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():ui.page==="live"?liveStudent():ui.page==="results"?performanceStudent():ui.page==="feedback"?feedbackStudent():homeStudent()):ui.role==="teacher"?teacherRender():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():projectRender();navRender();if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&ui.tab==="case")window.OB_CASE?.refreshStudent(ui.session);if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&ui.tab==="finalQuiz")window.OB_QUIZ?.refreshStudent(ui.session);if(ui.role==="student"&&!isGuest()&&ui.page==="results")window.OB_QUIZ?.refreshProfile();if(ui.role==="teacher"&&ui.page==="quizAdmin")window.OB_QUIZ?.refreshTeacher();if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&["case","reflection"].includes(ui.tab))window.OB_ASSIGNMENTS?.refreshStudent(ui.session);if(ui.role==="teacher"&&ui.page==="caseReviews"){window.OB_CASE?.refreshTeacher();window.OB_ASSIGNMENTS?.refreshTeacher()}editorBaseline=editorSignature()}
+function render(){if(isGuest()&&["live","results"].includes(ui.page))ui.page="home";if(!window.OB_ACCESS?.approved){app.innerHTML="";nav.innerHTML="";return}const summary=document.querySelector("#roleSummary");if(summary)summary.textContent=(ui.role==="student"?"دانشجو":ui.role==="teacher"?"مدرس":"پروژکتور");rolebar.querySelectorAll("[data-role]").forEach(b=>{const active=b.dataset.role===ui.role;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});app.innerHTML=ui.role==="student"?(ui.page==="syllabus"?syllabusRender():ui.page==="sessions"?sessionsStudent():ui.page==="session"?sessionStudent():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():ui.page==="live"?liveStudent():ui.page==="results"?performanceStudent():ui.page==="feedback"?feedbackStudent():homeStudent()):ui.role==="teacher"?teacherRender():ui.page==="presentation"?presentationPage():ui.page==="original"?originalEnglishPage():projectRender();navRender();if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&ui.tab==="case")window.OB_CASE?.refreshStudent(ui.session);if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&(ui.tab==="finalQuiz"||(ui.session===1&&ui.tab==="activity"&&ui.activityMode==="quiz")))window.OB_QUIZ?.refreshStudent(ui.session);if(ui.role==="student"&&!isGuest()&&ui.page==="results")window.OB_QUIZ?.refreshProfile();if(ui.role==="teacher"&&ui.page==="quizAdmin")window.OB_QUIZ?.refreshTeacher();if(ui.role==="student"&&!isGuest()&&ui.page==="session"&&["case","reflection"].includes(ui.tab))window.OB_ASSIGNMENTS?.refreshStudent(ui.session);if(ui.role==="teacher"&&ui.page==="caseReviews"){window.OB_CASE?.refreshTeacher();window.OB_ASSIGNMENTS?.refreshTeacher()}editorBaseline=editorSignature()}
 function navigate(page){
  if(!page||isGuest()&&["live","results"].includes(page))return;
  if(page===ui.page){window.scrollTo({top:0,behavior:"instant"});return}
@@ -408,7 +408,7 @@ document.addEventListener("change",event=>{
 render();
 /* These modules are loaded only after the approved access-gate has loaded app.js.
    Keep supplementary case and quiz code out of the unauthenticated shell. */
-const addons=["./session-case-choices.js?v=1","./case-export.js?v=1","./quiz-portal.js?v=1"];
+const addons=["./session-case-choices.js?v=1","./case-export.js?v=1","./quiz-portal.js?v=2"];
 function attachAddon(src){
  return new Promise((resolve,reject)=>{
   const element=document.createElement("script");element.src=src;element.async=false;
