@@ -334,7 +334,7 @@ root.addEventListener("input",function(e){
  if(e.target.matches('input[name="ljDecision"],#ljPractice,#ljRating'))saveDraft();
 });
 root.addEventListener("change",function(e){if(e.target.matches('input[name="ljDecision"],#ljPractice,#ljRating'))saveDraft()});
-window.addEventListener("hashchange",function(){if(active())render()});
+window.addEventListener("hashchange",function(){if(active())render();else closeModal()});
 window.addEventListener("storage",function(e){if(e.key===KEY){state=load();if(active())render();else updatePassport()}});
 var topbar=document.querySelector('.topbar');
 if(topbar&&window.ResizeObserver){new ResizeObserver(function(){root.style.setProperty('--lj-topbar-height',topbar.getBoundingClientRect().height+'px')}).observe(topbar)}

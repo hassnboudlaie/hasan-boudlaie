@@ -107,7 +107,7 @@ sel.dataset.boundToBase='yes';var valid=function(id){return Array.from(sel.optio
 }
 function setModelNavOpen(open,restoreFocus){
  var button=E("modelNavToggle"),scrim=E("modelNavScrim");
- var modal=!!open && !(window.matchMedia&&window.matchMedia&&window.matchMedia("(min-width:1460px)").matches);
+ var modal=!!open && !(window.matchMedia&&window.matchMedia("(min-width:1460px)").matches);
  [E("main"),document.querySelector(".topbar"),document.querySelector(".saba-tabbar")].forEach(function(el){if(el)el.inert=modal;});
  E("modelSideNav").setAttribute("role",modal?"dialog":"complementary");
  if(modal)E("modelSideNav").setAttribute("aria-modal","true");else E("modelSideNav").removeAttribute("aria-modal");

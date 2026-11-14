@@ -33,3 +33,7 @@ Existing source suites cover curriculum, chapters, context, roles, drills, coach
 ## Limitations
 
 Browser-local data and timing remain user-editable; this is not tamper-proof assessment or cross-device sync. Coaching remains clearly labelled rule-guided support, not an integrated language model. Physical iPhone/Android, screen-reader audit and participant usability research require manual follow-up. Automated checks cannot certify WCAG. No independent psychometric validation or full source-book re-audit performed.
+
+## First browser evidence / correction pass
+
+Run 43623544449 passed the existing full ten-stage Chromium suite. New gate 43623544590 completed all 44 browser states in both Chromium/WebKit, with no horizontal overflow; it correctly failed on progress-label/pending-badge contrast and one desktop WebKit target obscured by the sticky bottom navigation. Reviewed mobile Home and desktop first-session screenshots. Correction: retain opacity on pending-badge text, darken descriptive text, move desktop navigation into the header flow instead of overlaying lesson buttons. This failed run is retained as audit evidence; rerun required.
