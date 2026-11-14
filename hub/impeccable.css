@@ -1,5 +1,5 @@
 /* HB Hub Impeccable layer. Scoped to the launcher, never child application pages. */
-@font-face{font-family:"Vazirmatn";src:url("../ob-mba-classroom/assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Vazirmatn";src:url("../assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 html[lang="fa"] body,html[lang="fa"] :where(button,input,select,textarea){font-family:"Vazirmatn",Tahoma,Arial,sans-serif}
 html{scroll-padding-top:100px}body{overflow-wrap:break-word}
 :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #d2a568;outline-offset:3px}

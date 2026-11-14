@@ -11,7 +11,7 @@ const CORE=['index.html','manifest.webmanifest','favicon.svg','icon-192.png','ic
   'assets/kish-strategy-map-20261025.js','assets/kish-strategy-map-20261025.css',
   'assets/kish-team-dashboard-20261025.js','assets/kish-team-dashboard-20261025.css',
   'assets/okr-visual-upgrade-20261023.css','assets/kish-ai-strategy-coach-preview.js','assets/kish-ai-strategy-coach-preview.css'];
-const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../ob-mba-classroom/assets/fonts/Vazirmatn.woff2'];
+const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../assets/fonts/Vazirmatn.woff2'];
 const HB_PATHS=new Set(HB_EXTRA.map(p=>new URL(p,self.registration.scope).pathname));
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE)

@@ -1,7 +1,7 @@
 /* HB ecosystem — Impeccable presentation layer (2026-11-14).
    No authentication, data storage, product routes or business logic changes.
    Locally hosted Vazirmatn: SIL OFL 1.1. */
-@font-face{font-family:"Vazirmatn";src:url("./ob-mba-classroom/assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Vazirmatn";src:url("./assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 html[data-hb-impeccable="1"]{--hb-im-focus:#bc8947;scroll-padding-top:88px}
 html[data-hb-impeccable="1"] :is(body,button,input,select,textarea,summary){font-family:"Vazirmatn",Tahoma,Arial,sans-serif!important}
 html[data-hb-impeccable="1"] :where(code,pre,kbd,samp){font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important}

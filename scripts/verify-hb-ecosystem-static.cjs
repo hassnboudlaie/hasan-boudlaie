@@ -11,7 +11,7 @@ const serviceWorkers=["okr-system","okr-service","business-model-canvas","small-
 "trm-workspace","clinic-customer-app","rf-holding","life-organization","my-finance"];
 const shared=read("hb-impeccable-shared.css");
 assert.match(shared,/ob-mba-classroom\/assets\/fonts\/Vazirmatn\.woff2/);
-assert.ok(fs.statSync(path.join(ROOT,"ob-mba-classroom/assets/fonts/Vazirmatn.woff2")).size>100000);
+assert.ok(fs.statSync(path.join(ROOT,"assets/fonts/Vazirmatn.woff2")).size>100000);
 for(const entry of targets){
  const html=read(entry);
  assert.match(html,/data-hb-impeccable="1"/,entry+" missing design opt-in");
@@ -47,6 +47,6 @@ for(const excluded of ["ob-mba-classroom/index.html","sabanaft/app/index.html",
 }
 const hubSw=read("hub/sw.js");
 for(const asset of ["../experience.css?v=2.0","../experience.js?v=2.0",
-"./impeccable.css?v=20261114","../ob-mba-classroom/assets/fonts/Vazirmatn.woff2"])
+"./impeccable.css?v=20261114","../assets/fonts/Vazirmatn.woff2"])
  assert.ok(hubSw.includes(asset),"Hub offline cache missing "+asset);
 console.log("PASS: 21 app links, 5 groups, 10 local app entrypoints, 9 offline shells, protected exclusions.");
