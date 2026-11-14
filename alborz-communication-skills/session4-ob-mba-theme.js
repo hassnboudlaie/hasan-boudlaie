@@ -8,6 +8,20 @@ if(typeof original!=="function")return;
 
 const techniqueEmojis=["🎯","🔎","🎙️","⏱️","👁️","🧭"];
 const groupEmojis=["🤝","👔","🧑‍💻","💬","🧩","🏛️"];
+// Short, observable practice prompts — drawn from the six actual techniques.
+const microPractices=[
+ "در ۳۰ ثانیه یک پیام درباره نقص مدارک بسازید: مسئله چیست، چرا مهم است و گام بعد با چه کسی است؟",
+ "عبارت «پرونده در گردش است» را به جمله‌ای روشن با وضعیت فعلی و اقدام بعدی تبدیل کنید؛ قول نتیجه ندهید.",
+ "به کارشناس درباره خطای احتمالی ثبت بازخورد بدهید: صدای متوسط، لحن جدی و بدون نسبت‌دادن خطای تأییدنشده.",
+ "از همکار یک سؤال روشن بپرسید؛ سه ثانیه مکث کنید و بدون قطع‌کردن کلام او پاسخ را بشنوید.",
+ "هنگام شنیدن گلایه نماینده، رو به مخاطب بنشینید و فاصله راحت و نگاه طبیعی را تمرین کنید.",
+ "به تیم فرصت پرسش بدهید؛ پس از دعوت به سؤال واقعاً مکث کنید و یک اقدام پیگیری قابل انجام نام ببرید."
+];
+const practiceKey="alborz-s4-micropractices-v1";
+let practiced=new Set();
+function readPractices(){try{const a=JSON.parse(sessionStorage.getItem(practiceKey)||"[]");practiced=new Set(Array.isArray(a)?a.filter(v=>Number.isInteger(v)&&v>=0&&v<6):[]);}catch(_){practiced=new Set();}}
+function savePractices(){try{sessionStorage.setItem(practiceKey,JSON.stringify([...practiced]));}catch(_){}}
+const persianNumber=n=>String(n).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d]);
 const subtitles={
  home:["جلسه چهارم","فن بیان مدیریتی، لحن و زبان بدن","یادگیری را از یکی از سه مسیر زیر آغاز کنید."],
  techniques:["گام ۱ از ۳","شش تکنیک بیان حرفه‌ای","برای مطالعه تعریف، مثال و خطای رایج روی هر تکنیک بزنید."],
@@ -26,7 +40,7 @@ const el=(tag,cls,html)=>{const node=document.createElement(tag);if(cls)node.cla
 function loadTheme(){
  if(document.getElementById("s4-ob-mba-theme-css"))return;
  const link=el("link");link.id="s4-ob-mba-theme-css";link.rel="stylesheet";
- link.href="session4-ob-mba-theme.css?v=20261112-s4-v3";
+ link.href="session4-ob-mba-theme.css?v=20261114-impeccable-r1";
  document.head.appendChild(link);
 }
 function buildHome(){
@@ -52,7 +66,7 @@ function buildHome(){
  }
  if(!wrap.querySelector(".s4-screen-head")){
   const head=el("header","s4-screen-head");
-  head.innerHTML='<div class="s4-screen-banner"><div class="s4-screen-mark" id="s4-screen-emoji" aria-hidden="true">📘</div><div class="s4-screen-copy"><span id="s4-screen-step">گام ۱ از ۳</span><h2 id="s4-screen-title">شش تکنیک</h2><p id="s4-screen-description"></p></div></div><button type="button" class="s4-screen-back" data-s4-back>↩ بازگشت</button>';
+  head.innerHTML='<div class="s4-screen-banner"><div class="s4-screen-mark" id="s4-screen-emoji" aria-hidden="true">📘</div><div class="s4-screen-copy"><span id="s4-screen-step">گام ۱ از ۳</span><h2 id="s4-screen-title" tabindex="-1">شش تکنیک</h2><p id="s4-screen-description"></p></div></div><button type="button" class="s4-screen-back" data-s4-back>↩ بازگشت</button>';
   nav.insertAdjacentElement("afterend",head);
  }
  if(!wrap.querySelector(".s4-page-flip")){
@@ -125,6 +139,15 @@ function showTechnologyPager(){
  const old=detail.querySelector(".s4-tech-flipper");if(old)old.remove();
  const pager=el("nav","s4-tech-flipper");pager.setAttribute("aria-label","ورق زدن تکنیک‌ها");
  pager.innerHTML='<button type="button" data-s4-tech-flip="'+(techIndex-1)+'" '+(techIndex===0?"disabled":"")+'>→ تکنیک قبل</button><span>📖 تکنیک '+String(techIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+' از ۶</span><button type="button" data-s4-tech-flip="'+(techIndex+1)+'" '+(techIndex===5?"disabled":"")+'>تکنیک بعد ←</button>';
+ // A single doable challenge makes each technique active rather than a reading-only card.
+ detail.querySelector(".s4-tech-challenge")?.remove();
+ const challenge=el("section","s4-tech-challenge");
+ const done=practiced.has(techIndex);
+ challenge.innerHTML='<h4>تمرین ۳۰ ثانیه‌ای</h4><p>'+microPractices[techIndex]+'</p>'+
+  '<button type="button" data-s4-practiced="'+techIndex+'" aria-pressed="'+done+'">'+
+  (done?'✓ تمرین انجام شد؛ اصلاح وضعیت':'تمرین کردم؛ ثبت پیشرفت')+'</button>'+
+  '<span class="s4-tech-progress" role="status">'+persianNumber(practiced.size)+' از ۶ تمرین ثبت شده</span>';
+ detail.appendChild(challenge);
  detail.appendChild(pager);
 }
 function showCasePager(){
@@ -134,6 +157,22 @@ function showCasePager(){
  const box=el("div","s4-case-pagination");
  const current=work.querySelector(".s4-tabs button.active");
  const step=Number(current?.dataset.s4Step||0);
+ // Make the observer checklist actionable on the actual feedback step.
+ if(step===3){
+  const checklist=work.querySelector(".s4-behavior-check");
+  if(checklist&&!checklist.querySelector('input[type="checkbox"]')){
+   checklist.querySelectorAll("li").forEach((item,i)=>{
+    const text=item.textContent.trim();item.textContent="";
+    const label=el("label","s4-observation-option");
+    const input=el("input");input.type="checkbox";input.dataset.s4Observe=String(i);
+    label.appendChild(input);label.appendChild(document.createTextNode(text));item.appendChild(label);
+   });
+   const feedback=el("p","s4-observation-progress","۰ از ۳ رفتار مشاهده شد");
+   feedback.setAttribute("role","status");checklist.appendChild(feedback);
+  }
+  const nextCase=work.querySelector("[data-s4-nextcase]");
+  if(nextCase&&caseIndex===11)nextCase.textContent="پایان رول‌پلی‌ها · ورود به آزمون ←";
+ }
  box.innerHTML='<button type="button" data-s4-stepback '+(step===0?'disabled':'')+'>→ مرحله قبل</button><span>🎭 مرحله '+String(step+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+' از ۴</span><button type="button" data-s4-open="group">فهرست کیس‌ها</button>';
  work.querySelector(".s4-actions")?.insertAdjacentElement("beforebegin",box);
 }
@@ -193,11 +232,16 @@ function renderView(view,options={}){
   if(next){
    const navNames={techniques:"شروع مطالعه ←",technique:techIndex===5?"ورود به تمرین‌ها ←":"تکنیک بعد ←",practice:"مشاهده گروه اول ←",group:groupIndex===5?"آزمون پایانی ←":"گروه بعد ←",case:"کیس بعد ←",exam:"پایان مسیر",guide:"بازگشت به خانه"};
    next.textContent=navNames[view]||"صفحه بعد ←";
-   next.disabled=view==="exam";
+   if(view==="exam")next.textContent="بازگشت به خانه ←";
+   next.disabled=false;
   }
  }
  $$(".s4-mobile-nav [data-s4-open]").forEach(btn=>btn.classList.toggle("active",btn.dataset.s4Open===view));
- if(options.scroll!==false)window.scrollTo?.({top:0,behavior:"instant"});
+ if(options.scroll!==false){
+  window.scrollTo?.({top:0,behavior:"instant"});
+  // Focus the new page title so keyboard and assistive-technology users hear the transition.
+  if(view!=="home")requestAnimationFrame(()=>$("#s4-screen-title")?.focus({preventScroll:true}));
+ }
 }
 function openTechnique(n){
  if(n<0||n>5)return;
@@ -232,11 +276,12 @@ function goForward(){
  if(currentView==="practice"){renderView("group",{groupIndex:0});return;}
  if(currentView==="group"){if(groupIndex<5)renderView("group",{groupIndex:groupIndex+1});else renderView("exam");return;}
  if(currentView==="case"){if(caseIndex<11)openCase(caseIndex+1);else renderView("exam");return;}
- if(currentView==="guide")renderView("home");
+ if(currentView==="guide"||currentView==="exam")renderView("home");
 }
 function start(){
  const wrap=$(".s4-root .wrap");
  if(!wrap)return;
+ readPractices();
  loadTheme();
  buildHome();
  decorateTechniques();
@@ -249,6 +294,14 @@ document.addEventListener("click",ev=>{
  if(!$(".s4-root"))return;
  const b=ev.target.closest?.("button,a");
  if(!b)return;
+ if(b.matches("[data-s4-practiced]")){
+  const id=Number(b.dataset.s4Practiced);
+  if(Number.isInteger(id)&&id>=0&&id<6){
+   if(practiced.has(id))practiced.delete(id);else practiced.add(id);
+   savePractices();showTechnologyPager();
+  }
+  return;
+ }
  if(b.matches("[data-s4-open]")){
   ev.preventDefault();
   const route=b.dataset.s4Open;
@@ -278,9 +331,17 @@ document.addEventListener("click",ev=>{
  }
  if(b.matches("[data-s4-nextcase]")){
   const n=caseIndex;
-  if(n>=11){renderView("practice");return;}
+  if(n>=11){renderView("exam");return;}
   caseIndex=n+1;renderView("case",{caseIndex,groupIndex:Math.floor(caseIndex/2)});return;
  }
  if(b.matches("[data-s4-close]")){renderView("group");return;}
+});
+document.addEventListener("change",ev=>{
+ const input=ev.target;
+ if(!input?.matches?.("#s4-focus [data-s4-observe]"))return;
+ const panel=input.closest(".s4-behavior-check");
+ const completed=panel?.querySelectorAll('input[data-s4-observe]:checked').length||0;
+ const status=panel?.querySelector(".s4-observation-progress");
+ if(status)status.textContent=persianNumber(completed)+" از ۳ رفتار مشاهده شد"+(completed===3?" · آماده جمع‌بندی با همکار":"");
 });
 })();
