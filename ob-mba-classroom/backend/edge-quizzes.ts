@@ -84,6 +84,14 @@ async function route(body:Record<string,unknown>){
   if(error){if(error.code==="23505")return fail("already_submitted",409);throw Error("attempt_save_failed")}
   return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:session===1?"ثبت نهایی شد. نمره قطعی و پاسخنامه تشریحی هم‌اکنون قابل مشاهده است.":"ثبت نهایی شد. پاسخنامه تحلیلی پس از پایان مهلت آزمون قابل مشاهده است."});
  }
+ if(action==="teacherPreview"){
+  // Only authenticated instructors can see the answer key and analytic rationale.
+  if(u.role!=="teacher")return fail("teacher_only",403);
+  const questions=await bank(session);
+  return reply({ok:true,session,question_count:questions.length,
+   questions:questions.map(q=>({no:q.question_no,text:q.prompt,options:q.options,
+    correct_index:q.correct_index,explanation:q.explanation}))});
+ }
  if(action==="list"){
   if(u.role!=="teacher")return fail("teacher_only",403);
   const [a,students,questions]=await Promise.all([
