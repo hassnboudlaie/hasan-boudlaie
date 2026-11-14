@@ -1,6 +1,6 @@
 /* Robbins chapters 1–2: revised case-aligned examples, assignments and assessment questions. */
 window.OB_COURSE_CONTENT={
-  "version": 6,
+  "version": 7,
   "sessions": [
     {
       "id": 1,
@@ -434,5 +434,27 @@ window.OB_COURSE_CONTENT={
    note:"فایل ارائه‌شده توسط مدرس، خلاصه ۲۹ صفحه‌ای است و نسخه کامل کتاب رابینز نیست. فهرست آن موضوعات استخدام، انگیزش، رهبری، ارتباطات، گروه‌ها، تعارض، طراحی شغل، ارزیابی عملکرد و تغییر را پوشش می‌دهد.",
    prompt:"از میان حقایق مطرح‌شده، یک ادعای مدیریتی را انتخاب کنید؛ برای ارزیابی آن چه شواهدی لازم است؟",
    accessNote:"این خلاصه ۲۹ صفحه‌ای برای مطالعه و دانلود مستقیم در اپلیکیشن کلاس قرار گرفته است؛ فایل اصلی با فرمت PDF و بدون تغییر محتوای صفحات ارائه می‌شود."
+ });
+})();
+
+
+/* Session 2 — instructor-provided supplementary 41-slide PowerPoint, Perception. */
+(function(){
+ const second=window.OB_COURSE_CONTENT.sessions.find(x=>x.id===2);
+ if(!second)return;
+ if(!Array.isArray(second.resources))second.resources=[];
+ second.resources.push({
+   id:"perception-session-02-pptx",
+   type:"presentation",
+   title:"ادراک (Perception) — اسلایدهای تکمیلی",
+   sourceEnTitle:"Perception | Advanced Organizational Behavior",
+   downloadUrl:"https://hassnboudlaie.github.io/hasan-boudlaie/ob-mba-classroom/materials/readings/perception-session-02.pptx",
+   fileType:"PowerPoint (.pptx)",
+   slides:41,
+   fileSize:"۲٫۷۶ مگابایت",
+   topic:"جلسه دوم | ادراک (Perception)، فرایندهای شناختی، ادراک اجتماعی و سوگیری‌های ادراکی",
+   note:"فایل اصلی ۴۱ اسلایدی ارائه‌شده توسط مدرس، شامل تعریف و فرایند ادراک، محرک‌ها و عوامل ادراک اجتماعی، سازمان‌دهی ادراکی، خطاهای شناختی و ادراکی در تصمیم‌گیری، اثر هاله‌ای، کلیشه‌سازی، فرافکنی، اثر پیگمالیون، مدیریت تصویرسازی و راهکارهایی مانند پنجره جوهری و همدلی است. اسلایدها بدون تغییر محتوا برای دریافت مستقیم قرار داده شده‌اند.",
+   prompt:"دو مدیر، رفتار یکسان کارمند را متفاوت تفسیر می‌کنند. چه عواملی در فرایند ادراک و کدام سوگیری‌های شناختی ممکن است این تفاوت را توضیح دهند؟",
+   accessNote:"فایل قابل دانلود با فرمت PowerPoint است؛ ۴۱ اسلاید آموزشی و تصاویر موجود در نسخه اصلی حفظ شده‌اند."
  });
 })();
