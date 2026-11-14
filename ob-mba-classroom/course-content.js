@@ -1,6 +1,6 @@
 /* Robbins chapters 1–2: revised case-aligned examples, assignments and assessment questions. */
 window.OB_COURSE_CONTENT={
-  "version": 3,
+  "version": 4,
   "sessions": [
     {
       "id": 1,
@@ -373,5 +373,28 @@ window.OB_COURSE_CONTENT={
    prompt:"پرسش بحث: آیا تغییر رفتار می‌تواند مقدم بر تغییر نگرش باشد؟ برای پاسخ، یک مثال از سازمان و نقش نظام پاداش یا ساختار کار ارائه کنید.",
    duration:"۴:۴۳",
    relatedSession:15
+ }];
+})();
+
+
+/* Published academic recommendation with verified original and translated cover images. */
+(function(){
+ const first=window.OB_COURSE_CONTENT.sessions.find(s=>s.id===1);
+ if(!first)return;
+ first.resources=[{
+   id:"denhardt-persian-translation-1401",
+   type:"book",
+   title:"مدیریت رفتار سازمانی در سازمان‌های دولتی و غیرانتفاعی — جلد اول: سطح فردی",
+   author:"رابرت بی. دنهارت، جانت وی. دنهارت، ماریا پی. اریستوگوئتا و کلی سی. راولینگ | ترجمه: حسن بودلایی، محمدحسین کناررودی و محمدمهدی رنجبرفردوئی | انتشارات نگرش مدیران (۱۴۰۱)",
+   url:"https://www.sagepub.com/shop/buy-a-book/managing-human-behavior-in-public-and-nonprofit-organizations-5-257430",
+   urlFa:"https://www.linkedin.com/posts/mohammad-mahdi-ranjbar-fordoei-742784154_%DA%A9%D8%AA%D8%A7%D8%A8-%D9%85%D8%AF%DB%8C%D8%B1%DB%8C%D8%AA-%D8%B1%D9%81%D8%AA%D8%A7%D8%B1-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86%DB%8C-%D8%AF%D8%B1-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86-%D9%87%D8%A7%DB%8C-%D8%AF%D9%88%D9%84%D8%AA%DB%8C-activity-7044650110139420672-w2iz",
+   coverFa:"./materials/book-covers/denhardt-persian-cover.jpg",
+   coverEn:"./materials/book-covers/denhardt-original-cover.jpg",
+   sourceEnTitle:"Managing Human Behavior in Public and Nonprofit Organizations (5th ed.)",
+   topic:"جلسه اول | مبانی و رویکردهای رفتار سازمانی، رفتار فردی در بستر سازمان و کاربرد نظریه در مدیریت",
+   note:"ترجمه فارسی جلد اول بر سطح فردی تمرکز دارد. نسخه اصلی دنهارت و همکاران رفتار کارکنان، تصمیم‌گیری، انگیزش و مدیریت فرد در سازمان‌های دولتی و غیرانتفاعی را با کیس‌ها و تمرین‌های عملی پیوند می‌دهد. این کتاب به‌عنوان منبع تکمیلی، دیدگاه بخشی و مقایسه‌ای به مباحث عمومی MBA اضافه می‌کند.",
+   prompt:"پرسش کلاسی: کدام عوامل محیط سازمان دولتی یا غیرانتفاعی می‌توانند رابطه نگرش، رفتار و عملکرد کارکنان را متفاوت از یک شرکت خصوصی شکل دهند؟",
+   publisher:"نگرش مدیران",
+   pubYear:"۱۴۰۱"
  }];
 })();
