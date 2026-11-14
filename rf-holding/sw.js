@@ -1,6 +1,6 @@
 const CACHE="rf-holding-shell-v5-impeccable-20261114";
 const ASSETS=["./","./index.html","./style.css?v=20261111.10","./kish-theme.css?v=20261111.10","./i18n.js?v=20261111.10","./app.js?v=20261111.10","./icon.svg","./manifest.webmanifest"];
-const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../ob-mba-classroom/assets/fonts/Vazirmatn.woff2'];
+const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../assets/fonts/Vazirmatn.woff2'];
 const HB_PATHS=new Set(HB_EXTRA.map(p=>new URL(p,self.registration.scope).pathname));
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll([...ASSETS,...HB_EXTRA])).then(()=>self.skipWaiting())));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("rf-holding-shell-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

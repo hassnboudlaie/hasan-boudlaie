@@ -250,7 +250,7 @@ function moveStep(delta){
  $('.page.active')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function renderDashboard(){const filled=completedBlocks(),count=countAnswers(),total=totalQuestions();$('#dashboardBlocks').textContent=filled+' از ۹';$('#dashboardQuestions').textContent=count+' از '+total;$('#dashboardEvidence').textContent='';$('#progressBar').style.width=(100*count/Math.max(total,1))+'%';$('#stepProgress').textContent=filled+'/۹';$('#projectStage').textContent=({idea:'مرحله ایده',testing:'آزمون بازار',running:'کسب‌وکار فعال',growing:'مرحله رشد'})[state.profile.stage]||'شناخت اولیه';$('#welcomeTitle').textContent=state.profile.businessName?('مدل کسب‌وکار «'+state.profile.businessName+'»') :'بوم کسب‌وکار من'}
+function renderDashboard(){const filled=completedBlocks(),count=countAnswers(),total=totalQuestions();$('#dashboardBlocks').textContent=filled+' از ۹';$('#dashboardQuestions').textContent=count+' از '+total;$('#dashboardEvidence').textContent='';const completedPct=Math.max(0,Math.min(100,Math.round(100*count/Math.max(total,1))));$('#progressBar').style.width=completedPct+'%';document.querySelector('.dashboard-progress')?.setAttribute('aria-valuenow',String(completedPct));$('#stepProgress').textContent=filled+'/۹';$('#projectStage').textContent=({idea:'مرحله ایده',testing:'آزمون بازار',running:'کسب‌وکار فعال',growing:'مرحله رشد'})[state.profile.stage]||'شناخت اولیه';$('#welcomeTitle').textContent=state.profile.businessName?('مدل کسب‌وکار «'+state.profile.businessName+'»') :'بوم کسب‌وکار من'}
 let canvasEditingId=null;
 function renderCanvas(){
  for(const block of BLOCKS){

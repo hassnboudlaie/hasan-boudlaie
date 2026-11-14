@@ -1,5 +1,5 @@
 /* HB Hub Impeccable layer. Scoped to the launcher, never child application pages. */
-@font-face{font-family:"Vazirmatn";src:url("../ob-mba-classroom/assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Vazirmatn";src:url("../assets/fonts/Vazirmatn.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 html[lang="fa"] body,html[lang="fa"] :where(button,input,select,textarea){font-family:"Vazirmatn",Tahoma,Arial,sans-serif}
 html{scroll-padding-top:100px}body{overflow-wrap:break-word}
 :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #d2a568;outline-offset:3px}
@@ -55,3 +55,37 @@ html{scroll-padding-top:100px}body{overflow-wrap:break-word}
  .super-directory{gap:26px}
 }
 @media(prefers-reduced-motion:reduce){.super-app-link{transition:none}.super-app-link:hover{transform:none}}
+
+/* Deep audit: directory recovery, real search icon and mobile keyboard navigation. */
+.super-search-icon{display:grid;place-items:center;pointer-events:none;line-height:0}
+.super-search-icon svg{width:22px;height:22px}
+.super-no-results{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+.super-no-results p{margin:0;max-width:55ch;line-height:1.8}
+.super-reset{font:inherit;font-weight:700;font-size:.92rem;color:#fff;background:#123c35;border:1px solid #123c35;border-radius:12px;min-height:44px;padding:10px 16px}
+.super-reset:hover{background:#1f604f;border-color:#1f604f}
+.menu-toggle svg{grid-area:1/1;place-self:center}
+.menu-toggle .hub-close-icon{display:none}
+.menu-toggle[aria-expanded="true"] .hub-menu-icon{display:none}
+.menu-toggle[aria-expanded="true"] .hub-close-icon{display:block}
+@media(max-width:630px){.super-no-results{align-items:stretch}.super-reset{width:100%}}
+@media(forced-colors:active){.super-app-link,.super-search input,.super-filters button,.super-reset{border:1px solid CanvasText}}
+
+/* 320px browser finding: no off-screen-only filter chips on touch widths. */
+@media(max-width:630px){
+ .super-filters{flex-wrap:wrap;overflow:visible;scroll-snap-type:none;max-width:100%;padding:0;gap:8px}
+ .super-filters button{flex:0 1 auto;white-space:normal;max-width:100%;min-height:44px;font-size:.86rem;line-height:1.45;text-align:center}
+}
+
+/* Responsive root-cause hardening: compact sticky header inside 320px devices. */
+@media(max-width:630px){
+ .topbar .nav-wrap{gap:7px;min-width:0}
+ .topbar .brand{flex:1 1 0;min-width:0;gap:8px}
+ .topbar .brand-mark{width:36px;height:36px;flex:0 0 36px;border-radius:11px}
+ .topbar .brand-info{min-width:0;overflow:hidden}
+ .topbar .brand-info strong{display:block;min-width:0;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .topbar .brand-info small{display:none}
+ .topbar .header-actions{flex:none;min-width:0;gap:5px}
+ .topbar .lang-toggle button{padding:6px 7px;font-size:.72rem}
+ .topbar .menu-toggle{width:44px;height:44px;flex:none}
+ .hub-card,.super-controls,.super-directory{min-width:0}
+}

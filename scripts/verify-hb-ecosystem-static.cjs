@@ -10,8 +10,8 @@ const targets=[
 const serviceWorkers=["okr-system","okr-service","business-model-canvas","small-business",
 "trm-workspace","clinic-customer-app","rf-holding","life-organization","my-finance"];
 const shared=read("hb-impeccable-shared.css");
-assert.match(shared,/ob-mba-classroom\/assets\/fonts\/Vazirmatn\.woff2/);
-assert.ok(fs.statSync(path.join(ROOT,"ob-mba-classroom/assets/fonts/Vazirmatn.woff2")).size>100000);
+assert.match(shared,/assets\/fonts\/Vazirmatn\.woff2/);
+assert.ok(fs.statSync(path.join(ROOT,"assets/fonts/Vazirmatn.woff2")).size>100000);
 for(const entry of targets){
  const html=read(entry);
  assert.match(html,/data-hb-impeccable="1"/,entry+" missing design opt-in");
@@ -23,11 +23,24 @@ for(const dir of serviceWorkers){
  assert.ok(sw.includes("hb-impeccable-shared.css?v=20261114"),dir+" missing CSS precache");
  assert.ok(sw.includes("Vazirmatn.woff2"),dir+" missing font precache");
 }
+const bmcHtml=read("business-model-canvas/studio.html");
+const bmcJs=read("business-model-canvas/studio.js");
+assert.match(bmcHtml,/class="progress dashboard-progress" role="progressbar"/,"BMC progress semantics missing");
+assert.match(bmcHtml,/studio\.js\?v=12/,"BMC fresh script version missing");
+assert.match(bmcJs,/setAttribute\('aria-valuenow'/,"BMC accessible progress should follow actual data");
 const clinic=read("clinic-customer-app/sw.js");
 assert.match(clinic,/keys\.filter\(k=>k\.startsWith\(PREFIX\)&&k!==CACHE\)/,"Unsafe cross-app CacheStorage deletion");
 const hub=read("hub/index.html");
 assert.match(hub,/impeccable\.css\?v=20261114/);
 assert.match(hub,/superResultCount/);
+assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
+assert.match(hub,/catalog\.js\?v=4/,"Hub must load deep-audit search");
+const search=read("hub/catalog.js");
+for(const token of ["normalize('NFKC')","replace(/[يى]/g","replace(/ك/g","superReset","menu-toggle","Escape"])
+ assert.ok(search.includes(token),"Hub search/navigation regression: "+token);
+const parastoo=read("ba-parastoo/index.html");
+for(const token of ['id="mobileNavToggle"','id="mobileNav"','class="skip-link"','modalReturnFocus','setMobileNav'])
+ assert.ok(parastoo.includes(token),"Ba Parastoo mobile/focus flow missing "+token);
 const links=[...hub.matchAll(/<a class="super-app-link" href="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(links.length,21,"HB Hub must preserve all 21 entries");
 assert.equal(new Set(links).size,21,"Hub has duplicate entries");
@@ -47,6 +60,6 @@ for(const excluded of ["ob-mba-classroom/index.html","sabanaft/app/index.html",
 }
 const hubSw=read("hub/sw.js");
 for(const asset of ["../experience.css?v=2.0","../experience.js?v=2.0",
-"./impeccable.css?v=20261114","../ob-mba-classroom/assets/fonts/Vazirmatn.woff2"])
+"./impeccable.css?v=20261114","../assets/fonts/Vazirmatn.woff2"])
  assert.ok(hubSw.includes(asset),"Hub offline cache missing "+asset);
 console.log("PASS: 21 app links, 5 groups, 10 local app entrypoints, 9 offline shells, protected exclusions.");

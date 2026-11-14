@@ -1,7 +1,7 @@
 /* Dedicated TRM Workspace offline shell. Never caches candidate records. */
 const CACHE='hb-trm-workspace-v12-impeccable-20261114';
 const ASSETS=['./','./index.html','./style.css?v=4.0.0','./decision-engine.js?v=3.2.1','./agent-config.js?v=4.0.0','./firebase-free-client.js?v=4.0.0','./cloud-agent-client.js?v=4.0.0','./app.js?v=4.1.1','./single-hire.js?v=4.1.0','./trost-book-workflows.js?v=4.1.1','./trost-upgrade.css?v=4.1.1','./icon.svg?v=trm-logo-20261103','./icon-192.png?v=trm-logo-20261103','./icon-512.png?v=trm-logo-20261103'];
-const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../ob-mba-classroom/assets/fonts/Vazirmatn.woff2'];
+const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../assets/fonts/Vazirmatn.woff2'];
 const HB_PATHS=new Set(HB_EXTRA.map(p=>new URL(p,self.registration.scope).pathname));
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll([...ASSETS,...HB_EXTRA])).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('hb-trm-workspace-')&&k!==CACHE).map(k=>caches.delete(k)))),self.clients.claim()]));});

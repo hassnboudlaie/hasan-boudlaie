@@ -2,7 +2,7 @@
 const PREFIX="clinic-customer-app-",CACHE=PREFIX+"v3-impeccable-20261114";
 const SCOPE=new URL(self.registration.scope);
 const ASSETS=["./","./index.html","./app.css?v=2","./app.js?v=2","./manifest.webmanifest?v=2","./icon-192.svg","./icon-512.svg",
-"../hb-impeccable-shared.css?v=20261114","../ob-mba-classroom/assets/fonts/Vazirmatn.woff2"];
+"../hb-impeccable-shared.css?v=20261114","../assets/fonts/Vazirmatn.woff2"];
 const ALLOWED=new Set(ASSETS.map(x=>new URL(x,SCOPE).pathname));
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS.map(x=>new URL(x,SCOPE).href))).then(()=>self.skipWaiting())));
 self.addEventListener("activate",e=>e.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))),self.clients.claim()])));

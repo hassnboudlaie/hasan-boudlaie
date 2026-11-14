@@ -3,7 +3,7 @@ const CACHE='hb-small-business-independent-v3-impeccable-20261114';
 const PREFIX='hb-small-business-independent-';
 const FILES=['./','./index.html','./style.css','./steps.js','./app.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./install.html','./pwa-install.js'];
 const BASE=new URL('./',self.registration.scope);
-const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../ob-mba-classroom/assets/fonts/Vazirmatn.woff2'];
+const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../assets/fonts/Vazirmatn.woff2'];
 const HB_PATHS=new Set(HB_EXTRA.map(p=>new URL(p,self.registration.scope).pathname));
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(c=>c.addAll([...FILES,...HB_EXTRA].map(f=>new URL(f,BASE).href))).then(()=>self.skipWaiting()));
