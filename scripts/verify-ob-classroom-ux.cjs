@@ -126,7 +126,7 @@ assert.equal(guideHolder.OB_GUIDED.stepsOf(firstSource,'concepts',{}).length,7,'
 assert.equal(guideHolder.OB_GUIDED.stepsOf(firstSource,'examples',{}).length,3,'All 3 examples accessible');
 assert.ok(guideHolder.OB_GUIDED.stepsOf(firstSource,'case',{}).length>=5,'Case split into source, decision, analysis and close');
 assert.ok(guideHolder.OB_GUIDED.stepsOf(firstSource,'reflection',{}).every(v=>(v.body.match(/<textarea/g)||[]).length<=2),'At most two workbook prompts per page');
-const fakeWindow={scrollTo(){},addEventListener(){},OB_CASE:{teacherHTML:()=>'<section id="caseTeacherRoot">ارزیابی تحلیل کیس‌ها</section>',refreshTeacher(){},refreshStudent(){},studentStatusMarkup:()=>''},OB_ACCESS:{approved:true,role:"student"},OB_COURSE_CONTENT:publicCourse.OB_COURSE_CONTENT,OB_LESSON_ENRICHMENT:publicCourse.OB_LESSON_ENRICHMENT,OB_GUIDED:guideHolder.OB_GUIDED};
+const fakeWindow={scrollTo(){},addEventListener(){},OB_CASE:{teacherHTML:()=>'<section id="caseTeacherRoot">ارزیابی تحلیل کیس‌ها</section>',refreshTeacher(){},refreshStudent(){},studentStatusMarkup:()=>''},OB_ACCESS:{approved:true,role:"student"},OB_COURSE_CONTENT:publicCourse.OB_COURSE_CONTENT,OB_LESSON_ENRICHMENT:publicCourse.OB_LESSON_ENRICHMENT,OB_GUIDED:guideHolder.OB_GUIDED,OB_QUIZ:{studentHTML:(id)=>'<section id="quizPortal">آزمون پایانی جلسه '+id+'</section>',refreshStudent(){},profileHTML(){return ''},refreshProfile(){},teacherHTML(){return ''},refreshTeacher(){}}};
 new Function('window','document','Image',presenterJs)(fakeWindow,{getElementById(){return null}},function(){this.src=''});
 new Function('document','localStorage','window','crypto','setTimeout','clearTimeout',js)(doc,storage,fakeWindow,{getRandomValues(a){a[0]=54321}},()=>{},()=>{});
 assert.ok(app.innerHTML.includes('سایر امکانات کلاس'),'Student home uses progressive disclosure');
@@ -192,9 +192,8 @@ assert.ok(app.innerHTML.includes('تمرین گروهی'),'Group practice is ava
 click('guidedMode',{mode:'roleplay'});
 assert.ok(app.innerHTML.includes('نقش‌آفرینی'),'Role-play is available from activity switcher');
 click('guidedMode',{mode:'quiz'});
-assert.ok(app.innerHTML.includes('آزمون جلسه'),'Quiz available in session 1');
-click('answerLessonQuiz',{index:'1'});
-assert.ok(app.innerHTML.includes('پاسخ درست'),'Quiz answer shows explanatory feedback');
+assert.ok(app.innerHTML.includes('آزمون پایانی جلسه 1'),'Official centrally scored 10-question quiz is accessible from session 1 activity');
+assert.ok(!app.innerHTML.includes('پاسخ درست'),'Session 1 assessment does not reveal answers before final submission');
 click('navigate',{page:'sessions'});
 click('openSession',{id:'2'});
 click('setTrack',{track:'practice'});
