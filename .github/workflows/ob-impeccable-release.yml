@@ -1,0 +1,68 @@
+name: OB MBA Impeccable A11y and Production QA
+on:
+  pull_request:
+    paths:
+      - 'ob-mba-classroom/**'
+      - 'scripts/verify-ob-impeccable-browser.cjs'
+      - '.github/workflows/ob-impeccable-release.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ob-mba-classroom/**'
+      - 'scripts/verify-ob-impeccable-browser.cjs'
+      - '.github/workflows/ob-impeccable-release.yml'
+permissions:
+  contents: read
+jobs:
+  browsers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser accessibility toolchain
+        run: npm install --no-save playwright @axe-core/playwright
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Test font, focus, RTL, responsive and axe
+        run: node scripts/verify-ob-impeccable-browser.cjs
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ob-impeccable-evidence
+          path: qa-artifacts/ob-impeccable/*.png
+          if-no-files-found: ignore
+  production:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: browsers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check actual GitHub Pages asset bytes and font availability
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://hassnboudlaie.github.io/hasan-boudlaie/ob-mba-classroom"
+          matched=0
+          for attempt in $(seq 1 24); do
+            if curl -fsSL --max-time 20 "$base/index.html" -o /tmp/ob-index.html &&
+               curl -fsSL --max-time 20 "$base/impeccable.css" -o /tmp/ob-impeccable.css &&
+               curl -fsSL --max-time 20 "$base/assets/fonts/Vazirmatn.woff2" -o /tmp/ob-vazirmatn.woff2 &&
+               curl -fsSL --max-time 20 "$base/sw.js" -o /tmp/ob-sw.js &&
+               curl -fsSL --max-time 20 "$base/attendance.html" -o /tmp/ob-attendance.html &&
+               cmp -s ob-mba-classroom/index.html /tmp/ob-index.html &&
+               cmp -s ob-mba-classroom/impeccable.css /tmp/ob-impeccable.css &&
+               cmp -s ob-mba-classroom/assets/fonts/Vazirmatn.woff2 /tmp/ob-vazirmatn.woff2 &&
+               cmp -s ob-mba-classroom/sw.js /tmp/ob-sw.js &&
+               cmp -s ob-mba-classroom/attendance.html /tmp/ob-attendance.html; then
+              matched=1
+              echo "Production bytes match checkout for index, CSS, WOFF2, SW and attendance."
+              break
+            fi
+            sleep 12
+          done
+          test "$matched" -eq 1 || { echo "::error::Published assets did not match this checkout"; exit 1; }
