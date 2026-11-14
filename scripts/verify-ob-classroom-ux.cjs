@@ -195,9 +195,11 @@ doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker
 assert.ok(app.innerHTML.includes('تمرین گروهی'),'Group practice is available');
 click('guidedMode',{mode:'roleplay'});
 assert.ok(app.innerHTML.includes('نقش‌آفرینی'),'Role-play is available from activity switcher');
-click('guidedMode',{mode:'quiz'});
-assert.ok(app.innerHTML.includes('آزمون پایانی جلسه 1'),'Official centrally scored 10-question quiz is accessible from session 1 activity');
-assert.ok(!app.innerHTML.includes('پاسخ درست'),'Session 1 assessment does not reveal answers before final submission');
+assert.ok(!app.innerHTML.includes('آزمون نهایی ۱۰سؤالی'),'Group activity no longer duplicates the official assessment');
+fakeWindow.OB_QUIZ={studentHTML:session=>'<section class="quiz-portal">آزمون پایانی جلسه '+session+'</section>'};
+doc.listeners.change({target:{matches:x=>x==='[data-action="sessionPicker"]',value:'finalQuiz'}});
+assert.ok(app.innerHTML.includes('آزمون پایانی جلسه 1'),'Student sees official 10-question quiz only in dedicated assessment tab');
+assert.ok(!app.innerHTML.includes('پاسخ صحیح'),'Student assessment tab does not reveal the answer key');
 click('navigate',{page:'sessions'});
 click('openSession',{id:'2'});
 click('setTrack',{track:'practice'});
