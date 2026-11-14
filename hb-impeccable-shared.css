@@ -28,3 +28,27 @@ html[data-hb-impeccable="1"][data-hb-app="life-organization"] .nav-link{font-siz
  html[data-hb-impeccable="1"]{scroll-behavior:auto}
  html[data-hb-impeccable="1"] :where(*,::before,::after){transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+/* 2026-11-14 deep-audit: targeted contrast and legibility repairs.
+   Evidence: axe-core WCAG 2.x serious findings on the 390px entry screens.
+   App-specific selectors preserve each product's own visual palette. */
+html[data-hb-app="okr-system"] .kish-auth-brand small{color:#315069!important;font-size:13px;line-height:1.6}
+html[data-hb-app="okr-system"] #kishAuthForm > label{color:#193851!important;opacity:1!important;font-size:15px}
+html[data-hb-app="okr-service"] .title-cluster .eyebrow{color:#235361!important;font-size:13px;letter-spacing:.02em}
+html[data-hb-app="okr-service"] .metric-label,
+html[data-hb-app="okr-service"] .metric-hint{color:#3c5463!important;font-size:13px}
+html[data-hb-app="business-model-canvas"] .specialized-summary-sub{color:#3e5b4a!important;font-size:14px;line-height:1.7}
+html[data-hb-app="small-business"] .home-tile:not(.primary) small{color:#345448!important;font-size:14px;line-height:1.65}
+html[data-hb-app="trm-workspace"] .crumb{color:#34554e!important;font-size:14px}
+html[data-hb-app="trm-workspace"] .command-tile small{color:#34534b!important;font-size:14px;line-height:1.7}
+html[data-hb-app="ba-parastoo"] .eyebrow{color:#63374e!important;font-size:13px;letter-spacing:.02em}
+html[data-hb-app="ba-parastoo"] .muted{color:#55424c!important}
+html[data-hb-app="ba-parastoo"] footer{color:#55434b!important;font-size:13px}
+html[data-hb-app="life-organization"] .bottom-note p{color:var(--ink)!important;font-size:13px;line-height:1.75}
+html[data-hb-app="life-organization"] .bottom-link:not(.active){color:var(--ink)!important}
+html[data-hb-app="life-organization"] .bottom-link{font-size:13px}
+html[data-hb-app="my-finance"] .auth-brand,
+html[data-hb-app="my-finance"] .auth-brand small{color:var(--fg)!important;opacity:1!important;font-size:13px;letter-spacing:.025em}
+@media(forced-colors:active){
+ html[data-hb-impeccable="1"] :where(button,a,select,input,textarea){border-color:ButtonText}
+}

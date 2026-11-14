@@ -118,7 +118,7 @@ async function appsCheck(browser){
     const serious=axe.violations.filter(v=>["serious","critical"].includes(v.impact));
     audit.push({app:p,viewport:390,overflowPx:metric.overflow,
       serious:serious.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.slice(0,3).map(n=>n.target)}))});
-    console.log("AUDIT",p,"overflow="+metric.overflow,"serious/critical="+serious.length,JSON.stringify(serious.map(v=>({id:v.id,target:v.nodes.slice(0,2).map(n=>n.target)}))));
+    console.log("AUDIT",p,"overflow="+metric.overflow,"serious/critical="+serious.length,JSON.stringify(serious.map(v=>({id:v.id,target:v.nodes.slice(0,12).map(n=>n.target)}))));
     if(p==="ba-parastoo/"){
      const toggle=page.locator("#mobileNavToggle");
      await toggle.click();
@@ -133,7 +133,8 @@ async function appsCheck(browser){
      assert.equal(await page.locator("#modal.show").count(),0);
      assert.equal(await button.evaluate(el=>document.activeElement===el),true,"Modal return focus missing");
     }
-    console.log("PASS app",p,"Vazirmatn, navigation audited");
+    assert.equal(serious.length,0,p+" serious/critical WCAG violations; see AUDIT line");
+    console.log("PASS app",p,"Vazirmatn, axe serious/critical=0");
    }finally{await page.close()}
   }
  }finally{

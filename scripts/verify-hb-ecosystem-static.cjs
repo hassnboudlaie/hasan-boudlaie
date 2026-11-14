@@ -23,6 +23,11 @@ for(const dir of serviceWorkers){
  assert.ok(sw.includes("hb-impeccable-shared.css?v=20261114"),dir+" missing CSS precache");
  assert.ok(sw.includes("Vazirmatn.woff2"),dir+" missing font precache");
 }
+const bmcHtml=read("business-model-canvas/studio.html");
+const bmcJs=read("business-model-canvas/studio.js");
+assert.match(bmcHtml,/class="progress dashboard-progress" role="progressbar"/,"BMC progress semantics missing");
+assert.match(bmcHtml,/studio\.js\?v=12/,"BMC fresh script version missing");
+assert.match(bmcJs,/setAttribute\('aria-valuenow'/,"BMC accessible progress should follow actual data");
 const clinic=read("clinic-customer-app/sw.js");
 assert.match(clinic,/keys\.filter\(k=>k\.startsWith\(PREFIX\)&&k!==CACHE\)/,"Unsafe cross-app CacheStorage deletion");
 const hub=read("hub/index.html");
