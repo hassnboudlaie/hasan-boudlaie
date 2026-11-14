@@ -1,7 +1,7 @@
 /* Kish Ports & Airports OKR - strictly scoped static PWA cache (no API or user data). */
 'use strict';
 const PREFIX='kish-okr-pwa-';
-const CACHE=PREFIX+'20261030-strategy-coach-preview-v4';
+const CACHE=PREFIX+'20261114-impeccable-v5';
 const SCOPE=new URL('./',self.registration.scope);
 const SHELL=new URL('index.html',SCOPE).href;
 const CORE=['index.html','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png','pwa-maskable.svg',
@@ -11,9 +11,11 @@ const CORE=['index.html','manifest.webmanifest','favicon.svg','icon-192.png','ic
   'assets/kish-strategy-map-20261025.js','assets/kish-strategy-map-20261025.css',
   'assets/kish-team-dashboard-20261025.js','assets/kish-team-dashboard-20261025.css',
   'assets/okr-visual-upgrade-20261023.css','assets/kish-ai-strategy-coach-preview.js','assets/kish-ai-strategy-coach-preview.css'];
+const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../ob-mba-classroom/assets/fonts/Vazirmatn.woff2'];
+const HB_PATHS=new Set(HB_EXTRA.map(p=>new URL(p,self.registration.scope).pathname));
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE)
-   .then(cache=>Promise.allSettled(CORE.map(path=>cache.add(new Request(new URL(path,SCOPE).href,{cache:'reload'})))))
+   .then(cache=>Promise.allSettled([...CORE,...HB_EXTRA].map(path=>cache.add(new Request(new URL(path,SCOPE).href,{cache:'reload'})))))
    .then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
@@ -21,7 +23,7 @@ self.addEventListener('activate',event=>{
 });
 self.addEventListener('fetch',event=>{
  const req=event.request;
- if(req.method!=='GET'||!req.url.startsWith(SCOPE.href))return;
+ if(req.method!=='GET'||(!req.url.startsWith(SCOPE.href)&&!HB_PATHS.has(new URL(req.url).pathname)))return;
  const url=new URL(req.url);
  if(url.origin!==SCOPE.origin||url.pathname.includes('/api/')||url.pathname.includes('/auth/'))return;
  if(req.mode==='navigate'){
