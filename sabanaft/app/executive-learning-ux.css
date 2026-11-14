@@ -501,7 +501,7 @@ a{text-underline-offset:.22em}
 body.saba-home #homeView .saba-home-tile{border-right-width:1px!important;box-shadow:none!important;border-radius:14px!important}
 body.saba-home #homeView .saba-reflection-band{border-right-width:1px!important}
 @media(min-width:801px){
- .saba-tabbar{display:flex;justify-content:center;gap:8px;padding:12px;position:sticky;top:76px;z-index:64;background:var(--saba-paper);border-top:1px solid #c2d8c7}
+ .saba-tabbar{display:flex;justify-content:center;gap:8px;padding:12px;position:relative;z-index:64;background:var(--saba-paper);border-top:1px solid #c2d8c7}
  .saba-tabbar button{display:flex;align-items:center;gap:8px;min-height:48px;padding:10px 22px;background:transparent;color:var(--saba-pine);font:700 16px Vazirmatn,sans-serif;border:0;border-radius:10px;cursor:pointer}
  .saba-tabbar svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
  .saba-tabbar [aria-current="page"]{background:#d9ecdf}
