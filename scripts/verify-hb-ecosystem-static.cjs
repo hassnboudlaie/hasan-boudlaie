@@ -34,6 +34,14 @@ const hub=read("hub/index.html");
 assert.match(hub,/impeccable\.css\?v=20261115/);
 assert.match(hub,/superResultCount/);
 assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
+for(const token of ['id="hubQuickAccess"','id="hubPinnedList"','id="hubRecentList"','id="hubClearRecents"','data-super-filter="pinned"'])
+ assert.ok(hub.includes(token),"Quick access flow missing: "+token);
+const descriptions=[...hub.matchAll(/<a class="super-app-link"[^>]*>[\s\S]*?<small data-en="([^"]+)" data-fa="([^"]+)"/g)];
+assert.equal(descriptions.length,21,"Each app needs one task-oriented description");
+assert.equal(descriptions.filter(x=>x[1]==="Open independent app").length,0,"Generic app descriptions are not actionable");
+for(const token of ['hb-hub-saved-apps-v1','hb-hub-recent-apps-v1','hub-quick-link','aria-pressed','replaceChildren','valid(values)'])
+ assert.ok(read("hub/catalog.js").includes(token),"Safe local-only quick access missing "+token);
+
 assert.match(hub,/catalog\.js\?v=5/,"Hub must load deep-audit search");
 const search=read("hub/catalog.js");
 for(const token of ["normalize('NFKC')","replace(/[يى]/g","replace(/ك/g","superReset","menu-toggle","Escape"])
