@@ -129,7 +129,7 @@ async function main(){
  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
  try{
   for(const [name,driver,sizes] of [
-   ["chromium",chromium,[[360,800],[390,844],[768,1024],[1366,900]]],
+   ["chromium",chromium,[[320,720],[360,800],[390,844],[768,1024],[1366,900]]],
    ["webkit",webkit,[[390,844],[1366,900]]]
   ]){
    const browser=await driver.launch({headless:true});
