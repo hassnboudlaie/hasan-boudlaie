@@ -1,0 +1,21 @@
+/* Approved student · multi-device self-service account settings */
+.ob-device-settings{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid #bcdad0;background:#f0f8f4;color:#174940;padding:15px 20px;border-radius:17px;margin-block:18px}
+.ob-device-settings div{display:grid;gap:4px;min-width:0}.ob-device-settings strong{font-size:19px;font-weight:900}
+.ob-device-settings span{font-size:15px;line-height:1.8;color:#395f57}
+.ob-device-settings button{min-height:50px;border-radius:11px;padding:10px 15px;font:850 16px Vazirmatn,Tahoma,sans-serif;background:#175e59;color:#fff;border:1px solid #175e59;cursor:pointer}
+.ob-device-settings button:hover{background:#104943}
+.ob-device-dialog{width:min(570px,calc(100% - 20px));max-height:min(92dvh,850px);padding:0;border:1px solid #c4dcd3;border-radius:20px;color:#193f40;background:#fff;box-shadow:0 20px 60px #103d3b44;direction:rtl}
+.ob-device-dialog::backdrop{background:#0d28319c}
+.ob-device-inner{padding:clamp(20px,4vw,28px);display:grid;gap:15px;overflow-y:auto;max-height:90dvh}
+.ob-device-head{display:flex;justify-content:space-between;align-items:start;gap:16px}
+.ob-device-head span{color:#44665c;font-size:14px;font-weight:850}
+.ob-device-head h2{font-size:clamp(21px,4vw,27px);color:#164942;line-height:1.6;margin:5px 0 0}
+.ob-device-head button{flex:0 0 46px;width:46px;min-height:46px;background:#edf4f0;color:#164f4b;border:1px solid #c9dcd0;border-radius:10px;font-size:28px;cursor:pointer}
+.ob-device-inner p{font-size:16px;line-height:1.9;margin:0;color:#345751}
+.ob-device-form{display:grid;gap:8px}.ob-device-form label{font-size:16px;font-weight:850}
+.ob-device-form input{width:100%;min-height:53px;padding:12px 14px;border-radius:11px;border:1.5px solid #9fbeb4;background:#fff;color:#123e39;font-size:18px}
+.ob-device-submit{padding:13px;min-height:54px;margin-top:10px;border:0;border-radius:12px;background:#176456;color:#fff;font:900 17px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.ob-device-submit:disabled{opacity:.6}.ob-device-status{min-height:25px;color:#125d4b;font-weight:850;font-size:16px;line-height:1.7}
+.ob-device-private{font-size:14px!important;color:#52695f!important;border-top:1px solid #dae6dd;padding-top:12px}
+.ob-device-settings button:focus-visible,.ob-device-dialog button:focus-visible,.ob-device-dialog input:focus-visible{outline:3px solid #bd9155;outline-offset:3px}
+@media(max-width:620px){.ob-device-settings{padding:15px;gap:10px}.ob-device-settings button{width:100%;font-size:17px}}
