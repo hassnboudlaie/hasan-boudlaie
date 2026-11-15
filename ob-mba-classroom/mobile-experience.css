@@ -94,7 +94,7 @@
   #app .gr-stage{min-width:0}
   #app .gr-step-rail{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity}
   #app .gr-stage-tab{scroll-snap-align:start}
-  #app .gr-stage .gr-part p{font-size:18px;line-height:1.9}
+  #app .gr-stage .gr-part p{font-size:20px;line-height:1.9}
   #app textarea,#app input,#app select{max-width:100%}
   #app textarea{min-height:120px;font-size:18px}
   .bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr));padding:6px max(7px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));gap:3px;background:var(--panel);box-shadow:0 -7px 20px #14263c15}
