@@ -53,14 +53,20 @@ jobs:
                curl -fsSL --max-time 20 "$base/impeccable.css" -o /tmp/ob-impeccable.css &&
                curl -fsSL --max-time 20 "$base/assets/fonts/Vazirmatn.woff2" -o /tmp/ob-vazirmatn.woff2 &&
                curl -fsSL --max-time 20 "$base/sw.js" -o /tmp/ob-sw.js &&
+               curl -fsSL --max-time 20 "$base/install.html" -o /tmp/ob-install.html &&
+               curl -fsSL --max-time 20 "$base/manifest.webmanifest" -o /tmp/ob-manifest.webmanifest &&
+               curl -fsSL --max-time 20 "$base/access-gate.js" -o /tmp/ob-access-gate.js &&
                curl -fsSL --max-time 20 "$base/attendance.html" -o /tmp/ob-attendance.html &&
                cmp -s ob-mba-classroom/index.html /tmp/ob-index.html &&
                cmp -s ob-mba-classroom/impeccable.css /tmp/ob-impeccable.css &&
                cmp -s ob-mba-classroom/assets/fonts/Vazirmatn.woff2 /tmp/ob-vazirmatn.woff2 &&
                cmp -s ob-mba-classroom/sw.js /tmp/ob-sw.js &&
+               cmp -s ob-mba-classroom/install.html /tmp/ob-install.html &&
+               cmp -s ob-mba-classroom/manifest.webmanifest /tmp/ob-manifest.webmanifest &&
+               cmp -s ob-mba-classroom/access-gate.js /tmp/ob-access-gate.js &&
                cmp -s ob-mba-classroom/attendance.html /tmp/ob-attendance.html; then
               matched=1
-              echo "Production bytes match checkout for index, CSS, WOFF2, SW and attendance."
+              echo "Production bytes match checkout for index, install, manifest, access gate, CSS, WOFF2, SW and attendance."
               break
             fi
             sleep 12

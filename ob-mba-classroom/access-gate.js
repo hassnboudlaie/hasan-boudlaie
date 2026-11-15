@@ -52,7 +52,7 @@ function present(){
  }else{
   inner='<h2>فعال‌سازی دستگاه مدرس</h2><form id="entranceTeacherSetup" class="entrance-form"><label for="teacherNational">کد ملی مدرس</label><input id="teacherNational" name="national_id" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{10}" maxlength="10" required autocomplete="off"><label for="teacherPass">رمز مدیریت فعلی (فقط بار اول روی این دستگاه)</label><input id="teacherPass" name="password" type="password" minlength="16" maxlength="100" autocomplete="current-password" required><button class="entrance-primary" type="submit">تأیید دستگاه و ورود</button></form><p class="entrance-hint">پس از فعال‌سازی، روی همین دستگاه تنها کد ملی را وارد می‌کنید.</p>';
  }
- gate.innerHTML='<div class="entrance-shell"><div class="entrance-brand"><span class="entrance-logo">OB</span><div><small>دانشگاه علامه طباطبایی · MBA</small><strong>مدیریت رفتار سازمانی</strong></div></div><div class="entrance-card">'+(view==="login"?tabs:"")+inner+flash+'</div><p class="entrance-foot">۱۶ جلسه · ۴۸ ساعت</p></div>';
+ gate.innerHTML='<div class="entrance-shell"><div class="entrance-brand"><span class="entrance-logo">OB</span><div><small>دانشگاه علامه طباطبایی · MBA</small><strong>مدیریت رفتار سازمانی</strong></div></div><div class="entrance-card">'+(view==="login"?tabs:"")+inner+flash+'</div><p class="entrance-foot">۱۶ جلسه · ۴۸ ساعت</p><a class="entrance-install-link" href="./install.html" aria-label="نصب اپ مدیریت رفتار سازمانی روی گوشی"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg>نصب اپ روی گوشی</a></div>';
  gate.hidden=false;
 }
 function unlock(role){

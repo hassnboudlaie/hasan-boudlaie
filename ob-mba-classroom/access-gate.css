@@ -57,3 +57,9 @@ html[data-access="locked"]{background:#f6f5f1}
  .entrance-card h2{font-size:28px}
  .entrance-form input{font-size:23px}
 }
+/* Installation is available before registration or teacher approval. */
+.entrance-install-link{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:12px 18px;border:1.5px solid #b5d2c5;border-radius:14px;background:#eaf5ee;color:#115b50;text-decoration:none;font-size:19px;font-weight:850;line-height:1.55}
+.entrance-install-link:hover{background:#ddefe4;border-color:#78a995}
+.entrance-install-link:focus-visible{outline:3px solid #b58c46;outline-offset:3px}
+.entrance-install-link svg{flex-shrink:0}
+@media(display-mode:standalone){.entrance-install-link{display:none}}
