@@ -1,0 +1,59 @@
+name: Alborz Academy — Impeccable Suite QA
+
+on:
+  pull_request:
+    paths:
+      - 'alborz-communication-skills/**'
+      - 'scripts/alborz-impeccable-*.cjs'
+      - '.github/workflows/alborz-impeccable-suite.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'alborz-communication-skills/**'
+      - 'scripts/alborz-impeccable-*.cjs'
+      - '.github/workflows/alborz-impeccable-suite.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse guided learning and QA scripts
+        run: |
+          node --check alborz-communication-skills/session3-impeccable-journey.js
+          node --check scripts/alborz-impeccable-suite-qa.cjs
+          node --check scripts/alborz-impeccable-browser.cjs
+      - name: Verify source contracts across five surfaces
+        run: node scripts/alborz-impeccable-suite-qa.cjs
+      - name: Regression — session 3 content
+        run: node scripts/verify-alborz-session3.cjs
+  browser:
+    needs: static
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Exercise guided lesson, workshop, classroom, presentation and mobile
+        run: node scripts/alborz-impeccable-browser.cjs
+      - name: Save visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alborz-impeccable-suite-proof
+          path: artifacts/alborz-impeccable/
+          if-no-files-found: warn
