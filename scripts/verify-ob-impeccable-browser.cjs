@@ -248,6 +248,25 @@ async function verifyRepeatDevice(browser,name){
  const b=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  let registrations=0,logins=0,passwordSets=0;
  const mock=async(context)=>{
+  // WebKit blocks synthetic localhost -> hosted API preflights. Expose a
+  // deterministic browser binding rather than weakening production CORS.
+  await context.exposeBinding("__mbaTestDevice",async (_source,args)=>{
+   let response={ok:false,error:"unexpected_action"};
+   if(args.action==="setPassword"){passwordSets++;response={ok:true,enabled:true}}
+   if(args.action==="studentDeviceLogin"){logins++;response={ok:true,role:"student",token:"synthetic-device-b-token",name:student.name,student_number:student.student_number,approval_status:"approved"}}
+   return response;
+  });
+  await context.addInitScript(()=>{
+   const nativeFetch=window.fetch.bind(window);
+   window.fetch=(input,init={})=>{
+    const url=typeof input==="string"?input:input?.url||"";
+    if(!url.includes("/functions/v1/mba-ob-student-devices"))return nativeFetch(input,init);
+    let args={};try{args=JSON.parse(init?.body||"{}")}catch{}
+    return window.__mbaTestDevice(args).then(result=>new Response(JSON.stringify(result),{
+     status:result.ok?200:400,headers:{"Content-Type":"application/json"}
+    }));
+   };
+  });
   await context.route("**/functions/v1/mba-ob-attendance",async route=>{
    const request=JSON.parse(route.request().postData()||"{}");
    if(request.action==="registerStudent")registrations++;
