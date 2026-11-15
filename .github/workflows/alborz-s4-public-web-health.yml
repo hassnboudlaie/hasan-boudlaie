@@ -40,13 +40,17 @@ jobs:
           get 'Session 4 classroom link' "$base/alborz-communication-skills/index.html?m=4&health=s4" /tmp/s4-health/index.html
           grep -Fq 'session4-speaking-lab.js?v=20261115-technique-first-r1' /tmp/s4-health/index.html
           grep -Fq 'session4-ob-mba-theme.js?v=20261115-technique-first-r1' /tmp/s4-health/index.html
-          grep -Fq 'session4-final-exam.js' /tmp/s4-health/index.html
+          grep -Fq 'session4-final-exam.js?v=20261115-12cases-6min-v1' /tmp/s4-health/index.html
+          grep -Fq 'session4-final-quiz-data.js?v=20261115-12cases-v1' /tmp/s4-health/index.html
           get 'Original roleplay and definitions' "$base/alborz-communication-skills/session4-speaking-lab.js?v=20261115-technique-first-r1" /tmp/s4-health/core.js
           grep -Fq 'const techniqueDetails=' /tmp/s4-health/core.js
           get 'Premium UI and technique mapping' "$base/alborz-communication-skills/session4-ob-mba-theme.js?v=20261115-technique-first-r1" /tmp/s4-health/theme.js
           grep -Fq 'const techniqueCases=' /tmp/s4-health/theme.js
-          get 'Six minute quiz engine' "$base/alborz-communication-skills/session4-final-exam.js" /tmp/s4-health/exam.js
+          get 'Twelve roleplay-linked quiz items' "$base/alborz-communication-skills/session4-final-quiz-data.js?v=20261115-12cases-v1" /tmp/s4-health/questions.js
+          grep -Fq '"caseId": 11' /tmp/s4-health/questions.js
+          get 'Six minute quiz engine' "$base/alborz-communication-skills/session4-final-exam.js?v=20261115-12cases-6min-v1" /tmp/s4-health/exam.js
           grep -Fq 'DURATION_MS=360000' /tmp/s4-health/exam.js
+          grep -Fq 'dataset.questions.length!==12' /tmp/s4-health/exam.js
           get 'Public short fallback link' "$base/alborz4.html" /tmp/s4-health/short.html
           grep -Fq 'session4-classroom-fallback.html' /tmp/s4-health/short.html
           get 'Self-contained static classroom edition' "$base/alborz-communication-skills/session4-classroom-fallback.html" /tmp/s4-health/fallback.html
