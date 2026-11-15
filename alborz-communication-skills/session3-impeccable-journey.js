@@ -6,7 +6,7 @@ if(typeof original!=="function")return;
 const q=(s)=>document.querySelector(s);
 const qa=(s)=>Array.from(document.querySelectorAll(s));
 const digits=n=>String(n).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d]);
-const roles=["رئیس شعبه همتا","معاون شعبه","کارشناس شعبه","مشتری","نماینده","ستاد"];
+const roles=["رئیس شعبه همتا","معاون شعبه","کارشناس شعبه","مشتری","نماینده بیمه","کارشناس ستاد"];
 const descriptions=["هماهنگی میان دو شعبه","شنیدن دغدغه‌های همکار","گفت‌وگوی رشد و بازخورد","شناخت نگرانی مراجعه‌کننده","رفع ابهام نماینده","شنیدن و روشن‌سازی مطالبه ستاد"];
 const roleIcons=["🤝","👔","🧑‍💻","💬","🧩","🏛️"];
 const techniques=[
