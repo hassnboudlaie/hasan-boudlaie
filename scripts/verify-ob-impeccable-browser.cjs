@@ -125,6 +125,79 @@ async function verifyInstaller(browser,name){
  }finally{await context.close()}
 }
 
+
+async function verifyRepeatDevice(browser,name){
+ // Two genuinely independent browser storage contexts. Neither ever calls
+ // registerStudent or requires an instructor approval for device B.
+ const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
+ const storageKey="mba-ob-classroom-attendance-identity-v1";
+ const student={name:"دانشجوی آزمایشی",student_number:"123456789"};
+ const a=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const b=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ let registrations=0,logins=0,passwordSets=0;
+ const mock=async(context)=>{
+  await context.route("**/functions/v1/mba-ob-attendance",async route=>{
+   const request=JSON.parse(route.request().postData()||"{}");
+   if(request.action==="registerStudent")registrations++;
+   let result;
+   if(request.action==="accessState")result={ok:true,role:"student",approval_status:"approved",student};
+   else result={ok:true,submission:null,history:[]};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
+  });
+  await context.route("**/functions/v1/mba-ob-learning-analytics",async route=>{
+   const args=JSON.parse(route.request().postData()||"{}");
+   const summary={visits:1,active_seconds:90,activity_count:3,latest_at:new Date().toISOString(),by_area:{concepts:2}};
+   const payload=args.action==="mine"?{ok:true,summary,recent:[],recent_visits:[],period_days:365}:
+    args.action==="classOverview"?{ok:true,students:[{student_id:"00000000-0000-4000-8000-000000000001",...student,visits:1,active_seconds:90,activity_count:3,latest_at:null}]}:
+    args.action==="studentDetail"?{ok:true,student:{id:"00000000-0000-4000-8000-000000000001",...student},summary,recent:[]}:{ok:true};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(payload)});
+  });
+  await context.route("**/functions/v1/mba-ob-student-devices",async route=>{
+   const args=JSON.parse(route.request().postData()||"{}");
+   let result={ok:false,error:"unexpected_action"};
+   if(args.action==="setPassword"){passwordSets++;result={ok:true,enabled:true}}
+   if(args.action==="studentDeviceLogin"){logins++;result={ok:true,role:"student",token:"synthetic-device-b-token",name:student.name,student_number:student.student_number,approval_status:"approved"}}
+   await route.fulfill({status:result.ok?200:400,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
+  });
+ };
+ try{
+  await mock(a);await mock(b);
+  await a.addInitScript(({key,info})=>{
+   localStorage.setItem(key,JSON.stringify({role:"student",token:"synthetic-device-a-token",name:info.name,student_number:info.student_number}));
+  },{key:storageKey,info:student});
+  const pageA=await a.newPage(),pageB=await b.newPage();
+  const errors=[];pageA.on("pageerror",err=>errors.push("a:"+err.message));pageB.on("pageerror",err=>errors.push("b:"+err.message));
+  await pageA.goto(base,{waitUntil:"domcontentloaded"});
+  await pageA.locator(".student-focus").waitFor({timeout:18000});
+  assert.equal(await pageA.locator("#objJourney").count(),1,"Five-step learning experience should render");
+  await pageA.locator('[data-student-device-settings]').first().click();
+  await pageA.locator('#obDeviceDialog[open]').waitFor();
+  await pageA.locator("#obDevicePassword").fill("LearnerPersonal12345");
+  await pageA.locator("#obDeviceConfirm").fill("LearnerPersonal12345");
+  await pageA.locator("#obDeviceForm button[type=submit]").click();
+  await pageA.locator("#obDeviceStatus").getByText(/رمز شخصی ثبت شد/).waitFor({timeout:10000});
+  assert.equal(passwordSets,1,"Existing approved device must set password exactly once");
+  assert.equal((await pageA.evaluate(()=>localStorage.getItem("mba-ob-classroom-attendance-identity-v1"))).includes("LearnerPersonal12345"),false,"Password must never be written to localStorage");
+  await pageB.goto(base,{waitUntil:"domcontentloaded"});
+  await pageB.locator('#entryGate [data-entrance="returning"]').click();
+  await pageB.locator("#entranceReturning").waitFor();
+  await pageB.locator("#returningNumber").fill(student.student_number);
+  await pageB.locator("#returningPassword").fill("LearnerPersonal12345");
+  await pageB.locator("#entranceReturning button[type=submit]").click();
+  await pageB.locator(".student-focus").waitFor({timeout:18000});
+  assert.equal(logins,1,"New device should exchange password for a new student session");
+  assert.equal(registrations,0,"No re-registration, device review or instructor approval allowed");
+  const idA=await pageA.evaluate(()=>window.OB_ACCESS.student_number);
+  const idB=await pageB.evaluate(()=>window.OB_ACCESS.student_number);
+  assert.equal(idA,idB,"Both devices should have the same student identity");
+  await pageB.locator('[data-action="navigate"][data-page="results"]').first().click();
+  await pageB.locator("[data-oba-student]").waitFor();
+  assert.equal(await pageB.locator(".oba-metric").count(),3,"Per-student analytics metrics missing");
+  assert.deepEqual(errors,[],"Cross-device journey errors");
+  console.log("PASS cross-device",name,"approved device A sets password; device B login, zero registration or reapproval; analytics");
+ }finally{await a.close();await b.close();}
+}
+
 async function main(){
  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
  try{
@@ -133,7 +206,7 @@ async function main(){
    ["webkit",webkit,[[390,844],[1366,900]]]
   ]){
    const browser=await driver.launch({headless:true});
-   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyInstaller(browser,name)}
+   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyInstaller(browser,name);await verifyRepeatDevice(browser,name)}
    finally{await browser.close()}
   }
  }finally{server.close()}
