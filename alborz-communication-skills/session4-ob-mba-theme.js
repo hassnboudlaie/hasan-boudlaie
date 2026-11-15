@@ -160,7 +160,7 @@ function decorateRoleplays(){
   const prior=label?.querySelector(".s4-case-tags");
   prior?.remove();
   const tags=el("span","s4-case-tags");
-  appendText(tags,"span","s4-direct-tag","ارتباط مستقیم: "+techniqueName(relation===null?0:primaryByCase[id]));
+  appendText(tags,"span","s4-direct-tag","ارتباط مستقیم: "+techniqueName(primaryByCase[id]));
   appendText(tags,"span","s4-indirect-tag","ارتباط غیرمستقیم: "+relation.other.map(x=>techniqueName(x[0])).join("، "));
   label?.appendChild(tags);
   card.setAttribute("aria-label","رول‌پلی "+persianNumber(id+1)+"، "+caseLabel(id)+"، مهارت اصلی "+techniqueName(primaryByCase[id]));
