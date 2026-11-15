@@ -50,6 +50,13 @@ ok(journey.includes('const original=window.alborzSession3Page'),'wrapper keeps b
 const s4=read('session4-ob-mba-theme.js');
 new vm.Script(s4,{filename:'session4-ob-mba-theme.js'});checks++;
 ok(s4.includes('const original=window.alborzSession4Page'),'session 4 enhancement intact');
+const mobile=read('session4-mobile-first-20261115.css');
+ok(s4.includes('session4-mobile-first-20261115.css?v=1'),'Session 4 mobile stylesheet loaded after existing theme');
+ok(index.includes('session4-ob-mba-theme.js?v=20261115-mobile-first-v1'),'Session 4 JS cache-busted');
+ok(mobile.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'Four-way mobile navigation is readable');
+ok(mobile.includes('max-width:380px'),'320px phones covered');
+ok(mobile.includes('prefers-reduced-motion'),'Accessible animation fallback');
+ok(read('sw.js').includes('session4-mobile-first-20261115.css?v=1'),'PWA shell includes mobile CSS');
 const exam=read('session4-final-exam.js');
 ok(exam.includes('const DURATION_MS=360000'),'6-minute exam unchanged');
 ok(exam.includes('if(!deadline)activateTimer()'),'starts at first answer');

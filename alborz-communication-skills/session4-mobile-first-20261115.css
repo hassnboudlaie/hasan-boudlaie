@@ -1,0 +1,140 @@
+/* Alborz Insurance — Session Four Mobile-first UX · 15 Nov 2026
+ * Scope limited to .s4-*; no modification to six techniques, twelve cases,
+ * first-answer 360-second exam, score state or instructor/participant data.
+ */
+.s4-root,.s4-final-exam{--s4-mobile-paper:#fffdfa;--s4-mobile-stroke:#ced9df}
+.s4-root :is(.s4-hero,.s4-path,.s4-path-card,.s4-overview,.s4-techs,.s4-lab,.s4-role-tile,
+.s4-case,.s4-page-flip,.s4-final-exam){min-width:0}
+.s4-root :is(p,li,h2,h3,strong,small,button){overflow-wrap:break-word}
+.s4-root :is(button,summary,input,select,textarea){font-family:Vazirmatn,"Noto Sans Arabic",Tahoma,sans-serif}
+.s4-root :is(button,summary,a,input,select,textarea):focus-visible,
+.s4-mobile-nav button:focus-visible{outline:3px solid #cba15c;outline-offset:3px}
+.s4-root [hidden]{display:none!important}
+@media(min-width:761px) and (max-width:1024px){
+ .s4-root .s4-hero{min-height:270px!important}
+ .s4-root .s4-path{gap:13px}
+ .s4-root .s4-path-card{padding:17px;gap:12px}
+ .s4-root .s4-techs{gap:12px}
+}
+@media(max-width:760px){
+ html[data-alborz-surface="academy"]{scroll-padding-top:86px}
+ html[data-alborz-surface="academy"] body:has(.s4-root){overflow-x:clip}
+ .s4-topbar{position:sticky;top:0;box-shadow:0 4px 14px #152b3817!important;border-bottom:1px solid #a9b9bb!important}
+ .s4-topinside{min-height:63px!important;gap:9px;padding:7px 10px!important}
+ .s4-brand{min-width:0;gap:9px}
+ .s4-brand img{width:42px!important;height:42px!important;min-width:42px;padding:4px;border-radius:11px}
+ .s4-brand strong{font-size:clamp(17px,4.7vw,21px)!important;line-height:1.35}
+ .s4-brand small{font-size:12px!important;line-height:1.45}
+ .s4-home{min-width:44px;min-height:44px!important;font-size:14px!important;padding:8px 10px!important;border-radius:11px}
+ .s4-root{padding:11px 0 calc(115px + env(safe-area-inset-bottom,0px))!important}
+ .s4-root .wrap{padding-inline:10px!important;max-width:100%}
+ .s4-root .s4-hero{
+   display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+   min-height:0!important;margin:0 0 13px!important;
+   border-radius:17px!important;border:1px solid #37647d!important;
+   box-shadow:none!important;background:linear-gradient(115deg,#152e43,#0b535c)!important
+ }
+ .s4-root .s4-hero::before,.s4-root .s4-hero::after{display:none!important}
+ .s4-root .s4-hero .s4-hero-copy{padding:19px 16px 17px!important;gap:8px!important}
+ .s4-root .s4-hero .s4-hero-copy h1{
+   font-size:clamp(26px,6.7vw,32px)!important;line-height:1.48!important;max-width:100%
+ }
+ .s4-root .s4-hero .s4-hero-copy p{font-size:18px!important;line-height:1.75!important;font-weight:600!important}
+ .s4-root .s4-hero .s4-chip{font-size:14px!important;padding:4px 11px!important}
+ .s4-root .s4-hero-metrics{gap:6px;flex-wrap:wrap}
+ .s4-root .s4-hero-metrics span{font-size:13px!important;padding:5px 8px}
+ .s4-root .s4-hero img,.s4-root .s4-hero picture{max-width:100%;height:auto;object-fit:cover}
+ .s4-root .s4-path{
+   display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+   gap:9px!important;margin:12px 0 14px!important
+ }
+ .s4-root .s4-path-card,
+ .s4-root .s4-path-card:nth-child(2),
+ .s4-root .s4-path-card:nth-child(3){
+   display:grid!important;grid-template-columns:46px minmax(0,1fr) 16px!important;
+   align-items:center;gap:12px!important;min-height:87px!important;
+   padding:12px 13px!important;border-radius:16px!important;
+   background:var(--s4-mobile-paper)!important;color:#17394c!important;
+   border:1px solid var(--s4-mobile-stroke)!important;
+   border-inline-start:4px solid #087078!important;box-shadow:none!important
+ }
+ .s4-root .s4-path-card:nth-child(2){border-inline-start-color:#486e84!important}
+ .s4-root .s4-path-card:nth-child(3){border-inline-start-color:#a78a51!important}
+ .s4-root .s4-path-card::before{display:none!important}
+ .s4-root .s4-path-card:active{background:#eaf4f1!important}
+ .s4-root .s4-path-sticker{
+   width:46px!important;height:46px!important;min-width:46px;
+   display:grid;place-items:center;border-radius:12px;font-size:23px!important;
+   background:#e5eff0!important;color:#0e4655!important;border:0!important;
+   box-shadow:none!important
+ }
+ .s4-root .s4-path-copy{min-width:0;gap:0}
+ .s4-root .s4-path-copy small{font-size:13px!important;color:#56707b!important}
+ .s4-root .s4-path-copy strong{font-size:19px!important;line-height:1.45!important;color:#16394d!important}
+ .s4-root .s4-path-copy>span{font-size:14px!important;line-height:1.6!important;color:#456474!important}
+ .s4-root .s4-path-arrow{font-size:19px!important;color:#486775!important}
+ .s4-root .s4-home-footer{margin:11px 0 0;gap:8px}
+ .s4-root .s4-home-footer :is(button,a){min-height:46px;font-size:16px}
+ .s4-root .s4-screen-head{
+   display:grid;grid-template-columns:minmax(0,1fr);gap:8px;
+   padding:13px 14px!important;border-radius:15px
+ }
+ .s4-root .s4-screen-mark{width:40px;height:40px;font-size:22px}
+ .s4-root .s4-screen-copy h2{font-size:clamp(23px,6vw,29px)!important}
+ .s4-root .s4-screen-copy p{font-size:16px!important;line-height:1.75!important}
+ .s4-root .s4-screen-back{justify-self:stretch;min-height:46px!important;font-size:16px!important}
+ .s4-root .s4-techs,.s4-root .s4-cases,.s4-root .s4-role-index{
+   display:grid;grid-template-columns:minmax(0,1fr)!important;gap:10px!important
+ }
+ .s4-root .s4-tech,.s4-root .s4-role-tile,.s4-root .s4-case{
+   min-width:0;min-height:75px;border-radius:15px!important;
+   padding:14px!important;box-shadow:none!important
+ }
+ .s4-root .s4-tech :is(h3,strong),.s4-root .s4-role-tile-copy strong{font-size:19px!important;line-height:1.5}
+ .s4-root .s4-tech :is(p,small),.s4-root .s4-role-tile-copy span{font-size:16px!important;line-height:1.7}
+ .s4-root .s4-tabs{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity}
+ .s4-root .s4-tabs button{min-height:47px!important;scroll-snap-align:start}
+ .s4-root .s4-page-flip{
+   display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;
+   margin:12px 0!important;padding:11px!important;border-radius:15px!important;
+   box-shadow:none!important
+ }
+ .s4-root .s4-page-counter{grid-column:1/-1;grid-row:1;font-size:15px!important;line-height:1.5}
+ .s4-root .s4-page-flip button{
+   min-height:49px!important;padding:10px 9px!important;
+   font-size:16px!important;border-radius:11px!important
+ }
+ .s4-root :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select){
+   max-width:100%;min-width:0;font-size:18px!important
+ }
+ .s4-root textarea{min-height:116px}
+ .s4-root :is(.s4-observation-option,.s4-tech-challenge,.s4-role-card){min-width:0}
+ .s4-root .s4-observation-option{font-size:18px!important;line-height:1.8}
+ .s4-root .s4-tech-challenge p{font-size:18px!important}
+ .s4-root .s4-final-exam{max-width:100%;min-width:0}
+ .s4-root .s4-final-exam :is(.s4e-question,.s4e-options){min-width:0}
+ .s4-root .s4-final-exam button{min-height:48px}
+ .s4-mobile-nav{
+   display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+   gap:3px!important;left:0;right:0;bottom:0;z-index:60;
+   padding:6px max(7px,env(safe-area-inset-right,0px)) calc(7px + env(safe-area-inset-bottom,0px)) max(7px,env(safe-area-inset-left,0px))!important;
+   background:#fffcf8!important;border-top:1px solid #b9cbd0!important;
+   box-shadow:0 -5px 18px #12324718!important
+ }
+ .s4-mobile-nav button{min-height:57px!important;padding:6px 3px!important;font-size:13px!important;line-height:1.3;border-radius:10px}
+ .s4-mobile-nav button span{display:block;line-height:1.15;font-size:19px}
+}
+@media(max-width:380px){
+ .s4-topinside{padding-inline:8px!important}
+ .s4-brand strong{font-size:17px!important}
+ .s4-brand img{width:39px!important;height:39px!important;min-width:39px}
+ .s4-root .wrap{padding-inline:8px!important}
+ .s4-root .s4-path-card{grid-template-columns:41px minmax(0,1fr) 13px!important;padding:10px!important;gap:8px!important}
+ .s4-root .s4-path-sticker{width:41px!important;height:41px!important;min-width:41px;font-size:21px!important}
+ .s4-root .s4-path-copy strong{font-size:18px!important}
+ .s4-mobile-nav button{font-size:12px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .s4-root *,.s4-root *::before,.s4-root *::after,.s4-mobile-nav *{transition:none!important;scroll-behavior:auto!important}
+}
+@media print{.s4-mobile-nav{display:none!important}}

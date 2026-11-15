@@ -76,6 +76,10 @@ async function ready(){
  await phone.goto('index.html?m=4');
  await phone.check('S4 unaffected and loaded',()=>phone.page.locator('.s4-root').isVisible());
  await phone.check('S4 three path cards',async()=>await phone.page.locator('.s4-path-card').count()===3);
+ await phone.check('S4 mobile sheet loaded after base theme',async()=>await phone.page.locator('#s4-mobile-first-css').count()===1);
+ await phone.check('S4 four mobile navigation destinations',async()=>await phone.page.locator('.s4-mobile-nav button').count()===4);
+ await phone.check('S4 4-column mobile navigation',async()=>await phone.page.locator('.s4-mobile-nav').evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length===4));
+ await phone.snap('session4-mobile-home');
  await phone.page.locator('[data-s4-open="techniques"]').first().click();
  await phone.check('S4 six techniques',async()=>await phone.page.locator('.s4-tech').count()===6);
  await phone.snap('session4-techniques');

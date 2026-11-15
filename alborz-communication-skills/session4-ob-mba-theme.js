@@ -38,10 +38,17 @@ const $=q=>document.querySelector(q);
 const $$=q=>Array.from(document.querySelectorAll(q));
 const el=(tag,cls,html)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(html!==undefined)node.innerHTML=html;return node;};
 function loadTheme(){
- if(document.getElementById("s4-ob-mba-theme-css"))return;
- const link=el("link");link.id="s4-ob-mba-theme-css";link.rel="stylesheet";
- link.href="session4-ob-mba-theme.css?v=20261114-impeccable-r1";
- document.head.appendChild(link);
+ if(!document.getElementById("s4-ob-mba-theme-css")){
+  const theme=el("link");theme.id="s4-ob-mba-theme-css";theme.rel="stylesheet";
+  theme.href="session4-ob-mba-theme.css?v=20261114-impeccable-r1";
+  document.head.appendChild(theme);
+ }
+ // The mobile layer loads after the established Session Four theme.
+ if(!document.getElementById("s4-mobile-first-css")){
+  const mobile=el("link");mobile.id="s4-mobile-first-css";mobile.rel="stylesheet";
+  mobile.href="session4-mobile-first-20261115.css?v=1";
+  document.head.appendChild(mobile);
+ }
 }
 function buildHome(){
  const wrap=$(".s4-root .wrap"),hero=wrap?.querySelector(".s4-hero");

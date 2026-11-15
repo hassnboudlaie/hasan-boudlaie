@@ -1,11 +1,11 @@
 /* Scoped exclusively to /hasan-boudlaie/alborz-communication-skills/.
  * No shared cache names, site-root interception, or other app storage mutations. */
-const CACHE_NAME = 'alborz-communication-academy-v1-20261101';
+const CACHE_NAME = 'alborz-communication-academy-v2-20261115-s4-mobile';
 const CACHE_PREFIX = 'alborz-communication-academy-';
 const SCOPE_PATH = new URL(self.registration.scope).pathname;
 const SHELL = [
   './', './index.html', './session2-demo.html',
-  './manifest.webmanifest', './icon-192.png', './icon-512.png'
+  './session4-mobile-first-20261115.css?v=1', './manifest.webmanifest', './icon-192.png', './icon-512.png'
 ];
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
