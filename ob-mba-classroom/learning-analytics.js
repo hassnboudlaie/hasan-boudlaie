@@ -68,7 +68,7 @@ function onRender(ctx={}){
 }
 function studentCard(){
  return '<section class="oba-block" data-oba-student aria-label="فعالیت یادگیری من">'+
-  '<div class="oba-top"><div><span class="oba-kicker">MY LEARNING ANALYTICS</span><h3>فعالیت یادگیری من</h3><p>تعداد ورود، زمان استفاده و فعالیت‌ها، در طول ترم و خارج از ساعت کلاس</p></div>'+
+  '<div class="oba-top"><div><span class="oba-kicker">گزارش یادگیری من</span><h3>فعالیت یادگیری من</h3><p>تعداد ورود، زمان استفاده و فعالیت‌ها، در طول ترم و خارج از ساعت کلاس</p></div>'+
   '<button type="button" data-oba-refresh="mine" class="oba-refresh">به‌روزرسانی</button></div>'+
   '<div class="oba-student-data" data-oba-data role="status" aria-live="polite">در حال دریافت آمار…</div>'+
   '<p class="oba-privacy">فقط زمان حضور فعال روی صفحه و نوع فعالیت ثبت می‌شود؛ متن پاسخ‌ها و یادداشت‌های شخصی ارسال نمی‌شوند. این آمار نمره رسمی درس نیست.</p></section>';
@@ -99,7 +99,7 @@ async function refreshMine(){
  }finally{pendingMine=false}
 }
 function teacherHTML(){
- return '<div class="page oba-teacher-page"><header class="oba-title"><span class="oba-kicker">LEARNING ENGAGEMENT</span><h2>مشارکت و فعالیت دانشجویان</h2>'+
+ return '<div class="page oba-teacher-page"><header class="oba-title"><span class="oba-kicker">مشارکت آموزشی</span><h2>مشارکت و فعالیت دانشجویان</h2>'+
  '<p>گزارش اختصاصی هر دانشجو؛ تعداد ورود، زمان استفاده و مسیرهای مطالعه خارج از کلاس نیز ثبت می‌شوند.</p></header>'+
  '<div class="oba-block"><div class="oba-top"><strong>دانشجویان تأییدشده</strong><button type="button" class="oba-refresh" data-oba-refresh="teacher">به‌روزرسانی</button></div>'+
  '<div id="obaTeacherBody" role="status" aria-live="polite">در حال دریافت گزارش…</div></div>'+
