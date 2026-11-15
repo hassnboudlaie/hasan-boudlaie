@@ -37,7 +37,7 @@ async function examine(browser,name,width,height){
    const data=body.action==="accessState"
     ?{ok:true,role:"student",approval_status:"approved",student:{name:"دانشجوی تست",student_number:"123456789"}}
     :{ok:true,submission:null,history:[]};
-   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(data)});
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(data)});
   });
   // Keep privacy-sensitive analytics deterministic in synthetic enrolled users:
   // WebKit treats unmocked third-party CORS failures as page errors.
@@ -45,7 +45,7 @@ async function examine(browser,name,width,height){
    const input=JSON.parse(route.request().postData()||"{}");
    const empty={visits:1,active_seconds:120,activity_count:2,latest_at:new Date().toISOString(),by_area:{home:1}};
    const data=input.action==="mine"?{ok:true,summary:empty,recent:[],recent_visits:[],period_days:365}:{ok:true};
-   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(data)});
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(data)});
   });
   const page=await context.newPage();
   const errors=[];
@@ -150,7 +150,7 @@ async function verifyRepeatDevice(browser,name){
    let result;
    if(request.action==="accessState")result={ok:true,role:"student",approval_status:"approved",student};
    else result={ok:true,submission:null,history:[]};
-   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(result)});
   });
   await context.route("**/functions/v1/mba-ob-learning-analytics",async route=>{
    const args=JSON.parse(route.request().postData()||"{}");
@@ -158,14 +158,14 @@ async function verifyRepeatDevice(browser,name){
    const payload=args.action==="mine"?{ok:true,summary,recent:[],recent_visits:[],period_days:365}:
     args.action==="classOverview"?{ok:true,students:[{student_id:"00000000-0000-4000-8000-000000000001",...student,visits:1,active_seconds:90,activity_count:3,latest_at:null}]}:
     args.action==="studentDetail"?{ok:true,student:{id:"00000000-0000-4000-8000-000000000001",...student},summary,recent:[]}:{ok:true};
-   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(payload)});
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(payload)});
   });
   await context.route("**/functions/v1/mba-ob-student-devices",async route=>{
    const args=JSON.parse(route.request().postData()||"{}");
    let result={ok:false,error:"unexpected_action"};
    if(args.action==="setPassword"){passwordSets++;result={ok:true,enabled:true}}
    if(args.action==="studentDeviceLogin"){logins++;result={ok:true,role:"student",token:"synthetic-device-b-token",name:student.name,student_number:student.student_number,approval_status:"approved"}}
-   await route.fulfill({status:result.ok?200:400,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
+   await route.fulfill({status:result.ok?200:400,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(result)});
   });
  };
  try{
