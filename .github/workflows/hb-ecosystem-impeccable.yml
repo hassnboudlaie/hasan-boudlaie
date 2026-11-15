@@ -85,6 +85,7 @@ jobs:
           for attempt in $(seq 1 25); do
             if curl -fsSL --max-time 25 "$base/hub/index.html" -o /tmp/hb-index &&
                curl -fsSL --max-time 25 "$base/hub/impeccable.css" -o /tmp/hb-css &&
+               curl -fsSL --max-time 25 "$base/hub/catalog.js" -o /tmp/hb-catalog-js &&
                curl -fsSL --max-time 25 "$base/hb-impeccable-shared.css" -o /tmp/hb-shared &&
                curl -fsSL --max-time 25 "$base/okr-system/index.html" -o /tmp/hb-okr &&
                curl -fsSL --max-time 25 "$base/my-finance/index.html" -o /tmp/hb-finance &&
@@ -92,6 +93,7 @@ jobs:
                curl -fsSL --max-time 25 "$base/ba-parastoo/index.html" -o /tmp/hb-parastoo &&
                cmp -s hub/index.html /tmp/hb-index &&
                cmp -s hub/impeccable.css /tmp/hb-css &&
+               cmp -s hub/catalog.js /tmp/hb-catalog-js &&
                cmp -s hb-impeccable-shared.css /tmp/hb-shared &&
                cmp -s okr-system/index.html /tmp/hb-okr &&
                cmp -s my-finance/index.html /tmp/hb-finance &&
