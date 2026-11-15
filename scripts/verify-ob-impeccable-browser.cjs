@@ -92,6 +92,13 @@ async function examine(browser,name,width,height){
   assert.equal(metrics.lang,"fa");
   assert.ok(metrics.overflow<=2,name+" "+width+" home overflow: "+metrics.overflow);
   if(width===360||width===1366)await page.screenshot({path:path.join(OUTPUT,name+"-"+width+"-home.png"),fullPage:true});
+  if(width===390){
+   await page.locator("#themeToggle").click();
+   const appearance=await page.evaluate(()=>({mode:document.documentElement.dataset.theme,bg:getComputedStyle(document.querySelector(".oba-block")).backgroundColor}));
+   assert.equal(appearance.mode,"dark","Explicit theme switch should activate dark appearance");
+   assert.notEqual(appearance.bg,"rgb(255, 255, 255)","Student analytics must inherit dark theme instead of white panel");
+   if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-390-dark-learning.png"),fullPage:true});
+  }
   await page.locator('.student-focus button[data-action="openActive"]').click();
   await page.locator('.gr-shell[data-guided-mode="concepts"]').waitFor({timeout:15000});
   assert.equal(await page.locator(".ob-reading-layout").isVisible(),true,"Guided lesson uses the new reading layout");
@@ -216,6 +223,14 @@ async function verifyTeachingConsole(browser,name,width,height){
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   assert.ok(overflow<=2,name+" teacher "+width+" horizontal overflow: "+overflow);
   if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-teacher-"+width+".png"),fullPage:true});
+  await page.locator('.ob-console-row[data-page="analytics"]').click();
+  await page.locator(".oba-student-row").waitFor({timeout:12000});
+  assert.equal(await page.locator(".oba-student-row").count(),1,"The teacher should see individual student engagement");
+  await page.locator(".oba-student-row").first().click();
+  await page.locator(".oba-student-title").waitFor({timeout:12000});
+  assert.equal(await page.locator(".oba-metric").count(),3,"Individual student dashboard needs three engagement measures");
+  await page.locator("#contextHome").click();
+  await page.locator(".ob-teacher-console").waitFor();
   await page.locator('.ob-console-row[data-page="groups"]').click();
   assert.ok(await page.locator(".page").count()>0,"Teacher groups route remains navigable");
   assert.deepEqual(errors,[],name+" instructor runtime errors");
