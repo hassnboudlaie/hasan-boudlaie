@@ -40,9 +40,9 @@
 .sa-strip-header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:10px}
 .sa-strip-header strong{font-size:17px;font-weight:900}
 .sa-strip-header a{font-size:15px;font-weight:800;color:#0b5a51;text-decoration:underline;text-underline-offset:4px}
-.sa-strip-items{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(67px,1fr);gap:4px;overflow-x:auto;scrollbar-width:thin;scroll-padding-inline:8px;padding:0 0 6px}
-.sa-strip-item{min-width:65px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.sa-strip-item svg{display:block;width:52px;height:57px;max-width:100%}
+.sa-strip-items{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;overflow:visible;padding:0 0 6px}
+.sa-strip-item{min-width:0;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sa-strip-item svg{display:block;width:min(52px,100%);height:auto;max-height:57px}
 .sa-strip-item.sa-locked svg{filter:grayscale(1);opacity:.4}
 .sa-strip-item span{font-size:14px;font-weight:900;color:#24565a}
 .sa-milestone-award,.sa-final-medal{display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0;padding:13px 17px;border:1px solid #c6b077;border-radius:18px;background:linear-gradient(115deg,#fff9e7,#e5ede2);color:#123d3b;text-align:right;flex-wrap:wrap}
@@ -59,7 +59,7 @@
 .sa-final-medal>div:nth-child(2) span,.sa-final-medal small{color:#fff8e0}
 .sa-final-medal button{background:#e7c483;color:#0b3936;border-color:#fff1c5}
 .sa-collection button:focus-visible,.sa-journey-strip a:focus-visible,.sa-milestone-award button:focus-visible,.sa-final-medal button:focus-visible{outline:3px solid #239f8a;outline-offset:3px}
-@media (max-width:900px){.sa-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.sa-collection-footer{flex-wrap:wrap}.sa-strip-items{grid-auto-columns:72px}}
+@media (max-width:900px){.sa-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.sa-collection-footer{flex-wrap:wrap}.sa-strip-items{grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media (max-width:640px){.sa-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px 12px 19px}.sa-collection-header{padding:20px 18px;align-items:flex-start}.sa-count{flex-basis:74px;min-height:85px}.sa-count strong{font-size:31px}.sa-count span{font-size:12px}.sa-collection-header p{font-size:15px}.sa-tabs{margin:16px 12px 8px;gap:6px}.sa-tabs button{font-size:14px;padding:9px;flex:1 0 auto}.sa-group-status{margin-inline:12px}.sa-award-card{padding:12px 8px 14px;border-radius:16px}.sa-card-copy strong{font-size:16px}.sa-card-copy p{font-size:14px}.sa-art{width:98px;height:108px}.sa-card-actions button{font-size:13px;padding:6px 10px}.sa-collection-footer{padding:16px 14px}.sa-collection-footer button{width:100%;max-width:none}.sa-milestone-award,.sa-final-medal{gap:12px}.sa-milestone-award button,.sa-final-medal button{width:100%}}
 @media (max-width:365px){.sa-grid{grid-template-columns:minmax(0,1fr)}.sa-tabs button{flex:1 1 100%}.sa-collection-header h2{font-size:22px}}
 @media print{.sa-collection{box-shadow:none;break-inside:avoid}.sa-tabs,.sa-card-actions,.sa-collection-footer button,.sa-strip-header a,.sa-milestone-award button,.sa-final-medal button{display:none!important}.sa-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.sa-locked .sa-art{opacity:1}}
