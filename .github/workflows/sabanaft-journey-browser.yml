@@ -30,14 +30,14 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/saba-journey-http.log 2>&1 &
           echo $! > /tmp/saba-journey-http.pid
           sleep 2
-      - name: Test all ten stages at four viewport sizes in Chromium
-        env:
-          NODE_PATH: /tmp/saba-browser/node_modules
-        run: node sabanaft/verify-leadership-journey-browser.cjs
       - name: Verify badge exports and responsive collection
         env:
           NODE_PATH: /tmp/saba-browser/node_modules
         run: node sabanaft/verify-leadership-awards-browser.cjs
+      - name: Test all ten stages at four viewport sizes in Chromium
+        env:
+          NODE_PATH: /tmp/saba-browser/node_modules
+        run: node sabanaft/verify-leadership-journey-browser.cjs
       - name: Attach actual-browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
