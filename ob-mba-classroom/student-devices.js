@@ -15,7 +15,7 @@ function ensureDialog(){
  dialog.setAttribute("aria-labelledby","obDeviceTitle");
  dialog.innerHTML='<div class="ob-device-inner"><div class="ob-device-head"><div><span>ورود مستقل به همه دستگاه‌ها</span><h2 id="obDeviceTitle">تعریف رمز شخصی دانشجو</h2></div><button type="button" data-device-close aria-label="بستن پنجره">×</button></div>'+
  '<p>عضویت شما قبلاً تأیید شده است. یک‌بار رمز شخصی تعریف کنید تا بعداً با <strong>شماره دانشجویی و این رمز</strong> روی هر گوشی یا لپ‌تاپ دیگری وارد شوید؛ بدون تأیید دوباره مدرس.</p>'+
- '<form id="obDeviceForm" class="ob-device-form"><label for="obDevicePassword">رمز ورود (حداقل ۱۲ نویسه، شامل حرف و عدد لاتین)</label>'+
+ '<form id="obDeviceForm" class="ob-device-form"><label for="obDevicePassword">رمز ورود (حداقل ۱۲ نویسه، شامل حرف و عدد)</label>'+
  '<input id="obDevicePassword" type="password" name="password" minlength="12" maxlength="128" autocomplete="new-password" required>'+
  '<label for="obDeviceConfirm">تکرار رمز ورود</label>'+
  '<input id="obDeviceConfirm" type="password" name="confirm" minlength="12" maxlength="128" autocomplete="new-password" required>'+
@@ -34,7 +34,7 @@ async function submit(e){
  const password=form.elements.namedItem('password').value,confirm=form.elements.namedItem('confirm').value;
  if(password!==confirm){status.textContent="دو رمز واردشده یکسان نیستند.";return}
  if(password.length<12||password.length>128||!/\p{L}/u.test(password)||!/[0-9]/.test(password)){
-  status.textContent="رمز باید حداقل ۱۲ نویسه و شامل حرف و عدد لاتین باشد.";return;
+  status.textContent="رمز باید حداقل ۱۲ نویسه و شامل حرف و عدد باشد.";return;
  }
  const token=getToken();if(!token){status.textContent="جلسه شما منقضی شده است؛ دوباره وارد اپ شوید.";return}
  const button=form.querySelector('[type="submit"]');
