@@ -31,10 +31,10 @@ assert.match(bmcJs,/setAttribute\('aria-valuenow'/,"BMC accessible progress shou
 const clinic=read("clinic-customer-app/sw.js");
 assert.match(clinic,/keys\.filter\(k=>k\.startsWith\(PREFIX\)&&k!==CACHE\)/,"Unsafe cross-app CacheStorage deletion");
 const hub=read("hub/index.html");
-assert.match(hub,/impeccable\.css\?v=20261114/);
+assert.match(hub,/impeccable\.css\?v=20261115/);
 assert.match(hub,/superResultCount/);
 assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
-assert.match(hub,/catalog\.js\?v=4/,"Hub must load deep-audit search");
+assert.match(hub,/catalog\.js\?v=5/,"Hub must load deep-audit search");
 const search=read("hub/catalog.js");
 for(const token of ["normalize('NFKC')","replace(/[يى]/g","replace(/ك/g","superReset","menu-toggle","Escape"])
  assert.ok(search.includes(token),"Hub search/navigation regression: "+token);
@@ -60,6 +60,6 @@ for(const excluded of ["ob-mba-classroom/index.html","sabanaft/app/index.html",
 }
 const hubSw=read("hub/sw.js");
 for(const asset of ["../experience.css?v=2.0","../experience.js?v=2.0",
-"./impeccable.css?v=20261114","../assets/fonts/Vazirmatn.woff2"])
+"./impeccable.css?v=20261115","../assets/fonts/Vazirmatn.woff2"])
  assert.ok(hubSw.includes(asset),"Hub offline cache missing "+asset);
 console.log("PASS: 21 app links, 5 groups, 10 local app entrypoints, 9 offline shells, protected exclusions.");
