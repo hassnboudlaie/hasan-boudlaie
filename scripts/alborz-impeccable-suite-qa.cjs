@@ -89,8 +89,8 @@ ok(read('sw.js').includes('session4-mobile-first-20261115.css?v=1'),'PWA shell i
 for(const asset of [
  'session3-listening-lab.js?v=20261108-r6-six-roles',
  'session4-speaking-lab.js?v=20261115-technique-first-r1',
- 'session4-final-quiz-data.js?v=20261112-r2-audited',
- 'session4-final-exam.js?v=20261112-r2-6min',
+ 'session4-final-quiz-data.js?v=20261115-12cases-v1',
+ 'session4-final-exam.js?v=20261115-12cases-6min-v1',
  'session4-ob-mba-theme.js?v=20261115-technique-first-r1',
  'session4-ob-mba-theme.css?v=20261114-impeccable-r1',
  'alborz-impeccable.css?v=20261115-suite-r1'
@@ -98,6 +98,23 @@ for(const asset of [
 const exam=read('session4-final-exam.js');
 ok(exam.includes('const DURATION_MS=360000'),'6-minute exam unchanged');
 ok(exam.includes('if(!deadline)activateTimer()'),'starts at first answer');
+ok(exam.includes('dataset.questions.length!==12'),'Exam engine must load exactly twelve questions');
+ok(exam.includes('QCOUNT=questions.length'),'Assessment is count-driven');
+ok(exam.includes('new Set(questions.map(q=>q.caseId)).size!==12'),'Every roleplay must be mapped exactly once');
+ok(exam.includes('Math.round(total/QCOUNT*100)'),'Score includes both total and percentage');
+const quiz=read('session4-final-quiz-data.js');
+const quizData=JSON.parse(quiz.slice(quiz.indexOf('window.ALBORZ_S4_FINAL_QUIZ=')+'window.ALBORZ_S4_FINAL_QUIZ='.length).trim().replace(/;$/,''));
+ok(quizData.questions.length===12,'Twelve final scenario questions');
+const caseIds=quizData.questions.map(q=>q.caseId);
+ok(new Set(caseIds).size===12&&caseIds.every(i=>Number.isInteger(i)&&i>=0&&i<12),'No missing or duplicate roleplay in the quiz');
+ok(quizData.questions.every(q=>q.rule&&q.stem&&q.options.length===4&&q.options.every(o=>o[0]&&o[1])),'Four explained options and skill rule in each question');
+const answerPositions=[0,1,2,3].map(n=>quizData.questions.filter(q=>q.answer===n).length);
+ok(answerPositions.every(n=>n===3),'Balanced answer letter distribution');
+const caseSeq=[[0,2],[6,8],[1,4],[5,10],[9,11],[3,7]];
+ok(caseIds.every((c,i)=>c===caseSeq.flat()[i]),'Assessment follows the roleplay presentation order');
+ok(quizData.questions.every((q,i)=>q.skill===caseSeq.findIndex(pair=>pair.includes(q.caseId))),'Answer reasoning aligned to the assigned primary technique');
+ok(index.includes('session4-final-exam.js?v=20261115-12cases-6min-v1'),'Updated exam JS asset in page');
+ok(index.includes('session4-final-quiz-data.js?v=20261115-12cases-v1'),'Updated exam data asset in page');
 const r=read('resilience.html');
 ok(r.includes('classroom-flow.js'),'live classroom logic preserved');
 ok(r.includes('resilience-live.js'),'live group engine preserved');
