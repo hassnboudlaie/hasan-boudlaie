@@ -39,7 +39,7 @@ for(const token of ['id="hubQuickAccess"','id="hubPinnedList"','id="hubRecentLis
 const descriptions=[...hub.matchAll(/<a class="super-app-link"[^>]*>[\s\S]*?<small data-en="([^"]+)" data-fa="([^"]+)"/g)];
 assert.equal(descriptions.length,21,"Each app needs one task-oriented description");
 assert.equal(descriptions.filter(x=>x[1]==="Open independent app").length,0,"Generic app descriptions are not actionable");
-for(const token of ['hb-hub-saved-apps-v1','hb-hub-recent-apps-v1','hub-quick-link','aria-pressed','replaceChildren','valid(values)'])
+for(const token of ['hb-hub-saved-apps-v1','hb-hub-recent-apps-v1','hub-quick-link','aria-pressed','replaceChildren','const valid=values=>'])
  assert.ok(read("hub/catalog.js").includes(token),"Safe local-only quick access missing "+token);
 
 assert.match(hub,/catalog\.js\?v=5/,"Hub must load deep-audit search");
