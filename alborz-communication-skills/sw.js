@@ -5,7 +5,17 @@ const CACHE_PREFIX = 'alborz-communication-academy-';
 const SCOPE_PATH = new URL(self.registration.scope).pathname;
 const SHELL = [
   './', './index.html', './session2-demo.html',
-  './session4-mobile-first-20261115.css?v=1', './manifest.webmanifest', './icon-192.png', './icon-512.png'
+  // Session 3 and 4 HTML is routed from index.html; all JS must survive an offline reload.
+  './session3-listening-lab.js?v=20261108-r6-six-roles',
+  './session3-impeccable-journey.js?v=20261115-suite-r1',
+  './session4-speaking-lab.js?v=20261112-content-audit2',
+  './session4-final-quiz-data.js?v=20261112-r2-audited',
+  './session4-final-exam.js?v=20261112-r2-6min',
+  './session4-ob-mba-theme.js?v=20261115-session4-content-repair-r1',
+  './session4-ob-mba-theme.css?v=20261114-impeccable-r1',
+  './session4-mobile-first-20261115.css?v=1',
+  './alborz-impeccable.css?v=20261115-suite-r1',
+  './manifest.webmanifest', './icon-192.png', './icon-512.png'
 ];
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
