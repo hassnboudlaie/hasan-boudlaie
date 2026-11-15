@@ -31,13 +31,13 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal(await page.locator(".sa-award-card").count(),3);
    assert.equal(await page.locator(".sa-award-card.sa-earned").count(),1);
    if(width===390){
-     const pngButton=page.locator('[data-sa-download="medal-gold"][data-sa-format="png"]');
+     const pngButton=page.locator('#sabaAwardCollection [data-sa-download="medal-gold"][data-sa-format="png"]');
      assert.equal(await pngButton.count(),1,"earned gold medal has PNG download button");
      const [file]=await Promise.all([page.waitForEvent("download",{timeout:15000}),pngButton.click({timeout:10000})]);
      assert.ok(file.suggestedFilename().endsWith(".png"),"expected PNG not "+file.suggestedFilename());
      const buf=fs.readFileSync(await file.path());assert.deepEqual([...buf.subarray(0,8)],[137,80,78,71,13,10,26,10],"download must be actual PNG");
      const [s]=await Promise.all([page.waitForEvent("download",{timeout:15000}),
-       page.locator('[data-sa-download="medal-gold"][data-sa-format="svg"]').click({timeout:10000})]);
+       page.locator('#sabaAwardCollection [data-sa-download="medal-gold"][data-sa-format="svg"]').click({timeout:10000})]);
      assert.ok(s.suggestedFilename().endsWith(".svg"));
      assert.match(fs.readFileSync(await s.path(),"utf8"),/^<svg/);
    }
