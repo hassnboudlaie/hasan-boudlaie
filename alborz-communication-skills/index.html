@@ -589,7 +589,9 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 <style>
 .simple-academy .academy-courses{align-items:start}
 .claims-approved-poster{display:block;width:100%;height:auto;border-radius:16px}
-.simple-academy .academy-course-resilience{padding:14px;min-width:0}
+.simple-academy .academy-course-resilience,.simple-academy .academy-course-communication{padding:14px;min-width:0}
+.communication-approved-poster{display:block;width:100%;height:auto;border-radius:16px}
+.simple-academy .academy-course-communication .academy-course-cta{margin-top:13px}
 .simple-academy .direct-entry:focus-visible{outline:3px solid #b18b36;outline-offset:4px}
 
 /* Professional photography replaces legacy cartoon poster only on the claims course card. */
@@ -646,7 +648,7 @@ function home(){
  document.getElementById("app").innerHTML=header()+
  '<main class="simple-academy"><div class="wrap"><h1>انتخاب دوره</h1><div class="academy-courses">'+
  '<article class="academy-course-card academy-course-resilience"><img class="claims-approved-poster" src="assets/claims-resilience-approved-20261106.png" width="1024" height="1536" alt="پوستر کارگاه آموزشی استراتژی‌های تاب‌آوری فردی در دوران پرتلاطم؛ بیمه البرز" fetchpriority="high"><a class="academy-course-cta direct-entry" href="claims-workshop-v2.html">ورود به کارگاه کارشناسان خسارت</a></article>'+
- '<article class="academy-course-card academy-course-communication"><h2>مهارت‌های ارتباطات اثربخش</h2><a class="academy-course-cta direct-entry" href="?course=communication">ورود به دوره مهارت‌های ارتباطی</a></article>'+
+ '<article class="academy-course-card academy-course-communication"><img class="communication-approved-poster" src="assets/communication-course-poster-approved-20261115.png" width="1404" height="1536" alt="پوستر مهارت‌های ارتباطی؛ دوره توسعه شایستگی‌های مدیریتی ویژه رؤسای شعب بیمه البرز، با تدریس دکتر حسن بودلایی" fetchpriority="high"><a class="academy-course-cta direct-entry" href="?course=communication">ورود به دوره مهارت‌های ارتباطی</a></article>'+
  '</div></div></main>';
 }
 const labs={
