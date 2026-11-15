@@ -775,3 +775,42 @@ body:has(.s4-root){background:radial-gradient(circle at 92% 15%,#c3ddd8 0%,trans
 @media(prefers-reduced-motion:reduce){
  .s4-root .s4-path-card,.s4-root .s4-role-tile,.s4-root button.s4-tech{transition:none!important;transform:none!important}
 }
+
+/* S4 technique-first content architecture, 2026-11-15. Retains existing premium visual system. */
+.s4-root .s4-example-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;list-style:none;margin:13px 0 0;padding:0;counter-reset:none}
+.s4-root .s4-example-item{background:#f1f8fa;border:1px solid #c5dce3;border-radius:15px;padding:14px 15px;min-width:0}
+.s4-root .s4-example-item strong{color:#116078;display:block;font-size:16px;margin-bottom:5px}
+.s4-root .s4-example-item p{font-size:clamp(16px,1.5vw,19px);line-height:1.85;margin:0}
+.s4-root .s4-tech-detail-content>div:nth-child(2){grid-column:1/-1}
+.s4-root .s4-linked-roleplays{margin-top:20px;padding:20px;background:#f2f8f8;border:2px solid #bdd9da;border-radius:18px}
+.s4-root .s4-linked-roleplays h4{font-size:clamp(21px,2vw,26px);font-weight:900;margin:0 0 7px}
+.s4-root .s4-linked-help{font-size:17px;line-height:1.85;margin:0 0 14px;color:#31556a}
+.s4-root .s4-linked-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.s4-root button.s4-linked-case{display:grid;gap:5px;text-align:right;background:#fff;border:2px solid #a8c6cf;border-radius:16px;padding:17px;min-width:0;color:#184560}
+.s4-root button.s4-linked-case:hover,.s4-root button.s4-linked-case:focus-visible{border-color:#0e7184;outline:3px solid #b5dadd}
+.s4-root .s4-linked-index{font-size:14px;color:#116b75;font-weight:800}
+.s4-root .s4-linked-case strong{font-size:21px;font-weight:900}
+.s4-root .s4-linked-case small{font-size:15px;font-weight:800;color:#13765f}
+.s4-root .s4-linked-reason{font-size:17px;line-height:1.85;color:#42617a}
+.s4-root .s4-cases.s4-case-flat{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.s4-root .s4-case-flat .s4-case{height:auto;min-height:150px;align-items:start}
+.s4-root .s4-case-flat .s4-case-label{display:grid;gap:7px}
+.s4-root .s4-case-tags{display:grid;gap:6px;margin-top:8px}
+.s4-root .s4-case-tags span{display:block;width:fit-content;max-width:100%;border-radius:8px;padding:4px 9px;line-height:1.7;white-space:normal;text-align:right;font-size:14px}
+.s4-root .s4-direct-tag{background:#e0f2e8;color:#14614c}
+.s4-root .s4-indirect-tag{background:#e9f0fa;color:#244d70}
+.s4-root .s4-relation-map{padding:17px 19px;background:#eef6f8;border:1px solid #c5dce7;border-radius:15px;margin:12px 0 17px;display:grid;gap:12px}
+.s4-root .s4-relation-map h4{font-size:20px;margin:0;color:#174762}
+.s4-root .s4-relation-direct{padding:12px 13px;background:#e1f5e9;border-radius:11px}
+.s4-root .s4-relation-direct strong{color:#086b4d}
+.s4-root .s4-relation-indirect{padding:12px 13px;background:#e4eef9;border-radius:11px}
+.s4-root .s4-relation-indirect strong{color:#234b70}
+.s4-root .s4-relation-map p,.s4-root .s4-relation-map li{font-size:17px;line-height:1.9;margin:5px 0}
+.s4-root .s4-relation-map ul{margin:4px 0;padding-right:21px}
+@media(max-width:800px){
+ .s4-root .s4-example-list{grid-template-columns:1fr}
+ .s4-root .s4-linked-pair,.s4-root .s4-cases.s4-case-flat{grid-template-columns:1fr}
+ .s4-root .s4-example-item p,.s4-root .s4-linked-reason{font-size:18px}
+ .s4-root .s4-linked-roleplays{padding:17px 14px}
+ .s4-root .s4-case-tags span{font-size:15px}
+}
