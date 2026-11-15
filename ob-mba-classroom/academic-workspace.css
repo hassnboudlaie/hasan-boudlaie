@@ -173,3 +173,77 @@ html[data-theme=dark] .ob-study-feature,html[data-theme=dark] .ob-teacher-hero{b
 html[data-theme=dark] .ob-roadmap-item.is-selected .ob-roadmap-number{background:#d5e7df;color:#153b45;border-color:#d5e7df}
 html[data-theme=dark] .ob-lesson-session-number{color:#8fd4bd}
 @media(prefers-reduced-motion:reduce){.ob-workspace .learning-card{transition:none!important}}
+
+/* Editorial entrance — structurally distinct desktop and mobile layouts */
+html[data-access=locked]{background:#f1f4f1}
+.entrance-root{min-height:100dvh;padding:30px 25px;background:#f1f4f1;display:grid;align-items:center;justify-items:center}
+.ob-entrance-shell.entrance-shell{
+ width:min(100%,1190px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(360px,.86fr);
+ gap:0;align-items:stretch;border-radius:20px;overflow:hidden;
+ background:#fff;border:1px solid #d5e2dd;box-shadow:0 25px 75px rgba(21,60,61,.10);
+}
+.ob-entrance-intro{
+ min-width:0;background:#173e46;color:#fff;padding:49px clamp(32px,5vw,70px);
+ display:flex;flex-direction:column;justify-content:space-between;gap:35px;
+}
+.ob-entrance-school{display:flex;align-items:center;gap:13px}
+.ob-entrance-school-mark{width:55px;height:55px;border:1px solid #f0dcba88;color:#f2ddba;border-radius:10px;display:grid;place-items:center;font:900 23px/1 Georgia,serif;flex:none}
+.ob-entrance-school div{display:grid;gap:2px}
+.ob-entrance-school strong{font-size:18px;font-weight:850;color:#fff}
+.ob-entrance-school small{font-size:15px;color:#d4e5df}
+.ob-entrance-editorial{display:grid;gap:22px;max-width:590px}
+.ob-entrance-editorial h1{color:#fff;font-size:clamp(38px,4.4vw,62px);line-height:1.47;font-weight:950;letter-spacing:0}
+.ob-entrance-editorial p{max-width:47ch;color:#dbeae5;font-size:19px;line-height:1.95}
+.ob-entrance-course-route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-block:1px solid #ffffff33;padding-block:20px}
+.ob-entrance-course-route>div{display:grid;gap:0;text-align:right;padding-inline:10px;border-inline-end:1px solid #ffffff2d}
+.ob-entrance-course-route>div:first-child{padding-inline-start:0;border-inline-end:0}
+.ob-entrance-course-route strong{color:#fff;font-size:34px;font-weight:950;line-height:1.3;font-variant-numeric:tabular-nums}
+.ob-entrance-course-route span{font-size:14px;color:#d7e3e2}
+.ob-entrance-intro-note{color:#c3d9d4;font-size:15px;line-height:1.8}
+.ob-entrance-form-side{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:37px clamp(20px,3.5vw,48px);background:#fff}
+.ob-entrance-form-side .entrance-brand{padding:0;display:grid;gap:4px;background:none;box-shadow:none;border-radius:0;color:#183840}
+.ob-entrance-form-side .entrance-brand .entrance-logo{display:none}
+.ob-entrance-form-side .entrance-brand small{font-size:15px;line-height:1.6;color:#637a76}
+.ob-entrance-form-side .entrance-brand strong{font-size:27px;font-weight:900;line-height:1.5;color:#173d44}
+.ob-entrance-form-side .entrance-card{padding:0;gap:17px;border:0;border-radius:0;box-shadow:none;background:none}
+.ob-entrance-form-side .entrance-card h2{font-size:23px;line-height:1.6;color:#193c43}
+.ob-entrance-form-side .entrance-tabs{background:#edf2ef;border:1px solid #dce7e0;gap:4px;padding:4px;border-radius:10px}
+.ob-entrance-form-side .entrance-tabs button{min-height:48px;border-radius:8px;font-size:17px;color:#335a57}
+.ob-entrance-form-side .entrance-tabs button[aria-pressed=true]{background:#196d5e;color:white;box-shadow:none}
+.ob-entrance-form-side .entrance-form{gap:8px}
+.ob-entrance-form-side .entrance-form label{font-size:16px;color:#234649;font-weight:850}
+.ob-entrance-form-side .entrance-form input{min-height:54px;border-radius:9px;border:1.5px solid #b9ccc5;font-size:19px;background:#fff;color:#16343a;padding:10px 13px;box-shadow:none}
+.ob-entrance-form-side .entrance-form input::placeholder{font-size:16px;color:#687e77}
+.ob-entrance-form-side .entrance-primary,.ob-entrance-form-side .entrance-secondary{min-height:53px;border-radius:9px;font-size:18px;font-weight:900;margin-top:12px}
+.ob-entrance-form-side .entrance-primary{background:#176a5c;border-color:#176a5c;color:white}
+.ob-entrance-form-side .entrance-primary:hover{background:#105248}
+.ob-entrance-form-side .entrance-hint{font-size:15px!important;color:#546a67;line-height:1.85}
+.ob-entrance-form-side .entrance-foot{font-size:13px;color:#687b77;font-weight:650}
+.ob-entrance-form-side .entrance-install-link{min-height:49px;font-size:16px;font-weight:850;background:#eff5f0;border:1px solid #d4e4da;border-radius:9px}
+.ob-entrance-form-side .entrance-install-link:hover{background:#deede2}
+.ob-entrance-form-side .entrance-card>p{font-size:17px;line-height:1.8}
+@media(max-width:850px){
+ .entrance-root{padding:16px 12px 25px}
+ .ob-entrance-shell.entrance-shell{grid-template-columns:1fr;max-width:550px;border-radius:15px}
+ .ob-entrance-intro{gap:14px;padding:23px 24px 21px}
+ .ob-entrance-editorial{gap:5px}
+ .ob-entrance-editorial h1{font-size:28px;line-height:1.5}
+ .ob-entrance-editorial h1 br{display:none}
+ .ob-entrance-editorial p{font-size:14px;line-height:1.8}
+ .ob-entrance-course-route{padding-block:11px}
+ .ob-entrance-course-route strong{font-size:23px}
+ .ob-entrance-course-route span{font-size:12px}
+ .ob-entrance-intro-note{display:none}
+ .ob-entrance-school-mark{width:42px;height:42px;font-size:17px}
+ .ob-entrance-school strong{font-size:15px}
+ .ob-entrance-school small{font-size:12px}
+ .ob-entrance-form-side{padding:23px 22px 25px}
+ .ob-entrance-form-side .entrance-brand strong{font-size:23px}
+}
+@media(max-width:360px){
+ .ob-entrance-intro{padding:18px}
+ .ob-entrance-form-side{padding:20px 15px}
+ .ob-entrance-editorial h1{font-size:25px}
+ .ob-entrance-form-side .entrance-tabs button{font-size:15px}
+}
+@media(display-mode:standalone){.ob-entrance-form-side .entrance-install-link{display:none}}
