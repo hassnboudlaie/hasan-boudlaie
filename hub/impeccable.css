@@ -123,3 +123,9 @@ html{scroll-padding-top:100px}body{overflow-wrap:break-word}
 @media(max-width:740px){.hub-quick-grid{grid-template-columns:1fr}.hub-quick-panel{padding:15px}}
 @media(max-width:390px){.super-app-entry>.super-app-link{padding-inline-end:57px}.super-favorite{inset-inline-end:8px}}
 @media(forced-colors:active){.super-favorite,.hub-quick-link,.hub-quick-panel{border:1px solid ButtonText}.super-favorite[aria-pressed=true] svg{fill:Highlight}}
+
+/* Keep a full accessible hit target when cards sit next to separate save actions. */
+.super-app-entry{isolation:isolate}
+.super-app-entry>.super-app-link{position:relative;z-index:0}
+.super-app-entry>.super-favorite{z-index:2}
+.super-app-entry>.super-app-link:hover{transform:none}
