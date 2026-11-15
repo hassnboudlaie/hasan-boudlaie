@@ -24,9 +24,31 @@ const server=http.createServer((req,res)=>{
   });
  }catch(e){res.writeHead(500);res.end(String(e))}
 });
+
+/* An isolated same-page stub prevents WebKit's localhost-vs-production
+   origin preflight from masquerading as a product issue. Only CI synthetic
+   identities use this. API event rendering and role permissions remain tested. */
+async function installAnalyticsFixture(context){
+ await context.addInitScript(()=>{
+  const nativeFetch=window.fetch.bind(window);
+  window.fetch=(input,init={})=>{
+   const uri=typeof input==="string"?input:input?.url||"";
+   if(!uri.includes("/functions/v1/mba-ob-learning-analytics"))return nativeFetch(input,init);
+   let args={};try{args=JSON.parse(init?.body||"{}")}catch{}
+   const person={student_id:"00000000-0000-4000-8000-000000000001",name:"دانشجوی آزمایشی",student_number:"123456789",visits:3,active_seconds:210,activity_count:6,latest_at:new Date().toISOString()};
+   const summary={visits:1,active_seconds:150,activity_count:4,latest_at:person.latest_at,by_area:{concepts:2}};
+   const result=args.action==="mine"?{ok:true,summary,recent:[],recent_visits:[],period_days:365}:
+    args.action==="classOverview"?{ok:true,students:[person],period_days:365}:
+    args.action==="studentDetail"?{ok:true,student:{id:person.student_id,name:person.name,student_number:person.student_number},summary,recent:[]}:{ok:true};
+   return Promise.resolve(new Response(JSON.stringify(result),{status:200,headers:{"Content-Type":"application/json"}}));
+  };
+ });
+}
+
 async function examine(browser,name,width,height){
  const context=await browser.newContext({viewport:{width,height},isMobile:width<=390,hasTouch:width<=390,deviceScaleFactor:1});
  try{
+  await installAnalyticsFixture(context);
   await context.addInitScript(()=>{
    localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({
     role:"student",token:"ob-a11y-synthetic",name:"دانشجوی تست"
@@ -171,6 +193,7 @@ async function verifyAcademicEntrance(browser,name,width,height){
 async function verifyTeachingConsole(browser,name,width,height){
  const context=await browser.newContext({viewport:{width,height},isMobile:width<500,hasTouch:width<500});
  try{
+  await installAnalyticsFixture(context);
   await context.addInitScript(()=>{
    localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"teacher",token:"ob-a11y-synthetic-teacher"}));
   });
@@ -235,6 +258,7 @@ async function verifyRepeatDevice(browser,name){
   });
  };
  try{
+  await installAnalyticsFixture(a);await installAnalyticsFixture(b);
   await mock(a);await mock(b);
   await a.addInitScript(({key,info})=>{
    localStorage.setItem(key,JSON.stringify({role:"student",token:"synthetic-device-a-token",name:info.name,student_number:info.student_number}));
