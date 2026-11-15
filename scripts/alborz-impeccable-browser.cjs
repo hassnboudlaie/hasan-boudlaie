@@ -134,6 +134,7 @@ async function ready(){
  await desk.page.locator('[data-s4-back]').first().click();
  await desk.check('S4 desktop list view returns',()=>desk.page.locator('.s4-root[data-s4-view="techniques"]').isVisible());
  await desk.page.locator('.s4-tech').first().click();
+ console.log('S4 desktop reopen detail:',JSON.stringify(await desk.page.evaluate(()=>({view:document.querySelector('.s4-root')?.dataset.s4View,hidden:document.querySelector('#s4-tech-detail')?.hidden,content:document.querySelector('#s4-tech-detail')?.textContent?.slice(0,240),examples:document.querySelectorAll('.s4-example-item').length,expanded:Array.from(document.querySelectorAll('.s4-tech')).map(x=>x.getAttribute('aria-expanded')),errors:window.__s4errors||null}))));
  await desk.check('S4 desktop reopens after back',()=>desk.page.locator('.s4-example-item').count()===3);
  await desk.overflow();
  await phone.goto('index.html?course=communication');
