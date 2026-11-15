@@ -7,6 +7,9 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const html=read('ob-mba-classroom/index.html'),js=read('ob-mba-classroom/app.js'),css=read('ob-mba-classroom/style.css'),sw=read('ob-mba-classroom/sw.js'),courseScript=read('ob-mba-classroom/course-content.js'),enrichmentScript=read('ob-mba-classroom/lesson-enrichment.js'),guidedJs=read('ob-mba-classroom/guided-learning.js'),guidedCss=read('ob-mba-classroom/guided-learning.css'),gateJs=read('ob-mba-classroom/access-gate.js'),gateCss=read('ob-mba-classroom/access-gate.css'),caseJs=read('ob-mba-classroom/case-portal.js'),caseCss=read('ob-mba-classroom/case-portal.css'),caseSchema=read('ob-mba-classroom/backend/mba_ob_case_assessments_v1.sql'),qrSvg=read('ob-mba-classroom/join-qr.svg'),approvalSql=read('ob-mba-classroom/backend/mba_ob_identity_approval_v2.sql'),presenterJs=read('ob-mba-classroom/presenter-player.js'),presenterCss=read('ob-mba-classroom/presenter-player.css'),sourceManifest=JSON.parse(read('ob-mba-classroom/materials/original/manifest.json'));
 const mobileCss=read('ob-mba-classroom/mobile-experience.css');
 assert.ok(html.includes('./mobile-experience.css?v=2'),'Mobile UX CSS is loaded after core styles');
+assert.ok(html.includes('./academic-workspace.css?v=3'),'Academic workspace layout is loaded after mobile styles');
+assert.ok(sw.includes('./academic-workspace.css?v=3'),'PWA caches new academic workspace');
+assert.ok(js.includes('ob-roadmap-grid')&&js.includes('ob-teacher-console')&&js.includes('ob-reading-layout'),'Student, instructor and reading structures are actually redesigned');
 assert.ok(sw.includes('./mobile-experience.css?v=2'),'Offline PWA caches mobile UX');
 assert.match(mobileCss,/@media\s*\(max-width:700px\)/,'Mobile-first layouts are explicit');
 assert.match(mobileCss,/\.student-redesign\s+\.learning-card/,'Student entry cards have mobile layout');
@@ -110,7 +113,7 @@ assert.ok(gateJs.includes('entrance-install-link')&&gateJs.includes('href="./ins
 assert.match(gateCss,/\.entrance-install-link/,'Install access must have accessible touch target');
 assert.ok(sw.includes('APP_SCOPE.pathname')&&sw.includes('!url.pathname.startsWith(APP_SCOPE.pathname)'),'App service worker must not intercept other independent apps');
 assert.ok(sw.includes("ob-mba-classroom-shell-v36"),'Updated standalone offline cache');
-assert.ok(sw.includes("./access-gate.js?v=19")&&html.includes("./access-gate.js?v=19"),'Versioned gate must be cached for reliable new install');
+assert.ok(sw.includes("./access-gate.js?v=20")&&html.includes("./access-gate.js?v=20"),'Versioned gate must be cached for reliable new install');
 assert.ok(installHtml.includes('برای اولین ورود و تأیید عضویت، اتصال اینترنت لازم است'),'Offline limitations must be explained');
 
 assert.equal(manifest.display,'standalone','PWA launches in standalone mode');
