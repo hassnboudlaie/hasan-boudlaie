@@ -111,7 +111,8 @@ async function verifyInstaller(browser,name){
   assert.match(await page.locator("#instructions").textContent(),/Chrome/);
   assert.match(await page.locator("#instructions").textContent(),/Samsung Internet/);
   await page.locator("#copyLink").click();
-  assert.equal(await page.locator("#installStatus").isVisible(),true,"Copy feedback must be announced");
+  await page.locator("#installStatus:visible").waitFor({timeout:5000});
+  assert.ok((await page.locator("#installStatus").textContent()).length>2,"Copy feedback must be announced");
   const measurements=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,dir:document.documentElement.dir}));
   assert.equal(measurements.dir,"rtl");
   assert.ok(measurements.overflow<=2,"Install page horizontal overflow "+measurements.overflow);
