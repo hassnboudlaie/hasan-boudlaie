@@ -17,7 +17,7 @@ const messages=[
  "اکنون مفاهیم را به زبان خودتان بازگو کنید؛ فهم عمیق با حفظ‌کردن متفاوت است.",
  "در تحلیل کیس، شواهد را از فرض‌ها جدا کنید. چه چیزی ممکن است از قلم افتاده باشد؟",
  "یک دیدگاه متفاوت پیدا کنید و فرض اولیه‌تان را دوباره بررسی کنید.",
- "یادگیری وقتی به عمل تبدیل می‌شود که یک Next Best Step مشخص داشته باشید.",
+ "یادگیری وقتی به عمل تبدیل می‌شود که یک گام عملی بعدی مشخص داشته باشید.",
  "پنج گام خودآموزی را کامل کرده‌اید. حالا می‌توانید آموخته‌ها را در موقعیت واقعی به کار ببرید."
 ];
 const keys=()=>{const id=window.OB_ACCESS?.student_number||window.OB_ACCESS?.student||"guest";return "mba-ob-learning-journey-v1:"+id};
@@ -33,7 +33,7 @@ function layout(){
  const note=messages[Math.min(num,messages.length-1)];
  const disabled=!sessionReady;
  return '<section class="obj-shell" aria-label="سفر یادگیری فردی">'+
- '<div class="obj-hero"><div class="obj-hero-top"><span>SELF-PACED LEARNING · جلسه '+fmt(activeSession)+'</span><span class="obj-badge">'+badge(num)+'</span></div>'+
+ '<div class="obj-hero"><div class="obj-hero-top"><span>یادگیری مستقل · جلسه '+fmt(activeSession)+'</span><span class="obj-badge">'+badge(num)+'</span></div>'+
  '<h3>سفر یادگیری مستقل من</h3><p>پنج گام کوتاه برای تبدیل مفاهیم رفتار سازمانی به تحلیل و تصمیم مدیریتی؛ در هر ساعت از شبانه‌روز.</p>'+
  '<div class="obj-progress-top"><strong>'+fmt(num)+' از '+fmt(steps.length)+' گام</strong><span>'+fmt(percent)+'٪ تکمیل خوداظهاری</span></div>'+
  '<div class="obj-track" role="progressbar" aria-valuenow="'+num+'" aria-valuemin="0" aria-valuemax="5" aria-label="پیشرفت سفر یادگیری"><span style="width:'+percent+'%"></span></div></div>'+
