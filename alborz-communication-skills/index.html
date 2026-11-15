@@ -609,8 +609,8 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 <script src="session3-listening-lab.js?v=20261108-r6-six-roles"></script>
 <script src="session3-impeccable-journey.js?v=20261115-suite-r1"></script>
 <script src="session4-speaking-lab.js?v=20261115-technique-first-r1"></script>
-<script src="session4-final-quiz-data.js?v=20261112-r2-audited"></script>
-<script src="session4-final-exam.js?v=20261112-r2-6min"></script>
+<script src="session4-final-quiz-data.js?v=20261115-12cases-v1"></script>
+<script src="session4-final-exam.js?v=20261115-12cases-6min-v1"></script>
 <script src="session4-ob-mba-theme.js?v=20261115-technique-first-r1"></script>
 <link rel="stylesheet" href="alborz-impeccable.css?v=20261115-suite-r1">
 </head>
@@ -1591,7 +1591,7 @@ function scoreS1(){
  const strongest='<div class="s1-result-block"><h4>✅ رفتارهایی که بیشتر گزارش کرده‌اید</h4><ul>'+high.map(x=>'<li><b>'+esc(x.info.title)+'</b> — پاسخ شما: '+x.v.toLocaleString("fa-IR")+' از ۵</li>').join('')+'</ul></div>';
  const weakest='<div class="s1-result-block"><h4>🎯 دو اولویت تمرین برای شما</h4>'+main.map((x,i)=>'<div class="s1-result-practice"><b>'+(i+1).toLocaleString("fa-IR")+'. '+esc(x.info.title)+'</b><p>'+esc(x.info.action)+'</p><small>شاخص مشاهده: '+esc(x.info.metric)+'</small></div>').join('')+'</div>';
  const caveat=isOther?'<div class="s1-assess-note">شما گروه دیگری را انتخاب کرده‌اید، اما پرسش‌ها درباره رفتار شخصی «من» نوشته شده‌اند؛ بنابراین این نتیجه فقط برداشت شماست و ارزیابی واقعی کارکنان یا سایر رؤسای شعب محسوب نمی‌شود.</div>':"";
- const itemTable='<details class="s1-result-detail"><summary>مشاهده پاسخ هر ۱۰ سؤال و برنامه پیگیری</summary><div class="s1-result-items">'+s1TestAnswers.map((v,i)=>'<div class="s1-result-item"><span>'+((i+1).toLocaleString("fa-IR"))+'. '+esc(s1ActionCatalog[i].title)+'</span><strong>'+v.toLocaleString("fa-IR")+' از ۵</strong><div class="s1-result-track"><i style="width:'+(v*20)+'%"></i></div></div>').join('')+'</div></details>';
+ const itemTable='<details class="s1-result-detail"><summary>مشاهده پاسخ هر ۱۲ سؤال و برنامه پیگیری</summary><div class="s1-result-items">'+s1TestAnswers.map((v,i)=>'<div class="s1-result-item"><span>'+((i+1).toLocaleString("fa-IR"))+'. '+esc(s1ActionCatalog[i].title)+'</span><strong>'+v.toLocaleString("fa-IR")+' از ۵</strong><div class="s1-result-track"><i style="width:'+(v*20)+'%"></i></div></div>').join('')+'</div></details>';
  const evalbox='<div class="s1-result-commit"><h4>📋 تعهد عملی تا جلسه بعد</h4><p>از دو اولویت بالا، فقط یک رفتار را طی سه روز در دست‌کم سه تعامل واقعی تمرین کنید. تعداد اجرا و واکنش مشاهده‌شده را ثبت کنید؛ برای ثبت داده، نام یا مشخصات مشتری را وارد نکنید.</p><button type="button" onclick="s1CopyPlan()">رونوشت برنامه شخصی من</button></div>';
  const target=document.getElementById("s1-profile");
  target.innerHTML=base+caveat+strongest+weakest+itemTable+evalbox;
