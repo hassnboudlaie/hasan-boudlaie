@@ -16,6 +16,22 @@ assert.doesNotThrow(()=>new Function(attendanceJs),'Attendance frontend must par
 assert.doesNotThrow(()=>new Function('window',courseScript),'Course data JavaScript must parse');
 assert.doesNotThrow(()=>new Function('window',enrichmentScript),'Rich lesson data must parse');
 assert.doesNotThrow(()=>new Function(installJs),'Install JavaScript must parse');
+for(const f of ['learning-analytics.js','learning-journey.js','student-devices.js']){
+ assert.doesNotThrow(()=>new Function(read('ob-mba-classroom/'+f)),f+' must parse');
+}
+const crossDevice=read('ob-mba-classroom/backend/edge-student-devices.ts');
+const crossDeviceSql=read('ob-mba-classroom/backend/mba_ob_student_cross_device_v1.sql');
+const analyticsEdge=read('ob-mba-classroom/backend/edge-learning-analytics.ts');
+const analyticsSql=read('ob-mba-classroom/backend/mba_ob_learning_analytics_v1.sql');
+assert.ok(crossDevice.includes('studentDeviceLogin')&&crossDevice.includes('mba_ob_verify_device_password'),'Approved member can log in to other devices securely');
+assert.ok(crossDeviceSql.includes("extensions.crypt")&&crossDeviceSql.includes("locked_until"),'Student password must be bcrypt-hashed and rate-limited');
+assert.ok(analyticsSql.includes('enable row level security')&&analyticsSql.includes('revoke all'),'Learning analytics RLS and grants required');
+assert.ok(analyticsEdge.includes('studentDetail')&&analyticsEdge.includes('classOverview'),'Faculty must have per-student analytics');
+assert.ok(html.includes('learning-journey.css?v=1')&&html.includes('learning-analytics.css?v=1')&&html.includes('student-devices.css?v=1'),'Learning experience style bundles must be loaded');
+assert.ok(gateJs.includes('entranceReturning')&&gateJs.includes('studentDeviceLogin'),'Existing approved student needs cross-device password login');
+assert.ok(gateJs.includes('learning-analytics.js?v=1')&&gateJs.includes('learning-journey.js?v=1'),'Authorized learner scripts load after approval');
+assert.ok(js.includes('window.OB_ANALYTICS?.onRender')&&js.includes('window.OB_JOURNEY?.homeHTML'),'Learner analytics and journey are integrated');
+
 for(const file of ['ob-mba-classroom/session-case-choices.js','ob-mba-classroom/case-export.js','ob-mba-classroom/quiz-portal.js']){
  assert.doesNotThrow(()=>new Function(read(file)),file+' must parse');
 }
@@ -102,7 +118,7 @@ assert.ok(installJs.includes('beforeinstallprompt')&&installJs.includes('appinst
 assert.ok(gateJs.includes('entrance-install-link')&&gateJs.includes('href="./install.html"'),'Allameh entrance must offer install before login');
 assert.match(gateCss,/\.entrance-install-link/,'Install access must have accessible touch target');
 assert.ok(sw.includes('APP_SCOPE.pathname')&&sw.includes('!url.pathname.startsWith(APP_SCOPE.pathname)'),'App service worker must not intercept other independent apps');
-assert.ok(sw.includes("ob-mba-classroom-shell-v34"),'Updated standalone offline cache');
+assert.ok(sw.includes("ob-mba-classroom-shell-v35"),'Updated standalone offline cache');
 assert.ok(sw.includes("./access-gate.js?v=19")&&html.includes("./access-gate.js?v=19"),'Versioned gate must be cached for reliable new install');
 assert.ok(installHtml.includes('برای اولین ورود و تأیید عضویت، اتصال اینترنت لازم است'),'Offline limitations must be explained');
 

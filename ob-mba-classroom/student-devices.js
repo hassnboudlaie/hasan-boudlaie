@@ -31,7 +31,7 @@ function ensureDialog(){
 async function submit(e){
  e.preventDefault();
  const form=e.currentTarget,status=dialog.querySelector("#obDeviceStatus");
- const password=form.password.value,confirm=form.confirm.value;
+ const password=form.elements.namedItem('password').value,confirm=form.elements.namedItem('confirm').value;
  if(password!==confirm){status.textContent="دو رمز واردشده یکسان نیستند.";return}
  if(password.length<12||password.length>128||!/\p{L}/u.test(password)||!/[0-9]/.test(password)){
   status.textContent="رمز باید حداقل ۱۲ نویسه و شامل حرف و عدد لاتین باشد.";return;
