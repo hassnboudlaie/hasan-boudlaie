@@ -615,7 +615,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 <link rel="stylesheet" href="alborz-impeccable.css?v=20261115-suite-r1">
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><main style="max-width:980px;margin:36px auto;padding:24px;font:20px/2 Tahoma,Arial,sans-serif;direction:rtl;color:#173d5d;background:#fff;border:1px solid #dde7e5;border-radius:18px"><h1 style="font-size:29px;margin:0 0 15px">آکادمی مهارت‌های ارتباطی بیمه البرز</h1><p>دسترسی سریع به کلاس و محتوای آموزشی</p><nav style="display:flex;gap:12px;flex-wrap:wrap"><a style="background:#126a61;color:#fff;padding:12px 18px;border-radius:12px" href="?course=communication">ورود به دوره مهارت‌های ارتباطی</a><a style="background:#173d5d;color:#fff;padding:12px 18px;border-radius:12px" href="?m=4">جلسه چهارم</a><a style="background:#eaf3f2;color:#173d5d;padding:12px 18px;border-radius:12px" href="session2-demo.html">جلسه دوم</a><a style="background:#eaf3f2;color:#173d5d;padding:12px 18px;border-radius:12px" href="claims-workshop-v2.html">کارگاه خسارت</a></nav></main></div>
 <script>
 const sessions=[
 {id:0,title:"جلسه صفر | هوش مصنوعی کاربردی برای رؤسای شعب",desc:"شروع عملی با چت‌جی‌پی‌تی؛ ساخت حساب رایگان، مسیر ارتقا، کاربردهای روزمره رئیس شعبه و اصول استفاده امن.",topics:["چت‌جی‌پی‌تی","هوش مصنوعی برای رؤسای شعب","دستوردهی به هوش مصنوعی","محرمانگی"],goal:"رئیس شعبه با یک مسیر ساده و کاربردی وارد استفاده از هوش مصنوعی شود و بداند کجا، چگونه و با چه ملاحظات محرمانگی از چت‌جی‌پی‌تی کمک بگیرد.",outline:["هوش مصنوعی برای رئیس شعبه؛ چه کمکی می‌کند و چه کاری را نباید به آن واگذار کرد","ساخت حساب رایگان چت‌جی‌پی‌تی و شروع کار در chatgpt.com","آشنایی کلی با نسخه رایگان و مسیر ارتقا به پلن‌های پولی متناسب با نیاز","در صورت محدودیت پرداخت: آشنایی با استفاده از واسط پرداخت مانند نامبرلند؛ ترجیح ارتقای حساب شخصی و پرهیز از حساب مشترک یا آماده","کاربردها در شعبه: تهیه پیش‌نویس نامه و پیام، خلاصه‌سازی بخشنامه، گزارش مدیریتی، برنامه جلسه، آموزش و نقش‌آفرینی","کمک به بررسی پرونده‌ها فقط برای خلاصه‌سازی، ساخت فهرست کنترل و کشف نکات قابل بررسی؛ تصمیم نهایی با انسان","اصول دستور متنی نویسی ساده: نقش + مسئله + زمینه + خروجی مورد انتظار","حریم خصوصی و محرمانگی: عدم بارگذاری اطلاعات هویتی، مالی یا پرونده واقعی مشتری بدون مجوز و ناشناس‌سازی","اتصال چت‌جی‌پی‌تی به ابزارهای کاری مانند جیمیل، تقویم گوگل و گوگل‌درایو در صورت دسترسی و اعطای مجوز","تمرین‌های اولیه با سناریوهای فرضی و داده‌های غیرواقعی"]},
@@ -1637,8 +1637,9 @@ function renderAcademyAfterLogin(){
 const params=new URLSearchParams(location.search); const hasM=params.has("m"); const m=Number(params.get("m")); const view=params.get("view"); const item=params.get("item");
 if(hasM && (m===3||m===4))sessionPage(m); else if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else if(params.get("course")==="communication")communicationHome(); else home();
 }
-if(!document.documentElement.classList.contains("alborz-class-locked"))renderAcademyAfterLogin();
-document.addEventListener("alborz-classroom-authenticated",renderAcademyAfterLogin);
+function safeRenderAcademy(){try{renderAcademyAfterLogin();}catch(err){console.error("Alborz academy render failed:",err);const root=document.getElementById("app");if(root&&!root.textContent.trim())root.innerHTML='<main style="padding:28px;direction:rtl;font:20px Tahoma"><h1>آکادمی بیمه البرز</h1><p>برای ورود مستقیم از لینک‌های جلسات استفاده کنید.</p><a href="session2-demo.html">جلسه دوم</a> | <a href="?m=4">جلسه چهارم</a></main>';}}
+if(!document.documentElement.classList.contains("alborz-class-locked"))safeRenderAcademy();
+document.addEventListener("alborz-classroom-authenticated",safeRenderAcademy);
 </script>
 <!-- publish trigger -->
 </body>
