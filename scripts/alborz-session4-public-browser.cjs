@@ -46,9 +46,20 @@ async function run(){
   if(name==='mobile') await page.locator('.s4-mobile-nav [data-s4-open="exam"]').click();
   else await page.locator('.s4-page-flip [data-s4-advance]').click();
   assert(await page.locator('#s4-final-exam').isVisible(),name+': final quiz available');
+  await page.locator('#s4-final-exam [data-s4e-start]').click();
+  const correct=await page.evaluate(()=>window.ALBORZ_S4_FINAL_QUIZ.questions.map(q=>q.answer));
+  assert.equal(correct.length,12,name+': all twelve question items loaded anonymously');
+  for(let i=0;i<correct.length;i++){
+    const choice=page.locator('#s4-final-exam input[name="s4e-answer"]').nth(correct[i]);
+    await choice.check();
+    await page.locator('#s4-final-exam [data-s4e-next]').click();
+  }
+  assert((await page.locator('#s4-final-exam .s4e-score').innerText()).includes('۱۲ از ۱۲'),name+': result gives 12 out of 12');
+  assert.equal(await page.locator('#s4-final-exam .s4e-review').count(),12,name+': twelve answer reviews');
+  assert.equal(await page.locator('#s4-final-exam .s4e-explain').count(),48,name+': 48 option explanations');
   await page.screenshot({path:path.join(PROOF,name+'-exam.png'),fullPage:false});
   assert.deepEqual(errors,[],name+': no uncaught JavaScript errors');
-  report.push({device:name,http:200,techniques:6,examples:3,linkedRoleplays:2,cases:12,quiz:'accessible',consoleErrors:errors.length});
+  report.push({device:name,http:200,techniques:6,examples:3,linkedRoleplays:2,cases:12,quiz:'12 of 12 and 48 explanations verified',consoleErrors:errors.length});
   await page.close();
  }
  const backup=await browser.newPage();
@@ -62,4 +73,4 @@ async function run(){
  console.log('PASS: anonymous live UI, desktop/mobile lesson flow, 12 cases, quiz and static fallback\n'+JSON.stringify(report));
  await browser.close();
 }
-run().catch(e=>{console.error('FAILED:',e);process.exitCode=1;});
+run().catch(e=>{console.error('FAILED:',e);process.exit(1);});
