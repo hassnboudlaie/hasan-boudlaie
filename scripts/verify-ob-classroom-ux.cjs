@@ -5,6 +5,13 @@ const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const html=read('ob-mba-classroom/index.html'),js=read('ob-mba-classroom/app.js'),css=read('ob-mba-classroom/style.css'),sw=read('ob-mba-classroom/sw.js'),courseScript=read('ob-mba-classroom/course-content.js'),enrichmentScript=read('ob-mba-classroom/lesson-enrichment.js'),guidedJs=read('ob-mba-classroom/guided-learning.js'),guidedCss=read('ob-mba-classroom/guided-learning.css'),gateJs=read('ob-mba-classroom/access-gate.js'),gateCss=read('ob-mba-classroom/access-gate.css'),caseJs=read('ob-mba-classroom/case-portal.js'),caseCss=read('ob-mba-classroom/case-portal.css'),caseSchema=read('ob-mba-classroom/backend/mba_ob_case_assessments_v1.sql'),qrSvg=read('ob-mba-classroom/join-qr.svg'),approvalSql=read('ob-mba-classroom/backend/mba_ob_identity_approval_v2.sql'),presenterJs=read('ob-mba-classroom/presenter-player.js'),presenterCss=read('ob-mba-classroom/presenter-player.css'),sourceManifest=JSON.parse(read('ob-mba-classroom/materials/original/manifest.json'));
+const mobileCss=read('ob-mba-classroom/mobile-experience.css');
+assert.ok(html.includes('./mobile-experience.css?v=1'),'Mobile UX CSS is loaded after core styles');
+assert.ok(sw.includes('./mobile-experience.css?v=1'),'Offline PWA caches mobile UX');
+assert.match(mobileCss,/@media\s*\(max-width:700px\)/,'Mobile-first layouts are explicit');
+assert.match(mobileCss,/\.student-redesign\s+\.learning-card/,'Student entry cards have mobile layout');
+assert.match(mobileCss,/\.bottom-nav button\[aria-current="page"\]/,'Bottom navigation exposes a visible current state');
+assert.ok(js.includes('contextNav.hidden=ui.page==="home"'),'Home no longer wastes vertical space on back controls');
 const attendanceHtml=read('ob-mba-classroom/attendance.html'),attendanceJs=read('ob-mba-classroom/attendance.js'),attendanceCss=read('ob-mba-classroom/attendance.css'),attendanceSql=read('ob-mba-classroom/backend/mba_ob_attendance.sql'),attendanceApi=read('ob-mba-classroom/backend/edge-index.ts');
 const installHtml=read('ob-mba-classroom/install.html'),installJs=read('ob-mba-classroom/install.js'),installCss=read('ob-mba-classroom/install.css'),manifest=JSON.parse(read('ob-mba-classroom/manifest.webmanifest'));
 assert.doesNotThrow(()=>new Function(js),'Frontend JavaScript must parse');
@@ -102,7 +109,7 @@ assert.ok(installJs.includes('beforeinstallprompt')&&installJs.includes('appinst
 assert.ok(gateJs.includes('entrance-install-link')&&gateJs.includes('href="./install.html"'),'Allameh entrance must offer install before login');
 assert.match(gateCss,/\.entrance-install-link/,'Install access must have accessible touch target');
 assert.ok(sw.includes('APP_SCOPE.pathname')&&sw.includes('!url.pathname.startsWith(APP_SCOPE.pathname)'),'App service worker must not intercept other independent apps');
-assert.ok(sw.includes("ob-mba-classroom-shell-v34"),'Updated standalone offline cache');
+assert.ok(sw.includes("ob-mba-classroom-shell-v35"),'Updated standalone offline cache');
 assert.ok(sw.includes("./access-gate.js?v=19")&&html.includes("./access-gate.js?v=19"),'Versioned gate must be cached for reliable new install');
 assert.ok(installHtml.includes('برای اولین ورود و تأیید عضویت، اتصال اینترنت لازم است'),'Offline limitations must be explained');
 

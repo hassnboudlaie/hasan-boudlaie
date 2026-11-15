@@ -1,0 +1,140 @@
+/* Allameh MBA · mobile-first experience v1 (15 Nov 2026)
+ * An intentional layout pass beyond the shared Vazirmatn typography layer.
+ * No curriculum, grades, authentication, attendance or learner data changes.
+ * Keep the product quiet, readable, and touch-friendly on 320–430px devices.
+ */
+:root{
+  --ob-mobile-ink:#173b3d;
+  --ob-mobile-accent:#126557;
+  --ob-mobile-gold:#b68f58;
+}
+@media (min-width:701px) and (max-width:1024px){
+  .site{padding-inline:clamp(16px,3vw,26px)}
+  .learning-card{min-height:120px;grid-template-columns:60px minmax(0,1fr) 24px;padding:18px}
+  .learning-card-icon{width:56px;height:56px}
+  .learning-card-copy strong{font-size:23px}
+  .learning-card-copy small{font-size:17px}
+  #app .page-head{align-items:flex-start}
+}
+@media (max-width:700px){
+  html{scroll-padding-top:12px}
+  body{font-size:17px;line-height:1.75;overflow-x:clip}
+  .site{width:100%;max-width:100%;padding:10px 11px calc(96px + env(safe-area-inset-bottom))}
+  .mast{padding:12px 13px;gap:10px;border-radius:17px;min-height:68px}
+  .brand{min-width:0;gap:10px;flex:1}
+  .brand-emblem{width:43px;height:43px;min-width:43px;flex-basis:43px;font-size:17px;border-radius:12px}
+  .brand-copy{min-width:0}
+  .brand-copy h1{font-size:clamp(17px,4.5vw,21px);line-height:1.45;letter-spacing:0}
+  .brand-copy .eyebrow{font-size:clamp(10px,2.7vw,12px);line-height:1.5}
+  .header-actions{gap:6px;flex-shrink:0}
+  .header-actions .icon-btn,.demo-role-menu>summary{min-height:44px;min-width:44px}
+  .page,.student-redesign{gap:15px}
+  #app .card{padding:17px;border-radius:17px;box-shadow:none}
+  #app .page-head{align-items:flex-start;gap:10px}
+  #app .page-head h2{font-size:clamp(23px,6vw,29px);line-height:1.45}
+  #app .page-head p{font-size:16px;line-height:1.75}
+  #app .page-head .btn{min-height:44px;font-size:16px}
+  #app .grid.two,#app .grid.three,#app .grid.four{grid-template-columns:minmax(0,1fr)}
+  #app .btn,#app .link-card{min-height:48px}
+  .welcome-head{gap:8px;min-height:auto}
+  .welcome-head h2,.student-redesign .page-head h2{font-size:clamp(24px,6vw,30px)}
+  .welcome-eyebrow{font-size:13px}
+  .welcome-mark{display:none}
+  .student-focus{min-height:0;padding:19px 18px;border-radius:19px;gap:12px;background:linear-gradient(125deg,#13363b,#15554e);box-shadow:none}
+  .student-focus::before,.student-focus::after,.focus-spark{display:none}
+  .student-focus h3{font-size:clamp(23px,6vw,28px);line-height:1.5}
+  .focus-kicker{font-size:15px}
+  .focus-number{font-size:15px;padding:3px 10px}
+  .student-focus .focus-bottom{display:block}
+  .student-focus .btn{width:100%;min-width:0;min-height:50px;font-size:18px;margin:0}
+  .learning-paths-head{margin-top:4px}
+  .learning-paths-head h3{font-size:22px;line-height:1.5}
+  .learning-paths{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+  .student-redesign .learning-card{
+    min-height:88px;display:grid;grid-template-columns:49px minmax(0,1fr) 18px;
+    align-items:center;gap:12px;padding:13px 14px;border-radius:16px;
+    background:var(--panel);color:var(--text);border:1px solid var(--line);
+    border-inline-start:4px solid var(--ob-mobile-accent);
+    box-shadow:none;transform:none;
+  }
+  .student-redesign .learning-card.practice-card{border-inline-start-color:#9a7850}
+  .student-redesign .learning-card.sessions-card{border-inline-start-color:#50778c}
+  .student-redesign .learning-card.attendance-card{border-inline-start-color:#477c6a}
+  .student-redesign .learning-card::before{display:none}
+  .student-redesign .learning-card:hover{transform:none;box-shadow:none}
+  .student-redesign .learning-card:active{background:var(--soft)}
+  .student-redesign .learning-card-icon{width:48px;height:48px;min-width:48px;border-radius:13px;background:var(--soft);color:var(--text);border:0}
+  .student-redesign .learning-card-icon svg{width:28px;height:28px}
+  .student-redesign .learning-card-copy strong{font-size:19px;line-height:1.4;color:var(--text)}
+  .student-redesign .learning-card-copy small{font-size:14px;line-height:1.65;color:var(--muted)}
+  .student-redesign .learning-card-arrow{font-size:20px;color:var(--muted)}
+  .sy-home-link{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:9px;padding:15px 16px;border-radius:16px}
+  .sy-home-link strong{font-size:18px}
+  .sy-home-link p{font-size:15px}
+  .sy-home-link .btn{justify-self:stretch;width:100%;font-size:16px}
+  .term-progress{padding:14px 16px;border-radius:16px}
+  .term-progress-head{gap:8px;flex-wrap:wrap}
+  .term-progress-head strong,.term-progress-head span{font-size:15px}
+  #app .disclosure>summary{min-height:48px;font-size:17px;line-height:1.6}
+  .lesson-page .page-head{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+  .lesson-page .page-head .btn{justify-self:stretch;width:100%}
+  .lesson-paths{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #app .lesson-track{min-height:62px;display:flex;flex-direction:row;justify-content:center;gap:9px;padding:10px 9px;font-size:17px;line-height:1.5;border-radius:15px}
+  .lesson-track-icon{width:29px;height:29px;flex-shrink:0}
+  .lesson-track-icon svg{width:23px;height:23px}
+  .section-picker{display:grid;gap:7px}
+  .section-picker label{font-size:16px}
+  .section-picker select{width:100%;min-height:54px;font-size:18px;border-radius:12px}
+  .context-nav{position:sticky;top:5px;padding:7px 8px;margin:9px 0 13px;border-radius:13px;box-shadow:0 4px 13px #14263c14}
+  .context-nav-actions{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:7px}
+  .context-nav-actions button{min-height:45px;padding:7px 9px;font-size:15px}
+  .context-location{display:none}
+  #app .gr-shell{max-width:100%}
+  #app .gr-header{padding:17px 14px}
+  #app .gr-stage{min-width:0}
+  #app .gr-step-rail{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity}
+  #app .gr-stage-tab{scroll-snap-align:start}
+  #app .gr-stage .gr-part p{font-size:20px;line-height:1.9}
+  #app textarea,#app input,#app select{max-width:100%}
+  #app textarea{min-height:120px;font-size:18px}
+  .bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr));padding:6px max(7px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));gap:3px;background:var(--panel);box-shadow:0 -7px 20px #14263c15}
+  .bottom-nav button{min-height:58px;font-size:13px;line-height:1.45;border-radius:11px;padding:5px 1px;gap:2px}
+  .bottom-nav .nav-icon{font-size:23px}
+  .bottom-nav button[aria-current="page"]{background:var(--soft);color:var(--text);box-shadow:inset 0 -3px 0 var(--ob-mobile-accent)}
+  .entrance-root{padding:12px 11px calc(24px + env(safe-area-inset-bottom));align-content:start}
+  .entrance-shell{width:min(100%,470px);gap:12px}
+  .entrance-brand{padding:14px;border-radius:17px;gap:11px}
+  .entrance-logo{width:48px;height:48px;min-width:48px;border-radius:13px;font-size:20px}
+  .entrance-brand strong{font-size:clamp(20px,5vw,24px)}
+  .entrance-brand small{font-size:14px}
+  .entrance-card{padding:19px 16px;gap:14px;border-radius:18px;box-shadow:0 9px 24px #183f3016}
+  .entrance-card h2{font-size:25px}
+  .entrance-card>p,.entrance-hint{font-size:16px!important}
+  .entrance-tabs{gap:4px;padding:4px}
+  .entrance-tabs button{font-size:16px;min-height:48px}
+  .entrance-form label{font-size:17px}
+  .entrance-form input{font-size:19px;min-height:54px;padding:10px 13px}
+  .entrance-primary,.entrance-secondary{font-size:18px;min-height:51px}
+  .entrance-install-link{font-size:16px;min-height:49px}
+  .entrance-foot{font-size:14px}
+}
+@media(max-width:380px){
+  .site{padding-inline:8px}
+  .mast{padding-inline:9px}
+  .brand{gap:7px}
+  .brand-emblem{width:39px;height:39px;min-width:39px;flex-basis:39px}
+  .brand-copy h1{font-size:17px}
+  .brand-copy .eyebrow{font-size:10px}
+  .header-actions{gap:3px}
+  .student-redesign .learning-card{grid-template-columns:42px minmax(0,1fr) 14px;padding-inline:10px;gap:9px}
+  .student-redesign .learning-card-icon{width:42px;height:42px;min-width:42px}
+  .student-redesign .learning-card-copy strong{font-size:18px}
+  #app .lesson-track{font-size:16px;gap:5px}
+  .bottom-nav button{font-size:12px}
+}
+@media(max-height:580px) and (max-width:700px){
+  .context-nav{position:relative;top:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .student-redesign .learning-card,.bottom-nav button{transition:none}
+}
