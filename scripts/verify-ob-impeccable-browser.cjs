@@ -77,6 +77,54 @@ async function examine(browser,name,width,height){
   console.log("PASS",name,width,"Vazirmatn, focus, RTL, no overflow, axe high-severity=0");
  }finally{await context.close()}
 }
+
+async function verifyInstaller(browser,name){
+ const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ try{
+  const page=await context.newPage(),errors=[];
+  page.on("pageerror",e=>errors.push(e.message));
+  const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
+  await page.goto(base,{waitUntil:"domcontentloaded"});
+  const entrance=page.locator("#entryGate .entrance-install-link");
+  await entrance.waitFor({timeout:12000});
+  assert.equal(await entrance.isVisible(),true,"Install must be reachable before teacher/student login");
+  assert.equal(await entrance.getAttribute("href"),"./install.html");
+  await entrance.click();
+  await page.waitForURL(/\/install\.html/);
+  assert.equal(await page.locator("#installAction").isVisible(),true,"Mobile install action missing");
+  assert.equal(await page.locator(".open-app").getAttribute("href"),"./");
+  const manifest=await page.evaluate(async()=>{
+   const href=document.querySelector('link[rel="manifest"]')?.href;
+   if(!href)return null;
+   const response=await fetch(href);
+   if(!response.ok)return null;
+   return response.json();
+  });
+  assert.ok(manifest,"Install page must expose a reachable manifest");
+  assert.equal(manifest.display,"standalone");
+  assert.equal(manifest.start_url,"./");
+  assert.equal(manifest.scope,"./");
+  assert.ok(manifest.icons.some(i=>i.sizes==="192x192"));
+  assert.ok(manifest.icons.some(i=>i.sizes==="512x512"));
+  await page.locator("#instructions summary").click();
+  assert.equal(await page.locator("#instructions").evaluate(e=>e.open),true,"Android and iPhone install steps must expand");
+  assert.match(await page.locator("#instructions").textContent(),/Chrome/);
+  assert.match(await page.locator("#instructions").textContent(),/Samsung Internet/);
+  await page.locator("#copyLink").click();
+  await page.locator("#installStatus:visible").waitFor({timeout:5000});
+  assert.ok((await page.locator("#installStatus").textContent()).length>2,"Copy feedback must be announced");
+  const measurements=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,dir:document.documentElement.dir}));
+  assert.equal(measurements.dir,"rtl");
+  assert.ok(measurements.overflow<=2,"Install page horizontal overflow "+measurements.overflow);
+  const axe=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
+  const serious=axe.violations.filter(v=>["serious","critical"].includes(v.impact));
+  if(serious.length)throw Error("Install page accessibility "+JSON.stringify(serious.map(v=>({id:v.id,targets:v.nodes.slice(0,3).map(n=>n.target)}))));
+  if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"allameh-390-install.png"),fullPage:true});
+  assert.deepEqual(errors,[],"Install journey runtime errors");
+  console.log("PASS installer",name,"login CTA, manifest, device instructions, copy, RTL, axe serious/critical=0");
+ }finally{await context.close()}
+}
+
 async function main(){
  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
  try{
@@ -85,7 +133,7 @@ async function main(){
    ["webkit",webkit,[[390,844],[1366,900]]]
   ]){
    const browser=await driver.launch({headless:true});
-   try{for(const [w,h] of sizes)await examine(browser,name,w,h)}
+   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyInstaller(browser,name)}
    finally{await browser.close()}
   }
  }finally{server.close()}

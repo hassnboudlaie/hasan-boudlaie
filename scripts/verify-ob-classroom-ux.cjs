@@ -99,6 +99,13 @@ assert.ok(installHtml.includes('id="installAction"')&&installHtml.includes('Add 
 assert.ok(installHtml.includes('<details id="instructions"')&&!installHtml.includes('about-demo'),'Install help stays collapsed and redundant version details are removed');
 assert.ok(!installHtml.includes('وضعیت فعلی اپ')&&!installHtml.includes('آیکون «مدیریت رفتار سازمانی» اضافه می‌شود'),'Verbose install copy removed');
 assert.ok(installJs.includes('beforeinstallprompt')&&installJs.includes('appinstalled'),'Installer handles supported and fallback paths');
+assert.ok(gateJs.includes('entrance-install-link')&&gateJs.includes('href="./install.html"'),'Allameh entrance must offer install before login');
+assert.match(gateCss,/\.entrance-install-link/,'Install access must have accessible touch target');
+assert.ok(sw.includes('APP_SCOPE.pathname')&&sw.includes('!url.pathname.startsWith(APP_SCOPE.pathname)'),'App service worker must not intercept other independent apps');
+assert.ok(sw.includes("ob-mba-classroom-shell-v34"),'Updated standalone offline cache');
+assert.ok(sw.includes("./access-gate.js?v=19")&&html.includes("./access-gate.js?v=19"),'Versioned gate must be cached for reliable new install');
+assert.ok(installHtml.includes('برای اولین ورود و تأیید عضویت، اتصال اینترنت لازم است'),'Offline limitations must be explained');
+
 assert.equal(manifest.display,'standalone','PWA launches in standalone mode');
 assert.equal(manifest.scope,'./','PWA stays within the MBA classroom');
 assert.equal(manifest.start_url,'./','Installed app starts on Allameh page');
