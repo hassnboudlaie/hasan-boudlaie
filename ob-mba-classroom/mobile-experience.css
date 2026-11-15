@@ -138,3 +138,292 @@
 @media(prefers-reduced-motion:reduce){
   .student-redesign .learning-card,.bottom-nav button{transition:none}
 }
+
+/* Allameh MBA • Academic interface v2 • 15 Nov 2026
+   Operate/Read surfaces, based on the Impeccable 4.3.1 craft floor.
+   Visual-only, additive, reversible. Student records, approvals, sessions,
+   assessments and existing JavaScript contracts are deliberately untouched. */
+:root {
+  --navy:#172e3d;
+  --navy2:#294756;
+  --bg:#f5f7f6;
+  --panel:#ffffff;
+  --soft:#edf3f2;
+  --text:#1b303c;
+  --muted:#526673;
+  --line:#d6e1e0;
+  --gold:#9d783f;
+  --gold2:#f3dbad;
+  --ok:#116b57;
+  --radius:16px;
+  --shadow:0 8px 28px rgba(21,47,59,.055);
+  --ob-mobile-accent:#176b5d;
+}
+html[data-theme="dark"]{
+  --navy:#0b2530;
+  --navy2:#183a46;
+  --bg:#10222b;
+  --panel:#18333b;
+  --soft:#23454c;
+  --text:#eef5f2;
+  --muted:#bbd0cf;
+  --line:#3e6164;
+  --gold:#e5c48d;
+  --ok:#81dac0;
+  --shadow:none;
+}
+body {
+  background:var(--bg);
+  color:var(--text);
+  letter-spacing:0;
+  font-variant-numeric:tabular-nums;
+}
+.site{max-width:1180px}
+.mast{
+  border-radius:17px;
+  background:var(--navy);
+  box-shadow:0 8px 25px rgba(12,38,51,.09);
+}
+.brand-emblem{
+  background:rgba(255,255,255,.085);
+  border:1px solid rgba(245,230,196,.4);
+  border-radius:13px;
+  color:var(--gold2);
+}
+.brand-copy h1{font-weight:850;letter-spacing:0}
+.brand-copy .eyebrow{color:#eee3c8}
+:where(.header-actions .icon-btn,.demo-role-menu>summary){
+  background:rgba(255,255,255,.075);
+  border-color:rgba(255,255,255,.26);
+}
+#app .page{gap:clamp(16px,2.4vw,24px)}
+#app .page-head h2,.welcome-head h2{
+  line-height:1.42;
+  font-size:clamp(25px,2.65vw,34px);
+  letter-spacing:-.015em;
+}
+#app .card{
+  border-radius:16px;
+  border-color:var(--line);
+  box-shadow:var(--shadow);
+}
+.welcome-head{padding:0;min-height:auto}
+.welcome-eyebrow,.welcome-mark{display:none}
+.welcome-head h2{font-weight:850}
+.student-redesign{gap:clamp(15px,2.25vw,24px)}
+.student-focus{
+  min-height:190px;
+  padding:clamp(19px,3vw,32px);
+  gap:14px;
+  color:#fff;
+  background:#174b50;
+  border:1px solid #2b6968;
+  border-radius:18px;
+  box-shadow:0 9px 25px rgba(14,55,58,.13);
+}
+.student-focus::before,.student-focus::after,.student-focus .focus-spark{display:none}
+.student-focus h3{
+  color:#fff;
+  font-size:clamp(24px,2.6vw,32px);
+  line-height:1.45;
+  max-width:28ch;
+}
+.student-focus .focus-kicker{color:#f2ddbd}
+.student-focus .focus-number{
+  background:rgba(255,255,255,.09);
+  border-color:rgba(255,255,255,.33);
+  color:#fff;
+}
+.student-focus .btn.gold{
+  background:#f1ddba;
+  color:#263b3c;
+  border-color:#f1ddba;
+  box-shadow:none;
+}
+.student-focus .btn.gold:hover{background:#fff0d2;border-color:#fff0d2}
+.learning-paths{gap:12px}
+.learning-paths-head h3{
+  font-size:clamp(20px,2vw,25px);
+  line-height:1.45;
+}
+.student-redesign .learning-card{
+  min-height:118px;
+  grid-template-columns:55px minmax(0,1fr) 20px;
+  gap:14px;
+  padding:19px 20px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--panel);
+  color:var(--text);
+  box-shadow:none;
+  transform:none;
+  transition:background-color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;
+}
+.student-redesign .learning-card.practice-card{
+  background:var(--panel);
+  border-color:var(--line);
+}
+.student-redesign .learning-card::before{display:none}
+.student-redesign .learning-card:hover{
+  border-color:var(--ob-mobile-accent);
+  background:var(--soft);
+  box-shadow:0 6px 18px rgba(16,57,58,.055);
+  transform:none;
+}
+.student-redesign .learning-card:active{transform:none;background:var(--soft)}
+.student-redesign .learning-card:focus-visible{
+  outline:3px solid var(--ob-focus);
+  outline-offset:3px;
+}
+.student-redesign .learning-card-icon{
+  width:53px;height:53px;min-width:53px;
+  border:0;border-radius:12px;
+  background:var(--soft);color:var(--ob-mobile-accent);
+}
+.student-redesign .practice-card .learning-card-icon{color:#87643d}
+.student-redesign .sessions-card .learning-card-icon{color:#365e79}
+.student-redesign .attendance-card .learning-card-icon{color:#23735e}
+.student-redesign .learning-card-icon svg{width:29px;height:29px}
+.student-redesign .learning-card-copy strong{
+  display:block;
+  color:var(--text);
+  font-size:clamp(19px,1.95vw,23px);
+  line-height:1.48;
+  font-weight:850;
+}
+.student-redesign .learning-card-copy small{
+  color:var(--muted);
+  font-size:clamp(14px,1.4vw,16px);
+  line-height:1.6;
+}
+.student-redesign .learning-card-arrow{color:var(--ob-mobile-accent);font-size:22px}
+.sy-home-link,.term-progress{
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--panel);
+  box-shadow:none;
+}
+.sy-home-link strong,.term-progress-head strong{color:var(--text)}
+.term-progress-bar{background:var(--soft)}
+.term-progress-bar>span{background:#287365}
+#app .session-tile{
+  min-height:90px;
+  border-radius:13px;
+  border-color:var(--line);
+  box-shadow:none;
+  transition:border-color 160ms ease,background-color 160ms ease;
+}
+#app .session-tile:hover,
+#app .session-tile:focus-visible{background:var(--soft);border-color:var(--ob-mobile-accent)}
+#app .session-tile.published{border-color:#86afa5}
+#app .lesson-track{
+  border-width:1px;
+  border-radius:14px;
+  box-shadow:none;
+}
+#app .lesson-track.selected{
+  background:var(--navy);
+  color:#fff;
+  border-color:var(--navy);
+  box-shadow:none;
+}
+#app .lesson-track.selected .lesson-track-icon{
+  background:rgba(255,255,255,.14);
+  color:#fff;
+}
+#app .lesson-panel,#app .rich-accordion{
+  border-radius:14px;
+  overflow-wrap:anywhere;
+}
+#app .lesson-panel>summary{
+  font-size:clamp(18px,1.9vw,22px);
+  line-height:1.65;
+  min-height:54px;
+}
+#app :is(.lesson-panel-body,.rich-body,.gr-stage,.content-block){
+  line-height:1.9;
+}
+#app :is(.lesson-panel-body,.rich-body,.content-block) p{
+  max-width:73ch;
+}
+#app :is(textarea,input,select):focus-visible{
+  outline:3px solid var(--ob-focus);
+  outline-offset:2px;
+}
+#app .btn,.context-nav button{
+  border-radius:11px;
+  font-weight:800;
+}
+#app .btn:not(.secondary):not(.danger):not(.gold):hover{
+  filter:brightness(1.12);
+}
+#app .disclosure>summary{line-height:1.65}
+#app :is(.session-grid,.grid,.learning-paths,.lesson-paths)>*{min-width:0}
+.context-nav{
+  border:1px solid var(--line);
+  border-radius:13px;
+  box-shadow:0 5px 14px rgba(15,54,58,.065);
+}
+.bottom-nav button[aria-current="page"]{
+  color:var(--ob-mobile-accent);
+  font-weight:850;
+}
+.entrance-card{
+  border-radius:18px;
+  box-shadow:0 14px 32px rgba(19,55,56,.07);
+}
+.entrance-form :is(input,button){min-height:48px}
+.entrance-root :is(a,button):focus-visible{
+  outline:3px solid var(--ob-focus);
+  outline-offset:3px;
+}
+@media(max-width:700px){
+  .site{padding-inline:clamp(10px,3vw,17px)}
+  .mast{box-shadow:none;border-radius:15px}
+  .student-focus{
+    padding:20px 19px;
+    min-height:0;
+    border-radius:16px;
+    background:#174b50;
+    box-shadow:none;
+  }
+  .student-focus h3{font-size:clamp(22px,6vw,29px)}
+  .student-redesign .learning-card{
+    grid-template-columns:49px minmax(0,1fr) 18px;
+    min-height:88px;
+    padding:14px 15px;
+    border:1px solid var(--line);
+    border-inline-start:1px solid var(--line);
+    border-radius:14px;
+    gap:12px;
+  }
+  .student-redesign .learning-card.practice-card,
+  .student-redesign .learning-card.sessions-card,
+  .student-redesign .learning-card.attendance-card{
+    border-inline-start:1px solid var(--line);
+  }
+  .student-redesign .learning-card-icon{width:47px;height:47px;min-width:47px}
+  .student-redesign .learning-card-copy strong{font-size:19px}
+  .student-redesign .learning-card-copy small{font-size:14px}
+  .student-redesign .learning-card-arrow{font-size:18px}
+  .session-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .session-tile .num{font-size:24px}
+  .bottom-nav{box-shadow:0 -5px 18px rgba(13,45,51,.075)}
+  .bottom-nav button[aria-current="page"]{
+    background:var(--soft);
+    color:var(--ob-mobile-accent);
+    box-shadow:inset 0 -2px var(--ob-mobile-accent);
+  }
+  #app .page-head h2{font-size:clamp(23px,6vw,28px)}
+  #app .lesson-track{font-size:17px}
+  #app .lesson-panel>summary{font-size:19px}
+  .context-nav{box-shadow:none}
+}
+@media(max-width:370px){
+  .student-redesign .learning-card{gap:9px;padding-inline:10px}
+  .student-redesign .learning-card-copy strong{font-size:18px}
+  .session-tile{min-height:93px}
+}
+@media(prefers-reduced-motion:reduce){
+  .student-redesign .learning-card,#app .session-tile{transition:none}
+}
