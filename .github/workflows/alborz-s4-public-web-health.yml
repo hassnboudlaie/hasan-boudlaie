@@ -9,6 +9,10 @@ on:
       - 'alborz-communication-skills/session4-*.css'
       - 'alborz-communication-skills/session4-classroom-fallback.html'
       - 'alborz4.html'
+  pull_request:
+    paths:
+      - '.github/workflows/alborz-s4-public-web-health.yml'
+      - 'scripts/alborz-session4-public-browser.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -49,3 +53,27 @@ jobs:
           grep -Fq 'سه مثال ملموس' /tmp/s4-health/fallback.html
           ! grep -Fq '<script' /tmp/s4-health/fallback.html
           echo 'PASS: Public S4 web link, critical JS files and classroom fallback return HTTP 200 without credentials.'
+
+  browser-ui:
+    name: Real mobile and laptop public user flows
+    needs: public-url
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install headless browser
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Check public session four UI without a login
+        run: node scripts/alborz-session4-public-browser.cjs
+      - name: Save screenshots and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alborz-s4-anonymous-classroom-proof
+          path: artifacts/alborz-session4-live/
+          if-no-files-found: warn
