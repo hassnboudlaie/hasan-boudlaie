@@ -17,6 +17,10 @@ for(const [file,link] of checks){
 }
 const css=read('ob-mba-classroom/impeccable.css');
 const app=read('ob-mba-classroom/app.js');
+const mobile=read('ob-mba-classroom/mobile-experience.css');
+assert.ok(read('ob-mba-classroom/index.html').includes('./mobile-experience.css?v=1'),'Mobile-first CSS linked');
+assert.match(mobile,/\.entrance-card/,'Entrance supports mobile layout');
+assert.match(mobile,/max-width:380px/,'Small phones covered');
 const sw=read('ob-mba-classroom/sw.js');
 const font=fs.readFileSync(path.join(root,'ob-mba-classroom/assets/fonts/Vazirmatn.woff2'));
 assert.equal(font.subarray(0,4).toString(),'wOF2','Valid self-hosted WOFF2 font');
@@ -31,7 +35,7 @@ assert.match(app,/function focusMainAfterRoute\(\)/,'Focus is managed after app 
 assert.match(app,/aria-current="page"/,'Bottom navigation exposes current page');
 assert.ok(app.includes('const KEY="ob-mba-classroom-demo-v1"'),'Existing storage contract is preserved');
 assert.ok(app.includes('version:8,sessions:')&&app.includes('length:16'),'Course and storage schema remain intact');
-assert.ok(sw.includes('ob-mba-classroom-shell-v34'),'New PWA cache version');
+assert.ok(sw.includes('ob-mba-classroom-shell-v35'),'New PWA cache version');
 assert.ok(sw.includes("'./impeccable.css?v=1'")&&sw.includes("'./assets/fonts/Vazirmatn.woff2'"),'Font and CSS offline-cached');
 assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom/assets/fonts/OFL-Vazirmatn.txt')),'Font license available');
 console.log('PASS Allameh Impeccable typography, focus, RTL, offline font and storage-contract QA');
