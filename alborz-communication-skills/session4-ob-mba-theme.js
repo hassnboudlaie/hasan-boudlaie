@@ -60,7 +60,7 @@ const subtitles={
  technique:["درسنامه","تکنیک انتخاب‌شده","سه مثال شغلی و دو رول‌پلی اصلی این مهارت"],
  practice:["گام ۲ از ۳","۱۲ رول‌پلی؛ بدون گروه‌بندی","هر موقعیت یک تکنیک مستقیم و تکنیک‌های مکمل غیرمستقیم دارد."],
  case:["آزمایشگاه تعاملی","اجرای گفت‌وگو","چهار مرحله: اجرای اول، قواعد، اجرای دوم و بازخورد"],
- exam:["گام ۳ از ۳","آزمون پایانی","۱۰ سؤال موقعیتی؛ شمارش معکوس با اولین پاسخ آغاز می‌شود."],
+ exam:["گام ۳ از ۳","آزمون پایانی","۱۲ سؤال موقعیتی؛ شمارش معکوس با اولین پاسخ آغاز می‌شود."],
  guide:["ویژه مدرس","راهنمای اجرای کلاس","کنداکتور و زمان‌بندی ۱۲۰ دقیقه‌ای جلسه"]
 };
 let currentView="home",techIndex=0,caseIndex=0,caseReturn="practice";
@@ -95,7 +95,7 @@ function buildHome(){
  nav.innerHTML=[
  ["techniques","📘","۰۱","تکنیک‌های مدیریتی","شش مهارت، مثال‌های شعبه و خطاهای رایج"],
  ["practice","🎭","۰۲","آزمایشگاه گفت‌وگو","دوازده کیس، شش تکنیک، بدون گروه‌بندی"],
- ["exam","🏅","۰۳","آزمون و تحلیل نتیجه","ده سؤال، شش دقیقه و پاسخنامه تحلیلی"]
+ ["exam","🏅","۰۳","آزمون و تحلیل نتیجه","دوازده سؤال، شش دقیقه و پاسخنامه تشریحی"]
  ].map(a=>'<button type="button" class="s4-path-card" data-s4-open="'+a[0]+'"><span class="s4-path-sticker" aria-hidden="true">'+a[1]+'</span><span class="s4-path-copy"><small>'+a[2]+' · مسیر یادگیری</small><strong>'+a[3]+'</strong><span>'+a[4]+'</span></span><span class="s4-path-arrow" aria-hidden="true">←</span></button>').join("");
  hero.insertAdjacentElement("afterend",nav);
  if(!wrap.querySelector(".s4-home-footer")){
