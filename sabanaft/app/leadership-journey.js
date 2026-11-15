@@ -164,6 +164,7 @@ function renderIntro(){
  root.innerHTML='<div class="lj-shell" dir="rtl"><header class="lj-banner lj-intro-banner"><div class="lj-brand"><img src="./assets/my-leadership-icon.svg" alt="نشان اپ"><div><span>صبا نفت · مهارت‌های رهبری من</span><h1>سفر تعاملی رهبری بازتابی</h1></div></div><a class="lj-quiet" href="#/course">بازگشت به جلسات</a></header>'+html+'</div>';
 }
 function render(){
+ isolateBackground(false);
  D=Object.assign({},window.SABA_LEADERSHIP_JOURNEY,{steps:state&&state.contentSteps||window.SABA_LEADERSHIP_JOURNEY.steps});
  if(!state){renderIntro();updatePassport();return}
  if(state.mode==="competitive"&&state.pause.since&&C.syncPause(state,Date.now()))save();
@@ -174,7 +175,14 @@ function render(){
  else renderStep();
  updatePassport();
 }
+var isolated=[];
+function isolateBackground(active){
+ if(active&&isolated.length)return;
+ if(active){document.querySelectorAll('.topbar,.model-side-nav,.saba-tabbar,.skip-link').forEach(function(el){isolated.push([el,el.inert]);el.inert=true;});}
+ else{isolated.forEach(function(pair){pair[0].inert=pair[1];});isolated=[];}
+}
 function modal(html,cls){
+ isolateBackground(true);
  if(!root.querySelector("#ljModal"))lastFocus=document.activeElement;
  var old=root.querySelector("#ljModal");if(old)old.remove();
  var div=document.createElement("div");div.id="ljModal";div.className="lj-modal "+(cls||"");div.innerHTML='<div class="lj-dialog" role="dialog" aria-modal="true" aria-labelledby="ljModalTitle">'+html+'</div>';root.appendChild(div);
@@ -182,6 +190,7 @@ function modal(html,cls){
  var focus=div.querySelector("input,button");if(focus)focus.focus();
 }
 function closeModal(){
+ isolateBackground(false);
  root.querySelector("#ljModal")?.remove();var shell=root.querySelector(".lj-shell");if(shell)shell.inert=false;
  if(lastFocus&&lastFocus.isConnected)lastFocus.focus();
 }
@@ -325,7 +334,7 @@ root.addEventListener("input",function(e){
  if(e.target.matches('input[name="ljDecision"],#ljPractice,#ljRating'))saveDraft();
 });
 root.addEventListener("change",function(e){if(e.target.matches('input[name="ljDecision"],#ljPractice,#ljRating'))saveDraft()});
-window.addEventListener("hashchange",function(){if(active())render()});
+window.addEventListener("hashchange",function(){if(active())render();else closeModal()});
 window.addEventListener("storage",function(e){if(e.key===KEY){state=load();if(active())render();else updatePassport()}});
 var topbar=document.querySelector('.topbar');
 if(topbar&&window.ResizeObserver){new ResizeObserver(function(){root.style.setProperty('--lj-topbar-height',topbar.getBoundingClientRect().height+'px')}).observe(topbar)}

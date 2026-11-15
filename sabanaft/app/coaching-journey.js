@@ -24,7 +24,12 @@ var issueNames={clarity:'ابهام مسئولیت',capability:'کمبود مه�
 var draft={text:'',context:'project',urgency:'normal',issue:'unknown',extras:[]};
 try{var p=JSON.parse(localStorage.getItem(DRAFT)||'null');if(p&&typeof p==='object'){draft.text=String(p.text||'').slice(0,2200);if(typeof p.context==='string'&&/^[-a-z0-9_]{1,40}$/.test(p.context))draft.context=p.context;if(issues[p.issue]||p.issue==='unknown')draft.issue=p.issue;if(['normal','urgent','sensitive'].includes(p.urgency))draft.urgency=p.urgency;if(Array.isArray(p.extras))draft.extras=p.extras.filter(function(x){return !!issues[x];}).slice(0,4);}}catch(e){}
 function values(){var main=byId('cj-choice').value;return {text:byId('cj-situation').value.trim().slice(0,2200),context:byId('cj-context').value,urgency:byId('cj-urgency').value,issue:main,extras:Array.from(document.querySelectorAll('[data-cj-secondary]:checked')).map(function(x){return x.value;}).filter(function(x){return !!issues[x]&&x!==main;})};}
-function persist(){try{localStorage.setItem(DRAFT,JSON.stringify(values()));}catch(e){}}
+function persist(){
+ var warning=byId('cj-save-warning');
+ try{localStorage.setItem(DRAFT,JSON.stringify(values()));if(warning)warning.hidden=true;return true;}
+ catch(e){if(warning)warning.hidden=false;return false;}
+}
+byId('cj-retry-save').addEventListener('click',persist);
 function status(s){var el=byId('cj-output');el.hidden=false;el.textContent=s;}
 function advice(v){
  var i=issues[v.issue]||{first:'B',second:'C',look:'بافت و مسئولیت تصمیم',lesson:'1/daily'};
