@@ -59,9 +59,9 @@ return '<div class="page home-page student-redesign">'
 +'<div class="welcome-head"><div><span class="welcome-eyebrow">مدیریت رفتار سازمانی · MBA</span><h2>'+(isGuest()?"بازدید از کلاس":"کلاس من")+'</h2></div><span class="welcome-mark" aria-hidden="true">✦</span></div>'
 +(isGuest()?'<section class="guest-preview-banner" aria-label="حالت مهمان"><strong>بازدید مهمان · Guest Preview</strong><span>'+esc(window.OB_ACCESS?.guest||"مهمان")+' · دسترسی مشاهده و تجربه محتوای آموزشی؛ بدون نمرات و حضور رسمی</span></section>':"")
  +'<section class="student-focus" aria-label="جلسه جاری"><div class="student-focus-top"><span class="focus-kicker">جلسه جاری</span><span class="focus-number">جلسه '+pf(state.active)+'</span></div><h3>'+esc(s.published?titleOf(s):"جلسه "+pf(state.active))+'</h3><div class="focus-bottom">'+button("ورود به جلسه","openActive","btn gold")+'<span class="focus-spark" aria-hidden="true">✧</span></div></section>'
-+'<section class="sy-home-link"><div><strong>طرح درس ۴۸ ساعته</strong><p>برنامه ۱۶ جلسه MBA، اهداف یادگیری و ارزیابی</p></div>'+button("مشاهده طرح درس","navigate","btn secondary",'data-page="syllabus"')+'</section>'
 +'<div class="learning-paths-head"><h3>فضای یادگیری</h3></div>'
 +'<div class="learning-paths">'+shortcuts.filter(x=>!isGuest()||!x.url||!x.url.includes('attendance.html')).map(x=>{const inner='<span class="learning-card-icon">'+x.icon+'</span><span class="learning-card-copy"><strong>'+x.title+'</strong><small>'+x.subtitle+'</small></span><span class="learning-card-arrow" aria-hidden="true">←</span>';return x.url?'<a class="learning-card '+x.klass+'" href="'+x.url+'">'+inner+'</a>':'<button type="button" class="learning-card '+x.klass+'" data-action="'+x.action+'" '+(x.track?'data-track="'+x.track+'"':'data-page="'+x.page+'"')+'>'+inner+'</button>'}).join("")+'</div>'
++'<section class="sy-home-link"><div><strong>طرح درس ۴۸ ساعته</strong><p>برنامه ۱۶ جلسه MBA، اهداف یادگیری و ارزیابی</p></div>'+button("مشاهده طرح درس","navigate","btn secondary",'data-page="syllabus"')+'</section>'
 +'<section class="term-progress" aria-label="جلسات دارای محتوا"><div class="term-progress-head"><strong>محتوای منتشرشده</strong><span>'+published+' از ۱۶ جلسه</span></div><div class="term-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="16" aria-valuenow="'+published+'" aria-label="جلسات منتشرشده"><span style="width:'+progress+'%"></span></div></section>'
 +'<details class="disclosure extras"><summary>سایر امکانات کلاس</summary><div class="disclosure-body">'+(isGuest()?"":'<button class="link-card" data-action="navigate" data-page="results"><span><strong>عملکرد من</strong></span><span class="arrow">←</span></button>')+'<button class="link-card" data-action="navigate" data-page="feedback"><span><strong>پیشنهاد بهبود اپ</strong></span><span class="arrow">←</span></button><a class="link-card" href="./install.html"><span><strong>نصب اپ</strong></span><span class="arrow">↓</span></a></div></details>'
 +'</div>'}
@@ -271,7 +271,7 @@ function updateContextNav(){
  ui.page==="session"?"جلسه "+pf(ui.session):
  ui.page==="presentation"||ui.page==="original"?"نمایش اسلایدها":
  ({home:"خانه",sessions:"جلسات درس",syllabus:"طرح درس",attendance:"حضور و غیاب",students:"دانشجویان",live:"حضور",grades:"نمرات",results:"عملکرد",groups:"گروه‌ها",feedback:"بازخوردها",caseReviews:"تحلیل کیس",quizAdmin:"آزمون‌های پایان جلسه"}[ui.page]||"فضای کلاس");
- contextNav.hidden=false;contextLocation.textContent=label;
+ contextNav.hidden=ui.page==="home";contextLocation.textContent=label;
  contextHome.disabled=ui.page==="home";
  contextBack.disabled=ui.page==="home"&&viewHistoryIndex===0;
 }
