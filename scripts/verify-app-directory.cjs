@@ -51,7 +51,7 @@ for(const route of ['../ob-mba-classroom/','../alborz-training-system-discovery/
 assert.ok(products.includes('Independent interactive OKR pilot: strategy map'),'OKR product must be explicitly described as functional local pilot');
 assert.ok(products.includes('data-en="Interactive public pilot"'),'strategy category describes public pilot');
 assert.ok(hub.includes('superDirectory'),'Super App must group all independent applications');
-assert.ok(hub.includes('catalog.js?v=4'),'Super App searchable directory script is linked');
+assert.ok(hub.includes('catalog.js?v=5'),'Super App searchable directory script is linked');
 assert.ok(!hub.includes('app not yet released'),'Super App must not advertise released OKR as future guide');
 assert.ok(products.includes('href="hub/"'),'HB Hub must be independently discoverable in full catalog');
 assert.ok(products.includes('href="okr-service/index.html"'),'General OKR must open its own app path');

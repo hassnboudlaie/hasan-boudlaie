@@ -31,10 +31,19 @@ assert.match(bmcJs,/setAttribute\('aria-valuenow'/,"BMC accessible progress shou
 const clinic=read("clinic-customer-app/sw.js");
 assert.match(clinic,/keys\.filter\(k=>k\.startsWith\(PREFIX\)&&k!==CACHE\)/,"Unsafe cross-app CacheStorage deletion");
 const hub=read("hub/index.html");
-assert.match(hub,/impeccable\.css\?v=20261114/);
+assert.match(hub,/impeccable\.css\?v=20261115/);
 assert.match(hub,/superResultCount/);
+assert.ok(hub.indexOf('id="superDirectory"')<hub.indexOf('class="site-shortcuts"'),"Application catalog must precede secondary website shortcuts");
 assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
-assert.match(hub,/catalog\.js\?v=4/,"Hub must load deep-audit search");
+for(const token of ['id="hubQuickAccess"','id="hubPinnedList"','id="hubRecentList"','id="hubClearRecents"','data-super-filter="pinned"'])
+ assert.ok(hub.includes(token),"Quick access flow missing: "+token);
+const descriptions=[...hub.matchAll(/<a class="super-app-link"[^>]*>[\s\S]*?<small data-en="([^"]+)" data-fa="([^"]+)"/g)];
+assert.equal(descriptions.length,21,"Each app needs one task-oriented description");
+assert.equal(descriptions.filter(x=>x[1]==="Open independent app").length,0,"Generic app descriptions are not actionable");
+for(const token of ['hb-hub-saved-apps-v1','hb-hub-recent-apps-v1','hub-quick-link','aria-pressed','replaceChildren','const valid=values=>'])
+ assert.ok(read("hub/catalog.js").includes(token),"Safe local-only quick access missing "+token);
+
+assert.match(hub,/catalog\.js\?v=5/,"Hub must load deep-audit search");
 const search=read("hub/catalog.js");
 for(const token of ["normalize('NFKC')","replace(/[يى]/g","replace(/ك/g","superReset","menu-toggle","Escape"])
  assert.ok(search.includes(token),"Hub search/navigation regression: "+token);
@@ -60,6 +69,6 @@ for(const excluded of ["ob-mba-classroom/index.html","sabanaft/app/index.html",
 }
 const hubSw=read("hub/sw.js");
 for(const asset of ["../experience.css?v=2.0","../experience.js?v=2.0",
-"./impeccable.css?v=20261114","../assets/fonts/Vazirmatn.woff2"])
+"./impeccable.css?v=20261115","../assets/fonts/Vazirmatn.woff2"])
  assert.ok(hubSw.includes(asset),"Hub offline cache missing "+asset);
 console.log("PASS: 21 app links, 5 groups, 10 local app entrypoints, 9 offline shells, protected exclusions.");

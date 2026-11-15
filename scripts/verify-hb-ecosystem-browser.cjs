@@ -96,8 +96,37 @@ async function hubCheck(browser,name,w,h){
    assert.equal(await page.locator(".menu-toggle").getAttribute("aria-expanded"),"false","Escape must close navigation");
    assert.equal(await page.evaluate(()=>document.activeElement?.classList?.contains("menu-toggle")),true,"Menu focus must be restored");
   }
+    /* Returning-user journey: save > filter > reopen > recent > clear > unsave.
+     Does not touch child app data or credentials. */
+  const financeFavorite=page.locator('.super-app-entry:has(a[href="../my-finance/"]) > .super-favorite');
+  await financeFavorite.click();
+  assert.equal(await financeFavorite.getAttribute("aria-pressed"),"true","Favorite state must be announced");
+  assert.equal(await page.locator('#hubQuickAccess:visible').count(),1,"Quick access must appear");
+  assert.equal(await page.locator('#hubPinnedList .hub-quick-link').count(),1,"Saved shortcut missing");
+  await page.locator('[data-super-filter="pinned"]').click();
+  assert.equal(await page.locator('.super-app-link:visible').count(),1,"Saved filter must show the favorite");
+  await page.reload({waitUntil:"domcontentloaded"});
+  await page.locator("#superResultCount").filter({hasText:/21|۲۱/}).waitFor();
+  assert.equal(await page.locator('#hubPinnedList .hub-quick-link').count(),1,"Saved apps not persisted");
+  assert.equal(await page.locator('.super-favorite[aria-pressed="true"]').count(),1);
+  await page.locator('a.super-app-link[href="../okr-service/index.html"]').click();
+  await page.waitForURL(/okr-service/);
+  await page.goto(base()+"hub/",{waitUntil:"domcontentloaded"});
+  await page.locator('#hubRecentList .hub-quick-link').first().waitFor();
+  assert.equal(await page.locator('#hubRecentList .hub-quick-link').count(),1,"Recent app not recorded");
+  assert.ok((await page.locator('#hubRecentList .hub-quick-link').first().getAttribute('href')).includes("okr-service"));
+  await page.locator('#hubClearRecents').click();
+  assert.equal(await page.locator('#hubRecentList .hub-quick-link').count(),0,"Clear history failed");
+  assert.equal(await page.locator('#hubQuickAccess:visible').count(),1,"Saved apps should remain");
+  await page.locator('.super-app-entry:has(a[href="../my-finance/"]) > .super-favorite').click();
+  assert.equal(await page.locator('#hubQuickAccess:visible').count(),0,"Quick access should hide when empty");
+  assert.equal(await page.locator('.super-favorite[aria-pressed="true"]').count(),0);
+  const a11yAfter=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
+  const newViolations=a11yAfter.violations.filter(v=>["serious","critical"].includes(v.impact));
+  if(newViolations.length)console.error("HUB_JOURNEY_AXE",JSON.stringify(newViolations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.slice(0,12).map(n=>({target:n.target,summary:n.failureSummary}))}))));
+  assert.equal(newViolations.length,0,"New controls accessibility failure");
   assert.deepEqual(errors,[],"Hub runtime errors");
-  console.log("PASS Hub",name,w,"font, 21 links, search/filter, RTL layout, axe high=0");
+  console.log("PASS Hub",name,w,"21 apps, task descriptions, favorites, recents, keyboard, RTL, axe serious/critical=0");
  }finally{await ctx.close()}
 }
 const entries=["okr-system/","okr-service/","business-model-canvas/studio.html","small-business/",
