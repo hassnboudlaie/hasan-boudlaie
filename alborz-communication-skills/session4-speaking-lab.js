@@ -107,7 +107,7 @@ const s4AuditListCss=
 ".s4-behavior-check>b{display:block;color:#135b42;font-size:19px;margin-bottom:7px}"+
 ".s4-behavior-check ul{margin:0;padding:0 26px 0 6px;color:#204934;line-height:2;font-size:18px}"+
 ".s4-behavior-check li{padding:4px 0}";
-function cssOnce(){if(document.getElementById("alborz-s4-style"))return;const st=document.createElement("style");st.id="alborz-s4-style";st.textContent=css+"\n"+s4VisualPatch+"\n"+s4InteractivePatch+"\n"+s4AuditStyles+"\n"+s4AuditListCss;document.head.appendChild(st)}
+function cssOnce(){if(document.getElementById("alborz-s4-style"))return;const st=document.createElement("style");st.id="alborz-s4-style";st.textContent=css+"\n"+s4VisualPatch+"\n"+s4InteractivePatch+"\n"+s4AuditStyles+"\n"+s4AuditListCss+"\n"+s4ClassroomDeliveryStyle;document.head.appendChild(st)}
 window.alborzSession4Page=function(){cssOnce();page()};
 document.addEventListener("click",ev=>{
  if(!document.querySelector(".s4-root"))return;
