@@ -39,6 +39,14 @@ async function examine(browser,name,width,height){
     :{ok:true,submission:null,history:[]};
    await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(data)});
   });
+  // Keep privacy-sensitive analytics deterministic in synthetic enrolled users:
+  // WebKit treats unmocked third-party CORS failures as page errors.
+  await context.route("**/functions/v1/mba-ob-learning-analytics",async route=>{
+   const input=JSON.parse(route.request().postData()||"{}");
+   const empty={visits:1,active_seconds:120,activity_count:2,latest_at:new Date().toISOString(),by_area:{home:1}};
+   const data=input.action==="mine"?{ok:true,summary:empty,recent:[],recent_visits:[],period_days:365}:{ok:true};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(data)});
+  });
   const page=await context.newPage();
   const errors=[];
   page.on("pageerror",error=>errors.push(error.message));
