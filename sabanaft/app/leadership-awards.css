@@ -64,3 +64,8 @@
 @media (max-width:365px){.sa-grid{grid-template-columns:minmax(0,1fr)}.sa-tabs button{flex:1 1 100%}.sa-collection-header h2{font-size:22px}}
 @media print{.sa-collection{box-shadow:none;break-inside:avoid}.sa-tabs,.sa-card-actions,.sa-collection-footer button,.sa-strip-header a,.sa-milestone-award button,.sa-final-medal button{display:none!important}.sa-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.sa-locked .sa-art{opacity:1}}
 @media (prefers-reduced-motion:reduce){.sa-collection *,.sa-journey-strip *{transition:none!important;animation:none!important}}
+
+/* The legacy score calculation remains untouched; its emoji badge grid is
+   replaced visually by this source-backed award collection (no duplicates). */
+#passportView #gamificationDashboard .sg-badges,
+#passportView #gamificationDashboard .sg-dashboard > h3:nth-of-type(2){display:none}
