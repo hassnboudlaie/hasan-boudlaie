@@ -76,6 +76,15 @@ ok(mobile.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'Four-way mo
 ok(mobile.includes('max-width:380px'),'320px phones covered');
 ok(mobile.includes('prefers-reduced-motion'),'Accessible animation fallback');
 ok(read('sw.js').includes('session4-mobile-first-20261115.css?v=1'),'PWA shell includes mobile CSS');
+for(const asset of [
+ 'session3-listening-lab.js?v=20261108-r6-six-roles',
+ 'session4-speaking-lab.js?v=20261112-content-audit2',
+ 'session4-final-quiz-data.js?v=20261112-r2-audited',
+ 'session4-final-exam.js?v=20261112-r2-6min',
+ 'session4-ob-mba-theme.js?v=20261115-session4-content-repair-r1',
+ 'session4-ob-mba-theme.css?v=20261114-impeccable-r1',
+ 'alborz-impeccable.css?v=20261115-suite-r1'
+])ok(read('sw.js').includes(asset),'PWA precache asset '+asset);
 const exam=read('session4-final-exam.js');
 ok(exam.includes('const DURATION_MS=360000'),'6-minute exam unchanged');
 ok(exam.includes('if(!deadline)activateTimer()'),'starts at first answer');
