@@ -34,10 +34,16 @@ jobs:
         env:
           NODE_PATH: /tmp/saba-browser/node_modules
         run: node sabanaft/verify-leadership-journey-browser.cjs
+      - name: Verify badge exports and responsive collection
+        env:
+          NODE_PATH: /tmp/saba-browser/node_modules
+        run: node sabanaft/verify-leadership-awards-browser.cjs
       - name: Attach actual-browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: saba-leadership-journey-chromium
-          path: artifacts/saba-leadership-journey/
+          path: |
+            artifacts/saba-leadership-journey/
+            artifacts/saba-leadership-awards/
           if-no-files-found: ignore
