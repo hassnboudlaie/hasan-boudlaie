@@ -198,7 +198,7 @@ async function verifyRepeatDevice(browser,name){
   const idA=await pageA.evaluate(()=>window.OB_ACCESS.student_number);
   const idB=await pageB.evaluate(()=>window.OB_ACCESS.student_number);
   assert.equal(idA,idB,"Both devices should have the same student identity");
-  await pageB.locator('[data-action="navigate"][data-page="results"]').first().click();
+  await pageB.locator('#bottomNav [data-action="navigate"][data-page="results"]').click();
   await pageB.locator("[data-oba-student]").waitFor();
   assert.equal(await pageB.locator(".oba-metric").count(),3,"Per-student analytics metrics missing");
   assert.deepEqual(errors,[],"Cross-device journey errors");
