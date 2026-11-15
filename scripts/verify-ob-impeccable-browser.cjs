@@ -32,6 +32,12 @@ async function examine(browser,name,width,height){
     role:"student",token:"ob-a11y-synthetic",name:"دانشجوی تست"
    }));
   });
+  await context.route("**/functions/v1/mba-ob-learning-analytics",async route=>{
+   const input=JSON.parse(route.request().postData()||"{}");
+   const summary={visits:1,active_seconds:150,activity_count:4,latest_at:new Date().toISOString(),by_area:{concepts:2}};
+   const data=input.action==="mine"?{ok:true,summary,recent:[],recent_visits:[],period_days:365}:{ok:true};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(data)});
+  });
   await context.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
    const body=JSON.parse(route.request().postData()||"{}");
    const data=body.action==="accessState"
@@ -45,6 +51,9 @@ async function examine(browser,name,width,height){
   const url="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor({timeout:18000});
+  assert.equal(await page.locator("#objJourney").count(),1,"Five-stage independent-learning journey must be visible on approved student home");
+  assert.equal(await page.locator("[data-student-device-settings]").count(),1,"Approved student can set a cross-device password");
+  assert.equal(await page.locator("[data-oba-student]").count(),1,"Student receives their own learning analytics panel");
   assert.equal(await page.locator(".ob-roadmap-item").count(),16,"A complete sixteen-session roadmap must be immediately available");
   assert.equal(await page.locator(".ob-pathways .learning-card").count(),4,"Student dashboard should expose four working learning actions");
   assert.equal(await page.locator(".ob-dashboard-layout").isVisible(),true,"New student workspace is displayed");
@@ -144,6 +153,10 @@ async function verifyAcademicEntrance(browser,name,width,height){
   let overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   assert.ok(overflow<=2,name+" entrance "+width+" horizontal overflow: "+overflow);
   if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-entrance-"+width+".png"),fullPage:true});
+  await page.locator('[data-entrance="returning"]').click();
+  assert.ok(await page.locator("#entranceReturning").isVisible(),"Approved learner's new-device login must exist");
+  await page.locator('[data-entrance="returnBack"]').click();
+  assert.ok(await page.locator("#entranceStudent").isVisible(),"New enrollment route must remain available");
   await page.locator('[data-entrance="guest"]').click();
   assert.ok(await page.locator("#entranceGuest").isVisible(),"Guest flow remains accessible");
   await page.locator('[data-entrance="teacher"]').click();
@@ -161,6 +174,12 @@ async function verifyTeachingConsole(browser,name,width,height){
   await context.addInitScript(()=>{
    localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"teacher",token:"ob-a11y-synthetic-teacher"}));
   });
+  await context.route("**/functions/v1/mba-ob-learning-analytics",async route=>{
+   const input=JSON.parse(route.request().postData()||"{}");
+   const student={student_id:"00000000-0000-4000-8000-000000000001",name:"دانشجوی آزمایشی",student_number:"123456789",visits:3,active_seconds:210,activity_count:6,latest_at:new Date().toISOString()};
+   const result=input.action==="classOverview"?{ok:true,students:[student],period_days:365}:{ok:true,student:{id:student.student_id,name:student.name,student_number:student.student_number},summary:student,recent:[]};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
+  });
   await context.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
    await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify({ok:true,role:"teacher",approval_status:"approved"})});
   });
@@ -169,7 +188,7 @@ async function verifyTeachingConsole(browser,name,width,height){
   const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
   await page.goto(base,{waitUntil:"domcontentloaded"});
   await page.locator(".ob-teacher-console").waitFor({timeout:18000});
-  assert.equal(await page.locator(".ob-console-row").count(),8,"Instructor's eight key tasks must be directly reachable");
+  assert.equal(await page.locator(".ob-console-row").count(),9,"Instructor's nine teaching and learning engagement tools must be directly reachable");
   assert.equal(await page.locator(".ob-teacher-actions .btn").count(),4,"Instructor has visible live-class actions");
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   assert.ok(overflow<=2,name+" teacher "+width+" horizontal overflow: "+overflow);
@@ -177,9 +196,82 @@ async function verifyTeachingConsole(browser,name,width,height){
   await page.locator('.ob-console-row[data-page="groups"]').click();
   assert.ok(await page.locator(".page").count()>0,"Teacher groups route remains navigable");
   assert.deepEqual(errors,[],name+" instructor runtime errors");
-  console.log("PASS teacher console",name,width,"eight tools, role-specific route, no overflow");
+  console.log("PASS teacher console",name,width,"nine tools, role-specific route, no overflow");
  }finally{await context.close()}
 }
+
+async function verifyRepeatDevice(browser,name){
+ // Two genuinely independent browser storage contexts. Neither ever calls
+ // registerStudent or requires an instructor approval for device B.
+ const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
+ const storageKey="mba-ob-classroom-attendance-identity-v1";
+ const student={name:"دانشجوی آزمایشی",student_number:"123456789"};
+ const a=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const b=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ let registrations=0,logins=0,passwordSets=0;
+ const mock=async(context)=>{
+  await context.route("**/functions/v1/mba-ob-attendance",async route=>{
+   const request=JSON.parse(route.request().postData()||"{}");
+   if(request.action==="registerStudent")registrations++;
+   let result;
+   if(request.action==="accessState")result={ok:true,role:"student",approval_status:"approved",student};
+   else result={ok:true,submission:null,history:[]};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(result)});
+  });
+  await context.route("**/functions/v1/mba-ob-learning-analytics",async route=>{
+   const args=JSON.parse(route.request().postData()||"{}");
+   const summary={visits:1,active_seconds:90,activity_count:3,latest_at:new Date().toISOString(),by_area:{concepts:2}};
+   const payload=args.action==="mine"?{ok:true,summary,recent:[],recent_visits:[],period_days:365}:
+    args.action==="classOverview"?{ok:true,students:[{student_id:"00000000-0000-4000-8000-000000000001",...student,visits:1,active_seconds:90,activity_count:3,latest_at:null}]}:
+    args.action==="studentDetail"?{ok:true,student:{id:"00000000-0000-4000-8000-000000000001",...student},summary,recent:[]}:{ok:true};
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(payload)});
+  });
+  await context.route("**/functions/v1/mba-ob-student-devices",async route=>{
+   const args=JSON.parse(route.request().postData()||"{}");
+   let result={ok:false,error:"unexpected_action"};
+   if(args.action==="setPassword"){passwordSets++;result={ok:true,enabled:true}}
+   if(args.action==="studentDeviceLogin"){logins++;result={ok:true,role:"student",token:"synthetic-device-b-token",name:student.name,student_number:student.student_number,approval_status:"approved"}}
+   await route.fulfill({status:result.ok?200:400,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"content-type,authorization,apikey"},body:JSON.stringify(result)});
+  });
+ };
+ try{
+  await mock(a);await mock(b);
+  await a.addInitScript(({key,info})=>{
+   localStorage.setItem(key,JSON.stringify({role:"student",token:"synthetic-device-a-token",name:info.name,student_number:info.student_number}));
+  },{key:storageKey,info:student});
+  const pageA=await a.newPage(),pageB=await b.newPage();
+  const errors=[];pageA.on("pageerror",err=>errors.push("a:"+err.message));pageB.on("pageerror",err=>errors.push("b:"+err.message));
+  await pageA.goto(base,{waitUntil:"domcontentloaded"});
+  await pageA.locator(".student-focus").waitFor({timeout:18000});
+  assert.equal(await pageA.locator("#objJourney").count(),1,"Five-step learning experience should render");
+  await pageA.locator('[data-student-device-settings]').first().click();
+  await pageA.locator('#obDeviceDialog[open]').waitFor();
+  await pageA.locator("#obDevicePassword").fill("LearnerPersonal12345");
+  await pageA.locator("#obDeviceConfirm").fill("LearnerPersonal12345");
+  await pageA.locator("#obDeviceForm button[type=submit]").click();
+  await pageA.locator("#obDeviceStatus").getByText(/رمز شخصی ثبت شد/).waitFor({timeout:10000});
+  assert.equal(passwordSets,1,"Existing approved device must set password exactly once");
+  assert.equal((await pageA.evaluate(()=>localStorage.getItem("mba-ob-classroom-attendance-identity-v1"))).includes("LearnerPersonal12345"),false,"Password must never be written to localStorage");
+  await pageB.goto(base,{waitUntil:"domcontentloaded"});
+  await pageB.locator('#entryGate [data-entrance="returning"]').click();
+  await pageB.locator("#entranceReturning").waitFor();
+  await pageB.locator("#returningNumber").fill(student.student_number);
+  await pageB.locator("#returningPassword").fill("LearnerPersonal12345");
+  await pageB.locator("#entranceReturning button[type=submit]").click();
+  await pageB.locator(".student-focus").waitFor({timeout:18000});
+  assert.equal(logins,1,"New device should exchange password for a new student session");
+  assert.equal(registrations,0,"No re-registration, device review or instructor approval allowed");
+  const idA=await pageA.evaluate(()=>window.OB_ACCESS.student_number);
+  const idB=await pageB.evaluate(()=>window.OB_ACCESS.student_number);
+  assert.equal(idA,idB,"Both devices should have the same student identity");
+  await pageB.locator('#bottomNav [data-action="navigate"][data-page="results"]').click();
+  await pageB.locator("[data-oba-student]").waitFor();
+  assert.equal(await pageB.locator(".oba-metric").count(),3,"Per-student analytics metrics missing");
+  assert.deepEqual(errors,[],"Cross-device journey errors");
+  console.log("PASS cross-device",name,"approved device A sets password; device B login, zero registration or reapproval; analytics");
+ }finally{await a.close();await b.close();}
+}
+
 
 async function main(){
  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
@@ -189,7 +281,7 @@ async function main(){
    ["webkit",webkit,[[390,844],[1366,900]]]
   ]){
    const browser=await driver.launch({headless:true});
-   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyAcademicEntrance(browser,name,390,844);if(name==="chromium")await verifyAcademicEntrance(browser,name,1366,900);await verifyTeachingConsole(browser,name,390,844);if(name==="chromium")await verifyTeachingConsole(browser,name,1366,900);await verifyInstaller(browser,name)}
+   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyAcademicEntrance(browser,name,390,844);if(name==="chromium")await verifyAcademicEntrance(browser,name,1366,900);await verifyTeachingConsole(browser,name,390,844);if(name==="chromium")await verifyTeachingConsole(browser,name,1366,900);await verifyRepeatDevice(browser,name);await verifyInstaller(browser,name)}
    finally{await browser.close()}
   }
  }finally{server.close()}
