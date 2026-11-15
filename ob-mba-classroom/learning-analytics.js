@@ -160,9 +160,27 @@ document.addEventListener("click",e=>{
   openSessionQuiz:"quiz_open",openSessionQuizAdmin:"quiz_open",
   openCaseReviews:"assignment_open"
  };
- if(!group[action])return;
- const session=Number(btn.dataset.id||document.querySelector("[data-oba-session]")?.dataset.obaSession||0);
- send(group[action],group[action]==="guided_step"?"concepts":group[action]==="case_work"?"case":group[action]==="quiz_open"?"quiz":"resources",session);
+ if(!group[action]&&action!=="guidedJump"&&action!=="guidedExport")return;
+ const activity=group[action]||(action==="guidedJump"?"guided_step":"resource_open");
+ const session=Number(btn.dataset.id||document.querySelector("[data-guided-session]")?.dataset.guidedSession||document.querySelector("[data-oba-session]")?.dataset.obaSession||0);
+ const area=activity==="guided_step"?"concepts":activity==="case_work"?"case":activity==="quiz_open"?"quiz":"resources";
+ send(activity,area,session);
+},true);
+document.addEventListener("click",e=>{
+ if(role!=="student")return;
+ const quiz=e.target.closest?.("[data-quiz-action]");
+ const caseBtn=e.target.closest?.("[data-case-action]");
+ const area=quiz?"quiz":caseBtn?"case":null;
+ if(!area)return;
+ const session=Number(document.querySelector("[data-guided-session]")?.dataset.guidedSession||document.querySelector("[data-oba-session]")?.dataset.obaSession||0);
+ send(quiz?"quiz_open":"case_work",area,session);
+},true);
+document.addEventListener("change",e=>{
+ if(role!=="student")return;
+ const field=e.target.closest?.("[data-guided-key]");
+ if(!field)return;
+ const session=Number(document.querySelector("[data-guided-session]")?.dataset.guidedSession||0);
+ send("reflection_saved","reflection",session);
 },true);
 window.OB_ANALYTICS={onRender,studentCard,myDashboard,teacherHTML,track:(action,area,session)=>send(action,area,session),refreshMine,refreshOverview};
 })();
