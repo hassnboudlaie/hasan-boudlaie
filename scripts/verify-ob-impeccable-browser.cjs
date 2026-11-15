@@ -45,6 +45,9 @@ async function examine(browser,name,width,height){
   const url="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor({timeout:18000});
+  assert.equal(await page.locator(".ob-roadmap-item").count(),16,"A complete sixteen-session roadmap must be immediately available");
+  assert.equal(await page.locator(".ob-pathways .learning-card").count(),4,"Student dashboard should expose four working learning actions");
+  assert.equal(await page.locator(".ob-dashboard-layout").isVisible(),true,"New student workspace is displayed");
   const metrics=await page.evaluate(async()=>{
    await document.fonts.load('400 20px "Vazirmatn"');
    return {font:getComputedStyle(document.body).fontFamily,
@@ -60,6 +63,7 @@ async function examine(browser,name,width,height){
   if(width===360||width===1366)await page.screenshot({path:path.join(OUTPUT,name+"-"+width+"-home.png"),fullPage:true});
   await page.locator('.student-focus button[data-action="openActive"]').click();
   await page.locator('.gr-shell[data-guided-mode="concepts"]').waitFor({timeout:15000});
+  assert.equal(await page.locator(".ob-reading-layout").isVisible(),true,"Guided lesson uses the new reading layout");
   const active=await page.evaluate(()=>document.activeElement?.id);
   assert.equal(active,"main",name+" "+width+" should focus main after SPA route");
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
@@ -125,6 +129,58 @@ async function verifyInstaller(browser,name){
  }finally{await context.close()}
 }
 
+
+async function verifyAcademicEntrance(browser,name,width,height){
+ const context=await browser.newContext({viewport:{width,height},isMobile:width<500,hasTouch:width<500});
+ try{
+  const page=await context.newPage();
+  const errors=[];page.on("pageerror",err=>errors.push(err.message));
+  const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
+  await page.goto(base,{waitUntil:"domcontentloaded"});
+  await page.locator(".ob-entrance-editorial h1").waitFor({timeout:12000});
+  assert.equal(await page.locator(".ob-entrance-course-route>div").count(),3,"Entrance must explain real 16/48/3 academic structure");
+  assert.equal(await page.locator('[data-entrance="student"]').getAttribute("aria-pressed"),"true");
+  assert.ok(await page.locator(".ob-entrance-intro").isVisible(),"Academic welcome has a real visible panel");
+  let overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  assert.ok(overflow<=2,name+" entrance "+width+" horizontal overflow: "+overflow);
+  if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-entrance-"+width+".png"),fullPage:true});
+  await page.locator('[data-entrance="guest"]').click();
+  assert.ok(await page.locator("#entranceGuest").isVisible(),"Guest flow remains accessible");
+  await page.locator('[data-entrance="teacher"]').click();
+  assert.ok(await page.locator("#entranceTeacherSetup").isVisible(),"Teacher setup is accessible");
+  await page.locator('[data-entrance="student"]').click();
+  assert.ok(await page.locator("#entranceStudent").isVisible(),"Student entry remains accessible");
+  assert.deepEqual(errors,[],name+" entrance runtime errors");
+  console.log("PASS academic entrance",name,width,"desktop/mobile panels, tabs, RTL, no overflow");
+ }finally{await context.close()}
+}
+
+async function verifyTeachingConsole(browser,name,width,height){
+ const context=await browser.newContext({viewport:{width,height},isMobile:width<500,hasTouch:width<500});
+ try{
+  await context.addInitScript(()=>{
+   localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"teacher",token:"ob-a11y-synthetic-teacher"}));
+  });
+  await context.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify({ok:true,role:"teacher",approval_status:"approved"})});
+  });
+  const page=await context.newPage(),errors=[];
+  page.on("pageerror",err=>errors.push(err.message));
+  const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
+  await page.goto(base,{waitUntil:"domcontentloaded"});
+  await page.locator(".ob-teacher-console").waitFor({timeout:18000});
+  assert.equal(await page.locator(".ob-console-row").count(),8,"Instructor's eight key tasks must be directly reachable");
+  assert.equal(await page.locator(".ob-teacher-actions .btn").count(),4,"Instructor has visible live-class actions");
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  assert.ok(overflow<=2,name+" teacher "+width+" horizontal overflow: "+overflow);
+  if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-teacher-"+width+".png"),fullPage:true});
+  await page.locator('.ob-console-row[data-page="groups"]').click();
+  assert.ok(await page.locator(".page").count()>0,"Teacher groups route remains navigable");
+  assert.deepEqual(errors,[],name+" instructor runtime errors");
+  console.log("PASS teacher console",name,width,"eight tools, role-specific route, no overflow");
+ }finally{await context.close()}
+}
+
 async function main(){
  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
  try{
@@ -133,7 +189,7 @@ async function main(){
    ["webkit",webkit,[[390,844],[1366,900]]]
   ]){
    const browser=await driver.launch({headless:true});
-   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyInstaller(browser,name)}
+   try{for(const [w,h] of sizes)await examine(browser,name,w,h);await verifyAcademicEntrance(browser,name,390,844);if(name==="chromium")await verifyAcademicEntrance(browser,name,1366,900);await verifyTeachingConsole(browser,name,390,844);if(name==="chromium")await verifyTeachingConsole(browser,name,1366,900);await verifyInstaller(browser,name)}
    finally{await browser.close()}
   }
  }finally{server.close()}
