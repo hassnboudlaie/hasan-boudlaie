@@ -104,6 +104,7 @@ async function ready(){
  await phone.page.locator('.s4-mobile-nav [data-s4-open="practice"]').click();
  await phone.check('S4 all 12 scenarios flat',async()=>await phone.page.locator('.s4-cases.s4-case-flat > .s4-case').count()===12);
  await phone.check('S4 no role-group chooser',async()=>await phone.page.locator('.s4-role-index').count()===0);
+ console.log('S4 mobile: entering 12-question quiz');
  await phone.page.locator('.s4-mobile-nav [data-s4-open="exam"]').click();
  await phone.check('S4 12-question exam visible',()=>phone.page.locator('#s4-final-exam').isVisible());
  await phone.check('S4 12-question intro',async()=>await phone.page.locator('#s4-final-exam').innerText().then(t=>t.includes('۱۲ سؤال چهارگزینه‌ای')));
@@ -117,6 +118,7 @@ async function ready(){
   if(i===0)await phone.check('Timer only starts with first answer',async()=>await phone.page.locator('#s4e-clock-label').innerText().then(t=>t==='زمان باقی‌مانده'));
   await phone.page.locator('#s4-final-exam [data-s4e-next]').click();
  }
+ console.log('S4 mobile: submitted all twelve answers');
  await phone.check('S4 learner sees score 12 out of 12',async()=>await phone.page.locator('.s4e-score').innerText().then(t=>t.includes('۱۲ از ۱۲')));
  await phone.check('S4 all 12 explanations available',async()=>await phone.page.locator('.s4e-review').count()===12);
  await phone.check('S4 all 48 alternative explanations present',async()=>await phone.page.locator('.s4e-explain').count()===48);
@@ -158,4 +160,4 @@ async function ready(){
  fs.writeFileSync(path.join(art,'summary.json'),JSON.stringify(report,null,2));
  await browser.close();
  console.log('PASS: '+passed+' Alborz Impeccable browser checks; screenshots saved.');
-})().catch(err=>{console.error(err);process.exitCode=1;}).finally(()=>{server.kill('SIGTERM');});
+})().catch(err=>{console.error('ALBORZ BROWSER QA FAILED:',err);server.kill('SIGTERM');process.exit(1);}).finally(()=>{server.kill('SIGTERM');});
