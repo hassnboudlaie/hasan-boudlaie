@@ -321,17 +321,6 @@
         },
         {
           "title": {
-            "fa": "استودیوی شخصی رهبری",
-            "en": "Personal Leadership Studio"
-          },
-          "url": "https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/leadership-studio.html",
-          "stage": {
-            "fa": "بازاندیشی، کیس و تمرین نقش‌ها",
-            "en": "Reflection, cases and role rehearsal"
-          }
-        },
-        {
-          "title": {
             "fa": "وب‌سایت اصلی کارگاه ۹جلسه‌ای",
             "en": "Original Nine-Session Workshop"
           },
@@ -398,34 +387,6 @@
       "brandColor": "#082333",
       "brandAccent": "#c69b48",
       "brandSoft": "#f6f2e9"
-    },
-    {
-      "title": {
-        "en": "Reflective Leader",
-        "fa": "رهبر بازتابی"
-      },
-      "org": {
-        "fa": "رهبری بازتابی",
-        "en": "Reflective Leadership"
-      },
-      "type": {
-        "en": "Reflection Tool",
-        "fa": "ابزار بازاندیشی"
-      },
-      "url": "https://hassnboudlaie.github.io/reflective-leader/",
-      "description": {
-        "en": "A context-driven leadership journey that connects reflection, roles, decisions and practical action.",
-        "fa": "مسیر رهبری مبتنی بر موقعیت؛ برای پیوند بازاندیشی، نقش‌ها، تصمیم و اقدام عملی."
-      },
-      "stage": {
-        "en": "Reflection application",
-        "fa": "اپلیکیشن بازاندیشی"
-      },
-      "id": "reflective",
-      "brandColor": "#5b4d75",
-      "brandAccent": "#9b7c50",
-      "brandSoft": "#f1edf5",
-      "wordmark": "RL"
     }
   ],
   "advisory": {

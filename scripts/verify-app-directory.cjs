@@ -13,7 +13,7 @@ const entries=[...products.matchAll(/<article class="app-card"[^>]*>[\s\S]*?<\/a
 const hubEntries=[...hub.matchAll(/<a class="super-app-link"[^>]*>/g)].map(m=>m[0]);
 assert.equal(hubEntries.length,entries.length-1,'HB Hub must contain every product except its own launcher');
 
-assert.ok(entries.length>=22,'The website should list the new MBA classroom in addition to the existing catalog');
+assert.ok(entries.length>=20,'The website should list the new MBA classroom in addition to the existing catalog');
 function card(href){
  const matches=entries.filter(s=>s.includes('href="'+href+'"'));
  assert.equal(matches.length,1,'One catalog card must point to '+href);
@@ -45,7 +45,7 @@ for(const [name,href,category,target] of expected){
 for(const filt of ['all','organization','strategy','business','client','personal']){
  assert.ok(products.includes('data-filter="'+filt+'"'),'Missing discoverable filter: '+filt);
 }
-for(const route of ['../ob-mba-classroom/','../alborz-training-system-discovery/','../okr-system/','../trm-workspace/','../sabanaft/app/','../business-model-canvas/studio.html','../small-business/index.html','../okr-service/index.html','../alborz-communication-skills/','../clinic-customer-app/','../life-organization/','../my-finance/','../ba-parastoo/','../alborz-performance/my-branch/','../alborz-performance/','../sabanaft/leadership-studio.html','https://hassnboudlaie.github.io/afra-tejarat-mad/','https://hassnboudlaie.github.io/reflective-leader/','https://hassnboudlaie.github.io/naavsanat-culture-app/','https://hassnboudlaie.github.io/behparvar-leadership-lab/']){
+for(const route of ['../ob-mba-classroom/','../alborz-training-system-discovery/','../okr-system/','../trm-workspace/','../sabanaft/app/','../business-model-canvas/studio.html','../small-business/index.html','../okr-service/index.html','../alborz-communication-skills/','../clinic-customer-app/','../life-organization/','../my-finance/','../ba-parastoo/','../alborz-performance/my-branch/','../alborz-performance/','https://hassnboudlaie.github.io/afra-tejarat-mad/','https://hassnboudlaie.github.io/naavsanat-culture-app/','https://hassnboudlaie.github.io/behparvar-leadership-lab/']){
  assert.ok(hub.includes('href="'+route+'"'),'The HB Hub must still link to '+route);
 }
 assert.ok(products.includes('Independent interactive OKR pilot: strategy map'),'OKR product must be explicitly described as functional local pilot');
@@ -70,4 +70,12 @@ assert.equal(hub.split('href="../okr-system/"').length-1,1,'Kish destination rem
 
 assert.ok(read('ob-mba-classroom/app.js').includes('Array.from({length:16}'),'OB classroom must start with 16 unpopulated sessions');
 assert.ok(read('ob-mba-classroom/index.html').includes('dir="rtl"'),'OB classroom must be RTL');
-console.log('PASS: existing 12 installed apps remain mapped, classroom present, and all '+hubEntries.length+' independent products are listed in Super App.');
+assert.equal(entries.length,20,'Catalog should list 20 items after removing two duplicates');
+assert.equal(hubEntries.length,19,'Hub should list 19 canonical launchers');
+for(const stale of ['sabanaft/leadership-studio.html','hassnboudlaie.github.io/reflective-leader/']) {
+ assert.ok(!hub.includes(stale),'Retired app present in Hub: '+stale);
+ assert.ok(!products.includes(stale),'Retired app present in catalog: '+stale);
+ assert.ok(!read('content.json').includes(stale),'Retired app present in source data: '+stale);
+}
+assert.ok(hub.includes('href="../sabanaft/app/"'),'Canonical Saba My Leadership Skills missing');
+console.log('PASS: '+hubEntries.length+' canonical HB Hub apps; standalone leadership duplicates removed.');

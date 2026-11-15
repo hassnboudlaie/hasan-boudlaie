@@ -38,7 +38,7 @@ assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
 for(const token of ['id="hubQuickAccess"','id="hubPinnedList"','id="hubRecentList"','id="hubClearRecents"','data-super-filter="pinned"'])
  assert.ok(hub.includes(token),"Quick access flow missing: "+token);
 const descriptions=[...hub.matchAll(/<a class="super-app-link"[^>]*>[\s\S]*?<small data-en="([^"]+)" data-fa="([^"]+)"/g)];
-assert.equal(descriptions.length,21,"Each app needs one task-oriented description");
+assert.equal(descriptions.length,19,"Each app needs one task-oriented description");
 assert.equal(descriptions.filter(x=>x[1]==="Open independent app").length,0,"Generic app descriptions are not actionable");
 for(const token of ['hb-hub-saved-apps-v1','hb-hub-recent-apps-v1','hub-quick-link','aria-pressed','replaceChildren','const valid=values=>'])
  assert.ok(read("hub/catalog.js").includes(token),"Safe local-only quick access missing "+token);
@@ -51,8 +51,8 @@ const parastoo=read("ba-parastoo/index.html");
 for(const token of ['id="mobileNavToggle"','id="mobileNav"','class="skip-link"','modalReturnFocus','setMobileNav'])
  assert.ok(parastoo.includes(token),"Ba Parastoo mobile/focus flow missing "+token);
 const links=[...hub.matchAll(/<a class="super-app-link" href="([^"]+)"/g)].map(m=>m[1]);
-assert.equal(links.length,21,"HB Hub must preserve all 21 entries");
-assert.equal(new Set(links).size,21,"Hub has duplicate entries");
+assert.equal(links.length,19,"HB Hub must preserve all 19 canonical entries");
+assert.equal(new Set(links).size,19,"Hub has duplicate entries");
 assert.equal([...hub.matchAll(/<section class="super-group" data-group="([^"]+)"/g)].length,5);
 let internal=0,external=0;
 for(const url of links){
@@ -62,7 +62,7 @@ for(const url of links){
  assert.ok(fs.existsSync(path.join(ROOT,dest)),"Missing app "+url);
  internal++;
 }
-assert.equal(internal,17);assert.equal(external,4);
+assert.equal(internal,16);assert.equal(external,3);
 for(const excluded of ["ob-mba-classroom/index.html","sabanaft/app/index.html",
 "alborz-communication-skills/index.html"]){
  assert.ok(!read(excluded).includes("hb-impeccable-shared.css"),"Protected app modified: "+excluded);
@@ -71,4 +71,4 @@ const hubSw=read("hub/sw.js");
 for(const asset of ["../experience.css?v=2.0","../experience.js?v=2.0",
 "./impeccable.css?v=20261115","../assets/fonts/Vazirmatn.woff2"])
  assert.ok(hubSw.includes(asset),"Hub offline cache missing "+asset);
-console.log("PASS: 21 app links, 5 groups, 10 local app entrypoints, 9 offline shells, protected exclusions.");
+console.log("PASS: 19 app links, 5 groups, 10 local app entrypoints, 9 offline shells, protected exclusions.");
