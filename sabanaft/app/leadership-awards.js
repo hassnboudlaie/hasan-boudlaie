@@ -93,7 +93,7 @@ function card(a){
  '</article>';
 }
 function tab(id,label,count){
- return '<button type="button" role="tab" aria-selected="'+(filter===id)+'" tabindex="'+(filter===id?'0':'-1')+'" data-sa-filter="'+id+'">'+escaped(label)+' <span>'+f(count)+'</span></button>';
+ return '<button type="button" aria-pressed="'+(filter===id)+'" data-sa-filter="'+id+'">'+escaped(label)+' <span>'+f(count)+'</span></button>';
 }
 function collection(data){
  const list=filter==="stage"?data.steps:filter==="activity"?data.activity:data.medals;
@@ -102,10 +102,10 @@ function collection(data){
  '<header class="sa-collection-header"><div><span class="sa-eyebrow">Leadership Achievement Collection</span><h2>مجموعه نشان‌های رهبری من</h2>'+
  '<p>دستاوردهای یادگیری و رفتار ثبت‌شده؛ با معیارهای روشن و قابل پیگیری</p></div>'+
  '<div class="sa-count" aria-label="'+f(data.all.filter(a=>a.earned).length)+' نشان از '+f(data.all.length)+' نشان"><strong>'+f(data.all.filter(a=>a.earned).length)+'</strong><span>از '+f(data.all.length)+' نشان</span></div></header>'+
- '<div class="sa-tabs" role="tablist" aria-label="دسته‌بندی نشان‌ها">'+
+ '<div class="sa-tabs" aria-label="دسته‌بندی نشان‌ها">'+
  tab("stage","۱۰ ایستگاه یادگیری",data.steps.length)+tab("activity","فعالیت‌های رهبری",data.activity.length)+tab("medal","مدال‌های نهایی",data.medals.length)+'</div>'+
  '<p class="sa-group-status" aria-live="polite">'+f(earned)+' نشان دریافت شده از '+f(list.length)+'</p>'+
- '<div class="sa-grid" role="tabpanel">'+list.map(card).join("")+'</div>'+
+ '<div class="sa-grid">'+list.map(card).join("")+'</div>'+
  '<footer class="sa-collection-footer"><p>نشان مرحله‌ای فقط پس از ثبت تصمیم و تمرین در حالت رقابتی دریافت می‌شود. نشان‌های فعالیت از سوابق واقعی ثبت‌شده در همین مرورگر محاسبه می‌شوند. مدال نهایی بر اساس امتیاز خالص هر مأموریت است. این‌ها <strong>گواهی رسمی یا ارزیابی سازمانی تأییدشده نیستند</strong>.</p>'+
  '<button type="button" data-sa-print>چاپ / ذخیره مجموعه به PDF</button></footer></section>';
 }
