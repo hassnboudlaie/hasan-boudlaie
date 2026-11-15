@@ -54,6 +54,16 @@ ok(s4.includes('wrap.appendChild(nav)'),'S4 mobile navigation cannot leak into o
 ok(s4.includes('detail.replaceChildren()'),'S4 index resets stale technique detail');
 ok(s4.includes('repeated?.remove()'),'S4 checklist criterion not duplicated in feedback');
 ok(s4.includes('actions.prepend(back)'),'S4 single roleplay action row');
+ok(s4.includes('const techniqueCases=[[0,2],[6,8],[1,4],[5,10],[9,11],[3,7]]'),'S4 technique-specific case mapping');
+ok(s4.includes('const extraExamples='),'S4 three examples for each skill');
+ok(s4.includes('const caseRelations='),'S4 direct and indirect scenario links');
+ok(!s4.includes('microPractices'),'S4 no per-technique micropractice');
+ok(!s4.includes('function decorateRoles'),'S4 removes grouped roleplay UI');
+ok(s4.includes('classList.add("s4-case-flat")'),'S4 flat roleplay listing');
+ok(s4.includes('$(".s4-overview [data-s4-tech]").forEach'),'S4 returns safely to technique index');
+const s4core=read('session4-speaking-lab.js');
+ok(s4core.includes('activeTechnique=index;'),'S4 base technique selection is idempotent');
+ok(index.includes('session4-speaking-lab.js?v=20261115-technique-first-r1'),'S4 updated core linked');
 ok(!s4.includes('document.body.appendChild(nav)'),'S4 no body-level stale navigation');
 const coreS4=read('session4-speaking-lab.js');
 const getS4Data=(prefix,next)=>{
@@ -71,17 +81,17 @@ ok(s4Cases.every((x,i)=>x[0]===s4Cases[i-(i%2)][0]),'S4 two cases for each of si
 ok(s4Cases.every(x=>x[4].split('|').length===6&&x[5].split('|').length===6),'S4 every case contains 3 speaking turns before and after');
 const mobile=read('session4-mobile-first-20261115.css');
 ok(s4.includes('session4-mobile-first-20261115.css?v=1'),'Session 4 mobile stylesheet loaded after existing theme');
-ok(index.includes('session4-ob-mba-theme.js?v=20261115-session4-content-repair-r1'),'Session 4 JS cache-busted');
+ok(index.includes('session4-ob-mba-theme.js?v=20261115-technique-first-r1'),'Session 4 JS cache-busted');
 ok(mobile.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'Four-way mobile navigation is readable');
 ok(mobile.includes('max-width:380px'),'320px phones covered');
 ok(mobile.includes('prefers-reduced-motion'),'Accessible animation fallback');
 ok(read('sw.js').includes('session4-mobile-first-20261115.css?v=1'),'PWA shell includes mobile CSS');
 for(const asset of [
  'session3-listening-lab.js?v=20261108-r6-six-roles',
- 'session4-speaking-lab.js?v=20261112-content-audit2',
+ 'session4-speaking-lab.js?v=20261115-technique-first-r1',
  'session4-final-quiz-data.js?v=20261112-r2-audited',
  'session4-final-exam.js?v=20261112-r2-6min',
- 'session4-ob-mba-theme.js?v=20261115-session4-content-repair-r1',
+ 'session4-ob-mba-theme.js?v=20261115-technique-first-r1',
  'session4-ob-mba-theme.css?v=20261114-impeccable-r1',
  'alborz-impeccable.css?v=20261115-suite-r1'
 ])ok(read('sw.js').includes(asset),'PWA precache asset '+asset);

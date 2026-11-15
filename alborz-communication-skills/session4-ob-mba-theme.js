@@ -7,32 +7,63 @@ const original=window.alborzSession4Page;
 if(typeof original!=="function")return;
 
 const techniqueEmojis=["🎯","🔎","🎙️","⏱️","👁️","🧭"];
-const groupEmojis=["🤝","👔","🧑‍💻","💬","🧩","🏛️"];
-// Short, observable practice prompts — drawn from the six actual techniques.
-const microPractices=[
- "در ۳۰ ثانیه یک پیام درباره نقص مدارک بسازید: مسئله چیست، چرا مهم است و گام بعد با چه کسی است؟",
- "عبارت «پرونده در گردش است» را به جمله‌ای روشن با وضعیت فعلی و اقدام بعدی تبدیل کنید؛ قول نتیجه ندهید.",
- "به کارشناس درباره خطای احتمالی ثبت بازخورد بدهید: صدای متوسط، لحن جدی و بدون نسبت‌دادن خطای تأییدنشده.",
- "از همکار یک سؤال روشن بپرسید؛ سه ثانیه مکث کنید و بدون قطع‌کردن کلام او پاسخ را بشنوید.",
- "هنگام شنیدن گلایه نماینده، رو به مخاطب بنشینید و فاصله راحت و نگاه طبیعی را تمرین کنید.",
- "به تیم فرصت پرسش بدهید؛ پس از دعوت به سؤال واقعاً مکث کنید و یک اقدام پیگیری قابل انجام نام ببرید."
+// Each of the twelve original roleplays has exactly one primary skill.
+// Their original scripts, roles and four stages remain in the core source.
+const techniqueCases=[[0,2],[6,8],[1,4],[5,10],[9,11],[3,7]];
+const caseSequence=techniqueCases.flat();
+const primaryByCase=Object.fromEntries(techniqueCases.flatMap((ids,skill)=>ids.map(id=>[id,skill])));
+const extraExamples=[
+ [
+  "در جلسه صبحگاهی: «سه تمدید فوری داریم؛ چون دو مشتری امروز منتظرند، کارشناس قرارداد تا ساعت یازده اولویت‌بندی را اعلام کند.»",
+  "در پیگیری گزارش: «اطلاعات دو شعبه یکسان نیست؛ برای جلوگیری از پاسخ متناقض، امروز مسئول تطبیق سوابق مشخص می‌شود.»"
+ ],
+ [
+  "به مشتری: «پرونده در دست بررسی است» یعنی «هنوز تصمیم نهایی ثبت نشده و وضعیت آن را از مسیر رسمی پیگیری می‌کنیم».",
+  "به نماینده: به‌جای «اقدامات مقتضی انجام می‌شود» بگوییم «درخواست ثبت شده است؛ پس از تعیین مسئول، وضعیت قابل اعلام را خبر می‌دهیم»."
+ ],
+ [
+  "به کارشناس درباره اشتباه احتمالی: «اول سند را تطبیق بدهیم» را با صدای آرام و جدی بگوییم؛ نه با لحن سرزنش.",
+  "به رئیس شعبه همتا: «تعریف شاخص‌ها را با هم بررسی کنیم» را بدون تأکید رقابتی بر «ما» یا «شما» بیان کنیم."
+ ],
+ [
+  "پس از پرسش کارشناس «کدام بخش گزارش مبهم است؟» سه ثانیه مکث کنیم تا پاسخ او کامل شود.",
+  "هنگام اعلام اولویت‌ها بگوییم «اول، تماس با مشتری… دوم، ارسال گزارش تا ظهر» و بین دو بخش مکث کنیم."
+ ],
+ [
+  "وقتی نماینده از یک تماس گلایه دارد، گوشی را کنار بگذاریم، رو به او بنشینیم و با نگاه طبیعی به توضیحش گوش دهیم.",
+  "در ابلاغ یک تصمیم ستادی، حالت بدن باز و فاصله راحت حفظ کنیم و به افراد مختلف فرصت طرح پرسش بدهیم."
+ ],
+ [
+  "وقتی می‌گوییم «نظر شما مهم است»، واقعاً برای شنیدن سؤال مکث کنیم و هم‌زمان به ساعت یا تلفن نگاه نکنیم.",
+  "اگر درباره زمان پرداخت اطلاع قطعی نداریم، با صدای مطمئن قول پرداخت ندهیم؛ لحن همدلانه را با بیان محدودیت واقعی همراه کنیم."
+ ]
 ];
-const practiceKey="alborz-s4-micropractices-v1";
-let practiced=new Set();
-function readPractices(){try{const a=JSON.parse(sessionStorage.getItem(practiceKey)||"[]");practiced=new Set(Array.isArray(a)?a.filter(v=>Number.isInteger(v)&&v>=0&&v<6):[]);}catch(_){practiced=new Set();}}
-function savePractices(){try{sessionStorage.setItem(practiceKey,JSON.stringify([...practiced]));}catch(_){}}
+// Primary/direct and secondary/indirect links are grounded in each scenario's actual dialogue.
+const caseRelations={
+ 0:{why:"رئیس شعبه مسئله اختلاف پاسخ، علت نیاز به هماهنگی و اقدام بعدی را در سه بخش بیان می‌کند.",other:[[1,"جمله روشن به جای «در حال بررسی»"],[5,"همخوانی قول پیگیری با اقدام واقعی"]]},
+ 2:{why:"رئیس شعبه اولویت‌ها، دلیل ترتیب و مسئول پیگیری را صریح اعلام می‌کند.",other:[[3,"مکث میان اولویت‌های اعلام‌شده"],[5,"کنترل فهم و اجرای تعهد"]]},
+ 6:{why:"اصطلاحات مبهم وضعیت خسارت به عبارت قابل فهم و بدون وعده غیرمجاز تبدیل می‌شوند.",other:[[2,"لحن آرام هنگام توضیح نتیجه نامعلوم"],[5,"سازگاری لحن با واقعیت پرونده"]]},
+ 8:{why:"نماینده به مسیر و مسئول واقعی پیگیری نیاز دارد، نه پاسخ کلی و اداری.",other:[[0,"بیان مسئله و گام بعد به ترتیب"],[3,"مکث برای روشن شدن درخواست نماینده"]]},
+ 1:{why:"آهنگ و بلندی صدا در مقایسه دو شعبه می‌تواند همکاری یا رقابت ایجاد کند.",other:[[4,"حالت بدن برابر در گفت‌وگوی همتایان"],[5,"سازگاری احترام کلامی با رفتار"]]},
+ 4:{why:"در واکنش به اشتباه تأییدنشده، جدیت باید بدون صدای تند و سرزنش منتقل شود.",other:[[0,"تفکیک واقعیت، بررسی و اقدام"],[5,"همخوانی پیام حمایتی با رفتار مدیر"]]},
+ 5:{why:"قطع پی‌درپی صحبت کارشناس و ندادن مکث، فرصت طرح پیشنهاد را از بین می‌برد.",other:[[4,"نگاه و وضعیت بدن نشان‌دهنده توجه"],[5,"عمل‌کردن به دعوت برای ارائه پیشنهاد"]]},
+ 10:{why:"گزارش کوتاه به ستاد نیازمند تنظیم سرعت و مکث روی نقاط کلیدی است.",other:[[0,"ترتیب منطقی مسئله، علت و اقدام"],[1,"استفاده از واژه‌های روشن در گزارش"]]},
+ 9:{why:"نماینده در گفت‌وگوی حضوری از نگاه به گوشی و فاصله‌گرفتن مدیر احساس بی‌توجهی می‌کند.",other:[[2,"لحن مناسب هنگام پاسخ به گلایه"],[5,"همخوانی ادعای احترام با توجه واقعی"]]},
+ 11:{why:"هنگام انتقال ابلاغیه ستادی، نگاه، حالت بدن و فاصله مخاطبان را به گفت‌وگو دعوت می‌کند.",other:[[3,"مکث پس از دعوت به پرسش"],[5,"هماهنگی دعوت به مشارکت با رفتار واقعی"]]},
+ 3:{why:"گفتن «سؤال‌ها را می‌شنویم» باید با فرصت واقعی و رفتار محترمانه همراه باشد.",other:[[2,"لحن آرام در ابلاغ تغییر شیفت"],[3,"مکث واقعی بعد از دعوت به سؤال"]]},
+ 7:{why:"لحن امیدوارکننده نباید خلاف واقعیتِ نامشخص‌بودن پرداخت، پیام اطمینان قطعی بسازد.",other:[[1,"جایگزینی عبارت مبهم با وضعیت واقعی"],[2,"آرامش و قاطعیت بدون وعده قطعی"]]}
+};
 const persianNumber=n=>String(n).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d]);
 const subtitles={
  home:["جلسه چهارم","فن بیان مدیریتی، لحن و زبان بدن","یادگیری را از یکی از سه مسیر زیر آغاز کنید."],
- techniques:["گام ۱ از ۳","شش تکنیک بیان حرفه‌ای","برای مطالعه تعریف، مثال و خطای رایج روی هر تکنیک بزنید."],
- technique:["درسنامه تعاملی","تمرین یک مهارت کاربردی","با ورق‌زدن بین شش تکنیک، مرور را کامل کنید."],
- practice:["گام ۲ از ۳","آزمایشگاه ایفای نقش","یکی از شش گروه مخاطب را انتخاب کنید."],
- group:["سناریوهای گفت‌وگو","انتخاب موقعیت","یکی از دو موقعیت این گروه را باز کنید."],
- case:["آزمایشگاه تعاملی","اجرای گفت‌وگو","چهار مرحله را به‌ترتیب اجرا کنید و بازخورد بگیرید."],
+ techniques:["گام ۱ از ۳","شش تکنیک فن بیان مدیریتی","تعریف، سه مثال و خطای رایج را بخوانید؛ سپس دو رول‌پلی هر تکنیک را ببینید."],
+ technique:["درسنامه","تکنیک انتخاب‌شده","سه مثال شغلی و دو رول‌پلی اصلی این مهارت"],
+ practice:["گام ۲ از ۳","۱۲ رول‌پلی؛ بدون گروه‌بندی","هر موقعیت یک تکنیک مستقیم و تکنیک‌های مکمل غیرمستقیم دارد."],
+ case:["آزمایشگاه تعاملی","اجرای گفت‌وگو","چهار مرحله: اجرای اول، قواعد، اجرای دوم و بازخورد"],
  exam:["گام ۳ از ۳","آزمون پایانی","۱۰ سؤال موقعیتی؛ شمارش معکوس با اولین پاسخ آغاز می‌شود."],
  guide:["ویژه مدرس","راهنمای اجرای کلاس","کنداکتور و زمان‌بندی ۱۲۰ دقیقه‌ای جلسه"]
 };
-let currentView="home",groupIndex=0,techIndex=0,caseIndex=0,internalNavigation=false;
+let currentView="home",techIndex=0,caseIndex=0,caseReturn="practice";
 
 const $=q=>document.querySelector(q);
 const $$=q=>Array.from(document.querySelectorAll(q));
@@ -63,7 +94,7 @@ function buildHome(){
  const nav=el("nav","s4-path");nav.setAttribute("aria-label","انتخاب مسیر یادگیری");
  nav.innerHTML=[
  ["techniques","📘","۰۱","تکنیک‌های مدیریتی","شش مهارت، مثال‌های شعبه و خطاهای رایج"],
- ["practice","🎭","۰۲","آزمایشگاه گفت‌وگو","شش گروه مخاطب، دوازده کیس، چهار مرحله"],
+ ["practice","🎭","۰۲","آزمایشگاه گفت‌وگو","دوازده کیس، شش تکنیک، بدون گروه‌بندی"],
  ["exam","🏅","۰۳","آزمون و تحلیل نتیجه","ده سؤال، شش دقیقه و پاسخنامه تحلیلی"]
  ].map(a=>'<button type="button" class="s4-path-card" data-s4-open="'+a[0]+'"><span class="s4-path-sticker" aria-hidden="true">'+a[1]+'</span><span class="s4-path-copy"><small>'+a[2]+' · مسیر یادگیری</small><strong>'+a[3]+'</strong><span>'+a[4]+'</span></span><span class="s4-path-arrow" aria-hidden="true">←</span></button>').join("");
  hero.insertAdjacentElement("afterend",nav);
@@ -93,70 +124,117 @@ function decorateTechniques(){
  cards.forEach((card,i)=>{
   card.querySelector(".s4-tech-icon")?.replaceChildren(el("span","s4-emoji-sticker",techniqueEmojis[i]));
   const teaser=card.querySelector("small");
-  if(teaser)teaser.textContent="تعریف · مثال · خطای رایج";
+  if(teaser)teaser.textContent="تعریف · سه مثال · خطای رایج · دو رول‌پلی";
   card.setAttribute("aria-label","مطالعه تکنیک "+(i+1));
  });
  const overview=$(".s4-overview");
  if(overview?.querySelector(".s4-heading h2"))overview.querySelector(".s4-heading h2").textContent="شش تکنیک فن بیان مدیریتی";
 }
-function decorateRoles(){
+
+function techniqueName(i){
+ return $('.s4-tech[data-s4-tech="'+i+'"] strong')?.textContent||("تکنیک "+persianNumber(i+1));
+}
+function caseLabel(id){
+ return $('.s4-case[data-s4-case="'+id+'"] .s4-case-label strong')?.textContent||("کیس "+persianNumber(id+1));
+}
+function caseRole(id){
+ return $('.s4-case[data-s4-case="'+id+'"] .s4-case-label small')?.textContent.split(" · ")[0]||"";
+}
+function appendText(parent,tag,className,text){
+ const item=el(tag,className);item.textContent=text;parent.appendChild(item);return item;
+}
+function decorateRoleplays(){
  const list=$(".s4-lab .s4-cases");
  if(!list)return;
+ $$(".s4-role-index,.s4-group-nav").forEach(x=>x.remove());
  const cards=$$(".s4-lab .s4-cases > .s4-case");
  if(cards.length!==12)return;
- const existing=$(".s4-role-index");if(existing)existing.remove();
- const roleIndex=el("div","s4-role-index");
- const roles=["رئیس شعبه همتا","معاون شعبه","کارشناس شعبه","مشتری","نماینده","ستاد"];
- const descriptions=["همسویی بین دو شعبه","گفت‌وگوی مسئولیت و پیگیری","بازخورد و هماهنگی تیم","اعتمادسازی در ارتباط با مشتری","مدیریت انتظارات شبکه فروش","تعامل حرفه‌ای شعبه و ستاد"];
- roleIndex.innerHTML=roles.map((name,i)=>'<button type="button" class="s4-role-tile" data-s4-group="'+i+'"><span class="s4-role-sticker" aria-hidden="true">'+groupEmojis[i]+'</span><span class="s4-role-tile-copy"><small>گروه '+String(i+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+' · ۲ موقعیت</small><strong>'+name+'</strong><span>'+descriptions[i]+'</span></span><span class="s4-role-arrow" aria-hidden="true">←</span></button>').join("");
- list.insertAdjacentElement("beforebegin",roleIndex);
- // Physical grouping avoids a long 12-card wall and preserves the original delegated handlers.
- const oldGroups=Array.from(list.children).filter(x=>x.classList?.contains("s4-case-group"));
- oldGroups.forEach(x=>x.remove());
- const allCards=cards.length?cards:$$(".s4-lab .s4-case");
- // If the page was enhanced before, cards were moved into groups. Move by actual case number.
- const sorted=allCards.slice().sort((a,b)=>Number(a.dataset.s4Case)-Number(b.dataset.s4Case));
- for(let i=0;i<6;i++){
-  const g=el("section","s4-case-group");
-  g.dataset.s4Group=String(i);
-  const head=el("div","s4-case-group-header",'<span class="s4-group-label">گروه '+String(i+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+'</span><h3>'+groupEmojis[i]+' '+roles[i]+'</h3><p>'+descriptions[i]+'</p>');
-  g.appendChild(head);
-  const pair=el("div","s4-case-pair");
-  sorted.slice(i*2,i*2+2).forEach(c=>pair.appendChild(c));
-  g.appendChild(pair);list.appendChild(g);
+ const byId=new Map(cards.map(c=>[Number(c.dataset.s4Case),c]));
+ list.classList.add("s4-case-flat");
+ for(const id of caseSequence){
+  const card=byId.get(id),relation=caseRelations[id];
+  if(!card||!relation)continue;
+  const label=card.querySelector(".s4-case-label");
+  const note=label?.querySelector("small");
+  if(note)note.textContent=note.textContent.split(" · ")[0];
+  const prior=label?.querySelector(".s4-case-tags");
+  prior?.remove();
+  const tags=el("span","s4-case-tags");
+  appendText(tags,"span","s4-direct-tag","ارتباط مستقیم: "+techniqueName(primaryByCase[id]));
+  appendText(tags,"span","s4-indirect-tag","ارتباط غیرمستقیم: "+relation.other.map(x=>techniqueName(x[0])).join("، "));
+  label?.appendChild(tags);
+  card.setAttribute("aria-label","رول‌پلی "+persianNumber(id+1)+"، "+caseLabel(id)+"، مهارت اصلی "+techniqueName(primaryByCase[id]));
+  list.appendChild(card);
  }
- if(!$(".s4-group-nav")){
-  const bar=el("div","s4-group-nav",'<button type="button" data-s4-group-prev>→ گروه قبل</button><span id="s4-group-counter">گروه ۱ از ۶</span><button type="button" data-s4-group-next>گروه بعد ←</button>');
-  list.insertAdjacentElement("afterend",bar);
+ const head=$(".s4-lab .s4-heading");
+ if(head){
+  const h=head.querySelector("h2"),p=head.querySelector("p");
+  if(h)h.textContent="دوازده رول‌پلی فن بیان مدیریتی";
+  if(p)p.textContent="بدون گروه‌بندی: برای هر تکنیک دقیقاً دو کیس اصلی داریم. روی هر کیس بزنید و ارتباط‌های مستقیم و غیرمستقیم را ببینید.";
  }
 }
-function highlightGroup(){
- $$(".s4-case-group").forEach((g,i)=>{g.hidden=i!==groupIndex;});
- const bar=$(".s4-group-nav");
- if(bar){
-  bar.hidden=currentView!=="group";
-  const c=$("#s4-group-counter");if(c)c.textContent="گروه "+String(groupIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۶";
-  const before=bar.querySelector("[data-s4-group-prev]"),after=bar.querySelector("[data-s4-group-next]");
-  if(before)before.disabled=groupIndex===0;if(after)after.disabled=groupIndex===5;
- }
-}
-function showTechnologyPager(){
+function decorateTechniqueDetail(){
  const detail=$("#s4-tech-detail");
  if(!detail||detail.hidden)return;
- const old=detail.querySelector(".s4-tech-flipper");if(old)old.remove();
- const pager=el("nav","s4-tech-flipper");pager.setAttribute("aria-label","ورق زدن تکنیک‌ها");
- pager.innerHTML='<button type="button" data-s4-tech-flip="'+(techIndex-1)+'" '+(techIndex===0?"disabled":"")+'>→ تکنیک قبل</button><span>📖 تکنیک '+String(techIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+' از ۶</span><button type="button" data-s4-tech-flip="'+(techIndex+1)+'" '+(techIndex===5?"disabled":"")+'>تکنیک بعد ←</button>';
- // A single doable challenge makes each technique active rather than a reading-only card.
  detail.querySelector(".s4-tech-challenge")?.remove();
- const challenge=el("section","s4-tech-challenge");
- const done=practiced.has(techIndex);
- challenge.innerHTML='<h4>تمرین ۳۰ ثانیه‌ای</h4><p>'+microPractices[techIndex]+'</p>'+
-  '<button type="button" data-s4-practiced="'+techIndex+'" aria-pressed="'+done+'">'+
-  (done?'✓ تمرین انجام شد؛ اصلاح وضعیت':'تمرین کردم؛ ثبت پیشرفت')+'</button>'+
-  '<span class="s4-tech-progress" role="status">'+persianNumber(practiced.size)+' از ۶ تمرین ثبت شده</span>';
- detail.appendChild(challenge);
- detail.appendChild(pager);
+ detail.querySelector(".s4-tech-flipper")?.remove();
+ detail.querySelector(".s4-linked-roleplays")?.remove();
+ const content=detail.querySelector(".s4-tech-detail-content");
+ const exampleBox=content?.children[1];
+ if(exampleBox){
+  const lead=exampleBox.querySelector("b");
+  if(lead)lead.textContent="سه مثال واقعی در فضای شعبه";
+  const original=exampleBox.querySelector("p");
+  if(original){
+   const items=[original.textContent,...extraExamples[techIndex]];
+   const list=el("ol","s4-example-list");
+   items.forEach((sentence,i)=>{
+    const li=el("li","s4-example-item");
+    appendText(li,"strong","","مثال "+persianNumber(i+1));
+    appendText(li,"p","",sentence);
+    list.appendChild(li);
+   });
+   original.replaceWith(list);
+  }
+ }
+ const links=el("section","s4-linked-roleplays");
+ appendText(links,"h4","","دو رول‌پلی مستقیم همین تکنیک");
+ appendText(links,"p","s4-linked-help","یکی را انتخاب کنید. نقش‌ها، گفت‌وگوی پیش از اصلاح، قواعد و نمونه حرفه‌ای بعد از اصلاح در چهار صفحه نمایش داده می‌شوند.");
+ const pair=el("div","s4-linked-pair");
+ for(const id of techniqueCases[techIndex]){
+  const relation=caseRelations[id],button=el("button","s4-linked-case");
+  button.type="button";button.dataset.s4LinkedCase=String(id);
+  appendText(button,"span","s4-linked-index","رول‌پلی "+persianNumber(id+1));
+  appendText(button,"strong","",caseLabel(id));
+  appendText(button,"small","","ارتباط مستقیم: "+techniqueName(techIndex));
+  appendText(button,"span","s4-linked-reason",relation.why);
+  pair.appendChild(button);
+ }
+ links.appendChild(pair);
+ detail.appendChild(links);
 }
+function decorateCaseRelations(){
+ const work=$("#s4-focus .s4-work");
+ if(!work)return;
+ work.querySelector(".s4-relation-map")?.remove();
+ const rel=caseRelations[caseIndex];
+ if(!rel)return;
+ const block=el("section","s4-relation-map");
+ appendText(block,"h4","","پیوند این رول‌پلی با تکنیک‌های جلسه");
+ const direct=el("div","s4-relation-direct");
+ appendText(direct,"strong","","ارتباط مستقیم · "+techniqueName(primaryByCase[caseIndex]));
+ appendText(direct,"p","",rel.why);
+ block.appendChild(direct);
+ const others=el("div","s4-relation-indirect");
+ appendText(others,"strong","","ارتباط غیرمستقیم · مهارت‌های مکمل");
+ const ul=el("ul","");
+ rel.other.forEach(([skill,reason])=>appendText(ul,"li","",techniqueName(skill)+" — "+reason));
+ others.appendChild(ul);block.appendChild(others);
+ const scene=work.querySelector(".s4-scene");
+ if(scene)scene.insertAdjacentElement("afterend",block);
+ else work.prepend(block);
+}
+
 function showCasePager(){
  const focus=$("#s4-focus"),work=focus?.querySelector(".s4-work");
  if(!work)return;
@@ -173,7 +251,7 @@ function showCasePager(){
  back.disabled=step===0;back.setAttribute("aria-label","بازگشت به مرحله قبل همین گفت‌وگو");
  actions.prepend(back);
  const returnBtn=actions.querySelector("[data-s4-close]");
- if(returnBtn)returnBtn.textContent="بازگشت به دو سناریوی این گروه";
+ if(returnBtn)returnBtn.textContent=caseReturn==="technique"?"بازگشت به درسنامه تکنیک":"بازگشت به فهرست رول‌پلی‌ها";
  if(step===3){
   const checklist=work.querySelector(".s4-behavior-check");
   if(checklist&&!checklist.querySelector('input[type="checkbox"]')){
@@ -191,16 +269,14 @@ function showCasePager(){
    .find(p=>p.querySelector("b")?.textContent?.trim()==="معیار این کیس:");
   repeated?.remove();
   const nextCase=work.querySelector("[data-s4-nextcase]");
-  if(nextCase&&caseIndex===11)nextCase.textContent="پایان رول‌پلی‌ها · ورود به آزمون ←";
+  if(nextCase)nextCase.textContent=caseSequence.indexOf(caseIndex)===11?"پایان رول‌پلی‌ها · ورود به آزمون ←":"رول‌پلی بعدی ←";
  }
 }
+
 function renderView(view,options={}){
- const valid=Object.keys(subtitles);
- if(!valid.includes(view))view="home";
- // Leaving a case must restore the case index: the original engine hides it with .s4-active.
+ if(!Object.hasOwn(subtitles,view))view="home";
  if(view!=="case")$(".s4-lab")?.classList.remove("s4-active");
  currentView=view;
- if(Number.isInteger(options.groupIndex))groupIndex=Math.max(0,Math.min(5,options.groupIndex));
  if(Number.isInteger(options.techIndex))techIndex=Math.max(0,Math.min(5,options.techIndex));
  if(Number.isInteger(options.caseIndex))caseIndex=Math.max(0,Math.min(11,options.caseIndex));
  const root=$(".s4-root"),wrap=$(".s4-root .wrap");
@@ -215,152 +291,122 @@ function renderView(view,options={}){
  if(path)path.hidden=view!=="home";
  if(footer)footer.hidden=view!=="home";
  if(overview)overview.hidden=!["techniques","technique"].includes(view);
- if(lab)lab.hidden=!["practice","group","case"].includes(view);
+ if(lab)lab.hidden=!["practice","case"].includes(view);
  if(guide){guide.hidden=view!=="guide";if(view==="guide")guide.open=true;}
  if(exam)exam.hidden=view!=="exam";
  if(head)head.hidden=view==="home";
- if(flip)flip.hidden=view==="home";
+ // Roleplay already has four stage tabs and next/back buttons: do not duplicate navigation.
+ if(flip)flip.hidden=view==="home"||view==="case";
  const labels={
- technique:["تکنیک "+String(techIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۶",$('.s4-tech[data-s4-tech="'+techIndex+'"] strong')?.textContent||"فن بیان مدیریتی","معنا، مثال واقعی شعبه و خطای رایج این تکنیک."],
- group:["گروه "+String(groupIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۶","انتخاب یکی از دو سناریو","وارد کیس شوید و چهار مرحله اجرا را جلو ببرید."],
- case:["کیس "+String(caseIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۱۲","ایفای نقش و بازخورد","هر مرحله یک صفحه مستقل از اجرای گفت‌وگو است."]
+  technique:["تکنیک "+persianNumber(techIndex+1)+" از ۶",techniqueName(techIndex),"تعریف، سه مثال، خطای رایج و دو رول‌پلی مرتبط"],
+  case:["رول‌پلی "+persianNumber(caseSequence.indexOf(caseIndex)+1)+" از ۱۲",caseLabel(caseIndex),"ارتباط مستقیم و غیرمستقیم با تکنیک‌ها + گفت‌وگوی چهارمرحله‌ای"]
  };
  const a=labels[view]||subtitles[view];
- const emojis={techniques:"📘",technique:techniqueEmojis[techIndex],practice:"🎭",group:groupEmojis[groupIndex],case:"🗣️",exam:"🏅",guide:"🎓"};
  const step=$("#s4-screen-step"),title=$("#s4-screen-title"),desc=$("#s4-screen-description"),emoji=$("#s4-screen-emoji");
- if(step)step.textContent=a[0];if(title)title.textContent=a[1];if(desc)desc.textContent=a[2];if(emoji)emoji.textContent=emojis[view]||"📘";
+ if(step)step.textContent=a[0];if(title)title.textContent=a[1];if(desc)desc.textContent=a[2];
+ if(emoji)emoji.textContent=view==="technique"?techniqueEmojis[techIndex]:view==="case"?"🗣️":view==="practice"?"🎭":view==="exam"?"🏅":"📘";
  const overviewHeading=overview?.querySelector(".s4-heading"),techGrid=overview?.querySelector(".s4-techs"),detail=$("#s4-tech-detail"),science=overview?.querySelector(".s4-science");
  if(overviewHeading)overviewHeading.hidden=view==="technique";
  if(techGrid)techGrid.hidden=view==="technique";
  if(science)science.hidden=view!=="techniques";
- // Returning to the six-technique index must not leak the previously opened detail.
- // The core owns the technique data; the existing click bridge reopens it on selection.
  if(view==="techniques"&&detail){
   detail.hidden=true;
   detail.replaceChildren();
-  $(".s4-overview [data-s4-tech]").forEach(btn=>btn.setAttribute("aria-expanded","false"));
+  $$(".s4-overview [data-s4-tech]").forEach(btn=>btn.setAttribute("aria-expanded","false"));
  }
- // The original technique renderer owns detail.hidden when a detail is selected.
- const labHeading=lab?.querySelector(".s4-heading"),roleIndex=lab?.querySelector(".s4-role-index");
- const caseList=lab?.querySelector(".s4-cases"),focus=lab?.querySelector(".s4-focus");
+ const labHeading=lab?.querySelector(".s4-heading"),caseList=lab?.querySelector(".s4-cases"),focus=lab?.querySelector(".s4-focus");
  if(labHeading)labHeading.hidden=view!=="practice";
- if(roleIndex)roleIndex.hidden=view!=="practice";
- if(caseList)caseList.hidden=view!=="group";
+ if(caseList)caseList.hidden=view!=="practice";
  if(focus)focus.hidden=view!=="case";
- highlightGroup();
- if(view==="technique")showTechnologyPager();
- if(view==="case")showCasePager();
+ if(view==="technique")decorateTechniqueDetail();
+ if(view==="case"){showCasePager();decorateCaseRelations();}
  if(flip){
   const label=$("#s4-page-counter"),next=flip.querySelector("[data-s4-advance]");
-  const labels={techniques:"۱ / ۳ · تکنیک‌ها",technique:(techIndex+1)+" / ۶ · تکنیک",practice:"۲ / ۳ · تمرین",group:(groupIndex+1)+" / ۶ · گروه",case:(caseIndex+1)+" / ۱۲ · کیس",exam:"۳ / ۳ · آزمون",guide:"راهنمای مدرس"};
-  if(label)label.textContent=labels[view]||"مسیر یادگیری";
+  const names={techniques:"۱ / ۳ · تکنیک‌ها",technique:persianNumber(techIndex+1)+" / ۶ · تکنیک",practice:"۲ / ۳ · رول‌پلی",exam:"۳ / ۳ · آزمون",guide:"راهنمای مدرس"};
+  if(label)label.textContent=names[view]||"مسیر یادگیری";
   if(next){
-   const navNames={techniques:"شروع مطالعه ←",technique:techIndex===5?"ورود به تمرین‌ها ←":"تکنیک بعد ←",practice:"مشاهده گروه اول ←",group:groupIndex===5?"آزمون پایانی ←":"گروه بعد ←",case:"کیس بعد ←",exam:"پایان مسیر",guide:"بازگشت به خانه"};
-   next.textContent=navNames[view]||"صفحه بعد ←";
-   if(view==="exam")next.textContent="بازگشت به خانه ←";
+   next.textContent=view==="techniques"?"مطالعه تکنیک اول ←":view==="technique"?(techIndex===5?"مشاهده همه رول‌پلی‌ها ←":"تکنیک بعد ←"):view==="practice"?"ورود به آزمون پایانی ←":"بازگشت به خانه ←";
    next.disabled=false;
   }
  }
- $$(".s4-mobile-nav [data-s4-open]").forEach(btn=>btn.classList.toggle("active",btn.dataset.s4Open===view));
+ $$(".s4-mobile-nav [data-s4-open]").forEach(btn=>btn.classList.toggle("active",btn.dataset.s4Open===view||(view==="technique"&&btn.dataset.s4Open==="techniques")||(view==="case"&&btn.dataset.s4Open==="practice")));
  if(options.scroll!==false){
   window.scrollTo?.({top:0,behavior:"instant"});
-  // Focus the new page title so keyboard and assistive-technology users hear the transition.
   if(view!=="home")requestAnimationFrame(()=>$("#s4-screen-title")?.focus({preventScroll:true}));
  }
 }
 function openTechnique(n){
- if(n<0||n>5)return;
+ if(!Number.isInteger(n)||n<0||n>5)return;
  techIndex=n;
- const btn=$('.s4-tech[data-s4-tech="'+n+'"]');
- if(!btn)return;
- // The original click handler populates the learning content, no duplicate source of truth.
- const expanded=btn.getAttribute("aria-expanded")==="true";
- if(!expanded)btn.click();
- else renderView("technique",{techIndex:n});
+ const card=$('.s4-tech[data-s4-tech="'+n+'"]');
+ if(card)card.click(); // Base owns the definition and original example.
 }
 function openCase(n){
- if(n<0||n>11)return;
- const button=$('.s4-case[data-s4-case="'+n+'"]');
- if(!button)return;
- caseIndex=n;groupIndex=Math.floor(n/2);
- button.click();
+ if(!Number.isInteger(n)||!Object.hasOwn(primaryByCase,n))return;
+ caseIndex=n;
+ const card=$('.s4-case[data-s4-case="'+n+'"]');
+ if(card)card.click(); // Base owns the personas, dialogue and four-stage rules.
 }
-function goBack(){
+function back(){
+ if(currentView==="case"){const b=$("#s4-focus [data-s4-close]");if(b)b.click();else renderView(caseReturn);return;}
  if(currentView==="technique"){renderView("techniques");return;}
- if(currentView==="case"){
-  const close=$("#s4-focus [data-s4-close]");
-  if(close){close.click();return;}
-  renderView("group");return;
- }
- if(currentView==="group"){renderView("practice");return;}
+ if(currentView==="practice"){renderView("techniques");return;}
  renderView("home");
 }
-function goForward(){
- if(currentView==="techniques"){openTechnique(0);return;}
- if(currentView==="technique"){if(techIndex<5)openTechnique(techIndex+1);else renderView("practice");return;}
- if(currentView==="practice"){renderView("group",{groupIndex:0});return;}
- if(currentView==="group"){if(groupIndex<5)renderView("group",{groupIndex:groupIndex+1});else renderView("exam");return;}
- if(currentView==="case"){if(caseIndex<11)openCase(caseIndex+1);else renderView("exam");return;}
- if(currentView==="guide"||currentView==="exam")renderView("home");
+function forward(){
+ if(currentView==="techniques")return openTechnique(0);
+ if(currentView==="technique")return techIndex===5?renderView("practice"):openTechnique(techIndex+1);
+ if(currentView==="practice")return renderView("exam");
+ renderView("home");
 }
 function start(){
  const wrap=$(".s4-root .wrap");
  if(!wrap)return;
- readPractices();
- loadTheme();
- buildHome();
- decorateTechniques();
- decorateRoles();
+ loadTheme();buildHome();decorateTechniques();decorateRoleplays();
  renderView("home",{scroll:false});
 }
-// Script ordering: core roleplay, timed exam, then this progressive disclosure layer.
 window.alborzSession4Page=function(){original();start();};
+// The original case engine increments by original index. We instead follow the
+// technique-first sequence without changing any core roleplay transcripts.
+document.addEventListener("click",ev=>{
+ if(!$(".s4-root"))return;
+ const next=ev.target.closest?.("[data-s4-nextcase]");
+ if(!next)return;
+ ev.preventDefault();ev.stopImmediatePropagation();
+ const offset=caseSequence.indexOf(caseIndex)+1;
+ if(offset>=caseSequence.length)renderView("exam");
+ else openCase(caseSequence[offset]);
+},true);
 document.addEventListener("click",ev=>{
  if(!$(".s4-root"))return;
  const b=ev.target.closest?.("button,a");
  if(!b)return;
- if(b.matches("[data-s4-practiced]")){
-  const id=Number(b.dataset.s4Practiced);
-  if(Number.isInteger(id)&&id>=0&&id<6){
-   if(practiced.has(id))practiced.delete(id);else practiced.add(id);
-   savePractices();showTechnologyPager();
-  }
-  return;
- }
  if(b.matches("[data-s4-open]")){
-  ev.preventDefault();
-  const route=b.dataset.s4Open;
-  if(route==="group"){if(currentView==="case"){const close=$("#s4-focus [data-s4-close]");if(close){close.click();return;}}renderView("group");return;}
-  renderView(route);return;
+  ev.preventDefault();renderView(b.dataset.s4Open);return;
  }
- if(b.matches("[data-s4-back]")){goBack();return;}
- if(b.matches("[data-s4-advance]")){goForward();return;}
- if(b.matches("[data-s4-group]")){renderView("group",{groupIndex:Number(b.dataset.s4Group)});return;}
- if(b.matches("[data-s4-group-prev]")){renderView("group",{groupIndex:groupIndex-1});return;}
- if(b.matches("[data-s4-group-next]")){renderView("group",{groupIndex:groupIndex+1});return;}
+ if(b.matches("[data-s4-back]")){back();return;}
+ if(b.matches("[data-s4-advance]")){forward();return;}
  if(b.matches("[data-s4-tech]")){
-  // When reopening an already-selected technique from its index, core toggles it off.
-  // Trigger the same card once more to restore its existing detail content.
-  if($("#s4-tech-detail")?.hidden){b.click();return;}
-  renderView("technique",{techIndex:Number(b.dataset.s4Tech)});return;
+  techIndex=Number(b.dataset.s4Tech);renderView("technique",{techIndex});return;
  }
- if(b.matches("[data-s4-tech-flip]")){openTechnique(Number(b.dataset.s4TechFlip));return;}
+ if(b.matches("[data-s4-linked-case]")){
+  caseReturn="technique";openCase(Number(b.dataset.s4LinkedCase));return;
+ }
  if(b.matches("[data-s4-tech-close]")){renderView("techniques");return;}
- if(b.matches("[data-s4-case]")){caseIndex=Number(b.dataset.s4Case);renderView("case",{caseIndex,groupIndex:Math.floor(caseIndex/2)});return;}
- if(b.matches("[data-s4-step]")||b.matches("[data-s4-next]")){showCasePager();return;}
+ if(b.matches("[data-s4-case]")){
+  if(currentView==="practice")caseReturn="practice";
+  caseIndex=Number(b.dataset.s4Case);renderView("case",{caseIndex});return;
+ }
+ if(b.matches("[data-s4-step]")||b.matches("[data-s4-next]")){showCasePager();decorateCaseRelations();return;}
  if(b.matches("[data-s4-stepback]")){
-  const active=$("#s4-focus .s4-tabs button.active");
-  const n=Number(active?.dataset.s4Step||0);
+  const selected=$("#s4-focus .s4-tabs button.active");
+  const n=Number(selected?.dataset.s4Step||0);
   if(n>0)$('#s4-focus [data-s4-step="'+(n-1)+'"]')?.click();
   return;
  }
- if(b.matches("[data-s4-nextcase]")){
-  const n=caseIndex;
-  if(n>=11){renderView("exam");return;}
-  caseIndex=n+1;renderView("case",{caseIndex,groupIndex:Math.floor(caseIndex/2)});return;
- }
- if(b.matches("[data-s4-close]")){renderView("group");return;}
+ if(b.matches("[data-s4-close]")){renderView(caseReturn);return;}
 });
+
 document.addEventListener("change",ev=>{
  const input=ev.target;
  if(!input?.matches?.("#s4-focus [data-s4-observe]"))return;

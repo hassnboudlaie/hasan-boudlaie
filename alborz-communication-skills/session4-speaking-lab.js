@@ -22,7 +22,7 @@ function togglePersona(button){
 let activeTechnique=-1;
 function showTechniqueDetail(index){
  const el=document.getElementById("s4-tech-detail");if(!el)return;
- activeTechnique=index===activeTechnique?-1:index;
+ activeTechnique=index;
  document.querySelectorAll("[data-s4-tech]").forEach(btn=>btn.setAttribute("aria-expanded",String(Number(btn.getAttribute("data-s4-tech"))===activeTechnique)));
  if(activeTechnique<0){el.innerHTML="";el.hidden=true;return;}
  const t=techniques[activeTechnique],d=techniqueDetails[activeTechnique];el.hidden=false;
@@ -111,7 +111,7 @@ window.alborzSession4Page=function(){cssOnce();page()};
 document.addEventListener("click",ev=>{
  if(!document.querySelector(".s4-root"))return;
  const tech=ev.target.closest("[data-s4-tech]");if(tech){showTechniqueDetail(Number(tech.getAttribute("data-s4-tech")));return;}
- if(ev.target.closest("[data-s4-tech-close]")){showTechniqueDetail(activeTechnique);return;}
+ if(ev.target.closest("[data-s4-tech-close]")){showTechniqueDetail(-1);return;}
  const persona=ev.target.closest("[data-s4-role]");if(persona){togglePersona(persona);return;}
  const c=ev.target.closest("[data-s4-case]");if(c){select(+c.dataset.s4Case);return;}
  const t=ev.target.closest("[data-s4-step]");if(t){const n=+t.dataset.s4Step;if(n<=state.max){state.step=n;showStage()}return;}
