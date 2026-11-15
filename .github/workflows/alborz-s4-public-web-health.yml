@@ -1,0 +1,51 @@
+name: Alborz S4 — Public Web and Classroom Link Health
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/alborz-s4-public-web-health.yml'
+      - 'alborz-communication-skills/index.html'
+      - 'alborz-communication-skills/session4-*.js'
+      - 'alborz-communication-skills/session4-*.css'
+      - 'alborz-communication-skills/session4-classroom-fallback.html'
+      - 'alborz4.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-url:
+    name: Public HTTP and Assets (anonymous visitor)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify public GitHub Pages, entrypoint and core assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://hassnboudlaie.github.io/hasan-boudlaie'
+          mkdir -p /tmp/s4-health
+          get() {
+            local label="$1" url="$2" dest="$3"
+            local status
+            status=$(curl -4 -L -sS --retry 2 --retry-delay 2 --connect-timeout 12 --max-time 35 -w '%{http_code}' -o "$dest" "$url")
+            echo "$label HTTP=$status bytes=$(wc -c < "$dest") url=$url"
+            test "$status" = 200
+            test "$(wc -c < "$dest")" -gt 200
+          }
+          get 'Session 4 classroom link' "$base/alborz-communication-skills/index.html?m=4&health=s4" /tmp/s4-health/index.html
+          grep -Fq 'session4-speaking-lab.js?v=20261115-technique-first-r1' /tmp/s4-health/index.html
+          grep -Fq 'session4-ob-mba-theme.js?v=20261115-technique-first-r1' /tmp/s4-health/index.html
+          grep -Fq 'session4-final-exam.js' /tmp/s4-health/index.html
+          get 'Original roleplay and definitions' "$base/alborz-communication-skills/session4-speaking-lab.js?v=20261115-technique-first-r1" /tmp/s4-health/core.js
+          grep -Fq 'const techniqueDetails=' /tmp/s4-health/core.js
+          get 'Premium UI and technique mapping' "$base/alborz-communication-skills/session4-ob-mba-theme.js?v=20261115-technique-first-r1" /tmp/s4-health/theme.js
+          grep -Fq 'const techniqueCases=' /tmp/s4-health/theme.js
+          get 'Six minute quiz engine' "$base/alborz-communication-skills/session4-final-exam.js" /tmp/s4-health/exam.js
+          grep -Fq 'DURATION_MS=360000' /tmp/s4-health/exam.js
+          get 'Public short fallback link' "$base/alborz4.html" /tmp/s4-health/short.html
+          grep -Fq 'session4-classroom-fallback.html' /tmp/s4-health/short.html
+          get 'Self-contained static classroom edition' "$base/alborz-communication-skills/session4-classroom-fallback.html" /tmp/s4-health/fallback.html
+          grep -Fq 'سه مثال ملموس' /tmp/s4-health/fallback.html
+          ! grep -Fq '<script' /tmp/s4-health/fallback.html
+          echo 'PASS: Public S4 web link, critical JS files and classroom fallback return HTTP 200 without credentials.'
