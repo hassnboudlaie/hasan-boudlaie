@@ -23,6 +23,7 @@ async function ready(){
  let passed=0;
  async function make(name,width,height){
   const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+  page.setDefaultTimeout(7000); // Fail fast on missing/hidden classroom controls.
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   const goto=async url=>{await page.goto(BASE+url,{waitUntil:'domcontentloaded'});await page.waitForTimeout(240);};
@@ -83,11 +84,13 @@ async function ready(){
  await phone.page.locator('[data-s4-open="techniques"]').first().click();
  await phone.check('S4 six techniques',async()=>await phone.page.locator('.s4-tech').count()===6);
  await phone.snap('session4-techniques');
+ console.log('S4 phone: opening first technique');
  await phone.page.locator('.s4-tech').first().click();
  await phone.check('S4 technique detail opens',()=>phone.page.locator('.s4-root[data-s4-view="technique"]').isVisible());
  await phone.check('S4 three examples per technique',async()=>await phone.page.locator('.s4-example-list .s4-example-item').count()===3);
  await phone.check('S4 two roleplays per technique',async()=>await phone.page.locator('.s4-linked-case').count()===2);
  await phone.check('S4 no micropractice',async()=>await phone.page.locator('.s4-tech-challenge').count()===0);
+ console.log('S4 phone: opening linked roleplay');
  await phone.page.locator('.s4-linked-case').first().click();
  await phone.check('S4 roleplay from technique opens',()=>phone.page.locator('.s4-root[data-s4-view="case"]').isVisible());
  await phone.check('S4 case role personas preserved',async()=>await phone.page.locator('#s4-focus .s4-persona').count()===2);
@@ -95,12 +98,14 @@ async function ready(){
  await phone.check('S4 no double roleplay pager',async()=>await phone.page.locator('#s4-focus .s4-case-pagination').count()===0);
  await phone.page.locator('#s4-focus [data-s4-next]').click();
  await phone.check('S4 second roleplay step opens',async()=>await phone.page.locator('#s4-focus .s4-tabs button.active').getAttribute('data-s4-step')==='1');
+ console.log('S4 phone: closing roleplay');
  await phone.page.locator('#s4-focus [data-s4-close]').first().click();
  await phone.check('S4 returns to technique detail',()=>phone.page.locator('.s4-root[data-s4-view="technique"]').isVisible());
  await phone.page.locator('.s4-mobile-nav [data-s4-open="practice"]').click();
  await phone.check('S4 all 12 scenarios flat',async()=>await phone.page.locator('.s4-cases.s4-case-flat > .s4-case').count()===12);
  await phone.check('S4 no role-group chooser',async()=>await phone.page.locator('.s4-role-index').count()===0);
  await phone.overflow();
+ console.log('S4 desktop: loading');
  await desk.goto('index.html?m=4');
  await desk.check('S4 desktop URL opens',()=>desk.page.locator('.s4-root').isVisible());
  await desk.page.locator('.s4-path [data-s4-open="techniques"]').click();
