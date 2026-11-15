@@ -1,6 +1,6 @@
 /* Scoped exclusively to /hasan-boudlaie/alborz-communication-skills/.
  * No shared cache names, site-root interception, or other app storage mutations. */
-const CACHE_NAME = 'alborz-communication-academy-v2-20261115-s4-mobile';
+const CACHE_NAME = 'alborz-communication-academy-v2-20261115-s4-content-repair';
 const CACHE_PREFIX = 'alborz-communication-academy-';
 const SCOPE_PATH = new URL(self.registration.scope).pathname;
 const SHELL = [
