@@ -50,13 +50,41 @@ ok(journey.includes('const original=window.alborzSession3Page'),'wrapper keeps b
 const s4=read('session4-ob-mba-theme.js');
 new vm.Script(s4,{filename:'session4-ob-mba-theme.js'});checks++;
 ok(s4.includes('const original=window.alborzSession4Page'),'session 4 enhancement intact');
+ok(s4.includes('wrap.appendChild(nav)'),'S4 mobile navigation cannot leak into other sessions');
+ok(s4.includes('detail.replaceChildren()'),'S4 index resets stale technique detail');
+ok(s4.includes('repeated?.remove()'),'S4 checklist criterion not duplicated in feedback');
+ok(s4.includes('actions.prepend(back)'),'S4 single roleplay action row');
+ok(!s4.includes('document.body.appendChild(nav)'),'S4 no body-level stale navigation');
+const coreS4=read('session4-speaking-lab.js');
+const getS4Data=(prefix,next)=>{
+ const a=coreS4.indexOf(prefix),b=coreS4.indexOf(next,a);
+ ok(a>=0&&b>a,'S4 content marker '+prefix);
+ return JSON.parse(coreS4.slice(a+prefix.length,b));
+};
+const s4Skills=getS4Data('const techniques=',';\\nconst techniqueDetails='.replace('\\n','\n'));
+const s4Details=getS4Data('const techniqueDetails=',';\\nconst raw='.replace('\\n','\n'));
+const s4Cases=getS4Data('const raw=',';\\nconst cases='.replace('\\n','\n'));
+ok(s4Skills.length===6&&s4Details.length===6,'S4 has six distinct techniques');
+ok(s4Details.every(x=>x.definition&&x.example&&x.pitfall),'S4 every technique has definition, branch example and pitfall');
+ok(s4Cases.length===12&&new Set(s4Cases.map(x=>x[1])).size===12,'S4 has 12 unique roleplay scenarios');
+ok(s4Cases.every((x,i)=>x[0]===s4Cases[i-(i%2)][0]),'S4 two cases for each of six roles');
+ok(s4Cases.every(x=>x[4].split('|').length===6&&x[5].split('|').length===6),'S4 every case contains 3 speaking turns before and after');
 const mobile=read('session4-mobile-first-20261115.css');
 ok(s4.includes('session4-mobile-first-20261115.css?v=1'),'Session 4 mobile stylesheet loaded after existing theme');
-ok(index.includes('session4-ob-mba-theme.js?v=20261115-mobile-first-v1'),'Session 4 JS cache-busted');
+ok(index.includes('session4-ob-mba-theme.js?v=20261115-session4-content-repair-r1'),'Session 4 JS cache-busted');
 ok(mobile.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'Four-way mobile navigation is readable');
 ok(mobile.includes('max-width:380px'),'320px phones covered');
 ok(mobile.includes('prefers-reduced-motion'),'Accessible animation fallback');
 ok(read('sw.js').includes('session4-mobile-first-20261115.css?v=1'),'PWA shell includes mobile CSS');
+for(const asset of [
+ 'session3-listening-lab.js?v=20261108-r6-six-roles',
+ 'session4-speaking-lab.js?v=20261112-content-audit2',
+ 'session4-final-quiz-data.js?v=20261112-r2-audited',
+ 'session4-final-exam.js?v=20261112-r2-6min',
+ 'session4-ob-mba-theme.js?v=20261115-session4-content-repair-r1',
+ 'session4-ob-mba-theme.css?v=20261114-impeccable-r1',
+ 'alborz-impeccable.css?v=20261115-suite-r1'
+])ok(read('sw.js').includes(asset),'PWA precache asset '+asset);
 const exam=read('session4-final-exam.js');
 ok(exam.includes('const DURATION_MS=360000'),'6-minute exam unchanged');
 ok(exam.includes('if(!deadline)activateTimer()'),'starts at first answer');

@@ -85,7 +85,7 @@ function buildHome(){
  if(!$(".s4-mobile-nav")){
   const nav=el("nav","s4-mobile-nav",'<button type="button" data-s4-open="home"><span>🏠</span>خانه</button><button type="button" data-s4-open="techniques"><span>📘</span>تکنیک‌ها</button><button type="button" data-s4-open="practice"><span>🎭</span>رول‌پلی</button><button type="button" data-s4-open="exam"><span>📝</span>آزمون</button>');
   nav.setAttribute("aria-label","ناوبری جلسه چهارم");
-  document.body.appendChild(nav);
+  wrap.appendChild(nav);
  }
 }
 function decorateTechniques(){
@@ -160,28 +160,39 @@ function showTechnologyPager(){
 function showCasePager(){
  const focus=$("#s4-focus"),work=focus?.querySelector(".s4-work");
  if(!work)return;
- const old=work.querySelector(".s4-case-pagination");if(old)old.remove();
- const box=el("div","s4-case-pagination");
+ // Only one navigation system: the original four-stage tabs and action row.
+ // Remove the older secondary stage counter/pager if it exists.
+ work.querySelector(".s4-case-pagination")?.remove();
  const current=work.querySelector(".s4-tabs button.active");
  const step=Number(current?.dataset.s4Step||0);
- // Make the observer checklist actionable on the actual feedback step.
+ const actions=work.querySelector(".s4-actions");
+ if(!actions)return;
+ actions.querySelector("[data-s4-stepback]")?.remove();
+ const back=el("button","s4-secondary","→ مرحله قبل");
+ back.type="button";back.dataset.s4Stepback="";
+ back.disabled=step===0;back.setAttribute("aria-label","بازگشت به مرحله قبل همین گفت‌وگو");
+ actions.prepend(back);
+ const returnBtn=actions.querySelector("[data-s4-close]");
+ if(returnBtn)returnBtn.textContent="بازگشت به دو سناریوی این گروه";
  if(step===3){
   const checklist=work.querySelector(".s4-behavior-check");
   if(checklist&&!checklist.querySelector('input[type="checkbox"]')){
    checklist.querySelectorAll("li").forEach((item,i)=>{
-    const text=item.textContent.trim();item.textContent="";
+    const note=item.textContent.trim();item.textContent="";
     const label=el("label","s4-observation-option");
     const input=el("input");input.type="checkbox";input.dataset.s4Observe=String(i);
-    label.appendChild(input);label.appendChild(document.createTextNode(text));item.appendChild(label);
+    label.appendChild(input);label.appendChild(document.createTextNode(note));item.appendChild(label);
    });
    const feedback=el("p","s4-observation-progress","۰ از ۳ رفتار مشاهده شد");
    feedback.setAttribute("role","status");checklist.appendChild(feedback);
   }
+  // The same case-specific criterion already appears in the checklist.
+  const repeated=Array.from(work.querySelectorAll(".s4-feedback-panel > p"))
+   .find(p=>p.querySelector("b")?.textContent?.trim()==="معیار این کیس:");
+  repeated?.remove();
   const nextCase=work.querySelector("[data-s4-nextcase]");
   if(nextCase&&caseIndex===11)nextCase.textContent="پایان رول‌پلی‌ها · ورود به آزمون ←";
  }
- box.innerHTML='<button type="button" data-s4-stepback '+(step===0?'disabled':'')+'>→ مرحله قبل</button><span>🎭 مرحله '+String(step+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+' از ۴</span><button type="button" data-s4-open="group">فهرست کیس‌ها</button>';
- work.querySelector(".s4-actions")?.insertAdjacentElement("beforebegin",box);
 }
 function renderView(view,options={}){
  const valid=Object.keys(subtitles);
@@ -210,7 +221,7 @@ function renderView(view,options={}){
  if(head)head.hidden=view==="home";
  if(flip)flip.hidden=view==="home";
  const labels={
- technique:["تکنیک "+String(techIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۶","مطالعه و مرور مهارت","تعریف، مثال و خطای رایج را بررسی کنید."],
+ technique:["تکنیک "+String(techIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۶",$('.s4-tech[data-s4-tech="'+techIndex+'"] strong')?.textContent||"فن بیان مدیریتی","معنا، مثال واقعی شعبه و خطای رایج این تکنیک."],
  group:["گروه "+String(groupIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۶","انتخاب یکی از دو سناریو","وارد کیس شوید و چهار مرحله اجرا را جلو ببرید."],
  case:["کیس "+String(caseIndex+1).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d])+" از ۱۲","ایفای نقش و بازخورد","هر مرحله یک صفحه مستقل از اجرای گفت‌وگو است."]
  };
@@ -222,7 +233,14 @@ function renderView(view,options={}){
  if(overviewHeading)overviewHeading.hidden=view==="technique";
  if(techGrid)techGrid.hidden=view==="technique";
  if(science)science.hidden=view!=="techniques";
- // The original technique renderer owns detail.hidden. Visual hiding is scoped to the list view.
+ // Returning to the six-technique index must not leak the previously opened detail.
+ // The core owns the technique data; the existing click bridge reopens it on selection.
+ if(view==="techniques"&&detail){
+  detail.hidden=true;
+  detail.replaceChildren();
+  $(".s4-overview [data-s4-tech]").forEach(btn=>btn.setAttribute("aria-expanded","false"));
+ }
+ // The original technique renderer owns detail.hidden when a detail is selected.
  const labHeading=lab?.querySelector(".s4-heading"),roleIndex=lab?.querySelector(".s4-role-index");
  const caseList=lab?.querySelector(".s4-cases"),focus=lab?.querySelector(".s4-focus");
  if(labHeading)labHeading.hidden=view!=="practice";
