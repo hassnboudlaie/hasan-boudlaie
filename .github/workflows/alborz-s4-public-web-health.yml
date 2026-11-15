@@ -9,6 +9,9 @@ on:
       - 'alborz-communication-skills/session4-*.css'
       - 'alborz-communication-skills/session4-classroom-fallback.html'
       - 'alborz4.html'
+  pull_request:
+    paths:
+      - '.github/workflows/alborz-s4-public-web-health.yml'
   workflow_dispatch:
 permissions:
   contents: read
