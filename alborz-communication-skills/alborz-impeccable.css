@@ -1,0 +1,540 @@
+/* ALBORZ ACADEMY · IMPECCABLE DESIGN SYSTEM
+   Source of visual direction: Session 4 — navy / deep teal / champagne / clear Persian typography.
+   Presentation-only: never changes login, timing, scoring, classroom grouping, or app storage.
+   Last-layer selectors are scoped to each entrypoint to avoid unrelated apps. 2026-11-15 */
+@font-face{
+ font-family:AlborzImpeccable;src:url("./assets/fonts/Vazirmatn.woff2") format("woff2");
+ font-weight:100 900;font-display:swap
+}
+html[data-alborz-surface]{
+ --ab-navy:#162f49;--ab-navy-deep:#0d2239;--ab-teal:#096d76;
+ --ab-teal-deep:#095560;--ab-gold:#cba970;--ab-paper:#eaf0f4;
+ --ab-paper-warm:#f6f3ed;--ab-ink:#1a344b;--ab-muted:#3d5870;
+ --ab-outline:#aac0cb;--ab-mint:#d9ede7;--ab-blue:#d3e8f1;
+ --ab-lilac:#e6e2f0;--ab-shadow:0 12px 27px rgba(17,43,65,.12);
+ font-family:AlborzImpeccable,Vazirmatn,Tahoma,sans-serif;
+ direction:rtl;scroll-padding-top:115px
+}
+html[data-alborz-surface] body{font-family:AlborzImpeccable,Vazirmatn,Tahoma,sans-serif;direction:rtl;overflow-wrap:break-word}
+html[data-alborz-surface] :where(button,input,textarea,select){font-family:inherit}
+html[data-alborz-surface] :where(button,a,summary,input,textarea,select,[tabindex="0"]):focus-visible{
+ outline:3px solid #c38d38;outline-offset:4px
+}
+html[data-alborz-surface] :where(button,a,summary,input,textarea,select){touch-action:manipulation}
+html[data-alborz-surface] :where(button,[role="button"]):disabled{cursor:not-allowed}
+html[data-alborz-surface] :where(p,li,dd){line-height:1.85}
+html[data-alborz-surface] :where(h1,h2,h3,h4){font-weight:850;line-height:1.5;text-wrap:balance}
+html[data-alborz-surface] :where([hidden]){display:none!important}
+html[data-alborz-surface] :where(img,svg){max-width:100%}
+html[data-alborz-surface] :where(input:not([type="checkbox"]):not([type="radio"]),textarea,select){
+ max-width:100%
+}
+html[data-alborz-surface] :where(p,li,span,strong,small){overflow-wrap:break-word}
+html[data-alborz-surface] :where(a,button){-webkit-tap-highlight-color:transparent}
+
+/* ACADEMY HOME, SESSION 0 + 1, GUIDES (S4 keeps its complete independent world) */
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)){
+ --navy:var(--ab-navy);--teal:var(--ab-teal);
+ --bg:#edf2f4;--ink:var(--ab-ink);--muted:var(--ab-muted);
+ --line:#bdcdd7;--soft:#e0eff0;
+ background:radial-gradient(ellipse at 92% -4%,#c8e4e8 0%,transparent 33%),radial-gradient(ellipse at 6% 76%,#e6ddea 0%,transparent 33%),#edf2f4;
+ color:var(--ab-ink);font-size:20px;line-height:1.85
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .wrap{max-width:1360px}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .top{
+ background:#122b43;color:#fff;border-bottom:2px solid #bfa26e;box-shadow:0 9px 24px #0c294024
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .topin{min-height:84px;height:auto;padding-block:10px}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .brand b{color:#fff;font-size:clamp(20px,2vw,26px);font-weight:900}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .brand small{color:#e4eaf1;font-size:16px;font-weight:650}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .logo{width:54px;height:54px;background:#f0dcaf;color:#123650;font-weight:900;font-size:28px}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .utility-btn,
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .nav a{
+ min-height:47px;display:inline-flex;align-items:center;justify-content:center;font-size:17px;
+ background:#20455d;color:#fff;border:1px solid #7195a5;border-radius:12px;font-weight:750;padding:9px 15px
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .hero{
+ background:linear-gradient(123deg,#112841 0%,#194f65 68%,#0d7377 100%);
+ border-bottom:4px solid #c8a873;color:#fff;padding:clamp(37px,5vw,66px) 0;box-shadow:0 12px 30px #122d491f
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .hero h1{
+ font-size:clamp(32px,4vw,52px);font-weight:900;color:#fff;max-width:23ch
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .hero p{
+ font-size:clamp(20px,2vw,25px);font-weight:700;color:#eaf7fb;max-width:74ch
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.section h2,.panel h2,.lab-card h2,.s1-panel-head h2){
+ font-size:clamp(26px,2.7vw,36px);font-weight:900;color:#123b55
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.card,.panel,.lab-card,.academy-course-card,.s1-tool-card,.s1-moment,.guide){
+ border-radius:18px;border-color:#a9c3d0;box-shadow:var(--ab-shadow);background:#f5f9fb
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .card:nth-child(3n+2),
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .academy-course-card:nth-child(2n){
+ background:#e2eef2
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.card h3,.academy-course-card h3,.s1-tool-card strong){
+ font-size:clamp(23px,2vw,29px);font-weight:900;color:#153b55
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.card p,.panel p,.academy-course-card p,.lab-card p,.guide p){
+ font-size:19px;color:#31516a;line-height:1.85
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.btn,.go a,.academy-course-cta){
+ min-height:54px;border-radius:13px;font-size:19px;font-weight:900;align-items:center
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .academy-course-cta{
+ background:#13415c;color:#fff;justify-content:space-between;box-shadow:0 6px 17px #0d3a5826
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .academy-course-card:nth-child(2n) .academy-course-cta{background:#096b73}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .tag,
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .topic{
+ font-size:16px;font-weight:800;padding:7px 12px;background:#dce9ed;color:#164c63
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .s1-moment-q{
+ font-size:clamp(22px,2.3vw,28px);font-weight:850;color:#143750
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.s1-moment-story,.s1-tool-definition,.s1-tool-context,.s1-focus-case){
+ font-size:clamp(19px,1.8vw,23px);line-height:1.85;color:#23465e
+}
+html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.s1-moment-options button,.s1-tool-options button,.s1-focus-options button){
+ font-size:20px;min-height:58px;line-height:1.75;border-radius:13px
+}
+
+/* SESSION 3: high-fidelity page-flip journey, parallel to session 4 */
+html[data-alborz-surface="academy"] body:has(.s3-root){
+ background:#edf1f4;color:var(--ab-ink);font-size:21px
+}
+html[data-alborz-surface="academy"] .s3-root{background:radial-gradient(ellipse at 90% 9%,#d1e4eb,transparent 32%),#edf1f4!important;padding:18px 0 100px;min-height:80vh}
+html[data-alborz-surface="academy"] .s3-root .wrap{max-width:1480px;padding:0 clamp(14px,3vw,43px)}
+html[data-alborz-surface="academy"] .s3-topbar{background:#142b45!important;border-bottom:2px solid #bfa169;box-shadow:0 8px 22px #13354e2b}
+html[data-alborz-surface="academy"] .s3-topinside{max-width:1480px;min-height:85px}
+html[data-alborz-surface="academy"] .s3-brand strong{color:#fff!important;font-size:clamp(20px,2vw,26px);font-weight:900}
+html[data-alborz-surface="academy"] .s3-brand small{color:#e1eef2;font-size:16px}
+html[data-alborz-surface="academy"] .s3-home{background:#25536a;color:#fff;border:1px solid #7199a5;font-size:18px;min-height:52px}
+html[data-alborz-surface="academy"] .s3-root .s3-hero{
+ display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);
+ min-height:326px;padding:0;overflow:hidden;border-radius:23px;
+ background:linear-gradient(120deg,#132b47,#124b65 66%,#0a7478);color:#fff;box-shadow:0 18px 35px #10324b29;border:1px solid #628996
+}
+html[data-alborz-surface="academy"] .s3-hero-copy{padding:clamp(27px,4vw,53px)}
+html[data-alborz-surface="academy"] .s3-hero-copy h1{font-size:clamp(33px,3.6vw,49px);font-weight:900;color:#fff;line-height:1.42}
+html[data-alborz-surface="academy"] .s3-hero-copy p{font-size:clamp(21px,1.9vw,26px);color:#e7f7fa;font-weight:750}
+html[data-alborz-surface="academy"] .s3-hero-photo{width:100%;height:100%;object-fit:cover;min-height:326px;filter:saturate(.9)}
+html[data-alborz-surface="academy"] .s3-root [hidden]{display:none!important}
+html[data-alborz-surface="academy"] .s3-journey-path{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:26px 0 16px
+}
+html[data-alborz-surface="academy"] .s3-journey-path button,
+html[data-alborz-surface="academy"] .s3j-roles button{
+ width:100%;display:flex;align-items:center;gap:18px;text-align:right;
+ border:2px solid #5f9caa;color:#fff;padding:24px;border-radius:19px;min-height:154px;
+ background:linear-gradient(135deg,#173a55,#116b76);box-shadow:0 14px 26px #0f3a5626;cursor:pointer
+}
+html[data-alborz-surface="academy"] .s3-journey-path button:nth-child(2){background:linear-gradient(125deg,#29425e,#635578);border-color:#9691b3}
+html[data-alborz-surface="academy"] .s3-journey-path button>span:nth-child(2),
+html[data-alborz-surface="academy"] .s3j-roles button>span:nth-child(2){min-width:0;display:grid;gap:5px;flex:1}
+html[data-alborz-surface="academy"] .s3j-sticker{
+ width:72px;height:72px;flex:none;display:grid;place-items:center;border-radius:19px;
+ background:#e3f0ef;color:#144861;font-size:39px;border:2px solid #fff1d6;box-shadow:0 5px 12px #10283921
+}
+html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button small{
+ font-size:17px;font-weight:850;color:#f8dfae
+}
+html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button strong{
+ font-size:clamp(24px,2.4vw,31px);color:#fff;font-weight:900;line-height:1.4
+}
+html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button em{
+ font-style:normal;font-size:19px;color:#e8f5f8;line-height:1.65
+}
+html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button b{font-size:28px;color:#f5d99f}
+html[data-alborz-surface="academy"] .s3j-instructor-link{
+ background:#f5e9cf;border:1px solid #d7bd8e;padding:14px 17px;border-radius:13px;margin-bottom:21px
+}
+html[data-alborz-surface="academy"] .s3j-instructor-link button{
+ min-height:49px;border:0;background:#253e57;color:#fff;border-radius:10px;padding:9px 19px;font-size:19px;font-weight:850
+}
+html[data-alborz-surface="academy"] .s3j-head{
+ display:flex;align-items:center;gap:20px;justify-content:space-between;margin:5px 0 24px;
+ background:linear-gradient(114deg,#19324e,#116473);
+ color:#fff;border:1px solid #5a8f9b;border-radius:20px;padding:22px 27px;box-shadow:0 12px 27px #0c3b5425
+}
+html[data-alborz-surface="academy"] .s3j-headmark{
+ width:76px;height:76px;flex:none;display:grid;place-items:center;border-radius:18px;
+ background:#ecf5f4;font-size:42px;border:2px solid #f1d7a5
+}
+html[data-alborz-surface="academy"] .s3j-headcopy{flex:1;min-width:0}
+html[data-alborz-surface="academy"] .s3j-headcopy span{font-size:18px;color:#f4d49d;font-weight:900}
+html[data-alborz-surface="academy"] .s3j-headcopy h2{font-size:clamp(29px,2.8vw,38px);margin:3px 0;color:#fff;font-weight:900}
+html[data-alborz-surface="academy"] .s3j-headcopy p{font-size:20px;color:#ebf6fb;margin:0;font-weight:700}
+html[data-alborz-surface="academy"] .s3j-back{
+ font-size:18px;font-weight:900;background:#11314c;border:1px solid #8eb6c2;color:#fff;
+ border-radius:12px;min-height:52px;padding:10px 18px
+}
+html[data-alborz-surface="academy"] .s3-root .s3-techs{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+html[data-alborz-surface="academy"] .s3-root button.s3-tech{
+ display:grid;grid-template-columns:80px minmax(0,1fr);gap:7px 15px;align-content:center;
+ min-height:155px;padding:20px 21px;border-radius:17px;border:2px solid #8db6c6;
+ background:linear-gradient(123deg,#d7eaf2,#c2e0e8);box-shadow:0 10px 20px #173e5a1c;text-align:right
+}
+html[data-alborz-surface="academy"] .s3-root button.s3-tech:nth-child(2n){background:linear-gradient(125deg,#e5e1f1,#cfd9ef);border-color:#b7b6d4}
+html[data-alborz-surface="academy"] .s3-root button.s3-tech:nth-child(3n){background:linear-gradient(125deg,#d4efe3,#bfded6);border-color:#9ec8b8}
+html[data-alborz-surface="academy"] .s3-tech-icon{grid-column:1;grid-row:1/3;display:grid;place-items:center;width:76px;height:76px;background:#f0f9f6!important;border-radius:18px}
+html[data-alborz-surface="academy"] .s3j-tech-icon{font-size:42px}
+html[data-alborz-surface="academy"] .s3-root button.s3-tech strong{font-size:clamp(23px,2.1vw,29px);font-weight:900;color:#17374d;line-height:1.55}
+html[data-alborz-surface="academy"] .s3-root button.s3-tech small{font-size:18px;font-weight:800;color:#23536b}
+html[data-alborz-surface="academy"] .s3-root .s3-tech-detail{
+ padding:24px;background:linear-gradient(135deg,#d8ebf1,#e9e3ef);
+ border:2px solid #96b3c4;border-radius:20px;box-shadow:0 14px 26px #17395320
+}
+html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
+}
+html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content>div{background:#edf7fa;border:1px solid #bad2dc;padding:21px;border-radius:14px}
+html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content .s3-tech-pitfall{grid-column:1/-1;background:#f8ead4;border-color:#ddbd87}
+html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content b{font-size:23px;color:#154d67;font-weight:900}
+html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content p{font-size:23px;font-weight:650;color:#193a51;line-height:1.85}
+html[data-alborz-surface="academy"] .s3j-practice{
+ display:grid;grid-template-columns:1fr auto;gap:10px 14px;align-items:center;
+ margin-top:19px;padding:21px 24px;border-radius:16px;background:#1a3f59;color:#fff
+}
+html[data-alborz-surface="academy"] .s3j-practice h4,
+html[data-alborz-surface="academy"] .s3j-practice p{grid-column:1/-1;margin:0;color:#fff}
+html[data-alborz-surface="academy"] .s3j-practice h4{font-size:27px;color:#f5d69d;font-weight:900}
+html[data-alborz-surface="academy"] .s3j-practice p{font-size:23px;font-weight:700}
+html[data-alborz-surface="academy"] .s3j-practice button{
+ padding:10px 18px;min-height:57px;border:1px solid #f3d49b;background:#edd8b7;
+ border-radius:10px;color:#1c3950;font-size:19px;font-weight:900
+}
+html[data-alborz-surface="academy"] .s3j-practice button[aria-pressed="true"]{background:#ceeadc;border-color:#9ecdb9;color:#194b39}
+html[data-alborz-surface="academy"] .s3j-practice small{font-size:18px;color:#f1f6fb;font-weight:800}
+html[data-alborz-surface="academy"] .s3j-techpager,
+html[data-alborz-surface="academy"] .s3j-pager,
+html[data-alborz-surface="academy"] .s3j-grouppager,
+html[data-alborz-surface="academy"] .s3j-casepager{
+ display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap;
+ padding:15px 17px;margin-top:20px;background:#d7e8ee;border:1px solid #9bbcc9;border-radius:14px
+}
+html[data-alborz-surface="academy"] :where(.s3j-techpager,.s3j-pager,.s3j-grouppager,.s3j-casepager) button{
+ min-height:53px;padding:10px 16px;border:0;background:#183d57;color:#fff;font-size:19px;
+ font-weight:900;border-radius:11px
+}
+html[data-alborz-surface="academy"] :where(.s3j-techpager,.s3j-pager,.s3j-grouppager,.s3j-casepager) span{font-size:19px;color:#294a60;font-weight:900}
+html[data-alborz-surface="academy"] .s3j-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+html[data-alborz-surface="academy"] .s3j-roles button{background:linear-gradient(125deg,#17606d,#1b4763);border-color:#68a7ae;min-height:153px}
+html[data-alborz-surface="academy"] .s3j-roles button:nth-child(2n){background:linear-gradient(125deg,#3b4863,#676181);border-color:#a4a1c4}
+html[data-alborz-surface="academy"] .s3-root .s3-cases{grid-template-columns:1fr}
+html[data-alborz-surface="academy"] .s3j-case-group{
+ display:grid;gap:18px;padding:25px;background:#cfE5ed;border:2px solid #9fc0ce;
+ border-radius:20px;box-shadow:0 13px 25px #163b571b
+}
+html[data-alborz-surface="academy"] .s3j-group-heading h3{font-size:32px;color:#133a54;margin:4px 0}
+html[data-alborz-surface="academy"] .s3j-group-heading p{font-size:21px;color:#2d5870;margin:0}
+html[data-alborz-surface="academy"] .s3j-group-heading small{color:#1d5b74;font-size:17px;font-weight:850}
+html[data-alborz-surface="academy"] .s3j-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+html[data-alborz-surface="academy"] .s3-root .s3-case{
+ min-height:152px;padding:21px;background:#f0f9fb;border:2px solid #abc8d4;
+ border-radius:15px;box-shadow:0 7px 15px #0b38501a
+}
+html[data-alborz-surface="academy"] .s3-root .s3-case-label strong{font-size:clamp(23px,2.2vw,29px);font-weight:900;color:#18384c}
+html[data-alborz-surface="academy"] .s3-root .s3-case-label small{font-size:18px;color:#3a596d}
+html[data-alborz-surface="academy"] .s3-root .s3-work{
+ background:linear-gradient(135deg,#d8eaf2,#e8e4f0);border:2px solid #9eb7c8;
+ border-radius:21px;padding:clamp(20px,3vw,34px);box-shadow:0 16px 30px #123b5422
+}
+html[data-alborz-surface="academy"] .s3-root .s3-workhead h3{font-size:clamp(28px,2.9vw,37px);font-weight:900}
+html[data-alborz-surface="academy"] .s3-root .s3-scene{font-size:23px;font-weight:750;background:#f4e6cb;border-color:#be9859;color:#244457;padding:18px}
+html[data-alborz-surface="academy"] .s3-root .s3-tabs button{min-height:60px;font-size:19px;font-weight:900;background:#d9eaf0;color:#21445b}
+html[data-alborz-surface="academy"] .s3-root .s3-tabs button.active{background:#194660;color:#fff}
+html[data-alborz-surface="academy"] .s3-root .s3-stage h4{font-size:28px;color:#16415e;font-weight:900}
+html[data-alborz-surface="academy"] .s3-root .s3-bubble{padding:18px 20px;background:#e3f0f5;max-width:87%;border:1px solid #b1ced9}
+html[data-alborz-surface="academy"] .s3-root .s3-bubble.manager{background:#cee9dd;border-color:#9fcbb4}
+html[data-alborz-surface="academy"] .s3-root .s3-bubble p{font-size:clamp(21px,2.2vw,27px);font-weight:700;line-height:1.8;color:#1d384b}
+html[data-alborz-surface="academy"] .s3-root .s3-bubble small{font-size:18px;font-weight:900;color:#235069}
+html[data-alborz-surface="academy"] .s3-root .s3-rule-item p{font-size:22px;font-weight:700;color:#22485c}
+html[data-alborz-surface="academy"] .s3-root .s3-primary,
+html[data-alborz-surface="academy"] .s3-root .s3-secondary{min-height:55px;font-size:20px;font-weight:900;border-radius:12px}
+html[data-alborz-surface="academy"] .s3-root .s3-instructor{background:#d7eaf0;border:1px solid #b4cbd6;padding:22px;border-radius:17px}
+html[data-alborz-surface="academy"] .s3-root .s3-instructor summary{font-size:23px;color:#19475d;font-weight:900}
+html[data-alborz-surface="academy"] .s3-root .s3-instructor p{font-size:20px;color:#294b61}
+html[data-alborz-surface="academy"] .s3-root .s3-lab.s3-active>.s3-cases{display:none!important}
+html[data-alborz-surface="academy"] .s3-root .s3-focus{scroll-margin-top:110px}
+
+/* COMMUNICATION SESSION 2 — same editorial palette, preserving its learning mechanics */
+html[data-alborz-surface="communication-session2"] body{
+ background:radial-gradient(ellipse at 95% 2%,#d5e7ed,transparent 35%),#edf2f4!important;
+ color:var(--ab-ink);font-size:21px
+}
+html[data-alborz-surface="communication-session2"] .topbar{background:#162e47!important;border-bottom:2px solid #c8a86e}
+html[data-alborz-surface="communication-session2"] .brand strong{color:#fff!important;font-size:24px;font-weight:900}
+html[data-alborz-surface="communication-session2"] .brand small{color:#e8f3f6;font-size:16px}
+html[data-alborz-surface="communication-session2"] .back{
+ min-height:50px;background:#234c67!important;border:1px solid #7795a7;color:#fff!important;
+ font-size:18px;font-weight:900
+}
+html[data-alborz-surface="communication-session2"] .shell{max-width:1500px;padding-inline:clamp(13px,3vw,43px)}
+html[data-alborz-surface="communication-session2"] .hero,
+html[data-alborz-surface="communication-session2"] .subhero{
+ background:linear-gradient(118deg,#122c48,#145267 65%,#0e7378)!important;
+ border:1px solid #608d9a;box-shadow:0 16px 33px #123a5625;border-radius:22px
+}
+html[data-alborz-surface="communication-session2"] .hero-copy h1{font-size:clamp(33px,3.9vw,53px);font-weight:900}
+html[data-alborz-surface="communication-session2"] .hero-copy p{font-size:clamp(21px,2vw,26px);font-weight:700;color:#e4f6f9}
+html[data-alborz-surface="communication-session2"] :where(.overview,.contentcard,.panel,.stage-card,.tech-card,.casebox){
+ background:#e4eff4;border:1px solid #9fbfcf;border-radius:18px;box-shadow:var(--ab-shadow)
+}
+html[data-alborz-surface="communication-session2"] :where(.tech-card,.stage-card){
+ background:linear-gradient(138deg,#d9ebf2,#c4e0e9);min-height:140px
+}
+html[data-alborz-surface="communication-session2"] .tech-card:nth-child(2n),
+html[data-alborz-surface="communication-session2"] .stage-card:nth-child(2n){background:linear-gradient(130deg,#e5e1f0,#d5e2f0)}
+html[data-alborz-surface="communication-session2"] :where(.tech-card strong,.stage-card h3,.contentcard h2,.section-header h1){
+ color:#17394f;font-weight:900;font-size:clamp(23px,2.3vw,33px)
+}
+html[data-alborz-surface="communication-session2"] :where(.tech-copy p,.contentcard p,.panel p,.performance-guide p,.stage-card p){
+ font-size:20px;line-height:1.85;color:#28495f
+}
+html[data-alborz-surface="communication-session2"] :where(.speech,.dialogue-line,.performance-focus){
+ font-size:22px;line-height:1.85;font-weight:700
+}
+html[data-alborz-surface="communication-session2"] :where(.cta,.navbtn,.tab,.answer){
+ min-height:52px;font-size:19px;font-weight:850;border-radius:12px
+}
+html[data-alborz-surface="communication-session2"] :where(.feedback,.observer,.performance-guide){border-radius:15px}
+html[data-alborz-surface="communication-session2"] .floatingnav{background:#d9e9ef;border-color:#a6c8d1}
+html[data-alborz-surface="communication-session2"] .floatingnav button{min-height:50px}
+
+/* CLAIMS COURSE: resilience, anger management, assertiveness */
+html[data-alborz-surface="claims-course"] body,
+html[data-alborz-surface="resilience-classroom"] body{
+ background:radial-gradient(ellipse at 90% 0,#d1e9ee,transparent 40%),#edf2f5;
+ color:var(--ab-ink);font-size:21px
+}
+html[data-alborz-surface="claims-course"] header,
+html[data-alborz-surface="resilience-classroom"] header{background:#14324d!important;border-bottom:2px solid #c8aa72}
+html[data-alborz-surface="claims-course"] header .brand,
+html[data-alborz-surface="resilience-classroom"] header .brand{
+ font-size:clamp(20px,2vw,27px);font-weight:900;color:#fff
+}
+html[data-alborz-surface="claims-course"] header .small,
+html[data-alborz-surface="resilience-classroom"] header .small{font-size:16px;font-weight:650;color:#e1f1f5}
+html[data-alborz-surface="claims-course"] header :where(a,button),
+html[data-alborz-surface="resilience-classroom"] header :where(a,button){
+ min-height:48px;font-size:17px;font-weight:850;border-radius:11px
+}
+html[data-alborz-surface="claims-course"] main,
+html[data-alborz-surface="resilience-classroom"] main{max-width:1430px;padding-inline:clamp(13px,3vw,40px)}
+html[data-alborz-surface="claims-course"] :where(.hero,.workshop-hero,.asv2-hero),
+html[data-alborz-surface="resilience-classroom"] .hero{
+ background:linear-gradient(112deg,#132b49,#15556a 66%,#0c7477)!important;
+ color:#fff;border:1px solid #5f93a4;box-shadow:0 15px 34px #0a3e5829;border-radius:23px
+}
+html[data-alborz-surface="claims-course"] :where(.hero,.workshop-hero,.asv2-hero) h1,
+html[data-alborz-surface="resilience-classroom"] .hero h1{
+ font-size:clamp(33px,3.8vw,49px);font-weight:900;color:#fff
+}
+html[data-alborz-surface="claims-course"] :where(.hero,.workshop-hero,.asv2-hero) p,
+html[data-alborz-surface="resilience-classroom"] .hero p{font-size:clamp(20px,2vw,25px);color:#eaf4fa;font-weight:700}
+html[data-alborz-surface="claims-course"] :where(.mod-card,.module-path-card,.panel,.case-card,.anger-lesson,.asv2-panel,.asv2-lesson),
+html[data-alborz-surface="resilience-classroom"] :where(.mod-card,.panel,.mission-tile,.mission-pick-card){
+ background:#e6f1f5;border:1px solid #acc6d4;border-radius:17px;box-shadow:var(--ab-shadow)
+}
+html[data-alborz-surface="claims-course"] :where(.mod-card,.module-path-card):nth-child(2n){
+ background:linear-gradient(135deg,#e8e4f0,#dceaf2)
+}
+html[data-alborz-surface="claims-course"] :where(.mod-card strong,.module-path-card strong,.panel h2,.asv2-panel h2,.anger-lesson strong),
+html[data-alborz-surface="resilience-classroom"] :where(.panel h2,.mod-card strong,.mission-tile h3){
+ color:#173d56;font-size:clamp(24px,2.4vw,32px);font-weight:900;line-height:1.5
+}
+html[data-alborz-surface="claims-course"] :where(.mod-card p,.module-path-card p,.panel p,.skill p,.asv2-panel p,.asv2-panel li,.anger-lesson p),
+html[data-alborz-surface="resilience-classroom"] :where(.panel p,.mission-tile p,.choice-lead){
+ font-size:clamp(19px,1.85vw,23px);line-height:1.85;color:#2b5068
+}
+html[data-alborz-surface="claims-course"] :where(.btn,.tab,.choice,.case-card,.asv2-tabs button),
+html[data-alborz-surface="resilience-classroom"] :where(.btn,.tab,.choice,.case-card){
+ min-height:52px;font-size:clamp(19px,1.8vw,22px);font-weight:800;border-radius:12px
+}
+html[data-alborz-surface="claims-course"] .btn.primary,
+html[data-alborz-surface="resilience-classroom"] .btn.primary{
+ background:#096a75;border-color:#096a75;color:#fff;font-weight:900
+}
+html[data-alborz-surface="claims-course"] .tab.active,
+html[data-alborz-surface="resilience-classroom"] .tab.active{
+ background:#16425e!important;color:#fff;font-weight:900
+}
+html[data-alborz-surface="claims-course"] :where(.dialogue .line,.anger-talk,.anger-transcript,.asv2-dialogue,.asv3-dialogue){
+ font-size:clamp(20px,2vw,25px);line-height:1.85;color:#203e53
+}
+html[data-alborz-surface="claims-course"] :where(.anger-observation,.anger-execution,.feedback,.asv2-feedback){
+ background:#dceef0;border:1px solid #a0c7cf;border-radius:13px
+}
+html[data-alborz-surface="claims-course"] :where(.asv2-lesson>summary,.asv3-review-item>summary,.anger-lesson>summary){
+ font-size:22px;min-height:57px;font-weight:900;color:#1c465c
+}
+html[data-alborz-surface="claims-course"] .asv2-tabs{background:#d1e5ed}
+html[data-alborz-surface="claims-course"] .asv2-tabs button.active{background:#17445d;color:#fff}
+html[data-alborz-surface="claims-course"] .asv5-cta .btn{min-height:59px}
+html[data-alborz-surface="claims-course"] :where(.asv3-quiz-question,.asv2-question){
+ font-size:clamp(24px,2.6vw,32px);font-weight:900;line-height:1.7
+}
+
+/* LIVE RESILIENCE / INSTRUCTOR CONTROL — preserve touch + projection density */
+html[data-alborz-surface="resilience-classroom"] :where(.classroom-screen,.classroom-layout){max-width:1420px}
+html[data-alborz-surface="resilience-classroom"] .classroom-top{
+ background:linear-gradient(115deg,#152e4b,#0d6875);color:#fff;
+ border:1px solid #6397a4;border-radius:19px;box-shadow:0 15px 30px #0f3a502c;padding:clamp(19px,2.7vw,32px)
+}
+html[data-alborz-surface="resilience-classroom"] .classroom-top h1{
+ color:#fff;font-size:clamp(28px,3vw,39px);font-weight:900
+}
+html[data-alborz-surface="resilience-classroom"] .classroom-section-title h2{
+ font-size:clamp(27px,3vw,39px);color:#163d5b;font-weight:900
+}
+html[data-alborz-surface="resilience-classroom"] .classroom-content{
+ background:#e7f1f5;border:1px solid #adc5d2;border-radius:19px;box-shadow:var(--ab-shadow)
+}
+html[data-alborz-surface="resilience-classroom"] :where(.classroom-map-card,.classroom-checkin,.classroom-case-art,.classroom-team-row){
+ background:#f0f8fa;border:1px solid #b8d2dc;border-radius:15px
+}
+html[data-alborz-surface="resilience-classroom"] :where(.classroom-map-card h3,.classroom-team-row h3,.classroom-checkin h3){
+ font-size:clamp(22px,2vw,28px);font-weight:900;color:#15415d
+}
+html[data-alborz-surface="resilience-classroom"] :where(.classroom-team-row p,.classroom-checkin p,.classroom-section-title>p,.classroom-case-caption){
+ font-size:clamp(18px,1.9vw,22px);color:#2e5166
+}
+html[data-alborz-surface="resilience-classroom"] .classroom-controls{
+ background:#e2eef3;border-color:#a6c7d3;border-radius:14px;flex-wrap:wrap
+}
+html[data-alborz-surface="resilience-classroom"] .classroom-controls .btn{
+ min-height:53px;font-size:18px;font-weight:900
+}
+html[data-alborz-surface="resilience-classroom"] :where(.classroom-observer-board,.classroom-monitor,.classroom-projector,.teacher-mission){
+ border-radius:17px;border-color:#a7c4d0
+}
+html[data-alborz-surface="resilience-classroom"] :where(.classroom-input,.classroom-team-row select,input:not([type="checkbox"]):not([type="radio"]),textarea,select){
+ min-height:48px;font-size:19px
+}
+html[data-alborz-surface="resilience-classroom"] .classroom-projector h2{font-size:clamp(30px,3.3vw,44px)}
+html[data-alborz-surface="resilience-classroom"] .classroom-observer-result{font-size:20px}
+html[data-alborz-surface="resilience-classroom"] .classroom-award{color:#15384d}
+
+/* INSTRUCTOR PRESENTATION — visual parity without changing slide source/reveal behavior */
+html[data-alborz-surface="presentation"] body{background:#eaf1f4;color:var(--ab-ink);font-size:21px}
+html[data-alborz-surface="presentation"] .topbar{background:#152f49;border-bottom:2px solid #c9a974}
+html[data-alborz-surface="presentation"] .identity b{font-size:24px;font-weight:900}
+html[data-alborz-surface="presentation"] .brand-mark{background:#d8e9e6;color:#153d50}
+html[data-alborz-surface="presentation"] :where(.top-actions a,.top-actions button){
+ font-size:18px;min-height:50px;font-weight:900
+}
+html[data-alborz-surface="presentation"] .layout{max-width:1760px;gap:22px}
+html[data-alborz-surface="presentation"] .sidebar{background:#dceaf0;border-color:#a8c4d0}
+html[data-alborz-surface="presentation"] .sidebar h1{color:#143e58;font-size:32px;font-weight:900}
+html[data-alborz-surface="presentation"] .module-nav button{background:#f0f7f9;font-size:19px;min-height:53px;color:#21465e;font-weight:800;border-color:#b5cbd6}
+html[data-alborz-surface="presentation"] .module-nav button.active{background:#bedfe3;border-color:#5899a0;color:#173d52}
+html[data-alborz-surface="presentation"] .slide-nav button{font-size:17px;min-height:45px;color:#2f5064}
+html[data-alborz-surface="presentation"] .slide-nav button.active{background:#d1e6e8;color:#18475e}
+html[data-alborz-surface="presentation"] .slide{background:#f4f8fa;border:1px solid #adc7d3;box-shadow:var(--ab-shadow)}
+html[data-alborz-surface="presentation"] .slide h1{font-size:clamp(34px,3.8vw,52px);color:#163e57;font-weight:900}
+html[data-alborz-surface="presentation"] .slide h2{font-size:clamp(28px,3vw,41px);color:#17445f;font-weight:900}
+html[data-alborz-surface="presentation"] :where(.slide p,.slide li,.slide-content,.stage-dialogue){
+ font-size:clamp(21px,2.1vw,28px);line-height:1.78
+}
+html[data-alborz-surface="presentation"] :where(.slide-controls button,.module-nav button,.slide-nav button){
+ border-radius:11px;font-weight:850
+}
+html[data-alborz-surface="presentation"] .slide-controls button{min-height:52px;font-size:19px}
+html[data-alborz-surface="presentation"] .slide-controls .primary-btn{background:#096e76;color:#fff;border-color:#096e76}
+
+@media(max-width:1000px){
+ html[data-alborz-surface="academy"] .s3-root .s3-hero{grid-template-columns:1fr}
+ html[data-alborz-surface="academy"] .s3-hero-photo{min-height:190px;height:210px}
+ html[data-alborz-surface="academy"] .s3-journey-path,
+ html[data-alborz-surface="academy"] .s3j-roles{grid-template-columns:1fr}
+ html[data-alborz-surface="academy"] .s3j-pair{grid-template-columns:1fr}
+ html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content{grid-template-columns:1fr}
+ html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content .s3-tech-pitfall{grid-column:auto}
+}
+@media(max-width:760px){
+ html[data-alborz-surface] body{font-size:20px;line-height:1.85}
+ html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .topin{flex-wrap:wrap;gap:8px;padding:12px 14px}
+ html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .hero{padding:29px 0 32px}
+ html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .hero h1{font-size:34px}
+ html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) .hero p{font-size:21px}
+ html[data-alborz-surface="academy"] body:not(:has(.s3-root)):not(:has(.s4-root)) :where(.grid,.lab-grid,.content){grid-template-columns:1fr}
+ html[data-alborz-surface="academy"] .s3-topinside{gap:9px;flex-wrap:wrap;padding:10px 14px}
+ html[data-alborz-surface="academy"] .s3-brand strong{font-size:20px}
+ html[data-alborz-surface="academy"] .s3-brand small{font-size:14px}
+ html[data-alborz-surface="academy"] .s3-home{font-size:17px;min-height:47px}
+ html[data-alborz-surface="academy"] .s3-hero-copy{padding:25px 19px}
+ html[data-alborz-surface="academy"] .s3-hero-copy h1{font-size:32px}
+ html[data-alborz-surface="academy"] .s3-hero-copy p{font-size:21px}
+ html[data-alborz-surface="academy"] .s3-root .s3-techs{grid-template-columns:1fr;gap:12px}
+ html[data-alborz-surface="academy"] .s3-root button.s3-tech{min-height:130px;grid-template-columns:68px 1fr;padding:16px}
+ html[data-alborz-surface="academy"] .s3-tech-icon{width:62px;height:62px}
+ html[data-alborz-surface="academy"] .s3j-tech-icon{font-size:36px}
+ html[data-alborz-surface="academy"] .s3-root button.s3-tech strong{font-size:24px}
+ html[data-alborz-surface="academy"] .s3-root .s3-tech-detail{padding:17px}
+ html[data-alborz-surface="academy"] .s3-root .s3-tech-detail-content p{font-size:22px}
+ html[data-alborz-surface="academy"] .s3j-head{flex-wrap:wrap;gap:12px;padding:18px 16px}
+ html[data-alborz-surface="academy"] .s3j-headmark{height:64px;width:64px;font-size:37px}
+ html[data-alborz-surface="academy"] .s3j-headcopy{flex:1 1 55%}
+ html[data-alborz-surface="academy"] .s3j-headcopy h2{font-size:29px}
+ html[data-alborz-surface="academy"] .s3j-headcopy p{font-size:19px}
+ html[data-alborz-surface="academy"] .s3j-back{min-height:48px}
+ html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button{padding:17px 14px;min-height:137px;gap:12px}
+ html[data-alborz-surface="academy"] .s3j-sticker{width:64px;height:64px;font-size:37px}
+ html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button strong{font-size:24px}
+ html[data-alborz-surface="academy"] :where(.s3-journey-path,.s3j-roles) button em{font-size:17px}
+ html[data-alborz-surface="academy"] .s3j-practice{grid-template-columns:1fr;padding:18px}
+ html[data-alborz-surface="academy"] .s3j-practice h4{font-size:24px}
+ html[data-alborz-surface="academy"] .s3j-practice p{font-size:21px}
+ html[data-alborz-surface="academy"] .s3j-practice button{width:100%}
+ html[data-alborz-surface="academy"] :where(.s3j-techpager,.s3j-pager,.s3j-grouppager,.s3j-casepager){
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:13px 10px
+ }
+ html[data-alborz-surface="academy"] :where(.s3j-techpager,.s3j-pager,.s3j-grouppager,.s3j-casepager) span{
+  grid-column:1/-1;grid-row:1;text-align:center;font-size:17px
+ }
+ html[data-alborz-surface="academy"] :where(.s3j-techpager,.s3j-pager,.s3j-grouppager,.s3j-casepager) button{
+  font-size:17px;min-height:53px;padding:9px
+ }
+ html[data-alborz-surface="academy"] .s3j-case-group{padding:16px 13px}
+ html[data-alborz-surface="academy"] .s3j-group-heading h3{font-size:28px}
+ html[data-alborz-surface="academy"] .s3-root .s3-case{padding:15px;min-height:124px}
+ html[data-alborz-surface="academy"] .s3-root .s3-case-label strong{font-size:23px}
+ html[data-alborz-surface="academy"] .s3-root .s3-work{padding:18px 13px}
+ html[data-alborz-surface="academy"] .s3-root .s3-scene{font-size:21px}
+ html[data-alborz-surface="academy"] .s3-root .s3-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ html[data-alborz-surface="academy"] .s3-root .s3-tabs button{font-size:18px}
+ html[data-alborz-surface="academy"] .s3-root .s3-bubble{max-width:97%;padding:15px}
+ html[data-alborz-surface="academy"] .s3-root .s3-bubble p{font-size:23px}
+ html[data-alborz-surface="communication-session2"] .shell{padding-inline:13px}
+ html[data-alborz-surface="communication-session2"] .topinside{flex-wrap:wrap}
+ html[data-alborz-surface="communication-session2"] .hero-copy{padding:24px 20px}
+ html[data-alborz-surface="communication-session2"] .hero-copy h1{font-size:33px}
+ html[data-alborz-surface="communication-session2"] :where(.tech-card,.stage-card){min-height:110px}
+ html[data-alborz-surface="communication-session2"] :where(.tech-card strong,.stage-card h3){font-size:23px}
+ html[data-alborz-surface="claims-course"] main,
+ html[data-alborz-surface="resilience-classroom"] main{padding-inline:13px}
+ html[data-alborz-surface="claims-course"] :where(.grid3,.split),html[data-alborz-surface="resilience-classroom"] .split{grid-template-columns:1fr}
+ html[data-alborz-surface="claims-course"] :where(.hero,.workshop-hero,.asv2-hero),
+ html[data-alborz-surface="resilience-classroom"] .hero{padding:25px 18px}
+ html[data-alborz-surface="claims-course"] :where(.mod-card,.module-path-card){min-height:144px}
+ html[data-alborz-surface="claims-course"] .asv2-tabs button{font-size:17px;min-height:50px}
+ html[data-alborz-surface="resilience-classroom"] .classroom-top{flex-wrap:wrap}
+ html[data-alborz-surface="resilience-classroom"] .classroom-content{padding:18px 14px}
+ html[data-alborz-surface="resilience-classroom"] .classroom-controls{gap:9px;padding:11px}
+ html[data-alborz-surface="resilience-classroom"] .classroom-team-row{min-width:0}
+ html[data-alborz-surface="presentation"] .topbar{flex-wrap:wrap}
+ html[data-alborz-surface="presentation"] .slide{min-height:60vh}
+ html[data-alborz-surface="presentation"] .slide-nav button{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){
+ html[data-alborz-surface] *,html[data-alborz-surface] *::before,html[data-alborz-surface] *::after{
+  scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important
+ }
+}
+@media print{
+ html[data-alborz-surface] body{background:#fff!important}
+ html[data-alborz-surface] :where(.s3j-pager,.s3j-techpager,.s3j-grouppager,.s3j-casepager,.s3j-instructor-link){display:none!important}
+ html[data-alborz-surface] :where(.panel,.s3-work,.classroom-content,.slide,.contentcard){box-shadow:none!important}
+}
