@@ -4,6 +4,7 @@
 (()=>{
 "use strict";
 const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance";
+const DEVICE_API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-student-devices";
 const STORE="mba-ob-classroom-attendance-identity-v1",TRUST="mba-ob-teacher-trusted-device-v1";
 const gate=document.getElementById("entryGate"),site=document.getElementById("site");
 const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این کد دانشجویی قبلاً ثبت شده است. برای بازیابی دسترسی با مدرس هماهنگ کنید.",
@@ -33,6 +34,17 @@ async function request(action,args={},token=credential?.token){
   throw e;
  }finally{clearTimeout(kill)}
 }
+async function requestDevice(action,args={}){
+ const controller=new AbortController(),kill=setTimeout(()=>controller.abort(),16000);
+ try{
+  const response=await fetch(DEVICE_API,{method:"POST",mode:"cors",cache:"no-store",signal:controller.signal,
+   headers:{"Content-Type":"application/json"},body:JSON.stringify({action,...args})});
+  const data=await response.json();
+  if(!response.ok||!data.ok)throw Error(data.error||"server_error");
+  return data;
+ }catch(e){if(e.name==="AbortError"||e instanceof TypeError)throw Error("network_error");throw e}
+ finally{clearTimeout(kill)}
+}
 function present(){
  site.hidden=true;document.documentElement.dataset.access="locked";
  const flash=error?'<p class="entrance-error" role="alert">'+enc(message[error]||"درخواست انجام نشد؛ دوباره بررسی کنید.")+'</p>':"";
@@ -43,8 +55,15 @@ function present(){
   +(credential?.name?'<div class="entrance-student">'+enc(credential.name)+(credential.student_number?' · '+enc(credential.student_number):"")+'</div>':"")
   +'<button class="entrance-primary" data-entrance="refresh" type="button">بررسی وضعیت</button>'
   +'<button class="entrance-secondary" data-entrance="reset" type="button">تغییر دستگاه یا حساب</button>';
+ }else if(view==="returning"){
+  inner='<h2>ورود دانشجوی تأییدشده</h2><p class="entrance-hint">پس از تأیید اولیه، می‌توانید بدون درخواست مجدد مدرس از دستگاه دیگری وارد شوید.</p>'+
+   '<form id="entranceReturning" class="entrance-form"><label for="returningNumber">شماره دانشجویی</label><input id="returningNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" autocomplete="username" required placeholder="شماره دانشجویی">'+
+   '<label for="returningPassword">رمز شخصی</label><input id="returningPassword" name="password" type="password" minlength="12" maxlength="128" autocomplete="current-password" required placeholder="رمزی که قبلاً برای خودتان تعیین کردید">'+
+   '<button class="entrance-primary" type="submit">ورود به کلاس بدون تأیید مجدد</button></form>'+
+   '<button type="button" class="entrance-secondary" data-entrance="returnBack">بازگشت به ورود اولیه</button>'+
+   '<p class="entrance-hint">اگر هنوز رمز شخصی ندارید، از دستگاه تأییدشده قبلی وارد شوید و از بخش «ورود در دستگاه‌های دیگر» برای خود رمز تعریف کنید.</p>';
  }else if(selected==="student"){
-  inner='<h2>ورود دانشجو</h2><form id="entranceStudent" class="entrance-form"><label for="studentNumber">کد دانشجویی</label><input id="studentNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" required autocomplete="off" placeholder="کد دانشجویی"><label for="studentName">نام و نام خانوادگی</label><input id="studentName" name="name" maxlength="90" autocomplete="name" required placeholder="نام و نام خانوادگی"><button class="entrance-primary" type="submit">درخواست ورود</button></form><p class="entrance-hint">ورود به کلاس بعد از تأیید مدرس فعال می‌شود.</p>';
+  inner='<h2>ورود دانشجو</h2><form id="entranceStudent" class="entrance-form"><label for="studentNumber">کد دانشجویی</label><input id="studentNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" required autocomplete="off" placeholder="کد دانشجویی"><label for="studentName">نام و نام خانوادگی</label><input id="studentName" name="name" maxlength="90" autocomplete="name" required placeholder="نام و نام خانوادگی"><button class="entrance-primary" type="submit">درخواست عضویت جدید</button></form><button type="button" class="entrance-secondary" data-entrance="returning">قبلاً تأیید شده‌ام؛ ورود در دستگاه دیگر</button><p class="entrance-hint">تأیید مدرس فقط یک بار، هنگام عضویت اولیه لازم است؛ ثبت حضور در جلسه مستقل از ورود به اپ است.</p>';
  }else if(selected==="guest"){
   inner='<h2>ورود مهمان</h2><p class="entrance-hint">نام و نام خانوادگی خود را وارد کنید. پس از تأیید مدرس می‌توانید از امکانات آموزشی بازدید کنید.</p><form id="entranceGuest" class="entrance-form"><label for="guestFirst">نام</label><input id="guestFirst" name="first_name" minlength="2" maxlength="45" autocomplete="given-name" required placeholder="نام"><label for="guestLast">نام خانوادگی</label><input id="guestLast" name="last_name" minlength="2" maxlength="45" autocomplete="family-name" required placeholder="نام خانوادگی"><button class="entrance-primary" type="submit">ارسال درخواست</button></form><p class="entrance-hint">بازدید مهمان به نمرات، حضور رسمی یا اطلاعات خصوصی دانشجویان دسترسی نمی‌دهد.</p>';
  }else if(trusted){
@@ -65,13 +84,13 @@ function present(){
 function unlock(role){
  if(loaded)return;
  view="ready";loaded=true;
- window.OB_ACCESS={role,student:role==="student"?(credential?.name||""):"",guest:role==="guest"?(credential?.name||""):"",approved:true};
+ window.OB_ACCESS={role,student:role==="student"?(credential?.name||""):"",student_number:role==="student"?(credential?.student_number||""):"",guest:role==="guest"?(credential?.name||""):"",approved:true};
  document.documentElement.dataset.access=role;
  gate.hidden=true;site.hidden=false;
  const roleMenu=document.querySelector(".demo-role-menu");
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  // Education scripts load only after the server authorizes this device.
- const scripts=["./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=1","./guided-learning.js?v=3","./presenter-player.js?v=1","./app.js?v=30"];
+ const scripts=["./learning-analytics.js?v=1","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=1","./guided-learning.js?v=3","./presenter-player.js?v=1","./app.js?v=31"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
@@ -106,7 +125,9 @@ async function check(){
 gate.addEventListener("click",e=>{
  const b=e.target.closest("[data-entrance]");if(!b||loading)return;
  const act=b.dataset.entrance;
- if(act==="student"||act==="teacher"||act==="guest"){selected=act;error="";present()}
+ if(act==="student"||act==="teacher"||act==="guest"){selected=act;view="login";error="";present()}
+ else if(act==="returning"){selected="student";view="returning";error="";present()}
+ else if(act==="returnBack"){selected="student";view="login";error="";present()}
  else if(act==="refresh"){check()}
  else if(act==="newDevice"){trusted=null;localStorage.removeItem(TRUST);present()}
  else if(act==="reset"){
@@ -119,7 +140,11 @@ gate.addEventListener("submit",e=>{
  e.preventDefault();loading=true;error="";const btn=form.querySelector('[type="submit"]');if(btn)btn.disabled=true;
  const d=new FormData(form);
  (async()=>{
-  if(form.id==="entranceStudent"){
+  if(form.id==="entranceReturning"){
+   const studentNumber=digit(d.get("student_number"));
+   const data=await requestDevice("studentDeviceLogin",{student_number:studentNumber,password:String(d.get("password")||"")});
+   saveCred({role:"student",token:data.token,name:data.name,student_number:data.student_number});unlock("student");
+  }else if(form.id==="entranceStudent"){
    const studentNumber=digit(d.get("student_number"));
    if(!/^\d{6,16}$/.test(studentNumber))throw Error("invalid_registration");
    const data=await request("registerStudent",{student_number:studentNumber,name:String(d.get("name")||"").trim()},null);

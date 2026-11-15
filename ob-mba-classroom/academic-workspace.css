@@ -247,3 +247,65 @@ html[data-access=locked]{background:#f1f4f1}
  .ob-entrance-form-side .entrance-tabs button{font-size:15px}
 }
 @media(display-mode:standalone){.ob-entrance-form-side .entrance-install-link{display:none}}
+
+/* v4 accessibility and cross-device learning experience integration */
+.ob-unpublished-panel{display:grid;gap:16px;padding:clamp(24px,5vw,44px);border:1px solid var(--line);border-radius:15px;background:var(--panel);min-height:230px;align-content:center}
+.ob-unpublished-panel h3{font-size:24px;line-height:1.6}
+.ob-unpublished-panel p{max-width:66ch;color:var(--muted);font-size:16px}
+.ob-unpublished-panel .btn-row{margin-top:10px}
+.ob-dashboard-primary #objJourney{margin-top:0}
+.ob-dashboard-primary .obj-shell{margin:0;gap:14px}
+.ob-dashboard-primary .obj-hero{background:#1a4e54;border:0;border-radius:15px;box-shadow:none;padding:24px 26px}
+.ob-dashboard-primary .obj-hero h3{font-size:25px}
+.ob-dashboard-primary .obj-hero p{font-size:16px}
+.ob-dashboard-primary .obj-coach{border-radius:14px}
+.ob-dashboard-primary .obj-next,.ob-dashboard-primary .obj-next-done{border-radius:14px;box-shadow:none}
+.ob-dashboard-aside .oba-block{margin:0;border:1px solid var(--line);border-radius:15px;box-shadow:none;padding:19px}
+.ob-dashboard-aside .oba-top h3{font-size:20px}
+.ob-dashboard-aside .oba-metrics{gap:8px;margin-top:6px}
+.ob-dashboard-aside .oba-metric{padding:12px;border-radius:10px}
+.ob-dashboard-aside .oba-metric strong{font-size:22px}
+.ob-dashboard-aside .oba-metric span{font-size:13px}
+.ob-dashboard-aside .ob-device-settings{margin:0;border:1px solid var(--line);border-radius:15px;padding:19px}
+.ob-dashboard-aside .ob-device-settings strong{font-size:17px}
+.ob-dashboard-aside .ob-device-settings button{font-size:15px}
+.ob-personal-dashboard .oba-block{margin:0}
+.ob-personal-dashboard .ob-device-settings{margin:0}
+.ob-personal-dashboard{gap:20px}
+.ob-personal-dashboard .card h3{font-size:20px}
+.ob-console-section .ob-console-row:focus-visible{outline:3px solid var(--ob-focus,#b99b65);outline-offset:2px}
+.ob-workspace button:disabled,.ob-personal-dashboard button:disabled{cursor:not-allowed;opacity:.55}
+.ob-workspace ::selection,.ob-personal-dashboard ::selection{background:#b5d9cd;color:#173c3f}
+.ob-workspace a,.ob-personal-dashboard a{text-underline-offset:.18em}
+.ob-workspace :is(button,a,summary):focus-visible,.ob-personal-dashboard :is(button,a,summary):focus-visible{
+ outline:3px solid var(--ob-focus,#c1a06c);outline-offset:3px;
+}
+@media(max-width:640px){
+ .ob-dashboard-primary .obj-hero{padding:20px 18px}
+ .ob-dashboard-primary .obj-hero h3{font-size:22px}
+ .ob-dashboard-primary .obj-coach{padding:13px}
+ .ob-dashboard-primary .obj-next{padding:18px}
+ .ob-unpublished-panel{padding:24px 18px;min-height:220px}
+ .ob-unpublished-panel h3{font-size:21px}
+ .ob-unpublished-panel .btn{width:100%}
+}
+/* Custom learning modules must inherit the host theme rather than ship a second light app. */
+html[data-theme=dark] .obj-shell{color:var(--text)}
+html[data-theme=dark] .obj-hero{background:#174550;border:1px solid #41636b}
+html[data-theme=dark] .obj-coach,
+html[data-theme=dark] .obj-next,
+html[data-theme=dark] .obj-next-done,
+html[data-theme=dark] .obj-all,
+html[data-theme=dark] .oba-block,
+html[data-theme=dark] .oba-metric,
+html[data-theme=dark] .oba-student-row,
+html[data-theme=dark] .ob-device-settings,
+html[data-theme=dark] .ob-device-dialog{background:var(--panel);color:var(--text);border-color:var(--line);box-shadow:none}
+html[data-theme=dark] :is(.obj-coach strong,.obj-coach p,.obj-next h4,.obj-next p,.obj-next-done p,.obj-next label,.obj-all summary,.obj-all li strong,.oba-top h3,.oba-metric strong,.oba-event strong,.oba-summary strong,.oba-student-row strong,.oba-student-numbers,.oba-student-title,.ob-device-settings strong,.ob-device-head h2,.ob-device-inner p,.ob-device-form label){color:var(--text)}
+html[data-theme=dark] :is(.obj-caption,.obj-private-note,.obj-all li p,.obj-step-state,.oba-top p,.oba-metric span,.oba-last,.oba-privacy,.oba-student-row small,.oba-event span,.oba-event time,.ob-device-settings span,.ob-device-private){color:var(--muted)!important}
+html[data-theme=dark] :is(.obj-next textarea,.ob-device-form input){background:var(--soft);color:var(--text);border-color:var(--line)}
+html[data-theme=dark] :is(.obj-all li,.oba-event){border-color:var(--line)}
+html[data-theme=dark] .ob-device-dialog::backdrop{background:#02181ce0}
+html[data-theme=dark] .ob-device-head button{background:var(--soft);color:var(--text);border-color:var(--line)}
+html[data-theme=dark] .oba-student-row:hover{background:var(--soft)}
+html[data-theme=dark] .oba-tags span{background:var(--soft);border-color:var(--line);color:var(--text)}
