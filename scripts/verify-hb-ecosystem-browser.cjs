@@ -122,7 +122,9 @@ async function hubCheck(browser,name,w,h){
   assert.equal(await page.locator('#hubQuickAccess:visible').count(),0,"Quick access should hide when empty");
   assert.equal(await page.locator('.super-favorite[aria-pressed="true"]').count(),0);
   const a11yAfter=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
-  assert.equal(a11yAfter.violations.filter(v=>["serious","critical"].includes(v.impact)).length,0,"New controls accessibility failure");
+  const newViolations=a11yAfter.violations.filter(v=>["serious","critical"].includes(v.impact));
+  if(newViolations.length)console.error("HUB_JOURNEY_AXE",JSON.stringify(newViolations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.slice(0,12).map(n=>({target:n.target,summary:n.failureSummary}))}))));
+  assert.equal(newViolations.length,0,"New controls accessibility failure");
   assert.deepEqual(errors,[],"Hub runtime errors");
   console.log("PASS Hub",name,w,"21 apps, task descriptions, favorites, recents, keyboard, RTL, axe serious/critical=0");
  }finally{await ctx.close()}
