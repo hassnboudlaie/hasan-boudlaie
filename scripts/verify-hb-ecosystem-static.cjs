@@ -33,6 +33,7 @@ assert.match(clinic,/keys\.filter\(k=>k\.startsWith\(PREFIX\)&&k!==CACHE\)/,"Uns
 const hub=read("hub/index.html");
 assert.match(hub,/impeccable\.css\?v=20261115/);
 assert.match(hub,/superResultCount/);
+assert.ok(hub.indexOf('id="superDirectory"')<hub.indexOf('class="site-shortcuts"'),"Application catalog must precede secondary website shortcuts");
 assert.match(hub,/id="superReset"/,"Search empty state recovery missing");
 for(const token of ['id="hubQuickAccess"','id="hubPinnedList"','id="hubRecentList"','id="hubClearRecents"','data-super-filter="pinned"'])
  assert.ok(hub.includes(token),"Quick access flow missing: "+token);
