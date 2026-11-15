@@ -52,7 +52,14 @@ function present(){
  }else{
   inner='<h2>فعال‌سازی دستگاه مدرس</h2><form id="entranceTeacherSetup" class="entrance-form"><label for="teacherNational">کد ملی مدرس</label><input id="teacherNational" name="national_id" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{10}" maxlength="10" required autocomplete="off"><label for="teacherPass">رمز مدیریت فعلی (فقط بار اول روی این دستگاه)</label><input id="teacherPass" name="password" type="password" minlength="16" maxlength="100" autocomplete="current-password" required><button class="entrance-primary" type="submit">تأیید دستگاه و ورود</button></form><p class="entrance-hint">پس از فعال‌سازی، روی همین دستگاه تنها کد ملی را وارد می‌کنید.</p>';
  }
- gate.innerHTML='<div class="entrance-shell"><div class="entrance-brand"><span class="entrance-logo">OB</span><div><small>دانشگاه علامه طباطبایی · MBA</small><strong>مدیریت رفتار سازمانی</strong></div></div><div class="entrance-card">'+(view==="login"?tabs:"")+inner+flash+'</div><p class="entrance-foot">۱۶ جلسه · ۴۸ ساعت</p><a class="entrance-install-link" href="./install.html" aria-label="نصب اپ مدیریت رفتار سازمانی روی گوشی"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg>نصب اپ روی گوشی</a></div>';
+ gate.innerHTML='<div class="entrance-shell ob-entrance-shell">'
+ +'<aside class="ob-entrance-intro" aria-label="معرفی دوره"><div class="ob-entrance-school"><span class="ob-entrance-school-mark" aria-hidden="true">OB</span><div><strong>دانشگاه علامه طباطبایی</strong><small>دوره MBA</small></div></div>'
+ +'<div class="ob-entrance-editorial"><h1>مدیریت<br>رفتار سازمانی</h1><p>مسیر یادگیری تعاملی برای شناخت رفتار فرد، گروه و سازمان؛ از مفاهیم پایه تا تحلیل موقعیت‌های مدیریتی.</p></div>'
+ +'<div class="ob-entrance-course-route" aria-label="مشخصات دوره"><div><strong>۱۶</strong><span>جلسه آموزشی</span></div><div><strong>۴۸</strong><span>ساعت یادگیری</span></div><div><strong>۳</strong><span>سطح تحلیل</span></div></div>'
+ +'<p class="ob-entrance-intro-note">دسترسی به محتوای کلاس برای دانشجویان با تأیید اولیه مدرس فعال می‌شود.</p></aside>'
+ +'<div class="ob-entrance-form-side"><div class="entrance-brand"><span class="entrance-logo" aria-hidden="true">OB</span><div><small>فضای آموزشی دانشگاه</small><strong>ورود به کلاس</strong></div></div>'
+ +'<div class="entrance-card">'+(view==="login"?tabs:"")+inner+flash+'</div>'
+ +'<p class="entrance-foot">مدیریت رفتار سازمانی · MBA</p><a class="entrance-install-link" href="./install.html" aria-label="نصب اپ مدیریت رفتار سازمانی روی گوشی"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg>نصب اپ روی گوشی</a></div></div>';
  gate.hidden=false;
 }
 function unlock(role){
@@ -64,7 +71,7 @@ function unlock(role){
  const roleMenu=document.querySelector(".demo-role-menu");
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  // Education scripts load only after the server authorizes this device.
- const scripts=["./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=1","./guided-learning.js?v=3","./presenter-player.js?v=1","./app.js?v=29"];
+ const scripts=["./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=1","./guided-learning.js?v=3","./presenter-player.js?v=1","./app.js?v=30"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
