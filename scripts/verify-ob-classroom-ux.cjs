@@ -173,7 +173,10 @@ const role=val=>roles.handlers.click({target:{closest:()=>({dataset:{role:val}})
 click('navigate',{page:'sessions'});
 assert.ok(app.innerHTML.includes('جلسات 01 تا 04'),'16 sessions grouped in four accordions');
 click('openSession',{id:'4'});
-assert.ok(app.innerHTML.includes('sectionSelect'),'Lesson content selected by dropdown');
+assert.ok(app.innerHTML.includes('ob-unpublished-panel'),'Unpublished lesson offers clear recovery instead of inactive controls');
+assert.ok(!app.innerHTML.includes('sectionSelect'),'Do not show empty lesson tabs for unpublished material');
+click('openSession',{id:'1'});
+assert.ok(app.innerHTML.includes('sectionSelect'),'Published lesson supports selecting content by dropdown');
 assert.ok(app.innerHTML.includes('مفاهیم')&&app.innerHTML.includes('کاربرد عملی'),'Learning tracks available in each lesson');
 click('setTrack',{track:'practice'});
 assert.ok(app.innerHTML.includes('کیس مدیریتی')&&app.innerHTML.includes('تکلیف فردی')&&app.innerHTML.includes('مثال‌ها'),'Practice track labels the hypothetical case honestly');
