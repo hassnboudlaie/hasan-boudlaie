@@ -7,7 +7,7 @@ const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendan
 const DEVICE_API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-student-devices";
 const STORE="mba-ob-classroom-attendance-identity-v1",TRUST="mba-ob-teacher-trusted-device-v1";
 const gate=document.getElementById("entryGate"),site=document.getElementById("site");
-const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این کد دانشجویی قبلاً ثبت شده است. برای بازیابی دسترسی با مدرس هماهنگ کنید.",
+const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این شماره دانشجویی قبلاً ثبت شده است. تأیید مجدد لازم نیست؛ با رمز شخصی خود وارد شوید. اگر رمز ندارید، ابتدا آن را از دستگاه قبلی فعال کنید.",
  invalid_credentials:"اطلاعات ورود مدرس صحیح نیست یا این دستگاه تأیید نشده است.",
  invalid_guest_registration:"نام و نام خانوادگی را کامل وارد کنید.",guest_registration_limit:"تعداد درخواست‌ها موقتاً زیاد است؛ با مدرس هماهنگ کنید.",
  invalid_national_id:"کد ملی معتبر نیست.",session_expired:"دسترسی این دستگاه منقضی شده است.",
