@@ -31,6 +31,9 @@ jobs:
           node --check sabanaft/practice-kits.js
           node --check sabanaft/app/coaching-journey.js
           node --check sabanaft/app/ai-connector.js
+          node --check sabanaft/app/ai-config.js
+          node --check sabanaft/app/leadership-ai-coach.js
+          node --check sabanaft/verify-ai-companion.cjs
           node --check sabanaft/app/leadership-journey-core.js
           node --check sabanaft/app/leadership-journey-content.js
           node --check sabanaft/app/leadership-journey.js
@@ -49,5 +52,6 @@ jobs:
           node sabanaft/verify-gamification.cjs
           node sabanaft/verify-drilldown.cjs
           node sabanaft/verify-coaching.cjs
+          node sabanaft/verify-ai-companion.cjs
           node sabanaft/verify-leadership-journey.cjs
           node sabanaft/verify-leadership-awards.cjs
