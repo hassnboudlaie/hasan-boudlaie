@@ -111,13 +111,19 @@ async function actionRouter(input:Record<string,unknown>){
   return result({ok:true,role:"teacher",...await grantSession("teacher",null)});
  }
  if(action==="registerStudent"){
-  const number=digits(input.student_number),name=safeName(input.name);
-  if(!/^[0-9]{6,16}$/.test(number)||!name)return fail("invalid_registration");
+  const number=digits(input.student_number),name=safeName(input.name),password=input.password;
+  // A student's reusable credential is created with the initial (pending) enrollment.
+  // Cross-device login remains impossible until the teacher approves the student.
+  if(!/^[0-9]{6,16}$/.test(number)||!name||
+     typeof password!=="string"||password.length<12||password.length>64||
+     encoder.encode(password).length>72||!/[\\p{L}]/u.test(password)||!/[0-9]/.test(password))
+   return fail("invalid_registration");
   const token=randomHex(32);
-  const {data,error}=await supabase.rpc("mba_ob_register_by_student_number",{
-   p_student_number:number,p_name:name,p_session_hash:await sha256(token)
+  const {data,error}=await supabase.rpc("mba_ob_register_with_password",{
+   p_student_number:number,p_name:name,p_session_hash:await sha256(token),p_password:password
   });
-  if(error||!data?.ok)return fail(String(data?.error||"registration_failed"),409);
+  if(error)throw new Error("registration_failed");
+  if(!data?.ok)return fail(String(data?.error||"registration_failed"),409);
   return result({ok:true,role:"student",token,name,student_number:number,
     approval_status:"pending",expires_at:new Date(Date.now()+365*86400000).toISOString()});
  }
