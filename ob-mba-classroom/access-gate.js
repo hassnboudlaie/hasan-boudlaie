@@ -7,14 +7,14 @@ const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendan
 const DEVICE_API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-student-devices";
 const STORE="mba-ob-classroom-attendance-identity-v1",TRUST="mba-ob-teacher-trusted-device-v1";
 const gate=document.getElementById("entryGate"),site=document.getElementById("site");
-const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این کد دانشجویی قبلاً ثبت شده است. برای بازیابی دسترسی با مدرس هماهنگ کنید.",
- invalid_credentials:"اطلاعات ورود مدرس صحیح نیست یا این دستگاه تأیید نشده است.",
+const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این شماره دانشجویی قبلاً ثبت شده است. تأیید مجدد لازم نیست؛ با رمز شخصی خود وارد شوید. اگر رمز ندارید، ابتدا آن را از دستگاه قبلی فعال کنید.",
+ invalid_credentials:"اطلاعات ورود صحیح نیست؛ شماره دانشجویی و رمز شخصی، یا اطلاعات ورود مدرس را بررسی کنید.",
  invalid_guest_registration:"نام و نام خانوادگی را کامل وارد کنید.",guest_registration_limit:"تعداد درخواست‌ها موقتاً زیاد است؛ با مدرس هماهنگ کنید.",
  invalid_national_id:"کد ملی معتبر نیست.",session_expired:"دسترسی این دستگاه منقضی شده است.",
  network_error:"اتصال اینترنت برای بررسی عضویت لازم است.",server_error:"اتصال به سامانه کلاس برقرار نشد."};
 const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const digit=s=>String(s||"").replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776)).replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).trim();
-let credential=null,trusted=null,selected="student",error="",loading=false,view="login",status=null,loaded=false;
+let credential=null,trusted=null,selected="student",error="",loading=false,view="login",status=null,loaded=false,prefilledStudentNumber="";
 try{credential=JSON.parse(localStorage.getItem(STORE)||"null");trusted=localStorage.getItem(TRUST)}catch{}
 if(credential?.role==="teacher")selected="teacher";
 if(credential?.role==="guest")selected="guest";
@@ -57,7 +57,7 @@ function present(){
   +'<button class="entrance-secondary" data-entrance="reset" type="button">تغییر دستگاه یا حساب</button>';
  }else if(view==="returning"){
   inner='<h2>ورود دانشجوی تأییدشده</h2><p class="entrance-hint">پس از تأیید اولیه، می‌توانید بدون درخواست مجدد مدرس از دستگاه دیگری وارد شوید.</p>'+
-   '<form id="entranceReturning" class="entrance-form"><label for="returningNumber">شماره دانشجویی</label><input id="returningNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" autocomplete="username" required placeholder="شماره دانشجویی">'+
+   '<form id="entranceReturning" class="entrance-form"><label for="returningNumber">شماره دانشجویی</label><input id="returningNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" autocomplete="username" required value="'+enc(prefilledStudentNumber)+'" placeholder="شماره دانشجویی">'+
    '<label for="returningPassword">رمز شخصی</label><input id="returningPassword" name="password" type="password" minlength="12" maxlength="128" autocomplete="current-password" required placeholder="رمزی که قبلاً برای خودتان تعیین کردید">'+
    '<button class="entrance-primary" type="submit">ورود به کلاس بدون تأیید مجدد</button></form>'+
    '<button type="button" class="entrance-secondary" data-entrance="returnBack">بازگشت به ورود اولیه</button>'+
@@ -167,7 +167,7 @@ gate.addEventListener("submit",e=>{
    trusted=bound.device_token;localStorage.setItem(TRUST,trusted);
    saveCred({role:"teacher",token:data.token});unlock("teacher");
   }
- })().catch(e=>{error=e.message}).finally(()=>{loading=false;if(!loaded)present()});
+ })().catch(e=>{error=e.message;if(form.id==="entranceStudent"&&error==="already_registered"){prefilledStudentNumber=digit(d.get("student_number"));view="returning"}}).finally(()=>{loading=false;if(!loaded)present()});
 });
 present();check();
 })();
