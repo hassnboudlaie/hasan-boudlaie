@@ -167,7 +167,7 @@ gate.addEventListener("submit",e=>{
    trusted=bound.device_token;localStorage.setItem(TRUST,trusted);
    saveCred({role:"teacher",token:data.token});unlock("teacher");
   }
- })().catch(e=>{error=e.message}).finally(()=>{loading=false;if(!loaded)present()});
+ })().catch(e=>{error=e.message;if(form.id==="entranceStudent"&&error==="already_registered")view="returning"}).finally(()=>{loading=false;if(!loaded)present()});
 });
 present();check();
 })();
