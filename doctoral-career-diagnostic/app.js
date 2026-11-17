@@ -154,6 +154,12 @@ const OPTION_DESCRIPTIONS = {
  ]
 };
 const NONE_DESCRIPTION = 'Choose this if none of the listed options feels accurate. You can describe your own situation below.';
+const EXCLUSIVE_MULTI_CHOICES = {
+ geography: ['Not sure yet'],
+ constraints: ['Prefer not to say']
+};
+function exclusiveChoice(id,value){return value===NONE_OPTION||(EXCLUSIVE_MULTI_CHOICES[id]||[]).includes(value);}
+
 
 let answers = {};
 let current = 0;
@@ -166,6 +172,23 @@ function allQuestions(){return SECTIONS.flatMap(s=>s.questions);}
 function textValue(v){return Array.isArray(v)?v.join(', '):String(v==null?'':v);}
 function load(){
  try{const d=JSON.parse(localStorage.getItem(STORAGE)||'{}');if(d && d.answers && typeof d.answers==='object') answers=d.answers;}catch(_){}
+ // Preserve existing drafts from older versions while discarding choices that no longer exist.
+ const previousCareerValues={
+  'Research-intensive':'Research and discovery',
+  'Teaching-intensive':'Teaching and student development',
+  'A balance of teaching and research':'Combining teaching and research',
+  'Applied research / policy impact':'Research with practical or policy impact'
+ };
+ if(previousCareerValues[answers.career_values])answers.career_values=previousCareerValues[answers.career_values];
+ for(const item of allQuestions()){
+  if(item.type==='single'&&hasAnswer(answers[item.id])&&!item.options.includes(answers[item.id]))delete answers[item.id];
+  if(item.type==='multi'&&Array.isArray(answers[item.id])){
+   const values=answers[item.id].filter(v=>item.options.includes(v));
+   const exclusives=values.filter(v=>exclusiveChoice(item.id,v));
+   answers[item.id]=exclusives.length?[exclusives[0]]:values.slice(0,item.max||values.length);
+  }
+  if(!isNoneSelected(item))delete answers[otherKey(item.id)];
+ }
  try{const s=JSON.parse(localStorage.getItem(SUBMITTED)||'null');if(s && s.ref)completedRef=s.ref;}catch(_){}
 }
 function save(manual){
@@ -254,6 +277,14 @@ function renderReview(){
 function invalidInSection(section){
  for(const question of section.questions){
   if(question.required&&!hasAnswer(answers[question.id]))return {question,message:'Please answer the required question: '+question.label};
+  if(question.type==='single'&&hasAnswer(answers[question.id])&&!question.options.includes(answers[question.id]))
+   return {question,message:'Please choose a valid answer for: '+question.label};
+  if(question.type==='multi'&&Array.isArray(answers[question.id])){
+   const values=answers[question.id];
+   if((question.max&&values.length>question.max)||values.some(x=>!question.options.includes(x))||
+     (values.some(x=>exclusiveChoice(question.id,x))&&values.length!==1))
+    return {question,message:'Please review your choices for: '+question.label};
+  }
   if((question.type==='single'||question.type==='multi')&&isNoneSelected(question)&&!String(answers[otherKey(question.id)]||'').trim()){
    return {question,message:'Please briefly explain your selection of "None of the above" for: '+question.label};
   }
@@ -316,10 +347,10 @@ function onFieldChange(el){
  if(!item)return;
  if(item.type==='multi'){
   let selected=Array.from(document.querySelectorAll('input[data-question="'+id+'"]:checked')).map(x=>x.value);
-  if(el.value===NONE_OPTION&&el.checked){
-   selected=[NONE_OPTION];
+  if(exclusiveChoice(id,el.value)&&el.checked){
+   selected=[el.value];
   }else if(el.checked){
-   selected=selected.filter(x=>x!==NONE_OPTION);
+   selected=selected.filter(x=>!exclusiveChoice(id,x));
   }
   if(item.max&&selected.length>item.max){
    el.checked=false;showError('Please choose no more than '+item.max+' options for this question.');return;
