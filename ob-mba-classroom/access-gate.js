@@ -14,7 +14,7 @@ const message={invalid_registration:"نام و کد دانشجویی را برر
  network_error:"اتصال اینترنت برای بررسی عضویت لازم است.",server_error:"اتصال به سامانه کلاس برقرار نشد."};
 const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const digit=s=>String(s||"").replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776)).replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).trim();
-let credential=null,trusted=null,selected="student",error="",loading=false,view="login",status=null,loaded=false;
+let credential=null,trusted=null,selected="student",error="",loading=false,view="login",status=null,loaded=false,prefilledStudentNumber="";
 try{credential=JSON.parse(localStorage.getItem(STORE)||"null");trusted=localStorage.getItem(TRUST)}catch{}
 if(credential?.role==="teacher")selected="teacher";
 if(credential?.role==="guest")selected="guest";
