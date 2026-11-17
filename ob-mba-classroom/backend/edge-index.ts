@@ -116,7 +116,7 @@ async function actionRouter(input:Record<string,unknown>){
   // Cross-device login remains impossible until the teacher approves the student.
   if(!/^[0-9]{6,16}$/.test(number)||!name||
      typeof password!=="string"||password.length<12||password.length>64||
-     encoder.encode(password).length>72||!/[\\p{L}]/u.test(password)||!/[0-9]/.test(password))
+     encoder.encode(password).length>72||!/[\p{L}]/u.test(password)||!/[0-9]/.test(password))
    return fail("invalid_registration");
   const token=randomHex(32);
   const {data,error}=await supabase.rpc("mba_ob_register_with_password",{
