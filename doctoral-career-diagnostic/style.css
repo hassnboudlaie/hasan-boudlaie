@@ -147,3 +147,26 @@ textarea{min-height:94px;resize:vertical}
 }
 @media(max-width:360px){.private-label{display:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Rich option guidance: clear labels, short explanations, and an accessible custom response */
+.choice-label{align-items:flex-start;gap:10px;padding:13px 14px}
+.choice-label input{margin-top:4px}
+.choice-copy{display:block;min-width:0;flex:1}
+.choice-copy strong{display:block;color:#1c453e;font-size:14px;font-weight:800;line-height:1.45;overflow-wrap:anywhere}
+.choice-copy small{display:block;color:#617870;font-size:12.5px;font-weight:450;line-height:1.5;margin-top:4px;overflow-wrap:anywhere}
+.choice-label.selected .choice-copy strong{color:#075f52}
+.choice-label.selected .choice-copy small{color:#3c7668}
+.choice-label.none-choice{border-style:dashed;background:#fcfefc}
+.choice-label.none-choice.selected{background:#edf8f0;border-style:solid}
+.none-detail{margin:13px 0 4px;border-radius:11px;border:1px solid #b4d9c6;background:#f3faf5;padding:13px 14px}
+.none-detail[hidden]{display:none!important}
+.none-detail label{display:block;font-size:14px;font-weight:800;color:#184f44;margin-bottom:8px}
+.none-detail textarea{width:100%;min-height:86px;resize:vertical;background:#fff}
+.none-detail .required{font-size:11px}
+.error-field .none-detail textarea{border:2px solid #c36c5f}
+@media(max-width:760px){
+  .choice-label{padding:13px 12px;min-height:58px}
+  .choice-copy strong{font-size:15px}
+  .choice-copy small{font-size:13.5px;line-height:1.43}
+  .none-detail{padding:12px}
+}
