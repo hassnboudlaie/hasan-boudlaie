@@ -322,7 +322,12 @@ async function send(){
  if(!INVITE){showError('This page was opened without its individual invitation link. Please ask your mentor for the full link. You can still download your answers.');return;}
  if(!window.confirm('Submit your responses privately now? The invitation accepts one completed submission.'))return;
  const btn=byId('nextBtn');btn.disabled=true;btn.textContent='Submitting…';
- const response={schema_version:3,questionnaire:'doctoral_academic_career_2026',consent:true,submitted_client_at:new Date().toISOString(),answers:answers};
+ const submittedAnswers={};
+ for(const item of allQuestions()){
+  if(hasAnswer(answers[item.id]))submittedAnswers[item.id]=answers[item.id];
+  if(isNoneSelected(item)&&hasAnswer(answers[otherKey(item.id)]))submittedAnswers[otherKey(item.id)]=answers[otherKey(item.id)];
+ }
+ const response={schema_version:3,questionnaire:'doctoral_academic_career_2026',consent:true,submitted_client_at:new Date().toISOString(),answers:submittedAnswers};
  try{
   const res=await fetch(API_URL,{method:'POST',headers:{apikey:API_KEY,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({p_access_code:INVITE,p_response:response})});
   const body=await res.json().catch(()=>({}));
