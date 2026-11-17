@@ -197,13 +197,31 @@ function updateSteps(){
   return '<button type="button" class="step-link'+active+done+'" data-jump="'+i+'" '+(active?'aria-current="step"':'')+'><span class="step-no">'+(i+1)+'</span>'+esc(s.title)+'</button>';
  }).join('')+'<button type="button" class="step-link'+(current===SECTIONS.length?' active':'')+'" data-jump="'+SECTIONS.length+'"><span class="step-no">✓</span>Review & submit</button>';
 }
+function isNoneSelected(question){
+ const value=answers[question.id];
+ return Array.isArray(value)?value.includes(NONE_OPTION):value===NONE_OPTION;
+}
+function otherKey(id){return id+'__none_detail';}
+function answerDisplay(question){
+ if(!hasAnswer(answers[question.id]))return '';
+ const value=textValue(answers[question.id]);
+ const detail=isNoneSelected(question)?String(answers[otherKey(question.id)]||'').trim():'';
+ return detail?value+' — '+detail:value;
+}
 function choices(question,multi){
  const val=answers[question.id];
- return '<div class="'+(multi?'choice-grid':'single-choice')+'" role="group" aria-label="'+esc(question.label)+'">'+question.options.map((o,i)=>{
+ const texts=OPTION_DESCRIPTIONS[question.id]||[];
+ const options=question.options;
+ const name='answer-'+question.id;
+ const body=options.map((o,i)=>{
   const selected=multi?(Array.isArray(val)&&val.includes(o)):val===o;
-  const name='answer-'+question.id;
-  return '<label class="choice-label'+(selected?' selected':'')+'"><input type="'+(multi?'checkbox':'radio')+'" data-question="'+esc(question.id)+'" name="'+esc(name)+'" value="'+esc(o)+'" '+(selected?'checked':'')+'><span>'+esc(o)+'</span></label>';
- }).join('')+'</div>';
+  const desc=o===NONE_OPTION?NONE_DESCRIPTION:texts[i];
+  if(!desc)throw new Error('No description for '+question.id+': '+o);
+  return '<label class="choice-label'+(selected?' selected':'')+(o===NONE_OPTION?' none-choice':'')+'"><input type="'+(multi?'checkbox':'radio')+'" data-question="'+esc(question.id)+'" name="'+esc(name)+'" value="'+esc(o)+'" '+(selected?'checked':'')+'><span class="choice-copy"><strong>'+esc(o)+'</strong><small>'+esc(desc)+'</small></span></label>';
+ }).join('');
+ const active=isNoneSelected(question);
+ const detail='<div class="none-detail" id="detail-wrap-'+esc(question.id)+'" '+(active?'':'hidden')+'><label for="other-'+esc(question.id)+'">Tell us what fits you better <span class="required">Required when selected</span></label><textarea rows="2" id="other-'+esc(question.id)+'" data-none-detail="'+esc(question.id)+'" placeholder="A short explanation in your own words is enough.">'+esc(answers[otherKey(question.id)]||'')+'</textarea></div>';
+ return '<div class="'+(multi?'choice-grid':'single-choice')+'" role="group" aria-label="'+esc(question.label)+'">'+body+'</div>'+detail;
 }
 function renderQuestion(question,i){
  const val=answers[question.id];
@@ -235,31 +253,41 @@ function render(){
 function renderReview(){
  return '<div class="review-box"><h3 class="review-heading">Your reflections, in one place</h3><p class="review-intro">Optional questions may be left unanswered. You can return to any section to change an answer.</p>'+
  SECTIONS.map((s,i)=>{
-  let entries=s.questions.filter(x=>hasAnswer(answers[x.id])).map(x=>'<div class="review-item"><b>'+esc(x.label)+'</b><span>'+esc(textValue(answers[x.id]))+'</span></div>').join('');
+  let entries=s.questions.filter(x=>hasAnswer(answers[x.id])).map(x=>'<div class="review-item"><b>'+esc(x.label)+'</b><span>'+esc(answerDisplay(x))+'</span></div>').join('');
   return '<section class="review-section"><h3>'+esc(s.title)+' <button type="button" data-jump="'+i+'">Edit section</button></h3>'+(entries||'<p class="review-muted">No answers yet</p>')+'</section>';
  }).join('')+
  '<label class="consent-wrap"><input type="checkbox" id="agree"><span>I understand that sharing these responses is voluntary. I agree that Dr Hasan Boudlaie may use my answers solely to prepare our mentoring conversations and an individual career development plan. I have avoided sensitive or confidential details, and I can request deletion by contacting my mentor through UoB Mentoring Connect.</span></label>'+
  '<div class="review-actions"><button type="button" id="downloadTxt">Download a readable copy (.txt)</button><button type="button" id="downloadJson">Download backup (.json)</button><button type="button" id="copyTxt">Copy answers</button></div>'+
  '<p class="submit-note">This form uses an individual invitation. One completed submission is accepted; keep a backup if you would like your own record. Submissions are private and are not visible to website visitors.</p></div>';
 }
+function invalidInSection(section){
+ for(const question of section.questions){
+  if(question.required&&!hasAnswer(answers[question.id]))return {question,message:'Please answer the required question: '+question.label};
+  if((question.type==='single'||question.type==='multi')&&isNoneSelected(question)&&!String(answers[otherKey(question.id)]||'').trim()){
+   return {question,message:'Please briefly explain your selection of "None of the above" for: '+question.label};
+  }
+ }
+ return null;
+}
 function validateCurrent(){
- const section=SECTIONS[current];if(!section)return true;
- const missing=section.questions.find(x=>x.required&&!hasAnswer(answers[x.id]));
- if(missing){const el=byId('qwrap-'+missing.id);if(el)el.classList.add('error-field');showError('Please answer the required question: '+missing.label);return false;}
- return true;
+ const problem=invalidInSection(SECTIONS[current]);
+ if(!problem)return true;
+ byId('qwrap-'+problem.question.id)?.classList.add('error-field');
+ showError(problem.message);return false;
 }
 function validateAll(){
  for(let i=0;i<SECTIONS.length;i++){
-  const missing=SECTIONS[i].questions.find(x=>x.required&&!hasAnswer(answers[x.id]));
-  if(missing){current=i;render();const el=byId('qwrap-'+missing.id);if(el)el.classList.add('error-field');showError('Before submitting, please answer this required question: '+missing.label);return false;}
+  const problem=invalidInSection(SECTIONS[i]);
+  if(problem){current=i;render();byId('qwrap-'+problem.question.id)?.classList.add('error-field');showError(problem.message);return false;}
  }
  return true;
 }
+
 function jump(i){if(Number.isInteger(i)&&i>=0&&i<=SECTIONS.length){current=i;render();window.scrollTo({top:Math.max(0,byId('content').getBoundingClientRect().top+window.scrollY-10),behavior:'smooth'});}}
 function plainText(){
  let out='DOCTORAL CAREER & RESEARCH DEVELOPMENT — MENTORING REFLECTIONS\n';
  out+='Prepared for a personal mentoring conversation\nDate: '+new Date().toISOString().slice(0,10)+'\n\n';
- SECTIONS.forEach(s=>{out+='=== '+s.title.toUpperCase()+' ===\n';s.questions.forEach(x=>{out+='\n'+x.label+'\n'+(hasAnswer(answers[x.id])?textValue(answers[x.id]):'[not answered]')+'\n';});out+='\n';});
+ SECTIONS.forEach(s=>{out+='=== '+s.title.toUpperCase()+' ===\n';s.questions.forEach(x=>{out+='\n'+x.label+'\n'+(hasAnswer(answers[x.id])?answerDisplay(x):'[not answered]')+'\n';});out+='\n';});
  return out;
 }
 function download(name,content,type){
@@ -291,22 +319,43 @@ function renderComplete(){
  byId('completion').textContent='Complete';byId('progressFill').style.width='100%';document.querySelector('.progress-track').setAttribute('aria-valuenow','100');
 }
 function onFieldChange(el){
- const id=el.dataset.question;if(!id)return;
- const item=allQuestions().find(x=>x.id===id);if(!item)return;
+ const id=el.dataset.question;
+ if(!id)return;
+ const item=allQuestions().find(x=>x.id===id);
+ if(!item)return;
  if(item.type==='multi'){
-  const selected=Array.from(document.querySelectorAll('input[data-question="'+id+'"]:checked')).map(x=>x.value);
-  if(item.max&&selected.length>item.max){el.checked=false;showError('Please choose no more than '+item.max+' options for this question.');return;}
+  let selected=Array.from(document.querySelectorAll('input[data-question="'+id+'"]:checked')).map(x=>x.value);
+  if(el.value===NONE_OPTION&&el.checked){
+   selected=[NONE_OPTION];
+  }else if(el.checked){
+   selected=selected.filter(x=>x!==NONE_OPTION);
+  }
+  if(item.max&&selected.length>item.max){
+   el.checked=false;showError('Please choose no more than '+item.max+' options for this question.');return;
+  }
   answers[id]=selected;
-  document.querySelectorAll('input[data-question="'+id+'"]').forEach(x=>x.closest('label').classList.toggle('selected',x.checked));
+  document.querySelectorAll('input[data-question="'+id+'"]').forEach(x=>{
+   x.checked=selected.includes(x.value);
+   x.closest('label').classList.toggle('selected',x.checked);
+  });
  }else{
   answers[id]=el.value;
   if(item.type==='single')document.querySelectorAll('input[data-question="'+id+'"]').forEach(x=>x.closest('label').classList.toggle('selected',x.checked));
  }
+ if(item.type==='single'||item.type==='multi'){
+  const active=isNoneSelected(item);
+  const detail=byId('detail-wrap-'+id);
+  if(detail)detail.hidden=!active;
+  if(!active)delete answers[otherKey(id)];
+ }
  byId('qwrap-'+id)?.classList.remove('error-field');
  clearError();save(false);updateProgress();updateSteps();
 }
+
 function attachEvents(){
- document.body.addEventListener('input',e=>{const el=e.target;if(el.matches('textarea[data-question],input[type=text][data-question]'))onFieldChange(el);});
+ document.body.addEventListener('input',e=>{const el=e.target;
+  if(el.matches('textarea[data-none-detail]')){answers[otherKey(el.dataset.noneDetail)]=el.value;clearError();save(false);return;}
+  if(el.matches('textarea[data-question],input[type=text][data-question]'))onFieldChange(el);});
  document.body.addEventListener('change',e=>{
   const el=e.target;
   if(el.matches('input[data-question]:not([type=text]),select[data-question]'))onFieldChange(el);
