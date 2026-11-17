@@ -1,25 +1,57 @@
-# Saba Naft — secure AI integration (source only; not deployed)
+# صبا نفت — Live Leadership AI Coach (secure activation)
 
-This directory is an implementation-ready **separate-service foundation**. The public GitHub Pages pilot has no authenticated backend and **cannot safely hold an OpenAI API key**. The source in this directory is not a live AI service.
+**Status: source ready / NOT DEPLOYED.** The sole canonical production app remains
+https://hassnboudlaie.github.io/hasan-boudlaie/sabanaft/app/
 
-## Required before activation
+## Architecture
 
-1. Obtain approval for costs and create a **dedicated Saba Naft Supabase project**. Do not add this schema/function to My Finance or another app's existing Supabase project.
-2. Enable invite-only authenticated users and a documented privacy notice, deletion/retention process, and appropriate contracts for any real company data. Do not allow confidential real cases in the public demo.
-3. Apply \`leadership-ai-quota.sql\` to the dedicated project, verify RLS, RPC grants, rate limit and anonymous denial. Run Security Advisors.
-4. Deploy \`functions/leadership-coach/index.ts\` with JWT verification **enabled**, set \`OPENAI_API_KEY\` as a server-side function secret, optionally set \`OPENAI_MODEL\`. Never commit a secret.
-5. Wire the new app-only auth session layer so the browser obtains a *user* access token. Keep an allowlisted function URL in public config. Do not store user tokens in URL or transmit them to ChatGPT.
-6. Validate CORS, JWT expiration, rate limit, no user cross-access, zero key leakage, no confidential content in logs, inability to bypass security via client code, and answer quality with unsafe/uncertain prompts.
-7. Only after E2E passed, enable the in-app AI Coach button. If any gate fails, leave it disabled and show the rule-based guidance or optional copy-to-ChatGPT flow.
+- Public GitHub Pages PWA: `app/leadership-ai-coach.js`, `leadership-ai-coach.css`, and `ai-config.js`.
+- A companion is visible across Home, nine learning sessions, lesson reader, 10-step Journey, Leadership Studio (within the app), reflection/context and Passport.
+- When no backend is available, only **clearly labeled rule-based educational guidance** is returned. It does not pretend to evaluate writing with a model.
+- Authenticated HTTP POST to a **dedicated Supabase project**, `/functions/v1/leadership-coach`, with signed-in user JWT.
+- Edge Function verifies user via Auth, requires `app_metadata.saba_naft_approved=true`, reserves database quota and calls OpenAI **Responses API** with `store:false`. Prompts and answers are not persisted in the Saba database.
+- Server returns context-aware guidance, writing feedback, reflective questions and next actions. Every AI call requires an explicit request and processing consent.
+- In competitive Journey, the AI is not given correct choices, points or answer rationales. It must never reveal a correct answer before completion.
+- AI is *not* an official performance evaluation, psychometric instrument or supervisor approval.
 
-## Backend contract
+## Remaining secure activation (requires admin setup)
 
-POST \`/functions/v1/leadership-coach\`, with \`Authorization: Bearer <signed-in-user-jwt>\`, \`apikey: <publishable-key>\`, JSON:
+1. Choose the Supabase organization, approve any quoted project charge and **create a new project** (not My Finance, Behparvar or any other client's project).
+2. In Authentication: disable public sign-ups, enable invite-only employee accounts (email/password or enterprise SSO if implemented separately). Set a documented privacy and retention policy; use fictitious/de-identified cases until organization approval.
+3. Apply `supabase/leadership-ai-quota.sql` in the **new** project. Check RLS, RPC 12 requests/hour and 50/day, anonymous denial and Security Advisors.
+4. For each approved employee, administrator must set `app_metadata.saba_naft_approved=true` using the Supabase Admin API. `user_metadata` is not sufficient for authorization. Do not approve all registered accounts automatically.
+5. Deploy `supabase/functions/leadership-coach/index.ts` as Edge Function `leadership-coach` with **JWT verification enabled**.
+6. Set **`OPENAI_API_KEY` only in Supabase Edge Function Secrets**, never in GitHub, browser code or chat. Optionally set `SABA_AI_MODEL=gpt-6.1-sol` (availability and billing should be verified for your API project).
+7. Edit public `app/ai-config.js` to the dedicated `https://<project-ref>.supabase.co/functions/v1/leadership-coach` and a **publishable** client key. These are public configuration; service-role and OpenAI secrets remain server-only.
+8. End-to-end verify email/password login, refresh, 401/403 denial, cost and quota enforcement, CORS, mobile interaction, writing review quality, cross-route context and response latency. Only then merge/release as an authenticated Live service.
 
-\`\`\`json
-{"situation":"فرضی و بدون اطلاعات محرمانه","context":"project","urgency":"normal","issue":"clarity","consent":true}
-\`\`\`
+## API request
 
-Successful JSON: \`{"answer":"...","source":"AI-generated coaching guidance; user decision required"}\`.
+```json
+{
+  "mode":"review",
+  "question":"آیا این متن با معیارهای مرحله سازگار است؟",
+  "draft":"متن غیرمحرمانه کاربر",
+  "context":{"area":"journey","stageNumber":3,"title":"...","framework":"...","assessmentMode":"competitive_locked","criteria":["..."]},
+  "history":[],
+  "consent":true
+}
+```
 
-Never expose a service-role/secret key in browser code. Responses are generated with \`store:false\`. Quota is 12 user calls/hour (cost-control starting point; admin can adjust after testing). Genuine booking, calendar slots, payment, company reporting, and secure user data persistence are **separate** requirements, not delivered by this endpoint.
+Request headers: `Authorization: Bearer <user-jwt>`, `apikey: <publishable-key>`, `Content-Type: application/json`.
+
+Response: `{"answer":"...","source":"ai" }`.
+
+## Security / limitations
+
+- The browser's login token is held in `sessionStorage` only (clears when browser session ends); do not show passwords or tokens in logs.
+- Server enforces an allowlisted origin but **CORS is not an authentication mechanism**. User JWT verification + admin app_metadata and quota are mandatory.
+- Prompt inputs are untrusted. Treat AI judgments as formative feedback only, and apply human review to organizational risk decisions.
+- `store:false` disables provider-side response storage for the request but is not a blanket claim about all service-provider retention terms. Validate organizational data policy and vendor terms.
+- No voice Realtime API, no model fine-tuning, no autonomous HR decision and no multi-device transcript sync in this release.
+- No AI secret exists in this repository. **Do not mark Live AI operational until the endpoint is deployed, the model responds and the user login succeeds.**
+
+## Regression
+
+`node sabanaft/verify-ai-companion.cjs` (needs jsdom@26.1.0, same as existing Saba regression workflow).
+The code is versioned in the existing Saba repo; no duplicate standalone app.
