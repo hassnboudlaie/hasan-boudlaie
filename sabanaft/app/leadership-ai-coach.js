@@ -56,6 +56,7 @@ async function getAccessToken(){
  }catch(e){setSession(null);return null}
 }
 window.SabaSecureSession={getAccessToken:getAccessToken,signOut:()=>setSession(null)};
+window.SabaAiCoach={open:open,close:close,context:routeContext};
 function routeContext(){
  let arr=decodeURIComponent(location.hash.replace(/^#\/?/,"")).split("/"),area=arr[0]||"home",title=names[area]||"بخش جاری";
  const c={area,route:location.hash||"#/home",title,framework:"The Reflective Leader — applied adaptation",assessmentMode:"none"};
