@@ -16,11 +16,10 @@ const SECTIONS = [
  {id:'strengths',title:'Strengths & interests',subtitle:'Your own view is enough for our first conversation; no formal tests are needed.',questions:[
   q('self_strengths','Which strengths do you most recognise in yourself? Choose up to three.','multi',{required:true,max:3,options:['Research design','Survey research and data collection','Analysing and interpreting findings','Critical reading and writing','Teaching or presenting','Working with people and stakeholders','Organising and leading projects','None of the above']}),
   q('energizers','Which activities give you the most energy? Choose up to three.','multi',{max:3,options:['Exploring research ideas','Teaching and explaining concepts','Writing and publishing','Working with data','Collaborating with other researchers','Solving real organisational problems','Designing research projects','None of the above']}),
-  q('career_values','What kind of academic work appeals to you most?','single',{options:['Research-intensive','Teaching-intensive','A balance of teaching and research','Applied research / policy impact','I am still exploring','None of the above']}),
+  q('career_values','What matters most to you about academic work right now?','single',{options:['Research and discovery','Teaching and student development','Combining teaching and research','Research with practical or policy impact','I am still exploring','None of the above'],hint:'Choose the one that resonates most; this can change as your career develops.'}),
   q('research_interests','Which themes would you like to develop beyond your PhD? Choose up to three.','multi',{max:3,options:['Entrepreneurial fraud and business ethics','Institutions and governance','Signalling, reputation and trust','Behavioural ethics and moral disengagement','Technology and entrepreneurship','Public policy and management','I would like to explore further','None of the above']})
  ]},
  {id:'readiness',title:'Research & career readiness',subtitle:'A simple picture of what you already bring and what you would like to grow.',questions:[
-  q('vignette_stage','What stage is your vignette-based study at?','single',{options:['Designing the scenarios','Pilot testing / ethics preparation','Collecting data','Analysing data','Writing up','The approach has changed / unsure','None of the above']}),
   q('qatar_experience','From your six years of survey research at Qatar University, what experience would you most like to build on?','textarea',{placeholder:'A few words about methods, skills or projects are enough. No confidential details.'}),
   q('publication_stage','Where are you with academic publications?','single',{options:['Not writing a paper yet','Preparing a draft','One or more manuscripts submitted','One or more publications completed','Several different stages at once','None of the above']}),
   q('teaching_experience','What is your teaching experience so far?','single',{options:['Taught university courses','Assisted teaching / led workshops','Presented research but not taught courses','No formal teaching experience yet','None of the above']}),
@@ -75,11 +74,11 @@ const OPTION_DESCRIPTIONS = {
   "Planning studies, instruments, questions or research procedures."
  ],
  "career_values": [
-  "Most of your professional effort would focus on creating research.",
-  "Most of your professional effort would focus on teaching and learning.",
-  "You would like meaningful responsibilities in both research and teaching.",
-  "You are interested in research that informs organisations or policy.",
-  "You have not decided which balance would suit you best."
+  "Discovering ideas, investigating questions and adding to knowledge.",
+  "Helping students learn and building confidence as an educator.",
+  "Making meaningful contributions to both scholarly work and teaching.",
+  "Producing insights useful for organisations, communities or policymakers.",
+  "Taking time to learn which activities and roles fit you best."
  ],
  "research_interests": [
   "Research on questionable practices, ethics or misconduct in ventures.",
@@ -89,14 +88,6 @@ const OPTION_DESCRIPTIONS = {
   "How digital tools and innovation influence entrepreneurial behaviour.",
   "How organisations, public systems and management decisions interact.",
   "You would like time to discover additional topics beyond the thesis."
- ],
- "vignette_stage": [
-  "Creating the short scenarios and response questions.",
-  "Checking feasibility, procedures or research ethics before full data collection.",
-  "Running the study or collecting participant responses.",
-  "Interpreting responses and developing findings.",
-  "Turning evidence and analysis into chapters or papers.",
-  "Your research design has changed, or you are unsure of its current stage."
  ],
  "publication_stage": [
   "Your priority is currently research development rather than a manuscript.",
