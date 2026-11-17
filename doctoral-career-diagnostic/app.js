@@ -8,38 +8,162 @@ const SUBMITTED = 'hb-doctoral-diagnostic-submitted-v1';
 const q = (id,label,type,opts={}) => ({id,label,type,...opts});
 const SECTIONS = [
  {id:'now',title:'Where you are now',subtitle:'Your PhD, your current work and the time you realistically have.',questions:[
-  q('phd_stage','Where are you in your PhD research right now?','single',{required:true,options:['Designing or piloting my study','Collecting data','Analysing data','Writing chapters or papers','Working across several stages','Something else'],hint:'We understand you are a second-year Management PhD student at Birmingham, with an expected 2028 completion.'}),
-  q('available_time','How much time could you realistically dedicate to career development alongside work and your PhD?','single',{options:['1–2 hours per month','3–5 hours per month','1–2 hours per week','More than 2 hours per week','It varies / not sure'],hint:'No ideal answer — we want a plan that fits your real life.'}),
+  q('phd_stage','Where are you in your PhD research right now?','single',{required:true,options:['Designing or piloting my study','Collecting data','Analysing data','Writing chapters or papers','Working across several stages','None of the above'],hint:'We understand you are a second-year Management PhD student at Birmingham, with an expected 2028 completion.'}),
+  q('available_time','How much time could you realistically dedicate to career development alongside work and your PhD?','single',{options:['1–2 hours per month','3–5 hours per month','1–2 hours per week','More than 2 hours per week','It varies / not sure','None of the above'],hint:'No ideal answer — we want a plan that fits your real life.'}),
   q('next_phd_priority','What is your main PhD priority for the next six months?','textarea',{placeholder:'One short sentence is enough.'}),
   q('work_context','What should I know about balancing your full-time role in Qatar and your studies?','textarea',{placeholder:'Share only what you feel comfortable discussing.'})
  ]},
  {id:'strengths',title:'Strengths & interests',subtitle:'Your own view is enough for our first conversation; no formal tests are needed.',questions:[
-  q('self_strengths','Which strengths do you most recognise in yourself? Choose up to three.','multi',{required:true,max:3,options:['Research design','Survey research and data collection','Analysing and interpreting findings','Critical reading and writing','Teaching or presenting','Working with people and stakeholders','Organising and leading projects','Other / still exploring']}),
-  q('energizers','Which activities give you the most energy? Choose up to three.','multi',{max:3,options:['Exploring research ideas','Teaching and explaining concepts','Writing and publishing','Working with data','Collaborating with other researchers','Solving real organisational problems','Designing research projects','Other']}),
-  q('career_values','What kind of academic work appeals to you most?','single',{options:['Research-intensive','Teaching-intensive','A balance of teaching and research','Applied research / policy impact','I am still exploring']}),
-  q('research_interests','Which themes would you like to develop beyond your PhD? Choose up to three.','multi',{max:3,options:['Entrepreneurial fraud and business ethics','Institutions and governance','Signalling, reputation and trust','Behavioural ethics and moral disengagement','Technology and entrepreneurship','Public policy and management','I would like to explore further']})
+  q('self_strengths','Which strengths do you most recognise in yourself? Choose up to three.','multi',{required:true,max:3,options:['Research design','Survey research and data collection','Analysing and interpreting findings','Critical reading and writing','Teaching or presenting','Working with people and stakeholders','Organising and leading projects','None of the above']}),
+  q('energizers','Which activities give you the most energy? Choose up to three.','multi',{max:3,options:['Exploring research ideas','Teaching and explaining concepts','Writing and publishing','Working with data','Collaborating with other researchers','Solving real organisational problems','Designing research projects','None of the above']}),
+  q('career_values','What kind of academic work appeals to you most?','single',{options:['Research-intensive','Teaching-intensive','A balance of teaching and research','Applied research / policy impact','I am still exploring','None of the above']}),
+  q('research_interests','Which themes would you like to develop beyond your PhD? Choose up to three.','multi',{max:3,options:['Entrepreneurial fraud and business ethics','Institutions and governance','Signalling, reputation and trust','Behavioural ethics and moral disengagement','Technology and entrepreneurship','Public policy and management','I would like to explore further','None of the above']})
  ]},
  {id:'readiness',title:'Research & career readiness',subtitle:'A simple picture of what you already bring and what you would like to grow.',questions:[
-  q('vignette_stage','What stage is your vignette-based study at?','single',{options:['Designing the scenarios','Pilot testing / ethics preparation','Collecting data','Analysing data','Writing up','The approach has changed / unsure']}),
+  q('vignette_stage','What stage is your vignette-based study at?','single',{options:['Designing the scenarios','Pilot testing / ethics preparation','Collecting data','Analysing data','Writing up','The approach has changed / unsure','None of the above']}),
   q('qatar_experience','From your six years of survey research at Qatar University, what experience would you most like to build on?','textarea',{placeholder:'A few words about methods, skills or projects are enough. No confidential details.'}),
-  q('publication_stage','Where are you with academic publications?','single',{options:['Not writing a paper yet','Preparing a draft','One or more manuscripts submitted','One or more publications completed','Several different stages at once']}),
-  q('teaching_experience','What is your teaching experience so far?','single',{options:['Taught university courses','Assisted teaching / led workshops','Presented research but not taught courses','No formal teaching experience yet','Other / not sure']}),
-  q('development_gaps','Where would support make the greatest difference now? Choose up to three.','multi',{max:3,options:['Time and focus','Clarifying original research contribution','Academic writing and publishing','Teaching confidence and practice','Academic network and collaborators','Understanding academic job opportunities','Planning the transition from government work','Other']})
+  q('publication_stage','Where are you with academic publications?','single',{options:['Not writing a paper yet','Preparing a draft','One or more manuscripts submitted','One or more publications completed','Several different stages at once','None of the above']}),
+  q('teaching_experience','What is your teaching experience so far?','single',{options:['Taught university courses','Assisted teaching / led workshops','Presented research but not taught courses','No formal teaching experience yet','None of the above']}),
+  q('development_gaps','Where would support make the greatest difference now? Choose up to three.','multi',{max:3,options:['Time and focus','Clarifying original research contribution','Academic writing and publishing','Teaching confidence and practice','Academic network and collaborators','Understanding academic job opportunities','Planning the transition from government work','None of the above']})
  ]},
  {id:'future',title:'Your three-year direction',subtitle:'An aspiration, not a rigid commitment. We will shape the steps together.',questions:[
-  q('target_role','What kind of role would you most like to explore after your PhD?','single',{required:true,options:['Academic role combining teaching and research','Research-focused position or postdoc','Teaching-focused lecturer','Research institute or policy research','Gradual transition combining academic and current work','I am not sure yet']}),
-  q('geography','Where would you consider pursuing an academic career?','multi',{options:['Qatar','Other Gulf countries','United Kingdom','Other countries','Open to several places','Not sure yet']}),
-  q('constraints','Which factors should our career plan take into account? Choose up to three.','multi',{max:3,options:['PhD completion and workload','Full-time job commitments','Financial or job security','Family or location preferences','Publication / teaching requirements','Academic employment opportunities','No major constraints identified','Prefer not to say']}),
+  q('target_role','What kind of role would you most like to explore after your PhD?','single',{required:true,options:['Academic role combining teaching and research','Research-focused position or postdoc','Teaching-focused lecturer','Research institute or policy research','Gradual transition combining academic and current work','I am not sure yet','None of the above']}),
+  q('geography','Where would you consider pursuing an academic career?','multi',{options:['Qatar','Other Gulf countries','United Kingdom','Other countries','Open to several places','Not sure yet','None of the above']}),
+  q('constraints','Which factors should our career plan take into account? Choose up to three.','multi',{max:3,options:['PhD completion and workload','Full-time job commitments','Financial or job security','Family or location preferences','Publication / teaching requirements','Academic employment opportunities','Prefer not to say','None of the above']}),
   q('three_year_vision','Imagine it is the end of 2029. What would a fulfilling career look like for you?','textarea',{required:true,placeholder:'Describe it in your own words — the kind of work, impact and lifestyle you would value.'}),
   q('near_term_step','What is one realistic step you could take in 2027 towards that future?','textarea',{placeholder:'For example: one paper, some teaching practice, a conference, an academic CV or a new connection.'})
  ]},
  {id:'mentoring',title:'Our mentoring journey',subtitle:'Our official mentoring relationship is six months. You choose what matters most.',questions:[
-  q('mentoring_priorities','What would you most like us to focus on? Choose up to three.','multi',{required:true,max:3,options:['Research productivity and writing','Critical thinking and originality','Research identity and specialisation','Teaching readiness','Academic career options','Government-to-academia transition','Academic networking','Confidence, choices and accountability']}),
+  q('mentoring_priorities','What would you most like us to focus on? Choose up to three.','multi',{required:true,max:3,options:['Research productivity and writing','Critical thinking and originality','Research identity and specialisation','Teaching readiness','Academic career options','Government-to-academia transition','Academic networking','Confidence, choices and accountability','None of the above']}),
   q('six_month_value','What would make our six months together worthwhile for you?','textarea',{required:true,placeholder:'One or two specific outcomes are enough.'}),
-  q('mentoring_style','How would you prefer me to support you?','single',{options:['Ask thoughtful questions and help me reflect','Share practical advice and examples','Offer direct and constructive feedback','A mix of these approaches']}),
+  q('mentoring_style','How would you prefer me to support you?','single',{options:['Ask thoughtful questions and help me reflect','Share practical advice and examples','Offer direct and constructive feedback','A mix of these approaches','None of the above']}),
   q('first_conversation','What would you most like to discuss in our first meeting?','textarea',{placeholder:'One question or situation you would like to explore.'})
  ]}
 ];
+const NONE_OPTION = 'None of the above';
+const OPTION_DESCRIPTIONS = {
+ "phd_stage": [
+  "Creating or trialling the research approach, questions or vignette scenarios.",
+  "Gathering responses or other evidence for the doctoral study.",
+  "Interpreting collected data and developing findings.",
+  "Drafting thesis chapters, conference papers or journal articles.",
+  "Working on more than one of these activities at the same time."
+ ],
+ "available_time": [
+  "A small amount of time alongside your existing PhD and full-time role.",
+  "Time for a few focused career-development activities each month.",
+  "Enough time for one or two regular activities or conversations each week.",
+  "A greater weekly commitment, if your circumstances allow it.",
+  "Your availability changes with work, study or other commitments."
+ ],
+ "self_strengths": [
+  "Structuring research questions, methods and study designs.",
+  "Designing surveys, recruiting participants or collecting responses.",
+  "Making sense of data and communicating useful findings.",
+  "Evaluating literature, developing arguments or drafting research text.",
+  "Explaining ideas clearly to students, colleagues or audiences.",
+  "Building relationships and coordinating with diverse people.",
+  "Planning, organising and delivering work or research projects."
+ ],
+ "energizers": [
+  "Discovering new questions, theories and possible research directions.",
+  "Helping others understand an idea or develop a new skill.",
+  "Turning thinking and evidence into a written academic contribution.",
+  "Working through evidence, patterns and analysis.",
+  "Learning with others and building research partnerships.",
+  "Applying research to practical management or policy challenges.",
+  "Planning studies, instruments, questions or research procedures."
+ ],
+ "career_values": [
+  "Most of your professional effort would focus on creating research.",
+  "Most of your professional effort would focus on teaching and learning.",
+  "You would like meaningful responsibilities in both research and teaching.",
+  "You are interested in research that informs organisations or policy.",
+  "You have not decided which balance would suit you best."
+ ],
+ "research_interests": [
+  "Research on questionable practices, ethics or misconduct in ventures.",
+  "How formal and informal institutions shape organisational behaviour.",
+  "How actors communicate credibility, legitimacy and trust.",
+  "How people justify unethical decisions or disengage moral concerns.",
+  "How digital tools and innovation influence entrepreneurial behaviour.",
+  "How organisations, public systems and management decisions interact.",
+  "You would like time to discover additional topics beyond the thesis."
+ ],
+ "vignette_stage": [
+  "Creating the short scenarios and response questions.",
+  "Checking feasibility, procedures or research ethics before full data collection.",
+  "Running the study or collecting participant responses.",
+  "Interpreting responses and developing findings.",
+  "Turning evidence and analysis into chapters or papers.",
+  "Your research design has changed, or you are unsure of its current stage."
+ ],
+ "publication_stage": [
+  "Your priority is currently research development rather than a manuscript.",
+  "You are writing or revising a paper that has not yet been submitted.",
+  "At least one manuscript is with a journal or conference for review.",
+  "You have a published or accepted article, chapter or similar output.",
+  "You have drafts, submitted papers or completed outputs at different stages."
+ ],
+ "teaching_experience": [
+  "You have personally delivered university lectures, seminars or courses.",
+  "You have supported formal teaching or delivered structured workshops.",
+  "You have spoken at conferences or research events but not taught courses.",
+  "You have not yet had an opportunity for formal teaching."
+ ],
+ "development_gaps": [
+  "Making space for priorities while balancing employment and the PhD.",
+  "Making the distinct research contribution clearer.",
+  "Moving from research analysis or notes to publishable writing.",
+  "Building experience and comfort in teaching in higher education.",
+  "Connecting with researchers, mentors and possible collaborators.",
+  "Understanding roles, recruitment requirements and academic pathways.",
+  "Planning practical steps for moving from public-sector work to academia."
+ ],
+ "target_role": [
+  "A university role with a substantial mix of teaching and scholarship.",
+  "A postdoctoral or other research-led role to develop publications and expertise.",
+  "A lecturer or educator role with teaching as its main focus.",
+  "Applied research work in an institute, centre or policy-focused team.",
+  "Beginning academic work while continuing some professional employment.",
+  "You want to explore the available roles before deciding."
+ ],
+ "geography": [
+  "Roles within Qatar, where you currently work.",
+  "Other countries in the Gulf region, subject to role and personal fit.",
+  "Academic opportunities at universities in the United Kingdom.",
+  "International destinations not covered by the options above.",
+  "You are flexible about location if the role is a strong match.",
+  "You prefer to explore opportunities before deciding where."
+ ],
+ "constraints": [
+  "Your doctoral milestones or workload may affect timing.",
+  "You may need to balance academic steps with your current government role.",
+  "Maintaining financial stability or dependable employment matters to you.",
+  "Where you live, family preferences or relocation feasibility matter.",
+  "Research or teaching requirements may need further development.",
+  "Availability of suitable academic vacancies could shape your choices.",
+  "You would rather discuss any constraints privately in conversation."
+ ],
+ "mentoring_priorities": [
+  "Protecting focused time and converting research into written outputs.",
+  "Testing assumptions and clarifying what your research adds.",
+  "Developing a coherent set of scholarly interests beyond your PhD.",
+  "Building teaching confidence, experience and an academic portfolio.",
+  "Understanding academic positions and how to become ready for them.",
+  "Mapping a realistic route from your current employment into academia.",
+  "Developing professional connections and research partnerships.",
+  "Reflecting on decisions and following through on agreed next steps."
+ ],
+ "mentoring_style": [
+  "Support through reflection and questions rather than immediate advice.",
+  "Learn from examples, options and practical guidance.",
+  "Receive candid feedback while keeping ownership of decisions.",
+  "Combine reflection, examples and feedback as the topic requires."
+ ]
+};
+const NONE_DESCRIPTION = 'Choose this if none of the listed options feels accurate. You can describe your own situation below.';
+
 let answers = {};
 let current = 0;
 let completedRef = '';
