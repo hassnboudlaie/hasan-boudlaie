@@ -54,7 +54,7 @@ function load(){
  try{const s=JSON.parse(localStorage.getItem(SUBMITTED)||'null');if(s && s.ref)completedRef=s.ref;}catch(_){}
 }
 function save(manual){
- try{localStorage.setItem(STORAGE,JSON.stringify({answers,version:1,savedAt:new Date().toISOString()}));byId('saveState').textContent=manual?'Draft saved on this device':'Saved on this device';}
+ try{localStorage.setItem(STORAGE,JSON.stringify({answers,version:3,savedAt:new Date().toISOString()}));byId('saveState').textContent=manual?'Draft saved on this device':'Saved on this device';}
  catch(_){byId('saveState').textContent='Storage unavailable — download a backup';}
 }
 function countAnswered(s){return s.questions.filter(x=>hasAnswer(answers[x.id])).length;}
@@ -148,7 +148,7 @@ async function send(){
  if(!INVITE){showError('This page was opened without its individual invitation link. Please ask your mentor for the full link. You can still download your answers.');return;}
  if(!window.confirm('Submit your responses privately now? The invitation accepts one completed submission.'))return;
  const btn=byId('nextBtn');btn.disabled=true;btn.textContent='Submitting…';
- const response={schema_version:1,questionnaire:'doctoral_academic_career_2026',consent:true,submitted_client_at:new Date().toISOString(),answers:answers};
+ const response={schema_version:3,questionnaire:'doctoral_academic_career_2026',consent:true,submitted_client_at:new Date().toISOString(),answers:answers};
  try{
   const res=await fetch(API_URL,{method:'POST',headers:{apikey:API_KEY,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({p_access_code:INVITE,p_response:response})});
   const body=await res.json().catch(()=>({}));
@@ -198,7 +198,7 @@ function attachEvents(){
   if(id==='backBtn'&&current>0){current--;render();byId('content').scrollIntoView({behavior:'smooth'});}
   if(id==='saveBtn')save(true);
   if(id==='downloadTxt')download('doctoral-career-mentoring-responses.txt',plainText(),'text/plain;charset=utf-8');
-  if(id==='downloadJson')download('doctoral-career-mentoring-backup.json',JSON.stringify({version:1,answers},null,2),'application/json;charset=utf-8');
+  if(id==='downloadJson')download('doctoral-career-mentoring-backup.json',JSON.stringify({version:3,answers},null,2),'application/json;charset=utf-8');
   if(id==='copyTxt'){navigator.clipboard.writeText(plainText()).then(()=>{e.target.textContent='Copied';}).catch(()=>{showError('Copy not available in this browser. Use Download a readable copy instead.');});}
  });
 }
