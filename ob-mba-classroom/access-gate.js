@@ -57,7 +57,7 @@ function present(){
   +'<button class="entrance-secondary" data-entrance="reset" type="button">تغییر دستگاه یا حساب</button>';
  }else if(view==="returning"){
   inner='<h2>ورود دانشجوی تأییدشده</h2><p class="entrance-hint">پس از تأیید اولیه، می‌توانید بدون درخواست مجدد مدرس از دستگاه دیگری وارد شوید.</p>'+
-   '<form id="entranceReturning" class="entrance-form"><label for="returningNumber">شماره دانشجویی</label><input id="returningNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" autocomplete="username" required placeholder="شماره دانشجویی">'+
+   '<form id="entranceReturning" class="entrance-form"><label for="returningNumber">شماره دانشجویی</label><input id="returningNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" autocomplete="username" required value="'+enc(prefilledStudentNumber)+'" placeholder="شماره دانشجویی">'+
    '<label for="returningPassword">رمز شخصی</label><input id="returningPassword" name="password" type="password" minlength="12" maxlength="128" autocomplete="current-password" required placeholder="رمزی که قبلاً برای خودتان تعیین کردید">'+
    '<button class="entrance-primary" type="submit">ورود به کلاس بدون تأیید مجدد</button></form>'+
    '<button type="button" class="entrance-secondary" data-entrance="returnBack">بازگشت به ورود اولیه</button>'+
