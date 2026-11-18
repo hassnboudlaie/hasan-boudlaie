@@ -1,0 +1,19 @@
+name = "saba-leadership-coach-pilot"
+main = "src/index.mjs"
+compatibility_date = "2026-11-18"
+workers_dev = true
+
+# AI binding: no external OpenAI/Gemini API key or paid subscription required for the free pilot.
+[ai]
+binding = "AI"
+
+# Replace this ID after creating a dedicated database in YOUR Cloudflare account.
+# Do not deploy with the placeholder ID.
+[[d1_databases]]
+binding = "DB"
+database_name = "saba-leadership-coach-pilot"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# Avoid application-level capture of prompts, responses and bearer tokens.
+[observability]
+enabled = false
