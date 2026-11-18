@@ -12,11 +12,16 @@ const names={home:"خانه",course:"مسیر یادگیری",session:"جلسه 
 const methods={guide:"توضیح گام‌به‌گام",review:"بازخورد بر نوشته من",reflect:"پرسش بازاندیشی",next:"اقدام بعدی",ask:"گفت‌وگوی آزاد"};
 let history=[],inFlight=false,previousFocus=null,session=null;
 function config(){
- const c=window.SABA_AI_CONFIG||{};if(!c.endpoint||!c.publishableKey)return null;
+ const c=window.SABA_AI_CONFIG||{};if(!c.endpoint)return null;
  try{
   const u=new URL(c.endpoint);
-  if(u.protocol!=="https:"||!u.hostname.endsWith(".supabase.co")||!u.pathname.endsWith("/functions/v1/leadership-coach"))return null;
-  return {endpoint:u.toString(),base:u.origin,key:c.publishableKey};
+  if(u.protocol!=="https:")return null;
+  if(c.provider==="cloudflare"){
+   if(!u.hostname.endsWith(".workers.dev")||u.pathname!=="/v1/coach"||u.search||u.hash)return null;
+   return {provider:"cloudflare",endpoint:u.toString(),base:u.origin,key:""};
+  }
+  if(!c.publishableKey||!u.hostname.endsWith(".supabase.co")||!u.pathname.endsWith("/functions/v1/leadership-coach"))return null;
+  return {provider:"supabase",endpoint:u.toString(),base:u.origin,key:c.publishableKey};
  }catch(e){return null}
 }
 function readSession(){
@@ -26,13 +31,30 @@ function setSession(s){session=s;try{if(s)sessionStorage.setItem("saba_ai_sessio
 function status(){
  const el=$("sabaAiStatus"),auth=$("sabaAiAuth");
  if(!el)return;
- const live=!!config(),logged=!!session;
+ const cfg=config(),live=!!cfg,logged=!!session;
  el.textContent=!live?"راهنمای آموزشی · AI هنوز متصل نیست":logged?"Live AI آماده درخواست":"Live AI · ورود سازمانی لازم است";
  if(auth)auth.hidden=!live||logged;
+ const pilot=$("sabaAiPilotAuth"),old=$("sabaAiSupabaseAuth");
+ if(pilot)pilot.hidden=!live||cfg.provider!=="cloudflare";
+ if(old)old.hidden=!live||cfg.provider!=="supabase";
  const logout=$("sabaAiLogout");if(logout)logout.hidden=!live||!logged;
 }
 async function signIn(){
  const c=config();if(!c)return;
+ if(c.provider==="cloudflare"){
+  const code=trim($("sabaAiPilotCode").value,80).toLowerCase();
+  if(!/^snp_[a-f0-9]{64}$/.test(code)){show("کد اختصاصی Pilot معتبر نیست. کد دعوت‌شده را کامل وارد کنید.","system");return}
+  $("sabaAiSignIn").disabled=true;
+  try{
+   const resp=await fetch(c.base+"/v1/session",{method:"GET",headers:{"Authorization":"Bearer "+code},mode:"cors",credentials:"omit",cache:"no-store"});
+   if(!resp.ok)throw new Error("invalid_access");
+   setSession({provider:"cloudflare",access_token:code,expires_at:Date.now()+7*24*3600*1000});
+   $("sabaAiPilotCode").value="";
+   show("دسترسی Pilot تأیید شد. با رضایت صریح شما، پرسش و متن تمرین به مدل Cloudflare Workers AI ارسال می‌شود.","system");
+  }catch(e){show("کد دسترسی رد شد، منقضی شده یا Backend در دسترس نیست.","system")}
+  finally{$("sabaAiSignIn").disabled=false}
+  return;
+ }
  const email=trim($("sabaAiEmail").value,160),password=$("sabaAiPassword").value;
  if(!/^\S+@\S+\.\S+$/.test(email)||password.length<8){show("لطفاً ایمیل معتبر و رمز عبور حساب دعوت‌شده سازمانی را وارد کنید.","system");return;}
  $("sabaAiSignIn").disabled=true;
@@ -46,6 +68,10 @@ async function signIn(){
 }
 async function getAccessToken(){
  if(!session)session=readSession();if(!session)return null;
+ if(session.provider==="cloudflare"){
+  if(Date.now()<Number(session.expires_at||0))return session.access_token;
+  setSession(null);return null;
+ }
  if(Date.now()<Number(session.expires_at||0)-90000)return session.access_token;
  const c=config();if(!c||!session.refresh_token){setSession(null);return null}
  try{
@@ -147,7 +173,9 @@ async function run(mode){
  const token=await getAccessToken();if(!token){show("ابتدا از قسمت ورود سازمانی وارد شوید. بدون ورود، متن به بیرون ارسال نمی‌شود.","system");return}
  inFlight=true;$("sabaAiSend").disabled=true;const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),35000);
  try{
-  const r=await fetch(cfg.endpoint,{method:"POST",mode:"cors",credentials:"omit",headers:{"Authorization":"Bearer "+token,"apikey":cfg.key,"Content-Type":"application/json"},body:JSON.stringify({mode,question,draft,context:c,history:history.slice(-4),consent:true}),signal:ctl.signal});
+  const h={"Authorization":"Bearer "+token,"Content-Type":"application/json"};
+  if(cfg.provider==="supabase")h.apikey=cfg.key;
+  const r=await fetch(cfg.endpoint,{method:"POST",mode:"cors",credentials:"omit",headers:h,body:JSON.stringify({mode,question,draft,context:c,history:history.slice(-4),consent:true}),signal:ctl.signal});
   const data=await r.json().catch(()=>({}));
   if(!r.ok||typeof data.answer!=="string")throw new Error(String(data.error||"connection_failure"));
   const answer=trim(data.answer,5500);show(answer+"\n\nبازخورد AI یک ابزار توسعه‌ای است، نه ارزیابی رسمی عملکرد یا حکم قطعی روش‌شناختی.","coach");
@@ -175,9 +203,10 @@ function boot(){
  <label class="saba-ai-consent"><input id="sabaAiConsent" type="checkbox"> فقط با درخواست من، متن و بافت آموزشی همین مرحله برای پردازش AI ارسال شود.</label>
  <button type="button" id="sabaAiSend" class="saba-ai-primary">ارسال پرسش / راهنمای محلی</button>
  <section id="sabaAiAuth" class="saba-ai-auth" aria-label="ورود سازمانی" hidden><details><summary>ورود به Live AI سازمانی</summary>
- <label for="sabaAiEmail">ایمیل حساب دعوت‌شده</label><input id="sabaAiEmail" type="email" autocomplete="email" placeholder="name@organization.com">
- <label for="sabaAiPassword">رمز عبور</label><input id="sabaAiPassword" type="password" autocomplete="current-password" placeholder="رمز حساب سازمانی">
- <button type="button" id="sabaAiSignIn">ورود امن</button><small>حساب‌ها باید توسط مدیر سامانه تأیید شوند. رمز فقط برای Supabase Auth فرستاده می‌شود.</small></details></section>
+ <div id="sabaAiPilotAuth" hidden><label for="sabaAiPilotCode">کد اختصاصی شرکت‌کننده Pilot</label><input id="sabaAiPilotCode" type="password" autocomplete="off" spellcheck="false" maxlength="80" placeholder="snp_…"><small>کد شخصی، موقت و قابل ابطال است. به دیگران ندهید؛ فقط Hash آن در پایگاه داده نگهداری می‌شود.</small></div>
+ <div id="sabaAiSupabaseAuth" hidden><label for="sabaAiEmail">ایمیل حساب دعوت‌شده</label><input id="sabaAiEmail" type="email" autocomplete="email" placeholder="name@organization.com">
+ <label for="sabaAiPassword">رمز عبور</label><input id="sabaAiPassword" type="password" autocomplete="current-password" placeholder="رمز حساب سازمانی"><small>ورود سازمانی؛ رمز فقط برای Supabase Auth فرستاده می‌شود.</small></div>
+ <button type="button" id="sabaAiSignIn">تأیید دسترسی امن</button></details></section>
  <button type="button" id="sabaAiLogout" class="saba-ai-logout" hidden>خروج از حساب AI</button>
  <p class="saba-ai-warning">اطلاعات محرمانه اشخاص، قراردادها، پروژه‌ها و داده‌های حساس را وارد نکنید. راهنمای محلی بدون ارسال داده کار می‌کند.</p>
  </aside>`;
@@ -187,7 +216,7 @@ function boot(){
  $("sabaAiSend").addEventListener("click",()=>run("ask"));
  root.querySelectorAll("[data-saba-mode]").forEach(b=>b.addEventListener("click",()=>run(b.dataset.sabaMode)));
  $("sabaAiSignIn").addEventListener("click",signIn);
- $("sabaAiLogout").addEventListener("click",()=>{setSession(null);show("از حساب AI خارج شدید.","system")});
+ $("sabaAiLogout").addEventListener("click",()=>{setSession(null);history=[];show("از حساب AI خارج شدید.","system")});
  window.addEventListener("hashchange",()=>{updateContext();history=[]});
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sabaAiPanel").hidden)close()});
  document.addEventListener("click",e=>{const b=e.target.closest("#cj-ask-ai");if(b&&b.disabled&&config()){e.preventDefault();open()}});

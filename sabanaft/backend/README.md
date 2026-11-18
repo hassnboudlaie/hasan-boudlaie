@@ -1,3 +1,11 @@
+# Saba Naft — AI Coach Backend Selection
+
+**Preferred Free Pilot (Cloudflare):** See [Cloudflare Workers AI + D1 deployment and security runbook](cloudflare/README.md). That path needs no OpenAI API key and leaves all existing Supabase projects untouched. The same original GitHub Pages app is used. The public endpoint remains deliberately BLANK until a real Worker is deployed and E2E-tested.
+
+**Alternative future Supabase backend:** The archived instructions below describe the original isolated Supabase + OpenAI path; they are not the chosen pilot and have NOT been deployed. No old Supabase projects have been migrated or deleted.
+
+---
+
 # صبا نفت — Live Leadership AI Coach (secure activation)
 
 **Status: source ready / NOT DEPLOYED.** The sole canonical production app remains
