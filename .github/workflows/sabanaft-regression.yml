@@ -34,6 +34,9 @@ jobs:
           node --check sabanaft/app/ai-config.js
           node --check sabanaft/app/leadership-ai-coach.js
           node --check sabanaft/verify-ai-companion.cjs
+          node --check sabanaft/backend/cloudflare/src/index.mjs
+          node --check sabanaft/backend/cloudflare/scripts/issue-pilot-code.mjs
+          node --check sabanaft/verify-cloudflare-coach.cjs
           node --check sabanaft/app/leadership-journey-core.js
           node --check sabanaft/app/leadership-journey-content.js
           node --check sabanaft/app/leadership-journey.js
@@ -53,5 +56,6 @@ jobs:
           node sabanaft/verify-drilldown.cjs
           node sabanaft/verify-coaching.cjs
           node sabanaft/verify-ai-companion.cjs
+          node sabanaft/verify-cloudflare-coach.cjs
           node sabanaft/verify-leadership-journey.cjs
           node sabanaft/verify-leadership-awards.cjs
