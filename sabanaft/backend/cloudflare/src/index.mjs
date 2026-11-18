@@ -149,7 +149,8 @@ export default {
    try {
     generated = await env.AI.run(MODEL, {
      messages:[{role:"system", content:POLICY}, {role:"user", content:payload}],
-     max_completion_tokens:720, temperature:0.4, stream:false, store:false
+     max_completion_tokens:720, temperature:0.4, stream:false, store:false,
+     chat_template_kwargs:{enable_thinking:false}
     });
    } catch {
     return json({error:"model_temporarily_unavailable"}, 503, origin);
