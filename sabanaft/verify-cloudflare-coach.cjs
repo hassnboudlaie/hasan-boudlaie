@@ -19,7 +19,7 @@ const ORIGIN="https://hassnboudlaie.github.io";
    return {bind(...values){
     return {async first(){
      if(sql.includes("FROM pilot_access")) {
-      assert.equal(values[0],hash);
+      if(values[0]!==hash)return null;
       return active ? {user_id:"pilot-manager-1",display_name:"مدیر آزمایشی",expires_at:expired?"2025-01-01T00:00:00Z":"2030-01-01T00:00:00Z"} : null;
      }
      if(sql.includes("INSERT INTO coach_quota")) {
@@ -35,6 +35,7 @@ const ORIGIN="https://hassnboudlaie.github.io";
  const env={DB:db,AI:{async run(model, data){
   assert.equal(model,"@cf/google/gemma-4-26b-a4b-it");
   assert.equal(data.store,false);
+  assert.equal(data.chat_template_kwargs.enable_thinking,false);
   assert.ok(data.messages[0].content.includes("competitive_locked"));
   assert.equal(data.messages[0].role,"system");
   modelCalls++;lastModel=data;
@@ -50,7 +51,7 @@ const ORIGIN="https://hassnboudlaie.github.io";
  assert.equal((await send(request("GET","/health"))).status,200);
  assert.equal((await send(request("OPTIONS","/v1/coach",null,"https://evil.example"))).status,403);
  assert.equal((await send(request("GET","/v1/session"))).status,401);
- assert.equal((await send(request("GET","/v1/session","snp_"+ "cc".repeat(32)))).status,503,"mock lookup rejects mismatched code");
+ assert.equal((await send(request("GET","/v1/session","snp_"+ "cc".repeat(32)))).status,401,"unknown code must be denied");
  assert.equal((await send(request("GET","/v1/session",accessCode,"https://evil.example"))).status,403);
  assert.equal((await send(request("GET","/v1/session",accessCode))).status,200);
  active=0;assert.equal((await send(request("GET","/v1/session",accessCode))).status,401);active=1;
