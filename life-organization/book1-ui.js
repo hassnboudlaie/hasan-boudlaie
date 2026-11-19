@@ -49,6 +49,10 @@ const BOOK_FIELDS=[
   ["review","زمان بازبینی","Review date or time","زمانی واقع‌بینانه برای مراجعه دوباره تعیین کنید.","Set a realistic point to review the evidence."]
  ]
 ];
+/* Chapter-specific authorial workbooks: learning tools, not validated assessments. */
+BOOK_FIELDS.push(...[[["situation","موضوع، روش و بازه","Method and period","یک روش و شرط واقعی را نام ببرید.","Describe one real method and condition."],["assumption","فرض و ارزش پشت آن","Assumption and underlying value","فرض خود را دقیق بیان کنید.","State the assumption precisely."],["event","رویداد و شاهد مشخص","Actual event and evidence","مشاهده را از برداشت جدا کنید.","Separate observation from interpretation."],["stability","ثبات یا چابکی همان روش","Stability or agility of the method","چه چیزی حفظ یا تغییر کرده است؟","What remained or changed?"],["formality","قاعده قبلی یا هماهنگی موقعیتی","Prior rule or situational coordination","توافق مکتوب، شفاهی یا فرض شخصی؟","Written, verbal or assumed?"],["counterevidence","مثال نقض یا توضیح رقیب","Counterexample or alternative","کدام برداشت هنوز قطعی نیست؟","What interpretation remains uncertain?"],["preserve","نقطه قوت قابل حفظ","Strength to preserve","چه چیزی را نمی‌خواهید از دست بدهید؟","What deserves preservation?"],["stance","موضع اولیه و پرسش باز","Provisional stance and question","اطمینان یا ابهام را صادقانه ثبت کنید.","Acknowledge uncertainty."]],[["scope","حوزه، بازه و شرایط","Area, period and conditions","موضوع فصل سوم را مرور کنید.","Reuse a topic from Chapter 3."],["criterion","معیار نتیجه و موفقیت","Success criterion","قرار بود چه نتیجه‌ای حاصل شود؟","What outcome was expected?"],["outcomeEvidence","نتیجه و شاهد واقعی","Outcome evidence","از معیار خود شاهد بیاورید.","Document an observable result."],["experience","تجربه شادی همان بازه","Happiness experience","دو یا سه تجربه واقعی بنویسید.","Recall two or three experiences."],["contrast","تجربه متفاوت یا مختلط","Contrasting experience","تفاوت‌ها را پنهان نکنید.","Include mixed experiences."],["current","دلیل جایگاه فعلی","Current position and rationale","دو محور را جدا توضیح دهید.","Explain both axes."],["suitable","وضع مناسب و آنچه حفظ می‌شود","Suitable position and strengths","با ظرفیت و تعهدهای واقعی بسنجید.","Respect actual capacity."],["gap","فاصله فعلی تا مناسب","Current-to-suitable gap","شکاف را با ارزش خود اشتباه نگیرید.","Avoid self-judgment."],["unknown","شاهد کم و پرسش باز","Missing evidence and question","چه چیزی هنوز مبهم است؟","What is still unknown?"]],[["scope","حوزه و بازه مشترک","Comparable scope and period","از موضوع فصل پنجم شروع کنید.","Connect to Chapter 5."],["event1","موقعیت اول و نخستین عمل","Situation one and first action","چه رخ داد و اول چه کردید؟","Record what actually happened."],["evidence1","شاهد رفتار اول","Evidence for situation one","رفتار مشاهده‌شده را بنویسید.","Describe observable behavior."],["event2","موقعیت دوم و نخستین عمل","Situation two and first action","موقعیت مشابه انتخاب کنید.","Choose a comparable context."],["evidence2","شاهد رفتار دوم","Evidence for situation two","رفتار دوم را مشخص کنید.","Describe the second observed action."],["pace","آهنگ رفتار و شاهد","Pace/directness evidence","صریح یا سنجیده؛ یا ترکیبی؟","Direct, measured, or mixed?"],["orientation","جهت تعامل و شاهد","Interaction orientation evidence","پرسشگر یا پذیرا؛ یا ترکیبی؟","Questioning, accepting, or mixed?"],["pattern","الگوی مشروط رفتاری","Conditional pattern","وقتی ... معمولاً ...","When ... I usually ..."],["counter","استثنا یا توضیح رقیب","Exception or alternative","یک مورد متفاوت را ببینید.","Identify a counterexample."],["suitable","رفتار مناسب در همین وضعیت","Suitable behavior in context","چه رفتار را حفظ یا تعدیل می‌کنید؟","Preserve, add or adapt a behavior."],["unknown","سؤال باز یا کمبود شاهد","Open question","مشاهده ناکافی را به تیپ قطعی تبدیل نکنید.","Do not overinfer from limited evidence."]]]);
+const WORKSHEET_TITLES_FA=["نمای فوری سازمان زندگی من","معیارهای اولیه زندگی من","برگه وضع موجود و وضع مناسب","فرض‌ها و منطق اداره زندگی","نقشه شادی و موفقیت من","دو موقعیت و یک الگوی رفتاری"];
+const WORKSHEET_TITLES_EN=["My Life Organization Snapshot","My Initial Fit Criteria","Current and Suitable States","Assumptions and Ways of Organizing","My Happiness–Success Map","Two Situations and One Behavior Pattern"];
 let state=readState();
 function readState(){
  try{
@@ -75,7 +79,7 @@ function parse(n){
  const lines=book.sourceText.split(/\r?\n/);
  const parts=[{heading:"آغاز فصل",type:"intro",lines:[]}];
  for(const line of lines.slice(2)){
-  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم)|ابزار فصل|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(line)){
+  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم|ششم)|ابزار فصل|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(line)){
    const kind=line.startsWith("گفتار ")?"talk":line.startsWith("ابزار فصل")?"original-tool":line.startsWith("پایان فصل")?"ending":line.startsWith("یادداشت‌ها")?"references":"part-end";
    parts.push({heading:line,type:kind,lines:[]});
   }else parts[parts.length-1].lines.push(line);
@@ -91,7 +95,7 @@ function totalTalks(n){return talks(n).length}
 function question(n){
  const x=SOURCE.chapters[n-1].sourceText.split("\n");
  const i=x.indexOf("سؤال بزرگ فصل");
- return i>=0?x[i+1]:"";
+ return i>=0?x[i+1]:(SOURCE.chapters[n-1].leadQuestion||"");
 }
 function formatLine(s){
  const x=s.trim();
@@ -125,7 +129,10 @@ function landing(lang){
   const descriptions=[
    T(lang,"دیدن اجزا، نقش‌ها، منابع و الگوهای واقعی زندگی","Observe roles, resources and the actual patterns of your life"),
    T(lang,"معیارهای متناسب با خود را از نتایج ظاهری جدا کنیم","Clarify criteria that fit you, beyond apparent results"),
-   T(lang,"توصیف شاهددار وضع موجود، وضع مناسب و فاصله آنها","Compare present and suitable states using evidence")
+   T(lang,"توصیف شاهددار وضع موجود، وضع مناسب و فاصله آنها","Compare present and suitable states using evidence"),
+   T(lang,"ثبت فرض و جایگاه ثبات/چابکی و قواعد","Explore assumptions, agility and formality"),
+   T(lang,"نقشه شادی و موفقیت یک حوزه مشخص","Map happiness and success in one context"),
+   T(lang,"دو موقعیت و الگوی رفتار مبتنی بر DiSC","Observe two situations with the DiSC axes")
   ];
   return '<article class="lb-chapter-tile"><div class="lb-tile-top"><span class="lb-chapter-number">'+cnum(n)+'</span><span class="lb-tile-status">'+progressText(n,lang)+'</span></div>'+
    '<h3>'+E(T(lang,ch.title,ch.englishTitle))+'</h3><p>'+descriptions[i]+'</p>'+
@@ -137,11 +144,11 @@ function landing(lang){
  '<h1>'+T(lang,"من کجای زندگی ایستاده‌ام؟","Where do I stand in my life?")+'</h1>'+
  '<p class="lb-cover-intro">'+T(lang,"بخش اول: دیدن سازمان زندگی. پیش از تغییر، یاد می‌گیریم چگونه زندگی را ببینیم، معیارهای خود را روشن کنیم و درباره فاصله‌ها با شواهد حرف بزنیم.","Part One: Seeing your life organization. Before changing it, learn to observe, define your criteria and compare states with evidence.")+'</p>'+
  '<div class="lb-cover-buttons"><button class="lb-button lb-button-light" type="button" data-route="book1/1">'+T(lang,"شروع فصل اول","Start Chapter 1")+'</button>'+
- '<button class="lb-button lb-button-outline-light" type="button" data-route="book1/workbook">'+T(lang,"دفتر کار سه فصل","Three-chapter workbook")+'</button></div></div></section>'+
+ '<button class="lb-button lb-button-outline-light" type="button" data-route="book1/workbook">'+T(lang,"دفتر کار شش فصل","Six-chapter workbook")+'</button></div></div></section>'+
  '<div class="lb-intro-statement"><span>01</span><p>'+T(lang,"ببینیم چه چیزی هست","Observe what is")+'</p><span class="lb-chevron">›</span><span>02</span><p>'+T(lang,"روشن کنیم چه چیزی مهم است","Clarify what matters")+'</p><span class="lb-chevron">›</span><span>03</span><p>'+T(lang,"شاهد و فاصله را مقایسه کنیم","Compare evidence and gaps")+'</p></div>'+
- '<div class="lb-section-header"><div><p class="lb-eyebrow">THREE CONNECTED CHAPTERS</p><h2>'+T(lang,"مسیر مطالعه و تمرین","Your reading and practice journey")+'</h2></div><span class="lb-muted">'+T(lang,"بدون نمره‌دهی به زندگی","No life score")+'</span></div>'+
+ '<div class="lb-section-header"><div><p class="lb-eyebrow">SIX CONNECTED CHAPTERS</p><h2>'+T(lang,"مسیر مطالعه و تمرین","Your reading and practice journey")+'</h2></div><span class="lb-muted">'+T(lang,"بدون نمره‌دهی به زندگی","No life score")+'</span></div>'+
  '<div class="lb-tiles">'+content+'</div>'+
- '<section class="lb-journal-teaser"><div><h2>'+T(lang,"دفتر کار یکپارچه من","My connected workbook")+'</h2><p>'+T(lang,"خروجی‌های سه فصل به هم متصل‌اند: نمای فوری، معیارهای اولیه و برگه وضع موجود/مناسب. یادداشت‌ها فقط در همین مرورگر ذخیره می‌شوند.","Your snapshot, initial criteria and current/suitable-state sheet form one coherent workbook. Notes are stored only in this browser.")+'</p></div>'+
+ '<section class="lb-journal-teaser"><div><h2>'+T(lang,"دفتر کار یکپارچه من","My connected workbook")+'</h2><p>'+T(lang,"خروجی‌های شش فصل به هم متصل‌اند: نمای فوری، معیارهای اولیه و برگه وضع موجود/مناسب. یادداشت‌ها فقط در همین مرورگر ذخیره می‌شوند.","Your snapshot, initial criteria and current/suitable-state sheet form one coherent workbook. Notes are stored only in this browser.")+'</p></div>'+
  '<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مشاهده دفتر کار","Open workbook")+'</button></section>'+
  '<p class="lb-privacy">'+T(lang,"این نسخه ابزار تأمل آموزشی است، نه آزمون روان‌شناختی یا ارزیابی استاندارد. اطلاعات محرمانه وارد نکنید؛ ذخیره‌سازی Local و رمزنگاری‌نشده است.","These are learning and reflection tools, not validated psychometric assessments. Avoid sensitive information; local storage is unencrypted.")+'</p></div>';
 }
@@ -164,10 +171,10 @@ function chapterPage(n,lang){
     '<summary><div><span class="lb-panel-label">'+badge+'</span><h3>'+E(heading)+'</h3></div><span class="lb-expand-icon" aria-hidden="true">⌄</span></summary>'+
     '<div class="lb-panel-body" lang="fa" dir="rtl">'+original+btn+'</div></details>';
  }).join("");
- const jump=parts.filter(p=>p.type==="talk").map(p=>{const index=parts.indexOf(p);return '<button type="button" data-lb-action="jump" data-target="lb-sec-'+n+'-'+index+'">'+E(p.heading.replace(/^گفتار (اول|دوم|سوم|چهارم|پنجم)\s+/,""))+'</button>';}).join("");
- const next=n<3?'<button type="button" class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'">'+T(lang,"فصل بعدی","Next chapter")+'</button>':'<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مرور خروجی سه فصل","Review all three outputs")+'</button>';
+ const jump=parts.filter(p=>p.type==="talk").map(p=>{const index=parts.indexOf(p);return '<button type="button" data-lb-action="jump" data-target="lb-sec-'+n+'-'+index+'">'+E(p.heading.replace(/^گفتار (اول|دوم|سوم|چهارم|پنجم|ششم)\s+/,""))+'</button>';}).join("");
+ const next=n<6?'<button type="button" class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'">'+T(lang,"فصل بعدی","Next chapter")+'</button>':'<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مرور خروجی شش فصل","Review all three outputs")+'</button>';
  return '<div class="lb-root lb-reader">'+ribbon(lang,n)+masthead(lang)+
- '<section class="lb-chapter-hero"><div class="lb-hero-meta"><span>'+T(lang,"فصل "+n+" از ۳","Chapter "+n+" of 3")+'</span><span dir="ltr">BOOK ONE · PART I</span></div>'+
+ '<section class="lb-chapter-hero"><div class="lb-hero-meta"><span>'+T(lang,"فصل "+n+" از ۶","Chapter "+n+" of 6")+'</span><span dir="ltr">BOOK ONE · PART I</span></div>'+
  '<h1>'+E(T(lang,ch.title,ch.englishTitle))+'</h1><p class="lb-original-title">'+T(lang,"متن کامل نسخه نهایی فارسی","Full Persian edition")+'</p>'+
  '<div class="lb-big-question"><small>'+T(lang,"سؤال بزرگ فصل","Core chapter question")+'</small><strong lang="fa" dir="rtl">'+E(question(n))+'</strong></div>'+
  '<div class="lb-read-meta"><span data-lb-progress="'+n+'">'+progressText(n,lang)+'</span><span>'+T(lang,"مطالعه در گفتارهای قابل‌بازشدن","Expandable reading sections")+'</span></div>'+progressTrack(n)+'</section>'+
@@ -179,8 +186,8 @@ function chapterPage(n,lang){
  '<section class="lb-reflection-prompt"><span class="lb-eyebrow">REFLECT · APPLY · LEARN</span><h2>'+T(lang,"از مطالعه به مشاهده","From reading to observation")+'</h2>'+
  '<p>'+T(lang,"قرار نیست خودتان را با دیگران مقایسه کنید. این فصل را به یک مشاهده روشن و قابل استفاده در دفتر کار تبدیل کنید.","The point is not comparison with other people. Turn the chapter into an observation you can use in your workbook.")+'</p>'+
  '<button type="button" class="lb-button lb-button-primary" data-route="book1/'+n+'/workbook">'+T(lang,"ثبت خروجی فصل "+n,"Capture Chapter "+n+" output")+'</button></section>'+
- '<div class="lb-page-bottom"><button class="lb-button lb-button-quiet" type="button" data-route="module/1">'+T(lang,"بازگشت به مسیر سه فصل","Back to chapters")+'</button>'+next+'</div>'+
- '<p class="lb-manuscript-note">'+T(lang,"منبع: Book1_Part1_FINAL_v1.0_FA. روایت‌ها و شخصیت‌ها آموزشی و فرضی‌اند. منابع علمی در انتهای هر فصل درج شده‌اند.","Source: Book1_Part1_FINAL_v1.0_FA. Characters and situations are fictional teaching examples; references are included at each chapter’s end.")+' <a href="'+E(SOURCE.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(lang,"مشاهده فایل اصلی در Google Drive","View original manuscript on Google Drive")+'</a></p></div>';
+ '<div class="lb-page-bottom"><button class="lb-button lb-button-quiet" type="button" data-route="module/1">'+T(lang,"بازگشت به مسیر شش فصل","Back to chapters")+'</button>'+next+'</div>'+
+ '<p class="lb-manuscript-note">'+T(lang,"منبع: اسناد تألیفی جلد اول. روایت‌ها و شخصیت‌ها آموزشی و فرضی‌اند. منابع علمی در انتهای هر فصل درج شده‌اند.","Source: Book One authored manuscripts. Characters and situations are fictional teaching examples; references are included at each chapter’s end.")+' <a href="'+E(ch.sourceUrl||SOURCE.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(lang,"مشاهده فایل اصلی در Google Drive","View original manuscript on Google Drive")+'</a></p></div>';
 }
 function fieldValue(n,key){
  const group=state.fields[n];
@@ -188,10 +195,10 @@ function fieldValue(n,key){
 }
 function fieldsFilled(n){return BOOK_FIELDS[n-1].filter(x=>fieldValue(n,x[0]).trim()).length}
 function worksheetPage(n,lang){
- if(!(n>=1&&n<=3))return workbookOverview(lang);
+ if(!(n>=1&&n<=6))return workbookOverview(lang);
  const ch=SOURCE.chapters[n-1],fs=BOOK_FIELDS[n-1];
  const total=fs.length;
- const title=T(lang,["نمای فوری سازمان زندگی من","معیارهای اولیه زندگی من","برگه وضع موجود و وضع مناسب"][n-1],["My Life Organization Snapshot","My Initial Fit Criteria","Current and Suitable States"][n-1]);
+ const title=T(lang,WORKSHEET_TITLES_FA[n-1],WORKSHEET_TITLES_EN[n-1]);
  const fields=fs.map((f,i)=>{
   const id="lb-input-"+n+"-"+f[0];
   return '<div class="lb-form-field '+(n===3&&["current","suitable","gap"].includes(f[0])?"lb-field-major":"")+'">'+
@@ -199,17 +206,17 @@ function worksheetPage(n,lang){
    '<p>'+E(T(lang,f[3],f[4]))+'</p>'+
    '<textarea id="'+id+'" data-lb-field="'+E(f[0])+'" data-chapter="'+n+'" rows="4" maxlength="1800" placeholder="'+E(T(lang,"مشاهده خود را بنویسید؛ «نمی‌دانم» هم یک پاسخ معتبر است.","Write your observation. Saying “I don’t know yet” is valid."))+'">'+E(fieldValue(n,f[0]))+'</textarea></div>';
  }).join("");
- const next=n<3?'<button class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'/workbook">'+T(lang,"ابزار فصل بعدی","Next worksheet")+'</button>':'<button class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"جمع‌بندی سه فصل","Review three chapters")+'</button>';
+ const next=n<6?'<button class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'/workbook">'+T(lang,"ابزار فصل بعدی","Next worksheet")+'</button>':'<button class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"جمع‌بندی شش فصل","Review three chapters")+'</button>';
  return '<div class="lb-root lb-workbook-page">'+ribbon(lang,n)+masthead(lang)+
  '<section class="lb-worksheet-hero"><div class="lb-eyebrow">'+T(lang,"WORKBOOK · فصل "+cnum(n),"WORKBOOK · CHAPTER "+cnum(n))+'</div><h1>'+title+'</h1>'+
  '<p>'+T(lang,"این یک برگه مشاهده و بازاندیشی است، نه آزمون یا نمره زندگی. پاسخ‌ها فقط در دستگاه شما ذخیره می‌شوند.","This is a learning and reflection worksheet, not a diagnostic test or life score. Answers remain on this device.")+'</p>'+
  '<div class="lb-worksheet-meta"><strong>'+T(lang,fieldsFilled(n)+" از "+total+" بخش دارای یادداشت",fieldsFilled(n)+" of "+total+" prompts filled")+'</strong><span id="lb-save-status" role="status">'+T(lang,"ذخیره محلی خودکار","Auto-saved locally")+'</span></div></section>'+
  '<div class="lb-workbook-nav"><button class="lb-button lb-button-quiet" data-route="book1/'+n+'">'+T(lang,"مطالعه متن اصلی","Read original chapter")+'</button><button class="lb-button lb-button-quiet" data-route="book1/workbook">'+T(lang,"نمای کلی دفتر کار","Workbook overview")+'</button></div>'+
  '<form class="lb-workbook-form" autocomplete="off">'+fields+'</form>'+
- '<div class="lb-workbook-actions"><button class="lb-button lb-button-quiet" type="button" data-lb-action="download-text">'+T(lang,"دریافت نسخه متنی سه فصل","Export readable workbook")+'</button>'+
+ '<div class="lb-workbook-actions"><button class="lb-button lb-button-quiet" type="button" data-lb-action="download-text">'+T(lang,"دریافت نسخه متنی شش فصل","Export readable workbook")+'</button>'+
  '<button class="lb-button lb-button-quiet" type="button" data-lb-action="download-json">'+T(lang,"پشتیبان داده‌ها JSON","Backup JSON")+'</button>'+
  '<button class="lb-button lb-button-danger" type="button" data-lb-action="clear-chapter" data-chapter="'+n+'">'+T(lang,"پاک‌کردن پاسخ‌های این فصل","Clear this chapter’s answers")+'</button></div>'+
- '<div class="lb-page-bottom"><button class="lb-button lb-button-outline" data-route="module/1">'+T(lang,"مسیر سه فصل","All three chapters")+'</button>'+next+'</div>'+
+ '<div class="lb-page-bottom"><button class="lb-button lb-button-outline" data-route="module/1">'+T(lang,"مسیر شش فصل","All three chapters")+'</button>'+next+'</div>'+
  '<p class="lb-privacy">'+T(lang,"هشدار حریم خصوصی: ذخیره‌سازی این نسخه از نوع LocalStorage و رمزنگاری‌نشده است. برای حفظ اطلاعات مهم، Export بگیرید؛ پاک‌کردن داده مرورگر می‌تواند پاسخ‌ها را حذف کند.","Privacy notice: This version uses unencrypted browser storage. Export important notes; clearing browser data can remove them.")+'</p></div>';
 }
 function workbookOverview(lang){
@@ -223,8 +230,8 @@ function workbookOverview(lang){
  }).join("");
  return '<div class="lb-root lb-summary">'+masthead(lang)+
  '<div class="lb-ribbon"><button class="lb-text-button" type="button" data-route="module/1">'+T(lang,"بازگشت به جلد اول","Back to Book One")+'</button></div>'+
- '<section class="lb-worksheet-hero"><div class="lb-eyebrow">THE CONNECTED WORKBOOK</div><h1>'+T(lang,"دفتر کار یکپارچه سه فصل","Your connected three-chapter workbook")+'</h1>'+
- '<p>'+T(lang,"سه خروجی به هم پیوسته‌اند: تصویر واقعی زندگی، معیارهای مناسب‌بودن و نخستین مقایسه وضع موجود و مناسب. جای خالی و «نمی‌دانم» هم بخشی از یادگیری‌اند.","Your snapshot, fit criteria and initial current/suitable-state comparison build on one another. Unanswered questions are part of the learning process.")+'</p></section>'+
+ '<section class="lb-worksheet-hero"><div class="lb-eyebrow">THE CONNECTED WORKBOOK</div><h1>'+T(lang,"دفتر کار یکپارچه شش فصل","Your connected six-chapter workbook")+'</h1>'+
+ '<p>'+T(lang,"شش خروجی به هم پیوسته‌اند: تصویر واقعی زندگی، معیارهای مناسب‌بودن و نخستین مقایسه وضع موجود و مناسب. جای خالی و «نمی‌دانم» هم بخشی از یادگیری‌اند.","Your snapshot, fit criteria and initial current/suitable-state comparison build on one another. Unanswered questions are part of the learning process.")+'</p></section>'+
  '<div class="lb-summary-flow"><span>'+T(lang,"مشاهده","Observe")+'</span><b>→</b><span>'+T(lang,"معیار","Criteria")+'</span><b>→</b><span>'+T(lang,"مقایسه","Compare")+'</span></div>'+
  '<div class="lb-summary-grid">'+tiles+'</div>'+
  '<section class="lb-download-card"><div><h2>'+T(lang,"پشتیبان و خروجی شخصی","Back up and export your work")+'</h2><p>'+T(lang,"خروجی متنی قابل مطالعه یا فایل JSON قابل بازیابی دریافت کنید. هیچ داده‌ای به سرور ارسال نمی‌شود.","Download a readable text report or JSON backup. No data is transmitted to a server.")+'</p></div>'+
@@ -234,7 +241,7 @@ function workbookOverview(lang){
 }
 function homeFeature(lang){
  return '<section class="lb-home-feature"><div class="lb-home-emblem" aria-hidden="true">01</div><div><p class="lb-eyebrow">BOOK ONE · AVAILABLE NOW</p>'+
- '<h2>'+T(lang,"سه فصل اول، آماده مطالعه و تمرین","Three chapters ready to read and practice")+'</h2><p>'+T(lang,"متن کامل نسخه نهایی، روایت‌ها، منابع علمی و سه ابزار متصل در Workbook.","Full source text, narratives, references and a connected three-part workbook.")+'</p></div>'+
+ '<h2>'+T(lang,"شش فصل اول، آماده مطالعه و تمرین","Six authored chapters ready to read and practice")+'</h2><p>'+T(lang,"متن کامل نسخه نهایی، روایت‌ها، منابع علمی و شش ابزار متصل در Workbook.","Full source text, narratives, references and a connected six-part workbook.")+'</p></div>'+
  '<button class="lb-button lb-button-primary" type="button" data-route="module/1">'+T(lang,"ورود به جلد اول","Open Book One")+'</button></section>';
 }
 function download(filename,text,kind){
@@ -266,7 +273,7 @@ document.addEventListener("input",function(e){
  const field=e.target.closest("[data-lb-field]");
  if(!field)return;
  const n=Number(field.dataset.chapter),key=field.dataset.lbField;
- if(!(n>=1&&n<=3)||!BOOK_FIELDS[n-1].some(f=>f[0]===key))return;
+ if(!(n>=1&&n<=6)||!BOOK_FIELDS[n-1].some(f=>f[0]===key))return;
  if(!state.fields[n]||typeof state.fields[n]!=="object")state.fields[n]={};
  state.fields[n][key]=field.value.slice(0,1800);
  const status=document.getElementById("lb-save-status");
@@ -279,7 +286,7 @@ document.addEventListener("click",function(e){
  const action=el.dataset.lbAction;
  if(action==="mark"){
   const n=Number(el.dataset.chapter),i=Number(el.dataset.section);
-  if(!(n>=1&&n<=3)||!parse(n)[i]||parse(n)[i].type!=="talk")return;
+  if(!(n>=1&&n<=6)||!parse(n)[i]||parse(n)[i].type!=="talk")return;
   const key=n+"-"+i;state.checked[key]=!state.checked[key];persist();
   const yes=!!state.checked[key],lang=document.documentElement.lang;
   el.classList.toggle("is-done",yes);el.setAttribute("aria-pressed",String(yes));
@@ -294,7 +301,7 @@ document.addEventListener("click",function(e){
  if(action==="download-text")downloadText();
  if(action==="clear-chapter"){
   const n=Number(el.dataset.chapter);
-  if(n>=1&&n<=3&&confirm(T(document.documentElement.lang,"پاسخ‌های این فصل از این مرورگر پاک شوند؟","Delete this chapter’s answers from this browser?"))){
+  if(n>=1&&n<=6&&confirm(T(document.documentElement.lang,"پاسخ‌های این فصل از این مرورگر پاک شوند؟","Delete this chapter’s answers from this browser?"))){
    delete state.fields[n];persist();window.dispatchEvent(new HashChangeEvent("hashchange"));
   }
  }
