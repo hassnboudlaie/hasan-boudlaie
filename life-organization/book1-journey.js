@@ -21,6 +21,11 @@ const BADGES=[
  {id:"evidence",chapter:3,fa:"کاوشگر شواهد",en:"EVIDENCE EXPLORER",accent:"#9cb3f5",symbol:"✧",tag:"EVIDENCE"},
  {id:"foundation",chapter:0,fa:"معمار شناخت زندگی",en:"FOUNDATION BUILDER",accent:"#f3d08c",symbol:"✺",tag:"THE FOUNDATION"}
 ];
+BADGES.push(
+ {id:"philosophy",chapter:4,fa:"کاوشگر فرض‌ها",en:"ASSUMPTION EXPLORER",accent:"#baadff",tag:"ASSUMPTIONS"},
+ {id:"happiness",chapter:5,fa:"نقشه‌نگار سعادت",en:"HAPPINESS MAPPER",accent:"#f3c581",tag:"HAPPINESS"},
+ {id:"behavior",chapter:6,fa:"ناظر رفتار خود",en:"BEHAVIOR OBSERVER",accent:"#7fc8eb",tag:"BEHAVIOR"}
+);
 const COACH={
  1:[
   ["پیش از هر تغییر، چه چیزی را می‌خواهی دقیق‌تر ببینی؟","Before making changes, what do you want to observe more clearly?"],
@@ -54,6 +59,7 @@ const COACH={
   ["برای ادامه، معیارهایی را که پشت انتخاب‌هایت هستند بررسی کن.","Next, explore the assumptions behind your choices."]
  ]
 };
+Object.assign(COACH,{"4":[["کدام فرض پشت این انتخاب پنهان است؟","What assumption sits behind this choice?"],["چه ارزش یا دغدغه‌ای از این روش محافظت می‌کند؟","What value does this method protect?"],["کدام قسمت را مشاهده کرده‌ای و کدام را صرفاً تعبیر می‌کنی؟","What did you observe, and what are you interpreting?"],["در این موقعیت چه چیزی حفظ شد و چه چیزی تغییر کرد؟","What stayed stable, and what was adapted?"],["کدام توافق واقعی است و کدام فقط انتظار خودت؟","Which agreement is real and which only assumed?"],["کدام فرض را می‌توانی با یک مثال نقض بیازمایی؟","Which assumption could a counterexample challenge?"],["چه قوتی را حتی با بازنگری روش می‌خواهی نگه داری؟","What strength is worth preserving?"],["اگر هنوز نمی‌دانی، چه شاهدی ممکن است کمک کند؟","What evidence would clarify an uncertainty?"]],"5":[["در کدام حوزه و بازه می‌خواهی شادی و موفقیت را جدا بررسی کنی؟","What area and period will you examine?"],["چه نتیجه‌ای را واقعاً موفقیت حساب می‌کنی؟","What result would count as success?"],["چگونه بین نتیجه و تجربه زیسته تمایز می‌گذاری؟","How do you separate outcomes from lived experience?"],["چه چیزی از چهار روایت با تجربه تو همخوانی دارد؟","What do you recognize in these four stories?"],["در همان بازه چه شواهدی از هر دو محور داری؟","What evidence do you have for both dimensions?"],["وضع مناسب برای همین شرایط چیست و چه چیزی را حفظ می‌کنی؟","What is suitable in these circumstances, and what will you preserve?"],["کدام مجهول را پیش از قضاوت روشن می‌کنی؟","What remains unknown before drawing a conclusion?"]],"6":[["در یک موقعیت واقعی، اولین عمل مشاهده‌شده تو چه بود؟","What was your first observable action?"],["آهنگ و صراحت رفتارت چگونه بود؟","How would you describe your pace and directness?"],["در تعامل، بیشتر معیار را پرسیدی یا همراهی را ساختی؟","Did you first probe criteria or invite collaboration?"],["کدام یک از روایت‌های چهار شخصیت به یک رفتار مشخص اشاره دارد؟","Which of the four stories describes an observable response?"],["آیا دو موقعیت قابل مقایسه را ثبت کرده‌ای؟","Have you captured two comparable situations?"],["کدام رفتار در این وضعیت مناسب است، نه برای همیشه؟","What behavior fits this particular situation?"],["چه چیزی الگوی اولیه تو را به چالش می‌کشد؟","What counterexample challenges your early interpretation?"],["نقشه رفتار، برچسب هویت یا آزمون رسمی DiSC نیست.","A behavior map is not a fixed identity or an official DiSC assessment."]]});
 const FOLLOW=[
  ["دیدن رابطه میان اجزا، پایه تحلیل بهتر است. چه چیزی از قبل برایت روشن‌تر شد؟","Noticing connections sets a foundation for better analysis. What has become clearer?"],
  ["مهم‌ترین معیار، معیاری است که با شرایط تو تناسب داشته باشد. چه چیزی را می‌خواهی بیشتر بررسی کنی؟","A useful criterion fits your circumstances. What deserves closer examination?"],
@@ -92,7 +98,7 @@ function parse(n){
  if(!ch)return [];
  const groups=[{type:"intro",title:"آغاز فصل",lines:[]}];
  for(const row of ch.sourceText.split(/\r?\n/).slice(2)){
-  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم)|ابزار فصل|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(row)){
+  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم|ششم)|ابزار فصل|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(row)){
    const type=row.startsWith("گفتار ")?"talk":row.startsWith("ابزار فصل")?"tool":row.startsWith("پایان فصل")?"ending":row.startsWith("یادداشت‌ها")?"reference":"partend";
    groups.push({type,title:row,lines:[]});
   }else groups[groups.length-1].lines.push(row);
@@ -120,7 +126,7 @@ function talkTotal(n){return parse(n).filter(s=>s.type==="talk").length}
 function awards(){
  let xp=0,coins=0;
  for(const a of Object.values(game.claimed)){if(a&&typeof a==="object"){xp+=a.xp||0;coins+=a.coins||0}}
- return {xp,coins,reads:[1,2,3].reduce((s,n)=>s+ownedReading(n),0),practices:[1,2,3].filter(n=>game.practice[n]).length};
+ return {xp,coins,reads:[1,2,3,4,5,6].reduce((s,n)=>s+ownedReading(n),0),practices:[1,2,3,4,5,6].filter(n=>game.practice[n]).length};
 }
 function badgeUnlocked(id){
  if(id==="foundation")return [1,2,3].every(n=>ownedReading(n)===talkTotal(n)&&!!game.practice[n]);
@@ -131,14 +137,14 @@ function sync(){
  const prior=auditProgress();let change=false;
  for(const [key,done] of Object.entries(prior)){
   if(!done)continue;
-  const m=/^([1-3])-([0-9]+)$/.exec(key);
+  const m=/^([1-6])-([0-9]+)$/.exec(key);
   if(!m)continue;
   const n=Number(m[1]),i=Number(m[2]);
   if(parse(n)[i]?.type!=="talk")continue;
   const k="read:"+key;
   if(!game.claimed[k]){game.claimed[k]={...READING,at:new Date().toISOString()};change=true}
  }
- for(let n=1;n<=3;n++)if(game.practice[n]&&!game.claimed["practice:"+n]){
+ for(let n=1;n<=6;n++)if(game.practice[n]&&!game.claimed["practice:"+n]){
   game.claimed["practice:"+n]={...PRACTICE,at:new Date().toISOString()};change=true;
  }
  if(change)persist();
@@ -153,7 +159,7 @@ function bank(l,compact=false){
 }
 function stageLabel(s,n,l){
  if(s.type==="intro")return T(l,"شروع و هدف فصل","Chapter opening");
- if(s.type==="talk")return s.title.replace(/^گفتار\s+(اول|دوم|سوم|چهارم|پنجم)\s+/,"");
+ if(s.type==="talk")return s.title.replace(/^گفتار\s+(اول|دوم|سوم|چهارم|پنجم|ششم)\s+/,"");
  if(s.type==="tool")return T(l,"ابزار اصلی کتاب","Source worksheet");
  if(s.type==="ending")return T(l,"مکث و جمع‌بندی","Closing reflection");
  if(s.type==="reference")return T(l,"منابع علمی","Research notes");
@@ -216,7 +222,7 @@ function coachBox(n,index,l){
  '<small>'+T(l,"فقط روی همین دستگاه ذخیره می‌شود؛ اطلاعات حساس وارد نکنید.","Stored on this device only. Do not enter sensitive information.")+'</small></div></section>';
 }
 function chapter(n,l){
- if(!(n>=1&&n<=3))return ORIGINAL.landing(l);
+ if(!(n>=1&&n<=6))return ORIGINAL.landing(l);
  sync();
  const all=parse(n),stored=game.view[n]||{},idx=Math.max(0,Math.min(all.length-1,Number(stored.stage)||0));
  const s=all[idx],pages=spread(s),page=Math.max(0,Math.min(pages.length-1,Number(stored.page)||0));
@@ -239,18 +245,18 @@ function chapter(n,l){
   atLast?'<button type="button" class="lj-action-main" data-lb-action="mark" data-lj-action="read" data-chapter="'+n+'" data-section="'+idx+'">'+T(l,"مرور کردم · +۱۵ XP و ۵ سکه","Mark reviewed · +15 XP / 5 coins")+'</button>':
   '<span class="lj-continue-hint">'+T(l,"پس از آخرین صفحه می‌توانید مرور این گفتار را ثبت کنید.","You can mark this section reviewed after its last page.")+'</span>':"";
  const nextStage=idx<all.length-1?'<button type="button" class="lj-action-secondary" data-lj-action="step" data-chapter="'+n+'" data-step="'+(idx+1)+'">'+T(l,"گام بعد","Next step")+' <span aria-hidden="true">‹</span></button>':
- n<3?'<button type="button" class="lj-action-secondary" data-route="book1/'+(n+1)+'">'+T(l,"فصل بعد","Next chapter")+'</button>':
+ n<6?'<button type="button" class="lj-action-secondary" data-route="book1/'+(n+1)+'">'+T(l,"فصل بعد","Next chapter")+'</button>':
  '<button type="button" class="lj-action-secondary" data-route="book1/workbook">'+T(l,"مرور دفتر کار","Workbook overview")+'</button>';
  const nav='<div class="lj-pager">'+
  '<button type="button" data-lj-action="page" data-chapter="'+n+'" data-page="'+(page-1)+'" '+(page===0?"disabled":"")+'>'+T(l,"صفحه قبل","Previous page")+'</button>'+
  '<div class="lj-page-dots">'+pages.map((_,i)=>'<button type="button" class="'+(i===page?"active":"")+'" data-lj-action="page" data-chapter="'+n+'" data-page="'+i+'" aria-label="'+T(l,"صفحه "+(i+1),"Page "+(i+1))+'" '+(i===page?'aria-current="page"':"")+'></button>').join("")+'</div>'+
  '<button type="button" data-lj-action="page" data-chapter="'+n+'" data-page="'+(page+1)+'" '+(atLast?"disabled":"")+'>'+T(l,"ورق بعد","Next page")+'</button></div>';
- const question=BOOK.chapters[n-1].sourceText.split("\n");const qIndex=question.indexOf("سؤال بزرگ فصل"),q=qIndex>=0?question[qIndex+1]:"";
+ const question=BOOK.chapters[n-1].sourceText.split("\n");const qIndex=question.indexOf("سؤال بزرگ فصل"),q=qIndex>=0?question[qIndex+1]:(BOOK.chapters[n-1].leadQuestion||"");
  const nums=bank(l,true);
- const finish=badgeUnlocked(BADGES[n-1].id)?'<span class="lj-milestone"><span aria-hidden="true">✦</span> '+T(l,"نشان این فصل آزاد شد","Chapter badge unlocked")+'</span>':
+ const finish=badgeUnlocked(BADGES.find(b=>b.chapter===n)?.id)?'<span class="lj-milestone"><span aria-hidden="true">✦</span> '+T(l,"نشان این فصل آزاد شد","Chapter badge unlocked")+'</span>':
  '<span class="lj-milestone lj-milestone-pending">'+T(l,"پس از مرور گفتارها و خروجی Workbook، نشان فصل آزاد می‌شود.","Complete readings and a workbook output to unlock the chapter badge.")+'</span>';
  return '<div class="lb-root lj-root lj-chapter" data-lj-chapter="'+n+'">'+
- '<div class="lj-topnav"><button type="button" data-route="module/1">'+T(l,"مسیر سه فصل","Three-chapter journey")+'</button><span>'+T(l,"جلد اول · فصل "+n,"Book One · Chapter "+n)+'</span></div>'+
+ '<div class="lj-topnav"><button type="button" data-route="module/1">'+T(l,"مسیر شش فصل","Six-chapter journey")+'</button><span>'+T(l,"جلد اول · فصل "+n,"Book One · Chapter "+n)+'</span></div>'+
  '<section class="lj-head"><div class="lj-head-art" aria-hidden="true"><div class="lj-orbit"><span>'+leading(n)+'</span></div></div>'+
  '<div class="lj-head-copy"><span class="lj-kicker">BOOK I · CHAPTER '+leading(n)+'</span><h1>'+E(T(l,BOOK.chapters[n-1].title,BOOK.chapters[n-1].englishTitle))+'</h1>'+
  '<p class="lj-core"><span aria-hidden="true">✦</span><span lang="fa" dir="rtl">'+E(q)+'</span></p>'+
@@ -264,33 +270,26 @@ function chapter(n,l){
  '<div class="lj-chapter-outcome"><div><h3>'+T(l,"از خواندن به کاربست","From reading to practice")+'</h3><p>'+T(l,"پاسخ درست یا غلط نداریم. با یک مشاهده واقعی، مسیر یادگیری را ادامه بده.","There is no right or wrong personal answer. Continue with one real observation.")+'</p></div>'+
  '<button data-route="book1/'+n+'/workbook" type="button">'+T(l,"ثبت خروجی فصل","Capture chapter output")+'</button></div>'+
  finish+
- (n<3?'<button class="lj-rest-link" type="button" data-lj-action="rest" data-after="'+n+'"><span aria-hidden="true">☼</span> '+T(l,"ایستگاه مکث اختیاری · ۳۰ ثانیه","Optional 30-second reflection stop")+'</button>':"")+
- '</div></div><div class="lj-footer-nav"><button type="button" data-route="module/1">'+T(l,"بازگشت به نقشه سه فصل","Back to three-chapter map")+'</button>'+
- '<a href="'+E(BOOK.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(l,"متن مرجع Google Drive","Original source in Google Drive")+'</a></div>'+
+ (n<6?'<button class="lj-rest-link" type="button" data-lj-action="rest" data-after="'+n+'"><span aria-hidden="true">☼</span> '+T(l,"ایستگاه مکث اختیاری · ۳۰ ثانیه","Optional 30-second reflection stop")+'</button>':"")+
+ '</div></div><div class="lj-footer-nav"><button type="button" data-route="module/1">'+T(l,"بازگشت به نقشه شش فصل","Back to six-chapter map")+'</button>'+
+ '<a href="'+E(BOOK.chapters[n-1].sourceUrl||BOOK.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(l,"متن مرجع Google Drive","Original source in Google Drive")+'</a></div>'+
  '<p class="lj-disclaimer">'+T(l,"امتیازها و سکه‌ها فقط برای مشارکت در مطالعه و تمرین هستند و کیفیت زندگی یا پاسخ‌های فردی را اندازه نمی‌گیرند. متن فارسی از نسخه نهایی کتاب است.","Points and coins recognize reading and practice only; they do not score your life or personal answers. Persian text is sourced from the final manuscript.")+'</p></div>';
 }
 function enhancedLanding(l){
  sync();
  let s=ORIGINAL.landing(l);
+ const chapterTalks=BOOK.chapters.reduce((sum,ch)=>sum+talkTotal(ch.id),0);
  const strip='<section class="lj-landing-welcome"><div class="lj-mentor-art" aria-hidden="true"><span>✧</span></div><div><span class="lj-kicker">'+T(l,"راهنمای سفر یادگیری","YOUR LEARNING COMPANION")+'</span>'+
  '<h2>'+T(l,"آرام، آگاهانه و قدم‌به‌قدم پیش برو","Make progress with clarity, one step at a time")+'</h2>'+
  '<p>'+T(l,"در هر گفتار یک پرسش برای مکث داری. با مرور واقعی گفتارها، سکه و XP یادگیری می‌گیری و با ثبت خروجی هر فصل یک نشان آزاد می‌کنی.","Each reading step includes a coaching question. Earn learning coins and XP for reviewed sections, then unlock a badge with each chapter’s workbook output.")+'</p></div></section>'+
- bank(l)+'<div class="lj-legend"><span>✧ '+T(l,"۱۳ گفتار","13 sections")+'</span><span>◈ '+T(l,"۳ ابزار","3 worksheets")+'</span><span>✦ '+T(l,"۴ نشان","4 badges")+'</span></div>';
+ bank(l)+'<div class="lj-legend"><span>✧ '+T(l,chapterTalks+" گفتار",chapterTalks+" sections")+'</span><span>◈ '+T(l,"۶ ابزار","6 worksheets")+'</span><span>✦ '+T(l,BADGES.length+" نشان",BADGES.length+" badges")+'</span></div>';
  s=s.replace('<div class="lb-intro-statement">',strip+'<div class="lb-intro-statement">');
  s=s.replace('<p class="lb-privacy">',gallery(l)+'<p class="lb-privacy">');
  return s;
 }
 function worksheetCoach(n,l){
- const fa=[
- "از تجربه خودت آغاز کن؛ می‌خواهیم تصویر واقعی را ببینیم، نه تصویری بی‌نقص.",
- "چه چیزی واقعاً برای تو مهم است؟ معیارها را متناسب با منابع و نقش‌ها انتخاب کن.",
- "موضوع، بازه و شواهد را یکسان نگه دار. حتی «نمی‌دانم» یک خروجی معتبر است."
- ][n-1];
- const en=[
- "Draw on your own experience: capture the reality, not a flawless version of it.",
- "What matters most here? Choose criteria that fit your roles and available resources.",
- "Keep the topic, time window and evidence consistent. An unknown is a valid finding."
- ][n-1];
+ const fa=["از تجربه خودت آغاز کن؛ می‌خواهیم تصویر واقعی را ببینیم، نه تصویری بی‌نقص.","چه چیزی واقعاً برای تو مهم است؟ معیارها را متناسب با منابع و نقش‌ها انتخاب کن.","موضوع، بازه و شواهد را یکسان نگه دار. حتی «نمی‌دانم» یک خروجی معتبر است.","فرض‌ها را با ارزش‌ها و شواهد کنار هم ببین. موضع اولیه‌ات می‌تواند نامعلوم بماند.","برای همان حوزه و بازه، شادی و موفقیت را جداگانه ببین و هر دو را مستند کن.","دو موقعیت مشابه را بررسی کن. DiSC این برگه یک مشاهده رفتاری است، نه تیپ قطعی شخصیت."][n-1];
+ const en=["Draw on your own experience: capture the reality, not a flawless version of it.","What matters most here? Choose criteria that fit your roles and available resources.","Keep the topic, time window and evidence consistent. An unknown is a valid finding.","Keep assumptions, values and evidence distinct. A provisional stance is enough.","Describe happiness and success separately for one defined period.","Compare two situations. This DiSC-based worksheet is not a validated personality test."][n-1];
  const filled=Object.values((ORIGINAL.exportData().worksheetResponses||{})[n]||{}).filter(x=>typeof x==="string"&&x.trim()).length;
  const finished=!!game.practice[n];
  return '<section class="lj-practice-coach"><div class="lj-practice-icon" aria-hidden="true">✦</div><div><span class="lj-kicker">'+T(l,"گفت‌وگوی کوچینگ در پایان فصل","CHAPTER COACHING CHECK-IN")+'</span><h3>'+T(l,"یک مشاهده معتبر، بهتر از پاسخ اجباری است","One useful observation beats a forced answer")+'</h3><p>'+T(l,fa,en)+'</p>'+
@@ -323,7 +322,7 @@ function enhancedHome(l){
 function reload(scroll=true){
  const root=document.querySelector("#page");if(!root)return;
  const url=decodeURIComponent(location.hash.replace(/^#/,""));
- const m=/^book1\/([1-3])(?:\/workbook)?$/.exec(url);
+ const m=/^book1\/([1-6])(?:\/workbook)?$/.exec(url);
  if(m){
   const n=Number(m[1]);root.innerHTML=url.endsWith("/workbook")?enhancedWorksheet(n,document.documentElement.lang):chapter(n,document.documentElement.lang);
  }else if(url==="module/1")root.innerHTML=enhancedLanding(document.documentElement.lang);
@@ -404,7 +403,7 @@ document.addEventListener("click",function(ev){
  const target=ev.target.closest?.("[data-lj-action]");if(!target)return;
  const action=target.dataset.ljAction,l=document.documentElement.lang;
  if(action==="step"||action==="page"){
-  const n=Number(target.dataset.chapter);if(!(n>=1&&n<=3))return;
+  const n=Number(target.dataset.chapter);if(!(n>=1&&n<=6))return;
   const all=parse(n),prev=game.view[n]||{stage:0,page:0};
   const stage=action==="step"?Number(target.dataset.step):Number(prev.stage)||0;
   const max=spread(all[stage]||all[0]).length;
@@ -414,8 +413,8 @@ document.addEventListener("click",function(ev){
  }
  if(action==="form-page"){
   const n=Number(target.dataset.chapter),p=Number(target.dataset.formPage);
-  const groups=Math.ceil((n===1?8:n===2?10:12)/2);
-  if(!(n>=1&&n<=3)||p<0||p>=groups)return;
+  const groups=Math.ceil(({1:8,2:10,3:12,4:8,5:9,6:11}[n]||0)/2);
+  if(!(n>=1&&n<=6)||p<0||p>=groups)return;
   game.formPage[n]=p;persist();reload(false);
   document.querySelector(".lj-form-pager")?.scrollIntoView({block:"nearest",behavior:"smooth"});return;
  }
