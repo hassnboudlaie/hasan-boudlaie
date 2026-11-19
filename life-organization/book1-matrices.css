@@ -1,0 +1,50 @@
+/* Chapters 4–6: source-aligned contextual maps and six-chapter integrated dossier. */
+.lo-map,.lo-dossier{direction:rtl;color:var(--text,#172d37);background:var(--surface,#fff);border:1px solid rgba(23,87,85,.19);border-radius:24px;padding:clamp(18px,3vw,30px);margin:26px 0;box-shadow:0 12px 35px rgba(12,58,58,.055)}
+.lo-map *,.lo-dossier *{box-sizing:border-box}
+.lo-map-top,.lo-dossier-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.lo-map-top h3,.lo-dossier-header h2{font-size:clamp(1.25rem,2.6vw,1.75rem);line-height:1.55;margin:.3rem 0 .5rem;font-weight:900;letter-spacing:-.02em}
+.lo-map-kicker{font-size:.76rem;letter-spacing:.07em;font-weight:750;color:#327a74}
+.lo-map-book{font-family:system-ui,sans-serif;direction:ltr;font-size:.72rem;font-weight:800;border:1px solid #c8d9d6;border-radius:100px;padding:7px 11px;white-space:nowrap}
+.lo-map-lead,.lo-dossier>p{line-height:2;opacity:.86;max-width:850px;font-size:.97rem;margin:8px 0 18px}
+.lo-map-choice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0;padding:12px 0;border-top:1px solid rgba(18,90,86,.12)}
+.lo-map-choice>span{font-size:.91rem;font-weight:800;margin-inline-end:auto}
+.lo-map-choice button,.lo-map-bottom button,.lo-dossier-item button{font:inherit;cursor:pointer;color:inherit;border:1px solid rgba(39,105,100,.3);background:transparent;border-radius:12px;padding:10px 15px;font-weight:800;font-size:.91rem;min-height:43px}
+.lo-map-choice button.active{background:#0c6562;border-color:#0c6562;color:white}
+.lo-map-board{max-width:760px;margin:8px auto 20px}
+.lo-map-axis{display:block;font-size:.84rem;color:#56706e;font-weight:750;text-align:center;margin-bottom:9px}
+.lo-map-grid-head{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;text-align:center;font-size:.88rem;font-weight:850;margin-bottom:8px}
+.lo-map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.lo-map-cell{text-align:right;font:inherit;min-width:0;cursor:pointer;position:relative;min-height:112px;background:linear-gradient(125deg,#f5faf7,#f8fbfd);border:1.5px solid #d2e3de;border-radius:15px;padding:15px 16px;color:#173d3e;transition:border-color .15s,transform .15s,box-shadow .15s}
+.lo-map-cell:hover{border-color:#45877e;transform:translateY(-1px)}
+.lo-map-cell:focus-visible,.lo-map-choice button:focus-visible,.lo-map-bottom button:focus-visible,.lo-dossier button:focus-visible{outline:3px solid #ca9d55;outline-offset:3px}
+.lo-map-cell.lo-current{border-color:#05736e;box-shadow:inset 0 0 0 1px #05736e}
+.lo-map-cell.lo-suitable{border-color:#a7782e;box-shadow:inset 0 0 0 1px #a7782e}
+.lo-map-cell.lo-current.lo-suitable{border-color:#05736e;box-shadow:inset 0 0 0 2px #a7782e}
+.lo-map-cell-title{display:block;font-weight:900;font-size:clamp(.95rem,2vw,1.08rem);line-height:1.65}
+.lo-map-markers{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.lo-dot,.lo-ring{font-size:.76rem;font-weight:850;border-radius:100px;padding:4px 9px}
+.lo-dot{background:#dbf5ed;color:#07584e}
+.lo-ring{background:#fff0d3;color:#7a521e}
+.lo-map-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lo-map-results>div{border-radius:13px;background:rgba(62,137,128,.075);padding:13px;min-width:0}
+.lo-map-results small,.lo-map-results strong{display:block}
+.lo-map-results small{font-size:.79rem;opacity:.75;margin-bottom:5px}
+.lo-map-results strong{font-size:.92rem;line-height:1.75}
+.lo-map-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:16px}
+.lo-map-bottom p{flex:1 1 350px;font-size:.85rem;line-height:1.9;margin:0;opacity:.8}
+.lo-map-bottom button{font-weight:750}
+.lo-dossier-header>strong{font-size:1.1rem;direction:ltr;color:#0c6562}
+.lo-dossier-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lo-dossier-item{display:flex;align-items:flex-start;gap:12px;background:rgba(28,110,99,.05);border:1px solid rgba(27,108,98,.13);border-radius:15px;padding:15px;min-width:0}
+.lo-dossier-item>span{font:900 1.05rem/1.5 system-ui,sans-serif;direction:ltr;color:#0e8173}
+.lo-dossier-item>div{flex:1;min-width:0}
+.lo-dossier-item h3{font-size:1rem;line-height:1.6;margin:0 0 5px;font-weight:900}
+.lo-dossier-item p{font-size:.86rem;line-height:1.85;margin:0;overflow-wrap:anywhere}
+.lo-dossier-item small{display:block;margin-top:8px;font-size:.77rem;color:#327a74;line-height:1.7}
+.lo-dossier-item button{padding:7px 10px;font-size:.8rem;min-height:38px}
+@media(max-width:720px){.lo-map,.lo-dossier{padding:16px;border-radius:18px}.lo-dossier-list{grid-template-columns:1fr}.lo-map-cell{min-height:105px;padding:11px}.lo-map-grid{gap:7px}.lo-map-grid-head{gap:7px;font-size:.76rem}.lo-map-cell-title{font-size:.9rem}.lo-map-results{grid-template-columns:1fr}.lo-map-choice>span{width:100%}.lo-map-bottom button{width:100%}}
+@media(prefers-reduced-motion:reduce){.lo-map-cell{transition:none}.lo-map-cell:hover{transform:none}}
+html[data-theme=dark] .lo-map,html[data-theme=dark] .lo-dossier,[data-theme=dark] .lo-map,[data-theme=dark] .lo-dossier{background:#142e35;border-color:#35565d;color:#f3f8f5}
+html[data-theme=dark] .lo-map-cell,[data-theme=dark] .lo-map-cell{background:#1d3940;border-color:#567277;color:#f2f8f6}
+html[data-theme=dark] .lo-map-results>div,[data-theme=dark] .lo-map-results>div,html[data-theme=dark] .lo-dossier-item,[data-theme=dark] .lo-dossier-item{background:#1d3940;color:#f2f8f6}
+html[data-theme=dark] .lo-map-axis,[data-theme=dark] .lo-map-axis{color:#b3d0cd}
