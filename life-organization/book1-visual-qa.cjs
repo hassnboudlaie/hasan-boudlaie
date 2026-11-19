@@ -1,11 +1,11 @@
-/* Headless browser QA for Life Organization v0.3.
+/* Headless browser QA for Life Organization v0.4.
    Run on a runner with playwright installed: node life-organization/book1-visual-qa.cjs
    Requires no account and exercises public, entirely local app paths. */
 "use strict";
 const {chromium}=require("playwright");
 const http=require("node:http"),fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict");
 const ROOT=path.resolve(__dirname,"..");
-const SHOTS=path.join(ROOT,"qa-artifacts","life-org-v03");
+const SHOTS=path.join(ROOT,"qa-artifacts","life-org-v04");
 fs.mkdirSync(SHOTS,{recursive:true});
 const TYPES={".html":"text/html;charset=utf-8",".js":"text/javascript;charset=utf-8",".css":"text/css;charset=utf-8",".png":"image/png",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"};
 const server=http.createServer((req,res)=>{
@@ -36,8 +36,8 @@ async function main(){
    await page.goto(home+"#module/1",{waitUntil:"domcontentloaded"});
    await page.locator(".lb-landing .lj-bank").waitFor();
    if(await page.locator("#brand-splash").count())await page.locator("#brand-splash").waitFor({state:"detached"});
-   assert.equal(await page.locator(".lb-chapter-tile").count(),3,"three chapter tiles");
-   assert.equal(await page.locator(".lj-badge-card").count(),4,"four badge collection slots");
+   assert.equal(await page.locator(".lb-chapter-tile").count(),6,"six chapter tiles");
+   assert.equal(await page.locator(".lj-badge-card").count(),7,"seven badge collection slots");
    await page.screenshot({path:path.join(SHOTS,item.name+"-landing.png"),fullPage:true});
    await page.goto(home+"#book1/1",{waitUntil:"domcontentloaded"});
    await page.locator(".lj-reading-layout .lj-paper").waitFor();
@@ -67,15 +67,36 @@ async function main(){
    await page.locator(".lj-global-progress .lj-bank").waitFor();
    assert.ok(await page.locator(".lj-global-progress-heading").isVisible(),"global journey wallet shown");
    if(item.mobile){
-    for(const hash of ["#module/1","#book1/1","#book1/1/workbook","#progress"]){
+    for(const hash of ["#module/1","#book1/1","#book1/1/workbook","#book1/6","#book1/6/workbook","#progress"]){
      await page.goto(home+hash,{waitUntil:"domcontentloaded"});
      await page.locator("#page").waitFor();
      const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
      assert.ok(overflow<=2,"no horizontal viewport overflow in "+hash+": "+overflow+"px");
     }
    }
+   
+   // The authored tools are contextual maps, not personality / wellbeing scores.
+   for(const n of [4,5,6]){
+    await page.goto(home+"#book1/"+n,{waitUntil:"domcontentloaded"});
+    await page.locator('[data-lo-map="'+n+'"]').waitFor();
+    assert.equal(await page.locator('[data-lo-map="'+n+'"] .lo-map-cell').count(),4,"chapter "+n+" matrix has four positions");
+    await page.locator('[data-lo-map="'+n+'"] [data-lo-action="place"][data-cell="0"]').click();
+    assert.ok(await page.locator('[data-lo-map="'+n+'"] .lo-map-cell.lo-current').count()===1,"current placement selected");
+    await page.locator('[data-lo-map="'+n+'"] [data-lo-action="mode"][data-mode="suitable"]').click();
+    await page.locator('[data-lo-map="'+n+'"] [data-lo-action="place"][data-cell="3"]').click();
+    assert.ok(await page.locator('[data-lo-map="'+n+'"] .lo-map-cell.lo-suitable').count()===1,"suitable placement selected");
+    await page.screenshot({path:path.join(SHOTS,item.name+"-chapter"+n+"-matrix.png"),fullPage:true});
+    await page.goto(home+"#book1/"+n+"/workbook",{waitUntil:"domcontentloaded"});
+    assert.equal(await page.locator(".lj-form-stepper").count(),1,"chapter "+n+" workbook available");
+    if(item.mobile){
+     const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
+     assert.ok(overflow<=2,"no horizontal overflow in chapter "+n+" worksheet: "+overflow);
+    }
+   }
+   await page.goto(home+"#book1/workbook",{waitUntil:"domcontentloaded"});
+   assert.equal(await page.locator(".lo-dossier-item").count(),6,"six dossier entries");
    assert.deepEqual(errors,[],"no browser uncaught JS errors");
-   console.log("PASS "+item.name+": 3 chapters, 4 badges, readable type, coaching, rewards, paged workbook, saved answers, global wallet"+(item.mobile?", no horizontal overflow":""));
+   console.log("PASS "+item.name+": 6 chapters, 7 badges, 3 matrices, dossier, readable type, coaching, rewards, paged workbook, saved answers, global wallet"+(item.mobile?", no horizontal overflow":""));
    await ctx.close();
   }
  }finally{await browser.close();}
