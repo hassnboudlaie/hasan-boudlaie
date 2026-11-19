@@ -1,6 +1,6 @@
-/* The Life Organization v0.3.1 Life Architecture + Guided Journey service worker */
-const CACHE="life-org-brand-journey-v033-a11y-20261114";
-const ASSETS=["./","./index.html","./styles.css?v=0.1.2","./brand.css?v=life-architecture-1","./book1.css?v=0.2.0","./book1-journey.css?v=0.3.0","./book1-content.js?v=0.2.0","./book1-ui.js?v=0.2.0","./book1-journey.js?v=0.3.0","./app.js?v=0.3.0","./brand-symbol.svg","./icon.svg?v=life-architecture-1","./icon-192.png?v=life-architecture-1","./icon-512.png?v=life-architecture-1","./maskable-512.png?v=life-architecture-1","./manifest.webmanifest?v=life-architecture-1"];
+/* The Life Organization v0.4.0 Life Architecture + Guided Journey service worker */
+const CACHE="life-org-book1-six-chapters-v040-20261119";
+const ASSETS=["./","./index.html","./styles.css?v=0.1.2","./brand.css?v=life-architecture-1","./book1.css?v=0.2.0","./book1-journey.css?v=0.3.0","./book1-matrices.css?v=0.4.0","./book1-content.js?v=0.2.0","./book1-part2-content.js?v=0.4.0","./book1-ui.js?v=0.4.0","./book1-journey.js?v=0.4.0","./book1-matrices.js?v=0.4.0","./app.js?v=0.4.0","./brand-symbol.svg","./icon.svg?v=life-architecture-1","./icon-192.png?v=life-architecture-1","./icon-512.png?v=life-architecture-1","./maskable-512.png?v=life-architecture-1","./manifest.webmanifest?v=life-architecture-1"];
 const HB_EXTRA=['../hb-impeccable-shared.css?v=20261114','../assets/fonts/Vazirmatn.woff2'];
 const HB_PATHS=new Set(HB_EXTRA.map(p=>new URL(p,self.registration.scope).pathname));
 self.addEventListener("install",event=>{
