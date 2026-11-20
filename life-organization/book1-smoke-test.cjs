@@ -173,6 +173,29 @@ assert.equal((window.LifeBook.landing("fa").match(/lo-upcoming/g)||[]).length,1,
 assert.ok(window.LifeBook.chapter(9,"fa").includes("lo-source-state"),"review manuscript status visible");
 assert.ok(window.LifeBook.chapter(10,"fa").includes("lo-source-state"),"review manuscript status visible");
 
+assert.equal(source.chapters[10].title,"فلسفه پیشرفت من","Chapter 11 uses the current Drive manuscript title");
+assert.equal(source.chapters[10].priorLockedTitle,"پرمشغله بودن و مفید بودن","old locked title remains in editorial metadata");
+assert.ok(source.chapters[10].sourceText.includes("Burrell, G."),"Burrell and Morgan reference preserved");
+const ch11=window.LifeBook.chapter(11,"fa"),form11=window.LifeBook.worksheet(11,"fa");
+assert.ok(ch11.includes('data-lo-map="11"'),"chapter 11 progress matrix present in reader");
+assert.ok(form11.includes('data-lo-map="11"'),"chapter 11 progress matrix present in workbook");
+assert.ok(ch11.includes("lo-source-state"),"chapter 11 review label shown");
+assert.equal((form11.match(/data-lb-field=/g)||[]).length,10,"chapter 11 has ten exercise fields");
+const answer11={dataset:{chapter:"11",lbField:"scope"},value:"نمونه‌کار واقعی در یک هفته"};
+for(const h of handlers.input||[])h({target:{closest:sel=>sel==="[data-lb-field]"?answer11:null}});
+assert.equal(window.LifeBook.exportData().worksheetResponses["11"].scope,answer11.value,"chapter 11 locally persisted");
+assert.equal(window.LifeBook.exportData().worksheetResponses["1"].roles,"نقش حرفه‌ای و خانوادگی","old chapter 1 answer retained");
+for(let i=1;i<=5;i++){marker.dataset.chapter="11";marker.dataset.section=String(i);passMarker();}
+practice.dataset.chapter="11";
+for(const h of handlers.click||[])h({target:{closest:sel=>sel==="[data-lj-action]"?practice:null}});
+const eleven=window.LifeBook.engagement();
+assert.equal(eleven.wallet.reads,52,"52 reading talks");
+assert.equal(eleven.wallet.practices,11,"11 workbook outputs");
+assert.equal(eleven.wallet.xp,1275,"eleven chapter full XP");
+assert.equal(eleven.wallet.coins,425,"eleven chapter full coins");
+assert.equal(eleven.badges.length,12,"11 chapter badges and foundation");
+assert.ok(eleven.badges.includes("progress-philosophy"),"chapter 11 badge earned");
+assert.equal((window.LifeBook.workbook("fa").match(/class="lo-dossier-item/g)||[]).length,11,"11 dossier records");
 vm.runInNewContext(get("app.js"),context);
 assert.ok(node("#page").innerHTML.includes("من کجای زندگی ایستاده‌ام"),"Book I module landing integrated");
 location.hash="#book1/2";
@@ -200,4 +223,4 @@ window.LifeBook.resetAll();
 assert.ok(!storage.has("tlo-book1-part1-workbook-v1"),"reset clears saved workbook");
 assert.ok(!storage.has("tlo-guided-learning-v03"),"reset clears gamification ledger");
 assert.ok(!storage.has("tlo-book1-context-maps-v1"),"reset clears contextual map storage");
-console.log("PASS: ten Drive manuscripts, 47 reading steps, 99 prompts, seven contextual matrices, 10 dossier entries, 1155 XP / 385 coins, 11 badges, 12-chapter roadmap, persistence and reset.");
+console.log("PASS: 11 Drive manuscripts, 52 talks, 109 prompts, 8 maps, 11 dossier entries, 1275 XP / 425 coins, 12 badges, and one planned chapter.");
