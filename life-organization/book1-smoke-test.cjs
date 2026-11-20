@@ -71,7 +71,7 @@ for(const n of [1,2,3,4,5,6,7,8,9,10,11]){
  assert.equal((form.match(/data-lb-field=/g)||[]).length,[8,10,12,8,9,11,8,12,10,11,10][n-1],"worksheet field count");
  assert.ok(form.includes("data-lb-action"),"export and clear actions");
  assert.ok(form.includes("lj-form-stepper"),"paginated workbook");
- assert.equal((form.match(/data-lj-form-group=/g)||[]).length,[8,10,12,8,9,11,8,12,10,11][n-1],"all workbook inputs have page groups");
+ assert.equal((form.match(/data-lj-form-group=/g)||[]).length,[8,10,12,8,9,11,8,12,10,11,10][n-1],"all workbook inputs have page groups");
 }
 assert.ok(source.chapters[2].sourceText.includes("پایان بخش اول"),"full closing prose remains in source");
 assert.ok(window.LifeBook.landing("en").includes("Eleven"),"English interface");
