@@ -69,3 +69,15 @@ Existing localStorage keys are intentionally retained: `tlo-book1-part1-workbook
 **QA:** `node life-organization/book1-smoke-test.cjs` and `node life-organization/book1-visual-qa.cjs`. GitHub Actions workflow “Life Organization Book I QA” validates source synchronization, 12 reader/workbook routes, 57 reading sections, 119 fields, eight maps, profile, local storage/idempotent rewards, and mobile/desktop layout. GitHub Pages deployment is separately verified by Actions.
 
 **Publisher-level next steps, not claimed finished:** scholarly source/fact-check, image/figure rights, final editorial approval and copyedit of the still-review-stage chapters, complete English adaptation with professional human editing, and reader-testing against comprehension/accessibility. The application is a digital companion, not a substitute for rights clearance, print-ready artwork, or a professional psychometric validation.
+
+
+### Fun · Strategic Life Choices (20 November 2026)
+The official PWA now includes a **سرگرمی / Fun** entry in the sidebar and mobile navigation, a home teaser, and direct routes #fun and #fun/{values|direction|growth|work|money|relations|wellbeing|character}.
+
+The feature offers **58 contextualized either/or questions in eight areas** (10 + 4 + 8 + 5 + 4 + 9 + 11 + 7), preserving the editorial distinction between 42 explicitly identified source pairings and 16 interpretive prompts derived from images. Answers are saved locally, editable, and shown together at the end of each category with an answer-grounded narrative, reflection questions, progress and a next-theme link. After all eight categories, a local JSON export is available; the main app backup also includes Fun data. Reset clears its local choices.
+
+Four compact visual excerpts came from the **user-supplied PDF** (source slide pages 3, 120, 77 and 42), while other themes have original SVG motifs. Image third-party rights should be checked before further public redistribution.
+
+This is **reflective entertainment, not MBTI/DiSC or validated psychometrics**: no moral, success, personality or aggregate life score. Forced choices in fictional situations are not permanent dispositions. Original book content, matrices, workbook, chapter progress and existing learning rewards remain unchanged.
+
+Files: fun-choices-data.js, fun-choices-images.js, fun-choices.js, fun-choices.css. The offline precache lives in sw.js; index.html loads source data, images, game and then the app shell.
