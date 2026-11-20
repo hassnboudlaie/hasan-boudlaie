@@ -28,6 +28,7 @@ BADGES.push(
 );
 BADGES.push(...[{"id":"knowact","chapter":7,"fa":"پیونددهنده دانستن و عمل","en":"KNOWLEDGE TO ACTION","accent":"#8ac7d0","tag":"KNOW & DO"},{"id":"ceo","chapter":8,"fa":"مدیرعامل آگاه زندگی","en":"LIFE CEO","accent":"#d4ae71","tag":"LIFE CEO"},{"id":"behavior-result","chapter":9,"fa":"کاوشگر رفتار و نتیجه","en":"BEHAVIOR & RESULT","accent":"#b4b1f0","tag":"BEHAVIOR"},{"id":"tradeoff","chapter":10,"fa":"معمار انتخاب آگاهانه","en":"TRADE-OFF ARCHITECT","accent":"#e3b2a1","tag":"TRADEOFF"}]);
 BADGES.push({id:"progress-philosophy",chapter:11,fa:"راه‌نگار پیشرفت",en:"PROGRESS PATHFINDER",accent:"#97c9b6",symbol:"✧",tag:"PROGRESS"});
+BADGES.push({id:"life-profile",chapter:12,fa:"معمار نمایه بنیادین",en:"FOUNDATIONAL PROFILE ARCHITECT",accent:"#c6a56c",symbol:"✺",tag:"LIFE PROFILE"});
 const COACH={
  1:[
   ["پیش از هر تغییر، چه چیزی را می‌خواهی دقیق‌تر ببینی؟","Before making changes, what do you want to observe more clearly?"],
@@ -64,6 +65,7 @@ const COACH={
 Object.assign(COACH,{"4":[["کدام فرض پشت این انتخاب پنهان است؟","What assumption sits behind this choice?"],["چه ارزش یا دغدغه‌ای از این روش محافظت می‌کند؟","What value does this method protect?"],["کدام قسمت را مشاهده کرده‌ای و کدام را صرفاً تعبیر می‌کنی؟","What did you observe, and what are you interpreting?"],["در این موقعیت چه چیزی حفظ شد و چه چیزی تغییر کرد؟","What stayed stable, and what was adapted?"],["کدام توافق واقعی است و کدام فقط انتظار خودت؟","Which agreement is real and which only assumed?"],["کدام فرض را می‌توانی با یک مثال نقض بیازمایی؟","Which assumption could a counterexample challenge?"],["چه قوتی را حتی با بازنگری روش می‌خواهی نگه داری؟","What strength is worth preserving?"],["اگر هنوز نمی‌دانی، چه شاهدی ممکن است کمک کند؟","What evidence would clarify an uncertainty?"]],"5":[["در کدام حوزه و بازه می‌خواهی شادی و موفقیت را جدا بررسی کنی؟","What area and period will you examine?"],["چه نتیجه‌ای را واقعاً موفقیت حساب می‌کنی؟","What result would count as success?"],["چگونه بین نتیجه و تجربه زیسته تمایز می‌گذاری؟","How do you separate outcomes from lived experience?"],["چه چیزی از چهار روایت با تجربه تو همخوانی دارد؟","What do you recognize in these four stories?"],["در همان بازه چه شواهدی از هر دو محور داری؟","What evidence do you have for both dimensions?"],["وضع مناسب برای همین شرایط چیست و چه چیزی را حفظ می‌کنی؟","What is suitable in these circumstances, and what will you preserve?"],["کدام مجهول را پیش از قضاوت روشن می‌کنی؟","What remains unknown before drawing a conclusion?"]],"6":[["در یک موقعیت واقعی، اولین عمل مشاهده‌شده تو چه بود؟","What was your first observable action?"],["آهنگ و صراحت رفتارت چگونه بود؟","How would you describe your pace and directness?"],["در تعامل، بیشتر معیار را پرسیدی یا همراهی را ساختی؟","Did you first probe criteria or invite collaboration?"],["کدام یک از روایت‌های چهار شخصیت به یک رفتار مشخص اشاره دارد؟","Which of the four stories describes an observable response?"],["آیا دو موقعیت قابل مقایسه را ثبت کرده‌ای؟","Have you captured two comparable situations?"],["کدام رفتار در این وضعیت مناسب است، نه برای همیشه؟","What behavior fits this particular situation?"],["چه چیزی الگوی اولیه تو را به چالش می‌کشد؟","What counterexample challenges your early interpretation?"],["نقشه رفتار، برچسب هویت یا آزمون رسمی DiSC نیست.","A behavior map is not a fixed identity or an official DiSC assessment."]]});
 Object.assign(COACH,{"7":[["کدام گام مشخص را بررسی می‌کنی؟","Which action are you examining?"],["در همان زمان واقعاً چه می‌دانستی؟","What did you know at the time?"],["قصد و اقدام را چگونه از هم جدا می‌کنی؟","How do you separate intention and action?"],["چه شاهدی انجام کار را تأیید می‌کند؟","What evidence confirms the action?"],["کدام مانع قابل بررسی است؟","Which barrier can be examined?"],["گام مناسب و زمان بازبینی چیست؟","What is the next suitable step?"]],"8":[["چه کسی مسئول نتیجه است؟","Who owns the outcome?"],["نتیجه و منابع را جدا دیده‌ای؟","Have you separated outcomes and resources?"],["چه پیگیری‌هایی دوباره به تو برگشتند؟","What tasks returned to you?"],["با کدام دو شاهد خانه را انتخاب کردی؟","What are the two pieces of evidence?"],["چه چیزی باید ثابت بماند یا تغییر کند؟","What should stay stable or adapt?"],["تغییر شدنی بعدی چیست؟","What is your feasible next change?"]],"9":[["چه رفتاری رخ داد و نتیجه چه شد؟","What behavior and outcome occurred?"],["چه معیاری رفتار را مناسب می‌کند؟","What defines appropriate behavior?"],["آیا نتایج قابل مقایسه‌اند؟","Are the results comparable?"],["چه شاهدی از رابطه بین این دو داری؟","What evidence links them?"],["چه علت دیگری محتمل است؟","What alternative explanation matters?"],["چه آزمون کوچکی می‌توانی انجام دهی؟","What small test could you do?"]],"10":[["زحمت چه کاری را می‌سنجی؟","Which task's effort are you assessing?"],["چه زحمتی ذاتی و چه زحمتی قابل کاهش است؟","What effort is intrinsic or avoidable?"],["بازده را با چه نتیجه‌ای می‌سنجی؟","What determines the yield?"],["این نقشه با فصل قبل چگونه فرق دارد؟","How is this map distinct?"],["کدام گزینه شدنی را کنار می‌گذاری؟","What feasible alternative is forgone?"],["کدام تعهد یا محدودیت مهم است؟","Which constraint matters?"]]});
 Object.assign(COACH,{11:[["برای این تصمیم از چه چیزی شروع کردی: شواهد یا چشم‌انداز؟","What did you begin with: evidence or vision?"],["در روش فعلی، کدام بخش را حفظ کردی و کدام را تغییر دادی؟","Which part of your method stayed the same or changed?"],["آیا یک تغییر کوچک واقعاً بازطراحی روش است یا بهبود همان روال؟","Is this a redesign or an improvement of the existing method?"],["کدام روایت به موقعیت تو نزدیک است و کجا تفاوت دارد؟","Which story resembles your situation, and where does it differ?"],["چه چیزی برای حفظ تناسب با تعهدهای دیگر باید باقی بماند؟","What needs preserving to maintain fit with your commitments?"],["چه شاهدی به تو کمک می‌کند مسیر فعلی و مناسب را مقایسه کنی؟","What evidence helps compare current and suitable paths?"],["یک آزمون کوچک و زمان بازبینی آن چیست؟","What is your feasible small test and review point?"]]});
+Object.assign(COACH,{12:[["دو انتخابی که در یک موقعیت با هم ارتباط دارند کدام‌اند؟","Which two choices interact in one context?"],["برای هر انتخاب، چه شاهدی از فصل‌های پیشین داری؟","What evidence from earlier chapters supports each choice?"],["کدام نقش، زمان یا منبع مشترک میان آن‌هاست؟","Which role, time or resource do they share?"],["آیا این دو انتخاب همسو هستند یا اجرای یکدیگر را دشوار می‌کنند؟","Do they reinforce or constrain each other?"],["قبل از تغییر، چه چیزی را باید حفظ کنی؟","What must be preserved before you act?"],["کدام فرض هنوز نیازمند مشاهده یا گفت‌وگوست؟","What assumption still requires observation?"],["کوچک‌ترین تغییر شدنی و تاریخ بازبینی آن چیست؟","What is the smallest feasible change and review point?"]]});
 const FOLLOW=[
  ["دیدن رابطه میان اجزا، پایه تحلیل بهتر است. چه چیزی از قبل برایت روشن‌تر شد؟","Noticing connections sets a foundation for better analysis. What has become clearer?"],
  ["مهم‌ترین معیار، معیاری است که با شرایط تو تناسب داشته باشد. چه چیزی را می‌خواهی بیشتر بررسی کنی؟","A useful criterion fits your circumstances. What deserves closer examination?"],
@@ -102,8 +104,8 @@ function parse(n){
  if(!ch)return [];
  const groups=[{type:"intro",title:"آغاز فصل",lines:[]}];
  for(const row of ch.sourceText.split(/\r?\n/).slice(2)){
-  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)|ابزار فصل|کاربرگ|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(row)){
-   const type=row.startsWith("گفتار ")?"talk":(row.startsWith("ابزار فصل")||row.startsWith("کاربرگ"))?"tool":row.startsWith("پایان فصل")?"ending":row.startsWith("یادداشت‌ها")?"reference":"partend";
+  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)|ابزار فصل|کاربرگ|پایان فصل|پایان جلد اول|راهنمای اپ|یادداشت فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(row)){
+   const type=row.startsWith("گفتار ")?"talk":(row.startsWith("ابزار فصل")||row.startsWith("کاربرگ"))?"tool":(row.startsWith("پایان فصل")||row.startsWith("پایان جلد اول"))?"ending":(row.startsWith("یادداشت‌ها")||row.startsWith("یادداشت فصل"))?"reference":"partend";
    groups.push({type,title:row,lines:[]});
   }else groups[groups.length-1].lines.push(row);
  }
@@ -130,7 +132,7 @@ function talkTotal(n){return parse(n).filter(s=>s.type==="talk").length}
 function awards(){
  let xp=0,coins=0;
  for(const a of Object.values(game.claimed)){if(a&&typeof a==="object"){xp+=a.xp||0;coins+=a.coins||0}}
- return {xp,coins,reads:[1,2,3,4,5,6,7,8,9,10,11].reduce((s,n)=>s+ownedReading(n),0),practices:[1,2,3,4,5,6,7,8,9,10,11].filter(n=>game.practice[n]).length};
+ return {xp,coins,reads:[1,2,3,4,5,6,7,8,9,10,11,12].reduce((s,n)=>s+ownedReading(n),0),practices:[1,2,3,4,5,6,7,8,9,10,11,12].filter(n=>game.practice[n]).length};
 }
 function badgeUnlocked(id){
  if(id==="foundation")return [1,2,3].every(n=>ownedReading(n)===talkTotal(n)&&!!game.practice[n]);
@@ -141,14 +143,14 @@ function sync(){
  const prior=auditProgress();let change=false;
  for(const [key,done] of Object.entries(prior)){
   if(!done)continue;
-  const m=/^([1-9]|1[01])-([0-9]+)$/.exec(key);
+  const m=/^([1-9]|1[0-2])-([0-9]+)$/.exec(key);
   if(!m)continue;
   const n=Number(m[1]),i=Number(m[2]);
   if(parse(n)[i]?.type!=="talk")continue;
   const k="read:"+key;
   if(!game.claimed[k]){game.claimed[k]={...READING,at:new Date().toISOString()};change=true}
  }
- for(let n=1;n<=11;n++)if(game.practice[n]&&!game.claimed["practice:"+n]){
+ for(let n=1;n<=12;n++)if(game.practice[n]&&!game.claimed["practice:"+n]){
   game.claimed["practice:"+n]={...PRACTICE,at:new Date().toISOString()};change=true;
  }
  if(change)persist();
@@ -226,7 +228,7 @@ function coachBox(n,index,l){
  '<small>'+T(l,"فقط روی همین دستگاه ذخیره می‌شود؛ اطلاعات حساس وارد نکنید.","Stored on this device only. Do not enter sensitive information.")+'</small></div></section>';
 }
 function chapter(n,l){
- if(!(n>=1&&n<=11))return ORIGINAL.landing(l);
+ if(!(n>=1&&n<=12))return ORIGINAL.landing(l);
  sync();
  const all=parse(n),stored=game.view[n]||{},idx=Math.max(0,Math.min(all.length-1,Number(stored.stage)||0));
  const s=all[idx],pages=spread(s),page=Math.max(0,Math.min(pages.length-1,Number(stored.page)||0));
@@ -249,7 +251,7 @@ function chapter(n,l){
   atLast?'<button type="button" class="lj-action-main" data-lb-action="mark" data-lj-action="read" data-chapter="'+n+'" data-section="'+idx+'">'+T(l,"مرور کردم · +۱۵ XP و ۵ سکه","Mark reviewed · +15 XP / 5 coins")+'</button>':
   '<span class="lj-continue-hint">'+T(l,"پس از آخرین صفحه می‌توانید مرور این گفتار را ثبت کنید.","You can mark this section reviewed after its last page.")+'</span>':"";
  const nextStage=idx<all.length-1?'<button type="button" class="lj-action-secondary" data-lj-action="step" data-chapter="'+n+'" data-step="'+(idx+1)+'">'+T(l,"گام بعد","Next step")+' <span aria-hidden="true">‹</span></button>':
- n<11?'<button type="button" class="lj-action-secondary" data-route="book1/'+(n+1)+'">'+T(l,"فصل بعد","Next chapter")+'</button>':
+ n<12?'<button type="button" class="lj-action-secondary" data-route="book1/'+(n+1)+'">'+T(l,"فصل بعد","Next chapter")+'</button>':
  '<button type="button" class="lj-action-secondary" data-route="book1/workbook">'+T(l,"مرور دفتر کار","Workbook overview")+'</button>';
  const nav='<div class="lj-pager">'+
  '<button type="button" data-lj-action="page" data-chapter="'+n+'" data-page="'+(page-1)+'" '+(page===0?"disabled":"")+'>'+T(l,"صفحه قبل","Previous page")+'</button>'+
@@ -260,7 +262,7 @@ function chapter(n,l){
  const finish=badgeUnlocked(BADGES.find(b=>b.chapter===n)?.id)?'<span class="lj-milestone"><span aria-hidden="true">✦</span> '+T(l,"نشان این فصل آزاد شد","Chapter badge unlocked")+'</span>':
  '<span class="lj-milestone lj-milestone-pending">'+T(l,"پس از مرور گفتارها و خروجی Workbook، نشان فصل آزاد می‌شود.","Complete readings and a workbook output to unlock the chapter badge.")+'</span>';
  return '<div class="lb-root lj-root lj-chapter" data-lj-chapter="'+n+'">'+
- '<div class="lj-topnav"><button type="button" data-route="module/1">'+T(l,"مسیر یازیازده فصل","Eleven-chapter journey")+'</button><span>'+T(l,"جلد اول · فصل "+n,"Book One · Chapter "+n)+'</span></div>'+
+ '<div class="lj-topnav"><button type="button" data-route="module/1">'+T(l,"مسیر یازدوازده فصل","Twelve-chapter journey")+'</button><span>'+T(l,"جلد اول · فصل "+n,"Book One · Chapter "+n)+'</span></div>'+
  '<section class="lj-head"><div class="lj-head-art" aria-hidden="true"><div class="lj-orbit"><span>'+leading(n)+'</span></div></div>'+
  '<div class="lj-head-copy"><span class="lj-kicker">BOOK I · CHAPTER '+leading(n)+'</span><h1>'+E(T(l,BOOK.chapters[n-1].title,BOOK.chapters[n-1].englishTitle))+'</h1>'+
  (BOOK.chapters[n-1].editionStatus==="editorial-review"?'<p class="lo-source-state">'+T(l,"نسخه تألیفی در مرحله بازبینی؛ هنوز نهایی نشده است","Editorial review edition · not final")+'</p>':"")+
@@ -276,7 +278,7 @@ function chapter(n,l){
  '<button data-route="book1/'+n+'/workbook" type="button">'+T(l,"ثبت خروجی فصل","Capture chapter output")+'</button></div>'+
  finish+
  (n<3?'<button class="lj-rest-link" type="button" data-lj-action="rest" data-after="'+n+'"><span aria-hidden="true">☼</span> '+T(l,"ایستگاه مکث اختیاری · ۳۰ ثانیه","Optional 30-second reflection stop")+'</button>':"")+
- '</div></div><div class="lj-footer-nav"><button type="button" data-route="module/1">'+T(l,"بازگشت به نقشه یازیازده فصل","Back to eleven-chapter map")+'</button>'+
+ '</div></div><div class="lj-footer-nav"><button type="button" data-route="module/1">'+T(l,"بازگشت به نقشه یازدوازده فصل","Back to twelve-chapter map")+'</button>'+
  '<a href="'+E(BOOK.chapters[n-1].sourceUrl||BOOK.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(l,"متن مرجع Google Drive","Original source in Google Drive")+'</a></div>'+
  '<p class="lj-disclaimer">'+T(l,"امتیازها و سکه‌ها فقط برای مشارکت در مطالعه و تمرین هستند و کیفیت زندگی یا پاسخ‌های فردی را اندازه نمی‌گیرند. متن فارسی از نسخه تألیفی مرجع است و وضعیت بازبینی در فصل‌های مربوط مشخص شده است.","Points and coins recognize reading and practice only; they do not score your life or personal answers. The Persian manuscripts are sourced from Drive; review status is shown where applicable.")+'</p></div>';
 }
@@ -287,14 +289,14 @@ function enhancedLanding(l){
  const strip='<section class="lj-landing-welcome"><div class="lj-mentor-art" aria-hidden="true"><span>✧</span></div><div><span class="lj-kicker">'+T(l,"راهنمای سفر یادگیری","YOUR LEARNING COMPANION")+'</span>'+
  '<h2>'+T(l,"آرام، آگاهانه و قدم‌به‌قدم پیش برو","Make progress with clarity, one step at a time")+'</h2>'+
  '<p>'+T(l,"در هر گفتار یک پرسش برای مکث داری. با مرور واقعی گفتارها، سکه و XP یادگیری می‌گیری و با ثبت خروجی هر فصل یک نشان آزاد می‌کنی.","Each reading step includes a coaching question. Earn learning coins and XP for reviewed sections, then unlock a badge with each chapter’s workbook output.")+'</p></div></section>'+
- bank(l)+'<div class="lj-legend"><span>✧ '+T(l,chapterTalks+" گفتار",chapterTalks+" sections")+'</span><span>◈ '+T(l,"۱۰ ابزار","10 worksheets")+'</span><span>✦ '+T(l,BADGES.length+" نشان",BADGES.length+" badges")+'</span></div>';
+ bank(l)+'<div class="lj-legend"><span>✧ '+T(l,chapterTalks+" گفتار",chapterTalks+" sections")+'</span><span>◈ '+T(l,"۱۲ کاربرگ","12 worksheets")+'</span><span>✦ '+T(l,BADGES.length+" نشان",BADGES.length+" badges")+'</span></div>';
  s=s.replace('<div class="lb-intro-statement">',strip+'<div class="lb-intro-statement">');
  s=s.replace('<p class="lb-privacy">',gallery(l)+'<p class="lb-privacy">');
  return s;
 }
 function worksheetCoach(n,l){
- const fa=["از تجربه خودت آغاز کن؛ می‌خواهیم تصویر واقعی را ببینیم، نه تصویری بی‌نقص.","چه چیزی واقعاً برای تو مهم است؟ معیارها را متناسب با منابع و نقش‌ها انتخاب کن.","موضوع، بازه و شواهد را یکسان نگه دار. حتی «نمی‌دانم» یک خروجی معتبر است.","فرض‌ها را با ارزش‌ها و شواهد کنار هم ببین. موضع اولیه‌ات می‌تواند نامعلوم بماند.","برای همان حوزه و بازه، شادی و موفقیت را جداگانه ببین و هر دو را مستند کن.","دو موقعیت مشابه را بررسی کن. DiSC این برگه یک مشاهده رفتاری است، نه تیپ قطعی شخصیت.","دانستن، قصد و انجام‌دادن را با شاهد و زمان از هم تفکیک کن.","کارایی مصرف منابع و اثربخشی نتیجه را جداگانه بررسی کن.","رفتار را از نتیجه جدا کن و بدون شواهد کافی رابطه علّی نساز.","زحمت لازم، زحمت قابل کاهش، بازده و گزینه ازدست‌رفته را متمایز کن.","برای یک تصمیم مشخص، نقطه شروع و شیوه پیشرفت را جدا ببین؛ وضع مناسب را با شواهد و آمادگی بسنج."][n-1];
- const en=["Draw on your own experience: capture the reality, not a flawless version of it.","What matters most here? Choose criteria that fit your roles and available resources.","Keep the topic, time window and evidence consistent. An unknown is a valid finding.","Keep assumptions, values and evidence distinct. A provisional stance is enough.","Describe happiness and success separately for one defined period.","Compare two situations. This DiSC-based worksheet is not a validated personality test.","Separate knowing, intending and doing with timing and evidence.","Keep resource efficiency distinct from outcome effectiveness.","Assess behavior and outcome separately before making causal claims.","Distinguish inherent effort, avoidable effort, yield and opportunity cost.","For one bounded decision, distinguish starting point from progress method. Compare current and suitable choices with evidence."][n-1];
+ const fa=["از تجربه خودت آغاز کن؛ می‌خواهیم تصویر واقعی را ببینیم، نه تصویری بی‌نقص.","چه چیزی واقعاً برای تو مهم است؟ معیارها را متناسب با منابع و نقش‌ها انتخاب کن.","موضوع، بازه و شواهد را یکسان نگه دار. حتی «نمی‌دانم» یک خروجی معتبر است.","فرض‌ها را با ارزش‌ها و شواهد کنار هم ببین. موضع اولیه‌ات می‌تواند نامعلوم بماند.","برای همان حوزه و بازه، شادی و موفقیت را جداگانه ببین و هر دو را مستند کن.","دو موقعیت مشابه را بررسی کن. DiSC این برگه یک مشاهده رفتاری است، نه تیپ قطعی شخصیت.","دانستن، قصد و انجام‌دادن را با شاهد و زمان از هم تفکیک کن.","کارایی مصرف منابع و اثربخشی نتیجه را جداگانه بررسی کن.","رفتار را از نتیجه جدا کن و بدون شواهد کافی رابطه علّی نساز.","زحمت لازم، زحمت قابل کاهش، بازده و گزینه ازدست‌رفته را متمایز کن.","برای یک تصمیم مشخص، نقطه شروع و شیوه پیشرفت را جدا ببین؛ وضع مناسب را با شواهد و آمادگی بسنج.","در نمایه بنیادین، دو انتخاب مرتبط را با شاهد کنار هم بگذار؛ یک قوت قابل حفظ و یک آزمون کوچک قابل بازبینی انتخاب کن."][n-1];
+ const en=["Draw on your own experience: capture the reality, not a flawless version of it.","What matters most here? Choose criteria that fit your roles and available resources.","Keep the topic, time window and evidence consistent. An unknown is a valid finding.","Keep assumptions, values and evidence distinct. A provisional stance is enough.","Describe happiness and success separately for one defined period.","Compare two situations. This DiSC-based worksheet is not a validated personality test.","Separate knowing, intending and doing with timing and evidence.","Keep resource efficiency distinct from outcome effectiveness.","Assess behavior and outcome separately before making causal claims.","Distinguish inherent effort, avoidable effort, yield and opportunity cost.","For one bounded decision, distinguish starting point from progress method. Compare current and suitable choices with evidence.","Use the profile to connect two evidenced choices, preserve one strength, and identify one feasible test with a review date."][n-1];
  const filled=Object.values((ORIGINAL.exportData().worksheetResponses||{})[n]||{}).filter(x=>typeof x==="string"&&x.trim()).length;
  const finished=!!game.practice[n];
  return '<section class="lj-practice-coach"><div class="lj-practice-icon" aria-hidden="true">✦</div><div><span class="lj-kicker">'+T(l,"گفت‌وگوی کوچینگ در پایان فصل","CHAPTER COACHING CHECK-IN")+'</span><h3>'+T(l,"یک مشاهده معتبر، بهتر از پاسخ اجباری است","One useful observation beats a forced answer")+'</h3><p>'+T(l,fa,en)+'</p>'+
@@ -327,7 +329,7 @@ function enhancedHome(l){
 function reload(scroll=true){
  const root=document.querySelector("#page");if(!root)return;
  const url=decodeURIComponent(location.hash.replace(/^#/,""));
- const m=/^book1\/([1-9]|1[01])(?:\/workbook)?$/.exec(url);
+ const m=/^book1\/([1-9]|1[0-2])(?:\/workbook)?$/.exec(url);
  if(m){
   const n=Number(m[1]);root.innerHTML=url.endsWith("/workbook")?enhancedWorksheet(n,document.documentElement.lang):chapter(n,document.documentElement.lang);
  }else if(url==="module/1")root.innerHTML=enhancedLanding(document.documentElement.lang);
@@ -408,7 +410,7 @@ document.addEventListener("click",function(ev){
  const target=ev.target.closest?.("[data-lj-action]");if(!target)return;
  const action=target.dataset.ljAction,l=document.documentElement.lang;
  if(action==="step"||action==="page"){
-  const n=Number(target.dataset.chapter);if(!(n>=1&&n<=11))return;
+  const n=Number(target.dataset.chapter);if(!(n>=1&&n<=12))return;
   const all=parse(n),prev=game.view[n]||{stage:0,page:0};
   const stage=action==="step"?Number(target.dataset.step):Number(prev.stage)||0;
   const max=spread(all[stage]||all[0]).length;
@@ -418,8 +420,8 @@ document.addEventListener("click",function(ev){
  }
  if(action==="form-page"){
   const n=Number(target.dataset.chapter),p=Number(target.dataset.formPage);
-  const groups=Math.ceil(({1:8,2:10,3:12,4:8,5:9,6:11,7:8,8:12,9:10,10:11,11:10}[n]||0)/2);
-  if(!(n>=1&&n<=11)||p<0||p>=groups)return;
+  const groups=Math.ceil(({1:8,2:10,3:12,4:8,5:9,6:11,7:8,8:12,9:10,10:11,11:10,12:10}[n]||0)/2);
+  if(!(n>=1&&n<=12)||p<0||p>=groups)return;
   game.formPage[n]=p;persist();reload(false);
   document.querySelector(".lj-form-pager")?.scrollIntoView({block:"nearest",behavior:"smooth"});return;
  }
