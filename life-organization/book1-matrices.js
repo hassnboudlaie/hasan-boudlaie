@@ -1,4 +1,4 @@
-/* Book One chapters 4–6: contextual two-axis maps and a connected personal dossier.
+/* Book One chapters 4–11: contextual two-axis maps and a connected personal dossier.
  * Reflective learning only; no official DiSC diagnostic, no wellbeing score. */
 (function(){
 "use strict";
@@ -22,7 +22,8 @@ const maps={
 7:{"title":"نقشه دانستن و عمل‌کردن","en":"Knowing × Doing","x":["عمل نکرده‌ام","عمل کرده‌ام"],"y":["دانستن کافی و روشن","دانسته‌ام کافی نیست"],"cells":[["خانه C · می‌دانم، اما عمل نکرده‌ام · آرش","خانه D · می‌دانم و عمل کرده‌ام · لیلا"],["خانه A · نه دانستن کافی، نه عمل · نیلوفر","خانه B · عمل کرده‌ام، اما تناسب روش نامعلوم · رضا"]],"note":"دانستن یعنی بتوان گام مناسب و دلیلش را در همان زمان توضیح داد؛ عمل یعنی رخداد قابل مشاهده در همان بازه. قصد جای عمل نیست."},
 8:{"title":"نقشه مدیرعاملی و بهره‌وری زندگی","en":"Effectiveness × Efficiency","x":["کارایی پایین‌تر","کارایی بالاتر"],"y":["اثربخشی بالاتر","اثربخشی پایین‌تر"],"cells":[["مدیرعامل گرفتار","مدیرعامل راهبردی"],["مدیرعامل پراکنده‌کار","مدیرعامل متخصص"]],"note":"اثربخشی، دستیابی به نتیجه مهم است؛ کارایی، مصرف منابع در یک مقایسه منصفانه. این ماتریس درباره زحمت ذاتی کار نیست."},
 9:{"title":"نقشه رفتار و نتیجه","en":"Behavioral Fit × Outcome","x":["رفتار نامتناسب","رفتار متناسب"],"y":["نتیجه حاصل شد","نتیجه حاصل نشد"],"cells":[["نتیجه حاصل شد؛ رفتار نیازمند اصلاح","نتیجه حاصل شد؛ رفتار متناسب"],["نتیجه حاصل نشد؛ رفتار نیازمند اصلاح","نتیجه حاصل نشد؛ رفتار می‌تواند متناسب باشد"]],"note":"رفتار را نسبت به نیاز و توافق همان موقعیت بسنجید؛ نتیجه را جدا بررسی کنید. هیچ یک از چهار خانه، رابطه علّی را ثابت نمی‌کند."},
-10:{"title":"نقشه زحمت و بازده","en":"Effort × Yield","x":["پرزحمت","کم‌زحمت"],"y":["پربازده","کم‌بازده"],"cells":[["پرزحمت و پربازده","کم‌زحمت و پربازده"],["پرزحمت و کم‌بازده","کم‌زحمت و کم‌بازده"]],"note":"زحمت ذاتی کار با اتلاف منابع فرق دارد؛ بازده را با معیار ارزشمند خود بسنجید و گزینه ازدست‌رفته را هم در کاربرگ ثبت کنید. این نقشه، رفتار × نتیجه فصل نهم نیست."}
+10:{"title":"نقشه زحمت و بازده","en":"Effort × Yield","x":["پرزحمت","کم‌زحمت"],"y":["پربازده","کم‌بازده"],"cells":[["پرزحمت و پربازده","کم‌زحمت و پربازده"],["پرزحمت و کم‌بازده","کم‌زحمت و کم‌بازده"]],"note":"زحمت ذاتی کار با اتلاف منابع فرق دارد؛ بازده را با معیار ارزشمند خود بسنجید و گزینه ازدست‌رفته را هم در کاربرگ ثبت کنید. این نقشه، رفتار × نتیجه فصل نهم نیست."},
+11:{"title":"نقشه فلسفه پیشرفت من","en":"Starting Point × Progress Method","x":["شروع از معنا و چشم‌انداز","شروع از شواهد و امکانات"],"y":["بهبود گام‌به‌گام","بازطراحی مسیر"],"cells":[["بهبود روال برای هدفی معنادار · رضا","بهبود روال با بررسی شرایط · لیلا"],["طراحی مسیر از یک چشم‌انداز · نیلوفر","بازطراحی روش از روی شواهد · آرش"]],"note":"این ماتریس تألیفی، اقتباسی از منطق دو محور مستقل است و معادل چهار پارادایم جامعه‌شناسی بارل و مورگان نیست. نقطه شروع و شیوه حرکت را برای یک تصمیم و بازه مشخص با شواهد بررسی کنید."}
 };
 const esc=x=>String(x==null?"":x).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const tr=(fa,en)=>document.documentElement.lang==="en"?en:fa;
@@ -64,7 +65,8 @@ function dossier(){
   [7,"دانستن و عمل",["knowledge","action"]],
   [8,"مدیرعاملی و بهره‌وری",["efficiency","current"]],
   [9,"رفتار و نتیجه",["behavior","outcome"]],
-  [10,"زحمت، بازده و گزینه ازدست‌رفته",["opportunityCost","current"]]
+  [10,"زحمت، بازده و گزینه ازدست‌رفته",["opportunityCost","current"]],
+  [11,"فلسفه پیشرفت من",["currentStart","suitableStart","review"]]
  ];
  let count=0;
  const items=descriptors.map(([n,name,keys])=>{
@@ -76,8 +78,8 @@ function dossier(){
    (choice?'<small>'+esc("نقشه فعلی: "+choice)+'</small>':"")+'</div>'+
    '<button type="button" data-route="book1/'+n+'/workbook">'+tr("تکمیل","Open")+'</button></article>';
  }).join("");
- return '<section class="lo-dossier"><div class="lo-dossier-header"><div><span class="lo-map-kicker">INTEGRATED LIFE PROFILE · WORKBOOK</span><h2>'+tr("پرونده شناخت سازمان زندگی من","My Life Organization dossier")+'</h2></div><strong>'+count+' / 10</strong></div>'+
- '<p>'+tr("ده خروجی را در کنار یکدیگر می‌بینید، اما آن‌ها را به یک نمره کل یا قضاوت درباره شخصیت تبدیل نمی‌کنیم. موضوع و بازه هر فصل را در پاسخ‌های همان فصل نگه دارید.","Ten connected learning outputs without a total life or personality score. Keep each chapter’s context and time window.")+'</p>'+
+ return '<section class="lo-dossier"><div class="lo-dossier-header"><div><span class="lo-map-kicker">INTEGRATED LIFE PROFILE · WORKBOOK</span><h2>'+tr("پرونده شناخت سازمان زندگی من","My Life Organization dossier")+'</h2></div><strong>'+count+' / 11</strong></div>'+
+ '<p>'+tr("یازده خروجی را در کنار یکدیگر می‌بینید، اما آن‌ها را به یک نمره کل یا قضاوت درباره شخصیت تبدیل نمی‌کنیم. موضوع و بازه هر فصل را در پاسخ‌های همان فصل نگه دارید.","Eleven connected learning outputs without a total life or personality score. Keep each chapter’s context and time window.")+'</p>'+
  '<div class="lo-dossier-list">'+items+'</div></section>';
 }
 document.addEventListener("click",e=>{
