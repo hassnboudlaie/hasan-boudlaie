@@ -61,10 +61,12 @@ function outcome(c,l){
  const v=user[anchor.id],picked=v===0?anchor.a:anchor.b;
  const other=c.items.find(x=>x.id!==anchor.id&&user[x.id]!==undefined)||anchor;
  const second=user[other.id]===0?other.a:other.b;
+ const echo=c.items.filter(x=>x.id!==anchor.id&&x.id!==other.id).slice(0,3).map(x=>T(l,x.q,x.qe)+" — "+T(l,state.answers[x.id]===0?x.a:x.b,state.answers[x.id]===0?x.ae:x.be));
+ const echoHtml='<div class="fun-result-details"><strong>'+T(l,"سه انتخاب دیگر که به فکر کردن کمک می‌کنند:","Three more choices worth considering:")+'</strong><ul>'+echo.map(x=>'<li>'+E(x)+'</li>').join("")+'</ul></div>';
  const text=T(l,c.insights[v===0?0:1],v===0?"You leaned toward the first side of this theme. What does that preference protect, and when might the other side be useful?":"You leaned toward the second side of this theme. What matters here, and when could the opposite be useful?");
  return '<section class="fun-result"><span class="fun-eyebrow">'+T(l,"روایت انتخاب‌های تو","Your choice story")+'</span><h2>'+T(l,"این انتخاب‌ها چه چیزی را برای فکرکردن پیش رویت می‌گذارند؟","What do these choices invite you to notice?")+'</h2>'+
  '<p>'+T(l,"در این دسته، ","In this theme, you chose " )+'<strong>'+E(T(l,picked,v===0?anchor.ae:anchor.be))+'</strong>'+T(l," را انتخاب کردی؛ و در موقعیتی دیگر، ",". In another situation, you chose ")+'<strong>'+E(T(l,second,user[other.id]===0?other.ae:other.be))+'</strong>'+T(l," را. کنار هم گذاشتن این دو انتخاب، می‌تواند شروع یک گفت‌وگوی خوب با خودت باشد.",". Putting these two together can start a useful conversation with yourself.")+'</p>'+
- '<p>'+E(text)+'</p><p class="fun-result-question">'+T(l,"یک سؤال برای فکرکردن: اگر همین انتخاب فردا در شرایطی متفاوت پیش بیاید، باز هم همین پاسخ را می‌دهی؟","One question: would you choose the same thing tomorrow in a different context?")+'</p><small>'+T(l,"این متن تنها از پاسخ‌های همین دسته ساخته شده؛ نه شناخت کامل تو و نه قضاوت درباره درست یا غلط بودن انتخاب‌ها.","This reflection only uses these answers; it is not a diagnosis or a judgment.")+'</small></section>';
+ '<p>'+E(text)+'</p>'+echoHtml+'<p class="fun-result-question">'+T(l,"یک سؤال برای فکرکردن: اگر همین انتخاب فردا در شرایطی متفاوت پیش بیاید، باز هم همین پاسخ را می‌دهی؟","One question: would you choose the same thing tomorrow in a different context?")+'</p><small>'+T(l,"این متن تنها از پاسخ‌های همین دسته ساخته شده؛ نه شناخت کامل تو و نه قضاوت درباره درست یا غلط بودن انتخاب‌ها.","This reflection only uses these answers; it is not a diagnosis or a judgment.")+'</small></section>';
 }
 function summary(c,l){
  const n=next(c);
@@ -105,7 +107,7 @@ function rerender(){
  window.scrollTo({top:0,behavior:"instant"});
 }
 function download(){
- const payload={app:"The Life Organization",feature:"Strategic Life Choices",version:1,exportedAt:new Date().toISOString(),source:"User-provided 157-slide selection catalogue; 42 explicit and 16 interpretive pairings",choices:cats.map(c=>({category:c.fa,items:c.items.map(p=>({id:p.id,question:p.q,selected:state.answers[p.id]===0?p.a:state.answers[p.id]===1?p.b:null,origin:p.origin}))}))};
+ const payload={app:"The Life Organization",feature:"Strategic Life Choices",version:1,exportedAt:new Date().toISOString(),source:"User-supplied strategic choice slide PDF; 42 explicitly identified and 16 interpretive pairings",choices:cats.map(c=>({category:c.fa,items:c.items.map(p=>({id:p.id,question:p.q,selected:state.answers[p.id]===0?p.a:state.answers[p.id]===1?p.b:null,origin:p.origin}))}))};
  const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
  const a=document.createElement("a");a.href=url;a.download="life-organization-fun-choices.json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
