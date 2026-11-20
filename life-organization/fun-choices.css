@@ -99,3 +99,13 @@ html[dir="ltr"] .fun-root{text-align:left}
  .fun-actions button{flex:1}
 }
 @media(prefers-reduced-motion:reduce){.fun-category,.fun-choice,.fun-progress>span{transition:none}}
+
+/* Original visual excerpts supplied in the user's slide deck */
+.fun-original-img{width:100%;height:100%;min-height:inherit;display:block;object-fit:cover;object-position:center;filter:saturate(.85)}
+.fun-question>.fun-art:has(.fun-original-img){background:#2d5358}
+.fun-question .fun-original-img{max-width:380px;width:100%;object-fit:cover;object-position:center 42%}
+.fun-home-teaser{display:flex;justify-content:space-between;gap:20px;align-items:center;margin:23px 0;padding:24px 27px;background:linear-gradient(115deg,var(--paper),var(--sage));border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.fun-home-teaser h2{font-size:22px;line-height:1.6;margin:0 0 5px;font-weight:900}
+.fun-home-teaser p{font-size:13px;line-height:1.85;color:var(--muted);margin:0;max-width:650px}
+.fun-home-teaser button{flex:none;white-space:nowrap}
+@media(max-width:650px){.fun-home-teaser{flex-direction:column;align-items:flex-start;padding:20px}.fun-home-teaser h2{font-size:19px}.fun-home-teaser button{width:100%}}
