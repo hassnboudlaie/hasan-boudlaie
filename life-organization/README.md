@@ -53,7 +53,7 @@ Static HTML/CSS/JavaScript PWA without a build step. Read `index.html` in a loca
 - `book1-journey.js`: paginated story reading, optional contextual coaching, progress and earned recognition.
 - `book1-matrices.js` and `book1-matrices.css`: seven distinct maps and ten-section dossier.
 - `app.js`: existing shell and routes `#book1/1` through `#book1/10`, and `#book1/<n>/workbook`.
-- `sw.js`: versioned service worker cache `life-org-book1-ten-chapters-v050-20261120`.
+- `sw.js`: versioned service worker cache `life-org-book1-ten-chapters-v051-20261120`.
 
 ### Privacy and continuity
 
