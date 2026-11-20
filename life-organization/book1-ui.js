@@ -202,7 +202,7 @@ function fieldValue(n,key){
 }
 function fieldsFilled(n){return BOOK_FIELDS[n-1].filter(x=>fieldValue(n,x[0]).trim()).length}
 function worksheetPage(n,lang){
- if(!(n>=1&&n<=10))return workbookOverview(lang);
+ if(!(n>=1&&n<=11))return workbookOverview(lang);
  const ch=SOURCE.chapters[n-1],fs=BOOK_FIELDS[n-1];
  const total=fs.length;
  const title=T(lang,WORKSHEET_TITLES_FA[n-1],WORKSHEET_TITLES_EN[n-1]);
@@ -280,7 +280,7 @@ document.addEventListener("input",function(e){
  const field=e.target.closest("[data-lb-field]");
  if(!field)return;
  const n=Number(field.dataset.chapter),key=field.dataset.lbField;
- if(!(n>=1&&n<=10)||!BOOK_FIELDS[n-1].some(f=>f[0]===key))return;
+ if(!(n>=1&&n<=11)||!BOOK_FIELDS[n-1].some(f=>f[0]===key))return;
  if(!state.fields[n]||typeof state.fields[n]!=="object")state.fields[n]={};
  state.fields[n][key]=field.value.slice(0,1800);
  const status=document.getElementById("lb-save-status");
@@ -293,7 +293,7 @@ document.addEventListener("click",function(e){
  const action=el.dataset.lbAction;
  if(action==="mark"){
   const n=Number(el.dataset.chapter),i=Number(el.dataset.section);
-  if(!(n>=1&&n<=10)||!parse(n)[i]||parse(n)[i].type!=="talk")return;
+  if(!(n>=1&&n<=11)||!parse(n)[i]||parse(n)[i].type!=="talk")return;
   const key=n+"-"+i;state.checked[key]=!state.checked[key];persist();
   const yes=!!state.checked[key],lang=document.documentElement.lang;
   el.classList.toggle("is-done",yes);el.setAttribute("aria-pressed",String(yes));
@@ -308,7 +308,7 @@ document.addEventListener("click",function(e){
  if(action==="download-text")downloadText();
  if(action==="clear-chapter"){
   const n=Number(el.dataset.chapter);
-  if(n>=1&&n<=10&&confirm(T(document.documentElement.lang,"پاسخ‌های این فصل از این مرورگر پاک شوند؟","Delete this chapter’s answers from this browser?"))){
+  if(n>=1&&n<=11&&confirm(T(document.documentElement.lang,"پاسخ‌های این فصل از این مرورگر پاک شوند؟","Delete this chapter’s answers from this browser?"))){
    delete state.fields[n];persist();window.dispatchEvent(new HashChangeEvent("hashchange"));
   }
  }
