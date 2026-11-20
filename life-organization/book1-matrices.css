@@ -48,3 +48,9 @@ html[data-theme=dark] .lo-map,html[data-theme=dark] .lo-dossier,[data-theme=dark
 html[data-theme=dark] .lo-map-cell,[data-theme=dark] .lo-map-cell{background:#1d3940;border-color:#567277;color:#f2f8f6}
 html[data-theme=dark] .lo-map-results>div,[data-theme=dark] .lo-map-results>div,html[data-theme=dark] .lo-dossier-item,[data-theme=dark] .lo-dossier-item{background:#1d3940;color:#f2f8f6}
 html[data-theme=dark] .lo-map-axis,[data-theme=dark] .lo-map-axis{color:#b3d0cd}
+/* Book One master plan: chapters 11–12 are visible, deliberately not faked. */
+.lb-chapter-tile.lo-upcoming{border-style:dashed;box-shadow:none;opacity:.78;background:linear-gradient(130deg,rgba(26,98,92,.035),rgba(180,149,97,.045))}
+.lb-chapter-tile.lo-upcoming .lb-tile-status{color:#57706f;font-weight:800}
+.lb-chapter-tile.lo-upcoming h3{line-height:1.8}
+.lo-source-state{margin:9px 0 14px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:11px;border:1px solid rgba(132,115,77,.24);background:rgba(198,154,81,.09);font-size:.86rem;line-height:1.8;font-weight:750;color:inherit}
+@media(max-width:650px){.lb-chapter-tile.lo-upcoming{padding:18px}.lo-source-state{font-size:.81rem}}
