@@ -167,7 +167,7 @@ assert.equal(ten.wallet.practices,10,"ten completed workbook outputs");
 assert.equal(ten.wallet.xp,1155,"47 reading and ten workbook rewards");
 assert.equal(ten.wallet.coins,385,"correct ten-chapter coin total");
 assert.equal(ten.badges.length,11,"ten chapter badges plus foundation");
-assert.equal((window.LifeBook.workbook("fa").match(/class="lo-dossier-item/g)||[]).length,10,"ten dossier entries");
+assert.equal((window.LifeBook.workbook("fa").match(/class="lo-dossier-item/g)||[]).length,11,"dossier contains eleven authored chapters before Chapter 11 is completed");
 assert.equal((window.LifeBook.landing("fa").match(/class="lb-chapter-tile/g)||[]).length,12,"locked 12 chapter architecture");
 assert.equal((window.LifeBook.landing("fa").match(/lo-upcoming/g)||[]).length,1,"only Chapter 12 is still planned");
 assert.ok(window.LifeBook.chapter(9,"fa").includes("lo-source-state"),"review manuscript status visible");
