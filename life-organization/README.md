@@ -1,75 +1,75 @@
-# سازمان عالی زندگی من | The Life Organization — Book One, Six-Chapter Journey v0.4
+# سازمان عالی زندگی من — The Life Organization · Book One v0.5
 
-**Official app:** https://hassnboudlaie.github.io/hasan-boudlaie/life-organization/
+**Official application:** https://hassnboudlaie.github.io/hasan-boudlaie/life-organization/
 
-This is the existing six-volume, modular, mobile-first FA/EN PWA. Release v0.4 extends **Book One** from its first three complete authored chapters to **all six chapters authored as of 19 November 2026**. There is no parallel app. The other five volumes remain module shells; no content is fabricated for unpublished chapters. No files from \`my-finance/\`, \`sabanaft/\`, \`okr-system/\` or unrelated apps are changed.
+The Book One architecture is **12 chapters in three approved parts**, of which **chapters 1–10 are available as authored Persian manuscripts** and chapters 11–12 remain title-only placeholders. The existing six-volume PWA, its approved brand mark and unrelated applications are unchanged.
 
-## Content architecture — chapter fidelity before features
+## Editorial and manuscript register — 20 November 2026
 
-| Book One chapter | Authoritative authored content | Active individual tool |
+| Chapter | Approved subject | Learning instrument |
 |---|---|---|
-| 1. سازمانی که همین حالا اداره می‌کنید | Approved locked Part I | نمای فوری سازمان زندگی (8 fields) |
-| 2. سازمان عالی زندگی چیست | Approved locked Part I | معیارهای مناسب‌بودن و شواهد (10 fields) |
-| 3. چگونه وضع موجود و وضع مناسب را ببینیم | Approved locked Part I | موضوع/بازه، وضع موجود، وضع مناسب و شکاف (12 fields) |
-| 4. فلسفه زندگی من | Drive chapter 04, including Part II introduction | برگه فرض‌ها و منطق اداره زندگی (8 fields), contextual matrix: stability/agility × formal/informal coordination |
-| 5. سعادت من و رابطه شادی و موفقیت | Drive chapter 05 | برگه شادی و موفقیت (9 fields), contextual map: success yes/no × happiness yes/no |
-| 6. من کی هستم؟ — ترجیحات رفتاری با DiSC | Drive chapter 06 | دو موقعیت و یک الگوی رفتاری (11 fields), contextual DiSC-informed map: pace/directness × questioning/accepting |
+| 1 | سازمانی که همین حالا اداره می‌کنید | Life organization snapshot; 8 prompts |
+| 2 | سازمان عالی زندگی چیست؟ | Fit criteria and evidence; 10 prompts |
+| 3 | چگونه وضع موجود و وضع مناسب را ببینیم؟ | Current/suitable-state comparison; 12 prompts |
+| 4 | فلسفه زندگی من | Assumptions, values, stability/agility × formality; 8 prompts |
+| 5 | سعادت من و رابطه شادی و موفقیت | Happiness × success; 9 prompts |
+| 6 | من کی هستم؟ ترجیحات رفتاری با DiSC | Pace/directness × questioning/accepting; 11 prompts |
+| 7 | عالمِ عامل؛ دانستن و عمل‌کردن | Knowledge × action; 8 prompts |
+| 8 | مدیرعامل زندگی خودت باش | **Effectiveness × efficiency of resources**; 12 prompts |
+| 9 | رفتار من و نتایجی که می‌بینم | **Behavioral fit × outcome**; 10 prompts |
+| 10 | منفعت، هزینه و گزینه ازدست‌رفته | **Intrinsic effort × yield, with alternative/opportunity cost**; 11 prompts |
+| 11 | پرمشغله بودن و مفید بودن | Not yet authored; title only |
+| 12 | نمایه و ممیزی بنیادین من | Not yet authored; title only |
 
-The manuscript is displayed in a paginated reading experience with the original Persian storytelling and research reference text; two fields appear per workbook page. Every chapter has coaching-style reflection prompts, and the six outputs form a connected personal learning dossier. Chapters 4–6 add two-axis **Current State ● / Suitable State ○** interactive matrices. A placement can be left unknown and is stored only in the current browser.
+**Part I:** chapters 1–3 (seeing the life organization). **Part II:** chapters 4–11 (eight fundamental orientations). **Part III:** chapter 12 (integrated foundational profile).
 
-### Source provenance and editorial restraint
+Source of truth is **the updated individual Drive chapter files**, not the older `Book1_Part1_FINAL` archive. Chapter content has been editorially updated to maintain four-character continuity: **نیلوفر، رضا، آرش، لیلا**. This revision is substantial; the earlier Hamid/Sara narrative was replaced in the new Drive manuscripts. Historical workbook field keys and saved answers are preserved to prevent data loss, although previously entered observations may refer to older stories and users should revisit their meanings.
 
-- Chapters 1–3: existing canonical \`book1-content.js\`, source \`Book1_Part1_FINAL_v1.0_FA\`, https://docs.google.com/document/d/15AIIR5_2V81fqcGuBmtuml64Wn0HE65V/edit.
-- Checked against individually authored Drive documents dated 19 November 2026: the first three chapter prose strings match their current files through their full existing text. Drive's extraction contains **additional detached table fragments after** those files' prose. To preserve the editorially locked text and avoid duplicating tables, those detached strings were not appended to the first three interactive readers.
-- Chapter 4 source: https://docs.google.com/document/d/1qVLtLheK-i_PzOX4sXH3yl9QpbAEMQwU/edit.
-- Chapter 5 source: https://docs.google.com/document/d/1rubxFS2T2epL-mMZKGL2tlgjOXqlygTv/edit.
-- Chapter 6 source: https://docs.google.com/document/d/1hI4BqwrdqmzPCq7l3AF30lFgn1n9sjco/edit.
-- Part II source text is imported into \`book1-part2-content.js\`, without altering the source Word documents. An inert two-line reading header is prepended to preserve the book-page parser's existing first-two-lines behavior. Word-extracted table text, including detached table tails, is preserved as *text*; original embedded charts/visuals are **not** reproduced as their Word images. Consult Drive originals for original layout.
-- Preserve the four characters **نیلوفر، حمید، سارا، لیلا** in their source stories and cross-chapter comparisons. Do not conflate separate conceptual maps (productivity, happiness/success, DiSC style).
-- Individual workbook exercises are **authorial reflective instruments, not psychometric scales**. The DiSC-informed map does not administer or claim to score an official Everything DiSC assessment. A map placement is a provisional, contextual observation, not a diagnosis or permanent personality type.
-- The matrices and diagrams here implement the conceptual two-axis models. They are interactive adaptations, **not screenshots or copies of original Word figures**.
+- Chapters 1–7: up-to-date individual source manuscripts including the approved chapter folder and chapter 7 in its separate current manuscript folder.
+- Chapter 8: Drive document **08 - فصل هشتم - مدیرعامل زندگی خودت باش - نهایی.docx**.
+- Chapters 9–10: Drive documents marked **نسخه بازبینی**. They are available in the app for learning and review but **are explicitly not described as final approved editions**.
+- Source URLs are attached separately to every chapter in `book1-chapters-20261120.js`. No changes were made to the original Drive documents.
 
-## Guided Learning and recognition
+The source text from Drive is preserved and paged. Word-extracted figure and table text can appear as trailing text because the source connector does not reproduce original embedded image layouts. Interactive diagrams are faithful *adaptations* of each book-specific two-axis model, not image copies of the Word figures. The eight-orientation architecture is not rewritten to fit the app.
 
-- Full chapter talk coverage: **4 / 4 / 5 / 6 / 5 / 5 = 29 گفتار** in six independently navigable reading journeys.
-- Six chapter workbooks contain **58 prompts** total (8/10/12/8/9/11). All preserve their own labels, context and evidence rather than computing an arbitrary "life score".
-- Each reviewed reading step earns **15 Learning XP and 5 Journey Coins**, once per step; each recorded chapter workbook output earns **45 XP and 15 Coins**, once per chapter. All six fully completed yield **705 XP and 235 Coins** — participation counters only.
-- There are **seven badges**: one for each of chapters 1–6 and the existing first-part Foundation Builder badge, earned after chapters 1–3. The foundation badge does not require chapters 4–6.
-- Badges download as PNG with SVG fallback. In-app coaching check-ins are scripted editorial prompts and not a live AI coach.
-- Two optional 30-second reflection stations remain from v0.3.
+## Functionality and assessment boundaries
 
-## App and offline structure
+- **47 گفتار**, **99 authored-source-aligned workbook prompts**, ten chapter journeys, ten linked dossier sections and **seven distinct contextual matrices for chapters 4–10**.
+- Twelve-chapter planning view shows ten interactive chapters and two read-only future chapters; no fabricated teaching material for chapters 11 and 12.
+- Current state **●**, suitable state **○**, unknown/clear selection and free-text evidence on the matrices. Chapter 7 does not equate intention with action; chapter 8 resource-efficiency logic remains separate from chapter 10 intrinsic effort/yield; chapter 9 behavior/result is a different lens.
+- Learning badges: **11** total (ten chapter awards and the existing Part I Foundation Builder). Completing all 47 readings plus ten workbooks results in **1155 XP / 385 learning coins**, not life-performance scores.
+- One chapter reading marker is awarded at most once. Workbook outputs award once per chapter; the original v0.3 local state keys retain existing progress. Badges may be downloaded as PNG with SVG fallback.
+- Scripted reflective questions give a mentor-like tone, without pretending to provide a validated psychological assessment or live AI dialogue.
+- Chapter 6 is **DiSC-informed behavioral observation**, not an official Everything DiSC or MBTI questionnaire. None of the authored contextual matrices claims psychometric validity or yields a numerical life grade.
 
-Static HTML/CSS/JS; serve \`index.html\` from an HTTP server or GitHub Pages, no build tooling. File list:
-- \`book1-content.js\`: approved first-three manuscripts.
-- \`book1-part2-content.js\`: authored chapters 4–6, source metadata and chapter question metadata.
-- \`book1-ui.js\`: six workbook schemas, persistence, exports, baseline chapter UI.
-- \`book1-journey.js\`: guided reading, narrative coaching prompts, journey markers, gamification and chapter awards.
-- \`book1-matrices.js\` + \`book1-matrices.css\`: contextual, selectable source-aligned two-axis maps and six-chapter dossier.
-- \`app.js\`: existing six-volume app shell, routing \`#book1/1\` through \`#book1/6\`, workbook routes.
-- \`index.html\`: script loading order and PWA shell; \`sw.js\`: updated offline cache \`life-org-book1-six-chapters-v040-20261119\`.
-- Existing approved Life Architecture logo and assets remain intact.
+## Application and data architecture
 
-## Privacy, limitations and data continuity
+Static HTML/CSS/JavaScript PWA without a build step. Read `index.html` in a local HTTP server or via GitHub Pages. Main components:
 
-**There is no user authentication, backend, cross-device sync, encrypted storage, or multi-user isolation.** Notes and observations are stored in browser LocalStorage; **do not put confidential data into a shared browser** and keep backup exports if important. Clearing browsing data can erase progress. This remains an interactive educational prototype, not a commercial production system, validated personality instrument, therapy or clinical coaching service. The original authored text is Persian; interface navigation is partially bilingual, **not a full professionally translated English edition**.
+- `book1-content.js`: preserved earlier baseline source.
+- `book1-part2-content.js`: preserved previous 4–6 import.
+- `book1-chapters-20261120.js`: **last-loaded, authoritative current content override for chapters 1–10** with per-chapter provenance and editorial status; it does not change workbook storage.
+- `book1-ui.js`: all ten chapter-specific workbook schemas, export, reader foundations, plus the 12-chapter plan with chapter 11/12 placeholders.
+- `book1-journey.js`: paginated story reading, optional contextual coaching, progress and earned recognition.
+- `book1-matrices.js` and `book1-matrices.css`: seven distinct maps and ten-section dossier.
+- `app.js`: existing shell and routes `#book1/1` through `#book1/10`, and `#book1/<n>/workbook`.
+- `sw.js`: versioned service worker cache `life-org-book1-ten-chapters-v050-20261120`.
 
-Persistent keys:
-- \`tlo-book1-part1-workbook-v1\`: six chapters' worksheet answers and review markers; chapter 1–3 fields retain their existing keys.
-- \`tlo-guided-learning-v03\`: reading rewards, chapter output confirmations, notes and journey cursor. Existing v0.3 progress is retained.
-- \`tlo-book1-context-maps-v1\`: maps for chapters 4–6.
-- App-wide reset clears these after user confirmation.
-- The main app JSON export includes all six chapters, journey, reflection notes, contextual matrices and module-level notes. Chapter workbook TXT and backup JSON come from the original Book I workbook controls and cover the six chapter forms; matrix placements are in the **main app's** full JSON export.
+### Privacy and continuity
 
-## QA and quality gates
+The app is still a **local-browser prototype**, not a user-account platform. No authentication, shared backend, automatic cross-device synchronization, encrypted private storage or validated psychometric diagnostics. Do not enter confidential material on a shared device. Back up important work using the app-level JSON export; clearing browser storage may erase data.
 
-1. Script parse / isolated runtime QA confirmed all six chapter data objects, 29 گفتار, 58 prompts, three interactive matrices, six-card dossier, seven badge slots and correct chapter source links.
-2. Updated dependency-free \`node life-organization/book1-smoke-test.cjs\` for full six-chapter checks, saved entries, navigation, no double awards, matrices, reset and offline asset declarations.
-3. Updated Playwright-based \`node life-organization/book1-visual-qa.cjs\` for mobile & desktop screenshot/contrast/layout regression, including new matrices and dossier. Requires Playwright and a Chromium browser installed.
-4. **Code parsing and isolated render verification do not by themselves establish a successful browser deployment or end-to-end device test.** Verify on GitHub Pages after deployment and on target device before public use.
+These existing keys are retained intentionally:
+- `tlo-book1-part1-workbook-v1`: now holds book-one responses for all ten existing chapters while retaining chapters 1–6.
+- `tlo-guided-learning-v03`: chapter reading markers, rewards and coaching reflections for all ten chapters.
+- `tlo-book1-context-maps-v1`: current/suitable positions for all seven contextual matrices.
 
-## Design governance
+The main app JSON export includes all workbook answers, activity ledger, contextual maps, reflective notes and other volume shell notes. Book I's text workbook export includes ten authored workbooks but matrix coordinate backups are part of the **main** full app JSON export.
 
-The prescribed structure is **Book → chapter → source narrative and references → tool → reflection → evidence → current/suitable fit → review**. Adopt *Tool-First, Profile over Score, Fit over one-size-fits-all* and keep **Current State → Suitable State → Gap → Fit/Misfit → Readiness → Action** intact without imposing a generic psychometric score on book-specific reflection.
+## Verification
 
-Related prior editorial/UX audit: [UX_LEARNING_AUDIT_v03.md](./UX_LEARNING_AUDIT_v03.md).
+- Dependency-free smoke tests: `node life-organization/book1-smoke-test.cjs`. These assert ten authored chapter sources, 47 reading stages, 99 prompts, distinct interactive maps, badges, local persistence, routes, offline declarations, and the 12-chapter plan.
+- Browser layout and interaction QA: `node life-organization/book1-visual-qa.cjs` (requires Playwright/Chromium), including Android-size and desktop viewports, editable workbooks, matrix interactions, source review labels and horizontal-overflow checks.
+- The GitHub Actions workflow **Life Organization Book I QA** executes the smoke and visual tests; the Pages workflow deploys the public app.
+
+**Editorial governance:** The book's source models and locked editorial architecture govern the app, not the reverse. Keep scope → current state → suitable state → gap → fit → readiness → justified action, preserve comparative evidence and alternative explanations, and never turn exploratory reflections into unsupported diagnoses.
