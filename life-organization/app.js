@@ -97,8 +97,10 @@
     const h=decodeURIComponent(location.hash.replace(/^#/,""))||"home";
     const parts=h.split("/");
     if(parts[0]==="module"&&/^[1-6]$/.test(parts[1]||""))return {page:"module",id:Number(parts[1])};
+    if(parts[0]==="book1"&&parts[1]==="front"&&["about","intro","guide","toc"].includes(parts[2]||"")&&parts.length===3)return {page:"book1",id:0,mode:"front",section:parts[2]};
+    if(parts[0]==="book1"&&parts[1]==="profile"&&parts.length===2)return {page:"book1",id:0,mode:"profile"};
     if(parts[0]==="book1"&&parts[1]==="workbook"&&parts.length===2)return {page:"book1",id:0,mode:"workbook"};
-    if(parts[0]==="book1"&&/^(?:[1-9]|1[01])$/.test(parts[1]||"")&&(parts.length===2||(parts.length===3&&parts[2]==="workbook")))return {page:"book1",id:Number(parts[1]),mode:parts[2]==="workbook"?"workbook":"read"};
+    if(parts[0]==="book1"&&/^(?:[1-9]|1[0-2])$/.test(parts[1]||"")&&(parts.length===2||(parts.length===3&&parts[2]==="workbook")))return {page:"book1",id:Number(parts[1]),mode:parts[2]==="workbook"?"workbook":"read"};
     if(["home","modules","workbook","coach","progress","profile"].includes(h))return {page:h};
     return {page:"home"};
   }
@@ -147,7 +149,7 @@
   }
   function workbookPage(){
     const count=MODULES.filter(m=>hasNote(m.id)).length;
-    const bookCTA=window.LifeBook?'<div class="lb-journal-teaser"><div><h2>'+tr('دفتر کار یازده فصل تألیف‌شده جلد اول','Book One · Chapters 1–11 Workbook')+'</h2><p>'+tr('نمای فوری، معیارهای اولیه و مقایسه وضع موجود و مناسب؛ با ذخیره محلی و خروجی قابل دریافت.','Your snapshot, fit criteria and current/suitable-state comparison, with local save and downloadable outputs.')+'</p></div><button class="lb-button lb-button-primary" type="button" data-route="book1/workbook">'+tr('ورود به دفتر کار ده فصل','Open the ten-chapter workbook')+'</button></div>':'';
+    const bookCTA=window.LifeBook?'<div class="lb-journal-teaser"><div><h2>'+tr('دفتر کار دوازده فصل تألیف‌شده جلد اول','Book One · Chapters 1–12 Workbook')+'</h2><p>'+tr('نمای فوری، معیارهای اولیه و مقایسه وضع موجود و مناسب؛ با ذخیره محلی و خروجی قابل دریافت.','Your snapshot, fit criteria and current/suitable-state comparison, with local save and downloadable outputs.')+'</p></div><button class="lb-button lb-button-primary" type="button" data-route="book1/workbook">'+tr('ورود به دفتر کار ده فصل','Open the ten-chapter workbook')+'</button></div>':'';
     return '<div class="page-lead"><p class="section-kicker">'+t("teaserTag")+'</p><h1>'+t("workbookTitle")+'</h1><p>'+t("workbookDesc")+'</p></div>'+
       bookCTA+'<div class="stat-strip"><div class="stat-block"><b>'+count+' / 6</b><span>'+t("notesCount")+'</span></div></div>'+
       '<div class="section-heading"><h2>'+t("yourNotes")+'</h2><button class="btn btn-outline" data-action="export">'+icons("download")+t("exportNotes")+'</button></div>'+
@@ -202,7 +204,7 @@
     $("#bottom-nav").innerHTML=navHtml(active,true);
     const crumb=r.page==="module"?moduleName(MODULES[r.id-1]):r.page==="book1"?(state.lang==="fa"?"جلد اول / شناخت سازمان زندگی":"Book One / Understanding Your Life Organization"):t(r.page==="home"?"homeCrumb":r.page);
     $("#breadcrumbs").innerHTML='<span>'+t("home")+'</span><span class="crumb-sep">/</span><strong>'+esc(crumb)+'</strong>';
-    $("#page").innerHTML=r.page==="module"?modulePage(r.id):r.page==="book1"&&window.LifeBook?(r.id===0?window.LifeBook.workbook(state.lang):r.mode==="workbook"?window.LifeBook.worksheet(r.id,state.lang):window.LifeBook.chapter(r.id,state.lang)):pageFn[r.page]();
+    $("#page").innerHTML=r.page==="module"?modulePage(r.id):r.page==="book1"&&window.LifeBook?(r.id===0?(r.mode==="front"?window.LifeBook.frontmatter(state.lang,r.section):r.mode==="profile"?window.LifeBook.profile(state.lang):window.LifeBook.workbook(state.lang)):r.mode==="workbook"?window.LifeBook.worksheet(r.id,state.lang):window.LifeBook.chapter(r.id,state.lang)):pageFn[r.page]();
     $("#language-btn").textContent=state.lang==="fa"?"EN":"فا";
     $("#avatar-letter").textContent=(state.name.trim()||t("anonymous")).charAt(0).toUpperCase();
     $("#install-title").textContent=t("installation");$("#install-body").textContent=t("installHelp");
