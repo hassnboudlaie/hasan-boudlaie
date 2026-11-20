@@ -49,7 +49,7 @@ Static HTML/CSS/JavaScript PWA without a build step. Read `index.html` in a loca
 
 - `book1-content.js`: preserved earlier baseline source.
 - `book1-part2-content.js`: preserved previous 4–6 import.
-- `book1-chapters-20261120.js`: **last-loaded, authoritative current content override for chapters 1–10** with per-chapter provenance and editorial status; it does not change workbook storage.
+- `book1-chapters-20261120.js`: authoritative base override for chapters 1–10 with per-chapter provenance and editorial status; it does not change workbook storage.
 - `book1-chapter11-20261120.js`: the additive, authoritative Chapter 11 Drive text loaded after the ten-chapter source layer, retaining the prior locked chapter title as metadata.
 - `book1-ui.js`: all eleven chapter-specific workbook schemas, export, reader foundations, plus the 12-chapter plan with chapter 11/12 placeholders.
 - `book1-journey.js`: paginated story reading, optional contextual coaching, progress and earned recognition.
@@ -63,14 +63,14 @@ The app is still a **local-browser prototype**, not a user-account platform. No 
 
 These existing keys are retained intentionally; adding Chapter 11 does not wipe earlier user responses or XP:
 - `tlo-book1-part1-workbook-v1`: now holds book-one responses for all eleven authored chapters while retaining chapters 1–6.
-- `tlo-guided-learning-v03`: chapter reading markers, rewards and coaching reflections for all ten chapters.
+- `tlo-guided-learning-v03`: chapter reading markers, rewards and coaching reflections for all eleven chapters.
 - `tlo-book1-context-maps-v1`: current/suitable positions for all seven contextual matrices.
 
 The main app JSON export includes all workbook answers, activity ledger, contextual maps, reflective notes and other volume shell notes. Book I's text workbook export includes eleven authored workbooks but matrix coordinate backups are part of the **main** full app JSON export.
 
 ## Verification
 
-- Dependency-free smoke tests: `node life-organization/book1-smoke-test.cjs`. These assert ten authored chapter sources, 47 reading stages, 99 prompts, distinct interactive maps, badges, local persistence, routes, offline declarations, and the 12-chapter plan.
+- Dependency-free smoke tests: `node life-organization/book1-smoke-test.cjs`. These assert eleven authored chapter sources, 52 reading stages, 109 prompts, distinct interactive maps, badges, local persistence, routes, offline declarations, and the 12-chapter plan.
 - Browser layout and interaction QA: `node life-organization/book1-visual-qa.cjs` (requires Playwright/Chromium), including Android-size and desktop viewports, editable workbooks, matrix interactions, source review labels and horizontal-overflow checks.
 - The GitHub Actions workflow **Life Organization Book I QA** executes the smoke and visual tests; the Pages workflow deploys the public app.
 
