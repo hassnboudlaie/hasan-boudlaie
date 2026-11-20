@@ -109,3 +109,8 @@ html[dir="ltr"] .fun-root{text-align:left}
 .fun-home-teaser p{font-size:13px;line-height:1.85;color:var(--muted);margin:0;max-width:650px}
 .fun-home-teaser button{flex:none;white-space:nowrap}
 @media(max-width:650px){.fun-home-teaser{flex-direction:column;align-items:flex-start;padding:20px}.fun-home-teaser h2{font-size:19px}.fun-home-teaser button{width:100%}}
+
+.fun-result-details{margin:13px 0 18px;border:1px solid var(--line);border-radius:15px;padding:15px 19px;background:var(--bg)}
+.fun-result-details>strong{font-size:13px;line-height:1.8}
+.fun-result-details ul{margin:9px 0 0;padding-inline-start:22px}
+.fun-result-details li{font-size:13px;line-height:1.95;margin:4px 0;color:var(--muted)}
