@@ -115,7 +115,7 @@ function progressText(n,lang){
  return T(lang,"مرور "+completed(n)+" از "+totalTalks(n)+" گفتار","Reviewed "+completed(n)+" of "+totalTalks(n)+" sections");
 }
 function masthead(lang,chapter=0){
- return '<div class="lb-topline"><span>'+T(lang,chapter>3?"کتاب اول / بخش دوم":"کتاب اول / بخش اول",chapter>3?"Book One / Part Two":"Book One / Part One")+'</span><span class="lb-brand-signature"><img src="./brand-symbol.svg" alt="" width="29" height="29"><span dir="ltr">THE LIFE ORGANIZATION</span></span></div>';
+ return '<div class="lb-topline"><span>'+T(lang,chapter===0?"جلد اول / ساختار دوازده‌فصلی":chapter>3?"جلد اول / بخش دوم":"جلد اول / بخش اول",chapter===0?"Book One / Twelve-Chapter Architecture":chapter>3?"Book One / Part Two":"Book One / Part One")+'</span><span class="lb-brand-signature"><img src="./brand-symbol.svg" alt="" width="29" height="29"><span dir="ltr">THE LIFE ORGANIZATION</span></span></div>';
 }
 function progressTrack(n){
  return '<div class="lb-track" aria-hidden="true"><div style="width:'+Math.round(100*completed(n)/totalTalks(n))+'%"></div></div>';
@@ -147,7 +147,7 @@ function landing(lang){
  return '<div class="lb-root lb-landing">'+masthead(lang)+
  '<section class="lb-cover"><img class="lb-cover-brand" src="./brand-symbol.svg" alt="" loading="lazy"><div class="lb-cover-orbit" aria-hidden="true"><span>01</span><i></i><i></i><i></i></div><div class="lb-cover-copy"><p class="lb-eyebrow">BOOK I · THE FOUNDATION</p>'+
  '<h1>'+T(lang,"من کجای زندگی ایستاده‌ام؟","Where do I stand in my life?")+'</h1>'+
- '<p class="lb-cover-intro">'+T(lang,"بخش اول: دیدن سازمان زندگی. پیش از تغییر، یاد می‌گیریم چگونه زندگی را ببینیم، معیارهای خود را روشن کنیم و درباره فاصله‌ها با شواهد حرف بزنیم.","Part One: Seeing your life organization. Before changing it, learn to observe, define your criteria and compare states with evidence.")+'</p>'+
+ '<p class="lb-cover-intro">'+T(lang,"این جلد سه بخش و دوازده فصل دارد: دیدن سازمان زندگی، شناخت هشت موضع بنیادین و ساختن نمایه نهایی. ده فصل تألیف‌شده اکنون برای مطالعه و کاربست در دسترس‌اند.","Book One has three parts and twelve planned chapters: observing life, exploring eight foundational orientations and building an integrated profile. The ten authored chapters are ready to explore.")+'</p>'+
  '<div class="lb-cover-buttons"><button class="lb-button lb-button-light" type="button" data-route="book1/1">'+T(lang,"شروع فصل اول","Start Chapter 1")+'</button>'+
  '<button class="lb-button lb-button-outline-light" type="button" data-route="book1/workbook">'+T(lang,"دفتر کار ده فصل","Ten-chapter workbook")+'</button></div></div></section>'+
  '<div class="lb-intro-statement"><span>01</span><p>'+T(lang,"ببینیم چه چیزی هست","Observe what is")+'</p><span class="lb-chevron">›</span><span>02</span><p>'+T(lang,"روشن کنیم چه چیزی مهم است","Clarify what matters")+'</p><span class="lb-chevron">›</span><span>03</span><p>'+T(lang,"شاهد و فاصله را مقایسه کنیم","Compare evidence and gaps")+'</p></div>'+
