@@ -33,6 +33,8 @@ const scenes={
  character:['<path d="M105 30 158 50v45q0 37-53 66-53-29-53-66V50z" fill="#ffffff22" stroke="#fcebd4" stroke-width="4"/>','<path d="M82 95 100 111 130 76" fill="none" stroke="#fff4db" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>']
 };
 function art(c){
+ const source=window.LifeFunImages&&window.LifeFunImages[c.id];
+ if(source)return '<div class="fun-art fun-art-'+c.id+'" aria-hidden="true"><img class="fun-original-img" loading="lazy" decoding="async" src="'+source+'" alt=""></div>';
  return '<div class="fun-art fun-art-'+c.id+'" aria-hidden="true"><svg viewBox="0 0 210 190" role="presentation" focusable="false">'+(scenes[c.id]||[]).join("")+'</svg></div>';
 }
 function heading(l,small,title,lead){
