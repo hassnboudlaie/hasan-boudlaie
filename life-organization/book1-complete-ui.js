@@ -59,7 +59,6 @@ function profile(lang){
  const summary=[["scope","حوزه یا تصمیم"],["period","بازه"],["choiceA","انتخاب اول"],["choiceB","انتخاب دوم"],["fit","همسویی / مغایرت و دلیل"],["preserve","چیزی که حفظ می‌کنم"],["next","تغییر اولویت‌دار"],["readiness","شرط آمادگی"],["review","زمان بازبینی"]];
  const lines=summary.map(([id,title])=>'<div><span>'+title+'</span><p>'+esc(record[id]||"— ثبت نشده —")+'</p></div>').join("");
  const n=Array.from({length:8},(_,i)=>i+4),placed=n.filter(i=>maps[i]&&(maps[i].current!=null||maps[i].suitable!=null)).length;
- const mentorship=(src.chapters[11].sourceText.match(/«با من مثل یک منتور[^»]*»/)||[])[0]||"";
  return '<div class="lp-root lp-profile-page" lang="fa" dir="rtl">'+
  '<header class="lp-profile-cover"><div><span>BOOK I · FOUNDATIONAL LIFE PROFILE</span><h1>نمایه بنیادین سازمان زندگی من</h1><p>هشت نگاه به انتخاب‌ها، بدون نمره کلی و بدون قضاوت درباره ارزش فرد.</p></div><img src="./brand-symbol.svg" width="88" height="88" alt=""></header>'+
  '<div class="lp-profile-toolbar"><span>● وضع موجود &nbsp; ○ وضع مناسب پیشنهادی &nbsp; — نامعلوم</span><div><button type="button" data-route="book1/12/workbook">تکمیل جمع‌بندی</button><button type="button" data-lp-action="print">چاپ نمایه</button></div></div>'+
@@ -67,7 +66,7 @@ function profile(lang){
  '<div class="lp-profile-heading"><h2>هشت موضع بنیادین</h2><span>'+placed+' از ۸ نقشه با علامت ثبت‌شده</span></div>'+
  '<div class="lp-profile-matrices">'+n.map(x=>mapCard(x,maps)).join("")+'</div>'+
  '<section class="lp-profile-synthesis"><h2>یک تصمیم؛ دو انتخاب اثرگذار</h2><p>آنچه در کاربرگ فصل دوازدهم نوشته‌اید، اینجا برای مرور و چاپ کنار هم می‌نشیند.</p><div class="lp-synthesis-lines">'+lines+'</div><button data-route="book1/12/workbook" type="button">تکمیل یا بازبینی این جمع‌بندی</button></section>'+
- '<details class="lp-mentoring"><summary>راهنمای منتورینگ اختیاری این فصل</summary><p>این متن از راهنمای اپِ فصل دوازدهم کتاب گرفته شده است. گفت‌وگوی تعاملی در ChatGPT، خارج از اپ انجام می‌شود؛ اطلاعات محرمانه وارد نکنید.</p><blockquote>'+esc(mentorship)+'</blockquote><button type="button" data-lp-action="copy-prompt">'+tr(lang,"کپی متن راهنما","Copy mentor prompt")+'</button><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">بازکردن ChatGPT</a><span role="status" id="lp-copy-status"></span></details>'+
+ ''+
  '<div class="lp-final-actions"><button data-route="book1/12" type="button">بازگشت به روایت فصل دوازدهم</button><button data-route="module/1" type="button">مسیر جلد اول</button></div></div>';
 }
 book.frontmatter=frontmatter;

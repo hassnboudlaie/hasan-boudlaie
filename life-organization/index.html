@@ -22,13 +22,21 @@
   <title>سازمان عالی زندگی من | The Life Organization</title>
   <script>document.documentElement.classList.add("has-js")</script>
 <link rel="stylesheet" href="../hb-impeccable-shared.css?v=20261114">
+<style>
+.current-book-nav{display:flex;gap:.35rem;flex-wrap:wrap;margin:0 0 1.15rem;padding:.35rem;border-block-end:1px solid color-mix(in srgb,currentColor 22%,transparent)}
+.current-book-nav button{border:1px solid transparent;background:transparent;color:inherit;border-radius:.55rem;padding:.55rem .7rem;font:inherit;cursor:pointer}
+.current-book-nav button[aria-current],.current-book-nav button:hover{background:color-mix(in srgb,currentColor 10%,transparent);border-color:color-mix(in srgb,currentColor 24%,transparent)}
+nav.bottom-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+.book-source-figure{margin:1.15rem auto;text-align:center}.book-source-figure img{max-width:100%;max-height:37rem;height:auto;border-radius:.45rem}
+.book-source-table{overflow:auto;max-width:100%;margin:1rem 0}.book-source-table table{width:100%;border-collapse:collapse;font-size:.9em}.book-source-table th,.book-source-table td{padding:.65rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);text-align:start;vertical-align:top}.book-source-table th{background:color-mix(in srgb,currentColor 9%,transparent)}.book-source-table td img,.book-source-table th img{display:block;width:clamp(2.2rem,14vw,6rem);height:auto;margin:.3rem 0;border-radius:.3rem}
+</style>
 </head>
 <body>
   <div id="brand-splash" class="brand-splash" aria-hidden="true"><div class="brand-splash-panel"><img src="./brand-symbol.svg" width="230" height="230" alt=""><strong>سازمان عالی زندگی من</strong><small>The Life Organization</small><span class="brand-splash-line" aria-hidden="true"></span></div></div>
   <a id="skip-link" href="#main">رفتن به محتوای اصلی</a>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Main navigation">
-      <a href="#home" class="brand" aria-label="The Life Organization">
+      <a href="#module/1" class="brand" aria-label="The Life Organization">
         <span class="brand-mark"><img src="./icon.svg?v=life-architecture-1" alt="" width="45" height="45"></span>
         <span class="brand-words"><strong>سازمان عالی زندگی من</strong><small>THE LIFE ORGANIZATION</small></span>
       </a>
@@ -36,7 +44,7 @@
       <nav id="side-nav" class="side-nav" aria-label="Primary"></nav>
       <div class="side-bottom">
         <div class="side-message"><span class="side-message-icon" aria-hidden="true">✦</span><strong data-i18n="asideTitle">زندگی متناسب با من</strong><p data-i18n="asideDesc">یک فضای آرام برای فکر کردن، انتخاب کردن و پیش رفتن.</p></div>
-        <div class="sidebar-meta"><span>VERSION 0.8 · BOOK ONE + FUN</span><span class="meta-dot" aria-hidden="true"></span><span data-i18n="localOnly">ذخیره روی این دستگاه</span></div>
+        <div class="sidebar-meta"><span>BOOK ONE + FUN</span><span class="meta-dot" aria-hidden="true"></span><span data-i18n="localOnly">ذخیره روی این دستگاه</span></div>
       </div>
     </aside>
     <div class="content-shell">
@@ -71,14 +79,19 @@
   <script src="./book1-chapters-20261120.js?v=0.5.0" defer></script>
   <script src="./book1-chapter11-20261120.js?v=0.6.0" defer></script>
   <script src="./book1-complete-20261120.js?v=0.7.0" defer></script>
-  <script src="./book1-ui.js?v=0.7.0" defer></script>
+  <script defer src="./book-current-images-1.js?v=0.9.0"></script>
+  <script defer src="./book-current-images-2.js?v=0.9.0"></script>
+  <script defer src="./book-current-images-3.js?v=0.9.0"></script>
+  <script defer src="./book-current-images-4.js?v=0.9.0"></script>
+  <script defer src="./book-current.js?v=0.9.0"></script>
+  <script src="./book1-ui.js?v=0.9.0" defer></script>
   <script src="./book1-journey.js?v=0.7.0" defer></script>
   <script src="./book1-matrices.js?v=0.7.0" defer></script>
-  <script src="./book1-complete-ui.js?v=0.7.0" defer></script>
+  <script src="./book1-complete-ui.js?v=0.9.0" defer></script>
   <script src="./fun-choices-data.js?v=0.8.0" defer></script>
   <script src="./fun-choices-images.js?v=0.8.1" defer></script>
   <script src="./fun-choices.js?v=0.8.2" defer></script>
-  <script src="./app.js?v=0.8.0" defer></script>
+  <script src="./app.js?v=0.9.0" defer></script>
 <style>
 .life-lens{margin:1.25rem auto;padding:1rem clamp(.8rem,3vw,1.5rem);border:1px solid currentColor;border-radius:14px;max-width:66rem}
 .life-lens h2{font-size:1.25rem;margin:0 0 .5rem}.life-lens p{margin:.45rem 0;line-height:1.75}

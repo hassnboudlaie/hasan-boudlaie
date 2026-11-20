@@ -102,6 +102,7 @@ function question(n){
 }
 function formatLine(s){
  const x=s.trim();
+ if(window.LifeBookAssets?.[x])return window.LifeBookAssets[x].replace(/data-book-image="([^"]+)"/g,(_,id)=>'src="'+window.LifeBookImages[id]+'"');
  if(!x)return "";
  if(/^https:\/\//.test(x)){
   try{
@@ -151,13 +152,13 @@ function landing(lang){
  return '<div class="lb-root lb-landing">'+masthead(lang)+
  '<section class="lb-cover"><img class="lb-cover-brand" src="./brand-symbol.svg" alt="" loading="lazy"><div class="lb-cover-orbit" aria-hidden="true"><span>01</span><i></i><i></i><i></i></div><div class="lb-cover-copy"><p class="lb-eyebrow">BOOK I · THE FOUNDATION</p>'+
  '<h1>'+T(lang,"من کجای زندگی ایستاده‌ام؟","Where do I stand in my life?")+'</h1>'+
- '<p class="lb-cover-intro">'+T(lang,"این جلد سه بخش و دوازده فصل دارد: دیدن سازمان زندگی، شناخت هشت موضع بنیادین و ساختن نمایه نهایی. دوازده فصل تألیف‌شده اکنون برای مطالعه و کاربست در دسترس‌اند.","Book One has three parts and twelve planned chapters: observing life, exploring eight foundational orientations and building an integrated profile. All twelve authored chapters are ready to explore.")+'</p>'+
+ '<p class="lb-cover-intro">'+T(lang,"این جلد سه بخش و دوازدوازده فصل دارد: دیدن سازمان زندگی، شناخت هشت موضع بنیادین و ساختن نمایه نهایی. دوازدوازده فصل تألیف‌شده اکنون برای مطالعه و کاربست در دسترس‌اند.","Book One has three parts and twelve planned chapters: observing life, exploring eight foundational orientations and building an integrated profile. All twelve authored chapters are ready to explore.")+'</p>'+
  '<div class="lb-cover-buttons"><button class="lb-button lb-button-light" type="button" data-route="book1/1">'+T(lang,"شروع فصل اول","Start Chapter 1")+'</button>'+
- '<button class="lb-button lb-button-outline-light" type="button" data-route="book1/workbook">'+T(lang,"دفتر کار دوازده فصل","Twelve-chapter workbook")+'</button></div></div></section>'+
+ '<button class="lb-button lb-button-outline-light" type="button" data-route="book1/workbook">'+T(lang,"دفتر کار دوازدوازده فصل","Twelve-chapter workbook")+'</button></div></div></section>'+
  '<div class="lb-intro-statement"><span>01</span><p>'+T(lang,"ببینیم چه چیزی هست","Observe what is")+'</p><span class="lb-chevron">›</span><span>02</span><p>'+T(lang,"روشن کنیم چه چیزی مهم است","Clarify what matters")+'</p><span class="lb-chevron">›</span><span>03</span><p>'+T(lang,"شاهد و فاصله را مقایسه کنیم","Compare evidence and gaps")+'</p></div>'+
  '<div class="lb-section-header"><div><p class="lb-eyebrow">BOOK ONE · 12-CHAPTER PLAN</p><h2>'+T(lang,"مسیر مطالعه و تمرین","Your reading and practice journey")+'</h2></div><span class="lb-muted">'+T(lang,"بدون نمره‌دهی به زندگی","No life score")+'</span></div>'+
  '<div class="lb-tiles">'+content+SOURCE.plannedChapters.slice(12,12).map((title,i)=>'<article class="lb-chapter-tile lo-upcoming"><div class="lb-tile-top"><span class="lb-chapter-number">'+cnum(i+12)+'</span><span class="lb-tile-status">'+T(lang,"در انتظار تألیف","Not yet authored")+'</span></div><h3>'+E(title)+'</h3><p>'+T(lang,"عنوان طبق فهرست مطالب مصوب؛ بدون متن یا ابزار ساختگی.","Approved chapter title only; no fabricated manuscript or assessment.")+'</p></article>').join("")+'</div>'+
- '<section class="lb-journal-teaser"><div><h2>'+T(lang,"دفتر کار یکپارچه من","My connected workbook")+'</h2><p>'+T(lang,"خروجی‌های دوازده فصل به هم متصل‌اند: نمای فوری، معیارهای اولیه و برگه وضع موجود/مناسب. یادداشت‌ها فقط در همین مرورگر ذخیره می‌شوند.","Your snapshot, initial criteria and current/suitable-state sheet form one coherent workbook. Notes are stored only in this browser.")+'</p></div>'+
+ '<section class="lb-journal-teaser"><div><h2>'+T(lang,"دفتر کار یکپارچه من","My connected workbook")+'</h2><p>'+T(lang,"خروجی‌های دوازدوازده فصل به هم متصل‌اند: نمای فوری، معیارهای اولیه و برگه وضع موجود/مناسب. یادداشت‌ها فقط در همین مرورگر ذخیره می‌شوند.","Your snapshot, initial criteria and current/suitable-state sheet form one coherent workbook. Notes are stored only in this browser.")+'</p></div>'+
  '<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مشاهده دفتر کار","Open workbook")+'</button></section>'+
  '<p class="lb-privacy">'+T(lang,"این نسخه ابزار تأمل آموزشی است، نه آزمون روان‌شناختی یا ارزیابی استاندارد. اطلاعات محرمانه وارد نکنید؛ ذخیره‌سازی Local و رمزنگاری‌نشده است.","These are learning and reflection tools, not validated psychometric assessments. Avoid sensitive information; local storage is unencrypted.")+'</p></div>';
 }
@@ -181,7 +182,7 @@ function chapterPage(n,lang){
     '<div class="lb-panel-body" lang="fa" dir="rtl">'+original+btn+'</div></details>';
  }).join("");
  const jump=parts.filter(p=>p.type==="talk").map(p=>{const index=parts.indexOf(p);return '<button type="button" data-lb-action="jump" data-target="lb-sec-'+n+'-'+index+'">'+E(p.heading.replace(/^گفتار (اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)\s+/,""))+'</button>';}).join("");
- const next=n<12?'<button type="button" class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'">'+T(lang,"فصل بعدی","Next chapter")+'</button>':'<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مرور خروجی دوازده فصل","Review complete profile")+'</button>';
+ const next=n<12?'<button type="button" class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'">'+T(lang,"فصل بعدی","Next chapter")+'</button>':'<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مرور خروجی دوازدوازده فصل","Review complete profile")+'</button>';
  return '<div class="lb-root lb-reader">'+ribbon(lang,n)+masthead(lang,n)+
  '<section class="lb-chapter-hero"><div class="lb-hero-meta"><span>'+T(lang,"فصل "+n+" از ۱۲","Chapter "+n+" of 12")+'</span><span dir="ltr">BOOK ONE · PART '+(n===12?"III":n>3?"II":"I")+'</span></div>'+
  '<h1>'+E(T(lang,ch.title,ch.englishTitle))+'</h1><p class="lb-original-title">'+T(lang,ch.editionStatus==="editorial-review"?"نسخه تألیفی در بازبینی":"متن کامل تألیفی فارسی",ch.editionStatus==="editorial-review"?"Editorial review manuscript":"Complete authored Persian manuscript")+'</p>'+
@@ -195,7 +196,7 @@ function chapterPage(n,lang){
  '<section class="lb-reflection-prompt"><span class="lb-eyebrow">REFLECT · APPLY · LEARN</span><h2>'+T(lang,"از مطالعه به مشاهده","From reading to observation")+'</h2>'+
  '<p>'+T(lang,"قرار نیست خودتان را با دیگران مقایسه کنید. این فصل را به یک مشاهده روشن و قابل استفاده در دفتر کار تبدیل کنید.","The point is not comparison with other people. Turn the chapter into an observation you can use in your workbook.")+'</p>'+
  '<button type="button" class="lb-button lb-button-primary" data-route="book1/'+n+'/workbook">'+T(lang,"ثبت خروجی فصل "+n,"Capture Chapter "+n+" output")+'</button></section>'+
- '<div class="lb-page-bottom"><button class="lb-button lb-button-quiet" type="button" data-route="module/1">'+T(lang,"بازگشت به مسیر دوازده فصل","Back to chapters")+'</button>'+next+'</div>'+
+ '<div class="lb-page-bottom"><button class="lb-button lb-button-quiet" type="button" data-route="module/1">'+T(lang,"بازگشت به مسیر دوازدوازده فصل","Back to chapters")+'</button>'+next+'</div>'+
  '<p class="lb-manuscript-note">'+T(lang,"منبع: اسناد تألیفی جلد اول. روایت‌ها و شخصیت‌ها آموزشی و فرضی‌اند. منابع علمی در انتهای هر فصل درج شده‌اند.","Source: Book One authored manuscripts. Characters and situations are fictional teaching examples; references are included at each chapter’s end.")+' <a href="'+E(ch.sourceUrl||SOURCE.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(lang,"مشاهده فایل اصلی در Google Drive","View original manuscript on Google Drive")+'</a></p></div>';
 }
 function fieldValue(n,key){
@@ -222,10 +223,10 @@ function worksheetPage(n,lang){
  '<div class="lb-worksheet-meta"><strong>'+T(lang,fieldsFilled(n)+" از "+total+" بخش دارای یادداشت",fieldsFilled(n)+" of "+total+" prompts filled")+'</strong><span id="lb-save-status" role="status">'+T(lang,"ذخیره محلی خودکار","Auto-saved locally")+'</span></div></section>'+
  '<div class="lb-workbook-nav"><button class="lb-button lb-button-quiet" data-route="book1/'+n+'">'+T(lang,"مطالعه متن اصلی","Read original chapter")+'</button><button class="lb-button lb-button-quiet" data-route="book1/workbook">'+T(lang,"نمای کلی دفتر کار","Workbook overview")+'</button></div>'+
  '<form class="lb-workbook-form" autocomplete="off">'+fields+'</form>'+
- '<div class="lb-workbook-actions"><button class="lb-button lb-button-quiet" type="button" data-lb-action="download-text">'+T(lang,"دریافت نسخه متنی ده فصل","Export readable workbook")+'</button>'+
+ '<div class="lb-workbook-actions"><button class="lb-button lb-button-quiet" type="button" data-lb-action="download-text">'+T(lang,"دریافت نسخه متنی دوازده فصل","Export readable workbook")+'</button>'+
  '<button class="lb-button lb-button-quiet" type="button" data-lb-action="download-json">'+T(lang,"پشتیبان داده‌ها JSON","Backup JSON")+'</button>'+
  '<button class="lb-button lb-button-danger" type="button" data-lb-action="clear-chapter" data-chapter="'+n+'">'+T(lang,"پاک‌کردن پاسخ‌های این فصل","Clear this chapter’s answers")+'</button></div>'+
- '<div class="lb-page-bottom"><button class="lb-button lb-button-outline" data-route="module/1">'+T(lang,"مسیر دوازده فصل","All three chapters")+'</button>'+next+'</div>'+
+ '<div class="lb-page-bottom"><button class="lb-button lb-button-outline" data-route="module/1">'+T(lang,"مسیر دوازدوازده فصل","All twelve chapters")+'</button>'+next+'</div>'+
  '<p class="lb-privacy">'+T(lang,"هشدار حریم خصوصی: ذخیره‌سازی این نسخه از نوع LocalStorage و رمزنگاری‌نشده است. برای حفظ اطلاعات مهم، Export بگیرید؛ پاک‌کردن داده مرورگر می‌تواند پاسخ‌ها را حذف کند.","Privacy notice: This version uses unencrypted browser storage. Export important notes; clearing browser data can remove them.")+'</p></div>';
 }
 function workbookOverview(lang){
@@ -239,7 +240,7 @@ function workbookOverview(lang){
  }).join("");
  return '<div class="lb-root lb-summary">'+masthead(lang)+
  '<div class="lb-ribbon"><button class="lb-text-button" type="button" data-route="module/1">'+T(lang,"بازگشت به جلد اول","Back to Book One")+'</button></div>'+
- '<section class="lb-worksheet-hero"><div class="lb-eyebrow">THE CONNECTED WORKBOOK</div><h1>'+T(lang,"دفتر کار یکپارچه ده فصل","Your connected ten-chapter workbook")+'</h1>'+
+ '<section class="lb-worksheet-hero"><div class="lb-eyebrow">THE CONNECTED WORKBOOK</div><h1>'+T(lang,"دفتر کار یکپارچه جلد اول","Your connected ten-chapter workbook")+'</h1>'+
  '<p>'+T(lang,"شش خروجی به هم پیوسته‌اند: تصویر واقعی زندگی، معیارهای مناسب‌بودن و نخستین مقایسه وضع موجود و مناسب. جای خالی و «نمی‌دانم» هم بخشی از یادگیری‌اند.","Your snapshot, fit criteria and initial current/suitable-state comparison build on one another. Unanswered questions are part of the learning process.")+'</p></section>'+
  '<div class="lb-summary-flow"><span>'+T(lang,"مشاهده","Observe")+'</span><b>→</b><span>'+T(lang,"معیار","Criteria")+'</span><b>→</b><span>'+T(lang,"مقایسه","Compare")+'</span></div>'+
  '<div class="lb-summary-grid">'+tiles+'</div>'+
@@ -250,7 +251,7 @@ function workbookOverview(lang){
 }
 function homeFeature(lang){
  return '<section class="lb-home-feature"><div class="lb-home-emblem" aria-hidden="true">01</div><div><p class="lb-eyebrow">BOOK ONE · AVAILABLE NOW</p>'+
- '<h2>'+T(lang,"ده فصل اول، آماده مطالعه و تمرین","Ten authored chapters ready to read and practice")+'</h2><p>'+T(lang,"متن کامل نسخه نهایی، روایت‌ها، منابع علمی و شش ابزار متصل در Workbook.","Full source text, narratives, references and a connected six-part workbook.")+'</p></div>'+
+ '<h2>'+T(lang,"دوازدوازده فصل برای مطالعه و تمرین","Twelve chapters to read and practice")+'</h2><p>'+T(lang,"متن کامل نسخه نهایی، روایت‌ها، منابع علمی و شش ابزار متصل در Workbook.","Full source text, narratives, references and a connected six-part workbook.")+'</p></div>'+
  '<button class="lb-button lb-button-primary" type="button" data-route="module/1">'+T(lang,"ورود به جلد اول","Open Book One")+'</button></section>';
 }
 function download(filename,text,kind){

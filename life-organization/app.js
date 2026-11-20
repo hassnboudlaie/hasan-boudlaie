@@ -4,14 +4,6 @@
 (() => {
   "use strict";
   const KEY = "tlo-v01-personal-workspace";
-  const MODULES = [
-    {id:1,icon:"identity",fa:"شناخت سازمان زندگی",en:"Life Foundation",shortFa:"شناخت خود، نقش‌ها، ارزش‌ها و منابع زندگی",shortEn:"Understand identity, roles, values and resources",introFa:"از شناخت دقیق وضعیت موجود و الگوهای زندگی خود شروع می‌کنیم؛ نه از قضاوت یا امتیاز دادن.",introEn:"Start by understanding your current life patterns, without judgment or artificial scores.",aspectsFa:["شناخت وضعیت موجود","هویت و نقش‌ها","منابع و ارزش‌ها"],aspectsEn:["Current-state discovery","Identity and roles","Resources and values"]},
-    {id:2,icon:"strategy",fa:"راهبرد زندگی",en:"Life Strategy",shortFa:"تعیین جهت، اولویت‌ها و انتخاب‌های راهبردی",shortEn:"Make choices about direction and priorities",introFa:"مشخص می‌کنیم چه چیزی واقعاً برای شما مهم است و قرار است انرژی و توجهتان کجا صرف شود.",introEn:"Clarify what matters and where your time, energy and attention should go.",aspectsFa:["چشم‌انداز زندگی","انتخاب‌های راهبردی","اولویت‌های معنادار"],aspectsEn:["Life vision","Strategic choices","Meaningful priorities"]},
-    {id:3,icon:"design",fa:"طراحی سازمان زندگی",en:"Life Organization Design",shortFa:"ساختاردهی نقش‌ها، منابع و فعالیت‌های زندگی",shortEn:"Design roles, resources and ways of working",introFa:"ساختاری متناسب با شرایط واقعی زندگی شما طراحی می‌کنیم؛ نه یک نسخه یکسان برای همه.",introEn:"Design a life structure that fits your reality, not someone else's template.",aspectsFa:["ساختار زندگی","تناسب نقش‌ها و ظرفیت","فرایندهای شخصی"],aspectsEn:["Life structure","Role–capacity fit","Personal processes"]},
-    {id:4,icon:"coordination",fa:"هماهنگی زندگی",en:"Life Coordination",shortFa:"هماهنگی نقش‌ها، روابط و تعهدهای زندگی",shortEn:"Coordinate roles, relationships and commitments",introFa:"بخش‌های مختلف زندگی را طوری کنار هم قرار می‌دهیم که یکدیگر را تقویت کنند.",introEn:"Bring different parts of life together so they can support one another.",aspectsFa:["هماهنگی نقش‌ها","ارتباطات و تعاملات","مدیریت تعارض‌ها"],aspectsEn:["Role coordination","Relationships","Managing tensions"]},
-    {id:5,icon:"performance",fa:"مدیریت عملکرد زندگی",en:"Life Performance",shortFa:"حرکت از تصمیم به اقدام و یادگیری مستمر",shortEn:"Turn intentions into action and learning",introFa:"پیشرفت را با شاخص‌های معنادار و مرورهای سازنده پیگیری می‌کنیم؛ نه با فشار دائمی.",introEn:"Review meaningful progress and learn continuously, rather than chasing numbers.",aspectsFa:["پیگیری اقدام‌ها","بازنگری عملکرد","یادگیری از تجربه"],aspectsEn:["Action follow-through","Performance reviews","Learning from experience"]},
-    {id:6,icon:"audit",fa:"ممیزی و بازطراحی زندگی",en:"Life Audit & Redesign",shortFa:"شناسایی شکاف‌ها، تناسب‌ها و مسیرهای بهبود",shortEn:"Identify gaps, fit and opportunities for redesign",introFa:"وقتی شرایط عوض می‌شود، سازمان زندگی هم می‌تواند هوشمندانه بازطراحی شود.",introEn:"As circumstances change, your life organization can be thoughtfully redesigned.",aspectsFa:["ممیزی تناسب","آمادگی برای تغییر","بازطراحی هدفمند"],aspectsEn:["Fit and misfit audit","Change readiness","Purposeful redesign"]}
-  ];
   const I = {
     fa: {
       workspace:"فضای کاری من",asideTitle:"زندگی متناسب با من",asideDesc:"یک فضای آرام برای فکر کردن، انتخاب کردن و پیش رفتن.",localOnly:"ذخیره روی این دستگاه",mobileBrand:"سازمان عالی زندگی من",
@@ -89,87 +81,23 @@
     return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(map[name]||map.spark)+'</svg>';
   }
   const moduleName=m=>tr(m.fa,m.en), moduleShort=m=>tr(m.shortFa,m.shortEn),moduleIntro=m=>tr(m.introFa,m.introEn);
-  const started=id=>state.started.includes(id)||(id===1&&window.LifeBook&&window.LifeBook.progress().some(p=>p.reviewed>0||p.filled>0));
-  const hasNote=id=>Boolean(typeof state.notes[id]==="string"&&state.notes[id].trim())||(id===1&&window.LifeBook&&window.LifeBook.progress().some(p=>p.filled>0));
-  const moduleIcon=m=>'<span class="module-icon">'+icons(m.icon)+'</span>';
-  const status=id=>'<span class="status '+(started(id)?"active":"")+'">'+(started(id)?t("started"):t("ready"))+'</span>';
-  const navItems=[["home","home"],["modules","modules"],["workbook","workbook"],["fun","fun"],["coach","coach"],["progress","progress"],["profile","profile"]];
+  const navItems=[["module/1","modules"],["fun","fun"]];
   function route(){
-    const h=decodeURIComponent(location.hash.replace(/^#/,""))||"home";
+    const h=location.hash.slice(1)||"module/1";
     const parts=h.split("/");
     if(parts[0]==="fun"&&(parts.length===1||(parts.length===2&&/^(values|direction|growth|work|money|relations|wellbeing|character)$/.test(parts[1]))))return {page:"fun",id:parts[1]||null};
-    if(parts[0]==="module"&&/^[1-6]$/.test(parts[1]||""))return {page:"module",id:Number(parts[1])};
     if(parts[0]==="book1"&&parts[1]==="front"&&["about","intro","guide","toc"].includes(parts[2]||"")&&parts.length===3)return {page:"book1",id:0,mode:"front",section:parts[2]};
     if(parts[0]==="book1"&&parts[1]==="profile"&&parts.length===2)return {page:"book1",id:0,mode:"profile"};
     if(parts[0]==="book1"&&parts[1]==="workbook"&&parts.length===2)return {page:"book1",id:0,mode:"workbook"};
     if(parts[0]==="book1"&&/^(?:[1-9]|1[0-2])$/.test(parts[1]||"")&&(parts.length===2||(parts.length===3&&parts[2]==="workbook")))return {page:"book1",id:Number(parts[1]),mode:parts[2]==="workbook"?"workbook":"read"};
-    if(["home","modules","workbook","coach","progress","profile"].includes(h))return {page:h};
-    return {page:"home"};
+    if(h==="profile")return {page:"profile"};
+    if(h==="workbook")return {page:"book1",id:0,mode:"workbook"};
+    return {page:"module",id:1};
   }
   function navigate(next){location.hash=next;if(location.hash.slice(1)===next)render()}
   function navHtml(active,mobile=false){
-    const list=mobile?navItems.filter(x=>["home","modules","workbook","fun","coach","profile"].includes(x[0])):navItems;
-    return list.map(([key,ic])=>'<button class="'+(mobile?"bottom-link":"nav-link")+(active===key?" active":"")+'" type="button" data-route="'+key+'" '+(active===key?'aria-current="page"':"")+'>'+icons(ic)+'<span>'+esc(t(key))+'</span></button>').join("");
-  }
-  function moduleCard(m){
-    return '<button type="button" class="module-card module-'+m.id+'" data-route="module/'+m.id+'" aria-label="'+esc(moduleName(m))+'">'+
-      '<div class="card-top">'+moduleIcon(m)+'<span class="module-number">0'+m.id+' / 06</span></div>'+
-      '<div class="card-title">'+esc(moduleName(m))+'</div><p class="card-en" dir="ltr">'+esc(m.en)+'</p>'+
-      '<p class="card-desc">'+esc(moduleShort(m))+'</p><div class="card-bottom">'+status(m.id)+'<span class="card-arrow">↗</span></div></button>';
-  }
-  function orbit(){
-    return '<div class="orbit" aria-hidden="true"><div class="orbit-ring"></div><div class="orbit-ring two"></div><div class="orbit-center"><img src="./brand-symbol.svg" alt="" width="70" height="70"></div>'+
-    MODULES.map((m,i)=>'<span class="orbit-node n'+(i+1)+'">'+icons(m.icon)+'</span>').join("")+'</div>';
-  }
-  function homePage(){
-    const next=MODULES.find(m=>!started(m.id))||MODULES[0];
-    return '<section class="hero"><div class="hero-copy"><div class="eyebrow">'+t("homeEyebrow")+'</div>'+
-      '<h1>'+t("homeTitle")+'</h1><p class="hero-sub">'+t("homeDesc")+'</p><div class="hero-buttons">'+
-      '<button class="btn btn-hero" data-route="module/'+next.id+'">'+t("startJourney")+' <span aria-hidden="true">↗</span></button>'+
-      '<button class="btn btn-ghost" data-route="modules">'+t("exploreModules")+'</button></div></div>'+orbit()+'</section>'+(window.LifeBook?window.LifeBook.homeFeature(state.lang):'')+
-      '<section><div class="section-heading"><div><div class="section-kicker">'+t("moduleKicker")+'</div><h2>'+t("modulesHeading")+'</h2><p>'+t("modulesDesc")+'</p></div><button class="inline-link" data-route="modules">'+t("viewAll")+' ↗</button></div>'+
-      '<div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div></section>'+
-      '<section class="fun-home-teaser"><div><span class="fun-eyebrow">STRATEGIC LIFE CHOICES</span><h2>'+tr('سرگرمی: اگر مجبور باشی یکی را انتخاب کنی…','Fun: What would you choose?')+'</h2><p>'+tr('۵۸ دوراهی جذاب در ۸ موضوع؛ انتخاب کن، فکر کن و در پایان هر دسته روایت انتخاب‌هایت را بخوان.','58 playful choices across eight themes, followed by your personal reflection.')+'</p></div><button class="btn btn-primary" type="button" data-route="fun">'+tr('بزن بریم','Explore the choices')+' ↗</button></section>'+ 
-      '<section class="life-coach-teaser"><div><span class="section-kicker">MY AI LIFE COACH</span><h2>'+(state.lang==="fa"?"مربی هوش مصنوعی زندگی من":"My AI Life Coach")+'</h2><p>'+(state.lang==="fa"?"فضایی برای Reflection، انتخاب آگاهانه و طراحی زندگی؛ به‌زودی.":"A place to reflect, clarify choices and move forward — coming soon.")+'</p></div><button type="button" class="btn btn-primary" data-route="coach">'+(state.lang==="fa"?"مشاهده · به‌زودی":"Explore · Coming soon")+' ↗</button></section>'+
-      '<div class="bottom-note"><span class="note-icon">'+icons("workbook")+'</span><div><h3>'+t("workbookTeaser")+'</h3><p>'+t("workbookTeaserDesc")+'</p></div><button class="inline-link" data-route="workbook">'+t("openWorkbook")+' ↗</button></div>';
-  }
-  function modulesPage(){
-    return '<div class="page-lead"><p class="section-kicker">'+t("moduleKicker")+'</p><h1>'+t("allModulesTitle")+'</h1><p>'+t("allModulesDesc")+'</p></div>'+
-    '<div class="section-heading"><div><h2>'+t("moduleBrowse")+'</h2></div></div><div class="module-grid">'+MODULES.map(moduleCard).join("")+'</div>';
-  }
-  function modulePage(id){
-    if(id===1&&window.LifeBook)return window.LifeBook.landing(state.lang);
-    const m=MODULES[id-1];
-    return '<section class="module-hero module-'+id+'"><div class="module-hero-main">'+moduleIcon(m)+'<div class="module-overline">'+t("moduleTag")+' 0'+id+' / 06</div>'+
-      '<h1>'+esc(moduleName(m))+'</h1><div class="en-title">'+esc(m.en)+'</div><p>'+esc(moduleIntro(m))+'</p></div>'+
-      '<div class="module-hero-side">'+status(id)+'<button class="btn '+(started(id)?"btn-outline":"btn-primary")+'" type="button" data-action="start" data-module="'+id+'">'+(started(id)?t("continueModule"):t("startModule"))+' ↗</button></div></section>'+
-      '<div class="panel-grid"><section class="panel"><div class="panel-kicker">REFLECT & EXPLORE</div><h2>'+t("moduleReflections")+'</h2><p>'+t("moduleReflectionDesc")+'</p>'+
-      '<label class="field-label" for="reflection">'+t("yourWorkspace")+'</label>'+
-      '<textarea id="reflection" class="field" maxlength="3000" placeholder="'+esc(t("reflectionPlaceholder"))+'" data-module="'+id+'">'+esc(state.notes[id]||"")+'</textarea>'+
-      '<div class="field-help">'+t("localSave")+'</div></section>'+
-      '<section class="panel"><div class="panel-kicker">MODULE OVERVIEW</div><h2>'+t("moduleAreas")+'</h2><ul>'+tr(m.aspectsFa,m.aspectsEn).map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>'+
-      '<p>'+t("moduleDescription")+'</p><div class="feature-callout"><strong>'+t("coming")+'</strong></div></section></div>';
-  }
-  function workbookPage(){
-    const count=MODULES.filter(m=>hasNote(m.id)).length;
-    const bookCTA=window.LifeBook?'<div class="lb-journal-teaser"><div><h2>'+tr('دفتر کار دوازده فصل تألیف‌شده جلد اول','Book One · Chapters 1–12 Workbook')+'</h2><p>'+tr('نمای فوری، معیارهای اولیه و مقایسه وضع موجود و مناسب؛ با ذخیره محلی و خروجی قابل دریافت.','Your snapshot, fit criteria and current/suitable-state comparison, with local save and downloadable outputs.')+'</p></div><button class="lb-button lb-button-primary" type="button" data-route="book1/workbook">'+tr('ورود به دفتر کار ده فصل','Open the ten-chapter workbook')+'</button></div>':'';
-    return '<div class="page-lead"><p class="section-kicker">'+t("teaserTag")+'</p><h1>'+t("workbookTitle")+'</h1><p>'+t("workbookDesc")+'</p></div>'+
-      bookCTA+'<div class="stat-strip"><div class="stat-block"><b>'+count+' / 6</b><span>'+t("notesCount")+'</span></div></div>'+
-      '<div class="section-heading"><h2>'+t("yourNotes")+'</h2><button class="btn btn-outline" data-action="export">'+icons("download")+t("exportNotes")+'</button></div>'+
-      '<div class="workbook-list">'+MODULES.map(m=>'<button class="workbook-item module-'+m.id+'" data-route="module/'+m.id+'">'+moduleIcon(m)+
-      '<span><strong>'+esc(moduleName(m))+'</strong><small>'+esc(hasNote(m.id)?(state.notes[m.id]||tr("پاسخ‌های ابزارهای ده فصل جلد اول","Book One learning responses")).trim().slice(0,67):t("noNote"))+'</small></span><span class="card-arrow">↗</span></button>').join("")+'</div>'+
-      '<div class="feature-callout"><p>'+t("localNotice")+'</p></div>';
-  }
-  function progressPage(){
-    const count=MODULES.filter(m=>started(m.id)).length,n=MODULES.filter(m=>hasNote(m.id)).length;
-    return '<div class="page-lead"><p class="section-kicker">MY JOURNEY</p><h1>'+t("progressTitle")+'</h1><p>'+t("progressDesc")+'</p></div>'+
-      (window.LifeBook?.walletHtml?'<section class="lj-global-progress"><div class="lj-global-progress-heading"><div><h2>'+tr('امتیاز، سکه و نشان‌های یادگیری','Learning XP, coins & badges')+'</h2><p>'+tr('برای فعالیت‌های مطالعه و تمرین؛ نه ارزیابی کیفیت زندگی.','Rewards for reading and practice — never a life score.')+'</p></div><button type="button" class="lb-button lb-button-primary" data-route="module/1">'+tr('ادامه مسیر جلد اول','Continue Book One')+'</button></div>'+window.LifeBook.walletHtml(state.lang)+'</section>':'')+
-      '<div class="stat-strip"><div class="stat-block"><b>'+count+' / 6</b><span>'+t("modulesExplored")+'</span></div>'+
-      '<div class="stat-block"><b>'+(6-count)+'</b><span>'+t("modulesRemaining")+'</span></div><div class="stat-block"><b>'+n+'</b><span>'+t("notesWritten")+'</span></div></div>'+
-      '<section class="panel"><h2>'+t("moduleStatuses")+'</h2><div class="progress-rows">'+MODULES.map(m=>'<div class="progress-row module-'+m.id+'">'+moduleIcon(m)+'<strong>'+esc(moduleName(m))+'</strong>'+status(m.id)+
-      '<button type="button" data-route="module/'+m.id+'">'+t("openModule")+' ↗</button></div>').join("")+'</div></section>'+
-      (window.LifeBook?.badgesHtml?window.LifeBook.badgesHtml(state.lang):'')+
-      '<div class="feature-callout"><p>'+t("pathNotice")+'</p></div>';
+    const list=navItems;
+    return list.map(([key,ic])=>'<button class="'+(mobile?"bottom-link":"nav-link")+(active===key?" active":"")+'" type="button" data-route="'+key+'" '+(active===key?'aria-current="page"':"")+'>'+icons(ic)+'<span>'+esc(key==="module/1"?tr("جلد اول","Book One"):t(key))+'</span></button>').join("");
   }
   function profilePage(){
     return '<div class="page-lead"><p class="section-kicker">MY SPACE</p><h1>'+t("profileTitle")+'</h1><p>'+t("profileDesc")+'</p></div>'+
@@ -183,31 +111,31 @@
       '<div class="panel" style="margin-top:17px"><h2>'+t("privacy")+'</h2><p>'+t("privacyDesc")+'</p><button class="btn btn-danger" data-action="reset">'+t("reset")+'</button></div>';
   }
 
-  function coachPage(){
-    const fa=state.lang==="fa";
-    const title=fa?"مربی هوش مصنوعی زندگی من":"My AI Life Coach";
-    const subtitle=fa?"یک فضای شخصی برای بازاندیشی، روشن‌سازی اولویت‌ها و طراحی زندگی متناسب با من؛ در نسخه‌های آینده.":"A personal space for reflection, clarifying priorities and designing a life that fits — in a future update.";
-    const items=fa?[["شناخت و بازاندیشی","فهم نقش‌ها، ارزش‌ها و آنچه واقعاً مهم است."],["تصمیم‌ها و اولویت‌ها","Explore alternatives و انتخاب آگاهانه، بدون نسخه واحد."],["اقدام و پیگیری","تبدیل بینش به Next Best Step و مرور پیشرفت."]]:[["Reflection & insight","Explore roles, values and what matters most."],["Choices & priorities","Broaden perspective without prescribed answers."],["Action & follow-through","Turn insights into next steps and review progress."]];
-    return '<section class="life-coach-page"><div class="page-lead"><p class="section-kicker">MY AI LIFE COACH · COMING SOON</p><h1>'+title+'</h1><p>'+subtitle+'</p></div>'+
-      '<div class="life-coach-banner"><div><span class="life-coach-mark">'+icons("coach")+'</span><h2>'+(fa?"زندگی متناسب با من، با تأمل و انتخاب":"A life that fits, through reflection and choice")+'</h2><p>'+(fa?"این بخش فعلاً فقط پیش‌نمایش است؛ هیچ مکالمه هوش مصنوعی یا اتصال به داده‌های شخصی فعال نیست.":"This is a preview only. No AI chat or personal-data connection is active.")+'</p><span class="life-coach-status">'+(fa?"به‌زودی":"Coming soon")+'</span></div><div class="life-coach-orbit">✦</div></div>'+
-      '<div class="life-coach-features">'+items.map(x=>'<article><span class="life-coach-dot">✧</span><h3>'+x[0]+'</h3><p>'+x[1]+'</p><small>'+(fa?"به‌زودی":"Coming soon")+'</small></article>').join("")+'</div></section>';
-  }
-  const pageFn={home:homePage,modules:modulesPage,workbook:workbookPage,fun:()=>window.LifeFun?window.LifeFun.page(state.lang,route().id):"",coach:coachPage,progress:progressPage,profile:profilePage};
   function applyTheme(){
     const dark=state.theme==="dark"||(state.theme==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.dataset.theme=dark?"dark":"light";
     const themeBtn=$("#theme-btn"); if(themeBtn)themeBtn.innerHTML=icons(dark?"sun":"moon");
   }
   function render(){
-    const r=route(), active=(r.page==="module"||r.page==="book1")?"modules":r.page;
+    const r=route(), active=(r.page==="module"||r.page==="book1")?"module/1":r.page;
     document.documentElement.lang=state.lang;
     document.documentElement.dir=state.lang==="fa"?"rtl":"ltr";
     document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
     $("#side-nav").innerHTML=navHtml(active);
     $("#bottom-nav").innerHTML=navHtml(active,true);
-    const crumb=r.page==="module"?moduleName(MODULES[r.id-1]):r.page==="book1"?(state.lang==="fa"?"جلد اول / شناخت سازمان زندگی":"Book One / Understanding Your Life Organization"):t(r.page==="home"?"homeCrumb":r.page);
-    $("#breadcrumbs").innerHTML='<span>'+t("home")+'</span><span class="crumb-sep">/</span><strong>'+esc(crumb)+'</strong>';
-    $("#page").innerHTML=r.page==="module"?modulePage(r.id):r.page==="book1"&&window.LifeBook?(r.id===0?(r.mode==="front"?window.LifeBook.frontmatter(state.lang,r.section):r.mode==="profile"?window.LifeBook.profile(state.lang):window.LifeBook.workbook(state.lang)):r.mode==="workbook"?window.LifeBook.worksheet(r.id,state.lang):window.LifeBook.chapter(r.id,state.lang)):pageFn[r.page]();
+    const crumb=r.page==="fun"?tr("سرگرمی","Fun"):r.page==="profile"?t("profile"):r.id&&r.page==="book1"?window.LifeBookContent.chapters[r.id-1].title:tr("جلد اول","Book One");
+    $("#breadcrumbs").innerHTML='<span>'+esc(tr("سازمان عالی زندگی من","The Life Organization"))+'</span><span class="crumb-sep">/</span><strong>'+esc(crumb)+'</strong>';
+    $("#page").innerHTML=r.page==="module"?window.LifeBook.landing(state.lang):r.page==="book1"&&window.LifeBook?(r.id===0?(r.mode==="front"?window.LifeBook.frontmatter(state.lang,r.section):r.mode==="profile"?window.LifeBook.profile(state.lang):window.LifeBook.workbook(state.lang)):r.mode==="workbook"?window.LifeBook.worksheet(r.id,state.lang):window.LifeBook.chapter(r.id,state.lang)):r.page==="fun"?window.LifeFun.page(state.lang,r.id):profilePage();
+    const view=$("#page");
+    view.previousElementSibling?.matches(".current-book-nav") && view.previousElementSibling.remove();
+    if(r.page==="module"||r.page==="book1"){
+      const routes=[["module/1",tr("مسیر جلد اول","Book One"),r.page==="module"],["book1/front/toc",tr("فهرست فصل‌ها","Contents"),r.mode==="front"],["book1/workbook",tr("دفتر کار","Workbook"),r.mode==="workbook"],["book1/profile",tr("نمایه من","My profile"),r.mode==="profile"]];
+      const sub=document.createElement("nav");
+      sub.className="current-book-nav";
+      sub.setAttribute("aria-label",tr("ناوبری جلد اول","Book One navigation"));
+      sub.innerHTML=routes.map(([url,label,active])=>'<button type="button" data-route="'+url+'"'+(active?' aria-current="page"':'')+'>'+label+'</button>').join("");
+      view.before(sub);
+    }
     $("#language-btn").textContent=state.lang==="fa"?"EN":"فا";
     $("#avatar-letter").textContent=(state.name.trim()||t("anonymous")).charAt(0).toUpperCase();
     $("#install-title").textContent=t("installation");$("#install-body").textContent=t("installHelp");
@@ -229,22 +157,10 @@
     const routeBtn=e.target.closest("[data-route]");if(routeBtn){e.preventDefault();navigate(routeBtn.dataset.route);return}
     const act=e.target.closest("[data-action]");if(!act)return;
     switch(act.dataset.action){
-      case "start":{
-        const id=Number(act.dataset.module);
-        if(!started(id)){state.started.push(id);state.started.sort((a,b)=>a-b);persist();render();toast(t("moduleStarted"));}
-        else {const note=$("#reflection");if(note)note.focus()}
-        break;
-      }
       case "save-name":state.name=($("#name-input")?.value||"").trim().slice(0,80);persist();render();toast(t("nameSaved"));break;
       case "export":downloadNotes();break;
       case "reset":if(confirm(t("resetAsk"))){const lang=state.lang,theme=state.theme;state=blank();state.lang=lang;state.theme=theme;if(window.LifeBook)window.LifeBook.resetAll();if(window.LifeFun)window.LifeFun.reset();persist();render();toast(t("resetDone"))}break;
       case "install":if(installPrompt){installPrompt.prompt();installPrompt.userChoice.finally(()=>{installPrompt=null})}else $("#install-dialog").showModal();break;
-    }
-  });
-  document.addEventListener("input",e=>{
-    if(e.target.id==="reflection"){
-      const id=Number(e.target.dataset.module);
-      if(id>=1&&id<=6){state.notes[id]=e.target.value.slice(0,3000);persist()}
     }
   });
   document.addEventListener("change",e=>{
