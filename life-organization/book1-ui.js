@@ -114,8 +114,8 @@ function formatLine(s){
 function progressText(n,lang){
  return T(lang,"مرور "+completed(n)+" از "+totalTalks(n)+" گفتار","Reviewed "+completed(n)+" of "+totalTalks(n)+" sections");
 }
-function masthead(lang){
- return '<div class="lb-topline"><span>'+T(lang,"کتاب اول / بخش اول","Book One / Part One")+'</span><span class="lb-brand-signature"><img src="./brand-symbol.svg" alt="" width="29" height="29"><span dir="ltr">THE LIFE ORGANIZATION</span></span></div>';
+function masthead(lang,chapter=0){
+ return '<div class="lb-topline"><span>'+T(lang,chapter>3?"کتاب اول / بخش دوم":"کتاب اول / بخش اول",chapter>3?"Book One / Part Two":"Book One / Part One")+'</span><span class="lb-brand-signature"><img src="./brand-symbol.svg" alt="" width="29" height="29"><span dir="ltr">THE LIFE ORGANIZATION</span></span></div>';
 }
 function progressTrack(n){
  return '<div class="lb-track" aria-hidden="true"><div style="width:'+Math.round(100*completed(n)/totalTalks(n))+'%"></div></div>';
@@ -178,9 +178,9 @@ function chapterPage(n,lang){
  }).join("");
  const jump=parts.filter(p=>p.type==="talk").map(p=>{const index=parts.indexOf(p);return '<button type="button" data-lb-action="jump" data-target="lb-sec-'+n+'-'+index+'">'+E(p.heading.replace(/^گفتار (اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)\s+/,""))+'</button>';}).join("");
  const next=n<10?'<button type="button" class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'">'+T(lang,"فصل بعدی","Next chapter")+'</button>':'<button type="button" class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"مرور خروجی ده فصل","Review all three outputs")+'</button>';
- return '<div class="lb-root lb-reader">'+ribbon(lang,n)+masthead(lang)+
+ return '<div class="lb-root lb-reader">'+ribbon(lang,n)+masthead(lang,n)+
  '<section class="lb-chapter-hero"><div class="lb-hero-meta"><span>'+T(lang,"فصل "+n+" از ۱۲","Chapter "+n+" of 12")+'</span><span dir="ltr">BOOK ONE · PART I</span></div>'+
- '<h1>'+E(T(lang,ch.title,ch.englishTitle))+'</h1><p class="lb-original-title">'+T(lang,"متن کامل نسخه نهایی فارسی","Full Persian edition")+'</p>'+
+ '<h1>'+E(T(lang,ch.title,ch.englishTitle))+'</h1><p class="lb-original-title">'+T(lang,ch.editionStatus==="editorial-review"?"نسخه تألیفی در بازبینی":"متن کامل تألیفی فارسی",ch.editionStatus==="editorial-review"?"Editorial review manuscript":"Complete authored Persian manuscript")+'</p>'+
  '<div class="lb-big-question"><small>'+T(lang,"سؤال بزرگ فصل","Core chapter question")+'</small><strong lang="fa" dir="rtl">'+E(question(n))+'</strong></div>'+
  '<div class="lb-read-meta"><span data-lb-progress="'+n+'">'+progressText(n,lang)+'</span><span>'+T(lang,"مطالعه در گفتارهای قابل‌بازشدن","Expandable reading sections")+'</span></div>'+progressTrack(n)+'</section>'+
  '<nav class="lb-chapter-tabs" aria-label="Book One chapters">'+tabs+'</nav>'+
@@ -212,7 +212,7 @@ function worksheetPage(n,lang){
    '<textarea id="'+id+'" data-lb-field="'+E(f[0])+'" data-chapter="'+n+'" rows="4" maxlength="1800" placeholder="'+E(T(lang,"مشاهده خود را بنویسید؛ «نمی‌دانم» هم یک پاسخ معتبر است.","Write your observation. Saying “I don’t know yet” is valid."))+'">'+E(fieldValue(n,f[0]))+'</textarea></div>';
  }).join("");
  const next=n<10?'<button class="lb-button lb-button-primary" data-route="book1/'+(n+1)+'/workbook">'+T(lang,"ابزار فصل بعدی","Next worksheet")+'</button>':'<button class="lb-button lb-button-primary" data-route="book1/workbook">'+T(lang,"جمع‌بندی ده فصل","Review three chapters")+'</button>';
- return '<div class="lb-root lb-workbook-page">'+ribbon(lang,n)+masthead(lang)+
+ return '<div class="lb-root lb-workbook-page">'+ribbon(lang,n)+masthead(lang,n)+
  '<section class="lb-worksheet-hero"><div class="lb-eyebrow">'+T(lang,"WORKBOOK · فصل "+cnum(n),"WORKBOOK · CHAPTER "+cnum(n))+'</div><h1>'+title+'</h1>'+
  '<p>'+T(lang,"این یک برگه مشاهده و بازاندیشی است، نه آزمون یا نمره زندگی. پاسخ‌ها فقط در دستگاه شما ذخیره می‌شوند.","This is a learning and reflection worksheet, not a diagnostic test or life score. Answers remain on this device.")+'</p>'+
  '<div class="lb-worksheet-meta"><strong>'+T(lang,fieldsFilled(n)+" از "+total+" بخش دارای یادداشت",fieldsFilled(n)+" of "+total+" prompts filled")+'</strong><span id="lb-save-status" role="status">'+T(lang,"ذخیره محلی خودکار","Auto-saved locally")+'</span></div></section>'+
