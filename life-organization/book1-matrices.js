@@ -25,6 +25,7 @@ const maps={
 10:{"title":"نقشه زحمت و بازده","en":"Effort × Yield","x":["پرزحمت","کم‌زحمت"],"y":["پربازده","کم‌بازده"],"cells":[["پرزحمت و پربازده","کم‌زحمت و پربازده"],["پرزحمت و کم‌بازده","کم‌زحمت و کم‌بازده"]],"note":"زحمت ذاتی کار با اتلاف منابع فرق دارد؛ بازده را با معیار ارزشمند خود بسنجید و گزینه ازدست‌رفته را هم در کاربرگ ثبت کنید. این نقشه، رفتار × نتیجه فصل نهم نیست."},
 11:{"title":"نقشه فلسفه پیشرفت من","en":"Starting Point × Progress Method","x":["شروع از معنا و چشم‌انداز","شروع از شواهد و امکانات"],"y":["بهبود گام‌به‌گام","بازطراحی مسیر"],"cells":[["بهبود روال برای هدفی معنادار · رضا","بهبود روال با بررسی شرایط · لیلا"],["طراحی مسیر از یک چشم‌انداز · نیلوفر","بازطراحی روش از روی شواهد · آرش"]],"note":"این ماتریس تألیفی، اقتباسی از منطق دو محور مستقل است و معادل چهار پارادایم جامعه‌شناسی بارل و مورگان نیست. نقطه شروع و شیوه حرکت را برای یک تصمیم و بازه مشخص با شواهد بررسی کنید."}
 };
+book.contextMapDefinitions=maps;
 const esc=x=>String(x==null?"":x).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const tr=(fa,en)=>document.documentElement.lang==="en"?en:fa;
 function read(){try{const a=JSON.parse(localStorage.getItem(KEY)||"{}");return a&&typeof a==="object"&&!Array.isArray(a)?a:{}}catch(e){return {}}}
@@ -66,7 +67,8 @@ function dossier(){
   [8,"مدیرعاملی و بهره‌وری",["efficiency","current"]],
   [9,"رفتار و نتیجه",["behavior","outcome"]],
   [10,"زحمت، بازده و گزینه ازدست‌رفته",["opportunityCost","current"]],
-  [11,"فلسفه پیشرفت من",["currentStart","suitableStart","review"]]
+  [11,"فلسفه پیشرفت من",["currentStart","suitableStart","review"]],
+  [12,"نمایه و ممیزی بنیادین من",["scope","fit","next"]]
  ];
  let count=0;
  const items=descriptors.map(([n,name,keys])=>{
@@ -78,8 +80,8 @@ function dossier(){
    (choice?'<small>'+esc("نقشه فعلی: "+choice)+'</small>':"")+'</div>'+
    '<button type="button" data-route="book1/'+n+'/workbook">'+tr("تکمیل","Open")+'</button></article>';
  }).join("");
- return '<section class="lo-dossier"><div class="lo-dossier-header"><div><span class="lo-map-kicker">INTEGRATED LIFE PROFILE · WORKBOOK</span><h2>'+tr("پرونده شناخت سازمان زندگی من","My Life Organization dossier")+'</h2></div><strong>'+count+' / 11</strong></div>'+
- '<p>'+tr("یازده خروجی را در کنار یکدیگر می‌بینید، اما آن‌ها را به یک نمره کل یا قضاوت درباره شخصیت تبدیل نمی‌کنیم. موضوع و بازه هر فصل را در پاسخ‌های همان فصل نگه دارید.","Eleven connected learning outputs without a total life or personality score. Keep each chapter’s context and time window.")+'</p>'+
+ return '<section class="lo-dossier"><div class="lo-dossier-header"><div><span class="lo-map-kicker">INTEGRATED LIFE PROFILE · WORKBOOK</span><h2>'+tr("پرونده شناخت سازمان زندگی من","My Life Organization dossier")+'</h2></div><strong>'+count+' / 12</strong></div>'+
+ '<p>'+tr("دوازده خروجی را در کنار یکدیگر می‌بینید، اما آن‌ها را به یک نمره کل یا قضاوت درباره شخصیت تبدیل نمی‌کنیم. موضوع و بازه هر فصل را در پاسخ‌های همان فصل نگه دارید.","Twelve connected learning outputs without a total life or personality score. Keep each chapter’s context and time window.")+'</p>'+
  '<div class="lo-dossier-list">'+items+'</div></section>';
 }
 document.addEventListener("click",e=>{
