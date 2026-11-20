@@ -7,7 +7,7 @@ const assert=require("node:assert/strict");
 const path=require("node:path");
 const root=__dirname;
 const get=f=>fs.readFileSync(path.join(root,f),"utf8");
-for(const name of ["book1-content.js","book1-part2-content.js","book1-chapters-20261120.js","book1-ui.js","book1-journey.js","book1-matrices.js","app.js","sw.js"]){
+for(const name of ["book1-content.js","book1-part2-content.js","book1-chapters-20261120.js","book1-chapter11-20261120.js","book1-ui.js","book1-journey.js","book1-matrices.js","app.js","sw.js"]){
  new vm.Script(get(name),{filename:name});
  console.log("Syntax OK:",name);
 }
@@ -43,13 +43,14 @@ const context={window,document,localStorage,URL,location,navigator:{},Blob,
 vm.runInNewContext(get("book1-content.js"),context);
 vm.runInNewContext(get("book1-part2-content.js"),context);
 vm.runInNewContext(get("book1-chapters-20261120.js"),context);
+vm.runInNewContext(get("book1-chapter11-20261120.js"),context);
 const source=window.LifeBookContent;
-assert.equal(source.chapters.length,10,"ten authored chapters from Drive");
+assert.equal(source.chapters.length,11,"eleven authored chapters from Drive");
 assert.equal(source.plannedChapters.length,12,"twelve-chapter locked table of contents");
-assert.equal(source.version,"Book1_Chapters1to10_Drive_2026-11-20");
+assert.equal(source.version,"Book1_Chapters1to11_Drive_2026-11-20");
 source.chapters.forEach((chapter,index)=>{
  assert.ok(chapter.sourceText.length>10000,"Chapter "+(index+1)+" long-form text");
- assert.equal((chapter.sourceText.match(/^گفتار /gm)||[]).length,[4,4,5,6,5,5,5,5,4,4][index],"expected subchapters");
+ assert.equal((chapter.sourceText.match(/^گفتار /gm)||[]).length,[4,4,5,6,5,5,5,5,4,4,5][index],"expected subchapters");
  assert.ok(chapter.sourceText.includes("یادداشت‌ها و منابع فصل"),"chapter references");
 });
 assert.ok(source.chapters[2].sourceText.includes("پایان بخش اول"),"Part One end matter");
@@ -57,9 +58,9 @@ vm.runInNewContext(get("book1-ui.js"),context);
 vm.runInNewContext(get("book1-journey.js"),context);
 assert.ok(window.LifeBook,"Book UI was installed");
 vm.runInNewContext(get("book1-matrices.js"),context);
-assert.equal(window.LifeBook.progress().length,10);
+assert.equal(window.LifeBook.progress().length,11);
 const landing=window.LifeBook.landing("fa");
-for(const n of [1,2,3,4,5,6,7,8,9,10]){
+for(const n of [1,2,3,4,5,6,7,8,9,10,11]){
  assert.ok(landing.includes('data-route="book1/'+n+'"'),"chapter link "+n);
  const page=window.LifeBook.chapter(n,"fa");
  assert.ok(page.includes("lj-reading-layout"),"guided reader layout");
@@ -67,13 +68,13 @@ for(const n of [1,2,3,4,5,6,7,8,9,10]){
  assert.ok(page.includes("lj-coach"),"coaching check-in");
  assert.ok(page.includes("data-lj-action="),"interactive journey buttons");
  const form=window.LifeBook.worksheet(n,"fa");
- assert.equal((form.match(/data-lb-field=/g)||[]).length,[8,10,12,8,9,11,8,12,10,11][n-1],"worksheet field count");
+ assert.equal((form.match(/data-lb-field=/g)||[]).length,[8,10,12,8,9,11,8,12,10,11,10][n-1],"worksheet field count");
  assert.ok(form.includes("data-lb-action"),"export and clear actions");
  assert.ok(form.includes("lj-form-stepper"),"paginated workbook");
  assert.equal((form.match(/data-lj-form-group=/g)||[]).length,[8,10,12,8,9,11,8,12,10,11][n-1],"all workbook inputs have page groups");
 }
 assert.ok(source.chapters[2].sourceText.includes("پایان بخش اول"),"full closing prose remains in source");
-assert.ok(window.LifeBook.landing("en").includes("Ten"),"English interface");
+assert.ok(window.LifeBook.landing("en").includes("Eleven"),"English interface");
 const inputField={dataset:{chapter:"1",lbField:"roles"},value:"نقش حرفه‌ای و خانوادگی"};
 for(const h of handlers.input||[])h({target:{closest:sel=>sel==="[data-lb-field]"?inputField:null}});
 assert.equal(window.LifeBook.exportData().worksheetResponses["1"].roles,inputField.value,"local fields tracked");
@@ -168,7 +169,7 @@ assert.equal(ten.wallet.coins,385,"correct ten-chapter coin total");
 assert.equal(ten.badges.length,11,"ten chapter badges plus foundation");
 assert.equal((window.LifeBook.workbook("fa").match(/class="lo-dossier-item/g)||[]).length,10,"ten dossier entries");
 assert.equal((window.LifeBook.landing("fa").match(/class="lb-chapter-tile/g)||[]).length,12,"locked 12 chapter architecture");
-assert.equal((window.LifeBook.landing("fa").match(/lo-upcoming/g)||[]).length,2,"chapters 11 and 12 not invented");
+assert.equal((window.LifeBook.landing("fa").match(/lo-upcoming/g)||[]).length,1,"only Chapter 12 is still planned");
 assert.ok(window.LifeBook.chapter(9,"fa").includes("lo-source-state"),"review manuscript status visible");
 assert.ok(window.LifeBook.chapter(10,"fa").includes("lo-source-state"),"review manuscript status visible");
 
@@ -183,15 +184,15 @@ assert.ok(node("#page").innerHTML.includes("وضع موجود و وضع مناس
 location.hash="#book1/workbook";
 for(const fn of handlers["window:hashchange"]||[])fn();
 assert.ok(node("#page").innerHTML.includes("دفتر کار یکپارچه"),"Summary route works");
-location.hash="#book1/10/workbook";
+location.hash="#book1/11/workbook";
 for(const fn of handlers["window:hashchange"]||[])fn();
-assert.ok(node("#page").innerHTML.includes("کاربرگ زحمت، بازده و گزینه ازدست‌رفته"),"chapter 10 workbook route works");
+assert.ok(node("#page").innerHTML.includes("کاربرگ فلسفه پیشرفت من"),"chapter 11 workbook route works");
 location.hash="#progress";
 for(const fn of handlers["window:hashchange"]||[])fn();
 assert.ok(node("#page").innerHTML.includes("امتیاز، سکه و نشان‌های یادگیری"),"My Journey includes rewards dashboard");
 assert.ok(node("#page").innerHTML.includes("نشان‌های مسیر من"),"My Journey includes badges");
 const html=get("index.html"),sw=get("sw.js");
-for(const a of ["book1-content.js","book1-part2-content.js","book1-chapters-20261120.js","book1-ui.js","book1.css","book1-journey.js","book1-journey.css","book1-matrices.js","book1-matrices.css"]){
+for(const a of ["book1-content.js","book1-part2-content.js","book1-chapters-20261120.js","book1-chapter11-20261120.js","book1-ui.js","book1.css","book1-journey.js","book1-journey.css","book1-matrices.js","book1-matrices.css"]){
  assert.ok(html.includes(a),"HTML asset "+a);
  assert.ok(sw.includes(a),"Offline cache "+a);
 }
