@@ -80,7 +80,7 @@ function parse(n){
  const lines=book.sourceText.split(/\r?\n/);
  const parts=[{heading:"آغاز فصل",type:"intro",lines:[]}];
  for(const line of lines.slice(2)){
-  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)|ابزار فصل|کاربرگ\\s|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(line)){
+  if(/^(گفتار (اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)|ابزار فصل|کاربرگ|پایان فصل|یادداشت‌ها و منابع فصل|پایان بخش اول)/.test(line)){
    const kind=line.startsWith("گفتار ")?"talk":(line.startsWith("ابزار فصل")||line.startsWith("کاربرگ"))?"original-tool":line.startsWith("پایان فصل")?"ending":line.startsWith("یادداشت‌ها")?"references":"part-end";
    parts.push({heading:line,type:kind,lines:[]});
   }else parts[parts.length-1].lines.push(line);
