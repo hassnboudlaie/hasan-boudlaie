@@ -27,7 +27,7 @@ function classify(category,answers){
  if(!c||!patterns[c.id]||!answers)return null;
  if(!c.items.every(item=>answers[item.id]===0||answers[item.id]===1))return null;
  const config=patterns[c.id],axes=config.axes.map(axis=>axisResult(axis,answers));
- const mixed=axes.some(axis=>axis.trend==="m");
+ const mixed=axes.some(axis=>axis.trend==="m") || axes.every(axis=>axis.total>=3 && Math.abs(axis.score)/axis.total<=1/3+1e-9);
  const key=mixed?"mixed":axes.map(x=>x.trend).join("");
  const profile=config.profiles[key]||config.profiles.mixed;
  const examples=axes.map(axis=>{
