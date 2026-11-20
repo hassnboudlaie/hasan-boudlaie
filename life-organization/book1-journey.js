@@ -162,7 +162,7 @@ function bank(l,compact=false){
 function stageLabel(s,n,l){
  if(s.type==="intro")return T(l,"شروع و هدف فصل","Chapter opening");
  if(s.type==="talk")return s.title.replace(/^گفتار\s+(اول|دوم|سوم|چهارم|پنجم|ششم|هفتم|هشتم|نهم|دهم)\s+/,"");
- if(s.type==="tool")return T(l,"ابزار اصلی کتاب","Source worksheet");
+ if(s.type==="tool")return T(l,"کاربرگ تألیفی فصل","Authorial chapter worksheet");
  if(s.type==="ending")return T(l,"مکث و جمع‌بندی","Closing reflection");
  if(s.type==="reference")return T(l,"منابع علمی","Research notes");
  return T(l,"پایان بخش اول","End of Part One");
@@ -261,6 +261,7 @@ function chapter(n,l){
  '<div class="lj-topnav"><button type="button" data-route="module/1">'+T(l,"مسیر ده فصل","Ten-chapter journey")+'</button><span>'+T(l,"جلد اول · فصل "+n,"Book One · Chapter "+n)+'</span></div>'+
  '<section class="lj-head"><div class="lj-head-art" aria-hidden="true"><div class="lj-orbit"><span>'+leading(n)+'</span></div></div>'+
  '<div class="lj-head-copy"><span class="lj-kicker">BOOK I · CHAPTER '+leading(n)+'</span><h1>'+E(T(l,BOOK.chapters[n-1].title,BOOK.chapters[n-1].englishTitle))+'</h1>'+
+ (BOOK.chapters[n-1].editionStatus==="editorial-review"?'<p class="lo-source-state">'+T(l,"نسخه تألیفی در مرحله بازبینی؛ هنوز نهایی نشده است","Editorial review edition · not final")+'</p>':"")+
  '<p class="lj-core"><span aria-hidden="true">✦</span><span lang="fa" dir="rtl">'+E(q)+'</span></p>'+
  '<div class="lj-head-bottom"><div class="lj-head-progress"><strong>'+T(l,done+" / "+totalTalk+" گفتار مرورشده",done+" / "+totalTalk+" sections reviewed")+'</strong>'+
  '<div class="lj-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+percent+'" aria-label="'+T(l,"فعالیت‌های یادگیری فصل","Chapter learning activities")+'"><span style="width:'+percent+'%"></span></div></div>'+
