@@ -99,6 +99,16 @@ document.addEventListener('DOMContentLoaded',()=>{
    brain:copy('مغز · آرش|از تجربه و بازخورد چه می‌آموزم؟','Brain · Arash|What can we learn from feedback?'),
    organism:copy('موجود زنده · لیلا|با تغییر نیاز و شرایط چطور سازگار شوم؟','Organism · Leila|How can we adapt to changing needs?')
   };
+  if(fa&&route==='book1/1'){
+   const walker=document.createTreeWalker(page,NodeFilter.SHOW_TEXT);
+   const edits=[
+    ['نکته مهم این است که هیچ‌یک از شخصیت‌های ما «متعلق» به یک پنجره نیست. همان زندگی رضا، نیلوفر، آرش یا لیلا را می‌توان هم‌زمان از منظر نظم، سازگاری، یادگیری و معنا دید.','در این فصل رضا زاویه نظم، نیلوفر زاویه معنا، آرش زاویه یادگیری و لیلا زاویه سازگاری را برجسته می‌کنند. هر چهار نفر می‌توانند از زاویه دیگری هم به همان موقعیت نگاه کنند.'],
+    ['این شکل ماتریس دو در دو نیست.','محورهای ماتریس و کاربرد آن برای زندگی، صورت‌بندی تألیفی کتاب است.']
+   ];
+   for(let n=walker.nextNode();n;n=walker.nextNode()){
+    let value=n.nodeValue;for(const [a,b] of edits)value=value.replace(a,b);if(value!==n.nodeValue)n.nodeValue=value;
+   }
+  }
   const panel=document.createElement('section');panel.className='life-lens';
   const first=route==='book1/1'||route==='book1/1/workbook';
   const title=copy('مورگان و هنر دیدن','Morgan and the art of seeing');
