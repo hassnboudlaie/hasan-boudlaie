@@ -75,5 +75,55 @@
   <script src="./book1-matrices.js?v=0.7.0" defer></script>
   <script src="./book1-complete-ui.js?v=0.7.0" defer></script>
   <script src="./app.js?v=0.7.0" defer></script>
+<style>
+.life-lens{margin:1.25rem auto;padding:1rem clamp(.8rem,3vw,1.5rem);border:1px solid currentColor;border-radius:14px;max-width:66rem}
+.life-lens h2{font-size:1.25rem;margin:0 0 .5rem}.life-lens p{margin:.45rem 0;line-height:1.75}
+.life-lens-table{width:100%;table-layout:fixed;border-collapse:collapse;margin:.6rem 0}.life-lens-table th,.life-lens-table td{padding:.35rem;border:1px solid #83938c;text-align:start;vertical-align:middle}.life-lens-table th{font-size:.82rem}.life-lens-table th:first-child{width:24%}
+.life-lens button{width:100%;text-align:start;padding:.35rem;border:1px solid transparent;border-radius:.4rem;color:inherit;background:transparent;font:inherit;cursor:pointer}.life-lens button[aria-pressed="true"]{outline:2px solid #bf693e}.life-lens button small{display:block;font-size:.76em}
+.life-lens select,.life-lens input{font:inherit;color:inherit;background:transparent;border:1px solid #83938c;border-radius:.4rem;padding:.4rem;max-width:100%}.life-lens label{display:block;margin:.45rem 0}.life-lens a{color:inherit;text-decoration:underline}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const page=document.querySelector('#page');if(!page)return;
+ const key='life-book1-morgan-lens-v1';
+ let state={primary:'',secondary:'',note:''};
+ try{Object.assign(state,JSON.parse(localStorage.getItem(key)||'{}'))}catch{}
+ function append(){
+  const route=location.hash.slice(1);
+  if(!/^(book1\/(1|1\/workbook|12|12\/workbook|profile))$/.test(route)||page.querySelector('.life-lens'))return;
+  const fa=document.documentElement.lang!=='en';
+  const copy=(f,e)=>fa?f:e;
+  const angles={
+   machine:copy('ماشین · رضا|کار چگونه منظم و قابل‌اتکا پیش می‌رود؟','Machine · Reza|What makes the work run reliably?'),
+   culture:copy('فرهنگ · نیلوفر|چه ارزش یا معنایی باید حفظ شود؟','Culture · Niloufar|What value or meaning matters here?'),
+   brain:copy('مغز · آرش|از تجربه و بازخورد چه می‌آموزم؟','Brain · Arash|What can we learn from feedback?'),
+   organism:copy('موجود زنده · لیلا|با تغییر نیاز و شرایط چطور سازگار شوم؟','Organism · Leila|How can we adapt to changing needs?')
+  };
+  const panel=document.createElement('section');panel.className='life-lens';
+  const first=route==='book1/1'||route==='book1/1/workbook';
+  const title=copy('مورگان و هنر دیدن','Morgan and the art of seeing');
+  const options=Object.entries(angles).map(([id,s])=>'<option value="'+id+'">'+s.split('|')[0]+'</option>').join('');
+  function cell(id){const [label,q]=angles[id].split('|');return '<td><button type="button" aria-pressed="false" data-lens="'+id+'">'+label+'<small>'+q+'</small></button></td>'}
+  panel.innerHTML='<h2>'+title+'</h2><p>'+(first?copy('به یک تصمیم واقعی فکر کنید. زندگی را بیشتر از کدام زاویه می‌بینید؟','Think of a real decision. Which lens do you instinctively use?'):copy('زاویه غالب و مکمل فصل اول را کنار هشت ماتریس ببینید. این انتخاب به خواندن شواهد کمک می‌کند و خانه‌های ماتریس را تعیین نمی‌کند.','Read your primary and complementary lenses alongside the eight matrices. Your evidence still determines your place on each matrix.'))+'</p>'+
+   (first?'<table class="life-lens-table" aria-label="'+title+'"><thead><tr><th scope="col">'+copy('پرسش اول','First question')+'</th><th scope="col">'+copy('سازوکار و تصمیم','Mechanism and decisions')+'</th><th scope="col">'+copy('انسان و زمینه','People and context')+'</th></tr></thead><tbody><tr><th scope="row">'+copy('چه چیزی باید دوام بیاورد؟','What should endure?')+'</th>'+cell('machine')+cell('culture')+'</tr><tr><th scope="row">'+copy('چه چیزی باید تغییر کند؟','What needs to change?')+'</th>'+cell('brain')+cell('organism')+'</tr></tbody></table>':'')+
+   '<label>'+copy('زاویه غالب','Primary lens')+' <select data-field="primary"><option value="">—</option>'+options+'</select></label><label>'+copy('زاویه مکمل','Complementary lens')+' <select data-field="secondary"><option value="">—</option>'+options+'</select></label><label>'+copy('زاویه دوم چه نکته‌ای به تصویر اضافه کرد؟','What did the second lens help you notice?')+' <input type="text" maxlength="280" data-field="note"></label>'+
+   '<p><a href="'+(first?'#book1/profile':'#book1/1')+'">'+(first?copy('دیدن نمایه فصل ۱۲','View Chapter 12 profile'):copy('بازگشت به تمرین فصل اول','Back to the Chapter 1 exercise'))+'</a></p>';
+  function sync(){
+   panel.querySelectorAll('[data-field]').forEach(c=>{if(c.value!==state[c.dataset.field])c.value=state[c.dataset.field]});
+   panel.querySelectorAll('[data-lens]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lens===state.primary)));
+   panel.querySelectorAll('[data-field="secondary"] option').forEach(o=>o.disabled=!!o.value&&o.value===state.primary);
+  }
+  function save(){if(state.primary===state.secondary)state.secondary='';try{localStorage.setItem(key,JSON.stringify(state))}catch{}sync()}
+  panel.addEventListener('click',e=>{const b=e.target.closest('[data-lens]');if(b){state.primary=b.dataset.lens;save()}});
+  panel.addEventListener('input',e=>{const f=e.target.dataset.field;if(f){state[f]=e.target.value;save()}});
+  sync();
+  const anchor=first&&[...page.querySelectorAll('h2,h3')].find(e=>/مورگان|Morgan/i.test(e.textContent));
+  if(anchor)anchor.after(panel);else page.prepend(panel);
+ }
+ new MutationObserver(append).observe(page,{childList:true,subtree:true});
+ window.addEventListener('hashchange',()=>queueMicrotask(append));
+ append();
+});
+</script>
 </body>
 </html>
