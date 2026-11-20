@@ -273,7 +273,7 @@ function chapter(n,l){
  '<div class="lj-chapter-outcome"><div><h3>'+T(l,"از خواندن به کاربست","From reading to practice")+'</h3><p>'+T(l,"پاسخ درست یا غلط نداریم. با یک مشاهده واقعی، مسیر یادگیری را ادامه بده.","There is no right or wrong personal answer. Continue with one real observation.")+'</p></div>'+
  '<button data-route="book1/'+n+'/workbook" type="button">'+T(l,"ثبت خروجی فصل","Capture chapter output")+'</button></div>'+
  finish+
- (n<10?'<button class="lj-rest-link" type="button" data-lj-action="rest" data-after="'+n+'"><span aria-hidden="true">☼</span> '+T(l,"ایستگاه مکث اختیاری · ۳۰ ثانیه","Optional 30-second reflection stop")+'</button>':"")+
+ (n<3?'<button class="lj-rest-link" type="button" data-lj-action="rest" data-after="'+n+'"><span aria-hidden="true">☼</span> '+T(l,"ایستگاه مکث اختیاری · ۳۰ ثانیه","Optional 30-second reflection stop")+'</button>':"")+
  '</div></div><div class="lj-footer-nav"><button type="button" data-route="module/1">'+T(l,"بازگشت به نقشه ده فصل","Back to ten-chapter map")+'</button>'+
  '<a href="'+E(BOOK.chapters[n-1].sourceUrl||BOOK.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+T(l,"متن مرجع Google Drive","Original source in Google Drive")+'</a></div>'+
  '<p class="lj-disclaimer">'+T(l,"امتیازها و سکه‌ها فقط برای مشارکت در مطالعه و تمرین هستند و کیفیت زندگی یا پاسخ‌های فردی را اندازه نمی‌گیرند. متن فارسی از نسخه نهایی کتاب است.","Points and coins recognize reading and practice only; they do not score your life or personal answers. Persian text is sourced from the final manuscript.")+'</p></div>';
