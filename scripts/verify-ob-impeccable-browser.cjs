@@ -77,7 +77,7 @@ async function examine(browser,name,width,height){
   assert.equal(await page.locator("[data-student-device-settings]").count(),1,"Approved student can set a cross-device password");
   assert.equal(await page.locator("[data-oba-student]").count(),1,"Student receives their own learning analytics panel");
   assert.equal(await page.locator(".ob-roadmap-item").count(),16,"A complete sixteen-session roadmap must be immediately available");
-  assert.equal(await page.locator(".ob-pathways .learning-card").count(),4,"Student dashboard should expose four working learning actions");
+  assert.equal(await page.locator(".ob-pathways .learning-card").count(),5,"Student dashboard exposes five working learning actions including the community");
   assert.equal(await page.locator(".ob-dashboard-layout").isVisible(),true,"New student workspace is displayed");
   const metrics=await page.evaluate(async()=>{
    await document.fonts.load('400 20px "Vazirmatn"');
