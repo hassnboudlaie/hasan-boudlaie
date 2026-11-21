@@ -67,7 +67,8 @@ async function run(){
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor();
-  assert.equal(await page.locator(".learning-card").count(),4,"Four classroom learning routes");
+  assert.equal(await page.locator(".learning-card").count(),5,"Five classroom learning routes including discussion community");
+   assert.equal(await page.locator('a.learning-card[href="./community.html"]').count(),1,"Community shortcut is available on the student dashboard");
   await noOverflow(page,config.name+" home");
   await save(page,config.name+"-01-home");
   await page.locator('.student-focus button[data-action="openActive"]').click();
