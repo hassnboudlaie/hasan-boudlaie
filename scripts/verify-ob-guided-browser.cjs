@@ -290,6 +290,32 @@ assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']")
  assert.equal(reviewed,true,"Teacher approval sent to server");
  await save(instructorPage,"android-390-08-teacher-approval");
  await instructorCtx.close();
+ // A link opened in a fresh browser must offer a safe return to login and restore the topic.
+ const signedOut=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const signedOutPage=await signedOut.newPage();
+ const sampleTopic="fc8abf4e-d135-4fa4-8889-f173bccdd2e2";
+ await signedOutPage.goto(url+"community.html#topic/"+sampleTopic,{waitUntil:"domcontentloaded"});
+ await signedOutPage.getByRole("link",{name:"ورود با حساب کلاس"}).waitFor();
+ await signedOutPage.getByRole("link",{name:"ورود با حساب کلاس"}).click();
+ await signedOutPage.waitForURL(u=>u.pathname.endsWith("index.html")&&u.searchParams.get("next")==="community"&&u.searchParams.get("topic")===sampleTopic);
+ await signedOutPage.locator("#entranceStudent").waitFor();
+ await signedOut.close();
+ const returnCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await returnCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"student",token:"qa-return-to-community",name:"دانشجوی نمونه"})));
+ await returnCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance",async route=>{
+  const x=JSON.parse(route.request().postData()||"{}");
+  await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(x.action==="accessState"?{ok:true,role:"student",approval_status:"approved",student:{name:"دانشجوی نمونه",student_number:"123456789"}}:{ok:false,error:"invalid_action"})});
+ });
+ await returnCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-community",async route=>{
+  const v=JSON.parse(route.request().postData()||"{}"),now=new Date().toISOString();
+  const example={id:sampleTopic,kind:"case",title:"نمونه آموزشی خطاهای ادراکی",body:"این یک کیس فرضی است که در آن مدیر بدون شواهد کامل درباره عملکرد افراد تصمیم گرفته است.",question:"کدام شواهد برای تصمیم منصفانه ضروری‌اند؟",category:"خطاهای ادراکی",session_no:2,author_student_id:null,teacher_post:true,demo:true,author_name:"نمونه مدرس",poll_options:[],summary:null,created_at:now};
+  await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(v.action==="view"?{ok:true,topic:example,replies:[],vote_totals:[0,0,0,0],my_vote:null,contributors:[],my_review:null,me:{role:"student",id:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",name:"دانشجوی نمونه"}}:{ok:false,error:"unexpected_action"})});
+ });
+ const returnPage=await returnCtx.newPage();
+ await returnPage.goto(url+"index.html?next=community&topic="+sampleTopic,{waitUntil:"domcontentloaded"});
+ await returnPage.waitForURL(u=>u.pathname.endsWith("/community.html")&&u.hash==="#topic/"+sampleTopic);
+ await returnPage.getByText("نمونه آموزشی خطاهای ادراکی").first().waitFor();
+ await returnCtx.close();
  // Community interaction smoke test: two templates, owner follow-up and summary.
  const communityCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  await communityCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"student",token:"qa-community-session"})));
