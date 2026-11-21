@@ -140,7 +140,7 @@ async function actionRouter(input:Record<string,unknown>){
       attendance:[],active:null,server_time:stamp()});
   }
   const {data,error}=await supabase.from("mba_ob_attendance")
-   .select("session_no,status,checked_at").eq("student_id",user.student_id).order("session_no");
+   .select("session_no,status,checked_at,source").eq("student_id",user.student_id).order("session_no");
   if(error)throw new Error("attendance_lookup_failed");
   return result({ok:true,role:"student",approval_status:"approved",
    student:{id:user.student_id,name:user.name,student_number:user.student_number},
@@ -265,7 +265,7 @@ async function actionRouter(input:Record<string,unknown>){
  if(action==="teacherState"){
   const [students,attend,windows,invites,guests]=await Promise.all([
    supabase.from("mba_ob_students").select("id,full_name,student_number,approval_status,enrolled_at,disabled_at,reviewed_at").order("enrolled_at"),
-   supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at").order("checked_at",{ascending:false}),
+   supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at,source").order("checked_at",{ascending:false}),
    supabase.from("mba_ob_windows").select("session_no,opened_at,closes_at,closed_at").order("session_no"),
    supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at"),
    supabase.from("mba_ob_guests").select("id,full_name,approval_status,requested_at,reviewed_at,revoked_at,expires_at").order("requested_at",{ascending:false}).limit(500)
@@ -338,6 +338,24 @@ async function actionRouter(input:Record<string,unknown>){
    .eq("session_no",lesson).eq("student_id",id).select("student_id").maybeSingle();
   if(error||!data)return fail("attendance_not_found",404);
   return result({ok:true,status});
+ }
+ // Teacher-only recovery of physically verified attendance (including previous sessions).
+ // The endpoint never overwrites an existing attendance record.
+ if(action==="teacherMarkPresent"){
+  const lesson=Number(input.session),id=String(input.student_id||"");
+  if(!isInt(lesson,1,16)||!/^[0-9a-f-]{36}$/.test(id)||input.confirmed_in_person!==true)
+   return fail("manual_attendance_confirmation_required",400);
+  const {data:student,error:studentError}=await supabase.from("mba_ob_students")
+   .select("id").eq("id",id).eq("approval_status","approved").is("disabled_at",null).maybeSingle();
+  if(studentError)throw new Error("student_lookup_failed");
+  if(!student)return fail("student_not_found",404);
+  const now=stamp();
+  const {data,error}=await supabase.from("mba_ob_attendance")
+   .insert({student_id:id,session_no:lesson,status:"approved",source:"teacher_manual",checked_at:now,reviewed_at:now})
+   .select("student_id").maybeSingle();
+  if(error?.code==="23505")return fail("attendance_already_exists",409);
+  if(error||!data)throw new Error("attendance_manual_failed");
+  return result({ok:true,status:"approved",source:"teacher_manual"});
  }
  if(action==="disableStudent"){
   const id=String(input.student_id||"");
