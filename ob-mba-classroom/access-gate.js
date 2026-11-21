@@ -83,6 +83,15 @@ function present(){
 }
 function unlock(role){
  if(loaded)return;
+ // The direct community link can send an approved member through the normal login.
+ // Only a fixed, validated in-app destination is allowed, never an arbitrary URL.
+ const next=new URLSearchParams(location.search);
+ if(next.get("next")==="community"){
+  const topic=next.get("topic");
+  const fragment=topic&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(topic)?"#topic/"+topic:"";
+  location.replace("./community.html"+fragment);
+  return;
+ }
  view="ready";loaded=true;
  window.OB_ACCESS={role,student:role==="student"?(credential?.name||""):"",student_number:role==="student"?(credential?.student_number||""):"",guest:role==="guest"?(credential?.name||""):"",approved:true};
  document.documentElement.dataset.access=role;
