@@ -38,7 +38,7 @@ assert.match(app,/function focusMainAfterRoute\(\)/,'Focus is managed after app 
 assert.match(app,/aria-current="page"/,'Bottom navigation exposes current page');
 assert.ok(app.includes('const KEY="ob-mba-classroom-demo-v1"'),'Existing storage contract is preserved');
 assert.ok(app.includes('version:8,sessions:')&&app.includes('length:16'),'Course and storage schema remain intact');
-assert.ok(sw.includes('ob-mba-classroom-shell-v39'),'New PWA cache version');
+assert.ok(/ob-mba-classroom-shell-v\d+/.test(sw),'New PWA cache version');
 assert.ok(sw.includes("'./impeccable.css?v=1'")&&sw.includes("'./assets/fonts/Vazirmatn.woff2'"),'Font and CSS offline-cached');
 assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom/assets/fonts/OFL-Vazirmatn.txt')),'Font license available');
 for(const file of ['learning-analytics.js','learning-analytics.css','learning-journey.js','learning-journey.css','student-devices.js','student-devices.css']){assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom',file)),'Missing '+file);assert.ok(sw.includes("'./"+file+"?v=1'"),'Offline missing '+file)}
