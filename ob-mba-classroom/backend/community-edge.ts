@@ -137,6 +137,17 @@ async function action(a:string,input:any,user:{role:string,id:string|null,name:s
   const {error}=await db.from(I).upsert({topic_id:topic.id,inviter_id:user.id,invitee_id:target.id},{onConflict:"topic_id,invitee_id",ignoreDuplicates:true});if(error)throw error;
   return output({ok:true});
  }
+ if(a==="gradeReport"){
+  if(!teacher)return bad("teacher_only",403);
+  const {data:reviews,error}=await db.from(G).select("topic_id,student_id,score,feedback,reviewed_at").order("reviewed_at",{ascending:false}).limit(1500);
+  if(error)throw error;
+  const list=reviews||[];
+  const lookup=await names(list.map(x=>x.student_id));
+  const topicIds=[...new Set(list.map(x=>x.topic_id))];
+  let titles:Record<string,string>={};
+  if(topicIds.length){const q=await db.from(T).select("id,title").in("id",topicIds);if(q.error)throw q.error;for(const t of q.data||[])titles[t.id]=t.title;}
+  return output({ok:true,rows:list.map(x=>({...x,student_name:lookup[x.student_id]||"دانشجو",topic_title:titles[x.topic_id]||"موضوع حذف‌شده"}))});
+ }
  if(a==="review"){
   if(!teacher)return bad("teacher_only",403);
   const score=Number(input.score),studentId=plain(input.student_id),topicId=plain(input.topic_id),feedback=plain(input.feedback);
