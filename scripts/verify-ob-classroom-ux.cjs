@@ -67,7 +67,8 @@ for(const session of [1,2]){
   assert.ok(sw.includes('./materials/original/session-'+no+'/slide-'+String(n).padStart(2,'0')+'.webp'),'English slide cached for offline view');
  }
 }
-assert.ok(sw.includes('./attendance.html')&&sw.includes('./attendance.js?v=5'),'Attendance page is installable');
+const attendanceVersion=attendanceHtml.match(/attendance\.js\?v=(\d+)/)?.[1];
+assert.ok(attendanceVersion&&sw.includes('./attendance.html')&&sw.includes('./attendance.js?v='+attendanceVersion),'Attendance page is installable');
 assert.ok(attendanceHtml.includes('id="attendanceRoot"')&&attendanceHtml.includes('dir="rtl"'),'RTL attendance portal exists');
 for(const word of ['studentEnroll','teacherLogin','checkIn','openWindow','issueInvites','exportCsv','approvePending','changeTeacherPassword'])assert.ok(attendanceJs.includes(word),'Attendance functionality missing: '+word);
 assert.ok(!attendanceJs.includes('SERVICE_ROLE_KEY'),'No server key in public attendance script');
