@@ -4,7 +4,8 @@
 const cats=window.LifeFunCategories;
 const engine=window.LifeFunPatterns;
 if(!Array.isArray(cats)||cats.length!==8)return;
-const KEY="tlo-fun-strategic-choices-v1";
+const KEY="tlo-fun-strategic-choices-v2";
+const LEGACY_KEY="tlo-fun-strategic-choices-v1";
 const E=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const T=(l,f,e)=>l==="en"?e:f;
 const byId=id=>cats.find(x=>x.id===id);
@@ -21,6 +22,7 @@ function answers(c){return c.items.map(p=>state.answers[p.id]).filter(v=>v===0||
 function done(c){return answers(c)===c.items.length}
 function pattern(c){return done(c)&&engine?engine.classify(c,state.answers):null}
 function count(){return cats.reduce((n,c)=>n+answers(c),0)}
+function hasLegacyAnswers(){try{const x=JSON.parse(localStorage.getItem(LEGACY_KEY)||"null");return !!(x&&x.answers&&Object.keys(x.answers).length)}catch(e){return false}}
 function num(n,l){return l==="en"?String(n):String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)])}
 function catIndex(c){return cats.findIndex(x=>x.id===c.id)}
 function next(c){return cats[catIndex(c)+1]||null}
@@ -49,7 +51,7 @@ function home(l){
    T(l,"اگر مجبور باشی یکی را انتخاب کنی…","What would you choose?"),
    T(l,"هشت مسیر کوتاه، پنجاه‌وهشت دوراهی گاهی بامزه و گاهی جدی. قرار نیست نمره بگیری یا شخصیتت را کشف کنند؛ فقط انتخاب کن و ببین چه چیزی درباره اولویت‌های امروزت روشن می‌شود.",
    "Eight playful themes, 58 thought-provoking choices. This is not a personality test. Choose, reflect, and see what matters to you today."));
- return '<section class="fun-root">'+top+'<div class="fun-overview"><div><strong>'+num(count(),l)+' <small>/ '+num(58,l)+'</small></strong><span>'+T(l,"انتخاب ثبت‌شده","choices made")+'</span></div><div><strong>'+num(completed,l)+' <small>/ '+num(8,l)+'</small></strong><span>'+T(l,"دسته تکمیل‌شده","themes completed")+'</span></div><div class="fun-overview-progress">'+bar(count(),58,l)+'</div></div>'+
+ return '<section class="fun-root">'+top+(hasLegacyAnswers()?'<div class="fun-migration-notice" role="note">'+T(l,"همه پرسش‌ها و گزینه‌ها بازنویسی شده‌اند؛ برای حفظ درستی نتیجه، پاسخ‌های نسخه قبلی به پرسش‌های جدید منتقل نشده‌اند. پاسخ‌های قبلی همچنان در این دستگاه باقی‌اند.","Every question was rewritten. Previous answers were not mapped to the new choices. Old answers are still saved on this device.")+'</div>':'')+'<div class="fun-overview"><div><strong>'+num(count(),l)+' <small>/ '+num(58,l)+'</small></strong><span>'+T(l,"انتخاب ثبت‌شده","choices made")+'</span></div><div><strong>'+num(completed,l)+' <small>/ '+num(8,l)+'</small></strong><span>'+T(l,"دسته تکمیل‌شده","themes completed")+'</span></div><div class="fun-overview-progress">'+bar(count(),58,l)+'</div></div>'+
  '<div class="fun-grid">'+cats.map((c,i)=>{
  const a=answers(c),full=done(c),p=full?pattern(c):null;
  return '<button class="fun-category" type="button" data-route="fun/'+c.id+'">'+art(c)+'<span class="fun-category-content"><small>'+T(l,"مسیر ","Theme ")+num(i+1,l)+' / '+num(8,l)+'</small><strong>'+E(T(l,c.fa,c.en))+'</strong><span>'+E(T(l,c.desc,c.descEn))+'</span>'+(p?'<span class="fun-pattern-mini">'+T(l,"الگوی تو: ","Your pattern: ")+E(T(l,p.fa,p.en))+'</span>':'')+'<span class="fun-category-foot">'+(full?T(l,"تکمیل شده · دیدن روایت انتخاب‌ها","Complete · view your story"):a?T(l,"ادامه انتخاب‌ها","Continue choosing"):T(l,"شروع این مسیر","Start this theme"))+' · '+num(a,l)+'/'+num(c.items.length,l)+'</span></span></button>';
@@ -119,7 +121,7 @@ function rerender(){
  window.scrollTo({top:0,behavior:"instant"});
 }
 function download(){
- const payload={app:"The Life Organization",feature:"Strategic Life Choices",version:2,exportedAt:new Date().toISOString(),source:"User-supplied strategic choice slide PDF; 42 explicitly identified and 16 interpretive pairings",choices:cats.map(c=>({category:c.fa,pattern:pattern(c)?{nameFa:pattern(c).fa,nameEn:pattern(c).en,key:pattern(c).key,axes:pattern(c).basisFa}:null,items:c.items.map(p=>({id:p.id,question:p.q,selected:state.answers[p.id]===0?p.a:state.answers[p.id]===1?p.b:null,origin:p.origin}))}))};
+ const payload={app:"The Life Organization",feature:"Strategic Life Choices",version:2,catalogVersion:2,exportedAt:new Date().toISOString(),source:"User-supplied strategic-choice deck; 58 balanced editorial trade-off adaptations, not verbatim pairs",choices:cats.map(c=>({category:c.fa,pattern:pattern(c)?{nameFa:pattern(c).fa,nameEn:pattern(c).en,key:pattern(c).key,axes:pattern(c).basisFa}:null,items:c.items.map(p=>({id:p.id,question:p.q,selected:state.answers[p.id]===0?p.a:state.answers[p.id]===1?p.b:null,origin:p.origin}))}))};
  const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
  const a=document.createElement("a");a.href=url;a.download="life-organization-fun-choices.json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
