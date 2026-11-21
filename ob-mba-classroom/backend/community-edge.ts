@@ -105,6 +105,16 @@ async function action(a:string,input:any,user:{role:string,id:string|null,name:s
   const {error}=await db.from(T).update({summary:plain(input.summary),updated_at:new Date().toISOString(),last_activity_at:new Date().toISOString()}).eq("id",topic.id);if(error)throw error;
   return output({ok:true});
  }
+ if(a==="editWiki"){
+  if(!student&&!teacher)return bad("forbidden",403);
+  if(!uuid(input.topic_id)||!length(input.body,20,5000))return bad("invalid_wiki");
+  const topic=await oneTopic(input.topic_id);if(!topic)return bad("not_found",404);
+  if(topic.kind!=="wiki")return bad("invalid_wiki");
+  if(!teacher&&topic.author_student_id!==user.id)return bad("owner_only",403);
+  const {error}=await db.from(T).update({body:plain(input.body),updated_at:new Date().toISOString(),last_activity_at:new Date().toISOString()}).eq("id",topic.id);
+  if(error)throw error;
+  return output({ok:true});
+ }
  if(a==="vote"){
   if(!student)return bad("student_only",403);
   if(!uuid(input.topic_id)||!Number.isInteger(input.option_index))return bad("invalid_vote");
