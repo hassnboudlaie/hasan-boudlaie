@@ -50,6 +50,7 @@ const sessionTiles=(teacher=false)=>'<div class="session-accordion">'+Array.from
 function homeStudent(){
  const s=state.sessions[state.active-1],published=state.sessions.filter(x=>x.published).length,progress=Math.round(published/16*100),guest=isGuest();
  const shortcuts=[
+  {url:"./community.html",title:"باشگاه اندیشه",subtitle:"کیس‌های مدیریتی و دانشنامه مشترک",icon:'<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M12 12h40v29H34l-10 10v-10H12z" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><path d="M20 23h24M20 32h17" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg>',klass:"community-card"},
   {action:"openTrack",track:"concepts",title:"مفاهیم و نظریه‌ها",subtitle:"درسنامه، مدل‌ها و اسلایدهای جلسه",icon:visualIcon("concept"),klass:"concepts-card"},
   {action:"openTrack",track:"practice",title:"از نظریه تا عمل",subtitle:"کیس، تمرین و یادگیری کاربردی",icon:visualIcon("practice"),klass:"practice-card"},
   {action:"navigate",page:"sessions",title:"جلسات درس",subtitle:"دسترسی به مسیر ۱۶ جلسه",icon:'<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><rect x="12" y="8" width="40" height="48" rx="7" stroke="currentColor" stroke-width="3.5"/><path d="M21 20h22M21 30h22M21 40h16M7 21h9M7 33h9M7 45h9" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg>',klass:"sessions-card"},
