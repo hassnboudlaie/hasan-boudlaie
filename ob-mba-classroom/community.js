@@ -114,6 +114,7 @@ function detailHTML(data){
  (isTeacher()&&!t.demo?'<button type="button" class="btn danger sm" data-action="hideTopic">پنهان‌کردن موضوع</button>':"")+'</div>'+
  '<div id="inviteArea" class="hidden" style="margin-top:12px"></div></section>'+
  (isOwner?'<div class="owner-note" style="margin:15px 0"><strong>مسئولیت توسعه گفت‌وگو با شماست</strong><p>به نظرات پاسخ دهید، یک پرسش پیگیری مطرح کنید، دیگران را دعوت کنید و برداشت نهایی را ثبت کنید.'+(isStudent()?' پاسخ‌های شما تاکنون: '+actual.toLocaleString("fa-IR"):"")+'</p></div>':"")+
+ (isOwner&&t.kind==="wiki"?'<details class="extra"><summary>توسعه متن دانشنامه با استفاده از نظر دیگران</summary><form data-form="editWiki"><label class="field"><span>متن به‌روزشده دانشنامه</span><textarea name="body" rows="6" minlength="20" maxlength="5000" required>'+esc(t.body)+'</textarea></label><p class="note">نظرهای همکلاسی‌ها در پایین صفحه حفظ می‌شوند؛ متن اصلی را با استفاده از پیشنهادهای معتبر غنی‌تر کنید.</p><button class="btn primary sm" type="submit">ذخیره نسخه تکمیل‌شده</button></form></details>':"")+
  (t.summary?'<section class="summary"><strong>جمع‌بندی و یادگیری‌های این بحث</strong><p class="detail-text">'+esc(t.summary)+'</p></section>':"")+
  (isOwner?'<details class="extra"><summary>'+(t.summary?"ویرایش جمع‌بندی نویسنده":"ثبت جمع‌بندی نویسنده")+'</summary><form data-form="summary"><label class="field"><span>از این گفت‌وگو چه آموختیم؟</span><textarea name="summary" rows="4" minlength="30" maxlength="3000" required placeholder="دیدگاه‌های متفاوت، نتیجه و پرسش بازمانده را بنویسید.">'+esc(t.summary||"")+'</textarea></label><button type="submit" class="btn primary sm">ذخیره جمع‌بندی</button></form></details>':"")+
  '<div style="margin:18px 0">'+pollHTML(data)+'</div>'+
@@ -180,6 +181,7 @@ document.addEventListener("submit",async e=>{
  if(what==="create")return sendTopic(form);
  if(!current)return;
  if(what==="reply")return withBusy(form,async()=>{await api("reply",{topic_id:current.topic.id,body:form.querySelector("textarea").value.trim(),parent_reply_id:parentReply});notify("پاسخ شما ثبت شد.");await refreshTopic();});
+ if(what==="editWiki")return withBusy(form,async()=>{await api("editWiki",{topic_id:current.topic.id,body:form.querySelector("textarea").value.trim()});notify("دانشنامه با مشارکت همکلاسی‌ها به‌روزرسانی شد.");await refreshTopic();});
  if(what==="summary")return withBusy(form,async()=>{await api("summarize",{topic_id:current.topic.id,summary:form.querySelector("textarea").value.trim()});notify("جمع‌بندی ثبت شد.");await refreshTopic();});
  if(what==="vote")return withBusy(form,async()=>{const selected=form.querySelector("input[name=vote]:checked");if(!selected){notify("یکی از گزینه‌ها را انتخاب کنید.");return}await api("vote",{topic_id:current.topic.id,option_index:Number(selected.value)});notify("انتخاب شما ثبت شد.");await refreshTopic();});
  if(what==="review")return withBusy(form,async()=>{const fd=new FormData(form);await api("review",{topic_id:current.topic.id,student_id:form.dataset.student,score:Number(fd.get("score")),feedback:String(fd.get("feedback")||"")});notify("نمره مشارکت ثبت شد.");await refreshTopic();});
