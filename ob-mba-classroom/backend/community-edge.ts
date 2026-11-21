@@ -72,28 +72,28 @@ async function action(a:string,input:any,user:{role:string,id:string|null,name:s
   return output({ok:true,topic:asTopic(topic,lookup,(replies||[]).length),replies:(replies||[]).map(r=>({...r,author_name:writer(r,lookup)})),vote_totals:totals,my_vote:meVote,contributors,my_review:myReview,me:{role:user.role,id:user.id,name:user.name}});
  }
  if(a==="create"){
-  if(!student)return bad("student_only",403);
+  if(!student&&!teacher)return bad("forbidden",403);
   const kind=plain(input.kind),title=plain(input.title),body=plain(input.body),question=plain(input.question);
   const category=plain(input.category)||"موضوع آزاد",session=Number(input.session_no||2);
   const options=input.poll_options;
   if(!["case","wiki"].includes(kind)||!length(title,6,150)||!length(body,20,5000)||!length(question,8,900)||category.length>100||!Number.isInteger(session)||session<1||session>16)return bad("invalid_topic");
   if(!Array.isArray(options)||options.length===1||options.length>4||options.some(x=>typeof x!=="string"||x.trim().length<4||x.trim().length>180))return bad("invalid_poll");
   let link;try{link=source(input.source_url);}catch{return bad("invalid_url");}
-  const {count,error:ce}=await db.from(T).select("id",{count:"exact",head:true}).eq("author_student_id",user.id!).gte("created_at",new Date(Date.now()-86400000).toISOString());if(ce)throw ce;
-  if((count||0)>=6)return bad("daily_limit",429);
-  const row={kind,title,body,question,category,session_no:session,author_student_id:user.id,source_url:link,source_label:link?(plain(input.source_label).slice(0,140)||"منبع پیشنهادی"):null,poll_options:options.map(x=>x.trim())};
+  if(student){const {count,error:ce}=await db.from(T).select("id",{count:"exact",head:true}).eq("author_student_id",user.id!).gte("created_at",new Date(Date.now()-86400000).toISOString());if(ce)throw ce;
+   if((count||0)>=6)return bad("daily_limit",429);}
+  const row={kind,title,body,question,category,session_no:session,author_student_id:user.id,teacher_post:teacher,source_url:link,source_label:link?(plain(input.source_label).slice(0,140)||"منبع پیشنهادی"):null,poll_options:options.map(x=>x.trim())};
   const {data,error}=await db.from(T).insert(row).select("id").single();if(error)throw error;
   return output({ok:true,id:data.id},201);
  }
  if(a==="reply"){
-  if(!student)return bad("student_only",403);
+  if(!student&&!teacher)return bad("forbidden",403);
   if(!uuid(input.topic_id)||!length(input.body,3,2500))return bad("invalid_reply");
   const topic=await oneTopic(input.topic_id);if(!topic)return bad("not_found",404);
-  const {count,error:ce}=await db.from(R).select("id",{count:"exact",head:true}).eq("author_student_id",user.id!).gte("created_at",new Date(Date.now()-3600000).toISOString());if(ce)throw ce;
-  if((count||0)>=40)return bad("hourly_limit",429);
+  if(student){const {count,error:ce}=await db.from(R).select("id",{count:"exact",head:true}).eq("author_student_id",user.id!).gte("created_at",new Date(Date.now()-3600000).toISOString());if(ce)throw ce;
+   if((count||0)>=40)return bad("hourly_limit",429);}
   let parent=null;
   if(input.parent_reply_id){if(!uuid(input.parent_reply_id))return bad("invalid_parent");const q=await db.from(R).select("id").eq("id",input.parent_reply_id).eq("topic_id",topic.id).is("hidden_at",null).maybeSingle();if(q.error)throw q.error;if(!q.data)return bad("invalid_parent");parent=q.data.id;}
-  const {data,error}=await db.from(R).insert({topic_id:topic.id,author_student_id:user.id,body:plain(input.body),parent_reply_id:parent}).select("id").single();if(error)throw error;
+  const {data,error}=await db.from(R).insert({topic_id:topic.id,author_student_id:user.id,teacher_post:teacher,body:plain(input.body),parent_reply_id:parent}).select("id").single();if(error)throw error;
   await db.from(T).update({last_activity_at:new Date().toISOString()}).eq("id",topic.id);
   return output({ok:true,id:data.id},201);
  }
