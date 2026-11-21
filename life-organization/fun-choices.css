@@ -138,3 +138,24 @@ html[dir="ltr"] .fun-root{text-align:left}
 
 /* Editorial v2 · retained answers are never silently mapped to changed alternatives */
 .fun-migration-notice{border:1px solid var(--line);background:var(--sage);color:var(--ink);border-radius:15px;padding:15px 18px;font-size:13px;line-height:2;margin:0 0 20px;max-width:850px}
+
+
+/* v1.1: reader-first scenario → constraint → exclusive choice */
+.fun-question>.fun-art{height:126px;min-height:126px}
+.fun-question>.fun-art svg{max-height:114px}
+.fun-question .fun-scenario{font-size:clamp(17px,2.15vw,21px);line-height:2.05;font-weight:540;max-width:730px;margin:7px 0 18px;color:var(--ink);text-wrap:pretty}
+.fun-decision-heading{padding:14px 18px 12px;border-radius:16px;background:var(--sage);border:1px solid var(--line);margin:0 0 20px}
+.fun-decision-rule{display:inline-block;font-size:12px;font-weight:850;color:var(--primary);line-height:1.8}
+.fun-question-content .fun-decision-heading h1{font-size:clamp(20px,2.6vw,26px);font-weight:850;line-height:1.7;margin:3px 0 0}
+.fun-question .fun-choice{min-height:106px}
+.fun-question .fun-or{font-size:17px;font-weight:900;position:relative}
+.fun-question .fun-choice-note{text-align:start;font-size:13px;line-height:1.9}
+@media(max-width:600px){
+ .fun-question>.fun-art{height:92px;min-height:92px}
+ .fun-question>.fun-art svg{max-height:87px}
+ .fun-question .fun-scenario{font-size:17px;line-height:2.0;margin:4px 0 16px}
+ .fun-decision-heading{padding:12px 15px;margin-bottom:15px}
+ .fun-question-content .fun-decision-heading h1{font-size:21px}
+ .fun-question .fun-choice{min-height:83px}
+ .fun-question .fun-choice-note{font-size:12px}
+}
