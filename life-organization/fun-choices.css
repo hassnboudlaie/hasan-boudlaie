@@ -135,3 +135,6 @@ html[dir="ltr"] .fun-root{text-align:left}
 .fun-pattern-nuance>strong{display:block;font-size:13px;color:var(--primary);line-height:1.8}
 .fun-pattern-nuance p{font-size:13px;line-height:2;margin:6px 0 0}
 @media(max-width:580px){.fun-pattern-axes{grid-template-columns:1fr}.fun-pattern-card{border-radius:21px;padding:20px}.fun-pattern-name{font-size:29px}.fun-pattern-evidence li{gap:8px;flex-direction:column}.fun-pattern-evidence li>span{max-width:none}}
+
+/* Editorial v2 · retained answers are never silently mapped to changed alternatives */
+.fun-migration-notice{border:1px solid var(--line);background:var(--sage);color:var(--ink);border-radius:15px;padding:15px 18px;font-size:13px;line-height:2;margin:0 0 20px;max-width:850px}
