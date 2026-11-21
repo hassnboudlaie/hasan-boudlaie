@@ -13,6 +13,19 @@ const fmt=s=>{try{return new Intl.DateTimeFormat("fa-IR",{year:"numeric",month:"
 const short=(s,n=200)=>s.length>n?s.slice(0,n)+"…":s;
 const kindName=x=>x==="case"?"کیس مدیریتی":"دانشنامه";
 const myToken=()=>{try{return JSON.parse(localStorage.getItem(STORE)||"null")?.token||""}catch{return ""}};
+// A link opened from a different browser/PWA may not share the classroom session.
+// Return to the original discussion after the existing classroom login succeeds.
+function loginUrl(){
+ const p=new URL("./index.html",location.href);
+ p.searchParams.set("next","community");
+ const match=location.hash.match(/^#topic\/([0-9a-f-]{36})$/i);
+ if(match)p.searchParams.set("topic",match[1]);
+ return p.href;
+}
+function loginCard(){
+ app.innerHTML='<section class="card"><h2>ورود به باشگاه اندیشه</h2><p>برای مشاهده و مشارکت، ابتدا با حساب تأییدشده کلاس وارد شوید. سپس به همین صفحه برمی‌گردید.</p><a class="btn primary" href="'+esc(loginUrl())+'">ورود با حساب کلاس</a></section>';
+}
+
 const isStudent=()=>me?.role==="student";
 const isTeacher=()=>me?.role==="teacher";
 const owned=t=>!!me&&((isStudent()&&t.author_student_id===me.id)||(isTeacher()&&t.teacher_post));
@@ -131,12 +144,12 @@ async function feed(changeUrl=true){
  loading();try{
  const r=await api("feed");topics=r.topics||[];invited=new Set(r.invited||[]);grades=r.grades||[];me=r.me;current=null;mode="feed";parentReply=null;
  app.innerHTML=feedHTML();if(changeUrl)history.pushState(null,"",location.pathname);
- }catch(e){app.innerHTML='<div class="card alert">'+esc(alertText(e))+' <a href="./index.html">بازگشت به ورود کلاس</a></div>';}
+ }catch(e){if(e?.message==="session_expired"){loginCard();return}app.innerHTML='<div class="card alert">'+esc(alertText(e))+' <button class="btn" data-action="feed" type="button">تلاش مجدد</button></div>';}
 }
 async function openTopic(id,changeUrl=true){
  loading();
  try{const r=await api("view",{id});me=r.me;current=r;mode="topic";parentReply=null;app.innerHTML=detailHTML(r);if(changeUrl)history.pushState(null,"","#topic/"+id);
- }catch(e){notify(alertText(e));await feed();}
+ }catch(e){if(e?.message==="session_expired"){loginCard();return}notify(alertText(e));await feed();}
 }
 function begin(k){if(!me){notify("ابتدا وارد کلاس شوید.");return}kind=k;mode="new";parentReply=null;app.innerHTML=formHTML();history.pushState(null,"","#new-"+k);window.scrollTo(0,0);}
 async function refreshTopic(){if(current)await openTopic(current.topic.id,false);}
@@ -204,5 +217,5 @@ document.addEventListener("submit",async e=>{
  if(what==="review")return withBusy(form,async()=>{const fd=new FormData(form);await api("review",{topic_id:current.topic.id,student_id:form.dataset.student,score:Number(fd.get("score")),feedback:String(fd.get("feedback")||"")});notify("نمره مشارکت ثبت شد.");await refreshTopic();});
 });
 window.addEventListener("popstate",()=>{const match=location.hash.match(/^#topic\/([0-9a-f-]{36})$/i);if(match)openTopic(match[1],false);else feed(false);});
-(async()=>{const m=location.hash.match(/^#topic\/([0-9a-f-]{36})$/i);if(m)await openTopic(m[1],false);else await feed(false)})();
+(async()=>{if(!myToken()){loginCard();return}const m=location.hash.match(/^#topic\/([0-9a-f-]{36})$/i);if(m)await openTopic(m[1],false);else await feed(false)})();
 })();
