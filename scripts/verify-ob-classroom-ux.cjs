@@ -127,7 +127,8 @@ assert.ok(gateJs.includes('entrance-install-link')&&gateJs.includes('href="./ins
 assert.match(gateCss,/\.entrance-install-link/,'Install access must have accessible touch target');
 assert.ok(sw.includes('APP_SCOPE.pathname')&&sw.includes('!url.pathname.startsWith(APP_SCOPE.pathname)'),'App service worker must not intercept other independent apps');
 assert.ok(/ob-mba-classroom-shell-v\d+/.test(sw),'Updated standalone offline cache');
-assert.ok(sw.includes("./access-gate.js?v=22")&&html.includes("./access-gate.js?v=22"),'Versioned gate must be cached for reliable new install');
+const activeGateAssetMatch=html.match(/\.\/access-gate\.js\?v=(\d+)/);
+assert.ok(activeGateAssetMatch&&Number(activeGateAssetMatch[1])>=22&&sw.includes("./access-gate.js?v="+activeGateAssetMatch[1]),"Active versioned gate must be cached for reliable new install");
 assert.ok(installHtml.includes('برای اولین ورود و تأیید عضویت، اتصال اینترنت لازم است'),'Offline limitations must be explained');
 
 assert.equal(manifest.display,'standalone','PWA launches in standalone mode');
