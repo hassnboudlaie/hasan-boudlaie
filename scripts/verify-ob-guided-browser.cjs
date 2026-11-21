@@ -290,6 +290,44 @@ assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']")
  assert.equal(reviewed,true,"Teacher approval sent to server");
  await save(instructorPage,"android-390-08-teacher-approval");
  await instructorCtx.close();
+ // Community interaction smoke test: two templates, owner follow-up and summary.
+ const communityCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await communityCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"student",token:"qa-community-session"})));
+ const uid="aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",tid="cccccccc-cccc-4ccc-8ccc-cccccccccccc";
+ let created=null,replies=[];
+ const profile={role:"student",id:uid,name:"دانشجوی آزمایشی"};
+ await communityCtx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-community",async route=>{
+  const b=JSON.parse(route.request().postData()||"{}"),now=new Date().toISOString();
+  let data={ok:false,error:"unknown_action"};
+  if(b.action==="feed")data={ok:true,topics:created?[{...created,author_name:profile.name,reply_count:replies.length}]:[],invited:[],grades:[],me:profile};
+  if(b.action==="create"){created={id:tid,kind:b.kind,title:b.title,body:b.body,question:b.question,category:b.category,session_no:b.session_no,author_student_id:uid,teacher_post:false,demo:false,poll_options:b.poll_options,source_url:b.source_url||null,summary:null,created_at:now,last_activity_at:now};data={ok:true,id:tid};}
+  if(b.action==="view")data={ok:true,topic:{...created,author_name:profile.name,reply_count:replies.length},replies,vote_totals:[0,0,0,0],my_vote:null,contributors:[],my_review:null,me:profile};
+  if(b.action==="reply"){replies.push({id:"dddddddd-dddd-4ddd-8ddd-dddddddddddd",topic_id:tid,author_student_id:uid,author_name:profile.name,teacher_post:false,demo:false,body:b.body,created_at:now,parent_reply_id:null});data={ok:true,id:replies[0].id};}
+  if(b.action==="summarize"){created.summary=b.summary;data={ok:true};}
+  await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(data)});
+ });
+ const communityPage=await communityCtx.newPage(),communityErrors=[];
+ communityPage.on("pageerror",err=>communityErrors.push(err.message));
+ await communityPage.goto(url+"community.html",{waitUntil:"domcontentloaded"});
+ await communityPage.locator('button[data-action="new"]').first().waitFor();
+ assert.equal(await communityPage.locator('button[data-action="new"]').count(),2,"Community starts with exactly two creation templates");
+ await communityPage.locator('button[data-action="new"][data-kind="case"]').click();
+ await communityPage.locator('form[data-form="create"] input[name="title"]').fill("تحلیل نقش ادراک در ارزیابی عملکرد");
+ await communityPage.locator('form[data-form="create"] textarea[name="body"]').fill("مدیر واحد فروش بدون بررسی دقیق شواهد و معیارهای مستقل درباره شایستگی کارمندان خود قضاوت کرده است.");
+ await communityPage.locator('form[data-form="create"] textarea[name="question"]').fill("شما برای تصمیم‌گیری منصفانه چه داده‌هایی جمع‌آوری می‌کنید؟");
+ await communityPage.locator('form[data-form="create"] button[type="submit"]').click();
+ await communityPage.getByText("مسئولیت توسعه گفت‌وگو با شماست").waitFor();
+ await communityPage.locator('form[data-form="reply"] textarea[name="body"]').fill("برای ارزیابی بهتر باید رفتار مشاهده‌شده را از قضاوت درباره شخصیت جدا کنیم.");
+ await communityPage.locator('form[data-form="reply"] button[type="submit"]').click();
+ await communityPage.getByText("برای ارزیابی بهتر باید رفتار مشاهده‌شده را از قضاوت درباره شخصیت جدا کنیم.").waitFor();
+ await communityPage.locator('details summary').filter({hasText:"ثبت جمع‌بندی نویسنده"}).click();
+ await communityPage.locator('form[data-form="summary"] textarea').fill("نتیجه گفت‌وگو نشان می‌دهد که باید تعریف شایستگی‌ها، شواهد مستقل و عوامل موقعیتی را پیش از تصمیم بررسی کنیم.");
+ await communityPage.locator('form[data-form="summary"] button[type="submit"]').click();
+ await communityPage.getByText("جمع‌بندی و یادگیری‌های این بحث").waitFor();
+ await noOverflow(communityPage,"community mobile RTL");
+ assert.deepEqual(communityErrors,[],"Community has no uncaught JavaScript errors");
+ await save(communityPage,"android-390-09-community");
+ await communityCtx.close();
 
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 }
