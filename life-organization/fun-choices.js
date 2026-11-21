@@ -141,5 +141,5 @@ document.addEventListener("click",function(e){
  if(action==="advance"){if(idx+1<c.items.length)state.cursor[c.id]=idx+1;else delete state.cursor[c.id];save();rerender();return;}
  if(action==="edit"){state.cursor[c.id]=idx;save();rerender();}
 });
-window.LifeFun={page,count,done,pattern,reset(){state={answers:{},cursor:{},started:{}};try{localStorage.removeItem(KEY)}catch(e){}},exportData(){return {answers:{...state.answers},completed:cats.filter(done).map(x=>x.id),patterns:cats.filter(done).map(c=>({categoryId:c.id,nameFa:pattern(c).fa,nameEn:pattern(c).en,key:pattern(c).key,basisFa:pattern(c).basisFa}))}}};
+window.LifeFun={page,count,done,pattern,reset(){state={answers:{},cursor:{},started:{}};try{localStorage.removeItem(KEY);localStorage.removeItem(LEGACY_KEY)}catch(e){}},exportData(){return {answers:{...state.answers},completed:cats.filter(done).map(x=>x.id),patterns:cats.filter(done).map(c=>({categoryId:c.id,nameFa:pattern(c).fa,nameEn:pattern(c).en,key:pattern(c).key,basisFa:pattern(c).basisFa}))}}};
 })();
