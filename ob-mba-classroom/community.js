@@ -7,7 +7,7 @@ const terms=[
  ["جلسه اول",["رفتار فردی، گروهی و سازمانی","رضایت شغلی و عملکرد","غیبت و ترک خدمت","کیفیت و بهره‌وری","توانمندسازی کارکنان","اخلاق در محیط کار"]],
  ["جلسه دوم",["ارزش‌ها و نگرش‌ها","نگرش و رفتار","رضایت شغلی","ناهماهنگی شناختی","ادراک و تفاوت برداشت‌ها","اثر هاله‌ای و خطاهای ادراکی","نظریه اسناد و خطاهای قضاوت","یادگیری و تغییر رفتار"]]
 ];
-let topics=[],invited=new Set(),grades=[],me=null,current=null,filter="all",kind="case",parentReply=null,classmates=null,mode="feed",busy=false;
+let topics=[],invited=new Set(),grades=[],gradeRows=[],me=null,current=null,filter="all",kind="case",parentReply=null,classmates=null,mode="feed",busy=false;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=s=>{try{return new Intl.DateTimeFormat("fa-IR",{year:"numeric",month:"short",day:"numeric"}).format(new Date(s))}catch{return ""}};
 const short=(s,n=200)=>s.length>n?s.slice(0,n)+"…":s;
@@ -52,6 +52,8 @@ function feedHTML(){
  '<button class="choice" data-action="new" data-kind="wiki" type="button"><span class="choice-icon" aria-hidden="true">▤</span><span><strong>دانشنامه</strong><small>یک مفهوم رفتار سازمانی، همراه با توضیح، مثال و دعوت به تکمیل</small></span></button></div>'+
  '<div class="section-head"><h2>گفت‌وگوهای کلاس</h2>'+filtersHTML()+'</div>'+
  '<div class="list">'+(visible.length?visible.map(topicCard).join(""):'<div class="empty">هنوز موضوعی در این بخش وجود ندارد. از یکی از دو قالب بالا شروع کنید.</div>')+'</div>'+
+ (isStudent()&&grades.length?'<section class="grade" style="margin-top:16px">نمره‌های تأییدشده شما در باشگاه: '+grades.length.toLocaleString("fa-IR")+' مشارکت ارزیابی‌شده · میانگین '+(grades.reduce((a,g)=>a+Number(g.score||0),0)/grades.length).toFixed(1)+' از ۱۰. برای مشاهده بازخورد، موضوع مربوط را باز کنید.</section>':"")+
+ (isTeacher()?'<details class="extra"><summary>گزارش نمرات مشارکت کلاس</summary><p>فقط برای مدرس قابل مشاهده است؛ نمره هر دانشجو به تفکیک موضوع ثبت شده است.</p><button type="button" class="btn sm" data-action="loadGrades">نمایش نمرات</button><div id="gradeReport" aria-live="polite"></div></details>':"")+
  '<p class="note">نمونه‌های آموزشی با برچسب «فرضی» مشخص‌اند. نظرسنجی و کامنت‌های نمونه در نمره دانشجویان لحاظ نمی‌شوند.</p>';
 }
 function categories(){
@@ -171,6 +173,21 @@ document.addEventListener("click",async e=>{
  if(action==="clearReply"){parentReply=null;document.getElementById("replyingTo").textContent="";b.classList.add("hidden");}
  if(action==="invite")await inviteView();
  if(action==="sendInvite"&&current){const id=document.getElementById("inviteSelect")?.value;if(!id){notify("ابتدا همکلاسی را انتخاب کنید.");return}b.disabled=true;try{await api("invite",{topic_id:current.topic.id,invitee_id:id});notify("دعوت در باشگاه برای همکلاسی ثبت شد.");}catch(err){notify(alertText(err))}finally{b.disabled=false}}
+ if(action==="loadGrades"){
+  const root=document.getElementById("gradeReport");if(!root)return;root.textContent="در حال دریافت نمرات…";
+  try{const r=await api("gradeReport");gradeRows=r.rows||[];
+   root.innerHTML='<div style="overflow:auto"><table class="grades-table"><thead><tr><th>دانشجو</th><th>موضوع</th><th>نمره از ۱۰</th><th>بازخورد</th></tr></thead><tbody>'+
+   gradeRows.map(x=>'<tr><td>'+esc(x.student_name)+'</td><td>'+esc(x.topic_title)+'</td><td>'+Number(x.score).toLocaleString("fa-IR")+'</td><td>'+esc(x.feedback||"—")+'</td></tr>').join("")+'</tbody></table></div>'+
+   (!gradeRows.length?'<p class="note">هنوز نمره‌ای ثبت نشده است.</p>':'<button type="button" class="btn sm" data-action="exportGrades">دریافت فایل CSV</button>');
+  }catch(err){root.textContent=alertText(err);}
+ }
+ if(action==="exportGrades"&&gradeRows.length){
+  const cell=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const rows=[["دانشجو","موضوع","نمره","بازخورد","تاریخ ارزیابی"],...gradeRows.map(x=>[x.student_name,x.topic_title,x.score,x.feedback,fmt(x.reviewed_at)])];
+  const csv="\ufeff"+rows.map(row=>row.map(cell).join(",")).join("\r\n");
+  const objectURL=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const link=document.createElement("a");link.href=objectURL;link.download="mba-ob-community-grades.csv";document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectURL),3000);
+ }
  if(action==="share")share();
  if(action==="hideTopic"&&current&&confirm("این موضوع از دید دانشجویان پنهان شود؟")){try{await api("hideTopic",{id:current.topic.id});notify("موضوع پنهان شد.");await feed()}catch(err){notify(alertText(err))}}
  if(action==="hideReply"&&current&&confirm("این پاسخ پنهان شود؟")){try{await api("hideReply",{id:b.dataset.id});notify("پاسخ پنهان شد.");await refreshTopic()}catch(err){notify(alertText(err))}}
