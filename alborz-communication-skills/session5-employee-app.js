@@ -51,7 +51,7 @@ function caseStage(c){
  case 0:return '<h3>اجرای اول؛ گفت‌وگوی نیازمند اصلاح</h3><p>دو نفر نقش‌ها را اجرا کنند؛ مشاهده‌گر فقط رفتارهای قابل‌مشاهده را یادداشت کند.</p>'+dialogue(c.before)+button("مشاهده قواعد تکنیک","nextStage");
  case 1:{const l=lessons[c.skill];return '<h3>قواعدی که باید در اجرای دوم دیده شوند</h3><p class="s5-rule">'+esc(l.summary)+'</p><ol class="s5-rulelist">'+l.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol><div class="s5-prompt">پیش از اجرای دوم، هر نفر ۳۰ ثانیه فرصت دارد یک جمله بهتر بسازد.</div>'+button("اجرای اصلاح‌شده","nextStage");}
  case 2:return '<h3>اجرای دوم؛ به‌کارگیری تکنیک</h3><p>نقش‌ها دوباره اجرا شوند؛ هدف تکرار طوطی‌وار دیالوگ نیست، بلکه تغییر رفتار است.</p>'+dialogue(c.after)+button("مشاهده و جمع‌بندی","nextStage");
- default:return checklist(c)+'<div class="s5-reflect"><h3>پرسش منتور برای بازاندیشی</h3><p>'+esc(c.reflect)+'</p></div><p class="s5-subnote">ثبت تکمیل به معنی تمرین این سناریوست، نه گواهی صلاحیت حرفه‌ای.</p>'+button(state.completed.includes(state.caseId)?"سناریو ثبت شده؛ ادامه","completeCase")+' '+button("بازاجرای همین سناریو","restartCase","secondary");
+ default:return checklist(c)+'<div class="s5-reflect"><h3>پرسش منتور برای بازاندیشی</h3><p>'+esc(c.reflect)+'</p></div><p class="s5-subnote">ثبت تکمیل به معنی تمرین این سناریوست، نه گواهی صلاحیت حرفه‌ای.</p>'+button(state.completed.includes(state.caseId)?"سناریو ثبت شده؛ ادامه":"ثبت تکمیل و ادامه","completeCase")+' '+button("بازاجرای همین سناریو","restartCase","secondary");
  }
 }
 function caseScreen(){
