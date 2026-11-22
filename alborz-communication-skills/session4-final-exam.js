@@ -9,7 +9,7 @@ const letter=["الف","ب","ج","د"];
 const digit=n=>String(n).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d]);
 const escapeHTML=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let answers=Array(QCOUNT).fill(null),index=0,started=false,finished=false;
-const DURATION_MS=360000, STORAGE_KEY="alborz-s4-assessment-12cases-6min-v3";
+const DURATION_MS=360000, STORAGE_KEY="alborz-s4-assessment-12cases-oral-v4";
 let deadline=0,expired=false,timerId=null;
 function saveProgress(){try{window.sessionStorage?.setItem(STORAGE_KEY,JSON.stringify({answers,index,started,finished,deadline,expired}));}catch(_e){}}
 function loadProgress(){
