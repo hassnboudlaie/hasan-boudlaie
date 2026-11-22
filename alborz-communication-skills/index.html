@@ -612,6 +612,10 @@ button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-vi
 <script src="session4-final-quiz-data.js?v=20261122-oral-communication-v3"></script>
 <script src="session4-final-exam.js?v=20261122-oral-communication-v3"></script>
 <script src="session4-ob-mba-theme.js?v=20261122-oral-communication-v3"></script>
+<script src="session5-lessons.js?v=20261123-s5-v1"></script>
+<script src="session5-cases.js?v=20261123-s5-v1"></script>
+<script src="session5-employee-app.js?v=20261123-s5-v1"></script>
+<link rel="stylesheet" href="session5-employee-app.css?v=20261123-s5-v1">
 <link rel="stylesheet" href="alborz-impeccable.css?v=20261115-suite-r1">
 </head>
 <body>
@@ -1609,6 +1613,7 @@ function s1CopyPlan(){
 function sessionPage(id){
 if(id===3){window.alborzSession3Page();return}
 if(id===4){window.alborzSession4Page();return}
+if(id===5){window.alborzSession5Page();return}
 if(id===1){session1Page();return}
 const s=sessions.find(x=>x.id===id); if(!s){home();return}
 if(id===0){
@@ -1635,7 +1640,7 @@ document.getElementById("app").innerHTML=header()+
 }
 function renderAcademyAfterLogin(){
 const params=new URLSearchParams(location.search); const hasM=params.has("m"); const m=Number(params.get("m")); const view=params.get("view"); const item=params.get("item");
-if(hasM && (m===3||m===4))sessionPage(m); else if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else if(params.get("course")==="communication")communicationHome(); else home();
+if(hasM && (m===3||m===4||m===5))sessionPage(m); else if(hasM && m===0 && view==="lab" && item)aiDetailPage(item); else if(hasM && view==="lab")labPage(m); else if(hasM)sessionPage(m); else if(view==="guide")guide(); else if(params.get("course")==="communication")communicationHome(); else home();
 }
 function safeRenderAcademy(){try{renderAcademyAfterLogin();}catch(err){console.error("Alborz academy render failed:",err);const root=document.getElementById("app");if(root&&!root.textContent.trim())root.innerHTML='<main style="padding:28px;direction:rtl;font:20px Tahoma"><h1>آکادمی بیمه البرز</h1><p>برای ورود مستقیم از لینک‌های جلسات استفاده کنید.</p><a href="session2-demo.html">جلسه دوم</a> | <a href="?m=4">جلسه چهارم</a></main>';}}
 if(!document.documentElement.classList.contains("alborz-class-locked"))safeRenderAcademy();
