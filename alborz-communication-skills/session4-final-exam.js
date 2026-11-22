@@ -67,7 +67,7 @@ function styleOnce(){if(document.getElementById("s4-final-exam-style"))return;co
 function root(){return document.getElementById("s4-final-exam");}
 function frame(content){
  const holder=root();if(!holder)return;
- holder.innerHTML='<div class="s4e-header"><h2>تمرین پایانی جلسه چهارم</h2><p>۱۲ تصمیم موقعیتی · فن بیان مدیریتی، لحن و زبان بدن</p></div><div class="s4e-main">'+content+'</div>';
+ holder.innerHTML='<div class="s4e-header"><h2>تمرین پایانی جلسه چهارم</h2><p>۱۲ تصمیم موقعیتی · فن بیان، گفت‌وگو و ارائه حرفه‌ای</p></div><div class="s4e-main">'+content+'</div>';
 }
 function home(){
  frame('<div class="s4e-tags"><span>۱۲ سؤال چهارگزینه‌ای</span><span>۱ سؤال برای هر رول‌پلی</span><span>هر پاسخ درست: ۱ امتیاز</span><span>۶ دقیقه از اولین پاسخ</span></div>'+
