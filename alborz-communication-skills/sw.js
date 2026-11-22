@@ -1,11 +1,11 @@
 /* Scoped exclusively to /hasan-boudlaie/alborz-communication-skills/.
  * No shared cache names, site-root interception, or other app storage mutations. */
-const CACHE_NAME = 'alborz-communication-academy-v2-20261122-s4-oral-v5';
+const CACHE_NAME = 'alborz-communication-academy-v2-20261123-s5-v1';
 const CACHE_PREFIX = 'alborz-communication-academy-';
 const SCOPE_PATH = new URL(self.registration.scope).pathname;
 const SHELL = [
   './', './index.html', './session2-demo.html',
-  // Session 3 and 4 HTML is routed from index.html; all JS must survive an offline reload.
+  // Sessions 3–5 are routed from index.html; these assets should survive offline reload.
   './session3-listening-lab.js?v=20261108-r6-six-roles',
   './session3-impeccable-journey.js?v=20261115-suite-r1',
   './session4-speaking-lab.js?v=20261122-oral-communication-v3',
@@ -14,6 +14,10 @@ const SHELL = [
   './session4-ob-mba-theme.js?v=20261122-oral-communication-v3',
   './session4-ob-mba-theme.css?v=20261114-impeccable-r1',
   './session4-mobile-first-20261115.css?v=1',
+  './session5-lessons.js?v=20261123-s5-v1',
+  './session5-cases.js?v=20261123-s5-v1',
+  './session5-employee-app.js?v=20261123-s5-v1',
+  './session5-employee-app.css?v=20261123-s5-v1',
   './alborz-impeccable.css?v=20261115-suite-r1',
   './manifest.webmanifest', './icon-192.png', './icon-512.png'
 ];
