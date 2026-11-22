@@ -1,0 +1,36 @@
+name: Alborz Session 5 — Learning & Roleplay QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'alborz-communication-skills/session5-*.js'
+      - 'alborz-communication-skills/session5-*.css'
+      - 'alborz-communication-skills/index.html'
+      - 'alborz-communication-skills/sw.js'
+      - 'scripts/alborz-session5-qa.cjs'
+      - '.github/workflows/alborz-session5-qa.yml'
+  pull_request:
+    paths:
+      - 'alborz-communication-skills/session5-*.js'
+      - 'alborz-communication-skills/session5-*.css'
+      - 'alborz-communication-skills/index.html'
+      - 'alborz-communication-skills/sw.js'
+      - 'scripts/alborz-session5-qa.cjs'
+  workflow_dispatch:
+jobs:
+  session5-static-and-interactive-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check alborz-communication-skills/session5-lessons.js
+          node --check alborz-communication-skills/session5-cases.js
+          node --check alborz-communication-skills/session5-employee-app.js
+          node --check scripts/alborz-session5-qa.cjs
+      - name: Validate lessons, scenarios, exam, UX and routing
+        run: node scripts/alborz-session5-qa.cjs
