@@ -50,11 +50,78 @@ function useOrganization() {
     questions:portfolio[state.current], service:'کمک به حل مسئله‌ای که در کار این شرکت دیده می‌شود',
     deliverable:'شرح مشکل، تیم درگیر و چند کار مشخص برای حل آن',
   }];
-  navigation = [{id:'profile',title:'شرکت و واحد شما'}, {id:'signals',title:'مشکل‌های شرکت و حرف کارکنان',questions:signals}, ...currentStages,
+  navigation = [{id:'profile',title:'شرکت و واحد شما'}, {id:'business',title:'اولویت‌های کسب‌وکار'}, {id:'signals',title:'مشکل‌های شرکت و حرف کارکنان',questions:signals}, ...currentStages,
+    {id:'catalog',title:'همه حوزه‌های منابع انسانی'},
     {id:'planning',title:'از همکاری چه می‌خواهید؟',questions:planning},
     {id:'report',title:'مرور و نقشه راه'}];
 }
 useOrganization();
+
+function businessTitle(id) {
+  const item = businessCases[id];
+  return item?.local?.[state.current] ?? item?.title;
+}
+
+function priorityCases() {
+  return (draft.priorities ?? []).filter((item) => item?.business);
+}
+
+function availableAreas(item) {
+  return peopleFactors[item.factor]?.[1] ?? [];
+}
+
+function linkedArea(item) {
+  const areas = availableAreas(item);
+  return areas.includes(item.area) ? item.area : areas[0];
+}
+
+function linkedAreas() {
+  return new Set(priorityCases().map(linkedArea).filter(Boolean));
+}
+
+function guidedPath() {
+  const areas = linkedAreas();
+  return navigation.filter((section) => section.id !== 'catalog' && (!diagnosis[section.id] || areas.has(section.id)));
+}
+
+function caseSelect(slot, name, label, entries, selected) {
+  return `<label>${label}<select data-case="${slot}" data-field="${name}">
+    <option value="">انتخاب کنید</option>
+    ${entries.map(([id,title]) => `<option value="${id}" ${String(selected) === String(id) ? 'selected' : ''}>${title}</option>`).join('')}
+    </select></label>`;
+}
+
+function businessMarkup() {
+  const entries = Object.keys(businessCases).map((id) => [id,businessTitle(id)]);
+  const caseMarkup = (slot) => {
+    const item = draft.priorities?.[slot] ?? {};
+    const areas = availableAreas(item);
+    const area = linkedArea(item);
+    return `<div class="grid">
+      ${caseSelect(slot,'business','کدام چالش برای شرکت مهم است؟',entries,item.business)}
+      ${item.business ? caseSelect(slot,'importance','حل این چالش در شش ماه آینده چقدر مهم است؟',caseImportance.map((label,i) => [i,label]),item.importance) : ''}
+      ${item.business ? caseSelect(slot,'factor','کدام مسئله مربوط به کارکنان یا شیوه کار به این چالش ربط دارد؟',
+        [...businessCases[item.business].factors,'uncertain','outside'].map((id) => [id,peopleFactors[id][0]]),item.factor) : ''}
+      ${areas.length ? caseSelect(slot,'area','اول کدام حوزه را بررسی کنیم؟',areas.map((id) => [id,stages.find((section) => section.id === id).title]),area) : ''}
+      ${areas.length ? caseSelect(slot,'owner','به نظرتان این کار را چه کسی پیگیری کند؟ (اختیاری)',ownership.map((label,i) => [i,label]),item.owner) : ''}
+    </div>
+    ${item.business ? `<label class="comment">از کجا می‌فهمید بهتر شده؟ (اختیاری)
+      <textarea rows="2" maxlength="800" data-case="${slot}" data-field="evidence" placeholder="مثلاً ${businessCases[item.business].measures[0]}">${escapeHtml(item.evidence)}</textarea></label>` : ''}
+    ${area ? `<p class="note">پیشنهاد برای شروع، قابل تغییر در همین فرم · <strong>${stages.find((section) => section.id === area).title}</strong></p>`
+      : item.factor === 'outside' ? '<p class="note">این چالش در گزارش می‌آید تا در گفت‌وگو مسیر مناسبش روشن شود.</p>'
+      : item.factor === 'uncertain' ? '<p class="note">در گزارش پیشنهاد می‌شود اول چند نمونه واقعی را با تیم مرور کنیم.</p>' : ''}`;
+  };
+  return `<p class="help">از کاری شروع کنید که باید در خود شرکت بهتر شود. بعد بگویید کارکنان یا شیوه کار چه نقشی در آن دارند.</p>
+    <section class="report-block"><h3>چالش اول</h3>${caseMarkup(0)}</section>
+    <details class="report-block" ${draft.priorities?.[1]?.business ? 'open' : ''}><summary>افزودن چالش دوم <span>اختیاری</span></summary>${caseMarkup(1)}</details>`;
+}
+
+function catalogMarkup() {
+  const areas = linkedAreas();
+  return `<p class="help">در مسیر اصلی حوزه‌های مرتبط با چالش شما آمده‌اند. اینجا می‌توانید هر حوزه دیگری را هم بررسی کنید.</p>
+    <div class="grid">${currentStages.filter((section) => diagnosis[section.id]).map((section) =>
+      `<button type="button" data-step="${section.id}">${section.title}${areas.has(section.id) ? ' · در مسیر شما' : ''}</button>`).join('')}</div>`;
+}
 
 function options(items, selected) {
   return '<option value="">انتخاب کنید</option>' + items.map((label, index) =>
@@ -90,7 +157,7 @@ function diagnosisMarkup(section) {
   </section>
   <div id="diagnosis-details" ${status === 7 ? 'hidden' : ''}>
     ${questionMarkup(diagnosisQuestion(section),1)}
-    ${assessmentMarkup(section)}
+    ${linkedAreas().has(section.id) ? `<details class="report-block"><summary>زمان شروع و کمک مورد نیاز <span>اختیاری</span></summary>${assessmentMarkup(section)}</details>` : assessmentMarkup(section)}
     <details class="report-block no-print"><summary>سؤال‌های بیشتر درباره این موضوع <span>اختیاری</span></summary>
       ${section.questions.map((question,index) => questionMarkup(question,index + 2)).join('')}
     </details>
@@ -146,20 +213,28 @@ function answered(question) {
 }
 
 function progress(section) {
+  if (section.id === 'business') {
+    const items = [draft.priorities?.[0] ?? {}, ...(draft.priorities?.[1]?.business ? [draft.priorities[1]] : [])];
+    return [items.reduce((sum,item) => sum + Number(Boolean(item.business)) + Number(Boolean(item.factor)) + Number(item.importance !== undefined),0),items.length * 3];
+  }
   if (!section.questions) return undefined;
   if (diagnosis[section.id]) {
     const status = processState(section);
-    if (status === 7) return [3,3];
+    const linked = linkedAreas().has(section.id);
+    const total = linked ? 2 : 3;
+    if (status === 7) return [total,total];
     const count = Number(status !== undefined) + Number(answered(diagnosisQuestion(section)))
-      + Number(assessmentComplete(draft.assessment[section.id]));
-    return [count,3];
+      + Number(!linked && assessmentComplete(draft.assessment[section.id]));
+    return [count,total];
   }
   const assess = currentStages.includes(section);
   return [section.questions.filter(answered).length + (assess && assessmentComplete(draft.assessment[section.id]) ? 1 : 0), section.questions.length + Number(assess)];
 }
 
 function updateNavigation(rebuild = false) {
-  const counts = navigation.map(progress);
+  const path = guidedPath();
+  const menu = navigation.filter((section) => path.includes(section) || section.id === 'catalog' || section.id === step);
+  const counts = path.map(progress);
   const done = counts.reduce((sum,count) => sum + (count?.[0] ?? 0),0);
   const total = counts.reduce((sum,count) => sum + (count?.[1] ?? 0),0);
   $('progress').max = total;
@@ -168,11 +243,11 @@ function updateNavigation(rebuild = false) {
   $('progress-detail').textContent = `${fa(done)} از ${fa(total)} پاسخ اصلی`;
   $('start').textContent = draft.lastStep && draft.lastStep !== 'profile' ? 'ادامه پرسشنامه' : 'شروع پرسشنامه';
   if (rebuild) {
-    $('steps').innerHTML = navigation.map((section) =>
+    $('steps').innerHTML = menu.map((section) =>
       `<button type="button" data-step="${section.id}" ${section.id === step ? 'aria-current="step"' : ''}><span>${section.title}</span><small></small></button>`).join('');
   }
   $('steps').querySelectorAll('button').forEach((button,index) => {
-    const count = counts[index];
+    const count = progress(menu[index]);
     if (!count) return;
     const badge = button.querySelector('small');
     badge.textContent = count[0] === count[1] ? 'کامل' : `${fa(count[0])} از ${fa(count[1])}`;
@@ -192,7 +267,7 @@ function profileMarkup() {
     <label>چطور پاسخ می‌دهید؟<select data-profile="mode">${options(['پاسخ فردی','پاسخ مشترک تیم یا جلسه مدیریتی'],draft.profile.mode)}</select></label>
   </div>
   <p class="note">پاسخ‌ها روی همین مرورگر ذخیره می‌شوند. در پایان، فایل پاسخ‌ها را برای مشاور بفرستید. از درج نام یا اطلاعات شناسایی کارکنان و مشتریان خودداری کنید.</p>
-  ${Object.keys(draft.answers).length || Object.keys(draft.assessment).length || Object.keys(draft.profile).length ? '<button type="button" data-action="reset">پاک کردن پیش‌نویس همین دامنه</button>' : ''}`;
+  ${Object.keys(draft.answers).length || Object.keys(draft.assessment).length || Object.keys(draft.profile).length || priorityCases().length ? '<button type="button" data-action="reset">پاک کردن پیش‌نویس همین دامنه</button>' : ''}`;
 }
 
 function recommendations() {
@@ -254,15 +329,92 @@ function diagnosisSummary() {
   </section>`;
 }
 
+function linkedSolutions() {
+  return priorityCases().map((item,index) => {
+    const area = linkedArea(item);
+    const section = stages.find((entry) => entry.id === area);
+    const status = section ? processState(section) : undefined;
+    const findings = section ? selectedLabels(diagnosisQuestion(section)) : [];
+    const assessment = area ? draft.assessment[area] ?? {} : {};
+    let category, next, gap = 0;
+    if (item.factor === 'outside') {
+      category = 'بررسی با مدیر کسب‌وکار';
+      next = 'مانع اصلی را با تیم مسئول کسب‌وکار روشن کنیم.';
+    } else if (!section || status === undefined || status === 6 || status === 7) {
+      category = 'اول بررسی بیشتر';
+      next = status === 7 ? 'با پاسخ‌دهنده بررسی کنیم کدام روش یا تیم واقعاً به مسئله مربوط است.'
+        : 'چند نمونه واقعی را مرور کنیم تا ارتباط چالش با روش کار روشن شود.';
+    } else {
+      const question = diagnosisQuestion(section);
+      const response = draft.answers[question[0]];
+      const hasIssue = Boolean(response?.selected.some((option) => option <= question[2].length) || response?.comment.trim());
+      const noIssue = response?.selected.includes(question[2].length + 1) && !hasIssue;
+      if (status === 0) {
+        category = 'ایجاد یک روش تازه';
+        gap = 3;
+        next = `با یک تیم شروع کنیم و مراحل و مسئول کار را روشن کنیم. ${serviceActions[area][0]}.`;
+      } else if (status >= 3 && !hasIssue && !noIssue) {
+        category = 'اول بررسی بیشتر';
+        next = 'روش مشخص است. چند نمونه واقعی را ببینیم تا معلوم شود کجا باید آن را اصلاح یا کامل‌تر کنیم.';
+      } else if (status <= 2 || hasIssue) {
+        category = 'اصلاح روش موجود';
+        gap = 2;
+        next = `اول بخشی را که دردسر ایجاد می‌کند پیدا کنیم و تغییر را در یک تیم امتحان کنیم. ${serviceActions[area][0]}.`;
+      } else if (noIssue && status >= 4) {
+        category = 'ادامه روش فعلی و بررسی نتیجه';
+        next = 'روش فعلی را ادامه دهیم و ببینیم نتیجه مرتبط با چالش بهتر می‌شود یا هنوز مانعی باقی مانده است.';
+      } else {
+        category = 'توسعه روش موجود';
+        gap = 1;
+        next = `روش فعلی را برای نیاز پیشِ رو کامل‌تر کنیم و نتیجه را بسنجیم. ${serviceActions[area][0]}.`;
+      }
+    }
+    const importance = Number.isInteger(item.importance) && item.importance < 4 ? item.importance : null;
+    return {
+      order:index, business:businessTitle(item.business), factor:peopleFactors[item.factor]?.[0], area:section?.title,
+      areaId:area, status:processStates[status], findings, category, next,
+      owner:ownership[item.owner ?? assessment.owner],
+      respondentView:assessment.need === 0 && gap > 0 ? 'پاسخ‌دهنده فعلاً اقدامی درخواست نکرده است. نیاز به کار را در جلسه بررسی کنیم.' : undefined,
+      deliverable:gap > 0 ? section.deliverable : undefined,
+      outcome:item.evidence?.trim(), measures:businessCases[item.business].measures,
+      validation:area ? serviceActions[area][1] : 'گفت‌وگو با تیم و بررسی چند نمونه واقعی',
+      importance:importance === null ? null : caseImportance[importance], timing:urgency[assessment.urgency],
+      priority:importance === null ? null : (importance + 1) * 4 + gap,
+    };
+  }).sort((a,b) => (b.priority ?? -1) - (a.priority ?? -1) || a.order - b.order);
+}
+
+function solutionsMarkup(solutions) {
+  return `<section class="report-block"><h3>پیشنهاد خدمات برای چالش‌های اصلی شرکت</h3>
+    ${solutions.length ? `<p class="help">ترتیب پیشنهادها از اهمیت چالش شروع می‌شود. اگر اهمیت یکسان باشد، موضوعی که به ساخت یا تغییر بیشتری نیاز دارد بالاتر می‌آید.</p>
+    <ol>${solutions.map((item) => `<li>
+      <h4>${item.business}</h4>
+      <p><strong>اهمیت برای شرکت</strong> · ${item.importance ?? 'هنوز مشخص نیست'}<br>
+      <strong>مسئله مربوط به کارکنان</strong> · ${item.factor ?? 'هنوز مشخص نیست'}<br>
+      <strong>حوزه و روش فعلی</strong> · ${item.area ?? 'هنوز مشخص نیست'}${item.status ? ` · ${item.status}` : ''}<br>
+      ${item.findings.length ? `<strong>آنچه در عمل دیده‌اید</strong> · ${item.findings.join('، ')}<br>` : ''}
+      <strong>پیشنهاد</strong> · ${item.category}. ${item.next}<br>
+      ${item.deliverable ? `<strong>خروجی کار</strong> · ${item.deliverable}<br>` : ''}
+      ${item.respondentView ? `<strong>نظر پاسخ‌دهنده</strong> · ${item.respondentView}<br>` : ''}
+      <strong>مسئول پیشنهادی</strong> · ${item.owner ?? 'در گفت‌وگو مشخص شود'}${item.timing ? ` · ${item.timing}` : ''}<br>
+      <strong>چطور نتیجه را بسنجیم؟</strong> · ${item.outcome ? escapeHtml(item.outcome) : item.measures.join('، ')}<br>
+      <strong>برای اطمینان چه چیزی را بررسی کنیم؟</strong> · ${item.validation}</p>
+    </li>`).join('')}</ol>` : '<p>با ثبت یک چالش کسب‌وکار، پیشنهادهای این بخش شکل می‌گیرد.</p>'}
+  </section>`;
+}
+
 const phaseTitles = ['۳۰ روز اول | بررسی و شروع کار','روز ۳۱ تا ۹۰ | آماده کردن و امتحان راه‌حل','بعد از روز ۹۰ | اجرای کامل و بررسی نتیجه'];
 
 function reportMarkup() {
-  const ranked = recommendations();
-  const unfinished = navigation.find((section) => {
+  const solutions = linkedSolutions();
+  const linked = linkedAreas();
+  const ranked = recommendations().filter(({section}) => !linked.has(section.id));
+  const unfinished = guidedPath().find((section) => {
     const count = progress(section);
     return count && count[0] < count[1];
   });
   const deferred = currentStages.filter((section) => {
+    if (section.id !== 'specific') return false;
     const value = draft.assessment[section.id];
     return processState(section) !== 7 && (!value || value.need === undefined || value.need === 3);
   });
@@ -286,9 +438,10 @@ function reportMarkup() {
         </div>
       </div>
     </section>
+    ${solutionsMarkup(solutions)}
     ${signalsSummary()}
     ${diagnosisSummary()}
-    <section class="report-block"><h3>کارهایی که اول باید پیگیری شوند</h3>
+    <section class="report-block"><h3>سایر درخواست‌های کمک</h3>
       ${ranked.length ? `<div class="table-scroll"><table role="table"><thead role="rowgroup"><tr role="row">${reportHeaders.map((label) => `<th role="columnheader" scope="col">${label}</th>`).join('')}</tr></thead><tbody role="rowgroup">
       ${ranked.map(({section,value,score}) => `<tr role="row">${[section.title,need[value.need],impact[value.impact] ?? 'ثبت نشده',urgency[value.urgency] ?? 'ثبت نشده',ownership[value.owner] ?? 'تعیین نشده',score === null ? 'نیاز به بررسی' : fa(score)].map((cell,index) =>
         `<td role="cell" data-label="${reportHeaders[index]}">${cell}</td>`).join('')}</tr>`).join('')}
@@ -296,7 +449,7 @@ function reportMarkup() {
       <p class="muted">امتیاز بین ۳ و ۱۲ است. اثر مشکل روی کار دو برابر زمان شروع وزن دارد. اگر دو امتیاز برابر باشند، کاری که زودتر باید شروع شود بالاتر می‌آید.</p>` : '<p>هنوز کاری برای شروع مشخص نکرده‌اید.</p>'}
       ${deferred.length ? `<p><strong>برای تصمیم‌گیری هنوز اطلاعات بیشتری لازم است:</strong> ${deferred.map((section) => section.title).join('، ')}</p>` : ''}
     </section>
-    <section class="report-block"><h3>پیش‌نویس نقشه راه خدمات</h3>
+    <section class="report-block"><h3>زمان‌بندی پیشنهادی برای سایر درخواست‌ها</h3>
       ${[0,1,2].map((phase) => {
         const items = phaseItems(phase);
         return `<h4>${phaseTitles[phase]}</h4>${items.length ? `<ul>${items.join('')}</ul>` : '<p class="muted">با اطلاعات فعلی اقدامی برای این بازه پیشنهاد نشده است.</p>'}`;
@@ -318,20 +471,25 @@ function reportMarkup() {
 }
 
 function render(focus = false) {
-  const index = navigation.findIndex((section) => section.id === step);
-  const section = navigation[index];
+  const section = navigation.find((entry) => entry.id === step);
+  const path = guidedPath();
+  const index = path.indexOf(section);
   let body;
   if (step === 'profile') body = profileMarkup();
   else if (step === 'report') body = reportMarkup();
+  else if (step === 'business') body = businessMarkup();
+  else if (step === 'catalog') body = catalogMarkup();
   else if (diagnosis[step]) body = `<p class="help">اول بگویید کار الان چطور انجام می‌شود. بعد مشکل‌هایی را که واقعاً می‌بینید انتخاب کنید.</p>
     ${diagnosisMarkup(section)}`;
   else body = `<p class="help">${step === 'specific' ? organizations[state.current][1] : step === 'signals' ? 'از نتیجه کار شرکت، دغدغه‌های کارکنان و راه شنیدن نظرشان شروع کنیم.' : step === 'planning' ? 'بگویید دوست دارید با چه نتیجه‌ای شروع کنیم و مشاور کجا کمک کند.' : 'آنچه در ستاد یا شرکت خودتان می‌بینید انتخاب کنید.'}</p>
     ${section.questions.map(questionMarkup).join('')}
     ${currentStages.includes(section) ? assessmentMarkup(section) : ''}`;
-  $('panel').innerHTML = `<p class="step-kicker">بخش ${fa(index + 1)} از ${fa(navigation.length)}${section.level ? ` · ${section.level}` : ''}</p>
+  $('panel').innerHTML = `${index >= 0 ? `<p class="step-kicker">بخش ${fa(index + 1)} از ${fa(path.length)}${section.level ? ` · ${section.level}` : ''}</p>` : ''}
     <h2 id="step-title" tabindex="-1">${section.title}</h2>${body}
-    <div class="actions no-print">${index ? `<button type="button" data-step="${navigation[index-1].id}">بخش قبل</button>` : '<span></span>'}
-    ${index < navigation.length - 1 ? `<button type="button" class="primary" data-step="${navigation[index+1].id}">${navigation[index+1].id === 'report' ? 'مرور پاسخ‌ها و نقشه راه' : 'بخش بعد'}</button>` : '<button type="button" data-step="profile">بازگشت به اطلاعات شرکت</button>'}</div>`;
+    <div class="actions no-print">${index < 0 ? `<button type="button" data-step="${step === 'catalog' ? 'business' : 'catalog'}">${step === 'catalog' ? 'بازگشت به اولویت‌ها' : 'بازگشت به همه حوزه‌ها'}</button>`
+      : index > 0 ? `<button type="button" data-step="${path[index-1].id}">بخش قبل</button>` : '<span></span>'}
+    ${index >= 0 && index < path.length - 1 ? `<button type="button" class="primary" data-step="${path[index+1].id}">${path[index+1].id === 'report' ? 'مرور پاسخ‌ها و نقشه راه' : 'بخش بعد'}</button>`
+      : step === 'report' ? '<button type="button" data-step="profile">بازگشت به اطلاعات شرکت</button>' : '<button type="button" data-step="report">مرور و نقشه راه</button>'}</div>`;
   updateNavigation(true);
   if (focus) {
     $('step-title').focus({preventScroll:true});
@@ -341,8 +499,9 @@ function render(focus = false) {
 
 function download() {
   const payload = {
-    version:2, exportedAt:new Date().toISOString(), organization:state.current, organizationName:organizations[state.current][0],
+    version:3, exportedAt:new Date().toISOString(), organization:state.current, organizationName:organizations[state.current][0],
     profile:{...draft.profile, roleLabel:roles[draft.profile.role]},
+    linkedSolutions:linkedSolutions(),
     sections:navigation.filter((section) => section.questions).map((section) => ({
       id:section.id, title:section.title, level:section.level,
       questions:allQuestions(section).map((q) => ({
@@ -375,7 +534,9 @@ function response(id) {
 }
 
 $('panel').addEventListener('input', ({target}) => {
-  if (target.dataset.comment) response(target.dataset.comment).comment = target.value;
+  if (target.dataset.field === 'evidence' && target.dataset.case !== undefined) {
+    draft.priorities[target.dataset.case].evidence = target.value;
+  } else if (target.dataset.comment) response(target.dataset.comment).comment = target.value;
   else if (target.hasAttribute('data-assess-note')) (draft.assessment[step] ??= {}).note = target.value;
   else if (target.dataset.profile && target.type === 'text') draft.profile[target.dataset.profile] = target.value;
   else return;
@@ -384,7 +545,34 @@ $('panel').addEventListener('input', ({target}) => {
 });
 
 $('panel').addEventListener('change', ({target}) => {
-  if (target.id === 'organization') {
+  if (target.dataset.case !== undefined && target.tagName === 'SELECT') {
+    const {case:slot,field} = target.dataset;
+    const value = target.value === '' ? undefined : target.value;
+    draft.priorities ??= [];
+    const item = draft.priorities[slot] ??= {};
+    if (field === 'business') {
+      item.business = value;
+      if (!value) draft.priorities[slot] = {};
+      else if (!businessCases[value].factors.includes(item.factor) && !['outside','uncertain'].includes(item.factor)) {
+        delete item.factor;
+        delete item.area;
+        delete item.owner;
+      }
+    } else if (field === 'factor') {
+      item.factor = value;
+      if (!availableAreas(item).includes(item.area)) {
+        delete item.area;
+        delete item.owner;
+      }
+    } else if (field === 'area') {
+      item.area = value;
+      delete item.owner;
+    } else {
+      item[field] = value === undefined ? undefined : Number(value);
+    }
+    render();
+    $('panel').querySelector(`select[data-case="${slot}"][data-field="${field}"]`)?.focus({preventScroll:true});
+  } else if (target.id === 'organization') {
     state.current = target.value;
     useOrganization();
     render();
