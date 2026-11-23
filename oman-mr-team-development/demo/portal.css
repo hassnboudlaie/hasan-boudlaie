@@ -1,0 +1,40 @@
+
+/* Masir account, learner profile, cases, lesson library and protected admin UI */
+.mp-entry{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.mp-account-btn,.mp-admin-btn{border:1px solid #d1e2dc;background:#f1f7f3;color:#1d625b;font:800 12px Vazirmatn,Tahoma,sans-serif;border-radius:12px;padding:9px 13px;white-space:nowrap;cursor:pointer}
+.mp-admin-btn{color:#fff;background:#176c67;border-color:#176c67}
+.mp-account-btn:hover{background:#e4f0e9}.mp-admin-btn:hover{background:#10564f}
+.mp-overlay{position:fixed;inset:0;background:rgba(12,31,36,.68);z-index:110;overflow-y:auto;overscroll-behavior:contain;padding:20px 12px;display:flex;align-items:flex-start;justify-content:center}
+.mp-window{width:min(1060px,100%);background:#faf9f5;border-radius:24px;min-height:350px;box-shadow:0 30px 90px #0005;overflow:hidden;margin:auto}
+.mp-head{padding:21px 27px;background:#102d35;display:flex;gap:15px;align-items:center;justify-content:space-between;color:#fff}
+.mp-head span{font-size:11px;color:#a5ceca}.mp-head h2{font-size:22px;color:#fff;margin:0}
+.mp-close{border:1px solid #61797b;color:#fff;background:#24515a;border-radius:12px;min-height:42px;padding:7px 15px;cursor:pointer;font:800 13px Vazirmatn,Tahoma,sans-serif}
+.mp-tabs{display:flex;gap:6px;padding:13px 21px;border-bottom:1px solid #dae6df;flex-wrap:wrap;background:#fff}
+.mp-tabs button{border:1px solid transparent;background:transparent;color:#516f6b;border-radius:10px;padding:8px 13px;font:800 12px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.mp-tabs button.active{background:#e8f4ed;color:#12675e;border-color:#cfe4d8}
+.mp-content{padding:24px 27px 30px;max-height:none}.mp-content h3{font-size:20px;color:#173d43;margin:0 0 7px}
+.mp-content h4{font-size:15px;margin:0 0 7px}.mp-content p{font-size:13px;color:#627978;line-height:2;margin:3px 0 17px}
+.mp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.mp-grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mp-panel{background:#fff;border:1px solid #dee8e2;border-radius:17px;padding:19px;box-shadow:0 9px 26px #254c4d08}
+.mp-stat{background:#fff;border:1px solid #deebe3;border-radius:15px;padding:16px;min-height:100px}.mp-stat strong{font:900 26px Vazirmatn,Tahoma,sans-serif;display:block;color:#174d47}.mp-stat span{font-size:11px;color:#718681}
+.mp-form{display:grid;gap:13px}.mp-form label{font-size:12px;color:#355b55;font-weight:900;display:grid;gap:5px}.mp-form input,.mp-form select,.mp-form textarea{border:1px solid #cfdfd6;padding:11px 13px;background:white;color:#153d40;border-radius:11px;width:100%;min-height:43px;font:500 13px Vazirmatn,Tahoma,sans-serif}
+.mp-form textarea{min-height:95px;resize:vertical}.mp-form input:focus,.mp-form textarea:focus{outline:2px solid #b7dfcf;border-color:#38947f}
+.mp-btn{min-height:42px;border-radius:10px;padding:9px 15px;background:#14776d;color:#fff;border:1px solid #14776d;font:900 13px Vazirmatn,Tahoma,sans-serif;cursor:pointer}
+.mp-btn-light{color:#22675e;background:#fff;border-color:#cde0d5}.mp-btn-warn{background:#fff;color:#98533d;border-color:#efd4c5}.mp-btn:disabled{opacity:.5;cursor:not-allowed}
+.mp-link{background:none;border:0;color:#14776d;text-decoration:underline;font:800 12px Vazirmatn,Tahoma,sans-serif;cursor:pointer;padding:4px}
+.mp-note{padding:11px 14px;border:1px solid #cfdfd6;border-radius:11px;background:#edf6f0;color:#476f63;font-size:12px;line-height:2}
+.mp-warning{border-color:#e8d1b7;background:#fff5e6;color:#825f39}.mp-error{border-color:#e7bdaf;background:#fff2ed;color:#9a483b}
+.mp-flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.mp-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.mp-card{background:#fff;border:1px solid #dce9e2;padding:17px;border-radius:15px}.mp-card h4{font-size:14px;color:#214944;margin:0 0 7px}.mp-card p{font-size:12px;margin:0 0 11px;color:#637f79}
+.mp-label{display:inline-block;border-radius:30px;background:#e9f4ec;color:#1a7867;border:1px solid #cee3d3;font-size:10px;font-weight:900;padding:2px 9px;margin:5px 0}
+.mp-table-wrap{overflow-x:auto;border:1px solid #e0e8e0;border-radius:14px;background:#fff}
+.mp-table{border-collapse:collapse;width:100%;font-size:12px;min-width:700px}.mp-table th,.mp-table td{padding:13px 11px;text-align:right;border-bottom:1px solid #eaf0e9;vertical-align:middle}.mp-table th{font-size:11px;color:#526e68;background:#edf4ee;white-space:nowrap}.mp-table td{color:#3d5d5a}.mp-table tr:last-child td{border-bottom:0}
+.mp-table .mp-rowbtn{background:#eaf4ee;color:#17685e;border:1px solid #c9ded3;border-radius:8px;cursor:pointer;font:800 11px Vazirmatn,Tahoma,sans-serif;padding:7px 11px}
+.mp-action-list{display:grid;gap:8px}.mp-event{display:flex;justify-content:space-between;gap:12px;border:1px solid #e3ebe6;background:#fff;padding:10px 12px;border-radius:11px;font-size:12px;color:#416158}.mp-muted{font-size:11px;color:#84918c}
+.mp-reading-body{border:1px solid #e0e8e1;background:#fff;border-radius:16px;padding:24px;font-size:15px;line-height:2.25}.mp-reading-body p{font-size:14px;color:#355851}.mp-reading-body h4{font-size:16px;margin:22px 0 8px;color:#1b5e55}.mp-reading-body ol{padding-right:24px}.mp-reading-body li{margin-bottom:8px}
+.mp-progress{height:9px;border-radius:30px;overflow:hidden;background:#e0e9e3}.mp-progress div{height:100%;background:#1a9683;border-radius:30px}
+.mp-small{font-size:11px;color:#6f8781}
+.mp-loading{display:flex;align-items:center;justify-content:center;min-height:150px;color:#53746d;font-size:13px}
+.mp-identity{color:#4c7971;font-size:11px}.mp-danger{color:#9b4f40}
+@media(max-width:950px){.mp-entry{margin-top:5px}.mp-account-btn,.mp-admin-btn{font-size:10px;padding:7px 9px}.topbar{flex-wrap:wrap;height:auto;min-height:85px}.topbar .mp-entry{width:100%;justify-content:flex-start;margin-bottom:7px}}
+@media(max-width:600px){.mp-overlay{padding:0}.mp-window{width:100%;min-height:100vh;border-radius:0}.mp-head{padding:17px 16px}.mp-content{padding:16px 13px 28px}.mp-tabs{padding:9px 8px;gap:4px;overflow-x:auto;flex-wrap:nowrap}.mp-tabs button{white-space:nowrap;font-size:11px;padding:7px 10px}.mp-grid,.mp-grid-3{grid-template-columns:1fr 1fr;gap:9px}.mp-panel{padding:15px}.mp-stat{min-height:85px;padding:13px}.mp-stat strong{font-size:22px}.mp-window .mp-grid>.mp-panel{grid-column:span 2}.mp-head h2{font-size:19px}}
