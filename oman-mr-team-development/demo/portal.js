@@ -167,9 +167,9 @@ async function loadOwn(){
  if(a.error||b.error||c.error)console.warn('profile data issue',a.error?.message,b.error?.message,c.error?.message);
  own={cases:a.data||[],readings:b.data||[],events:c.data||[]};
  // On a second device, restore previously earned practice badges from secure history.
- if(window.MasirCoreSync?.restoreCompleted){
+ if(window.MasirCoreSync?.setIdentity){
   const completed=[...new Set(own.events.filter(e=>e.event_type==='practice_finish'&&e.module_id).map(e=>e.module_id))];
-  window.MasirCoreSync.restoreCompleted(completed);
+  window.MasirCoreSync.setIdentity(user.id,completed);
  }
 }
 async function initUser(nameHint){
@@ -331,7 +331,7 @@ document.addEventListener('click',async e=>{
   if(a==='to-signup'){authMode='signup';paint();return;}
   if(a==='to-login'){authMode='login';paint();return;}
   if(a==='to-reset'){authMode='reset';paint();return;}
-  if(a==='signout'){await sb.auth.signOut();user=null;profile=null;isAdmin=false;own={cases:[],readings:[],events:[]};selectedUser=null;paintEntry();close();toast('از حساب خارج شدی.');return;}
+  if(a==='signout'){await sb.auth.signOut();user=null;profile=null;isAdmin=false;own={cases:[],readings:[],events:[]};selectedUser=null;window.MasirCoreSync?.setIdentity(null,[]);paintEntry();close();toast('از حساب خارج شدی.');return;}
   if(a==='refresh-admin'){await adminRefresh();toast('گزارش به‌روزرسانی شد.');return;}
   if(a==='close-user'){selectedUser=null;selectedUserCases=[];selectedUserEvents=[];paint();return;}
   if(a==='back-library'){await flushReading();readingId=null;readingStarted=false;await loadOwn();paint();return;}
@@ -370,7 +370,7 @@ async function init(){
  sb=window.supabase.createClient(PROJECT_URL,PROJECT_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  sb.auth.onAuthStateChange((event)=>{
   if(event==='PASSWORD_RECOVERY'){recovery=true;authMode='newpassword';setTimeout(()=>show('profile'),0);}
-  if(event==='SIGNED_OUT'){user=null;profile=null;isAdmin=false;paintEntry();}
+  if(event==='SIGNED_OUT'){user=null;profile=null;isAdmin=false;window.MasirCoreSync?.setIdentity(null,[]);paintEntry();}
  });
  startObserver();
  try{const {data}=await sb.auth.getSession();if(data?.session)await initUser();}catch(err){console.warn('Masir session init',err);}
