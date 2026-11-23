@@ -57,7 +57,7 @@ main{max-width:1250px;margin:0 auto;padding:34px clamp(18px,3vw,53px) 110px}.sec
 <script>
 (function(){
 'use strict';
-var STORAGE='oman-masir-demo-v1';
+var STORAGE='oman-masir-demo-v2',activeScope='guest',activeStorageKey=STORAGE+':guest';
 var labels={home:['خانه','⌂'],paths:['مسیرها','▦'],practice:['تمرین','◎'],coach:['کوچ','✧'],progress:['پیشرفت','◉'],about:['راهنما','ⓘ']};
 var modules=[
 {id:'negotiation',week:1,priority:'فوری',title:'مذاکره و مدیریت اعتراض مشتری',tag:'فروش و مذاکره',desc:'به‌جای دفاع از قیمت، نگرانی واقعی مشتری و معیار تصمیم او را کشف کن.',skills:['کشف اعتراض','مذاکره مبتنی بر منافع','مدیریت انتظار'],basis:'سؤال ۱۱',caseTitle:'مشتری با پیشنهاد ارزان‌تر برگشته است',scene:'یک سرمایه‌گذار خارجی پس از بازدید آپارتمانی در مسقط می‌گوید واحد مشابهی با قیمت پایین‌تر پیدا کرده و درباره بازده سرمایه‌گذاری هم اطمینان ندارد.',steps:[
@@ -141,9 +141,9 @@ var modules=[
 ];
 var role='advisor',page='home',active='negotiation',phase='decision',idx=0,selection=null,feedback=false,help=false,speechDone=false;
 var data={completed:{},notes:{},missions:{},missionDone:{},coachNotes:{}};
-try{var saved=JSON.parse(localStorage.getItem(STORAGE)||'null');if(saved&&typeof saved==='object'){role=saved.role==='leader'?'leader':'advisor';data.completed=saved.completed||{};data.notes=saved.notes||{};data.missions=saved.missions||{};data.missionDone=saved.missionDone||{};data.coachNotes=saved.coachNotes||{};}}catch(e){}
+try{var saved=JSON.parse(localStorage.getItem(activeStorageKey)||'null');if(saved&&typeof saved==='object'){role=saved.role==='leader'?'leader':'advisor';data.completed=saved.completed||{};data.notes=saved.notes||{};data.missions=saved.missions||{};data.missionDone=saved.missionDone||{};data.coachNotes=saved.coachNotes||{};}}catch(e){}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function persist(){try{localStorage.setItem(STORAGE,JSON.stringify(Object.assign({},data,{role:role})));}catch(e){}}
+function persist(){try{localStorage.setItem(activeStorageKey,JSON.stringify(Object.assign({},data,{role:role})));}catch(e){}}
 function byid(id){return modules.find(function(x){return x.id===id;})||modules[0];}
 function doneCount(){return modules.filter(function(x){return !!data.completed[x.id];}).length;}
 function pct(){return Math.round(doneCount()/modules.length*100);}
@@ -275,6 +275,21 @@ document.addEventListener('change',function(e){
 document.addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&e.target.matches('.pathrow[role=button]')){e.preventDefault();go('practice',e.target.dataset.practice);}});
 window.MasirCoreSync={
  titles:Object.fromEntries(modules.map(function(m){return [m.id,m.title]})),
+ setIdentity:function(id,completed){
+  var scope=id||'guest';
+  if(scope!==activeScope){
+   activeScope=scope;activeStorageKey=STORAGE+':'+scope;
+   var saved=null;
+   try{saved=JSON.parse(localStorage.getItem(activeStorageKey)||'null');}catch(e){}
+   data={completed:saved&&saved.completed||{},notes:saved&&saved.notes||{},
+     missions:saved&&saved.missions||{},missionDone:saved&&saved.missionDone||{},
+     coachNotes:saved&&saved.coachNotes||{}};
+   role=saved&&saved.role==='leader'?'leader':'advisor';
+   page='home';phase='decision';selection=null;feedback=false;help=false;
+   persist();render();
+  }
+  this.restoreCompleted(completed);
+ },
  restoreCompleted:function(ids){
   var changed=false;
   (ids||[]).forEach(function(id){if(modules.some(function(m){return m.id===id})&&!data.completed[id]){data.completed[id]=true;changed=true;}});
