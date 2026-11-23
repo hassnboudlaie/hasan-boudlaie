@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#124777">
   <meta name="description" content="پرسشنامه نیازسنجی خدمات منابع انسانی هلدینگ نکو فکر و شرکت‌های تابعه">
   <title>نیازسنجی خدمات منابع انسانی | هلدینگ نکو فکر</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
   <script src="questions.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=2" defer></script>
 </head>
 <body>
   <header class="top"><div class="wrap top-inner">
@@ -19,21 +19,26 @@
     <section class="hero">
       <div class="wrap hero-inner">
         <div>
-          <p class="eyebrow">طراحی مسیر همکاری مشاوره‌ای</p>
-          <h1>نیازسنجی خدمات<br>منابع انسانی</h1>
+          <h1>نیازسنجی خدمات منابع انسانی</h1>
           <p class="intro">مسائل ستاد یا شرکت خود را مشخص کنید تا خدمات منابع انسانی را بر اساس اثر، فوریت و آمادگی اجرا طراحی کنیم.</p>
-          <div class="hero-action"><button type="button" class="primary" id="start">شروع یا ادامه پرسشنامه</button><span id="save-status" role="status"></span></div>
+          <div class="hero-action"><button type="button" class="primary" id="start">شروع پرسشنامه</button></div>
         </div>
-        <aside class="hero-card" aria-label="دامنه ارزیابی">
-          <span>دامنه نیازسنجی</span>
-          <strong>ستاد هلدینگ و پنج شرکت تابعه</strong>
-          <p>از راهبرد و راهبری تا جذب، عملکرد، نگهداشت، تجربه کارکنان و داشبورد.</p>
+        <aside class="hero-card" aria-label="راهنمای تکمیل">
+          <span class="form-sticker" aria-hidden="true">📋</span>
+          <div><strong>هر شرکت، یک پاسخ مستقل</strong>
+          <p>دامنه را انتخاب کنید، سؤال‌ها را پاسخ دهید و در پایان فایل نتیجه را دریافت کنید.</p></div>
         </aside>
       </div>
     </section>
     <div class="wrap workspace" id="workspace">
       <aside class="rail" aria-label="مسیر پرسشنامه">
-        <div class="progress-box"><strong id="progress-label">پیشرفت تکمیل فرم</strong><progress id="progress" aria-labelledby="progress-label"></progress><p id="progress-detail"></p></div>
+        <div class="progress-box">
+          <div class="progress-head"><strong id="progress-label">پیشرفت پاسخ‌ها</strong><b id="progress-percent"></b></div>
+          <progress id="progress" aria-labelledby="progress-label"></progress>
+          <p id="progress-detail"></p>
+          <p id="save-status" role="status"></p>
+          <button type="button" id="toggle-steps" aria-controls="steps" aria-expanded="false"><span>فهرست بخش‌ها</span><span class="chevron" aria-hidden="true"></span></button>
+        </div>
         <nav id="steps" aria-label="بخش‌های پرسشنامه"></nav>
       </aside>
       <section class="panel" id="panel" aria-labelledby="step-title"></section>

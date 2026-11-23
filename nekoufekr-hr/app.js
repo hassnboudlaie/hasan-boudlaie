@@ -8,6 +8,7 @@ const key = 'nekoufekr-hr-v1';
 const unknown = 'اطلاعات کافی ندارم';
 const noNeed = 'فعلاً نیازی در این زمینه نداریم';
 const notRelevant = 'برای این دامنه کاربرد ندارد';
+const reportHeaders = ['حوزه','نوع نیاز','اثر','فوریت','متولی','امتیاز'];
 const roles = ['هیئت‌مدیره یا مدیر ارشد هلدینگ','مدیرعامل یا مدیر ارشد تابعه','مدیر یا کارشناس منابع انسانی','مدیر واحد عملیاتی یا پشتیبانی','نماینده تیم مشترک هلدینگ و تابعه','سایر نقش‌ها'];
 const need = ['فعلاً نیاز به مداخله ندارد','نیاز به بهبود دارد','نیاز به طراحی یا بازطراحی دارد','برای قضاوت شواهد کافی نیست','در این دامنه موضوعیت ندارد'];
 const impact = ['محدود به یک فعالیت','اثر محسوس بر یک تیم یا فرایند','اثر جدی بر نتیجه یک شرکت','اثر حیاتی بر تداوم خدمت یا چند شرکت','هنوز معلوم نیست'];
@@ -33,8 +34,11 @@ let navigation;
 function save() {
   try {
     localStorage.setItem(key, JSON.stringify(state));
-    $('save-status').textContent = 'پیش‌نویس روی همین مرورگر ذخیره شد.';
+    const status = $('save-status');
+    status.dataset.state = 'saved';
+    if (status.textContent !== 'پیش‌نویس در این مرورگر ذخیره شد') status.textContent = 'پیش‌نویس در این مرورگر ذخیره شد';
   } catch {
+    $('save-status').dataset.state = 'error';
     $('save-status').textContent = 'ذخیره مرورگر در دسترس نیست. پیش از خروج، فایل پاسخ‌ها را بگیرید.';
   }
 }
@@ -61,15 +65,25 @@ function labels(q) {
   return [...q[2], 'سایر؛ در توضیح بنویسید', noNeed, notRelevant, unknown];
 }
 
-function questionMarkup(q) {
+function questionMarkup(q, position) {
   const [id,title,,prompt,max] = q;
   const value = draft.answers[id] || { selected:[], comment:'' };
   const maxReached = max > 1 && value.selected.filter((index) => index <= q[2].length).length >= max;
-  return `<fieldset class="question"><legend>${title}<small>${max === 1 ? 'یک گزینه' : `حداکثر ${fa(max)} گزینه`}</small></legend>
+  return `<fieldset class="question" aria-describedby="limit-${id}"><legend><span class="question-index">${fa(position + 1)}.</span> ${title}</legend>
+    <p class="selection-limit" id="limit-${id}" aria-live="polite">${selectionHint(max,value.selected.length,maxReached)}</p>
     <div class="choices">${labels(q).map((label,i) => `<label class="choice">
       <input type="${max === 1 ? 'radio' : 'checkbox'}" name="${id}" data-q="${id}" value="${i}" ${value.selected.includes(i) ? 'checked' : maxReached && i <= q[2].length ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>
-    <label class="comment">توضیح یا شواهد (اختیاری)<textarea rows="2" maxlength="1500" data-comment="${id}" placeholder="${prompt}">${escapeHtml(value.comment)}</textarea></label>
+    <details class="question-comment" ${value.comment ? 'open' : ''}>
+      <summary>افزودن توضیح یا شواهد <span>اختیاری</span></summary>
+      <label class="comment"><span>${prompt}</span><textarea rows="3" maxlength="1500" data-comment="${id}">${escapeHtml(value.comment)}</textarea></label>
+    </details>
   </fieldset>`;
+}
+
+function selectionHint(max, selected, reached) {
+  if (max === 1) return 'یک گزینه انتخاب کنید';
+  if (reached) return `سقف ${fa(max)} گزینه پر شد. برای تغییر، یکی را بردارید.`;
+  return `حداکثر ${fa(max)} گزینه${selected ? ` · ${fa(selected)} انتخاب شده` : ''}`;
 }
 
 function assessmentMarkup(section) {
@@ -100,17 +114,26 @@ function progress(section) {
   return [section.questions.filter(answered).length + (assess && assessmentComplete(draft.assessment[section.id]) ? 1 : 0), section.questions.length + Number(assess)];
 }
 
-function updateNavigation() {
-  const counts = navigation.map(progress).filter(Boolean);
-  const done = counts.reduce((sum,[value]) => sum + value,0);
-  const total = counts.reduce((sum,[,value]) => sum + value,0);
+function updateNavigation(rebuild = false) {
+  const counts = navigation.map(progress);
+  const done = counts.reduce((sum,count) => sum + (count?.[0] ?? 0),0);
+  const total = counts.reduce((sum,count) => sum + (count?.[1] ?? 0),0);
   $('progress').max = total;
   $('progress').value = done;
-  $('progress-detail').textContent = `${fa(done)} از ${fa(total)} سؤال و جمع‌بندی حوزه`;
-  $('steps').innerHTML = navigation.map((section) => {
-    const count = progress(section);
-    return `<button type="button" data-step="${section.id}" ${section.id === step ? 'aria-current="step"' : ''}><span>${section.title}</span>${count ? `<small>${fa(count[0])}/${fa(count[1])}</small>` : ''}</button>`;
-  }).join('');
+  $('progress-percent').textContent = `${fa(Math.round(done * 100 / total))}٪`;
+  $('progress-detail').textContent = `${fa(done)} از ${fa(total)} سؤال و جمع‌بندی`;
+  $('start').textContent = draft.lastStep && draft.lastStep !== 'profile' ? 'ادامه پرسشنامه' : 'شروع پرسشنامه';
+  if (rebuild) {
+    $('steps').innerHTML = navigation.map((section) =>
+      `<button type="button" data-step="${section.id}" ${section.id === step ? 'aria-current="step"' : ''}><span>${section.title}</span><small></small></button>`).join('');
+  }
+  $('steps').querySelectorAll('button').forEach((button,index) => {
+    const count = counts[index];
+    if (!count) return;
+    const badge = button.querySelector('small');
+    badge.textContent = count[0] === count[1] ? 'کامل' : `${fa(count[0])} از ${fa(count[1])}`;
+    badge.classList.toggle('done', count[0] === count[1]);
+  });
 }
 
 function profileMarkup() {
@@ -124,7 +147,7 @@ function profileMarkup() {
     <label>اندازه نیروی انسانی در دامنه (اختیاری)<select data-profile="size">${options(['کمتر از ۲۰ نفر','۲۰ تا ۴۹ نفر','۵۰ تا ۹۹ نفر','۱۰۰ تا ۲۴۹ نفر','۲۵۰ نفر و بیشتر','در دسترس نیست'],draft.profile.size)}</select></label>
     <label>شیوه تکمیل<select data-profile="mode">${options(['پاسخ فردی','پاسخ مشترک تیم یا جلسه مدیریتی'],draft.profile.mode)}</select></label>
   </div>
-  <p class="note">پاسخ‌ها در همین مرورگر ذخیره می‌شوند. در پایان فایل پاسخ‌ها یا گزارش PDF را دانلود و از مسیر مورد توافق برای مشاور ارسال کنید. فقط شواهد تجمیعی و بدون اطلاعات شناسایی کارکنان یا مشتریان ثبت کنید.</p>
+  <p class="note">پاسخ‌ها روی همین مرورگر ذخیره می‌شوند. در پایان، فایل پاسخ‌ها را برای مشاور بفرستید. از درج نام یا اطلاعات شناسایی کارکنان و مشتریان خودداری کنید.</p>
   ${Object.keys(draft.answers).length || Object.keys(draft.assessment).length || Object.keys(draft.profile).length ? '<button type="button" data-action="reset">پاک کردن پیش‌نویس همین دامنه</button>' : ''}`;
 }
 
@@ -145,6 +168,10 @@ const phaseTitles = ['۳۰ روز اول | تأیید و اقدام اولیه',
 
 function reportMarkup() {
   const ranked = recommendations();
+  const unfinished = navigation.find((section) => {
+    const count = progress(section);
+    return count && count[0] < count[1];
+  });
   const deferred = currentStages.filter((section) => {
     const value = draft.assessment[section.id];
     return !value || value.need === undefined || value.need === 3;
@@ -157,13 +184,22 @@ function reportMarkup() {
   });
   return `<p class="help"><strong>${organizations[state.current][0]}</strong>${draft.profile.role !== undefined ? ` · ${roles[draft.profile.role]}` : ''}${draft.profile.unit ? ` · ${escapeHtml(draft.profile.unit)}` : ''}${draft.profile.period ? ` · ${escapeHtml(draft.profile.period)}` : ''}</p>
     <p class="note">این برآورد از پاسخ همین دامنه به دست می‌آید. در جلسه بعدی، نتایج ستاد و تابعه‌ها، شواهد و منابع اجرا را کنار هم بگذارید تا مسیر همکاری نهایی شود.</p>
-    <div class="report-tools">
-      <button type="button" class="primary" data-action="print">چاپ یا ذخیره PDF</button>
-      <button type="button" data-action="download">دانلود فایل پاسخ‌ها</button>
-    </div>
+    <section class="report-share no-print" aria-labelledby="share-title">
+      <span class="form-sticker" aria-hidden="true">📄</span>
+      <div>
+        <h3 id="share-title">فایل پاسخ‌ها برای ارسال به مشاور</h3>
+        <p>${unfinished ? 'هنوز سؤال یا جمع‌بندیِ بدون پاسخ وجود دارد. می‌توانید تکمیل کنید یا همین پیش‌نویس را دریافت کنید.' : 'همهٔ سؤال‌ها و جمع‌بندی‌ها پوشش داده شده‌اند. فایل پاسخ‌ها را دریافت کنید.'}</p>
+        <div class="report-tools">
+          <button type="button" class="primary" data-action="download">دانلود فایل پاسخ‌ها</button>
+          <button type="button" data-action="print">چاپ یا ذخیره PDF</button>
+          ${unfinished ? `<button type="button" data-step="${unfinished.id}">ادامه تکمیل</button>` : ''}
+        </div>
+      </div>
+    </section>
     <section class="report-block"><h3>نیازهای اولویت‌دار</h3>
-      ${ranked.length ? `<div class="table-scroll"><table><thead><tr><th>حوزه</th><th>نوع نیاز</th><th>اثر</th><th>فوریت</th><th>متولی</th><th>امتیاز</th></tr></thead><tbody>
-      ${ranked.map(({section,value,score}) => `<tr><td>${section.title}</td><td>${need[value.need]}</td><td>${impact[value.impact] ?? 'ثبت نشده'}</td><td>${urgency[value.urgency] ?? 'ثبت نشده'}</td><td>${ownership[value.owner] ?? 'تعیین نشده'}</td><td>${score === null ? 'نیاز به بررسی' : fa(score)}</td></tr>`).join('')}
+      ${ranked.length ? `<div class="table-scroll"><table role="table"><thead role="rowgroup"><tr role="row">${reportHeaders.map((label) => `<th role="columnheader" scope="col">${label}</th>`).join('')}</tr></thead><tbody role="rowgroup">
+      ${ranked.map(({section,value,score}) => `<tr role="row">${[section.title,need[value.need],impact[value.impact] ?? 'ثبت نشده',urgency[value.urgency] ?? 'ثبت نشده',ownership[value.owner] ?? 'تعیین نشده',score === null ? 'نیاز به بررسی' : fa(score)].map((cell,index) =>
+        `<td role="cell" data-label="${reportHeaders[index]}">${cell}</td>`).join('')}</tr>`).join('')}
       </tbody></table></div>
       <p class="muted">امتیاز از ۳ تا ۱۲ است. اثر بر کسب‌وکار دو برابر فوریت وزن دارد. در امتیاز برابر، فوریت بالاتر در اولویت است. آمادگی اجرا در تعیین زمان شروع به کار می‌رود.</p>` : '<p>هنوز حوزه‌ای به‌عنوان نیاز به بهبود یا طراحی ثبت نشده است.</p>'}
       ${deferred.length ? `<p><strong>نیازمند تکمیل شواهد یا ارزیابی:</strong> ${deferred.map((section) => section.title).join('، ')}</p>` : ''}
@@ -202,14 +238,10 @@ function render(focus = false) {
     <h2 id="step-title" tabindex="-1">${section.title}</h2>${body}
     <div class="actions no-print">${index ? `<button type="button" data-step="${navigation[index-1].id}">بخش قبل</button>` : '<span></span>'}
     ${index < navigation.length - 1 ? `<button type="button" class="primary" data-step="${navigation[index+1].id}">${navigation[index+1].id === 'report' ? 'مرور پاسخ‌ها و نقشه راه' : 'بخش بعد'}</button>` : '<button type="button" data-step="profile">بازگشت به مشخصات</button>'}</div>`;
-  updateNavigation();
+  updateNavigation(true);
   if (focus) {
     $('step-title').focus({preventScroll:true});
-    $('workspace').scrollIntoView({block:'start'});
-    const active = $('steps').querySelector('[aria-current=step]');
-    if ($('steps').scrollWidth > $('steps').clientWidth) {
-      $('steps').scrollBy({left:active.getBoundingClientRect().left - $('steps').getBoundingClientRect().left});
-    }
+    $('panel').scrollIntoView({block:'start'});
   }
 }
 
@@ -285,23 +317,38 @@ $('panel').addEventListener('change', ({target}) => {
     if (!target.checked) value.selected = value.selected.filter((i) => i !== index);
     else if (q[4] === 1 || exclusive(index)) value.selected = [index];
     else value.selected = [...value.selected.filter((i) => !exclusive(i)),index].slice(0,q[4]);
+    const maxReached = q[4] > 1 && value.selected.filter((i) => !exclusive(i)).length >= q[4];
+    $('limit-' + id).textContent = selectionHint(q[4],value.selected.length,maxReached);
+    if (target.checked && index === q[2].length) {
+      $('panel').querySelector(`[data-comment="${id}"]`).closest('details').open = true;
+    }
     $('panel').querySelectorAll(`[data-q="${id}"]`).forEach((input) => {
       input.checked = value.selected.includes(Number(input.value));
-      input.disabled = input.type === 'checkbox' && !input.checked && !exclusive(Number(input.value)) && value.selected.filter((i) => !exclusive(i)).length >= q[4];
+      input.disabled = input.type === 'checkbox' && !input.checked && !exclusive(Number(input.value)) && maxReached;
     });
   } else return;
   save();
   updateNavigation();
 });
 
+function goTo(section) {
+  step = section;
+  draft.lastStep = section;
+  $('toggle-steps').setAttribute('aria-expanded','false');
+  save();
+  render(true);
+}
+
 document.addEventListener('click', (event) => {
   const button = event.target.closest('button');
   if (!button) return;
   if (button.dataset.step) {
-    step = button.dataset.step;
-    render(true);
+    goTo(button.dataset.step);
   } else if (button.id === 'start') {
-    render(true);
+    goTo(navigation.some((section) => section.id === draft.lastStep) ? draft.lastStep : 'profile');
+  } else if (button.id === 'toggle-steps') {
+    const open = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!open));
   } else if (button.dataset.action === 'download') {
     download();
   } else if (button.dataset.action === 'print') {
