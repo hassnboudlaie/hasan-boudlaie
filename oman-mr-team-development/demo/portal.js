@@ -135,12 +135,12 @@ function recordView(){
 }
 function adminView(){
  if(!isAdmin)return note('دسترسی مدیریتی تأیید نشده است.','error');
- const n=adminData.length,totalVisits=adminData.reduce((s,x)=>s+Number(x.visits||0),0),totalSigns=adminData.reduce((s,x)=>s+Number(x.sign_ins||0),0),totalCases=adminData.reduce((s,x)=>s+Number(x.cases_count||0),0),totalTime=adminData.reduce((s,x)=>s+Number(x.reading_seconds||0),0);
+ const team=adminData.filter(x=>x.user_id!==user.id);const n=team.length,totalVisits=team.reduce((s,x)=>s+Number(x.visits||0),0),totalSigns=team.reduce((s,x)=>s+Number(x.sign_ins||0),0),totalCases=team.reduce((s,x)=>s+Number(x.cases_count||0),0),totalTime=team.reduce((s,x)=>s+Number(x.reading_seconds||0),0);
  return'<div class="mp-between" style="margin-bottom:17px"><div><h3>رصد فعالیت و توسعه مهارتی تیم</h3><p>نمای خصوصی Admin · فقط حساب مجاز می‌تواند به داده‌های کارکنان دسترسی داشته باشد.</p></div>'+btn('به‌روزرسانی گزارش','refresh-admin','mp-btn-light')+'</div>'+
- '<div class="mp-grid-3">'+[[fmt(n),'کاربر دارای پروفایل'],[fmt(totalVisits),'مراجعه به سامانه'],[fmt(totalSigns),'ورود ثبت‌شده'],[fmt(totalCases),'کیس ثبت‌شده'],[timeFmt(totalTime),'مطالعه فعال تیم'],[fmt(adminData.reduce((s,x)=>s+Number(x.practices||0),0)),'اتمام تمرین‌ها']].map(x=>'<div class="mp-stat"><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div>').join('')+'</div>'+
+ '<div class="mp-grid-3">'+[[fmt(n),'کاربر دارای پروفایل'],[fmt(totalVisits),'مراجعه به سامانه'],[fmt(totalSigns),'ورود ثبت‌شده'],[fmt(totalCases),'کیس ثبت‌شده'],[timeFmt(totalTime),'مطالعه فعال تیم'],[fmt(team.reduce((s,x)=>s+Number(x.practices||0),0)),'اتمام تمرین‌ها']].map(x=>'<div class="mp-stat"><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div>').join('')+'</div>'+
  '<div class="mp-panel" style="margin-top:17px"><div class="mp-between" style="margin-bottom:12px"><h4>عملکرد و فعالیت افراد</h4><span class="mp-small">برای جزئیات، گزینه مشاهده هر ردیف را بزن.</span></div>'+
  (n?'<div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>نام / نقش</th><th>ورود</th><th>مراجعه</th><th>تمرین</th><th>کیس</th><th>جزوه تکمیل</th><th>زمان مطالعه</th><th>آخرین فعالیت</th><th>جزئیات</th></tr></thead><tbody>'+
- adminData.map(x=>'<tr><td><b>'+escapeHTML(x.display_name)+'</b><div class="mp-muted">'+escapeHTML(x.role_label||'')+'</div></td><td>'+fmt(x.sign_ins)+'</td><td>'+fmt(x.visits)+'</td><td>'+fmt(x.practices)+'</td><td>'+fmt(x.cases_count)+'</td><td>'+fmt(x.lessons_completed)+'</td><td>'+timeFmt(x.reading_seconds)+'</td><td>'+shortDate(x.last_activity)+'</td><td><button class="mp-rowbtn" data-admin-user="'+escapeHTML(x.user_id)+'">مشاهده</button></td></tr>').join('')+'</tbody></table></div>':'<div class="mp-note">هنوز کاربری وارد سامانه نشده و پروفایل ثبت نکرده است.</div>')+'</div>'+
+ team.map(x=>'<tr><td><b>'+escapeHTML(x.display_name)+'</b><div class="mp-muted">'+escapeHTML(x.role_label||'')+'</div></td><td>'+fmt(x.sign_ins)+'</td><td>'+fmt(x.visits)+'</td><td>'+fmt(x.practices)+'</td><td>'+fmt(x.cases_count)+'</td><td>'+fmt(x.lessons_completed)+'</td><td>'+timeFmt(x.reading_seconds)+'</td><td>'+shortDate(x.last_activity)+'</td><td><button class="mp-rowbtn" data-admin-user="'+escapeHTML(x.user_id)+'">مشاهده</button></td></tr>').join('')+'</tbody></table></div>':'<div class="mp-note">هنوز کاربری وارد سامانه نشده و پروفایل ثبت نکرده است.</div>')+'</div>'+
  (selectedUser?adminDetails():'<div class="mp-note" style="margin-top:12px">با انتخاب هر فرد، سابقه فعالیت‌ها و عنوان کیس‌های او نمایش داده می‌شود.</div>')+
  '<div class="mp-note mp-warning" style="margin-top:12px">آمار ورود و زمان مطالعه از رویدادهای ثبت‌شده توسط اپ محاسبه می‌شوند و باید شاخص Engagement محسوب شوند، نه ارزیابی قطعی شایستگی.</div>';
 }
@@ -375,7 +375,7 @@ async function init(){
  startObserver();
  try{const {data}=await sb.auth.getSession();if(data?.session)await initUser();}catch(err){console.warn('Masir session init',err);}
  paintEntry();
- if(window.location.hash==='#account')show('profile');
+ if(window.location.hash==='#admin'){tab='admin';show('admin');}else if(window.location.hash==='#account')show('profile');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
