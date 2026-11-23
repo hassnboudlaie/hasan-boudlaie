@@ -41,7 +41,7 @@ const fmt=n=>new Intl.NumberFormat('fa-IR').format(Number(n||0));
 const dateFmt=v=>v?new Intl.DateTimeFormat('fa-IR',{dateStyle:'medium',timeStyle:'short'}).format(new Date(v)):'—';
 const shortDate=v=>v?new Intl.DateTimeFormat('fa-IR',{dateStyle:'short'}).format(new Date(v)):'—';
 const timeFmt=s=>{let n=Math.max(0,Number(s||0));return n<60?fmt(n)+' ثانیه':fmt(Math.floor(n/60))+' دقیقه'+(n%60?' و '+fmt(n%60)+' ثانیه':'');};
-const eventNames={app_open:'بازدید از سامانه',sign_in:'ورود به حساب',lesson_open:'بازکردن جزوه',lesson_finish:'تکمیل مطالعه جزوه',practice_finish:'اتمام تمرین و دریافت نشان',case_created:'ثبت کیس',case_updated:'ویرایش کیس'};
+const eventNames={app_open:'بازدید از سامانه',sign_in:'ورود به حساب',lesson_open:'بازکردن جزوه',lesson_finish:'تکمیل مطالعه جزوه',practice_finish:'اتمام تمرین و دریافت نشان',case_created:'ثبت کیس',case_updated:'ویرایش کیس',practice_start:'شروع تمرین',decision_answered:'انتخاب پاسخ در سناریو',roleplay_saved:'ثبت رول‌پلی',coach_note_saved:'ثبت یادداشت بازتابی',mission_defined:'تعریف مأموریت میدانی'};
 let sb=null,user=null,profile=null,isAdmin=false,modal=false,tab='profile',authMode='login',recovery=false,loginName='';
 let own={cases:[],readings:[],events:[]},adminData=[],selectedUser=null,selectedUserCases=[],selectedUserEvents=[];
 let readingId=null,readingStarted=false,lastActivity=Date.now(),readCallBusy=false,loginBusy=false;
@@ -344,15 +344,27 @@ document.addEventListener('click',async e=>{
 },false);
 // Hook existing functional prototype, without changing its scenario logic.
 document.addEventListener('click',function(e){
- const t=e.target.closest('[data-action]');if(!t||!user)return;
+ if(!user)return;
+ const start=e.target.closest('#appMain [data-practice]');
+ if(start){logEvent('practice_start',start.dataset.practice);return;}
+ const choice=e.target.closest('#appMain [data-choice]');
+ if(choice){
+  const id=Object.entries(window.MasirCoreSync?.titles||{}).find(([,title])=>($('#appMain .breadcrumb')?.textContent||'').includes(title))?.[0];
+  if(id&&!choice.disabled)logEvent('decision_answered',id);
+  return;
+ }
+ const t=e.target.closest('#appMain [data-action]');if(!t)return;
  const action=t.dataset.action;
- if(action==='finish'&&$('#missionBox')?.value.trim()){
-   const id=Object.entries(window.MasirCoreSync?.titles||{}).find(([,title])=>($('#appMain .breadcrumb')?.textContent||'').includes(title))?.[0];
-   if(id)setTimeout(async()=>{await logEvent('practice_finish',id);await loadOwn();},10);
+ const id=Object.entries(window.MasirCoreSync?.titles||{}).find(([,title])=>($('#appMain .breadcrumb')?.textContent||'').includes(title))?.[0];
+ if(action==='save-speech'&&$('#speechBox')?.value.trim()&&id)logEvent('roleplay_saved',id);
+ if(action==='save-coach'&&$('#coachEntry')?.value.trim())logEvent('coach_note_saved',null);
+ if(action==='finish'&&$('#missionBox')?.value.trim()&&id){
+   logEvent('mission_defined',id);
+   setTimeout(async()=>{await logEvent('practice_finish',id);await loadOwn();},10);
  }
  if(action==='to-commit'){
-   const id=moduleFromCore();
-   if(id)setTimeout(()=>markLesson(id),100);
+   const lesson=moduleFromCore();
+   if(lesson)setTimeout(()=>markLesson(lesson),100);
  }
 },true);
 ['click','keydown','touchstart','scroll'].forEach(type=>document.addEventListener(type,()=>{lastActivity=Date.now();},{passive:true,capture:true}));
