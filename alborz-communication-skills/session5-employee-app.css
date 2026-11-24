@@ -5,3 +5,8 @@
 @media(max-width:390px){.s5-stages{grid-template-columns:repeat(2,minmax(0,1fr))}.s5-badge-grid{grid-template-columns:1fr}.s5-tabs button{font-size:15px}.s5-root{font-size:17px}.s5-dialogue p{font-size:17px}}
 @media(prefers-reduced-motion:reduce){.s5-root *{transition:none!important;scroll-behavior:auto!important}}
 @media print{.s5-root{background:white}.s5-tabs,.s5-crumb,.s5-button,.s5-picker,.s5-stages,.s5-bottom{display:none!important}.s5-screen{border:0;box-shadow:none}.s5-hero{background:#173d57!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* Three exchanges per run: visible round breaks, without adding navigation complexity. */
+.s5-round-label{display:inline-flex;align-items:center;width:max-content;max-width:100%;font-size:13px;line-height:1.5;font-weight:850;letter-spacing:0;color:#295d65;background:#fff9e9;border:1px solid #e9d3a7;border-radius:999px;padding:2px 9px;margin:0 0 7px;direction:rtl}
+.s5-dialogue p:has(.s5-round-label){margin-top:10px}
+.s5-dialogue p .s5-round-label{display:block}
