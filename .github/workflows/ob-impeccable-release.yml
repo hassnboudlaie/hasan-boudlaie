@@ -60,6 +60,7 @@ jobs:
                curl -fsSL --max-time 20 "$base/community.html" -o /tmp/ob-community.html &&
                curl -fsSL --max-time 20 "$base/community.js" -o /tmp/ob-community.js &&
                curl -fsSL --max-time 20 "$base/community.css" -o /tmp/ob-community.css &&
+               curl -fsSL --max-time 20 "https://hassnboudlaie.github.io/hasan-boudlaie/ob-mba-club/index.html" -o /tmp/ob-clean-club.html &&
                cmp -s ob-mba-classroom/index.html /tmp/ob-index.html &&
                cmp -s ob-mba-classroom/impeccable.css /tmp/ob-impeccable.css &&
                cmp -s ob-mba-classroom/assets/fonts/Vazirmatn.woff2 /tmp/ob-vazirmatn.woff2 &&
@@ -70,9 +71,10 @@ jobs:
                cmp -s ob-mba-classroom/attendance.html /tmp/ob-attendance.html &&
                cmp -s ob-mba-classroom/community.html /tmp/ob-community.html &&
                cmp -s ob-mba-classroom/community.js /tmp/ob-community.js &&
-               cmp -s ob-mba-classroom/community.css /tmp/ob-community.css; then
+               cmp -s ob-mba-classroom/community.css /tmp/ob-community.css &&
+               cmp -s ob-mba-club/index.html /tmp/ob-clean-club.html; then
               matched=1
-              echo "Production bytes match checkout for index, install, manifest, access gate, CSS, WOFF2, SW, attendance and community assets."
+              echo "Production bytes match checkout including clean no-cache club entry and all community assets."
               break
             fi
             sleep 12
