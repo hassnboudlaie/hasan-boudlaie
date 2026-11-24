@@ -52,10 +52,11 @@ function emailHref(session,kind,id){
  return "https://mail.google.com/mail/?view=cm&fs=1&to="+encodeURIComponent(TEACHER_EMAIL)+
  "&su="+encodeURIComponent(title)+"&body="+encodeURIComponent(body);
 }
-function studentHTML(session,kind){
+function studentHTML(session,kind,{existingOnly=false}={}){
  const id=myKey(session,kind),rec=my.get(id),guest=window.OB_ACCESS?.role==="guest",locked=rec&&rec.status!=="revision_requested";
  const formId="as-"+id;
- return '<section class="as-student card" id="'+formId+'"><div class="as-head"><div><span class="as-caption">Assignment Submission</span><h3>ارسال '+label(kind)+'</h3><p>پاسخ خود را بنویسید یا حداکثر سه فایل ضمیمه کنید.</p></div><span class="as-count">جلسه '+String(session).padStart(2,"0")+'</span></div>'+
+ if(existingOnly&&!rec)return '<div id="'+formId+'" data-as-existing-only hidden></div>';
+ return '<section class="as-student card" id="'+formId+'"'+(existingOnly?' data-as-existing-only':"")+'><div class="as-head"><div><span class="as-caption">Assignment Submission</span><h3>ارسال '+label(kind)+'</h3><p>پاسخ خود را بنویسید یا حداکثر سه فایل ضمیمه کنید.</p></div><span class="as-count">جلسه '+String(session).padStart(2,"0")+'</span></div>'+
  (guest?'<p class="as-alert">مهمان‌ها فقط امکان مشاهده دارند؛ ارسال تکلیف ویژه دانشجویان تأییدشده است.</p>':
  '<div class="as-live" data-as-status="'+id+'">'+(rec?statusHTML(rec,session,kind):'<span>در حال بررسی وضعیت ثبت…</span>')+'</div>'+
  (locked?'':('<form data-as-submit="1" data-session="'+session+'" data-kind="'+kind+'" class="as-form">'+
@@ -80,7 +81,7 @@ async function refreshStudent(session,force=false){
   const data=await request("mine",{session});
   for(const kind of ["case","homework"])my.set(myKey(session,kind),(data.assignments||[]).find(x=>x.kind===kind)||null);
   for(const kind of ["case","homework"]){
-   const root=document.querySelector("#as-"+myKey(session,kind));if(root)root.outerHTML=studentHTML(session,kind);
+   const root=document.querySelector("#as-"+myKey(session,kind));if(root)root.outerHTML=studentHTML(session,kind,{existingOnly:root.hasAttribute("data-as-existing-only")});
   }
  }catch(err){for(const kind of ["case","homework"]){const root=document.querySelector("#as-"+myKey(session,kind)+" .as-live");if(root)root.textContent=errorText(err)}}
 }

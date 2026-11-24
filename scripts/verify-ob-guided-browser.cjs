@@ -67,7 +67,7 @@ async function run(){
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor();
-  assert.equal(await page.locator(".learning-card").count(),5,"Five classroom learning routes including discussion community");
+  assert.equal(await page.locator(".learning-card").count(),6,"Six classroom routes including the participation portfolio");
    assert.equal(await page.locator('a.learning-card[href="./community.html"]').count(),1,"Community shortcut is available on the student dashboard");
   await noOverflow(page,config.name+" home");
   await save(page,config.name+"-01-home");
@@ -140,12 +140,12 @@ async function run(){
   await page.getByText("نمره قطعی:").waitFor();
   assert.ok(await page.getByText("۲۰ از ۲۰").first().isVisible(),"Grade appears immediately after final submit");
   assert.equal(await page.locator(".quiz-answer-review").count(),10,"Explanatory answer key available only after final submission");
-  await page.locator("#sectionSelect").selectOption("reflection");
-  await page.locator('.gr-shell[data-guided-mode="reflection"]').waitFor();
-  await page.locator('[data-action="guidedNext"]').click();
-  assert.ok(await page.locator('[data-action="jumpToCase"]').isVisible(),"Assignment follows exactly the same six-step case framework");
-  await page.locator('[data-action="jumpToCase"]').click();
-  assert.ok(await page.locator('.gr-shell[data-guided-mode="case"]').isVisible(),"Assignment returns to case not disconnected tasks");
+  assert.equal(await page.locator('#sectionSelect option[value="reflection"]').count(),0,"No separate duplicate assignment tab");
+  await page.locator("#sectionSelect").selectOption("case");
+  assert.ok(await page.locator('.gr-shell[data-guided-mode="case"]').isVisible(),"Case analysis and submission use the same workspace");
+  const alternate=page.locator('details').filter({has:page.getByText("ارسال تحلیل متنی یا فایل",{exact:true})});
+  assert.equal(await alternate.getAttribute("open"),null,"Optional text or file submission starts collapsed");
+  assert.ok(await page.getByText("ارسال‌شده · در انتظار ارزیابی",{exact:true}).isVisible(),"Previously submitted case remains visible from the same workspace");
   await noOverflow(page,config.name+" assignment");
   await save(page,config.name+"-06-assignment");
   await page.locator('[data-track="concepts"]').click();
