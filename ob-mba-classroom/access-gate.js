@@ -86,10 +86,10 @@ function unlock(role){
  // The direct community link can send an approved member through the normal login.
  // Only a fixed, validated in-app destination is allowed, never an arbitrary URL.
  const next=new URLSearchParams(location.search);
- if(next.get("next")==="community"){
+ if(next.get("next")==="community"||next.get("next")==="club"){
   const topic=next.get("topic");
   const fragment=topic&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(topic)?"#topic/"+topic:"";
-  location.replace("./community.html"+fragment);
+  location.replace((next.get("next")==="club"?"../ob-mba-club/index.html":"./community.html")+fragment);
   return;
  }
  view="ready";loaded=true;
