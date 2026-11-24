@@ -5,7 +5,7 @@ const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const checks=[
- ['ob-mba-classroom/index.html','./impeccable.css?v=1'],
+ ['ob-mba-classroom/index.html','./impeccable.css?v=2'],
  ['ob-mba-classroom/attendance.html','./impeccable.css?v=1'],
  ['ob-mba-classroom/install.html','./impeccable.css?v=1']
 ];
@@ -18,7 +18,7 @@ for(const [file,link] of checks){
 const css=read('ob-mba-classroom/impeccable.css');
 const app=read('ob-mba-classroom/app.js');
 const mobile=read('ob-mba-classroom/mobile-experience.css');
-assert.ok(read('ob-mba-classroom/index.html').includes('./mobile-experience.css?v=2'),'Mobile-first CSS linked');
+assert.ok(read('ob-mba-classroom/index.html').includes('./mobile-experience.css?v=3'),'Mobile-first CSS linked');
 assert.ok(read('ob-mba-classroom/index.html').includes('./academic-workspace.css?v=4'),'Structural academic redesign is linked');
 assert.match(read('ob-mba-classroom/academic-workspace.css'),/\.ob-dashboard-layout/,'Student redesign has a distinct layout');
 assert.match(app,/ob-teacher-console/,'Instructor workspace rebuilt');
@@ -39,8 +39,8 @@ assert.match(app,/aria-current="page"/,'Bottom navigation exposes current page')
 assert.ok(app.includes('const KEY="ob-mba-classroom-demo-v1"'),'Existing storage contract is preserved');
 assert.ok(app.includes('version:8,sessions:')&&app.includes('length:16'),'Course and storage schema remain intact');
 assert.ok(/ob-mba-classroom-shell-v\d+/.test(sw),'New PWA cache version');
-assert.ok(sw.includes("'./impeccable.css?v=1'")&&sw.includes("'./assets/fonts/Vazirmatn.woff2'"),'Font and CSS offline-cached');
+assert.ok(sw.includes("'./impeccable.css?v=2'")&&sw.includes("'./assets/fonts/Vazirmatn.woff2'"),'Font and CSS offline-cached');
 assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom/assets/fonts/OFL-Vazirmatn.txt')),'Font license available');
-for(const file of ['learning-analytics.js','learning-analytics.css','learning-journey.js','learning-journey.css','student-devices.js','student-devices.css']){assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom',file)),'Missing '+file);assert.ok(sw.includes("'./"+file+"?v=1'"),'Offline missing '+file)}
+for(const file of ['learning-analytics.js','learning-analytics.css','learning-journey.js','learning-journey.css','student-devices.js','student-devices.css']){assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom',file)),'Missing '+file);assert.ok(sw.includes("'./"+file+"?v="+(file==="learning-analytics.js"?2:1)+"'"),'Offline missing '+file)}
 assert.match(app,/OB_ANALYTICS\?\.onRender/,'Analytics wired into approved app');
 console.log('PASS Allameh Impeccable typography, focus, RTL, offline font and storage-contract QA');

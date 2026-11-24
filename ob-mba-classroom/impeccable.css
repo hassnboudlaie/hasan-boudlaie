@@ -46,7 +46,7 @@ button,summary,a,input,select,textarea{ -webkit-tap-highlight-color:rgba(16,98,8
 #app .resource-cover img{height:auto;aspect-ratio:3 / 4;max-height:265px;object-fit:contain}
 .context-nav{scroll-margin-top:10px}
 .context-location{font-size:16px;min-width:0}
-.bottom-nav button{min-height:48px}
+.bottom-nav :is(button,a){min-height:48px}
 .entrance-root,.entrance-card,.entrance-form,.entrance-form input,
 .entrance-tabs button,.entrance-primary,.entrance-secondary{font-family:var(--ob-font)}
 .entrance-tabs button{font-size:clamp(17px,3.9vw,21px);font-weight:850;line-height:1.45}

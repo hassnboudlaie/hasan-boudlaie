@@ -33,14 +33,20 @@ async function installAnalyticsFixture(context){
   const nativeFetch=window.fetch.bind(window);
   window.fetch=(input,init={})=>{
    const uri=typeof input==="string"?input:input?.url||"";
-   if(!uri.includes("/functions/v1/mba-ob-learning-analytics"))return nativeFetch(input,init);
+   if(!/\/functions\/v1\/mba-ob-(learning-analytics|participation)$/.test(uri))return nativeFetch(input,init);
    let args={};try{args=JSON.parse(init?.body||"{}")}catch{}
    const person={student_id:"00000000-0000-4000-8000-000000000001",name:"دانشجوی آزمایشی",student_number:"123456789",visits:3,active_seconds:210,activity_count:6,latest_at:new Date().toISOString()};
    const summary={visits:1,active_seconds:150,activity_count:4,latest_at:person.latest_at,by_area:{concepts:2}};
    const result=args.action==="mine"?{ok:true,summary,recent:[],recent_visits:[],period_days:365}:
     args.action==="classOverview"?{ok:true,students:[person],period_days:365}:
     args.action==="studentDetail"?{ok:true,student:{id:person.student_id,name:person.name,student_number:person.student_number},summary,recent:[]}:{ok:true};
-   return Promise.resolve(new Response(JSON.stringify(result),{status:200,headers:{"Content-Type":"application/json"}}));
+   const record={id:person.student_id,full_name:person.name,student_number:person.student_number};
+   const isTeacher=String(localStorage.getItem("mba-ob-classroom-attendance-identity-v1")||"").includes('"role":"teacher"');
+   const portfolio=args.action==="open"&&isTeacher?{ok:true,students:[record]}:{
+    ok:true,student:record,classroom:{quizzes:[],attendance:[],assignments:[],cases:[]},
+    community:{topics:[],replies:[],votes:[],reviews:[]}
+   };
+   return Promise.resolve(new Response(JSON.stringify(uri.endsWith("mba-ob-participation")?portfolio:result),{status:200,headers:{"Content-Type":"application/json"}}));
   };
  });
 }
@@ -75,9 +81,9 @@ async function examine(browser,name,width,height){
   await page.locator(".student-focus").waitFor({timeout:18000});
   assert.equal(await page.locator("#objJourney").count(),1,"Five-stage independent-learning journey must be visible on approved student home");
   assert.equal(await page.locator("[data-student-device-settings]").count(),1,"Approved student can set a cross-device password");
-  assert.equal(await page.locator("[data-oba-student]").count(),1,"Student receives their own learning analytics panel");
-  assert.equal(await page.locator(".ob-roadmap-item").count(),16,"A complete sixteen-session roadmap must be immediately available");
-  assert.equal(await page.locator(".ob-pathways .learning-card").count(),5,"Student dashboard exposes five working learning actions including the community");
+  assert.equal(await page.locator('#bottomNav a[href="./participation.html"]').count(),1,"Student portfolio has one direct entry");
+  assert.equal(await page.locator(".ob-roadmap-item").count(),0,"Home does not duplicate the sessions directory");
+  assert.equal(await page.locator('a.ob-console-row[href="./community.html"]').count(),1,"Home presents one discussion entry");
   assert.equal(await page.locator(".ob-dashboard-layout").isVisible(),true,"New student workspace is displayed");
   const metrics=await page.evaluate(async()=>{
    await document.fonts.load('400 20px "Vazirmatn"');
@@ -94,9 +100,9 @@ async function examine(browser,name,width,height){
   if(width===360||width===1366)await page.screenshot({path:path.join(OUTPUT,name+"-"+width+"-home.png"),fullPage:true});
   if(width===390){
    await page.locator("#themeToggle").click();
-   const appearance=await page.evaluate(()=>({mode:document.documentElement.dataset.theme,bg:getComputedStyle(document.querySelector(".oba-block")).backgroundColor}));
+   const appearance=await page.evaluate(()=>({mode:document.documentElement.dataset.theme,bg:getComputedStyle(document.querySelector(".ob-console-section")).backgroundColor}));
    assert.equal(appearance.mode,"dark","Explicit theme switch should activate dark appearance");
-   assert.notEqual(appearance.bg,"rgb(255, 255, 255)","Student analytics must inherit dark theme instead of white panel");
+   assert.notEqual(appearance.bg,"rgb(255, 255, 255)","Dashboard cards must inherit dark theme instead of white panel");
    if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-390-dark-learning.png"),fullPage:true});
   }
   await page.locator('.student-focus button[data-action="openActive"]').click();
@@ -218,20 +224,21 @@ async function verifyTeachingConsole(browser,name,width,height){
   const base="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
   await page.goto(base,{waitUntil:"domcontentloaded"});
   await page.locator(".ob-teacher-console").waitFor({timeout:18000});
-  assert.equal(await page.locator(".ob-console-row").count(),9,"Instructor's nine teaching and learning engagement tools must be directly reachable");
-  assert.equal(await page.locator(".ob-teacher-actions .btn").count(),4,"Instructor has visible live-class actions");
+  assert.equal(await page.locator(".ob-console-row").count(),2,"Teacher home keeps the portfolio and discussion shortcuts");
+  assert.equal(await page.locator(".ob-teacher-actions .btn").count(),2,"Teacher home highlights the current session actions");
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   assert.ok(overflow<=2,name+" teacher "+width+" horizontal overflow: "+overflow);
   if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-teacher-"+width+".png"),fullPage:true});
-  await page.locator('.ob-console-row[data-page="analytics"]').click();
-  await page.locator(".oba-student-row").waitFor({timeout:12000});
-  assert.equal(await page.locator(".oba-student-row").count(),1,"The teacher should see individual student engagement");
-  await page.locator(".oba-student-row").first().click();
-  await page.locator(".oba-student-title").waitFor({timeout:12000});
-  assert.equal(await page.locator(".oba-metric").count(),3,"Individual student dashboard needs three engagement measures");
-  await page.locator("#contextHome").click();
+  await page.locator('a.ob-console-row[href="./participation.html"]').click();
+  await page.locator("#classUsage summary").click();
+  await page.locator("[data-usage-student]").click();
+  await page.locator("#usageHistory summary").click();
+  await page.locator("#usageHistory [data-usage] .portfolio-line").first().waitFor({timeout:12000});
+  assert.equal(await page.locator("#usageHistory [data-usage] .portfolio-line strong").count(),3,"Portfolio shows three engagement measures");
+  await page.getByRole("link",{name:/بازگشت به کلاس/}).click();
   await page.locator(".ob-teacher-console").waitFor();
-  await page.locator('.ob-console-row[data-page="groups"]').click();
+  await page.locator(".ob-console-settings summary").click();
+  await page.locator('.ob-console-settings [data-page="groups"]').click();
   assert.ok(await page.locator(".page").count()>0,"Teacher groups route remains navigable");
   assert.deepEqual(errors,[],name+" instructor runtime errors");
   console.log("PASS teacher console",name,width,"nine tools, role-specific route, no overflow");
@@ -302,6 +309,7 @@ async function verifyRepeatDevice(browser,name){
   await pageA.goto(base,{waitUntil:"domcontentloaded"});
   await pageA.locator(".student-focus").waitFor({timeout:18000});
   assert.equal(await pageA.locator("#objJourney").count(),1,"Five-step learning experience should render");
+  await pageA.locator(".ob-utilities summary").click();
   await pageA.locator('[data-student-device-settings]').first().click();
   await pageA.locator('#obDeviceDialog[open]').waitFor();
   await pageA.locator("#obDevicePassword").fill("LearnerPersonal12345");
@@ -322,9 +330,10 @@ async function verifyRepeatDevice(browser,name){
   const idA=await pageA.evaluate(()=>window.OB_ACCESS.student_number);
   const idB=await pageB.evaluate(()=>window.OB_ACCESS.student_number);
   assert.equal(idA,idB,"Both devices should have the same student identity");
-  await pageB.locator('#bottomNav [data-action="navigate"][data-page="results"]').click();
-  await pageB.locator("[data-oba-student]").waitFor();
-  assert.equal(await pageB.locator(".oba-metric").count(),3,"Per-student analytics metrics missing");
+  await pageB.locator('#bottomNav a[href="./participation.html"]').click();
+  await pageB.locator("#usageHistory summary").click();
+  await pageB.locator("#usageHistory [data-usage] .portfolio-line").first().waitFor();
+  assert.equal(await pageB.locator("#usageHistory [data-usage] .portfolio-line strong").count(),3,"Per-student analytics metrics missing");
   assert.deepEqual(errors,[],"Cross-device journey errors");
   console.log("PASS cross-device",name,"approved device A sets password; device B login, zero registration or reapproval; analytics");
  }finally{await a.close();await b.close();}

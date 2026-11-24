@@ -22,3 +22,16 @@
   .portfolio-shell .topbar { flex-wrap: wrap; gap: 8px; }
   #portfolio .card { padding-inline: 13px; }
 }
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #122025;
+  --paper: #1c2e35;
+  --ink: #eff7f8;
+  --muted: #bed0d5;
+  --line: #43606a;
+  --brand: #93dcea;
+  --light: #243e46;
+}
+html[data-theme="dark"] #portfolio .btn.primary { background: #176579; color: #fff; }
+#portfolio details.card > summary { cursor: pointer; }

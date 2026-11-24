@@ -67,8 +67,8 @@ async function run(){
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor();
-  assert.equal(await page.locator(".learning-card").count(),6,"Six classroom routes including the participation portfolio");
-   assert.equal(await page.locator('a.learning-card[href="./community.html"]').count(),1,"Community shortcut is available on the student dashboard");
+  assert.equal(await page.locator('#bottomNav a[href="./participation.html"]').count(),1,"Single direct student portfolio link");
+   assert.equal(await page.locator('a.ob-console-row[href="./community.html"]').count(),1,"Community shortcut is available on the student dashboard");
   await noOverflow(page,config.name+" home");
   await save(page,config.name+"-01-home");
   await page.locator('.student-focus button[data-action="openActive"]').click();
@@ -82,7 +82,6 @@ async function run(){
   assert.equal(await page.locator(".gr-stage").getAttribute("data-stage-index"),"1","Next concept");
   await page.locator('[data-action="guidedJump"][data-index="0"]').click();
   assert.equal(await page.locator(".gr-stage").getAttribute("data-stage-index"),"0","Direct stage rail works");
-  await page.locator('[data-track="practice"]').click();
   await page.locator("#sectionSelect").selectOption("examples");
   await page.locator('.gr-shell[data-guided-mode="examples"]').waitFor();
   assert.equal(await page.locator(".gr-stage-tab").count(),3,"Three separate examples");
@@ -106,7 +105,6 @@ async function run(){
   await save(page,config.name+"-04-case-workbook");
   await page.reload({waitUntil:"domcontentloaded"});
   await page.locator('.student-focus button[data-action="openActive"]').click();
-  await page.locator('[data-track="practice"]').click();
   await page.locator("#sectionSelect").selectOption("case");
   assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),initialChoice,"Session text survives refresh");
   const keys=["problem","evidence","levels","explain","intervention","measurement"];
@@ -148,7 +146,6 @@ async function run(){
   assert.ok(await page.getByText("ارسال‌شده · در انتظار ارزیابی",{exact:true}).isVisible(),"Previously submitted case remains visible from the same workspace");
   await noOverflow(page,config.name+" assignment");
   await save(page,config.name+"-06-assignment");
-  await page.locator('[data-track="concepts"]').click();
   await page.locator("#sectionSelect").selectOption("slides");
   assert.ok(await page.locator(".persian-version").isVisible(),"Persian presentation kept");
   assert.ok(await page.locator(".english-version").isVisible(),"English source preserved");
@@ -192,7 +189,6 @@ async function run(){
   // Both chapters must use their own original source image sequence.
   await page.locator('[data-action="backSessions"]').click();
   await page.locator('[data-action="openSession"][data-id="2"]').click();
-  await page.locator('[data-track="concepts"]').click();
   await page.locator("#sectionSelect").selectOption("slides");
   await page.locator('[data-action="openOriginalEnglish"]').click();
   await page.waitForFunction(()=>{const image=document.querySelector(".presenter-original-slide img");return image&&image.complete&&image.naturalWidth>=900},null,{timeout:6500});
@@ -264,8 +260,7 @@ async function run(){
  await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').click();
  assert.ok(await instructorPage.locator('.presenter-original-slide img').isVisible(),"Teacher English deck opens inside the app");
  await instructorPage.locator('[data-action="backFromPresentation"]').click();
- await instructorPage.locator(".teacher-home details.disclosure").first().locator("summary").click();
- await instructorPage.locator('[data-page="caseReviews"]').click();
+ await instructorPage.locator('#bottomNav [data-page="grades"]').click();
  await instructorPage.getByText("ارزیابی تحلیل کیس‌ها").waitFor();
  await instructorPage.getByText("کد دانشجویی: 991122334").first().waitFor();
  await instructorPage.locator(".case-student-record summary").click();
@@ -278,6 +273,7 @@ async function run(){
  await save(instructorPage,"android-390-08-gradebook");
  await instructorPage.locator('[data-action="navigate"][data-page="home"]').first().click();
 assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
+ await instructorPage.locator(".teacher-home details.disclosure > summary").click();
  await instructorPage.locator('[data-action="showJoinQR"]').click();
  assert.ok(await instructorPage.locator(".join-qr-projector").isVisible(),"Projected first screen shows large join QR");
  await noOverflow(instructorPage,"teacher projector QR");

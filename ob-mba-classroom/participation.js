@@ -1,7 +1,10 @@
 (() => {
   "use strict";
 
+  try { document.documentElement.dataset.theme = localStorage.getItem("ob-mba-theme") || "light"; } catch {}
+
   const api = "https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-participation";
+  const analyticsApi = api.replace("mba-ob-participation", "mba-ob-learning-analytics");
   const key = "mba-ob-classroom-attendance-identity-v1";
   const controls = document.querySelector("#portfolioControls");
   const status = document.querySelector("#portfolioStatus");
@@ -27,11 +30,11 @@
   let teacher = false;
   let generation = 0;
 
-  async function call(action, studentId) {
+  async function call(action, studentId, endpoint = api) {
     let token;
     try { token = JSON.parse(localStorage.getItem(key) || "null")?.token; } catch {}
     if (!token) throw Error("session_expired");
-    const response = await fetch(api, {
+    const response = await fetch(endpoint, {
       method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" },
       signal: AbortSignal.timeout(16000), body: JSON.stringify({
         action, token, ...(studentId ? { student_id: studentId } : {}),
@@ -122,12 +125,59 @@
       '</section>';
   }
 
+  const areaNames = {
+    home: "خانه", sessions: "جلسات", session: "جلسه", concepts: "مفاهیم", case: "کیس",
+    resources: "منابع", quiz: "آزمون", performance: "پرونده", reflection: "تأمل", journey: "سفر یادگیری",
+  };
+  const actionNames = {
+    open: "ورود", navigate: "مرور بخش", guided_step: "پیمودن گام آموزشی", case_work: "تحلیل کیس",
+    quiz_open: "آزمون", resource_open: "مرور منبع", reflection_saved: "ثبت پاسخ", journey_check: "سفر یادگیری",
+    assignment_open: "مشاهده تکلیف",
+  };
+  const minutes = seconds => digits.format(Math.floor((Number(seconds) || 0) / 60)) + " دقیقه";
+  function usageMarkup({ summary, recent = [] }) {
+    return '<div class="portfolio-line"><strong>' + digits.format(summary.visits) + ' ورود</strong><strong>' +
+      minutes(summary.active_seconds) + ' استفادهٔ فعال</strong><strong>' +
+      digits.format(summary.activity_count) + ' فعالیت</strong></div>' +
+      (summary.latest_at ? '<p class="portfolio-meta">آخرین استفاده · ' + date(summary.latest_at) + '</p>' : '') +
+      '<p class="portfolio-meta">زمان استفادهٔ فعال و نوع فعالیت در اپ ثبت می‌شود.</p>' +
+      group("فعالیت‌های اخیر", recent.slice(0, 18), event => '<div class="portfolio-session portfolio-line"><strong>' +
+        escape(actionNames[event.action] || "فعالیت آموزشی") + ' · ' + escape(areaNames[event.area] || "بخش دیگر") +
+        (event.session_no ? ' · جلسه ' + digits.format(event.session_no) : '') + '</strong><span>' +
+        date(event.recorded_at) + '</span></div>');
+  }
+
+  function loadOnOpen(panel, read, draw) {
+    const host = panel.querySelector("[data-usage]");
+    async function refresh() {
+      host.textContent = "در حال دریافت گزارش…";
+      try {
+        const result = await read();
+        if (host.isConnected) draw(host, result);
+      } catch {
+        if (!host.isConnected) return;
+        host.innerHTML = '<p>دریافت آمار ممکن نشد.</p><button type="button" class="btn">تلاش مجدد</button>';
+        host.querySelector("button").addEventListener("click", refresh);
+      }
+    }
+    function open() {
+      if (!panel.open) return;
+      panel.removeEventListener("toggle", open);
+      refresh();
+    }
+    panel.addEventListener("toggle", open);
+  }
+
   function render(data) {
     status.textContent = "";
     content.innerHTML = '<header class="portfolio-header"><h2>' + escape(data.student.full_name) +
         '</h2>' + (teacher && data.student.student_number ? '<p>شماره دانشجویی <bdi>' + escape(data.student.student_number) + '</bdi></p>' : '') +
         '</header><nav class="portfolio-menu" aria-label="بخش‌های پرونده"><a class="btn" href="#classroomHistory">فعالیت‌های کلاسی</a>' +
-        '<a class="btn" href="#communityHistory">باشگاه اندیشه</a></nav>' + classroomSection(data.classroom) + communitySection(data.community);
+        '<a class="btn" href="#communityHistory">باشگاه اندیشه</a></nav>' + classroomSection(data.classroom) + communitySection(data.community) +
+      '<details class="card" id="usageHistory"><summary>ورودها و فعالیت یادگیری</summary><div data-usage role="status"></div></details>';
+    loadOnOpen(content.querySelector("#usageHistory"),
+      () => teacher ? call("studentDetail", data.student.id, analyticsApi) : call("mine", null, analyticsApi),
+      (host, result) => { host.innerHTML = usageMarkup(result); });
   }
 
   async function load(studentId) {
@@ -161,6 +211,21 @@
         students.map(student => '<option value="' + escape(student.id) + '">' + escape(student.full_name) +
           (student.student_number ? ' · ' + escape(student.student_number) : '') + '</option>').join("") +
         '</select></label><button class="btn primary" type="submit">مشاهده پرونده</button></form>';
+      const select = controls.querySelector("select");
+      loadOnOpen(controls.querySelector("#classUsage"), () => call("classOverview", null, analyticsApi), (host, result) => {
+        const roster = new Map(students.map(student => [student.id, student.full_name]));
+        const visible = result.students.filter(student => roster.has(student.student_id));
+        host.innerHTML = '<p class="portfolio-meta">' + digits.format(visible.length) + ' دانشجو · ' +
+          minutes(visible.reduce((sum, student) => sum + Number(student.active_seconds || 0), 0)) + ' استفادهٔ فعال</p>' +
+          visible.map(student => '<div class="portfolio-session portfolio-line"><button type="button" class="btn" data-usage-student="' +
+            escape(student.student_id) + '">' + escape(roster.get(student.student_id)) + '</button><span>' +
+            digits.format(student.visits) + ' ورود · ' + minutes(student.active_seconds) + '</span></div>').join("");
+        host.querySelectorAll("[data-usage-student]").forEach(button => button.addEventListener("click", () => {
+          select.value = button.dataset.usageStudent;
+          host.closest("details").open = false;
+          load(select.value);
+        }));
+      });
       controls.querySelector("form").addEventListener("submit", event => {
         event.preventDefault();
         load(event.currentTarget.elements.student.value);

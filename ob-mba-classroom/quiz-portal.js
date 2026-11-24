@@ -10,7 +10,7 @@ const lastMinute=(session,t)=>t&&singleEntry(session)?new Date(Date.parse(t)-1).
 const local=t=>{if(!t)return "";const d=new Date(t),pad=x=>String(x).padStart(2,"0");return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes())};
 const errors={session_expired:"برای ادامه دوباره وارد حساب خود شوید.",student_only:"فقط دانشجویان تأییدشده می‌توانند آزمون بدهند.",teacher_only:"این قسمت مخصوص مدرس است.",invalid_answers:"به هر ده سؤال پاسخ بدهید.",quiz_closed:"مهلت آزمون به پایان رسیده است.",entry_used:"فرصت ورود به آزمون قبلاً استفاده شده و ثبت نهایی انجام نشده است.",entry_required:"ثبت پاسخ فقط از همان صفحه‌ای امکان دارد که آزمون را در آن شروع کردید.",fixed_schedule:"مهلت آزمون این جلسه از قبل تعیین شده است.",already_submitted:"پاسخ شما قبلاً ثبت نهایی شده است.",question_bank_incomplete:"بانک سؤالات این جلسه هنوز تکمیل نشده است.",schedule_locked_after_attempt:"پس از نخستین ارسال، زمان آزمون قابل جابه‌جایی نیست.",invalid_time:"تاریخ و زمان پایان جلسه معتبر نیست.",unscheduled:"مدرس هنوز زمان پایان جلسه را تعیین نکرده است."};
 const entryKeys=new WeakMap();
-let cache=new Map(),teacherStatus=null,teacherSession=1,roster=null,profile=null;
+let cache=new Map(),teacherStatus=null,teacherSession=1,roster=null;
 function cred(){try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch{return null}}
 async function request(action,payload={}){
  const token=cred()?.token;if(!token)throw Error("session_expired");
@@ -82,22 +82,12 @@ async function submit(form){
  try{
   const key=entryKeys.get(form);
   await request("submit",{session,answers,...(key?{entry_key:key}:{})});
-  entryKeys.delete(form);await refreshStudent(session);await refreshProfile();
+  entryKeys.delete(form);await refreshStudent(session);
  }catch(e){
-  if(["already_submitted","quiz_closed"].includes(e?.message)){entryKeys.delete(form);await refreshStudent(session);await refreshProfile();return;}
+  if(["already_submitted","quiz_closed"].includes(e?.message)){entryKeys.delete(form);await refreshStudent(session);return;}
   status.textContent=error(e);btn.disabled=false;
  }
 }
-function profileHTML(){
- return '<section class="quiz-profile" id="obQuizProfile"><h3>پرونده آزمون‌های پایان جلسه</h3><p>نمره و پاسخنامه جلسات اول و دوم بلافاصله پس از ثبت نهایی نمایش داده می‌شود.</p><div id="obQuizProfileContents">در حال دریافت سوابق…</div></section>';
-}
-async function refreshProfile(){
- const t=document.getElementById("obQuizProfileContents");if(!t)return;
- try{const v=await request("my");profile=v; if(!t.isConnected)return;t.innerHTML=v.attempts.length?'<div class="quiz-profile-list">'+v.attempts.map(a=>
- '<div class="quiz-profile-row"><span>جلسه '+digits(a.session)+'<small> · ثبت: '+date(a.submitted_at)+'</small></span><strong>'+(a.score!=null?digits(a.score)+' / ۲۰':'در انتظار پایان مهلت')+'</strong></div>').join("")+'</div>':'<p>هنوز آزمون پایان جلسه‌ای ثبت نکرده‌اید.</p>'}
- catch(e){if(t.isConnected)t.textContent=error(e)}
-}
-
 let previewCache=new Map();
 function previewMarkup(data){
  const n=Number(data?.question_count||0),rows=Array.isArray(data?.questions)?data.questions:[];
@@ -173,5 +163,5 @@ window.addEventListener("beforeunload",event=>{
  if(!entryKeys.has(document.getElementById("quizFinalForm")))return;
  event.preventDefault();event.returnValue=true;
 });
-window.OB_QUIZ={studentHTML,refreshStudent,profileHTML,refreshProfile,teacherHTML,refreshTeacher,refreshTeacherPreview,setTeacherSession};
+window.OB_QUIZ={studentHTML,refreshStudent,teacherHTML,refreshTeacher,refreshTeacherPreview,setTeacherSession};
 })();
