@@ -52,7 +52,7 @@ async function all<T>(page: (start: number, end: number) => PromiseLike<{ data: 
 const topicJoin = "topic:mba_ob_community_topics!inner(id,title)";
 const graded = "session_no,status,score,feedback,submitted_at";
 async function portfolio(studentId: string, instructor: boolean) {
-  const [topics, replies, votes, reviews, invites, attempts, windows, questions, attendance, assignments, cases] =
+  const [topics, replies, votes, reviews, invites, attempts, entries, windows, questions, attendance, assignments, cases] =
     await Promise.all([
       all((from, to) => db.from("mba_ob_community_topics").select("id,title,kind,summary,created_at")
         .eq("author_student_id", studentId).is("hidden_at", null).order("created_at", { ascending: false }).order("id").range(from, to)),
@@ -66,6 +66,7 @@ async function portfolio(studentId: string, instructor: boolean) {
       all((from, to) => db.from("mba_ob_community_invites").select("topic_id")
         .eq("inviter_id", studentId).order("topic_id").order("invitee_id").range(from, to)),
       rows(db.from("mba_ob_quiz_attempts").select("session_no,submitted_at,score,correct_count").eq("student_id", studentId)),
+      rows(db.from("mba_ob_quiz_entries").select("session_no,started_at").eq("student_id", studentId)),
       rows(db.from("mba_ob_quiz_windows").select("session_no,opens_at,closes_at")),
       rows(db.from("mba_ob_quiz_questions").select("session_no")),
       rows(db.from("mba_ob_attendance").select("session_no,status,checked_at").eq("student_id", studentId)),
@@ -81,16 +82,19 @@ async function portfolio(studentId: string, instructor: boolean) {
   for (const question of questions) {
     questionsBySession.set(question.session_no, (questionsBySession.get(question.session_no) ?? 0) + 1);
   }
+  const entryBySession = new Map(entries.map(entry => [entry.session_no, entry]));
   const now = Date.now();
   const quizzes = Array.from({ length: 16 }, (_, index) => {
     const session = index + 1;
     const window = windowBySession.get(session);
     const attempt = attemptBySession.get(session);
-    const released = instructor || session === 1 || Boolean(window && now >= Date.parse(window.closes_at));
+    const released = instructor || session <= 2 || Boolean(window && now >= Date.parse(window.closes_at));
     if (attempt) return {
       session, status: released ? "graded" : "awaiting_release", submitted_at: attempt.submitted_at,
       score: released ? attempt.score : null, correct_count: released ? attempt.correct_count : null,
     };
+    const entry = entryBySession.get(session);
+    if (entry) return { session, status: "started_no_submission", started_at: entry.started_at };
     let status = "not_ready";
     if (questionsBySession.get(session) === 10) {
       status = !window ? "unscheduled" : now < Date.parse(window.opens_at) ? "upcoming"

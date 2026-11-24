@@ -1,4 +1,4 @@
-/* MBA OB private per-session quizzes; correct answers are withheld until submission (session 1) or closing (other sessions). */
+/* MBA OB private per-session quizzes; correct answers are withheld until submission (sessions 1 and 2) or closing (other sessions). */
 import {createClient} from "npm:@supabase/supabase-js@2.57.0";
 const db=createClient(Deno.env.get("SUPABASE_URL")!,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,{auth:{persistSession:false,autoRefreshToken:false}});
 const ORIGIN="https://hassnboudlaie.github.io",encoder=new TextEncoder();
@@ -27,16 +27,25 @@ async function windowFor(session:number){
 }
 const publicQuestions=(q:any[])=>q.map(x=>({no:x.question_no,text:x.prompt,options:x.options}));
 const grade=(q:any[],answers:number[])=>q.reduce((n,x,i)=>n+(Number(x.correct_index)===answers[i]?1:0),0);
+const singleEntry=(session:number)=>session===1||session===2;
+const gradeReleased=(session:number,closes:number)=>singleEntry(session)||Date.now()>=closes;
+async function entryFor(session:number,studentId:string){
+ if(!singleEntry(session))return null;
+ const {data,error}=await db.from("mba_ob_quiz_entries").select("started_at,key_hash")
+  .eq("student_id",studentId).eq("session_no",session).maybeSingle();
+ if(error)throw error;
+ return data;
+}
 async function responseForStudent(session:number,user:Ident){
- const [questions,window]=await Promise.all([bank(session),windowFor(session)]);
+ const [questions,window,entry]=await Promise.all([bank(session),windowFor(session),entryFor(session,user.id)]);
  const {data:attempt,error:attemptError}=await db.from("mba_ob_quiz_attempts").select("id,submitted_at,score,correct_count,answers").eq("student_id",user.id).eq("session_no",session).maybeSingle();
  if(attemptError)throw Error("attempt_lookup_failed");
  const now=Date.now(),opens=window?Date.parse(window.opens_at):0,closes=window?Date.parse(window.closes_at):0;
  const isReady=questions.length===10;
- const status=!isReady?"not_ready":!window?"unscheduled":now<opens?"upcoming":now>=closes?"closed":"open";
- const showResult=Boolean(attempt&&(session===1||now>=closes));
+ const status=!isReady?"not_ready":!window?"unscheduled":now<opens?"upcoming":now>=closes?"closed":entry&&!attempt?"entry_used":"open";
+ const showResult=Boolean(attempt&&gradeReleased(session,closes));
  return reply({ok:true,session,status,opens_at:window?.opens_at||null,closes_at:window?.closes_at||null,
-  questions:status==="open"&&!attempt?publicQuestions(questions):[],
+  single_entry:singleEntry(session),questions:status==="open"&&!attempt&&!singleEntry(session)?publicQuestions(questions):[],
   attempt:attempt?{id:attempt.id,submitted_at:attempt.submitted_at,...(showResult?{score:attempt.score,correct_count:attempt.correct_count,review:questions.map((q,i)=>({no:q.question_no,answer:Number(attempt.answers[i]),correct_index:q.correct_index,text:q.prompt,options:q.options,explanation:q.explanation}))}:{})}:null});
 }
 async function route(body:Record<string,unknown>){
@@ -47,7 +56,7 @@ async function route(body:Record<string,unknown>){
   const [a,w]=await Promise.all([db.from("mba_ob_quiz_attempts").select("session_no,id,submitted_at,score,correct_count").eq("student_id",u.id).order("session_no"),db.from("mba_ob_quiz_windows").select("session_no,closes_at")]);
   if(a.error||w.error)throw Error("profile_failed");
   const closeMap=new Map((w.data||[]).map(x=>[x.session_no,Date.parse(x.closes_at)]));
-  return reply({ok:true,attempts:(a.data||[]).map(x=>({session:x.session_no,id:x.id,submitted_at:x.submitted_at,score:x.session_no===1||Date.now()>=(closeMap.get(x.session_no)||Infinity)?x.score:null,correct_count:x.session_no===1||Date.now()>=(closeMap.get(x.session_no)||Infinity)?x.correct_count:null}))});
+  return reply({ok:true,attempts:(a.data||[]).map(x=>({session:x.session_no,id:x.id,submitted_at:x.submitted_at,score:gradeReleased(x.session_no,closeMap.get(x.session_no)??Infinity)?x.score:null,correct_count:gradeReleased(x.session_no,closeMap.get(x.session_no)??Infinity)?x.correct_count:null}))});
  }
  if(action==="teacherStatus"){
   if(u.role!=="teacher")return fail("teacher_only",403);
@@ -60,8 +69,30 @@ async function route(body:Record<string,unknown>){
  }
  if(!session)return fail("invalid_session");
  if(action==="get"){if(u.role!=="student")return fail("student_only",403);return responseForStudent(session,u)}
+ if(action==="start"){
+  if(u.role!=="student")return fail("student_only",403);
+  if(!singleEntry(session))return fail("invalid_session");
+  const [questions,w,submitted]=await Promise.all([
+   bank(session),windowFor(session),
+   db.from("mba_ob_quiz_attempts").select("id").eq("student_id",u.id).eq("session_no",session).maybeSingle()
+  ]);
+  if(submitted.error)throw submitted.error;
+  if(submitted.data)return fail("already_submitted",409);
+  if(!w)return fail("unscheduled",403);
+  const now=Date.now();
+  if(now<Date.parse(w.opens_at)||now>=Date.parse(w.closes_at))return fail("quiz_closed",403);
+  if(questions.length!==10)return fail("question_bank_incomplete",409);
+  const key=Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,"0")).join("");
+  const {error}=await db.from("mba_ob_quiz_entries").insert({student_id:u.id,session_no:session,key_hash:await sha256(key)});
+  if(error?.code==="23505")return fail("entry_used",409);
+  if(error?.message==="quiz_closed")return fail("quiz_closed",403);
+  if(error)throw error;
+  return reply({ok:true,session,status:"open",single_entry:true,entry_key:key,opens_at:w.opens_at,
+    closes_at:w.closes_at,questions:publicQuestions(questions)});
+ }
  if(action==="schedule"){
   if(u.role!=="teacher")return fail("teacher_only",403);
+  if(singleEntry(session))return fail("fixed_schedule",409);
   const start=String(body.opens_at||""),moment=Date.parse(start);
   if(!/\d{4}-\d{2}-\d{2}T/.test(start)||!Number.isFinite(moment)||moment<Date.now()-2592000000||moment>Date.now()+31536000000)return fail("invalid_time");
   const q=await bank(session);if(q.length!==10)return fail("question_bank_incomplete",409);
@@ -78,11 +109,16 @@ async function route(body:Record<string,unknown>){
   if(!Array.isArray(answers)||answers.length!==10||answers.some(x=>!Number.isInteger(x)||x<0||x>3))return fail("invalid_answers");
   const w=await windowFor(session),now=Date.now();if(!w)return fail("unscheduled",403);
   if(now<Date.parse(w.opens_at)||now>=Date.parse(w.closes_at))return fail("quiz_closed",403);
+  if(singleEntry(session)){
+   const entry=await entryFor(session,u.id),key=body.entry_key;
+   if(!entry||typeof key!=="string"||!/^[a-f0-9]{64}$/.test(key)||await sha256(key)!==entry.key_hash)
+    return fail("entry_required",403);
+  }
   const q=await bank(session);if(q.length!==10)return fail("question_bank_incomplete",409);
   const correct=grade(q,answers),score=correct*2;
   const {data,error}=await db.from("mba_ob_quiz_attempts").insert({student_id:u.id,session_no:session,answers,correct_count:correct,score}).select("id,submitted_at").single();
-  if(error){if(error.code==="23505")return fail("already_submitted",409);throw Error("attempt_save_failed")}
-  return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:session===1?"ثبت نهایی شد. نمره قطعی و پاسخنامه تشریحی هم‌اکنون قابل مشاهده است.":"ثبت نهایی شد. پاسخنامه تحلیلی پس از پایان مهلت آزمون قابل مشاهده است."});
+  if(error){if(error.code==="23505")return fail("already_submitted",409);if(error.message==="quiz_closed")return fail("quiz_closed",403);throw Error("attempt_save_failed")}
+  return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:singleEntry(session)?"ثبت نهایی شد. نمره قطعی و پاسخنامه تشریحی هم‌اکنون قابل مشاهده است.":"ثبت نهایی شد. پاسخنامه تحلیلی پس از پایان مهلت آزمون قابل مشاهده است."});
  }
  if(action==="teacherPreview"){
   // Only authenticated instructors can see the answer key and analytic rationale.

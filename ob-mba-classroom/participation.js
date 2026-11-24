@@ -16,6 +16,7 @@
   const quizStatus = {
     not_ready: "آزمون آماده نشده", unscheduled: "زمان آزمون تعیین نشده",
     upcoming: "هنوز شروع نشده", open: "باز برای پاسخ‌گویی", missed: "مهلت گذشته، ارسالی ثبت نشده",
+    started_no_submission: "شروع شده، ثبت نهایی انجام نشده",
     awaiting_release: "پاسخ‌ها ثبت شد، در انتظار انتشار نمره", graded: "ارزیابی‌شده",
   };
   const classroomStatus = {
@@ -66,7 +67,7 @@
       (quiz.score == null ? quizStatus[quiz.status] : digits.format(quiz.score) + ' از ۲۰ · ' +
         digits.format(quiz.correct_count) + ' پاسخ درست از ۱۰') +
       '</span></div>' + (quiz.submitted_at ? '<p class="portfolio-meta">ثبت نهایی ' + date(quiz.submitted_at) + '</p>' : '') +
-      review + '</div>';
+      (quiz.started_at ? '<p class="portfolio-meta">شروع آزمون ' + date(quiz.started_at) + '</p>' : '') + review + '</div>';
   }
 
   function group(label, items, render) {
