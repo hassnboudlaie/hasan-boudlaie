@@ -63,6 +63,7 @@ function topicCard(t){
 function feedHTML(){
  const visible=topics.filter(t=>filter==="all"||(filter==="mine"&&owned(t))||(filter==="invited"&&invited.has(t.id)));
  return '<section class="hero"><span class="eyebrow">فضای گفت‌وگوی علمی کلاس</span><h1>باشگاه اندیشه رفتار سازمانی</h1><p>یک مسئله مطرح کنید، دانشی به اشتراک بگذارید و همکلاسی‌ها را به گفت‌وگو دعوت کنید. نویسنده هر موضوع مسئول پیگیری و جمع‌بندی بحث است.</p></section>'+
+ '<div class="actions"><a class="btn" href="'+(location.pathname.includes("/ob-mba-club/")?"../ob-mba-classroom/participation.html":"./participation.html")+'">'+(isTeacher()?"پرونده مشارکت دانشجویان":"پرونده مشارکت من")+'</a></div>'+
  '<div class="section-head"><h2>می‌خواهید چه چیزی ثبت کنید؟</h2></div>'+
  '<div class="choice-grid">'+
  '<button class="choice" data-action="new" data-kind="case" type="button"><span class="choice-icon" aria-hidden="true">◇</span><span><strong>کیس مدیریتی</strong><small>یک موقعیت واقعی یا فرضی، همراه با مسئله و پرسش برای تصمیم‌گیری</small></span></button>'+

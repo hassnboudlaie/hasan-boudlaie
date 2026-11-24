@@ -86,6 +86,10 @@ function unlock(role){
  // The direct community link can send an approved member through the normal login.
  // Only a fixed, validated in-app destination is allowed, never an arbitrary URL.
  const next=new URLSearchParams(location.search);
+ if(next.get("next")==="participation"&&role!=="guest"){
+  location.replace("./participation.html");
+  return;
+ }
  if(next.get("next")==="community"||next.get("next")==="club"){
   const topic=next.get("topic");
   const fragment=topic&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(topic)?"#topic/"+topic:"";
@@ -99,7 +103,7 @@ function unlock(role){
  const roleMenu=document.querySelector(".demo-role-menu");
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  // Education scripts load only after the server authorizes this device.
- const scripts=["./learning-analytics.js?v=1","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=1","./guided-learning.js?v=3","./presenter-player.js?v=1","./app.js?v=31"];
+ const scripts=["./learning-analytics.js?v=1","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=1","./guided-learning.js?v=3","./presenter-player.js?v=1","./app.js?v=32"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);

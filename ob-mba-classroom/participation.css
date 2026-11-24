@@ -1,0 +1,24 @@
+.portfolio-shell { max-width: 980px; }
+#portfolio { padding-block: 18px 45px; }
+#portfolio h1 { margin-block: 0 12px; font-size: clamp(1.65rem, 4vw, 2.55rem); }
+#portfolio h2, #portfolio h3, #portfolio p { margin-block: 0; }
+#portfolio .card { margin-block: 14px; }
+#portfolioStatus:not(:empty) { margin-block: 12px; color: var(--muted); }
+.portfolio-picker { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.portfolio-picker .field { flex: 1 1 240px; margin: 0; }
+.portfolio-header { margin-block: 20px 12px; }
+.portfolio-header p, .portfolio-meta { color: var(--muted); }
+.portfolio-menu { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 14px; }
+.portfolio-session, .portfolio-record { padding-block: 11px; border-block-end: 1px solid var(--line); }
+.portfolio-record:last-child, .portfolio-session:last-child { border-block-end: 0; }
+.portfolio-details { margin-block-start: 12px; padding-inline: 12px; border: 1px solid var(--line); border-radius: 12px; }
+#portfolio summary { min-height: 44px; padding-block: 8px; font-weight: 700; cursor: pointer; }
+.portfolio-line { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 3px 14px; }
+#portfolio a:not(.btn) { color: var(--brand); font-weight: 700; text-underline-offset: 3px; }
+.portfolio-copy { white-space: pre-wrap; overflow-wrap: anywhere; }
+#portfolio .portfolio-record p { margin-block-start: 5px; }
+#portfolio :is(button, a, select, summary):focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+@media (max-width: 480px) {
+  .portfolio-shell .topbar { flex-wrap: wrap; gap: 8px; }
+  #portfolio .card { padding-inline: 13px; }
+}
