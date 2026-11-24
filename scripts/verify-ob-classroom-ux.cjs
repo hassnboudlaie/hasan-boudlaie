@@ -20,7 +20,7 @@ assert.ok(eventSql.includes('enable row level security')&&eventSql.includes('rev
 assert.ok(edgeDevices.includes('studentDeviceLogin')&&edgeAnalytics.includes('studentDetail')&&edgeAnalytics.includes('classOverview'),'Authorized cross-device account and individual teacher report supported');
 for(const file of ['learning-analytics.css','learning-journey.css','student-devices.css'])assert.ok(html.includes('./'+file+'?v=1')&&sw.includes('./'+file+'?v=1'),'PWA must include '+file);
 assert.ok(gateJs.includes('entranceReturning')&&gateJs.includes('studentDeviceLogin')&&gateJs.includes('student_number:role==="student"'),'Approved cross-device login exists');
-assert.ok(js.includes('OB_JOURNEY?.homeHTML')&&js.includes('OB_ANALYTICS?.onRender')&&js.includes('ob-unpublished-panel'),'Self-paced journey, analytics and empty-state integrated');
+assert.ok(js.includes('OB_JOURNEY.homeHTML')&&js.includes('OB_ANALYTICS?.onRender')&&js.includes('ob-unpublished-panel'),'Self-paced journey, analytics and empty-state integrated');
 assert.ok(!js.includes('function performanceStudent(){const arr=state.grades["demo-1"]'),'Student must not see another student’s demo scores');
 
 assert.ok(sw.includes('./mobile-experience.css?v=3'),'Offline PWA caches mobile UX');
@@ -173,6 +173,8 @@ assert.ok(app.innerHTML.includes('href="./install.html"'),'Student can find inst
 assert.ok(!app.innerHTML.includes('class="metric"'),'Student home is not a metric dashboard');
 const click=(action,other={})=>doc.listeners.click({target:{closest:()=>({dataset:{action,...other}})}});
 const role=val=>roles.handlers.click({target:{closest:()=>({dataset:{role:val}})}});
+click('openResources');
+assert.ok(app.innerHTML.includes('id="sectionSelect"')&&app.innerHTML.includes('value="resources" selected'),'The learning journey links directly to current session resources');
 click('navigate',{page:'sessions'});
 assert.ok(app.innerHTML.includes('جلسات 01 تا 04'),'16 sessions grouped in four accordions');
 click('openSession',{id:'4'});
