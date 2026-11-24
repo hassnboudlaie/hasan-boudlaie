@@ -16,14 +16,18 @@ const myToken=()=>{try{return JSON.parse(localStorage.getItem(STORE)||"null")?.t
 // A link opened from a different browser/PWA may not share the classroom session.
 // Return to the original discussion after the existing classroom login succeeds.
 function loginUrl(){
- const p=new URL("./index.html",location.href);
- p.searchParams.set("next","community");
+ const cleanPath=location.pathname.includes("/ob-mba-club/");
+ const p=new URL(cleanPath?"../ob-mba-classroom/index.html":"./index.html",location.href);
+ p.searchParams.set("next",cleanPath?"club":"community");
  const match=location.hash.match(/^#topic\/([0-9a-f-]{36})$/i);
  if(match)p.searchParams.set("topic",match[1]);
  return p.href;
 }
 function loginCard(){
- app.innerHTML='<section class="card"><h2>ورود به باشگاه اندیشه</h2><p>برای مشاهده و مشارکت، ابتدا با حساب تأییدشده کلاس وارد شوید. سپس به همین صفحه برمی‌گردید.</p><a class="btn primary" href="'+esc(loginUrl())+'">ورود با حساب کلاس</a></section>';
+ app.innerHTML='<section class="hero"><span class="eyebrow">دانشگاه علامه طباطبایی · MBA</span><h1>باشگاه اندیشه رفتار سازمانی</h1><p>یادگیری مشارکتی با دو مسیر ساده: کیس مدیریتی و دانشنامه. در این دو نمونه فرضی ببینید چگونه یک گفت‌وگوی علمی شروع و توسعه پیدا می‌کند.</p></section>'+
+ '<div class="choice-grid" style="margin-bottom:18px"><article class="card"><span class="pill demo">نمونه فرضی · کیس مدیریتی</span><h2 style="font-size:1.16rem">آیا خوش‌بیانی نشانه شایستگی بیشتر است؟</h2><p>مدیر یک واحد فروش، از خوش‌بیانی یک کارشناس نتیجه گرفته که او در همه شایستگی‌ها بهتر است؛ درحالی‌که اطلاعات عملکرد، تصویر متفاوتی نشان می‌دهد.</p><p class="note">موضوع بحث: اثر هاله‌ای، شواهد عملکرد و خطاهای ادراکی</p></article>'+
+ '<article class="card"><span class="pill demo">نمونه فرضی · دانشنامه</span><h2 style="font-size:1.16rem">آیا نگرش مثبت همیشه به رفتار مثبت منجر می‌شود؟</h2><p>کارمندی همکاری تیمی را ارزشمند می‌داند، اما وقتی نظام پاداش فقط عملکرد فردی را تشویق می‌کند، رفتار متفاوتی نشان می‌دهد.</p><p class="note">موضوع بحث: نگرش، رفتار، ناهماهنگی شناختی و شرایط محیط کار</p></article></div>'+
+ '<section class="card"><h2>ورود و مشارکت در گفت‌وگو</h2><p>نمونه‌ها برای آشنایی اولیه قابل مشاهده‌اند. برای مطالعه پاسخ‌ها، ثبت کیس یا دانشنامه و دعوت همکلاسی‌ها، با حساب تأییدشده کلاس وارد شوید.</p><a class="btn primary" href="'+esc(loginUrl())+'">ورود با حساب کلاس</a></section>';
 }
 
 const isStudent=()=>me?.role==="student";
