@@ -29,6 +29,7 @@ try{
   }else if(params.get("tab")==="finalQuiz"&&window.OB_ACCESS?.role==="student"){
    ui.page="session";
    ui.tab="finalQuiz";
+   ui.track="practice";
   }
  }
 }catch{}
