@@ -1,6 +1,6 @@
 /* Scoped exclusively to /hasan-boudlaie/alborz-communication-skills/.
  * No shared cache names, site-root interception, or other app storage mutations. */
-const CACHE_NAME = 'alborz-communication-academy-v2-20261123-s5-v1';
+const CACHE_NAME = 'alborz-communication-academy-v2-20261124-s5-three-rounds-v2';
 const CACHE_PREFIX = 'alborz-communication-academy-';
 const SCOPE_PATH = new URL(self.registration.scope).pathname;
 const SHELL = [
@@ -14,10 +14,10 @@ const SHELL = [
   './session4-ob-mba-theme.js?v=20261122-oral-communication-v3',
   './session4-ob-mba-theme.css?v=20261114-impeccable-r1',
   './session4-mobile-first-20261115.css?v=1',
-  './session5-lessons.js?v=20261123-s5-v1',
-  './session5-cases.js?v=20261123-s5-v1',
-  './session5-employee-app.js?v=20261123-s5-v1',
-  './session5-employee-app.css?v=20261123-s5-v1',
+  './session5-lessons.js?v=20261124-s5-three-rounds-v2',
+  './session5-cases.js?v=20261124-s5-three-rounds-v2',
+  './session5-employee-app.js?v=20261124-s5-three-rounds-v2',
+  './session5-employee-app.css?v=20261124-s5-three-rounds-v2',
   './alborz-impeccable.css?v=20261115-suite-r1',
   './manifest.webmanifest', './icon-192.png', './icon-512.png'
 ];
