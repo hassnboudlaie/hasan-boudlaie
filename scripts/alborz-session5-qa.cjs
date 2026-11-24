@@ -12,8 +12,18 @@ w.ALBORZ_S5_CASES.cases.forEach((c,i)=>{
  assert.equal(c.skill,Math.floor(i/2),"skill index aligns with paired scenarios");
  assert.equal(c.opts.length,4,"four options per scenario");
  assert.equal(c.checks.length,3,"three observer criteria");
- assert.equal(c.before.length,4,"baseline dialogues");
- assert.equal(c.after.length,4,"improved dialogues");
+ assert.equal(c.before.length,6,"baseline: three turns per speaker");
+ assert.equal(c.after.length,6,"improved: three turns per speaker");
+ for(const stage of ["before","after"]){
+   const dialogue=c[stage];
+   const speakers=dialogue.map(line=>line.split(":",1)[0].trim());
+   const roles=[...new Set(speakers)];
+   assert.equal(roles.length,2,`case ${i+1} ${stage} must have two active speakers`);
+   assert.ok(roles.every(r=>speakers.filter(s=>s===r).length===3),`case ${i+1} ${stage}: three turns each`);
+   assert.ok(speakers.every((s,j)=>j===0||s!==speakers[j-1]),`case ${i+1} ${stage}: speakers alternate`);
+   assert.ok(dialogue.every(line=>line.length>=65),`case ${i+1} ${stage}: each turn is substantial`);
+ }
+
  assert.ok(Number.isInteger(c.best)&&c.best>=0&&c.best<4);
  keys[c.best]++;
 });
