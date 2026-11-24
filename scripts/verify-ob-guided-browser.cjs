@@ -315,7 +315,21 @@ assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']")
  await returnPage.goto(url+"index.html?next=community&topic="+sampleTopic,{waitUntil:"domcontentloaded"});
  await returnPage.waitForURL(u=>u.pathname.endsWith("/community.html")&&u.hash==="#topic/"+sampleTopic);
  await returnPage.getByText("نمونه آموزشی خطاهای ادراکی").first().waitFor();
+ // Clean entry lives outside the old PWA service-worker scope, but uses the same classroom session.
+ await returnPage.goto(url+"index.html?next=club&topic="+sampleTopic,{waitUntil:"domcontentloaded"});
+ await returnPage.waitForURL(u=>u.pathname.endsWith("/ob-mba-club/index.html")&&u.hash==="#topic/"+sampleTopic);
+ await returnPage.getByText("نمونه آموزشی خطاهای ادراکی").first().waitFor();
  await returnCtx.close();
+ const cleanCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const cleanPage=await cleanCtx.newPage();
+ await cleanPage.goto(url.replace("/ob-mba-classroom/","/ob-mba-club/"),{waitUntil:"domcontentloaded"});
+ await cleanPage.getByRole("link",{name:"ورود با حساب کلاس"}).waitFor();
+ assert.equal(await cleanPage.locator("article.card").count(),2,"Clean entry has two meaningful demo previews before login");
+ assert.equal(await cleanPage.evaluate(()=>navigator.serviceWorker?.controller===null),true,"Clean entry is outside old PWA cache scope");
+ await noOverflow(cleanPage,"clean entry mobile without old PWA cache");
+ await cleanPage.getByRole("link",{name:"ورود با حساب کلاس"}).click();
+ await cleanPage.waitForURL(u=>u.pathname.endsWith("/ob-mba-classroom/index.html")&&u.searchParams.get("next")==="club");
+ await cleanCtx.close();
  // Community interaction smoke test: two templates, owner follow-up and summary.
  const communityCtx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  await communityCtx.addInitScript(()=>localStorage.setItem("mba-ob-classroom-attendance-identity-v1",JSON.stringify({role:"student",token:"qa-community-session"})));
