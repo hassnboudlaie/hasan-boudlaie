@@ -38,7 +38,7 @@ function badges(){return '<div class="s5-badges"><h3>نشان‌های تکمی�
 function lessonScreen(){
  const l=lessons[state.lesson];
  return '<div class="s5-heading"><div><span class="s5-kicker">درسنامه تخصصی · تکنیک '+fa(state.lesson+1)+' از ۶</span><h2>'+esc(l.title)+'</h2></div><div class="s5-picker">'+lessons.map((x,i)=>'<button type="button" data-s5-lesson="'+i+'" class="'+(i===state.lesson?"selected":"")+'" aria-label="تکنیک '+fa(i+1)+'">'+fa(i+1)+'</button>').join("")+'</div></div>'+
- '<div class="s5-teach"><div class="s5-idea"><h3>مفهوم و هدف</h3><p>'+esc(l.summary)+'</p></div><div class="s5-steps"><h3>چگونه در شعبه اجرا کنیم؟</h3><ol>'+l.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol></div><div class="s5-example"><h3>گفت‌وگوی نمونه رئیس شعبه</h3><p>'+esc(l.example)+'</p></div><div class="s5-caution"><h3>خطای رایج</h3><p>'+esc(l.pitfall)+'</p></div><div class="s5-rehearsal"><h3>تمرین ۳۰ ثانیه‌ای</h3><p>'+esc(l.exercise)+'</p>'+button(state.learned.includes(state.lesson)?"تمرین ثبت شده":"این تکنیک را تمرین کردم","learn","secondary")+'</div></div>'+
+ '<div class="s5-teach"><div class="s5-idea"><h3>مفهوم و هدف</h3><p>'+esc(l.summary)+'</p></div><div class="s5-steps"><h3>چگونه در شعبه اجرا کنیم؟</h3><ol>'+l.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol></div><div class="s5-example"><h3>مثال در شعبه</h3><p>'+esc(l.example[0])+'</p><p><strong>رئیس شعبه</strong> '+esc(l.example[1])+'</p><p><strong>همکار</strong> '+esc(l.example[2])+'</p></div><div class="s5-caution"><h3>خطای رایج</h3><p>'+esc(l.pitfall)+'</p></div><div class="s5-rehearsal"><h3>تمرین ۳۰ ثانیه‌ای</h3><p>'+esc(l.exercise)+'</p>'+button(state.learned.includes(state.lesson)?"تمرین ثبت شده":"این تکنیک را تمرین کردم","learn","secondary")+'</div></div>'+
  '<div class="s5-actions">'+button("سناریوهای این تکنیک","lessonCases")+ (state.lesson<5?button("تکنیک بعد","nextLesson","secondary"):"")+'</div>'+badges();
 }
 function dialogue(lines){return '<div class="s5-dialogue" aria-label="سه دور گفت‌وگو؛ هر نفر سه نوبت">'+lines.map((line,i)=>{const who=line.split(":")[0].trim();const cls=who==="رئیس"?"manager":"employee";const round=Math.floor(i/2)+1;return '<p class="'+cls+'">'+(i%2===0?'<small class="s5-round-label">دور '+fa(round)+' از ۳</small>':"")+'<span>'+esc(line)+'</span></p>';}).join("")+'</div>';}
@@ -46,11 +46,15 @@ function checklist(c){
  const a=Array.isArray(state.checks[state.caseId])?state.checks[state.caseId]:[];
  return '<div class="s5-checklist"><h3>چک‌لیست مشاهده‌گر</h3>'+c.checks.map((label,i)=>'<label><input type="checkbox" data-s5-check="'+i+'" '+(a.includes(i)?"checked":"")+'> '+esc(label)+'</label>').join("")+'</div>';
 }
+function roleGuide(c){
+ const roles=c.roles.split(" / ");
+ return '<div class="s5-teach">'+c.coaching.map((rounds,i)=>'<section class="s5-steps"><h3>'+esc(roles[i])+'</h3><ol>'+rounds.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>').join("")+'</div>';
+}
 function caseStage(c){
  switch(state.stage){
  case 0:return '<h3>اجرای اول؛ گفت‌وگوی نیازمند اصلاح</h3><p>دو نفر در سه دور گفت‌وگو فعالانه مشارکت کنند؛ هر نفر سه بار صحبت می‌کند. مشاهده‌گر فقط رفتارهای قابل‌مشاهده را ثبت کند.</p>'+dialogue(c.before)+button("مشاهده قواعد تکنیک","nextStage");
- case 1:{const l=lessons[c.skill];return '<h3>قواعدی که باید در اجرای دوم دیده شوند</h3><p class="s5-rule">'+esc(l.summary)+'</p><ol class="s5-rulelist">'+l.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol><div class="s5-prompt">پیش از اجرای دوم، هر نفر ۳۰ ثانیه فرصت دارد یک جمله بهتر بسازد.</div>'+button("اجرای اصلاح‌شده","nextStage");}
- case 2:return '<h3>اجرای دوم؛ به‌کارگیری تکنیک</h3><p>گفت‌وگو را دوباره در سه دور اجرا کنید؛ هر نفر سه نوبت برای پرسش، پاسخ و پیشبرد تصمیم دارد. هدف تغییر رفتار است، نه حفظ متن.</p>'+dialogue(c.after)+button("مشاهده و جمع‌بندی","nextStage");
+ case 1:{const l=lessons[c.skill];return '<h3>قواعدی که باید در اجرای دوم دیده شوند</h3><p class="s5-rule">'+esc(l.summary)+'</p><ol class="s5-rulelist">'+l.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol><div class="s5-prompt">هر نفر راهنمای نقش خودش را بخواند. هر گام برای یک دور گفت‌وگوست.</div>'+roleGuide(c)+button("اجرای اصلاح‌شده","nextStage");}
+ case 2:return '<h3>اجرای دوم؛ به‌کارگیری تکنیک</h3><p>گفت‌وگو را دوباره در سه دور اجرا کنید؛ هر نفر سه نوبت برای پرسش، پاسخ و پیشبرد تصمیم دارد. هدف تغییر رفتار است، نه حفظ متن.</p>'+ '<details><summary>راهنمای هر دو نقش</summary>'+roleGuide(c)+'</details>'+dialogue(c.after)+button("مشاهده و جمع‌بندی","nextStage");
  default:return checklist(c)+'<div class="s5-reflect"><h3>پرسش منتور برای بازاندیشی</h3><p>'+esc(c.reflect)+'</p></div><p class="s5-subnote">ثبت تکمیل به معنی تمرین این سناریوست، نه گواهی صلاحیت حرفه‌ای.</p>'+button(state.completed.includes(state.caseId)?"سناریو ثبت شده؛ ادامه":"ثبت تکمیل و ادامه","completeCase")+' '+button("بازاجرای همین سناریو","restartCase","secondary");
  }
 }
