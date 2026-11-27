@@ -125,7 +125,7 @@ const thirdCourse=publicCourse.OB_COURSE_CONTENT.sessions.find(x=>x.id===3);
 const thirdEnrichment=publicCourse.OB_LESSON_ENRICHMENT.sessions.find(x=>x.id===3);
 assert.ok(thirdCourse?.published&&thirdCourse.presentation.length===13&&thirdCourse.quizzes.length===10,'Session 3 has 13 slides and 10 substantive quiz questions');
 assert.ok(thirdEnrichment?.caseFramework.steps.length===6&&thirdEnrichment.caseFramework.steps.reduce((n,x)=>n+x.points,0)===20,'Session 3 six-step case rubric totals 20 points');
-assert.ok(gateJs.includes('session-03-content.js?v=1')&&sw.includes('session-03-content.js?v=1'),'Session 3 content loads after login and is in PWA shell');
+assert.ok(gateJs.includes('session-03-content.js?v=2')&&sw.includes('session-03-content.js?v=2'),'Session 3 content loads after login and is in PWA shell');
 assert.ok(sw.includes('session-03-study-guide.html'),'Session 3 seven-part study guide is accessible offline');
 assert.ok(js.includes('href="./install.html"'),'App must link its installer within the classroom');
 assert.ok(sw.includes('./install.html')&&sw.includes('./install.js?v=2')&&sw.includes('./install.css?v=3'),'Install page must be cached by the PWA');
