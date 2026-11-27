@@ -712,7 +712,10 @@ html[data-theme=dark] .resource-cover img{background:#f7f7f5}
 }
 .context-nav button#contextBack{background:var(--navy);color:#fff;border-color:var(--navy)}
 .context-nav button svg{width:19px;height:19px;flex-shrink:0}
-.context-nav button:disabled{opacity:.48;cursor:default}
+.context-nav button:disabled{opacity:1;cursor:default}
+.context-nav button#contextHome{background:#ffffff;color:#16333a;border-color:#94adb2}
+.context-nav button#contextHome:disabled{background:#f0f3f3;color:#263c43;border-color:#9cabb0}
+.context-nav button#contextBack:disabled{background:#173d49;color:#fff}
 .context-location{font-size:16px;font-weight:800;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:700px){
  .context-nav{top:5px;margin:10px 0 14px;padding:8px 9px;gap:7px;border-radius:13px}
