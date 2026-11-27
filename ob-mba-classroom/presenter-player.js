@@ -10,7 +10,7 @@ const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const two=x=>String(x).padStart(2,"0");
 const supportsOriginal=s=>Boolean(originals[s?.id]);
 const count=(s,variant)=>variant==="en"&&supportsOriginal(s)?originals[s.id]:(originalPersian[s?.id]||((Array.isArray(s?.presentation)?s.presentation.length:0)));
-const sourceImage=(s,n,variant="en")=>s?.id===3&&variant==="fa"?"./materials/readings/personality-session-03-slides/slide-"+two(n+1)+".webp":"./materials/original/session-"+two(s.id)+"/slide-"+two(n+1)+".webp";
+const sourceImage=(s,n,variant="en")=>s?.id===3&&variant==="fa"?"./materials/readings/session-03-fa/slide-"+two(n+1)+".webp":"./materials/original/session-"+two(s.id)+"/slide-"+two(n+1)+".webp";
 function slideMarkup(s,variant,n){
  if(s.id===3||variant==="en"&&supportsOriginal(s)){
   const img=sourceImage(s,n,variant);
