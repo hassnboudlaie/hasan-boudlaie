@@ -63,3 +63,21 @@ end;
 $$;
 revoke all on function public.oman_lxp_approve_reward(uuid,integer,integer),public.oman_lxp_issue_reward(uuid,integer) from public, anon, authenticated;
 grant execute on function public.oman_lxp_approve_reward(uuid,integer,integer),public.oman_lxp_issue_reward(uuid,integer) to authenticated;
+
+create function public.oman_lxp_grade_course_quiz() returns trigger language plpgsql set search_path='' as $$
+declare
+  v_keys constant smallint[][] := array[[1,0],[2,0],[1,2],[0,2],[1,2],[2,0],[0,1],[1,0],[2,0],[1,2],[0,1],[2,0],[0,1]];
+  v_week integer := (new.day-1)/7+1;
+begin
+  if new.quiz_answers is null then new.quiz_score:=null; return new; end if;
+  if new.day <> least(90,v_week*7) or array_ndims(new.quiz_answers)<>1 or array_lower(new.quiz_answers,1)<>1
+    or cardinality(new.quiz_answers)<>2 or exists(select 1 from unnest(new.quiz_answers) a where a is null or a not between 0 and 2) then
+    raise exception 'Invalid weekly quiz submission';
+  end if;
+  new.quiz_score := (new.quiz_answers[1]=v_keys[v_week][1])::integer + (new.quiz_answers[2]=v_keys[v_week][2])::integer;
+  return new;
+end;
+$$;
+revoke all on function public.oman_lxp_grade_course_quiz() from public, anon, authenticated;
+create trigger oman_lxp_grade_course_quiz before insert or update of quiz_answers, quiz_score on public.oman_lxp_course_days
+for each row execute function public.oman_lxp_grade_course_quiz();
