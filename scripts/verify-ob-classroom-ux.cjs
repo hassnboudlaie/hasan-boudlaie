@@ -126,7 +126,8 @@ const thirdCourse=publicCourse.OB_COURSE_CONTENT.sessions.find(x=>x.id===3);
 const thirdEnrichment=publicCourse.OB_LESSON_ENRICHMENT.sessions.find(x=>x.id===3);
 assert.ok(thirdCourse?.published&&thirdCourse.presentation.length===13&&thirdCourse.quizzes.length===10,'Session 3 has 13 slides and 10 substantive quiz questions');
 assert.ok(thirdEnrichment?.caseFramework.steps.length===6&&thirdEnrichment.caseFramework.steps.reduce((n,x)=>n+x.points,0)===20,'Session 3 six-step case rubric totals 20 points');
-assert.ok(gateJs.includes('session-03-content.js?v=2')&&sw.includes('session-03-content.js?v=2'),'Session 3 content loads after login and is in PWA shell');
+const session3Asset=gateJs.match(/session-03-content[.]js[?]v=[0-9]+/)?.[0];
+assert.ok(session3Asset&&sw.includes(session3Asset),'Session 3 content loads after login and is in PWA shell');
 assert.ok(sw.includes('session-03-study-guide.html'),'Session 3 seven-part study guide is accessible offline');
 
 assert.equal(sourceManifest.sessions['3']?.slides,13,'The English original Session 03 has exactly 13 slides');
