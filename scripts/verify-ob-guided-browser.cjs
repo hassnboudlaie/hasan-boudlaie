@@ -254,7 +254,8 @@ async function run(){
  await instructorPage.goto(url,{waitUntil:"domcontentloaded"});
  await instructorPage.locator(".page").waitFor();
  assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
- assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
+ await instructorPage.locator(".ob-console-settings > summary").click();
+  assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher QR is available under clearly labeled class tools");
  await instructorPage.locator('[data-action="teacherCurrentPresentation"]').click();
  assert.ok(await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').isVisible(),"Teacher can choose original English in the classroom player");
  await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').click();
