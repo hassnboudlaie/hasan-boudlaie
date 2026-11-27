@@ -4,16 +4,18 @@
    No dependency on Drive login, iframe controls, paid APIs or browser PPT plugins. */
 (()=>{
 "use strict";
-const originals={1:16,2:14};
+const originals={1:16,2:14,3:13};
+const originalPersian={3:51};
 const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const two=x=>String(x).padStart(2,"0");
 const supportsOriginal=s=>Boolean(originals[s?.id]);
-const count=(s,variant)=>variant==="en"&&supportsOriginal(s)?originals[s.id]:(Array.isArray(s?.presentation)?s.presentation.length:0);
-const sourceImage=(s,n)=>"./materials/original/session-"+two(s.id)+"/slide-"+two(n+1)+".webp";
+const count=(s,variant)=>variant==="en"&&supportsOriginal(s)?originals[s.id]:(originalPersian[s?.id]||((Array.isArray(s?.presentation)?s.presentation.length:0)));
+const sourceImage=(s,n,variant="en")=>s?.id===3&&variant==="fa"?"./materials/readings/personality-session-03-slides/slide-"+two(n+1)+".webp":"./materials/original/session-"+two(s.id)+"/slide-"+two(n+1)+".webp";
 function slideMarkup(s,variant,n){
- if(variant==="en"&&supportsOriginal(s)){
-  const img=sourceImage(s,n);
-  return '<div class="presenter-original-slide" dir="ltr"><img src="'+img+'" loading="eager" decoding="async" width="1200" height="900" draggable="false" alt="Robbins original English slide '+(n+1)+' of '+count(s,"en")+'"></div>';
+ if(s.id===3||variant==="en"&&supportsOriginal(s)){
+  const img=sourceImage(s,n,variant);
+  const lang=variant==="en"?"English original (Robbins)":"Persian supplementary (uploaded source)";
+  return '<div class="presenter-original-slide" dir="'+(variant==="en"?"ltr":"rtl")+'"><img src="'+img+'" loading="eager" decoding="async" width="1200" height="900" draggable="false" alt="'+lang+' — slide '+(n+1)+' of '+count(s,variant)+'"></div>';
  }
  const slide=Array.isArray(s.presentation)?s.presentation[n]||[]:[];
  return '<div class="lecture-slide presenter-fa-slide" dir="rtl" aria-label="اسلاید فارسی '+(n+1)+'">'+
@@ -23,6 +25,15 @@ function slideMarkup(s,variant,n){
  '<div class="lecture-slide-footer"><span>اسلاید '+(n+1)+' از '+count(s,"fa")+'</span><span>نسخه فارسی تدریس</span></div></div>';
 }
 function downloads(s,variant){
+ if(s.id===3){
+  const en=variant==="en";
+  const pdf=en?"./materials/original/session-03.pdf":"./materials/readings/personality-session-03.pdf";
+  const deck=en?"./materials/original/session-03-robbins.ppt":"./materials/readings/personality-session-03.pptx";
+  return '<div class="presenter-files-links ob-slide-real-downloads">'+
+   '<a href="'+pdf+'" target="_blank" rel="noopener noreferrer">مشاهده PDF '+(en?"انگلیسی اصلی":"فارسی تکمیلی")+'</a>'+
+   '<a href="'+deck+'" download>دانلود '+(en?"PowerPoint اصلی (.ppt)":"PowerPoint تکمیلی (.pptx)")+'</a>'+
+   '<a href="./materials/readings/personality-types-session-03.xls" download>دانلود فایل تیپ شخصیت (.xls)</a></div>';
+ }
  const no=two(s.id);
  const b="./materials/session-"+no+"-robbins",o="./materials/original/session-"+no;
  const links=variant==="en"&&supportsOriginal(s)
@@ -30,6 +41,7 @@ function downloads(s,variant){
  :'<a href="'+b+'.pdf" target="_blank" rel="noopener noreferrer">PDF فارسی ↗</a><a href="'+b+'.pptx" download>PowerPoint فارسی ↓</a>';
  return '<details class="presenter-files"><summary>دریافت فایل ارائه</summary><div class="presenter-files-links">'+links+'</div></details>';
 }
+
 function render({session:s,variant="fa",index=0}){
  const en=variant==="en"&&supportsOriginal(s),mode=en?"en":"fa",length=count(s,mode);
  const n=Math.max(0,Math.min(Math.max(0,length-1),Number(index)||0));
@@ -37,8 +49,8 @@ function render({session:s,variant="fa",index=0}){
  Array.from({length},(_,i)=>'<option value="'+(i+1)+'" '+(i===n?'selected':'')+'>'+(i+1)+'</option>').join("")+'</select></label>';
  const active=m=>mode===m?' aria-pressed="true" class="presenter-mode active"':' aria-pressed="false" class="presenter-mode"';
  const modeSwitch='<div class="presenter-mode-switch" role="group" aria-label="انتخاب نسخه ارائه">'+
- '<button type="button" data-action="presenterLanguage" data-language="fa"'+active("fa")+'>فارسی</button>'+
- (supportsOriginal(s)?'<button type="button" data-action="presenterLanguage" data-language="en"'+active("en")+'>English · Original</button>':"")+'</div>';
+ '<button type="button" data-action="presenterLanguage" data-language="fa"'+active("fa")+'>فارسی'+(s.id===3?' · فایل تکمیلی (۵۱ اسلاید)':'')+'</button>'+
+ (supportsOriginal(s)?'<button type="button" data-action="presenterLanguage" data-language="en"'+active("en")+'>English · Original'+(s.id===3?' (13 slides)':'')+'</button>':"")+'</div>';
  const nav='<nav class="presenter-navigation" aria-label="کنترل ورق زدن اسلایدها">'+
  '<button type="button" data-action="slidePrev" class="presenter-arrow" '+(n<=0?'disabled':'')+'>قبلی</button>'+pick+
  '<span class="presenter-count" role="status" aria-live="polite">اسلاید '+(n+1)+' از '+length+'</span>'+
@@ -76,9 +88,9 @@ function update({session:s,variant="fa",index=0}){
  }
  const progress=stage.querySelector(".presenter-progress>span");if(progress)progress.style.width=(100*(n+1)/Math.max(1,total)).toFixed(1)+"%";
  const downloadSection=document.querySelector(".presenter-bottom .presenter-files");if(downloadSection)downloadSection.outerHTML=downloads(s,mode);
- if(mode==="en"&&n+1<total){
+ if((mode==="en"||s.id===3)&&n+1<total){
   // Best-effort one-slide prefetch; does not preload unrelated apps or sources.
-  const img=new Image();img.src=sourceImage(s,n+1);
+  const img=new Image();img.src=sourceImage(s,n+1,mode);
  }
  return true;
 }
