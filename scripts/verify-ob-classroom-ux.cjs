@@ -127,6 +127,39 @@ assert.ok(thirdCourse?.published&&thirdCourse.presentation.length===13&&thirdCou
 assert.ok(thirdEnrichment?.caseFramework.steps.length===6&&thirdEnrichment.caseFramework.steps.reduce((n,x)=>n+x.points,0)===20,'Session 3 six-step case rubric totals 20 points');
 assert.ok(gateJs.includes('session-03-content.js?v=2')&&sw.includes('session-03-content.js?v=2'),'Session 3 content loads after login and is in PWA shell');
 assert.ok(sw.includes('session-03-study-guide.html'),'Session 3 seven-part study guide is accessible offline');
+
+assert.equal(sourceManifest.sessions['3']?.slides,13,'The English original Session 03 has exactly 13 slides');
+assert.equal(sourceManifest.sessions['3']?.persianSupplementary?.slides,51,'The separate Persian supplementary Session 03 has exactly 51 slides');
+const originalAssets=[
+ ['ob-mba-classroom/materials/original/session-03-robbins.ppt','ppt'],
+ ['ob-mba-classroom/materials/original/session-03.pdf','pdf'],
+ ['ob-mba-classroom/materials/readings/personality-session-03.pptx','pptx'],
+ ['ob-mba-classroom/materials/readings/personality-session-03.pdf','pdf'],
+ ['ob-mba-classroom/materials/readings/personality-types-session-03.xls','xls']
+];
+for(const [file,format] of originalAssets){
+ const binary=fs.readFileSync(path.join(root,file));
+ assert.ok(binary.byteLength>15000,'Real uploaded Session 03 file missing: '+file);
+ const magic=format==='pdf'?'%PDF-':format==='pptx'?'PK':'\u00d0\u00cf\u0011\u00e0';
+ if(format==='pdf'||format==='pptx')assert.equal(binary.subarray(0,magic.length).toString('latin1'),magic,'Invalid uploaded source '+file);
+}
+for(const [folder,pages] of [['materials/original/session-03',13],['materials/readings/session-03-fa',51]]){
+ const dir=path.join(root,'ob-mba-classroom',folder);
+ const images=fs.readdirSync(dir).filter(x=>/^slide-\d\d\.webp$/.test(x));
+ assert.equal(images.length,pages,folder+' should include every original page');
+ for(let i=1;i<=pages;i++){
+  const image=fs.readFileSync(path.join(dir,'slide-'+String(i).padStart(2,'0')+'.webp'));
+  assert.ok(image.length>1000,'Empty source slide '+folder+' '+i);
+  assert.equal(image.subarray(0,4).toString('ascii'),'RIFF','Original page must be an actual WebP');
+ }
+}
+const playerWindow={};new Function('window',presenterJs)(playerWindow);
+const originalView=playerWindow.OB_PRESENTER.render({session:thirdCourse,variant:'en',index:0});
+const persianView=playerWindow.OB_PRESENTER.render({session:thirdCourse,variant:'fa',index:0});
+assert.ok(originalView.includes('session-03/slide-01.webp')&&originalView.includes('13 slides')&&originalView.includes('session-03-robbins.ppt'),'English original Session 03 renders and downloads the uploaded PPT');
+assert.ok(persianView.includes('session-03-fa/slide-01.webp')&&persianView.includes('۵۱ اسلاید')&&persianView.includes('personality-session-03.pptx'),'Persian supplementary Session 03 renders all 51 slides');
+assert.ok(js.includes('officialSession03Files(true)')&&js.includes('personality-types-session-03.xls'),'Session 03 editor has source slide thumbnails and the separate XLS');
+
 assert.ok(js.includes('href="./install.html"'),'App must link its installer within the classroom');
 assert.ok(sw.includes('./install.html')&&sw.includes('./install.js?v=2')&&sw.includes('./install.css?v=3'),'Install page must be cached by the PWA');
 assert.ok(installHtml.includes('id="installAction"')&&installHtml.includes('Add to Home Screen'),'Installer offers concise device-specific help');
