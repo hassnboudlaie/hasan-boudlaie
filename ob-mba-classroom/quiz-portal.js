@@ -51,8 +51,8 @@ function studentView(s){
 }
 async function refreshStudent(session){
  const el=document.getElementById("quizPortalContent");if(!el||Number(el.closest("#quizPortal")?.dataset.quizSession)!==Number(session)||entryKeys.has(el.querySelector("#quizFinalForm")))return;
- try{const data=await request("get",{session});cache.set(session,data);if(el.isConnected)el.innerHTML=studentView(data)}
- catch(e){if(el.isConnected)el.innerHTML='<p class="quiz-error">'+safe(error(e))+'</p>'}
+ try{const data=await request("get",{session});cache.set(session,data);if(el.isConnected&&!entryKeys.has(el.querySelector("#quizFinalForm")))el.innerHTML=studentView(data)}
+ catch(e){if(el.isConnected&&!entryKeys.has(el.querySelector("#quizFinalForm")))el.innerHTML='<p class="quiz-error">'+safe(error(e))+'</p>';return e.message}
 }
 async function start(button){
  if(button.disabled||!confirm("با شروع آزمون، تنها فرصت شما فعال می‌شود. بعد از شروع در همین صفحه بمانید و پاسخ‌ها را ثبت نهایی کنید. آماده‌اید؟"))return;
