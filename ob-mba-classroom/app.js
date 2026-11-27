@@ -222,7 +222,7 @@ function teacherHome(){
  +'<header class="ob-workspace-head"><div class="ob-workspace-title"><h2>میز کار مدرس</h2></div></header>'
  +'<section class="ob-teacher-hero"><div class="ob-teacher-hero-main"><span class="ob-teacher-current-label">جلسه '+pf(state.active)+'</span><h3>'+esc(s.title||"جلسه جاری")+'</h3></div><div class="ob-teacher-actions">'+button("ویرایش جلسه جاری","editActive","btn gold")+((Array.isArray(s.presentation)&&s.presentation.length)?button("نمایش اسلایدها","teacherCurrentPresentation","btn secondary"):"")+'</div></section>'
  +'<nav class="ob-console-section" aria-label="دانشجویان و باشگاه"><div class="ob-console-list">'
- +'<a class="ob-console-row" href="./participation.html"><span><strong>پرونده دانشجویان</strong><small>نمرات، تکالیف، حضور و فعالیت یادگیری</small></span><span aria-hidden="true">←</span></a>'
+ +'<a class="ob-console-row" href="./participation.html?v=4"><span><strong>پرونده دانشجویان</strong><small>نمرات، تکالیف، حضور و فعالیت یادگیری</small></span><span aria-hidden="true">←</span></a>'
  +'<a class="ob-console-row" href="./community.html"><span><strong>باشگاه اندیشه</strong></span><span aria-hidden="true">←</span></a>'
  +'</div></nav>'
  +'<details class="disclosure ob-console-settings"><summary>ابزارهای کلاس و تنظیمات</summary><div class="disclosure-body">'
@@ -317,7 +317,7 @@ function navRender(){
  updateContextNav();
  if(ui.role==="projector"||ui.page==="presentation"||ui.page==="original"){nav.innerHTML="";nav.style.display="none";return}
  nav.style.display="";
- const items=ui.role==="student"?(isGuest()?[["home","خانه"],["sessions","جلسات"]]:[["home","خانه"],["sessions","جلسات"],["live","حضور","./attendance.html"],["results","پرونده","./participation.html"]]):[["home","خانه"],["sessions","جلسات"],["attendance","حضور و عضویت","./attendance.html"],["grades","ارزیابی"]];
+ const items=ui.role==="student"?(isGuest()?[["home","خانه"],["sessions","جلسات"]]:[["home","خانه"],["sessions","جلسات"],["live","حضور","./attendance.html"],["results","پرونده","./participation.html?v=4"]]):[["home","خانه"],["sessions","جلسات"],["attendance","حضور و عضویت","./attendance.html"],["grades","ارزیابی"]];
  nav.innerHTML=items.map(([id,label,href])=>{
   const active=ui.page===id||(id==="sessions"&&["session","edit","resources"].includes(ui.page))
     ||(id==="grades"&&assessmentPages.includes(ui.page));
