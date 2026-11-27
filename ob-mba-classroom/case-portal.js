@@ -55,7 +55,7 @@ function drawStudent(lesson){
 }
 async function refreshStudent(lesson,force=false){
   if(window.OB_ACCESS?.role==="guest"){drawStudent(Number(lesson));return;}
- if(![1,2].includes(Number(lesson)))return;
+ if(![1,2,3].includes(Number(lesson)))return;
  if(!force&&my.has(lesson)){drawStudent(lesson);return}
  try{const response=await request("caseMy",{session:Number(lesson)});my.set(Number(lesson),response);drawStudent(Number(lesson))}
  catch(e){const elem=document.querySelector("#caseSubmitStatus");if(elem)elem.textContent=explain(e)}
