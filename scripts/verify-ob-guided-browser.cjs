@@ -283,7 +283,7 @@ async function run(){
  await instructorPage.getByText("درخواست‌های عضویت").waitFor();
  assert.ok((await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').count())===1,"Teacher sees pending student");
  await instructorPage.locator('[data-action="reviewStudent"][data-status="approved"]').click();
- await instructorPage.getByText("درخواست جدیدی وجود ندارد.").waitFor();
+ await instructorPage.getByText("عضویت دانشجو تأیید شد.").waitFor();
  assert.equal(reviewed,true,"Teacher approval sent to server");
  await save(instructorPage,"android-390-08-teacher-approval");
  await instructorCtx.close();
