@@ -221,6 +221,7 @@ function teacherHome(){
  const s=state.sessions[state.active-1];
  return '<div class="page teacher-home ob-workspace ob-teacher-console">'
  +'<header class="ob-workspace-head"><div class="ob-workspace-title"><h2>میز کار مدرس</h2></div></header>'
+ +'<section class="card stack"><h3>همه جلسات کلاس</h3>'+button("مشاهده و مدیریت ۱۶ جلسه","navigate","btn gold",'data-page="sessions"')+'<div class="btn-row">'+state.sessions.map(item=>button("جلسه "+pf(item.id),"editSession","btn secondary",'data-id="'+item.id+'"')).join("")+'</div></section>'
  +'<section class="ob-teacher-hero"><div class="ob-teacher-hero-main"><span class="ob-teacher-current-label">جلسه '+pf(state.active)+'</span><h3>'+esc(s.title||"جلسه جاری")+'</h3></div><div class="ob-teacher-actions">'+button("ویرایش جلسه جاری","editActive","btn gold")+((Array.isArray(s.presentation)&&s.presentation.length)?button("نمایش اسلایدها","teacherCurrentPresentation","btn secondary"):"")+'</div></section>'
  +'<nav class="ob-console-section" aria-label="دانشجویان و باشگاه"><div class="ob-console-list">'
  +'<a class="ob-console-row" href="./participation.html?v=4"><span><strong>پرونده دانشجویان</strong><small>نمرات، تکالیف، حضور و فعالیت یادگیری</small></span><span aria-hidden="true">←</span></a>'
@@ -309,7 +310,7 @@ function updateContextNav(){
  ui.page==="session"?"جلسه "+pf(ui.session):
  ui.page==="presentation"||ui.page==="original"?"نمایش اسلایدها":
  ({home:"خانه",sessions:"جلسات درس",syllabus:"طرح درس",attendance:"حضور و غیاب",students:"دانشجویان",live:"حضور",grades:"نمرات",results:"عملکرد",groups:"گروه‌ها",feedback:"بازخوردها",caseReviews:"تحلیل کیس",quizAdmin:"آزمون‌های پایان جلسه"}[ui.page]||"فضای کلاس");
- contextNav.hidden=ui.page==="home";contextLocation.textContent=label;
+ contextNav.hidden=ui.page==="home"&&ui.role!=="teacher";contextLocation.textContent=label;
  contextHome.disabled=ui.page==="home";
  contextBack.disabled=ui.page==="home"&&viewHistoryIndex===0;
 }
