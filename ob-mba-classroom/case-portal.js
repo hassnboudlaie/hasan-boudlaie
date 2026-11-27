@@ -6,7 +6,8 @@
 const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance";
 const KEY="mba-ob-classroom-attendance-identity-v1";
 const fields=["problem","evidence","levels","explain","intervention","measurement"];
-const errorNames={approval_required:"عضویت شما هنوز تأیید نشده است.",case_already_submitted:"این تکلیف قبلاً ارسال شده است.",
+const sessionOneClosed=lesson=>Number(lesson)===1&&Date.now()>=Date.parse("2026-11-28T00:00:00+03:30");
+const errorNames={case_deadline_passed:"مهلت ثبت کیس جلسه اول به پایان رسیده است.",approval_required:"عضویت شما هنوز تأیید نشده است.",case_already_submitted:"این تکلیف قبلاً ارسال شده است.",
  incomplete_case_answer:"یکی از شش بخش تحلیل ناقص است.",invalid_case_answers:"پاسخ‌ها را در هر شش بخش کامل کنید.",
  invalid_case_review:"نمره یا توضیح ارزیابی معتبر نیست.",session_expired:"دوباره وارد حساب خود شوید.",
  case_submission_failed:"ثبت پاسخ در سرور انجام نشد.",case_review_failed:"ثبت نمره انجام نشد.",
@@ -39,12 +40,13 @@ function statusHTML(lesson){
  const state=my.get(lesson);
  if(!state)return '<p class="case-network-status">در حال بررسی وضعیت تکلیف…</p>';
  const rec=state.submission;
+ if(sessionOneClosed(lesson)&&(!rec||rec.status==="revision_requested"))return '<p class="case-hint">مهلت ثبت تحلیل کیس جلسه اول به پایان رسیده است.</p>';
  if(!rec)return '<span class="case-status-pill">پیش‌نویس · ارسال‌نشده</span><p class="case-hint">پس از تکمیل شش مرحله، تکلیف را برای ارزیابی مدرس ارسال کنید.</p><button type="button" class="case-submit-btn" data-action="submitCase">ثبت نهایی و ارسال برای استاد</button>';
  const history=(state.history||[]).map(h=>'<li><strong>'+esc(h.decision==="reviewed"?"ارزیابی شده":"نیازمند اصلاح")+'</strong> · '+date(h.reviewed_at)+(h.score!==null?' · '+digit(h.score)+' از ۲۰':"")+'<p>'+esc(h.feedback)+'</p></li>').join("");
  const common='<span class="case-status-pill '+(rec.status==="reviewed"?"approved":rec.status==="revision_requested"?"revision":"pending")+'">'+esc(rec.status==="reviewed"?"ارزیابی‌شده":rec.status==="revision_requested"?"نیازمند اصلاح":"ارسال‌شده · در انتظار ارزیابی")+'</span><p class="case-hint">ثبت در سرور: '+date(rec.submitted_at)+'</p>';
  const feedback=rec.feedback?'<div class="case-feedback"><strong>بازخورد مدرس</strong><p>'+esc(rec.feedback)+'</p>'+(rec.score!==null?'<strong>نمره: '+digit(rec.score)+' از ۲۰</strong>':"")+'</div>':"";
  const emailUrl="https://mail.google.com/mail/?view=cm&fs=1&to="+encodeURIComponent("hasanboudlaie@gmail.com")+"&su="+encodeURIComponent("تحلیل شش‌مرحله‌ای رفتار سازمانی — جلسه "+lesson)+"&body="+encodeURIComponent("استاد محترم،\\nتحلیل شش‌مرحله‌ای این جلسه در سامانه ثبت شد.\\nشناسه ثبت: "+rec.id+"\\nدر صورت نیاز، فایل Word یا PDF دریافت‌شده را به ایمیل پیوست کرده و سپس Send را بزنید.");
- const email='<div class="case-email-followup"><strong>رسید ایمیلی به استاد (اختیاری)</strong><p>تحلیل شما قبلاً در سامانه خصوصی استاد ثبت شده است. برای ارسال نسخه فایل، ابتدا Word/PDF را دریافت کنید، سپس پیش‌نویس Gmail را باز کنید، فایل را پیوست کنید و خودتان Send را بزنید.</p><a class="case-submit-btn case-email-link" href="'+esc(emailUrl)+'" target="_blank" rel="noopener noreferrer">آماده‌سازی ایمیل در Gmail استاد</a></div>';
+ const email='<div class="case-email-followup"><strong>ارسال رسید به استاد</strong><p>تحلیل شما قبلاً در سامانه خصوصی استاد ثبت شده است. برای ارسال نسخه فایل، ابتدا Word/PDF را دریافت کنید، سپس پیش‌نویس Gmail را باز کنید، فایل را پیوست کنید و خودتان Send را بزنید.</p><a class="case-submit-btn case-email-link" href="'+esc(emailUrl)+'" target="_blank" rel="noopener noreferrer">ارسال رسید در Gmail استاد</a></div>';
  return common+feedback+email+(rec.status==="revision_requested"?'<p class="case-hint">شش پاسخ را اصلاح کنید و نسخه جدید را بفرستید.</p><button type="button" class="case-submit-btn" data-action="submitCase">ارسال نسخه اصلاح‌شده</button>':"")+(history?'<details class="case-history"><summary>سوابق ارزیابی</summary><ol>'+history+'</ol></details>':"");
 }
 function drawStudent(lesson){
@@ -61,6 +63,7 @@ async function refreshStudent(lesson,force=false){
 async function submitCase(lesson,work){
   if(window.OB_ACCESS?.role==="guest")return false;
  const node=document.getElementById("caseSubmitStatus");
+ if(sessionOneClosed(lesson)){if(node)node.textContent=errorNames.case_deadline_passed;return false}
  const values={};
  for(const key of fields){
   const value=String(work?.guidedAnswers?.["case-"+key]||"").trim();
