@@ -273,8 +273,8 @@ async function run(){
  await noOverflow(instructorPage,"teacher case grading");
  await save(instructorPage,"android-390-08-gradebook");
  await instructorPage.locator('[data-action="navigate"][data-page="home"]').first().click();
-assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher home shows classroom QR");
- await instructorPage.locator(".teacher-home details.disclosure > summary").click();
+ await instructorPage.locator(".teacher-home details.ob-console-settings > summary").click();
+ assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher QR is visible inside the expanded classroom tools");
  await instructorPage.locator('[data-action="showJoinQR"]').click();
  assert.ok(await instructorPage.locator(".join-qr-projector").isVisible(),"Projected first screen shows large join QR");
  await noOverflow(instructorPage,"teacher projector QR");
