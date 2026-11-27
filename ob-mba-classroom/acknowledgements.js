@@ -24,7 +24,7 @@ function mount(){
  const h=make("h2",role==="teacher"?"پیگیری تکالیف":"اعلان‌های من");h.style.fontSize="1.15rem";
  const close=make("button","بستن");close.type="button";close.style.cssText="float:left;font:inherit;padding:.35rem .7rem";close.onclick=()=>dialog.close();
  body=make("div");dialog.append(close,h,body);document.body.append(dialog);
- button.onclick=()=>{if(!dialog.open)dialog.showModal();load(true)};
+ button.onclick=()=>{if(!dialog.open)dialog.showModal();if(busy){body.replaceChildren(make("p","در حال دریافت اطلاعات…"));const retry=setInterval(()=>{if(!busy){clearInterval(retry);if(dialog?.open)load(true)}},100)}else load(true)};
  if(role==="student")load(false);
 }
 async function load(open){
@@ -43,7 +43,7 @@ async function load(open){
   if(!items.length)body.append(make("p","هنوز اعلانی برای شما ثبت نشده است."));
   for(const item of items){
    const card=make("article");card.style.cssText="padding:.8rem 0;border-bottom:1px solid #9995";
-   card.append(make("strong","تکلیف شما ملاحظه شد"),make("p","دانشجوی عزیز، "+kinds[item.submission_kind]+" جلسه "+fa(item.session_no)+" شما توسط استاد ملاحظه شد. از پیگیری و تلاش شما سپاسگزاریم. موفق و پایدار باشید."),make("small",date(item.created_at)));
+   card.append(make("strong","تکلیف شما ملاحظه شد"),make("p",item.message||"دانشجوی عزیز، "+kinds[item.submission_kind]+" جلسه "+fa(item.session_no)+" شما توسط استاد ملاحظه شد. از پیگیری و تلاش شما سپاسگزاریم. موفق و پایدار باشید."),make("small",date(item.created_at)));
    body.append(card);
   }
   if(unread){await request("read");button.textContent="اعلان‌ها";}
