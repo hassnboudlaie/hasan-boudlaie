@@ -729,5 +729,5 @@ html[data-theme=dark] .resource-cover img{background:#f7f7f5}
 .bottom-nav a{text-decoration:none;text-align:center}
 
 /* Accessible theme control: constant high-contrast button in Chromium, WebKit and small screens. */
-.topbar .header-actions #themeToggle{background:#123a46!important;color:#ffffff!important;border:2px solid #d6ebed!important;opacity:1!important;box-shadow:none}
-.topbar .header-actions #themeToggle:focus-visible{outline:3px solid #ffdb83;outline-offset:3px}
+.mast .header-actions #themeToggle{background:#123a46!important;color:#ffffff!important;border:2px solid #d6ebed!important;opacity:1!important;box-shadow:none}
+.mast .header-actions #themeToggle:focus-visible{outline:3px solid #ffdb83;outline-offset:3px}
