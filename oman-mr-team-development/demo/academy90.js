@@ -29,7 +29,7 @@ const sources=[
  ['RICS · Comparable Evidence','https://www.rics.org/profession-standards/rics-standards-and-guidance/sector-standards/valuation-standards/comparable-evidence-in-real-estate-valuation','ارزیابی کیفیت شواهد مقایسه‌ای']
 ];
 function metrics(records,seconds){
- return '<div class="academy-stats"><span>'+n(records.filter(r=>r.read_at).length)+' مطالعه تأییدشده</span><span>'+n(records.filter(r=>r.task).length)+' تکلیف</span><span>'+n(records.filter(r=>r.quiz_score!=null).length)+' آزمون</span><span>'+duration(seconds)+' فعالیت برآوردی در وب‌اپ</span></div>';
+ return '<div class="academy-stats"><span>'+n(records.filter(r=>r.read_at).length)+' درس خوانده‌شده</span><span>'+n(records.filter(r=>r.task).length)+' تکلیف</span><span>'+n(records.filter(r=>r.quiz_score!=null).length)+' آزمون</span><span>'+duration(seconds)+' فعالیت تقریبی در اپ</span></div>';
 }
 const weeklyCase=window.MasirWeeklyCases;
 function reviewWeek(records,index){
@@ -87,20 +87,20 @@ function render(state){
  }).join('')+'</div></details>').join('');
  const weekly=records.filter(r=>r.day>d.number-w.days.length&&r.day<=d.number);
  const review=d.summary?'<section class="academy-review"><h4>مرور عملکرد هفته</h4><p>'+n(weekly.filter(r=>r.read_at).length)+' مطالعه و '+n(weekly.filter(r=>r.task).length)+' تکلیف ثبت شده است.</p><ol><li>یک رفتار که کیفیت تصمیم مشتری را بهتر کرد.</li><li>یک پرونده که نشان داد کدام مرحله قیف گیر می‌کند.</li><li>اقدام هفته بعد، مسئول و موعد مرور.</li></ol></section>':'';
- const quiz=d.summary?'<fieldset><legend>آزمون جمع‌بندی · ۲ سؤال</legend>'+w.quiz.map(([question,...options],i)=>
- '<div class="academy-question"><strong>'+esc(question)+'</strong>'+options.slice(0,3).map((text,j)=>'<label><input type="radio" name="answer'+i+'" value="'+j+'" '+(record.quiz_answers?.[i]===j?'checked':'')+'> '+esc(text)+'</label>').join('')+(record.quiz_score!=null?'<small>پاسخ پیشنهادی: '+esc(options[options[3]])+'</small>':'')+'</div>').join('')+'<button class="mp-btn" data-academy-save="quiz">ثبت آزمون</button>'+(record.quiz_score!=null?'<p>آخرین نمره: '+n(record.quiz_score)+' از ۲</p>':'')+'</fieldset>':'';
- const roleplay='<details '+(d.roleplay?'open':'')+'><summary>کیس و رول‌پلی سه‌دور</summary><p>'+esc(w.scenario)+'</p><ol>'+w.roles.map(role=>'<li>'+esc(role)+'</li>').join('')+'</ol><p>برای هر نقش یک رفتار مؤثر و یک رفتار قابل اصلاح ثبت کنید و بخش حساس را دوباره اجرا کنید. کشف مسئله، شفافیت پاسخ و توافق بر اقدام را از صفر تا دو امتیاز بدهید.</p></details>';
- const caseSection=d.summary?'<section class="academy-casefile" tabindex="-1"><h4>'+esc(caseFile[0])+'</h4><p>'+esc(caseFile[1])+'</p><p><strong>مأموریت</strong> '+esc(caseFile[2])+'</p></section>':'';
+ const quiz=d.summary?'<fieldset><legend>سؤال‌های هفته · ۲ سؤال</legend>'+w.quiz.map(([question,...options],i)=>
+ '<div class="academy-question"><strong>'+esc(question)+'</strong>'+options.slice(0,3).map((text,j)=>'<label><input type="radio" name="answer'+i+'" value="'+j+'" '+(record.quiz_answers?.[i]===j?'checked':'')+'> '+esc(text)+'</label>').join('')+(record.quiz_score!=null?'<small>پاسخ پیشنهادی '+esc(options[options[3]])+'</small>':'')+'</div>').join('')+'<button class="mp-btn" data-academy-save="quiz">ثبت آزمون</button>'+(record.quiz_score!=null?'<p>نمره ثبت‌شده: '+n(record.quiz_score)+' از ۲</p>':'')+'</fieldset>':'';
+ const roleplay='<details '+(d.roleplay?'open':'')+'><summary>تمرین گفت‌وگو در سه نوبت</summary><p>'+esc(w.scenario)+'</p><ol>'+w.roles.map(role=>'<li>'+esc(role)+'</li>').join('')+'</ol><p>برای هر نفر بنویس چه کاری خوب بود و چه کاری می‌تواند بهتر شود. بخش سخت گفت‌وگو را دوباره اجرا کنید. به سه کار از صفر تا دو نمره بده: فهمیدن مشکل، جواب روشن و تعیین قدم بعدی.</p></details>';
+ const caseSection=d.summary?'<section class="academy-casefile" tabindex="-1"><h4>'+esc(caseFile[0])+'</h4><p>'+esc(caseFile[1])+'</p><p><strong>کاری که باید انجام بدهی</strong> '+esc(caseFile[2])+'</p></section>':'';
  const points=reviewWeek(records,index).score;
  return '<div class="academy almas-course">'+(error?'<p role="alert">'+esc(error)+'</p>':'')+
   (showCalendar?'<details id="academyCalendar" class="academy-calendar" open><summary>انتخاب روز از تقویم</summary>'+calendar+'</details>':'')+
   '<article class="academy-lesson" id="academyLesson" tabindex="-1"><div class="almas-day-heading"><span>روز '+n(d.number)+' از ۹۰</span><span>تا ۲۰ دقیقه</span></div>'+
   '<h3>'+esc(w.title)+'</h3><div class="almas-progress" role="progressbar" aria-label="پیشرفت درس" aria-valuemin="0" aria-valuemax="'+end+'" aria-valuenow="'+step+'"><span style="width:'+(step/end*100)+'%"></span></div><p class="almas-step-counter">گام '+n(step+1)+' از '+n(end+1)+' · '+labelsForDay[step]+'</p>'+
   panel(0,'<h4>'+labelsForDay[0]+'</h4><p dir="ltr" class="academy-technique">'+esc(w.skill)+'</p><p>'+esc(w.theory)+'</p>'+
-   (record.read_at?advance(1):'<button class="mp-btn" data-academy-save="read">مطالعه کردم، ادامه ←</button>'))+
+   (record.read_at?advance(1):'<button class="mp-btn" data-academy-save="read">خواندم، برو به تمرین ←</button>'))+
   panel(1,'<h4>'+labelsForDay[1]+'</h4><p>'+esc(d.task)+'</p>'+caseSection+roleplay+
-   '<label for="academyTask">'+taskLabel+'</label><textarea id="academyTask" maxlength="3000" rows="4" placeholder="نتیجه را کوتاه و بدون مشخصات مشتری بنویس">'+esc(draft??record.task)+'</textarea>'+
-   '<button class="mp-btn" data-academy-save="task">ثبت و ادامه ←</button>')+
+   '<label for="academyTask">'+taskLabel+'</label><textarea id="academyTask" maxlength="3000" rows="4" placeholder="در چند خط بنویس چه گفتی یا چه کردی. نام و شماره مشتری را ننویس.">'+esc(draft??record.task)+'</textarea>'+
+   '<button class="mp-btn" data-academy-save="task">ذخیره پاسخ و ادامه ←</button>')+
   (d.summary?panel(2,review+quiz):'')+
   panel(end,'<h4>✓ برنامه این روز تکمیل شد</h4><p>'+n(points)+' امتیاز در این هفته ثبت کرده‌ای.</p>'+
    (record.quiz_score!=null?'<p>نمره آزمون: '+n(record.quiz_score)+' از ۲</p>':'')+
@@ -123,7 +123,7 @@ function patch(action,root){
  if(action==='read')return {day:selected,read_at:new Date().toISOString()};
  if(action==='task'){
   const task=root.querySelector('#academyTask').value.trim();
-  if(task.length<(day.summary?60:10))throw Error(day.summary?'پاسخ کیس را با تصمیم، دلیل و اقدام بعدی کامل کنید (حداقل ۶۰ نویسه).':'برای ثبت تکلیف دست‌کم ۱۰ نویسه وارد کنید.');
+  if(task.length<(day.summary?60:10))throw Error(day.summary?'پاسخت را در چند جمله کامل کن. بگو چه تصمیمی می‌گیری، چرا و بعد چه می‌کنی.':'برای ثبت تمرین، دست‌کم یک جمله کوتاه بنویس.');
   return {day:selected,task};
  }
  if(action==='quiz'&&day.summary){

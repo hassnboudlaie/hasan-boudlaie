@@ -83,7 +83,7 @@ function topNav(){
 }
 function paint(){
  if(!modal)return;
- const title=!user?'ورود و ساخت پروفایل':tab==='course'?'آکادمی فروش املاک عمان':tab==='admin'?'داشبورد ادمین':tab==='library'?'کتابخانه و مطالعه':tab==='cases'?'کیس‌های کاری':tab==='record'?'کارنامه فردی':'پروفایل من';
+ const title=!user?'ورود یا ساخت حساب':tab==='course'?'آکادمی فروش املاک عمان':tab==='admin'?'داشبورد ادمین':tab==='library'?'کتابخانه و مطالعه':tab==='cases'?'کیس‌های کاری':tab==='record'?'کارنامه فردی':'پروفایل من';
  const overlay=$('#mpOverlay');
  overlay.dataset.tab=user?tab:'auth';
  overlay.innerHTML='<div class="mp-window"><div class="mp-head"><div><span>ALMAS ESTATES</span><h2>'+title+'</h2></div><button class="mp-close" data-mp="close" aria-label="بستن">بستن ×</button></div>'+topNav()+'<div class="mp-content" id="mpContent">'+(!sb?note('بارگذاری ارتباط امن سامانه با خطا مواجه شد. صفحه را تازه‌سازی کنید.','error'):!user?authView():tab==='course'?academy.render(course):tab==='profile'?profileView():tab==='library'?libraryView():tab==='cases'?casesView():tab==='record'?recordView():isAdmin?adminView():note('برای دسترسی به این بخش مجوز مدیریتی لازم است.','error'))+'</div></div>';
@@ -100,7 +100,7 @@ function authView(){
  const mode=authMode;
  if(mode==='newpassword')return'<h3>تنظیم رمز عبور جدید</h3><p>رمز تازه خودت را وارد کن.</p><form class="mp-form" id="mpNewPassForm"><label>رمز جدید (حداقل ۸ کاراکتر)<input type="password" name="password" minlength="8" required autocomplete="new-password"></label>'+btn('ذخیره رمز جدید','noop')+'</form>';
  if(mode==='reset')return'<h3>بازیابی رمز عبور</h3><p>لینک بازیابی رمز به ایمیل حساب فرستاده می‌شود. برای فعال‌شدن لینک، تنظیم آدرس بازگشت در Supabase نیز لازم است.</p><form class="mp-form" id="mpResetForm"><label>ایمیل حساب<input type="email" name="email" required autocomplete="email" dir="ltr" placeholder="name@example.com"></label><button class="mp-btn" type="submit">ارسال لینک بازیابی رمز</button></form><p><button class="mp-link" data-mp="to-login">بازگشت به ورود</button></p>';
- return'<div class="almas-auth"><section class="mp-panel"><span class="mp-label">'+(mode==='signup'?'ایجاد حساب جدید':'ورود امن')+'</span><h3>'+(mode==='signup'?'پروفایل اختصاصی خود را بساز':'به فضای شخصی یادگیری خوش آمدی')+'</h3><p>برای ثبت دائمی پرونده، سوابق مطالعه و فعالیت‌ها، با ایمیل و رمز خودت وارد شو.</p><form class="mp-form" id="mpAuthForm">'+
+ return'<div class="almas-auth"><section class="mp-panel"><span class="mp-label">'+(mode==='signup'?'ایجاد حساب جدید':'ورود امن')+'</span><h3>'+(mode==='signup'?'حساب خودت را بساز':'وارد حساب خودت شو')+'</h3><p>با ایمیل وارد شو تا نتیجه تمرین‌ها ذخیره شود و دفعه بعد از همان‌جا ادامه بدهی.</p><form class="mp-form" id="mpAuthForm">'+
  (mode==='signup'?'<label>نام و نام خانوادگی<input name="name" maxlength="100" minlength="2" required autocomplete="name" placeholder="مثلاً علی رضایی"></label>':'')+
  '<label>ایمیل<input type="email" name="email" required autocomplete="email" dir="ltr" placeholder="name@example.com"></label><label>رمز عبور<input type="password" name="password" required minlength="8" autocomplete="'+(mode==='signup'?'new-password':'current-password')+'" placeholder="حداقل ۸ کاراکتر"></label><button class="mp-btn" type="submit">'+(mode==='signup'?'ساخت پروفایل و ثبت‌نام':'ورود به حساب')+'</button></form><div class="mp-between" style="margin-top:13px"><button class="mp-link" data-mp="'+(mode==='signup'?'to-login':'to-signup')+'">'+(mode==='signup'?'قبلاً حساب ساخته‌ام':'حساب ندارم؛ ثبت‌نام')+'</button><button class="mp-link" data-mp="to-reset">رمزم را فراموش کرده‌ام</button></div></section>'+
  '</div>';
@@ -192,13 +192,13 @@ async function saveCourse(action,button){
  try{
   const result=await sb.from('oman_lxp_course_days').upsert({...values,user_id:id,updated_at:new Date().toISOString()},{onConflict:'user_id,day'}).select('day,read_at,task,quiz_answers,quiz_score,updated_at').single();
   if(user?.id!==id)return;
-  if(result.error){toast('ثبت انجام نشد. دوباره تلاش کنید.');return;}
+  if(result.error){toast('پاسخ ذخیره نشد. دوباره امتحان کن.');return;}
   course.records=[...course.records.filter(row=>row.day!==values.day),result.data].sort((a,b)=>a.day-b.day);
   if(tab==='course'){
    academy.moveStep(null);
    paint();$('#academyLesson')?.focus();
   }
-  toast('فعالیت ثبت شد.');
+  toast('پاسخت ذخیره شد.');
  }finally{button.disabled=false;}
 }
 async function saveSchedule(form){
