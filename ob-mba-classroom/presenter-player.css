@@ -109,3 +109,23 @@
  .presenter-page-heading h2{font-size:24px}
 }
 @media(prefers-reduced-motion:reduce){.presenter-progress>span{transition:none}}
+
+/* Exact teacher-uploaded Session 03 files — visible in editor, lessons and resources. */
+.ob-session3-source-files{padding:clamp(16px,2.4vw,25px)!important;border:1.5px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);min-width:0}
+.ob-session3-source-head h3{margin:0 0 7px;font-size:clamp(20px,3vw,26px)}
+.ob-session3-source-head p{margin:0 0 15px;color:var(--muted);font-size:clamp(14px,2vw,17px)}
+.ob-session3-files-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ob-session3-source-card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0;display:grid;align-content:start;gap:8px}
+.ob-session3-source-card h4{font-size:clamp(18px,2.2vw,22px);margin:3px 0}
+.ob-session3-source-card p{color:var(--muted);margin:0 0 6px}
+.ob-session3-thumbnail{width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff;border-radius:10px;border:1px solid #d5dad7}
+.ob-session3-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ob-session3-actions :is(a,button){min-height:44px;font-size:clamp(14px,1.8vw,17px);white-space:normal;text-align:center}
+.ob-session3-link{display:inline-flex!important;align-items:center;justify-content:center;text-decoration:none!important;padding:10px 12px;border:1px solid var(--line);border-radius:10px;color:var(--text);background:var(--panel);font-weight:750}
+.ob-session3-link:hover,.ob-session3-link:focus-visible{border-color:var(--accent);text-decoration:underline!important}
+.ob-session3-assessment{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;padding:13px;border:1px dashed var(--line);border-radius:12px}
+.ob-session3-assessment strong{font-size:18px}
+.ob-session3-assessment span{color:var(--muted)}
+.ob-slide-real-downloads{padding:14px 0;gap:10px;display:flex;flex-wrap:wrap}
+.ob-slide-real-downloads a{font-size:clamp(14px,2vw,17px);white-space:normal}
+@media(max-width:670px){.ob-session3-files-grid{grid-template-columns:1fr}.ob-session3-source-card{padding:12px}.ob-session3-actions a,.ob-session3-actions button{flex:1 1 155px}.ob-session3-assessment{align-items:flex-start;flex-direction:column}}
