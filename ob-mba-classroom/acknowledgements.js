@@ -43,7 +43,9 @@ async function load(open){
   if(!items.length)body.append(make("p","هنوز اعلانی برای شما ثبت نشده است."));
   for(const item of items){
    const card=make("article");card.style.cssText="padding:.8rem 0;border-bottom:1px solid #9995";
-   card.append(make("strong","تکلیف شما ملاحظه شد"),make("p",item.message||"دانشجوی عزیز، "+kinds[item.submission_kind]+" جلسه "+fa(item.session_no)+" شما توسط استاد ملاحظه شد. از پیگیری و تلاش شما سپاسگزاریم. موفق و پایدار باشید."),make("small",date(item.created_at)));
+   const heading=item.submission_kind==="announcement"?"پیام استاد":item.submission_kind.startsWith("receipt_")?"ثبت موفق تکلیف":item.submission_kind==="case"?"بازخورد تحلیل کیس":"تکلیف شما ملاحظه شد";
+   card.append(make("strong",heading),make("p",item.message||"دانشجوی عزیز، "+kinds[item.submission_kind]+" جلسه "+fa(item.session_no)+" شما توسط استاد ملاحظه شد. از پیگیری و تلاش شما سپاسگزاریم. موفق و پایدار باشید."),make("small",date(item.created_at)));
+   if(item.submission_kind==="announcement"){const link=make("a","ورود به باشگاه اندیشه");link.href="./community.html";link.className="btn";card.append(link)}
    body.append(card);
   }
   if(unread){await request("read");button.textContent="اعلان‌ها";}
