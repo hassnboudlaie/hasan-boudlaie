@@ -43,6 +43,9 @@ const shortDate=v=>v?new Intl.DateTimeFormat('fa-IR',{dateStyle:'short'}).format
 const timeFmt=s=>{let n=Math.max(0,Number(s||0));return n<60?fmt(n)+' ثانیه':fmt(Math.floor(n/60))+' دقیقه'+(n%60?' و '+fmt(n%60)+' ثانیه':'');};
 const eventNames={app_open:'بازدید از سامانه',sign_in:'ورود به حساب',lesson_open:'بازکردن جزوه',lesson_finish:'تکمیل مطالعه جزوه',practice_finish:'اتمام تمرین و دریافت نشان',case_created:'ثبت کیس',case_updated:'ویرایش کیس',practice_start:'شروع تمرین',decision_answered:'انتخاب پاسخ در سناریو',roleplay_saved:'ثبت رول‌پلی',coach_note_saved:'ثبت یادداشت بازتابی',mission_defined:'تعریف مأموریت میدانی'};
 let sb=null,user=null,profile=null,isAdmin=false,modal=false,tab='profile',authMode='login',recovery=false,loginName='';
+let course={records:[],seconds:0,start:null,error:''};
+let memberCourse={records:[],seconds:0,error:''};
+const academy=window.MasirCourse;
 let own={cases:[],readings:[],events:[]},adminData=[],selectedUser=null,selectedUserCases=[],selectedUserEvents=[];
 let readingId=null,readingStarted=false,lastActivity=Date.now(),readCallBusy=false,loginBusy=false;
 let activeReadSeconds=0, lastReadTick=Date.now();
@@ -61,7 +64,7 @@ function ensureUI(){
 }
 function paintEntry(){
  const e=$('#mpEntry');if(!e)return;
- e.innerHTML='<button class="mp-account-btn" data-mp="open-profile">'+(user?'◉ '+escapeHTML(profile?.display_name||'حساب من'):'◉ ورود / ایجاد پروفایل')+'</button>'+(isAdmin?'<button class="mp-admin-btn" data-mp="open-admin">▦ داشبورد ادمین</button>':'');
+ e.innerHTML='<button class="mp-account-btn" data-mp="open-profile">'+(user?'◉ '+escapeHTML(profile?.display_name||'حساب من'):'◉ ورود / ایجاد پروفایل')+'</button><button class="mp-account-btn" data-mp="open-course">تقویم ۹۰ روزه</button>'+(isAdmin?'<button class="mp-admin-btn" data-mp="open-admin">▦ داشبورد ادمین</button>':'');
 }
 function show(t){
  tab=t||tab;modal=true;ensureUI();const e=$('#mpOverlay');e.hidden=false;document.body.style.overflow='hidden';paint();window.scrollTo({top:0,behavior:'smooth'});
@@ -71,15 +74,15 @@ function close(){
 }
 function topNav(){
  if(!user)return'';
- const nav=[['profile','پروفایل من'],['library','جزوه‌ها'],['cases','ثبت و مشاهده کیس'],['record','کارنامه من']];
+ const nav=[['course','تقویم ۹۰ روزه'],['profile','پروفایل من'],['library','جزوه‌ها'],['cases','ثبت و مشاهده کیس'],['record','کارنامه من']];
  if(isAdmin)nav.push(['admin','داشبورد مدیر']);
  return '<nav class="mp-tabs" aria-label="بخش‌های حساب کاربری">'+nav.map(x=>'<button class="'+(tab===x[0]?'active':'')+'" data-mp-tab="'+x[0]+'">'+x[1]+'</button>').join('')+'</nav>';
 }
 function paint(){
  if(!modal)return;
- const title=!user?'ورود و ساخت پروفایل':tab==='admin'?'داشبورد ادمین':tab==='library'?'کتابخانه و مطالعه':tab==='cases'?'کیس‌های کاری':tab==='record'?'کارنامه فردی':'پروفایل من';
+ const title=!user?'ورود و ساخت پروفایل':tab==='course'?'آکادمی فروش املاک عمان':tab==='admin'?'داشبورد ادمین':tab==='library'?'کتابخانه و مطالعه':tab==='cases'?'کیس‌های کاری':tab==='record'?'کارنامه فردی':'پروفایل من';
  const overlay=$('#mpOverlay');
- overlay.innerHTML='<div class="mp-window"><div class="mp-head"><div><span>MASIR · LEARNING & PERFORMANCE</span><h2>'+title+'</h2></div><button class="mp-close" data-mp="close" aria-label="بستن">بستن ×</button></div>'+topNav()+'<div class="mp-content" id="mpContent">'+(!sb?note('بارگذاری ارتباط امن سامانه با خطا مواجه شد. صفحه را تازه‌سازی کنید.','error'):!user?authView():tab==='profile'?profileView():tab==='library'?libraryView():tab==='cases'?casesView():tab==='record'?recordView():isAdmin?adminView():note('برای دسترسی به این بخش مجوز مدیریتی لازم است.','error'))+'</div></div>';
+ overlay.innerHTML='<div class="mp-window"><div class="mp-head"><div><span>MASIR · LEARNING & PERFORMANCE</span><h2>'+title+'</h2></div><button class="mp-close" data-mp="close" aria-label="بستن">بستن ×</button></div>'+topNav()+'<div class="mp-content" id="mpContent">'+(!sb?note('بارگذاری ارتباط امن سامانه با خطا مواجه شد. صفحه را تازه‌سازی کنید.','error'):!user?authView():tab==='course'?academy.render(course):tab==='profile'?profileView():tab==='library'?libraryView():tab==='cases'?casesView():tab==='record'?recordView():isAdmin?adminView():note('برای دسترسی به این بخش مجوز مدیریتی لازم است.','error'))+'</div></div>';
 }
 function authView(){
  const mode=authMode;
@@ -126,7 +129,7 @@ function casesView(){
 function recordView(){
  const total=own.events.filter(x=>x.event_type==='practice_finish').length;
  const unique=new Set(own.events.filter(x=>x.event_type==='practice_finish').map(x=>x.module_id)).size;
- return'<h3>کارنامه و سابقه فعالیت من</h3><p>این اطلاعات از دیتابیس حساب تو خوانده می‌شوند و در دستگاه‌های دیگر نیز قابل دسترسی‌اند.</p>'+statsOwn()+
+ return'<h3>کارنامه و سابقه فعالیت من</h3><p>این اطلاعات از دیتابیس حساب تو خوانده می‌شوند و در دستگاه‌های دیگر نیز قابل دسترسی‌اند.</p>'+statsOwn()+academy.history(course.records,course.seconds)+
  '<div class="mp-grid" style="margin-top:17px"><section class="mp-panel"><h4>وضعیت مطالعه جزوه‌ها</h4><div class="mp-action-list">'+LESSONS.map(l=>{
   const r=own.readings.find(x=>x.module_id===l.id);
   return'<div class="mp-event"><div><b>'+l.title+'</b><div class="mp-small">'+(r?timeFmt(r.active_seconds)+' · '+fmt(r.open_count)+' نوبت بازکردن':'مطالعه نشده')+'</div></div><span class="mp-small">'+(r?.completed_at?'تکمیل‌شده':'—')+'</span></div>';
@@ -137,6 +140,7 @@ function adminView(){
  if(!isAdmin)return note('دسترسی مدیریتی تأیید نشده است.','error');
  const team=adminData.filter(x=>x.user_id!==user.id);const n=team.length,totalVisits=team.reduce((s,x)=>s+Number(x.visits||0),0),totalSigns=team.reduce((s,x)=>s+Number(x.sign_ins||0),0),totalCases=team.reduce((s,x)=>s+Number(x.cases_count||0),0),totalTime=team.reduce((s,x)=>s+Number(x.reading_seconds||0),0);
  return'<div class="mp-between" style="margin-bottom:17px"><div><h3>رصد فعالیت و توسعه مهارتی تیم</h3><p>نمای خصوصی Admin · فقط حساب مجاز می‌تواند به داده‌های کارکنان دسترسی داشته باشد.</p></div>'+btn('به‌روزرسانی گزارش','refresh-admin','mp-btn-light')+'</div>'+
+ '<form class="academy-start" id="academyStart"><label for="academyStartDate">تاریخ شروع گروه (میلادی، به وقت عمان)</label><input id="academyStartDate" type="date" required value="'+escapeHTML(course.start||'')+'"><button class="mp-btn" type="submit">ذخیره تاریخ شروع</button></form>'+
  '<div class="mp-grid-3">'+[[fmt(n),'کاربر دارای پروفایل'],[fmt(totalVisits),'مراجعه به سامانه'],[fmt(totalSigns),'ورود ثبت‌شده'],[fmt(totalCases),'کیس ثبت‌شده'],[timeFmt(totalTime),'مطالعه فعال تیم'],[fmt(team.reduce((s,x)=>s+Number(x.practices||0),0)),'اتمام تمرین‌ها']].map(x=>'<div class="mp-stat"><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div>').join('')+'</div>'+
  '<div class="mp-panel" style="margin-top:17px"><div class="mp-between" style="margin-bottom:12px"><h4>عملکرد و فعالیت افراد</h4><span class="mp-small">برای جزئیات، گزینه مشاهده هر ردیف را بزن.</span></div>'+
  (n?'<div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>نام / نقش</th><th>ورود</th><th>مراجعه</th><th>تمرین</th><th>کیس</th><th>جزوه تکمیل</th><th>زمان مطالعه</th><th>آخرین فعالیت</th><th>جزئیات</th></tr></thead><tbody>'+
@@ -147,8 +151,56 @@ function adminView(){
 function adminDetails(){
  const p=adminData.find(x=>x.user_id===selectedUser);if(!p)return'';
  return'<section class="mp-panel" style="margin-top:17px"><div class="mp-between"><div><h3>پرونده فعالیت: '+escapeHTML(p.display_name)+'</h3><div class="mp-small" dir="ltr">'+escapeHTML(p.email)+'</div><p>'+escapeHTML(p.role_label)+' · '+escapeHTML(p.department)+'</p></div>'+btn('بستن جزئیات','close-user','mp-btn-light')+'</div>'+
- '<div class="mp-grid"><div><h4>کیس‌های ثبت‌شده</h4>'+(selectedUserCases.length?'<div class="mp-action-list">'+selectedUserCases.map(c=>'<article class="mp-card"><h4>'+escapeHTML(c.title)+'</h4><span class="mp-small">'+dateFmt(c.created_at)+'</span><details><summary style="font-size:12px;cursor:pointer;color:#176b65">مشاهده متن کیس</summary><p><b>موقعیت:</b> '+escapeHTML(c.situation)+'</p><p><b>اقدام:</b> '+escapeHTML(c.action_taken||'—')+'</p><p><b>نتیجه:</b> '+escapeHTML(c.outcome||'—')+'</p><p><b>درس آموخته:</b> '+escapeHTML(c.reflection||'—')+'</p></details></article>').join('')+'</div>':'<div class="mp-note">کیسی ثبت نشده است.</div>')+'</div>'+
+ (memberCourse.error?note(memberCourse.error,'error'):academy.history(memberCourse.records,memberCourse.seconds))+'<div class="mp-grid"><div><h4>کیس‌های ثبت‌شده</h4>'+(selectedUserCases.length?'<div class="mp-action-list">'+selectedUserCases.map(c=>'<article class="mp-card"><h4>'+escapeHTML(c.title)+'</h4><span class="mp-small">'+dateFmt(c.created_at)+'</span><details><summary style="font-size:12px;cursor:pointer;color:#176b65">مشاهده متن کیس</summary><p><b>موقعیت:</b> '+escapeHTML(c.situation)+'</p><p><b>اقدام:</b> '+escapeHTML(c.action_taken||'—')+'</p><p><b>نتیجه:</b> '+escapeHTML(c.outcome||'—')+'</p><p><b>درس آموخته:</b> '+escapeHTML(c.reflection||'—')+'</p></details></article>').join('')+'</div>':'<div class="mp-note">کیسی ثبت نشده است.</div>')+'</div>'+
  '<div><h4>رویدادهای اخیر</h4>'+(selectedUserEvents.length?'<div class="mp-action-list">'+selectedUserEvents.map(e=>'<div class="mp-event"><span>'+escapeHTML(eventNames[e.event_type]||e.event_type)+(e.module_id?' · '+escapeHTML(LESSONS.find(l=>l.id===e.module_id)?.title||e.module_id):'')+'</span><time class="mp-small">'+dateFmt(e.created_at)+'</time></div>').join('')+'</div>':'<div class="mp-note">رویدادی ثبت نشده است.</div>')+'</div></div></section>';
+}
+async function fetchCourseData(id){
+ const [days,clock]=await Promise.all([
+  sb.from('oman_lxp_course_days').select('day,read_at,task,quiz_answers,quiz_score,updated_at').eq('user_id',id).order('day'),
+  sb.from('oman_lxp_course_clock').select('active_seconds').eq('user_id',id).maybeSingle()
+ ]);
+ return {records:days.data||[],seconds:clock.data?.active_seconds||0,error:days.error||clock.error?'بخشی از پرونده دوره بارگذاری نشد. دوباره تلاش کنید.':''};
+}
+async function loadCourse(){
+ const id=user?.id;
+ if(!id)return;
+ const [data,schedule]=await Promise.all([
+  fetchCourseData(id),
+  sb.from('oman_lxp_course_schedule').select('start_date').eq('id',true).maybeSingle()
+ ]);
+ if(user?.id===id)course={...data,start:schedule.data?.start_date||null,error:data.error||(schedule.error?'بارگذاری تاریخ شروع ناموفق بود.':'')};
+}
+async function saveCourse(action,button){
+ const id=user?.id;
+ if(!id||tab!=='course'||button.disabled)return;
+ let values;
+ try{values=academy.patch(action,$('#mpContent'));}catch(error){toast(error.message);return;}
+ button.disabled=true;
+ try{
+  const result=await sb.from('oman_lxp_course_days').upsert({...values,user_id:id,updated_at:new Date().toISOString()},{onConflict:'user_id,day'}).select('day,read_at,task,quiz_answers,quiz_score,updated_at').single();
+  if(user?.id!==id)return;
+  if(result.error){toast('ثبت انجام نشد. دوباره تلاش کنید.');return;}
+  course.records=[...course.records.filter(row=>row.day!==values.day),result.data].sort((a,b)=>a.day-b.day);
+  if(tab==='course'){
+   paint();$('#academyLesson')?.focus();
+  }
+  toast('فعالیت ثبت شد.');
+ }finally{button.disabled=false;}
+}
+async function saveSchedule(form){
+ if(!isAdmin)return;
+ const start=form.querySelector('input').value;
+ const result=await sb.from('oman_lxp_course_schedule').upsert({id:true,start_date:start},{onConflict:'id'});
+ if(result.error){toast('تاریخ ثبت نشد. دوباره تلاش کنید.');return;}
+ course.start=start;
+ academy.selection(0);
+ toast('تاریخ شروع گروه ذخیره شد.');
+}
+async function trackCourseClock(){
+ if(!user||document.visibilityState!=='visible'||!document.hasFocus()||Date.now()-lastActivity>90000)return;
+ const id=user.id;
+ const {data,error}=await sb.rpc('oman_lxp_course_tick');
+ if(!error&&Number.isInteger(data)&&user?.id===id)course.seconds=data;
 }
 async function logEvent(event_type,module_id){
  if(!user||!sb)return;
@@ -182,7 +234,7 @@ async function initUser(nameHint){
  profile=p.data||{display_name:nameHint||user.email.split('@')[0],email:user.email};
  isAdmin=!!a.data&&!a.error;
  await logEvent('app_open',null);
- await loadOwn();
+ await Promise.all([loadOwn(),loadCourse()]);
  paintEntry();if(modal)paint();
 }
 async function adminRefresh(){
@@ -196,10 +248,12 @@ async function adminRefresh(){
 async function loadUserDetails(id,repaint=true){
  if(!isAdmin||!adminData.some(x=>x.user_id===id))return;
  selectedUser=id;
- const [a,b]=await Promise.all([
+ const [a,b,details]=await Promise.all([
   sb.from('oman_lxp_cases').select('id,title,situation,action_taken,outcome,reflection,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(80),
-  sb.from('oman_lxp_events').select('event_type,module_id,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(100)
+  sb.from('oman_lxp_events').select('event_type,module_id,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(100),fetchCourseData(id)
  ]);
+ if(selectedUser!==id||!isAdmin)return;
+ memberCourse=details;
  if(a.error||b.error)toast('بخشی از اطلاعات این فرد قابل بارگذاری نبود.');
  selectedUserCases=a.data||[];selectedUserEvents=b.data||[];
  if(repaint)paint();
@@ -268,12 +322,12 @@ async function handleAuthForm(form){
    const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:location.origin+location.pathname}});
    if(error)throw error;
    if(!data.session){toast('در صورت فعال‌بودن تأیید ایمیل، لینک فعال‌سازی را در صندوق ایمیل بررسی کن.');authMode='login';paint();}
-   else{loginName=name;await initUser(name);await logEvent('sign_in',null);await loadOwn();tab='profile';paint();}
+   else{loginName=name;await initUser(name);await logEvent('sign_in',null);await loadOwn();if(tab!=='course')tab='profile';paint();}
   }else{
    const {error}=await sb.auth.signInWithPassword({email,password});
    if(error)throw error;
    await initUser();
-   await logEvent('sign_in',null);await loadOwn();tab=isAdmin?'admin':'profile';
+   await logEvent('sign_in',null);await loadOwn();if(tab!=='course')tab=isAdmin?'admin':'profile';
    if(isAdmin)await adminRefresh();paint();toast('ورود به حساب موفق بود.');
   }
  }catch(err){toast('ورود / ثبت‌نام انجام نشد: '+(err.message||'خطای ناشناخته'));}
@@ -308,15 +362,22 @@ async function handleNewPassword(form){
 }
 document.addEventListener('submit',async e=>{
  const f=e.target;
- if(!f.matches('#mpAuthForm,#mpResetForm,#mpNewPassForm,#mpProfileForm,#mpCaseForm'))return;
+ if(!f.matches('#mpAuthForm,#mpResetForm,#mpNewPassForm,#mpProfileForm,#mpCaseForm,#academyStart'))return;
  e.preventDefault();
  if(f.id==='mpAuthForm')await handleAuthForm(f);
  if(f.id==='mpResetForm')await handleReset(f);
  if(f.id==='mpNewPassForm')await handleNewPassword(f);
  if(f.id==='mpProfileForm')await handleProfileForm(f);
  if(f.id==='mpCaseForm')await handleCaseForm(f);
+ if(f.id==='academyStart')await saveSchedule(f);
 });
 document.addEventListener('click',async e=>{
+ const daily=e.target.closest('[data-academy-day],[data-academy-today],[data-academy-save]');
+ if(daily&&tab==='course'&&user){
+  if(daily.dataset.academySave){await saveCourse(daily.dataset.academySave,daily);return;}
+  academy.selection(Number(daily.dataset.academyDay)||(course.start?academy.currentDay(course.start):1));
+  paint();$('#academyLesson')?.focus();return;
+ }
  const t=e.target.closest('[data-mp],[data-mp-tab],[data-admin-user]');
  if(t){
   if(t.dataset.mpTab){tab=t.dataset.mpTab;readingId=null;paint();if(tab==='library')await loadOwn();if(tab==='admin')await adminRefresh();scanCore();return;}
@@ -324,6 +385,7 @@ document.addEventListener('click',async e=>{
   const a=t.dataset.mp;
   if(!a)return;
   if(a==='close'){close();return;}
+  if(a==='open-course'){show('course');return;}
   if(a==='open-profile'){tab='profile';show(tab);return;}
   if(a==='open-admin'){tab='admin';show(tab);await adminRefresh();return;}
   if(a==='open-cases'){tab='cases';show(tab);return;}
@@ -331,7 +393,7 @@ document.addEventListener('click',async e=>{
   if(a==='to-signup'){authMode='signup';paint();return;}
   if(a==='to-login'){authMode='login';paint();return;}
   if(a==='to-reset'){authMode='reset';paint();return;}
-  if(a==='signout'){await sb.auth.signOut();user=null;profile=null;isAdmin=false;own={cases:[],readings:[],events:[]};selectedUser=null;window.MasirCoreSync?.setIdentity(null,[]);paintEntry();close();toast('از حساب خارج شدی.');return;}
+  if(a==='signout'){await sb.auth.signOut();user=null;profile=null;isAdmin=false;course={records:[],seconds:0,start:null,error:''};academy.selection(0);own={cases:[],readings:[],events:[]};selectedUser=null;window.MasirCoreSync?.setIdentity(null,[]);paintEntry();close();toast('از حساب خارج شدی.');return;}
   if(a==='refresh-admin'){await adminRefresh();toast('گزارش به‌روزرسانی شد.');return;}
   if(a==='close-user'){selectedUser=null;selectedUserCases=[];selectedUserEvents=[];paint();return;}
   if(a==='back-library'){await flushReading();readingId=null;readingStarted=false;await loadOwn();paint();return;}
@@ -382,12 +444,13 @@ async function init(){
  sb=window.supabase.createClient(PROJECT_URL,PROJECT_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  sb.auth.onAuthStateChange((event)=>{
   if(event==='PASSWORD_RECOVERY'){recovery=true;authMode='newpassword';setTimeout(()=>show('profile'),0);}
-  if(event==='SIGNED_OUT'){user=null;profile=null;isAdmin=false;window.MasirCoreSync?.setIdentity(null,[]);paintEntry();}
+  if(event==='SIGNED_OUT'){user=null;profile=null;isAdmin=false;course={records:[],seconds:0,start:null,error:''};academy.selection(0);window.MasirCoreSync?.setIdentity(null,[]);paintEntry();}
  });
  startObserver();
+ setInterval(trackCourseClock,15000);
  try{const {data}=await sb.auth.getSession();if(data?.session)await initUser();}catch(err){console.warn('Masir session init',err);}
  paintEntry();
- if(window.location.hash==='#admin'){tab='admin';show('admin');}else if(window.location.hash==='#account')show('profile');
+ if(window.location.hash==='#admin'){tab='admin';show('admin');}else if(window.location.hash==='#account')show('profile');else if(window.location.hash==='#academy')show('course');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

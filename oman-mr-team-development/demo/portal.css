@@ -40,3 +40,26 @@
 @media(max-width:600px){.mp-overlay{padding:0}.mp-window{width:100%;min-height:100vh;border-radius:0}.mp-head{padding:17px 16px}.mp-content{padding:16px 13px 28px}.mp-tabs{padding:9px 8px;gap:4px;overflow-x:auto;flex-wrap:nowrap}.mp-tabs button{white-space:nowrap;font-size:11px;padding:7px 10px}.mp-grid,.mp-grid-3{grid-template-columns:1fr 1fr;gap:9px}.mp-panel{padding:15px}.mp-stat{min-height:85px;padding:13px}.mp-stat strong{font-size:22px}.mp-window .mp-grid>.mp-panel{grid-column:span 2}.mp-head h2{font-size:19px}}
 
 .mp-overlay[hidden],#mpNoticeToast[hidden]{display:none!important}
+
+.academy { display:grid; gap:14px }
+.academy-stats { display:flex; flex-wrap:wrap; gap:8px }
+.academy-stats span { background:#e7f1ec; color:#123d35; border-radius:10px; padding:6px 10px }
+.academy-calendar { max-height:42vh; overflow:auto; overscroll-behavior:contain; padding:10px; border:1px solid #cfdfd8; border-radius:12px }
+.academy summary,.academy-history summary { cursor:pointer; font-weight:700 }
+.academy-week { margin:12px 0 }
+.academy-week h4 { margin-bottom:6px }
+.academy-days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px }
+.academy-days button { min-height:68px; border:1px solid #bed5c8; background:#fff; color:#153e36; border-radius:8px; font:inherit; padding:4px }
+.academy-days button[aria-pressed=true] { background:#164a41; color:#fff }
+.academy-days small,.academy-days strong { display:block }
+.academy-lesson { display:grid; gap:10px; border:1px solid #cfdfd8; border-radius:12px; padding:14px }
+.academy-lesson textarea { width:100%; font:inherit; border:1px solid #98b8aa; border-radius:8px; padding:8px; resize:vertical }
+.academy-lesson button,.academy > button { justify-self:start }
+.academy-lesson fieldset { border:1px solid #cfdfd8; border-radius:12px; padding:12px; min-width:0 }
+.academy-question { margin-bottom:12px }
+.academy-question label { display:block }
+.academy-technique { text-align:right; color:#17594d }
+.academy-history details { margin:8px 0; padding:8px; border:1px solid #cfdfd8; border-radius:8px }
+.academy-submission { white-space:pre-wrap; overflow-wrap:anywhere }
+.academy-start { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:10px 0 }
+@media(max-width:640px){ .academy-days { grid-template-columns:repeat(4,minmax(0,1fr)) } }
