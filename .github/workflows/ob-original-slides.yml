@@ -29,8 +29,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ob-mba-classroom/materials/original
+          git add ob-mba-classroom/materials/original ob-mba-classroom/materials/readings/personality-session-03-slides
           if ! git diff --cached --quiet; then
-            git commit -m "Render and verify 16+14 original Robbins slides for classroom player"
+            git commit -m "Render source-faithful original Robbins slides and Session 03 Persian supplementary slides"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
