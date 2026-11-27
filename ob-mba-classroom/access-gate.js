@@ -87,7 +87,7 @@ function unlock(role){
  // Only a fixed, validated in-app destination is allowed, never an arbitrary URL.
  const next=new URLSearchParams(location.search);
  if(next.get("next")==="participation"&&role!=="guest"){
-  location.replace("./participation.html");
+  location.replace("./participation.html?v=4");
   return;
  }
  if(next.get("next")==="community"||next.get("next")==="club"){
@@ -103,7 +103,7 @@ function unlock(role){
  const roleMenu=document.querySelector(".demo-role-menu");
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  // Education scripts load only after the server authorizes this device.
- const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=2","./guided-learning.js?v=4","./presenter-player.js?v=1","./app.js?v=38"];
+ const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=2","./case-portal.js?v=3","./assignment-portal.js?v=2","./guided-learning.js?v=4","./presenter-player.js?v=1","./app.js?v=39"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
