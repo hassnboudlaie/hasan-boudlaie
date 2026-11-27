@@ -47,12 +47,12 @@ const stepsOf=(x,mode,work)=>{
   }));
   return [
    {kicker:"کیس جلسه "+x.id,title:c.title,sub:c.tag||"",
-    body:part("موقعیت",c.facts[0],"gr-definition")+(window.OB_CASE_CHOICES?.[x.id]?part("راهنمای جلسه اول",window.OB_CASE_CHOICES[x.id].introduction,"gr-takeaway"):"")+'<h4 class="gr-section">اطلاعات کیس</h4>'+list(c.facts.slice(1))+table+part("یادداشت مدرس",c.teachingNote)},
+    body:part("موقعیت",c.facts[0],"gr-definition")+(window.OB_CASE_CHOICES?.[x.id]?part("راهنمای تحلیل کیس",window.OB_CASE_CHOICES[x.id].introduction,"gr-takeaway"):"")+'<h4 class="gr-section">اطلاعات کیس</h4>'+list(c.facts.slice(1))+table+part("یادداشت مدرس",c.teachingNote)},
    {kicker:"ابزار تحلیل",title:framework.title,sub:"Concept Toolkit · Robbins",
     body:part("هدف",framework.description,"gr-takeaway")+concepts+
     '<h4 class="gr-section">شش مرحله تحلیل</h4>'+list(framework.steps.map(item=>item.title),true)},
    {kicker:"تصمیم مدیریتی",title:"مسئله تصمیم‌گیری",sub:c.title,
-    body:part("مأموریت شما",window.OB_CASE_CHOICES?.[x.id]?"با تکیه بر مفاهیم مقدماتی فصل اول، در هر یک از شش مرحله یک برداشت مستدل‌تر را انتخاب کنید.":"برای هر یک از شش مرحله پاسخ شواهدمحور بنویسید و پس از بازبینی برای استاد ارسال کنید.","gr-definition")+part("خروجی نهایی","شش مرحله را تکمیل کنید، گزارش یکپارچه را پیش‌نمایش و در قالب Word یا PDF دریافت کنید و پاسخ‌ها را برای استاد ارسال کنید.")+
+    body:part("مأموریت شما",window.OB_CASE_CHOICES?.[x.id]?"با تکیه بر مفاهیم همین جلسه، در هر یک از شش مرحله یک برداشت مستدل‌تر را انتخاب کنید.":"برای هر یک از شش مرحله پاسخ شواهدمحور بنویسید و پس از بازبینی برای استاد ارسال کنید.","gr-definition")+part("خروجی نهایی","شش مرحله را تکمیل کنید، گزارش یکپارچه را پیش‌نمایش و در قالب Word یا PDF دریافت کنید و پاسخ‌ها را برای استاد ارسال کنید.")+
     part("معیار یک تحلیل خوب",assignment?.quality)+originalDraft("پیش‌نویس قبلی من",work?.case||"")+originalDraft("یادداشت تأمل قبلی من",work?.reflection||"")},
    ...itemSteps,
    {kicker:"ثبت تکلیف",title:"تحویل تمرین ساختارمند شش‌مرحله‌ای",sub:"Structured Case Exercise",
