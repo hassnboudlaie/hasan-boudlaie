@@ -129,7 +129,7 @@ function casesView(){
 function recordView(){
  const total=own.events.filter(x=>x.event_type==='practice_finish').length;
  const unique=new Set(own.events.filter(x=>x.event_type==='practice_finish').map(x=>x.module_id)).size;
- return'<h3>کارنامه و سابقه فعالیت من</h3><p>این اطلاعات از دیتابیس حساب تو خوانده می‌شوند و در دستگاه‌های دیگر نیز قابل دسترسی‌اند.</p>'+statsOwn()+academy.history(course.records,course.seconds)+
+ return'<h3>کارنامه و سابقه فعالیت من</h3><p>این اطلاعات از دیتابیس حساب تو خوانده می‌شوند و در دستگاه‌های دیگر نیز قابل دسترسی‌اند.</p>'+statsOwn()+academy.history(course.records,course.seconds,course.rewards)+
  '<div class="mp-grid" style="margin-top:17px"><section class="mp-panel"><h4>وضعیت مطالعه جزوه‌ها</h4><div class="mp-action-list">'+LESSONS.map(l=>{
   const r=own.readings.find(x=>x.module_id===l.id);
   return'<div class="mp-event"><div><b>'+l.title+'</b><div class="mp-small">'+(r?timeFmt(r.active_seconds)+' · '+fmt(r.open_count)+' نوبت بازکردن':'مطالعه نشده')+'</div></div><span class="mp-small">'+(r?.completed_at?'تکمیل‌شده':'—')+'</span></div>';
@@ -151,15 +151,16 @@ function adminView(){
 function adminDetails(){
  const p=adminData.find(x=>x.user_id===selectedUser);if(!p)return'';
  return'<section class="mp-panel" style="margin-top:17px"><div class="mp-between"><div><h3>پرونده فعالیت: '+escapeHTML(p.display_name)+'</h3><div class="mp-small" dir="ltr">'+escapeHTML(p.email)+'</div><p>'+escapeHTML(p.role_label)+' · '+escapeHTML(p.department)+'</p></div>'+btn('بستن جزئیات','close-user','mp-btn-light')+'</div>'+
- (memberCourse.error?note(memberCourse.error,'error'):academy.history(memberCourse.records,memberCourse.seconds))+'<div class="mp-grid"><div><h4>کیس‌های ثبت‌شده</h4>'+(selectedUserCases.length?'<div class="mp-action-list">'+selectedUserCases.map(c=>'<article class="mp-card"><h4>'+escapeHTML(c.title)+'</h4><span class="mp-small">'+dateFmt(c.created_at)+'</span><details><summary style="font-size:12px;cursor:pointer;color:#176b65">مشاهده متن کیس</summary><p><b>موقعیت:</b> '+escapeHTML(c.situation)+'</p><p><b>اقدام:</b> '+escapeHTML(c.action_taken||'—')+'</p><p><b>نتیجه:</b> '+escapeHTML(c.outcome||'—')+'</p><p><b>درس آموخته:</b> '+escapeHTML(c.reflection||'—')+'</p></details></article>').join('')+'</div>':'<div class="mp-note">کیسی ثبت نشده است.</div>')+'</div>'+
+ (memberCourse.error?note(memberCourse.error,'error'):academy.history(memberCourse.records,memberCourse.seconds,memberCourse.rewards,true,course.start))+'<div class="mp-grid"><div><h4>کیس‌های ثبت‌شده</h4>'+(selectedUserCases.length?'<div class="mp-action-list">'+selectedUserCases.map(c=>'<article class="mp-card"><h4>'+escapeHTML(c.title)+'</h4><span class="mp-small">'+dateFmt(c.created_at)+'</span><details><summary style="font-size:12px;cursor:pointer;color:#176b65">مشاهده متن کیس</summary><p><b>موقعیت:</b> '+escapeHTML(c.situation)+'</p><p><b>اقدام:</b> '+escapeHTML(c.action_taken||'—')+'</p><p><b>نتیجه:</b> '+escapeHTML(c.outcome||'—')+'</p><p><b>درس آموخته:</b> '+escapeHTML(c.reflection||'—')+'</p></details></article>').join('')+'</div>':'<div class="mp-note">کیسی ثبت نشده است.</div>')+'</div>'+
  '<div><h4>رویدادهای اخیر</h4>'+(selectedUserEvents.length?'<div class="mp-action-list">'+selectedUserEvents.map(e=>'<div class="mp-event"><span>'+escapeHTML(eventNames[e.event_type]||e.event_type)+(e.module_id?' · '+escapeHTML(LESSONS.find(l=>l.id===e.module_id)?.title||e.module_id):'')+'</span><time class="mp-small">'+dateFmt(e.created_at)+'</time></div>').join('')+'</div>':'<div class="mp-note">رویدادی ثبت نشده است.</div>')+'</div></div></section>';
 }
 async function fetchCourseData(id){
- const [days,clock]=await Promise.all([
+ const [days,clock,rewards]=await Promise.all([
   sb.from('oman_lxp_course_days').select('day,read_at,task,quiz_answers,quiz_score,updated_at').eq('user_id',id).order('day'),
-  sb.from('oman_lxp_course_clock').select('active_seconds').eq('user_id',id).maybeSingle()
+  sb.from('oman_lxp_course_clock').select('active_seconds').eq('user_id',id).maybeSingle(),
+  sb.from('oman_lxp_course_rewards').select('week,points,rate_irr,amount_irr,approved_at,issued_at').eq('user_id',id).order('week')
  ]);
- return {records:days.data||[],seconds:clock.data?.active_seconds||0,error:days.error||clock.error?'بخشی از پرونده دوره بارگذاری نشد. دوباره تلاش کنید.':''};
+ return {records:days.data||[],seconds:clock.data?.active_seconds||0,rewards:rewards.data||[],error:days.error||clock.error||rewards.error?'بخشی از پرونده دوره بارگذاری نشد. دوباره تلاش کنید.':''};
 }
 async function loadCourse(){
  const id=user?.id;
@@ -195,6 +196,27 @@ async function saveSchedule(form){
  course.start=start;
  academy.selection(0);
  toast('تاریخ شروع گروه ذخیره شد.');
+}
+async function processReward(control,issue=false){
+ const id=selectedUser;
+ if(!isAdmin||!id)return;
+ const week=Number(issue?control.dataset.academyIssue:control.dataset.academyReward);
+ const rate=issue?null:Number(new FormData(control).get('rate'));
+ if(!issue&&(!Number.isInteger(rate)||rate<1||rate>100000000)){toast('نرخ هر امتیاز را به ریال وارد کنید.');return;}
+ const button=issue?control:control.querySelector('button');
+ if(button.disabled)return;
+ button.disabled=true;
+ try{
+  const args={p_user:id,p_week:week};
+  if(!issue)args.p_rate=rate;
+  const result=await sb.rpc(issue?'oman_lxp_issue_reward':'oman_lxp_approve_reward',args);
+  if(result.error){toast('ثبت مشوق ممکن نشد. تاریخ پایان هفته و امتیاز فرد را بررسی کنید.');return;}
+  if(selectedUser===id){
+   await loadUserDetails(id);
+   document.querySelectorAll('.academy-week-report')[week-1]?.setAttribute('open','');
+  }
+  toast(issue?'تحویل مشوق ثبت شد.':'امتیاز و ارزش ریالی هفته تأیید شد.');
+ }finally{button.disabled=false;}
 }
 async function trackCourseClock(){
  if(!user||document.visibilityState!=='visible'||!document.hasFocus()||Date.now()-lastActivity>90000)return;
@@ -362,6 +384,7 @@ async function handleNewPassword(form){
 }
 document.addEventListener('submit',async e=>{
  const f=e.target;
+ if(f.matches('[data-academy-reward]')){e.preventDefault();await processReward(f);return;}
  if(!f.matches('#mpAuthForm,#mpResetForm,#mpNewPassForm,#mpProfileForm,#mpCaseForm,#academyStart'))return;
  e.preventDefault();
  if(f.id==='mpAuthForm')await handleAuthForm(f);
@@ -372,6 +395,8 @@ document.addEventListener('submit',async e=>{
  if(f.id==='academyStart')await saveSchedule(f);
 });
 document.addEventListener('click',async e=>{
+ const issue=e.target.closest('[data-academy-issue]');
+ if(issue){await processReward(issue,true);return;}
  const daily=e.target.closest('[data-academy-day],[data-academy-today],[data-academy-save]');
  if(daily&&tab==='course'&&user){
   if(daily.dataset.academySave){await saveCourse(daily.dataset.academySave,daily);return;}
