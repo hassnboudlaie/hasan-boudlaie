@@ -81,7 +81,7 @@ async function examine(browser,name,width,height){
   await page.locator(".student-focus").waitFor({timeout:18000});
   assert.equal(await page.locator("#objJourney").count(),1,"Five-stage independent-learning journey must be visible on approved student home");
   assert.equal(await page.locator("[data-student-device-settings]").count(),1,"Approved student can set a cross-device password");
-  assert.equal(await page.locator('#bottomNav a[href="./participation.html"]').count(),1,"Student portfolio has one direct entry");
+  assert.equal(await page.locator('#bottomNav a[href="./participation.html?v=4"]').count(),1,"Student portfolio has one direct entry");
   assert.equal(await page.locator(".ob-roadmap-item").count(),0,"Home does not duplicate the sessions directory");
   assert.equal(await page.locator('a.ob-console-row[href="./community.html"]').count(),1,"Home presents one discussion entry");
   assert.equal(await page.locator(".ob-dashboard-layout").isVisible(),true,"New student workspace is displayed");
@@ -229,9 +229,9 @@ async function verifyTeachingConsole(browser,name,width,height){
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   assert.ok(overflow<=2,name+" teacher "+width+" horizontal overflow: "+overflow);
   if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-teacher-"+width+".png"),fullPage:true});
-  await page.locator('a.ob-console-row[href="./participation.html"]').click();
-  await page.locator("#classUsage summary").click();
-  await page.locator("[data-usage-student]").click();
+  await page.locator('a.ob-console-row[href="./participation.html?v=4"]').click();
+  await page.locator("#portfolioControls select").selectOption({index:1});
+  await page.locator("#classroomHistory").waitFor({timeout:12000});
   await page.locator("#usageHistory summary").click();
   await page.locator("#usageHistory [data-usage] .portfolio-line").first().waitFor({timeout:12000});
   assert.equal(await page.locator("#usageHistory [data-usage] .portfolio-line strong").count(),3,"Portfolio shows three engagement measures");
@@ -330,7 +330,7 @@ async function verifyRepeatDevice(browser,name){
   const idA=await pageA.evaluate(()=>window.OB_ACCESS.student_number);
   const idB=await pageB.evaluate(()=>window.OB_ACCESS.student_number);
   assert.equal(idA,idB,"Both devices should have the same student identity");
-  await pageB.locator('#bottomNav a[href="./participation.html"]').click();
+  await pageB.locator('#bottomNav a[href="./participation.html?v=4"]').click();
   await pageB.locator("#usageHistory summary").click();
   await pageB.locator("#usageHistory [data-usage] .portfolio-line").first().waitFor();
   assert.equal(await pageB.locator("#usageHistory [data-usage] .portfolio-line strong").count(),3,"Per-student analytics metrics missing");
