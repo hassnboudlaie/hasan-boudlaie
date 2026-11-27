@@ -20,6 +20,7 @@ let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"stud
 /* Auth-gated deep links to a session resource library or student quiz. */
 try{
  const params=new URLSearchParams(window.location.search);
+ if(params.get("view")==="caseReviews" && window.OB_ACCESS?.role==="teacher") ui.page="caseReviews";
  const sid=Number(params.get("session"));
  if(Number.isInteger(sid)&&sid>=1&&sid<=16){
   ui.session=sid;
