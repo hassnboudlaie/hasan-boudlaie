@@ -148,11 +148,18 @@ function unlock(role){
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  if(role==="teacher")addTeacherRecovery();
  // Education scripts load only after the server authorizes this device.
- const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=3","./session-03-content.js?v=3","./case-portal.js?v=6","./assignment-portal.js?v=4","./guided-learning.js?v=5","./presenter-player.js?v=3","./app.js?v=49"];
- (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
+ const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=3","./session-03-content.js?v=3","./case-portal.js?v=6","./assignment-portal.js?v=4","./guided-learning.js?v=5","./presenter-player.js?v=3"];
+ const optionalScripts=["./session-case-choices.js?v=2","./case-export.js?v=1","./quiz-portal.js?v=8"];
+ const loadScript=src=>new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
- })})().catch(()=>{loaded=false;error="server_error";present()});
+ });
+ const optionalReady=Promise.allSettled(optionalScripts.map(loadScript));
+ (async()=>{
+  for(const src of scripts)await loadScript(src);
+  await optionalReady;
+  await loadScript("./app.js?v=50");
+ })().catch(()=>{loaded=false;error="server_error";present()});
 }
 async function check(){
  if(!credential?.token){view="login";present();return}

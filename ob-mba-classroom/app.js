@@ -239,7 +239,7 @@ else if(ui.tab==="slides")c=s.id===3?officialSession03Files(true):hasSlides?'<di
 else if(ui.tab==="examples")c=x?guidedPanel(s,x,"examples"):lessonSection("مثال‌ها",s.model);
 else if(ui.tab==="case")c=caseWorkspace(s,x);
 else if(ui.tab==="activity")c=x?guidedActivity(s,x):quizPanel(s)+lessonSection("تمرین گروهی",s.roleplay);
-else if(ui.tab==="finalQuiz")c=window.OB_QUIZ?.studentHTML(s.id)||'<p role="status">در حال دریافت بخش آزمون…</p>'+ (s.id===1?'<p><a href="../ob-mba-quiz-1/">باز کردن مستقیم آزمون جلسه اول</a></p>':"");
+else if(ui.tab==="finalQuiz")c=window.OB_QUIZ?.studentHTML(s.id)||'<p role="alert">بخش آزمون بارگذاری نشد. پیش از شروع آزمون، صفحه را دوباره باز کنید.</p>';
 return '<div class="page lesson-page ob-reading-workspace"><header class="ob-lesson-header"><div><span class="ob-lesson-session-number">جلسه '+pf(s.id)+' از ۱۶</span><h2>'+esc(titleOf(s))+'</h2></div>'+button("جلسات درس","backSessions","btn secondary")+'</header>'
  +'<div class="ob-reading-layout"><aside class="ob-reading-aside"><div class="field section-picker"><label for="sectionSelect">بخش جلسه</label><select id="sectionSelect" data-action="sessionPicker">'+tabs.map(([id,l])=>'<option value="'+id+'" '+(ui.tab===id?"selected":"")+'>'+l+'</option>').join("")+'</select></div></aside><div class="ob-reading-content">'+(c||'<div class="empty-study"><h3>محتوا موجود نیست</h3></div>')+'</div></div></div>'}
 
@@ -487,18 +487,4 @@ document.addEventListener("change",event=>{
 
 
 render();
-/* These modules are loaded only after the approved access-gate has loaded app.js.
-   Keep supplementary case and quiz code out of the unauthenticated shell. */
-const addons=["./session-case-choices.js?v=2","./case-export.js?v=1","./quiz-portal.js?v=8"];
-function attachAddon(src){
- return new Promise((resolve,reject)=>{
-  const element=document.createElement("script");element.src=src;element.async=false;
-  element.onload=resolve;element.onerror=()=>reject(Error("addon_load_failed"));
-  document.head.appendChild(element);
- });
-}
-if(document.head&&typeof document.createElement==="function")Promise.allSettled(addons.map(attachAddon)).then(results=>{
- if(window.OB_ACCESS?.approved)render();
- if(results.some(result=>result.status==="rejected"))toast("بخشی از امکانات جدید بارگذاری نشد. اتصال اینترنت را بررسی کنید و صفحه را تازه‌سازی کنید.");
-});
 })();
