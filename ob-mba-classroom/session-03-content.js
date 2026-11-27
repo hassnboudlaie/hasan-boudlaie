@@ -243,10 +243,10 @@ const third={
     {
       "id": "onet-interest",
       "type": "link",
-      "title": "O*NET Interest Profiler — رغبت‌های شغلی",
-      "url": "https://www.mynextmove.org/explore/ip",
-      "topic": "Holland / RIASEC",
-      "note": "منبع رسمی اکتشاف رغبت‌های شغلی؛ نتیجه آزمون به تنهایی معیار استخدام نیست."
+      "title": "انجام آزمون رایگان رغبت شغلی — O*NET Interest Profiler",
+      "url": "https://onetinterestprofiler.org/",
+      "topic": "Holland / RIASEC — Person–Job Fit",
+      "note": "O*NET (Occupational Information Network) پایگاه اطلاعات مشاغل با پشتیبانی وزارت کار آمریکاست. آزمون رایگان انگلیسی آن شامل ۳۰ سؤال و حدود ۱۰ تا ۲۰ دقیقه است. روی Get started بزنید؛ بر اساس علاقه خود، نه توانایی یا درآمد، پاسخ دهید و در پایان سه رغبت غالب و مشاغل پیشنهادی را بررسی کنید. این فعالیت برای خودشناسی و اکتشاف مسیر شغلی است، نه تشخیص شخصیت یا معیار قطعی استخدام."
     },
     {
       "id": "myers-briggs",
