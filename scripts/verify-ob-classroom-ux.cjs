@@ -51,7 +51,7 @@ assert.ok(/shell-v\d+/.test(sw)&&appVersion&&sw.includes('app.js?v='+appVersion)
 for(const token of ['max-width:none','font-size:24px','min-height:min(58svh','session-section','disclosure','section-picker',':fullscreen'])assert.ok(css.includes(token),'Missing responsive UX style: '+token);
 assert.ok(js.includes('Array.from({length:16}'),'Keep 16 lesson records');
 assert.ok(presenterCss.includes('.presenter-stage:fullscreen')&&presenterCss.includes('.presenter-mode-switch'),'Unified player supports fullscreen and language switch');
-const playerAsset=gateJs.match(/presenter-player\\.js\\?v=\\d+/)?.[0],playerStyles=html.match(/presenter-player\\.css\\?v=\\d+/)?.[0];
+const playerAsset=gateJs.match(/presenter-player[.]js[?]v=[0-9]+/)?.[0],playerStyles=html.match(/presenter-player[.]css[?]v=[0-9]+/)?.[0];
 assert.ok(playerAsset&&sw.includes(playerAsset)&&playerStyles&&sw.includes(playerStyles),'Current presentation JavaScript/CSS versions load in approved app and offline cache');
 assert.equal(sourceManifest.sessions['1'].slides,16,'Original English chapter 1 has 16 verified pages');
 assert.equal(sourceManifest.sessions['2'].slides,14,'Original English chapter 2 has 14 verified pages');
