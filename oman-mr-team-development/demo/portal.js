@@ -44,6 +44,8 @@ const timeFmt=s=>{let n=Math.max(0,Number(s||0));return n<60?fmt(n)+' ثانیه
 const eventNames={app_open:'بازدید از سامانه',sign_in:'ورود به حساب',lesson_open:'بازکردن جزوه',lesson_finish:'تکمیل مطالعه جزوه',practice_finish:'اتمام تمرین و دریافت نشان',case_created:'ثبت کیس',case_updated:'ویرایش کیس',practice_start:'شروع تمرین',decision_answered:'انتخاب پاسخ در سناریو',roleplay_saved:'ثبت رول‌پلی',coach_note_saved:'ثبت یادداشت بازتابی',mission_defined:'تعریف مأموریت میدانی'};
 let sb=null,user=null,profile=null,isAdmin=false,modal=false,tab='profile',authMode='login',recovery=false,loginName='';
 let course={records:[],seconds:0,start:null,error:''};
+let modalTrigger=null;
+let courseEntry=null;
 let memberCourse={records:[],seconds:0,error:''};
 const academy=window.MasirCourse;
 let own={cases:[],readings:[],events:[]},adminData=[],selectedUser=null,selectedUserCases=[],selectedUserEvents=[];
@@ -64,13 +66,14 @@ function ensureUI(){
 }
 function paintEntry(){
  const e=$('#mpEntry');if(!e)return;
- e.innerHTML='<button class="mp-account-btn" data-mp="open-profile">'+(user?'◉ '+escapeHTML(profile?.display_name||'حساب من'):'◉ ورود / ایجاد پروفایل')+'</button><button class="mp-account-btn" data-mp="open-course">تقویم ۹۰ روزه</button>'+(isAdmin?'<button class="mp-admin-btn" data-mp="open-admin">▦ داشبورد ادمین</button>':'');
+ e.innerHTML='<button class="mp-account-btn" data-mp="open-profile">'+(user?'◉ '+escapeHTML(profile?.display_name||'حساب من'):'◉ ورود / ایجاد پروفایل')+'</button>'+(isAdmin?'<button class="mp-admin-btn" data-mp="open-admin">▦ داشبورد ادمین</button>':'');
 }
 function show(t){
- tab=t||tab;modal=true;ensureUI();const e=$('#mpOverlay');e.hidden=false;document.body.style.overflow='hidden';paint();window.scrollTo({top:0,behavior:'smooth'});
+ if(!modal)modalTrigger=document.activeElement;
+ tab=t||tab;modal=true;ensureUI();const e=$('#mpOverlay');e.hidden=false;document.body.style.overflow='hidden';paint();e.scrollTop=0;$('#mpOverlay .mp-close')?.focus();
 }
 function close(){
- if(!modal)return;modal=false;readingId=null;$('#mpOverlay').hidden=true;document.body.style.overflow='';stopReading();scanCore();
+ if(!modal)return;modal=false;readingId=null;$('#mpOverlay').hidden=true;document.body.style.overflow='';stopReading();scanCore();if(modalTrigger?.isConnected)modalTrigger.focus();
 }
 function topNav(){
  if(!user)return'';
@@ -82,7 +85,16 @@ function paint(){
  if(!modal)return;
  const title=!user?'ورود و ساخت پروفایل':tab==='course'?'آکادمی فروش املاک عمان':tab==='admin'?'داشبورد ادمین':tab==='library'?'کتابخانه و مطالعه':tab==='cases'?'کیس‌های کاری':tab==='record'?'کارنامه فردی':'پروفایل من';
  const overlay=$('#mpOverlay');
+ overlay.dataset.tab=user?tab:'auth';
  overlay.innerHTML='<div class="mp-window"><div class="mp-head"><div><span>MASIR · LEARNING & PERFORMANCE</span><h2>'+title+'</h2></div><button class="mp-close" data-mp="close" aria-label="بستن">بستن ×</button></div>'+topNav()+'<div class="mp-content" id="mpContent">'+(!sb?note('بارگذاری ارتباط امن سامانه با خطا مواجه شد. صفحه را تازه‌سازی کنید.','error'):!user?authView():tab==='course'?academy.render(course):tab==='profile'?profileView():tab==='library'?libraryView():tab==='cases'?casesView():tab==='record'?recordView():isAdmin?adminView():note('برای دسترسی به این بخش مجوز مدیریتی لازم است.','error'))+'</div></div>';
+}
+function enterCourse(destination){
+ courseEntry=destination;
+ const today=course.start?academy.currentDay(course.start):1;
+ academy.selection(destination==='week-case'?academy.weekEnd(today):today,destination==='calendar');
+ show('course');
+ if(destination==='calendar'&&user)$('#academyCalendar summary')?.focus();
+ if(destination==='week-case'&&user)$('.academy-casefile')?.focus();
 }
 function authView(){
  const mode=authMode;
@@ -344,11 +356,11 @@ async function handleAuthForm(form){
    const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:location.origin+location.pathname}});
    if(error)throw error;
    if(!data.session){toast('در صورت فعال‌بودن تأیید ایمیل، لینک فعال‌سازی را در صندوق ایمیل بررسی کن.');authMode='login';paint();}
-   else{loginName=name;await initUser(name);await logEvent('sign_in',null);await loadOwn();if(tab!=='course')tab='profile';paint();}
+   else{loginName=name;await initUser(name);if(tab==='course'&&courseEntry)enterCourse(courseEntry);await logEvent('sign_in',null);await loadOwn();if(tab!=='course')tab='profile';paint();}
   }else{
    const {error}=await sb.auth.signInWithPassword({email,password});
    if(error)throw error;
-   await initUser();
+   await initUser();if(tab==='course'&&courseEntry)enterCourse(courseEntry);
    await logEvent('sign_in',null);await loadOwn();if(tab!=='course')tab=isAdmin?'admin':'profile';
    if(isAdmin)await adminRefresh();paint();toast('ورود به حساب موفق بود.');
   }
@@ -382,6 +394,9 @@ async function handleNewPassword(form){
  if(error){toast(error.message);return;}
  recovery=false;authMode='login';await initUser();paint();toast('رمز جدید تنظیم شد.');
 }
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&modal){e.preventDefault();close();}
+});
 document.addEventListener('submit',async e=>{
  const f=e.target;
  if(f.matches('[data-academy-reward]')){e.preventDefault();await processReward(f);return;}
@@ -410,7 +425,7 @@ document.addEventListener('click',async e=>{
   const a=t.dataset.mp;
   if(!a)return;
   if(a==='close'){close();return;}
-  if(a==='open-course'){show('course');return;}
+  if(['open-course','open-today','open-calendar','open-week-case'].includes(a)){enterCourse(a.slice(5));return;}
   if(a==='open-profile'){tab='profile';show(tab);return;}
   if(a==='open-admin'){tab='admin';show(tab);await adminRefresh();return;}
   if(a==='open-cases'){tab='cases';show(tab);return;}
@@ -475,7 +490,7 @@ async function init(){
  setInterval(trackCourseClock,15000);
  try{const {data}=await sb.auth.getSession();if(data?.session)await initUser();}catch(err){console.warn('Masir session init',err);}
  paintEntry();
- if(window.location.hash==='#admin'){tab='admin';show('admin');}else if(window.location.hash==='#account')show('profile');else if(window.location.hash==='#academy')show('course');
+ if(window.location.hash==='#admin'){tab='admin';show('admin');}else if(window.location.hash==='#account')show('profile');else if(window.location.hash==='#academy')enterCourse('today');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

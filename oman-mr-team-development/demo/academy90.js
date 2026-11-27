@@ -17,6 +17,7 @@ const dayDate=(start,number)=>date.format(new Date(asDate(start)+(number-1)*8640
 const currentDay=start=>Math.min(90,Math.max(1,Math.floor((asDate(muscat.format(new Date()))-asDate(start))/86400000)+1));
 const duration=seconds=>n(Math.floor((seconds||0)/60))+' دقیقه';
 let selected=0;
+let showCalendar=false;
 const sources=[
  ['HubSpot Academy · Inbound Sales','https://academy.hubspot.com/courses/inbound-sales','مسیر شناسایی، ارتباط، کشف و پیشنهاد برای قیف فروش'],
  ['NAR · Accredited Buyer’s Representative','https://www.nar.realtor/education/designations-and-certifications/accredited-buyers-representative-abr','نمایندگی و کشف نیاز خریدار'],
@@ -72,11 +73,11 @@ function render(state){
   d.roleplay?[['آماده‌سازی',3],['رول‌پلی و اجرای دوباره',12],['ثبت بازخورد',5]]:
   [['مطالعه',5],['تمرین',10],['ثبت نتیجه',5]];
  const record=records.find(r=>r.day===d.number)||{};
- const calendar=weeks.map((week,i)=>'<section class="academy-week"><h4>هفته '+n(i+1)+' · '+esc(week.title)+'</h4><div class="academy-days">'+week.days.map((_,slot)=>{
+ const calendar=weeks.map((week,i)=>'<details class="academy-week" '+(i===index?'open':'')+'><summary>هفته '+n(i+1)+' · '+esc(week.title)+'</summary><div class="academy-days">'+week.days.map((_,slot)=>{
   const day=i*7+slot+1;
   const row=records.find(r=>r.day===day);
   return '<button type="button" data-academy-day="'+day+'" aria-pressed="'+(day===selected)+'"><strong>روز '+n(day)+'</strong>'+(start?'<small>'+dayDate(start,day)+'</small>':'')+'<small>'+(row?.task?'تکلیف ثبت شد':row?.read_at?'مطالعه شد':day>=85?'پروژه پایانی':labels[slot])+'</small></button>';
- }).join('')+'</div></section>').join('');
+ }).join('')+'</div></details>').join('');
  const weekly=records.filter(r=>r.day>d.number-w.days.length&&r.day<=d.number);
  const review=d.summary?'<section class="academy-review"><h4>مرور عملکرد هفته</h4><p>'+n(weekly.filter(r=>r.read_at).length)+' مطالعه و '+n(weekly.filter(r=>r.task).length)+' تکلیف ثبت شده است.</p><ol><li>یک رفتار که کیفیت تصمیم مشتری را بهتر کرد.</li><li>یک پرونده که نشان داد کدام مرحله قیف گیر می‌کند.</li><li>اقدام هفته بعد، مسئول و موعد مرور.</li></ol></section>':'';
  const quiz=d.summary?'<fieldset><legend>آزمون جمع‌بندی · ۲ سؤال</legend>'+w.quiz.map(([question,...options],i)=>
@@ -84,15 +85,16 @@ function render(state){
  return '<div class="academy"><h3>تقویم ۹۰ روزه فروش املاک عمان</h3><p>'+ (start?'تاریخ‌ها بر اساس برنامه شروع گروه نمایش داده می‌شوند.':'تاریخ شروع گروه هنوز تنظیم نشده است. روزها به ترتیب دوره قابل انتخاب‌اند.')+'</p>'+
  (error?'<p role="alert">'+esc(error)+'</p>':'')+metrics(records,seconds)+
  '<div class="academy-shortcuts"><button class="mp-btn mp-btn-light" data-mp="open-record">کارنامه و نشان‌های من</button><button class="mp-btn mp-btn-light" data-academy-today>رفتن به '+(start?'روز جاری':'روز اول')+'</button></div>'+
- '<details class="academy-calendar"><summary>تقویم هفتگی · همه ۹۰ روز</summary>'+calendar+'</details>'+
- '<article class="academy-lesson" id="academyLesson" tabindex="-1"><div class="academy-listing"><span>⌂ دفتر معاملات عمان</span><b>حداکثر ۲۰ دقیقه</b></div><div class="academy-time">'+timePlan.map(([title,mins])=>'<span>'+title+' · '+n(mins)+' دقیقه</span>').join('')+'</div><h3>روز '+n(d.number)+' · '+esc(w.title)+'</h3><p dir="ltr" class="academy-technique">'+esc(w.skill)+'</p><p>'+esc(w.theory)+'</p><h4>فعالیت امروز</h4><p>'+esc(d.task)+'</p>'+
+ '<details id="academyCalendar" class="academy-calendar" '+(showCalendar?'open':'')+'><summary>▦ انتخاب از تقویم ۹۰ روزه</summary>'+calendar+'</details>'+
+ '<article class="academy-lesson" id="academyLesson" tabindex="-1"><div class="academy-listing"><span>⌂ دفتر معاملات عمان</span><b>حداکثر ۲۰ دقیقه</b></div><div class="academy-time">'+timePlan.map(([title,mins])=>'<span>'+title+' · '+n(mins)+' دقیقه</span>').join('')+'</div><h3>روز '+n(d.number)+' · '+esc(w.title)+'</h3><p dir="ltr" class="academy-technique">'+esc(w.skill)+'</p><p>'+esc(w.theory)+'</p><h4>مأموریت این روز</h4><p>'+esc(d.task)+'</p>'+
  '<button class="mp-btn mp-btn-light" data-academy-save="read" '+(record.read_at?'disabled':'')+'>'+(record.read_at?'مطالعه تأیید شد':'تأیید مطالعه')+'</button>'+
  '<details '+(d.roleplay?'open':'')+'><summary>کیس و رول‌پلی سه‌دور</summary><p>'+esc(w.scenario)+'</p><ol>'+w.roles.map(role=>'<li>'+esc(role)+'</li>').join('')+'</ol><p>مشاهده‌گر از هر نقش یک رفتار مؤثر و یک رفتار قابل اصلاح ثبت کند. دور حساس را دوباره اجرا کنید و شواهد تغییر را بنویسید.</p><p>سه معیار مشاهده: کشف مسئله، شفافیت پاسخ و توافق بر اقدام. هر معیار ۰ تا ۲ امتیاز دارد. ۰ یعنی دیده نشد، ۱ یعنی ناقص، ۲ یعنی مستقل و روشن. امتیاز هر دو اجرا و شاهد رفتاری را در تکلیف ثبت کنید.</p></details>'+
- (d.summary?'<section class="academy-casefile"><p>پرونده هفته · '+n(index+1)+'</p><h4>'+esc(caseFile[0])+'</h4><p>'+esc(caseFile[1])+'</p><p><strong>مأموریت</strong> '+esc(caseFile[2])+'</p><p>پاسخ را در چهار بخش کوتاه بنویس. تصمیم، شاهد، پیام یا اقدام، و مسئول و موعد. از نام یا اطلاعات شناسایی مشتری استفاده نکن.</p></section>':'')+
- '<label for="academyTask">'+(d.summary?'پاسخ کیس هفته':'تکلیف و شواهد تمرین')+'</label><textarea id="academyTask" minlength="10" maxlength="3000" rows="5" placeholder="موقعیت بی‌نام، اقدام، نتیجه و قدم بعدی">'+esc(record.task)+'</textarea><button class="mp-btn" data-academy-save="task">ثبت تکلیف</button>'+review+quiz+'</article>'+
+ (d.summary?'<section class="academy-casefile" tabindex="-1"><p>پرونده هفته · '+n(index+1)+'</p><h4>'+esc(caseFile[0])+'</h4><p>'+esc(caseFile[1])+'</p><p><strong>مأموریت</strong> '+esc(caseFile[2])+'</p><p>پاسخ را در چهار بخش کوتاه بنویس. تصمیم، شاهد، پیام یا اقدام، و مسئول و موعد. از نام یا اطلاعات شناسایی مشتری استفاده نکن.</p></section>':'')+
+ '<label for="academyTask">'+(d.summary?'پاسخ کیس هفته':'تکلیف و شواهد تمرین')+'</label><textarea id="academyTask" minlength="10" maxlength="3000" rows="5" placeholder="موقعیت بی‌نام، اقدام، نتیجه و قدم بعدی">'+esc(record.task)+'</textarea><button class="mp-btn" data-academy-save="task">ثبت تکلیف</button>'+review+quiz+'<div class="academy-day-nav">'+(d.number>1?'<button type="button" class="mp-btn mp-btn-light" data-academy-day="'+(d.number-1)+'">روز قبل</button>':'')+(d.number<90?'<button type="button" class="mp-btn mp-btn-light" data-academy-day="'+(d.number+1)+'">روز بعد ←</button>':'')+'</div></article>'+
  '<details><summary>منابع و چارچوب‌های طراحی</summary><ul>'+sources.map(([title,url,use])=>'<li>'+esc(use)+' · <a target="_blank" rel="noopener noreferrer" href="'+url+'">'+esc(title)+'</a></li>').join('')+'</ul><p>کیس‌ها تألیفی و شبیه‌سازی‌شده‌اند. برای تکالیف میدانی نام و مشخصات مشتری را ثبت نکنید.</p></details></div>';
 }
-function selection(day){selected=day;}
+function selection(day,calendar=false){selected=day;showCalendar=calendar;}
+function weekEnd(day){return Math.min(90,Math.ceil(day/7)*7);}
 function patch(action,root){
  const day=days[selected-1];
  if(action==='read')return {day:selected,read_at:new Date().toISOString()};
@@ -109,5 +111,5 @@ function patch(action,root){
  }
  throw Error('فعالیت معتبر نیست.');
 }
-window.MasirCourse={render,history,metrics,selection,patch,currentDay};
+window.MasirCourse={render,history,metrics,selection,patch,currentDay,weekEnd};
 })();

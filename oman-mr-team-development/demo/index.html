@@ -36,7 +36,7 @@ main{max-width:1250px;margin:0 auto;padding:34px clamp(18px,3vw,53px) 110px}.sec
 @media(max-width:680px){h1{font-size:26px}h2{font-size:20px}.topbar{height:auto;min-height:75px;padding:11px 15px;align-items:flex-start}.topbar .kicker{font-size:10px}.top-title{font-size:13px}.top-right{display:grid;gap:6px;justify-items:end}.demo-pill{font-size:9px;padding:2px 8px}.role-switch button{font-size:10px;padding:5px 6px}main{padding:18px 12px 125px}.hero{padding:26px 22px;min-height:285px}.hero p{font-size:12px}.hero-art{left:-100px;opacity:.16}.btn{font-size:12px;padding:9px 13px;min-height:44px}.stats{gap:7px}.stat{padding:12px 10px;display:block;text-align:center;border-radius:13px}.stat-icon{display:none}.stat strong{font-size:23px}.stat span{font-size:10px}.grid-2,.module-grid,.practice-layout{grid-template-columns:1fr}.panel{padding:18px}.module-grid{gap:11px}.module h3{font-size:17px}.experience-top{padding:18px}.experience-body{padding:20px 17px}.side-coach{position:static;padding:17px}.scene{font-size:14px;padding:16px}.choice{font-size:13px}.section-head{margin:23px 0 13px}.topbar .role-switch{max-width:180px}.foot-actions .btn{flex:1}.toast{right:14px;left:14px;bottom:85px;text-align:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
-<link rel="stylesheet" href="./portal.css?v=90.2">
+<link rel="stylesheet" href="./portal.css?v=90.3">
 </head>
 <body>
 <div class="app">
@@ -45,10 +45,10 @@ main{max-width:1250px;margin:0 auto;padding:34px clamp(18px,3vw,53px) 110px}.sec
  <div class="nav-label">فضای یادگیری</div>
  <nav class="nav" id="navDesktop"></nav>
  <div class="side-note"><strong>از آموختن تا عمل</strong><p>هر مهارت را در یک موقعیت واقعی تجربه کن، بازخورد بگیر و در گفت‌وگوی بعدی به‌کار ببند.</p></div>
- <div class="version">PROTOTYPE · v1.0 · 2026</div>
+
 </aside>
 <div class="workspace">
- <header class="topbar"><div><div class="kicker">آزمایشگاه یادگیری و عملکرد · عمان</div><div class="top-title" id="topTitle">خانه یادگیری</div></div><div class="top-right"><span class="demo-pill">نسخه آزمایشی · بدون حساب کاربری</span><div class="role-switch" aria-label="انتخاب نقش"><button data-role="advisor" id="advisorBtn">کارشناس فروش</button><button data-role="leader" id="leaderBtn">مدیر / سرپرست</button></div></div></header>
+ <header class="topbar"><div><div class="kicker">آزمایشگاه یادگیری و عملکرد · عمان</div><div class="top-title" id="topTitle">خانه یادگیری</div></div><div class="top-right"><div class="role-switch" aria-label="انتخاب نقش"><button data-role="advisor" id="advisorBtn">کارشناس فروش</button><button data-role="leader" id="leaderBtn">مدیر / سرپرست</button></div></div></header>
  <main id="appMain" tabindex="-1" aria-live="polite"></main>
 </div>
 </div>
@@ -152,21 +152,24 @@ function tagPri(m){return '<span class="priority '+(m.priority==='مهم'?'mid':
 function go(p,m){page=p;if(m){active=m;}if(p==='practice'){phase='decision';idx=0;selection=null;feedback=false;speechDone=false;help=false;}render();window.scrollTo({top:0,behavior:'smooth'});}
 function navHtml(){return Object.keys(labels).map(function(k){return '<button data-page="'+k+'" class="'+(page===k?'active':'')+'" aria-current="'+(page===k?'page':'false')+'"><span class="sym">'+labels[k][1]+'</span>'+labels[k][0]+'</button>';}).join('');}
 function home(){
- var ordered=modules.slice();if(role==='leader')ordered.sort(function(a,b){return (a.id==='delegation'?-1:a.week)-(b.id==='delegation'?-1:b.week);});
- var featured=role==='leader'?modules[3]:modules[0];
- return '<div class="hero"><div class="hero-content"><span class="eyebrow">THE LEARNING JOURNEY · مسیر توسعه در عمل</span><h1>'+(role==='leader'?'از مدیر تصمیم‌گیر تا رهبر توانمندساز':'از یک گفت‌وگوی معمولی تا یک تجربه حرفه‌ای')+'</h1><p>'+(role==='leader'?'برای رشد استقلال تیم، با موقعیت‌های واقعی تفویض اختیار، تصمیم‌گیری و بازخورد تمرین کن.':'هر بار یک موقعیت واقعی از فروش املاک را تجربه کن؛ تصمیم بگیر، بازخورد بگیر و مهارتت را در گفت‌وگوی بعدی به‌کار ببر.')+'</p><div class="hero-actions"><button class="btn btn-light" data-practice="'+featured.id+'">شروع یک تمرین واقعی ←</button><button class="btn btn-outline" data-page="paths">مشاهده مسیر ۶ هفته‌ای</button></div></div><div class="hero-art"><div class="orbit"></div><div class="orb">م</div><span class="floaty one">تجربه ← بازتاب</span><span class="floaty two">تمرین ← اقدام</span></div></div>'+
- '<div class="stats"><div class="stat"><div class="stat-icon">▦</div><div><strong>۶</strong><span>مسیر مهارتی</span></div></div><div class="stat"><div class="stat-icon">◷</div><div><strong>۱۵</strong><span>دقیقه در هر نوبت</span></div></div><div class="stat"><div class="stat-icon">◉</div><div><strong>'+doneCount()+' / ۶</strong><span>تمرین‌های تکمیل‌شده در این مرورگر</span></div></div></div>'+
- '<div class="grid-2"><section class="panel"><div class="panel-head"><h3>نقشه یادگیری پیشنهادی</h3><button class="text-link" data-page="paths">نمایش همه مسیرها ←</button></div>'+
- ordered.slice(0,4).map(function(m){return '<div class="pathrow" role="button" tabindex="0" data-practice="'+m.id+'"><span class="num">'+m.week+'</span><div><strong>'+m.title+'</strong><small>'+m.tag+' · '+m.basis+'</small></div><span class="arr">'+(data.completed[m.id]?'✓':'←')+'</span></div>';}).join('')+'</section>'+
- '<section class="panel"><div class="panel-head"><h3>از نیازسنجی تا تجربه یادگیری</h3><span class="priority">برآورد اولیه</span></div>'+
- '<div class="insight"><strong>مذاکره با مشتری مردد</strong><p>اعتراض به قیمت و بازده؛ اولویت توسعه بر اساس پاسخ سؤال ۱۱.</p></div><div class="insight"><strong>مسئولیت‌پذیری در زمان خطا</strong><p>پذیرش مالکیت و پیگیری تعهد؛ اولویت برگرفته از سؤال ۱۷.</p></div><div class="insight"><strong>تفویض تصمیم به سرپرست</strong><p>شفافیت اختیار و حل مسئله؛ برگرفته از سؤالات ۲۲ و ۲۳.</p></div>'+
- '<div class="info-note">این اولویت‌ها از یک پاسخ مدیریتی استخراج شده‌اند؛ هنوز نمره مهارتی کارکنان یا سنجش واقعی عملکرد نیستند.</div></section></div>'+
- '<div class="section-head"><div><span class="eyebrow">LEARN BY DOING</span><h2>یادگیری اینجا چه شکلی است؟</h2></div></div>'+
- '<div class="module-grid">'+[['۰۱','یک موقعیت واقعی','در فضای فروش املاک عمان با یک تصمیم دشوار روبه‌رو می‌شوی.'],['۰۲','انتخاب و بازخورد','میان چند راه معقول انتخاب می‌کنی و دلیل قوت و محدودیت هرکدام را می‌بینی.'],['۰۳','تمرین گفت‌وگو','جمله خودت را می‌نویسی و با نمونه حرفه‌ای مقایسه می‌کنی.'],['۰۴','مأموریت در محیط کار','یک رفتار مشخص را در پرونده یا گفت‌وگوی واقعی تمرین می‌کنی.']].map(function(x){return '<div class="panel"><span class="eyebrow">گام '+x[0]+'</span><h3>'+x[1]+'</h3><p class="sub">'+x[2]+'</p></div>';}).join('')+'</div>';
+ return `<section class="masir-home-hero">
+  <div class="masir-welcome"><span>مسیر · آکادمی املاک عمان</span>
+   <h1>معامله بعدی،<br>یک تمرین نزدیک‌تر.</h1>
+   <p>از اولین تماس تا پیگیری معامله، هر روز در حداکثر ۲۰ دقیقه یک موقعیت کاری را تمرین کن.</p>
+   <button class="masir-primary" type="button" data-mp="open-today">شروع برنامه امروز <span aria-hidden="true">←</span></button>
+  </div>
+  <div class="masir-town" aria-hidden="true"><i></i><i></i><i></i><i></i><span>⌂</span></div>
+ </section>
+ <div class="masir-home-actions">
+  <button type="button" data-mp="open-calendar"><span class="masir-icon" aria-hidden="true">▦</span><strong>تقویم ۹۰ روزه</strong><small>انتخاب هفته و روز</small></button>
+  <button type="button" data-mp="open-record"><span class="masir-icon" aria-hidden="true">✦</span><strong>کارنامه و نشان‌ها</strong><small>پیشرفت، امتیاز و مشوق</small></button>
+  <button type="button" data-page="paths"><span class="masir-icon" aria-hidden="true">◇</span><strong>آزمایشگاه تمرین</strong><small>سناریو، رول‌پلی و کوچ</small></button>
+ </div>
+ <section class="masir-week-preview"><span class="masir-icon" aria-hidden="true">▤</span><div><h2>پرونده هفته</h2><p>یک کیس املاک، یک تصمیم قابل دفاع و یک آزمون کوتاه.</p></div><button class="mp-btn mp-btn-light" type="button" data-mp="open-week-case">باز کردن پرونده</button></section>`;
 }
 function paths(){
- return '<span class="eyebrow">PERSONALIZED LEARNING PATH</span><h1>نقشه مسیر یادگیری</h1><p class="sub">برنامه پیشنهادی ۶ هفته‌ای برای تیم کوچک فروش املاک؛ هر هفته ۲ تا ۳ نوبت کوتاه ۱۵ دقیقه‌ای. این ترتیب پیشنهادی و قابل بازنگری پس از ارزیابی مستقیم کارکنان است.</p>'+
- '<div class="manager-strip"><strong>شخصی‌سازی بر اساس نقش</strong><p>'+(role==='leader'?'نمای مدیر فعال است. مسیر «تفویض اختیار و تصمیم‌گیری» نقطه شروع پیشنهادی است.':'نمای کارشناس فعال است. مسیر «مذاکره و مدیریت اعتراض مشتری» نقطه شروع پیشنهادی است.')+'</p></div>'+
+ return '<span class="eyebrow">PERSONALIZED LEARNING PATH</span><h1>نقشه مسیر یادگیری</h1><p class="sub">شش سناریوی تمرین تکمیلی برای تیم فروش املاک. برنامه اصلی روزانه را از تقویم ۹۰ روزه دنبال کن.</p>'+
+ '<div class="manager-strip"><strong>تمرین بر اساس نقش</strong><div class="role-switch masir-practice-role" aria-label="انتخاب نقش تمرین"><button data-role="advisor" aria-pressed="'+(role==='advisor')+'">کارشناس فروش</button><button data-role="leader" aria-pressed="'+(role==='leader')+'">مدیر / سرپرست</button></div><p>'+(role==='leader'?'نمای مدیر فعال است. مسیر «تفویض اختیار و تصمیم‌گیری» نقطه شروع پیشنهادی است.':'نمای کارشناس فعال است. مسیر «مذاکره و مدیریت اعتراض مشتری» نقطه شروع پیشنهادی است.')+'</p></div>'+
  '<div class="module-grid">'+modules.map(function(m){return '<article class="module"><div class="module-top"><span class="week">هفته '+m.week+' · ۱۵ دقیقه</span>'+tagPri(m)+'</div><div class="module-body"><span class="eyebrow">'+m.tag+'</span><h3>'+m.title+'</h3><p>'+m.desc+'</p><div class="skillcaps">'+m.skills.map(function(s){return '<span class="skillcap">'+esc(s)+'</span>';}).join('')+'</div></div><div class="module-foot"><span class="status '+(data.completed[m.id]?'':'wait')+'">'+(data.completed[m.id]?'✓ تمرین انجام شد':'آماده تمرین · '+m.basis)+'</span><button class="btn btn-ghost" data-practice="'+m.id+'">'+(data.completed[m.id]?'مرور دوباره':'ورود به تجربه')+' ←</button></div></article>';}).join('')+'</div>';
 }
 function practice(){
@@ -233,7 +236,12 @@ function about(){
  '<div class="info-note"><strong>راهنمای آزمایش:</strong> برای بررسی عملی، وارد «مسیرها» شو؛ یک مهارت را انتخاب کن، تصمیم‌ها را بگیر، رول‌پلی را بنویس، درسنامه را مرور کن و مأموریت واقعی تعریف کن.</div><button class="btn btn-outline" data-action="reset-demo">پاک‌کردن پیشرفت آزمایشی این دستگاه</button>';
 }
 function render(){
- document.getElementById('navDesktop').innerHTML=navHtml();document.getElementById('navMobile').innerHTML=navHtml();
+ document.getElementById('navDesktop').innerHTML=navHtml();
+ document.getElementById('navMobile').innerHTML=
+  '<button type="button" data-page="home" aria-current="'+(page==='home'?'page':'false')+'"><span class="sym" aria-hidden="true">⌂</span>خانه</button>'+
+  '<button type="button" data-mp="open-today"><span class="sym" aria-hidden="true">◷</span>امروز</button>'+
+  '<button type="button" data-mp="open-calendar"><span class="sym" aria-hidden="true">▦</span>تقویم</button>'+
+  '<button type="button" data-mp="open-record"><span class="sym" aria-hidden="true">✦</span>کارنامه</button>';
  document.getElementById('advisorBtn').className=role==='advisor'?'selected':'';
  document.getElementById('leaderBtn').className=role==='leader'?'selected':'';
  document.getElementById('topTitle').textContent=labels[page][0];
@@ -302,6 +310,6 @@ render();
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script>
 <script defer src="./academy90-data.js?v=1"></script>
 <script defer src="./academy90-weekly.js?v=1"></script>
-<script defer src="./academy90.js?v=2"></script>
-<script defer src="./portal.js?v=90.2"></script>
+<script defer src="./academy90.js?v=3"></script>
+<script defer src="./portal.js?v=90.3"></script>
 </body></html>
