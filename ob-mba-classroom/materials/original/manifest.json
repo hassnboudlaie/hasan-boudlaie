@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "source": "Uploaded original PowerPoint decks (publisher slides, 2000)",
   "sessions": {
     "1": {
@@ -17,6 +17,23 @@
       "pagePattern": "materials/original/session-02/slide-%02d.webp",
       "pdf": "materials/original/session-02.pdf",
       "powerpoint": "materials/original/session-02-robbins.ppt"
+    },
+    "3": {
+      "slides": 13,
+      "format": "webp",
+      "aspect": "4:3",
+      "pagePattern": "materials/original/session-03/slide-%02d.webp",
+      "pdf": "materials/original/session-03.pdf",
+      "powerpoint": "materials/original/session-03-robbins.ppt",
+      "persianSupplementary": {
+        "slides": 51,
+        "format": "webp",
+        "aspect": "4:3",
+        "pagePattern": "materials/readings/session-03-fa/slide-%02d.webp",
+        "pdf": "materials/readings/personality-session-03.pdf",
+        "powerpoint": "materials/readings/personality-session-03.pptx",
+        "assessment": "materials/readings/personality-types-session-03.xls"
+      }
     }
   }
 }
