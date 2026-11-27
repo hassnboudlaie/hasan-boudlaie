@@ -165,7 +165,7 @@ async function actionRouter(input:Record<string,unknown>){
   if(!student)return fail("session_expired",401);
   if(student.approval_status!=="approved")return fail("approval_required",403);
   const lesson=Number(input.session);
-  if(![1,2].includes(lesson))return fail("case_not_published");
+  if(![1,2,3].includes(lesson))return fail("case_not_published");
   if(action==="caseSubmit"){
    const answers=input.answers;
    if(!answers||typeof answers!=="object"||Array.isArray(answers))return fail("invalid_case_answers");
@@ -264,14 +264,15 @@ async function actionRouter(input:Record<string,unknown>){
  }
  if(action==="teacherState"){
   const [students,attend,windows,invites,guests]=await Promise.all([
-   supabase.from("mba_ob_students").select("id,full_name,student_number,approval_status,enrolled_at,disabled_at,reviewed_at").order("enrolled_at"),
+   supabase.from("mba_ob_students").select("id,full_name,student_number,approval_status,enrolled_at,disabled_at,reviewed_at").is("merged_into",null).order("enrolled_at"),
    supabase.from("mba_ob_attendance").select("student_id,session_no,checked_at,status,reviewed_at,source").order("checked_at",{ascending:false}),
    supabase.from("mba_ob_windows").select("session_no,opened_at,closes_at,closed_at").order("session_no"),
    supabase.from("mba_ob_invitations").select("id,expected_name,redeemed_at,revoked_at"),
    supabase.from("mba_ob_guests").select("id,full_name,approval_status,requested_at,reviewed_at,revoked_at,expires_at").order("requested_at",{ascending:false}).limit(500)
   ]);
   if(students.error||attend.error||windows.error||invites.error||guests.error)throw new Error("roster_lookup_failed");
-  return result({ok:true,students:students.data||[],attendance:attend.data||[],windows:windows.data||[],
+  const rosterIds=new Set((students.data||[]).map(s=>s.id));
+  return result({ok:true,students:students.data||[],attendance:(attend.data||[]).filter(a=>rosterIds.has(a.student_id)),windows:windows.data||[],
    unredeemed:(invites.data||[]).filter(i=>!i.redeemed_at&&!i.revoked_at).length,invites:invites.data||[],guests:guests.data||[],server_time:stamp()});
  }
 
