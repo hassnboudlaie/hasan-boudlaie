@@ -167,7 +167,7 @@ new Function('window','document','Image',presenterJs)(fakeWindow,{getElementById
 new Function('document','localStorage','window','crypto','setTimeout','clearTimeout',js)(doc,storage,fakeWindow,{getRandomValues(a){a[0]=54321}},()=>{},()=>{});
 assert.ok(app.innerHTML.includes('سایر امکانات کلاس'),'Student home uses progressive disclosure');
 assert.ok(!app.innerHTML.includes('یکی از دو مسیر را انتخاب کنید')&&!app.innerHTML.includes('در زمان مناسب'),'Student home avoids redundant instructions');
-assert.ok(app.innerHTML.includes('href="./community.html"')&&nav.innerHTML.includes('href="./participation.html"'),'Student dashboard links directly to club and participation');
+assert.ok(app.innerHTML.includes('href="./community.html"')&&nav.innerHTML.includes('href="./participation.html?v=4"'),'Student dashboard links directly to club and participation');
 assert.ok(!app.innerHTML.includes('ob-roadmap-item'),'Official session directory is the only course list');
 assert.ok(app.innerHTML.includes('href="./install.html"'),'Student can find installation from home');
 assert.ok(!app.innerHTML.includes('class="metric"'),'Student home is not a metric dashboard');
