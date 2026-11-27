@@ -73,37 +73,37 @@ function show(t){
  tab=t||tab;modal=true;ensureUI();const e=$('#mpOverlay');e.hidden=false;document.body.style.overflow='hidden';paint();e.scrollTop=0;$('#mpOverlay .mp-close')?.focus();
 }
 function close(){
- if(!modal)return;modal=false;readingId=null;$('#mpOverlay').hidden=true;document.body.style.overflow='';stopReading();scanCore();if(modalTrigger?.isConnected)modalTrigger.focus();
+ if(!modal)return;modal=false;readingId=null;$('#mpOverlay').hidden=true;document.body.style.overflow='';stopReading();scanCore();if(modalTrigger?.isConnected&&modalTrigger.getClientRects().length)modalTrigger.focus();else $('.almas-menu summary')?.focus();
 }
 function topNav(){
  if(!user)return'';
  const nav=[['course','تقویم ۹۰ روزه'],['profile','پروفایل من'],['library','جزوه‌ها'],['cases','ثبت و مشاهده کیس'],['record','کارنامه من']];
  if(isAdmin)nav.push(['admin','داشبورد مدیر']);
- return '<nav class="mp-tabs" aria-label="بخش‌های حساب کاربری">'+nav.map(x=>'<button class="'+(tab===x[0]?'active':'')+'" data-mp-tab="'+x[0]+'">'+x[1]+'</button>').join('')+'</nav>';
+ return '<details class="almas-path-menu"><summary>بخش‌های دیگر</summary><nav class="mp-tabs" aria-label="بخش‌های حساب کاربری">'+nav.map(x=>'<button class="'+(tab===x[0]?'active':'')+'" data-mp-tab="'+x[0]+'">'+x[1]+'</button>').join('')+'</nav></details>';
 }
 function paint(){
  if(!modal)return;
  const title=!user?'ورود و ساخت پروفایل':tab==='course'?'آکادمی فروش املاک عمان':tab==='admin'?'داشبورد ادمین':tab==='library'?'کتابخانه و مطالعه':tab==='cases'?'کیس‌های کاری':tab==='record'?'کارنامه فردی':'پروفایل من';
  const overlay=$('#mpOverlay');
  overlay.dataset.tab=user?tab:'auth';
- overlay.innerHTML='<div class="mp-window"><div class="mp-head"><div><span>MASIR · LEARNING & PERFORMANCE</span><h2>'+title+'</h2></div><button class="mp-close" data-mp="close" aria-label="بستن">بستن ×</button></div>'+topNav()+'<div class="mp-content" id="mpContent">'+(!sb?note('بارگذاری ارتباط امن سامانه با خطا مواجه شد. صفحه را تازه‌سازی کنید.','error'):!user?authView():tab==='course'?academy.render(course):tab==='profile'?profileView():tab==='library'?libraryView():tab==='cases'?casesView():tab==='record'?recordView():isAdmin?adminView():note('برای دسترسی به این بخش مجوز مدیریتی لازم است.','error'))+'</div></div>';
+ overlay.innerHTML='<div class="mp-window"><div class="mp-head"><div><span>ALMAS ESTATES</span><h2>'+title+'</h2></div><button class="mp-close" data-mp="close" aria-label="بستن">بستن ×</button></div>'+topNav()+'<div class="mp-content" id="mpContent">'+(!sb?note('بارگذاری ارتباط امن سامانه با خطا مواجه شد. صفحه را تازه‌سازی کنید.','error'):!user?authView():tab==='course'?academy.render(course):tab==='profile'?profileView():tab==='library'?libraryView():tab==='cases'?casesView():tab==='record'?recordView():isAdmin?adminView():note('برای دسترسی به این بخش مجوز مدیریتی لازم است.','error'))+'</div></div>';
 }
 function enterCourse(destination){
  courseEntry=destination;
- const today=course.start?academy.currentDay(course.start):1;
+ const today=academy.resumeDay(course.records,course.start);
  academy.selection(destination==='week-case'?academy.weekEnd(today):today,destination==='calendar');
  show('course');
  if(destination==='calendar'&&user)$('#academyCalendar summary')?.focus();
- if(destination==='week-case'&&user)$('.academy-casefile')?.focus();
+
 }
 function authView(){
  const mode=authMode;
  if(mode==='newpassword')return'<h3>تنظیم رمز عبور جدید</h3><p>رمز تازه خودت را وارد کن.</p><form class="mp-form" id="mpNewPassForm"><label>رمز جدید (حداقل ۸ کاراکتر)<input type="password" name="password" minlength="8" required autocomplete="new-password"></label>'+btn('ذخیره رمز جدید','noop')+'</form>';
  if(mode==='reset')return'<h3>بازیابی رمز عبور</h3><p>لینک بازیابی رمز به ایمیل حساب فرستاده می‌شود. برای فعال‌شدن لینک، تنظیم آدرس بازگشت در Supabase نیز لازم است.</p><form class="mp-form" id="mpResetForm"><label>ایمیل حساب<input type="email" name="email" required autocomplete="email" dir="ltr" placeholder="name@example.com"></label><button class="mp-btn" type="submit">ارسال لینک بازیابی رمز</button></form><p><button class="mp-link" data-mp="to-login">بازگشت به ورود</button></p>';
- return'<div class="mp-grid"><section class="mp-panel"><span class="mp-label">'+(mode==='signup'?'ایجاد حساب جدید':'ورود امن')+'</span><h3>'+(mode==='signup'?'پروفایل اختصاصی خود را بساز':'به فضای شخصی یادگیری خوش آمدی')+'</h3><p>برای ثبت دائمی پرونده، سوابق مطالعه و فعالیت‌ها، با ایمیل و رمز خودت وارد شو.</p><form class="mp-form" id="mpAuthForm">'+
+ return'<div class="almas-auth"><section class="mp-panel"><span class="mp-label">'+(mode==='signup'?'ایجاد حساب جدید':'ورود امن')+'</span><h3>'+(mode==='signup'?'پروفایل اختصاصی خود را بساز':'به فضای شخصی یادگیری خوش آمدی')+'</h3><p>برای ثبت دائمی پرونده، سوابق مطالعه و فعالیت‌ها، با ایمیل و رمز خودت وارد شو.</p><form class="mp-form" id="mpAuthForm">'+
  (mode==='signup'?'<label>نام و نام خانوادگی<input name="name" maxlength="100" minlength="2" required autocomplete="name" placeholder="مثلاً علی رضایی"></label>':'')+
  '<label>ایمیل<input type="email" name="email" required autocomplete="email" dir="ltr" placeholder="name@example.com"></label><label>رمز عبور<input type="password" name="password" required minlength="8" autocomplete="'+(mode==='signup'?'new-password':'current-password')+'" placeholder="حداقل ۸ کاراکتر"></label><button class="mp-btn" type="submit">'+(mode==='signup'?'ساخت پروفایل و ثبت‌نام':'ورود به حساب')+'</button></form><div class="mp-between" style="margin-top:13px"><button class="mp-link" data-mp="'+(mode==='signup'?'to-login':'to-signup')+'">'+(mode==='signup'?'قبلاً حساب ساخته‌ام':'حساب ندارم؛ ثبت‌نام')+'</button><button class="mp-link" data-mp="to-reset">رمزم را فراموش کرده‌ام</button></div></section>'+
- '<section class="mp-panel"><span class="mp-label">کارکردهای فضای شخصی</span><h3>یادگیری قابل پیگیری، نه فقط مشاهده محتوا</h3><div class="mp-action-list">'+['پروفایل دائمی با نام، نقش و واحد سازمانی','آمار ورودها و دفعات مراجعه به سامانه','ثبت تمرین‌ها و نشان‌های مهارتی','مطالعه جزوه همراه با زمان فعال و وضعیت تکمیل','ثبت کیس واقعی، اقدام و درس آموخته','گزارش تیمی برای مدیر مجاز'].map(x=>'<div class="mp-event"><span>✓ '+x+'</span></div>').join('')+'</div><div style="margin-top:13px">'+note('کیس‌های ثبت‌شده علاوه بر صاحب پرونده برای ادمین این سامانه قابل مشاهده‌اند. داده‌های حساس یا هویتی مشتریان را وارد نکنید.','warning')+'</div></section></div>';
+ '</div>';
 }
 function profileView(){
  return'<div class="mp-grid"><section class="mp-panel"><span class="mp-label">حساب احراز هویت‌شده</span><h3>'+escapeHTML(profile?.display_name||'کاربر')+'</h3><div class="mp-identity" dir="ltr">'+escapeHTML(user.email||'')+'</div><p>از این پس پیشرفت آموزشی و کیس‌ها به شناسه این حساب متصل می‌شوند و روی دستگاه‌های دیگر با ورود به همین حساب در دسترس خواهند بود.</p><form class="mp-form" id="mpProfileForm"><label>نام و نام خانوادگی<input name="name" minlength="2" maxlength="100" value="'+escapeHTML(profile?.display_name||'')+'" required></label><label>سمت یا نقش<input name="role" maxlength="80" value="'+escapeHTML(profile?.role_label||'کارشناس')+'" required></label><label>واحد یا حوزه فعالیت<input name="department" maxlength="100" value="'+escapeHTML(profile?.department||'فروش املاک')+'" required></label><button class="mp-btn" type="submit">ذخیره تغییرات پروفایل</button></form><div class="mp-between" style="margin-top:14px"><span class="mp-small">عضویت از: '+shortDate(profile?.joined_at)+'</span>'+btn('خروج از حساب','signout','mp-btn-light')+'</div></section>'+
@@ -195,6 +195,7 @@ async function saveCourse(action,button){
   if(result.error){toast('ثبت انجام نشد. دوباره تلاش کنید.');return;}
   course.records=[...course.records.filter(row=>row.day!==values.day),result.data].sort((a,b)=>a.day-b.day);
   if(tab==='course'){
+   academy.moveStep(null);
    paint();$('#academyLesson')?.focus();
   }
   toast('فعالیت ثبت شد.');
@@ -412,10 +413,11 @@ document.addEventListener('submit',async e=>{
 document.addEventListener('click',async e=>{
  const issue=e.target.closest('[data-academy-issue]');
  if(issue){await processReward(issue,true);return;}
- const daily=e.target.closest('[data-academy-day],[data-academy-today],[data-academy-save]');
+ const daily=e.target.closest('[data-academy-day],[data-academy-step],[data-academy-save]');
  if(daily&&tab==='course'&&user){
   if(daily.dataset.academySave){await saveCourse(daily.dataset.academySave,daily);return;}
-  academy.selection(Number(daily.dataset.academyDay)||(course.start?academy.currentDay(course.start):1));
+  if(daily.dataset.academyStep!==undefined)academy.moveStep(Number(daily.dataset.academyStep),$('#academyTask')?.value);
+  else academy.selection(Number(daily.dataset.academyDay));
   paint();$('#academyLesson')?.focus();return;
  }
  const t=e.target.closest('[data-mp],[data-mp-tab],[data-admin-user]');
@@ -423,6 +425,7 @@ document.addEventListener('click',async e=>{
   if(t.dataset.mpTab){tab=t.dataset.mpTab;readingId=null;paint();if(tab==='library')await loadOwn();if(tab==='admin')await adminRefresh();scanCore();return;}
   if(t.dataset.adminUser){await loadUserDetails(t.dataset.adminUser);return;}
   const a=t.dataset.mp;
+  const menu=t.closest('.almas-menu');if(menu)menu.open=false;
   if(!a)return;
   if(a==='close'){close();return;}
   if(['open-course','open-today','open-calendar','open-week-case'].includes(a)){enterCourse(a.slice(5));return;}

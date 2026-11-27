@@ -18,6 +18,8 @@ const currentDay=start=>Math.min(90,Math.max(1,Math.floor((asDate(muscat.format(
 const duration=seconds=>n(Math.floor((seconds||0)/60))+' دقیقه';
 let selected=0;
 let showCalendar=false;
+let step=null;
+let draft;
 const sources=[
  ['HubSpot Academy · Inbound Sales','https://academy.hubspot.com/courses/inbound-sales','مسیر شناسایی، ارتباط، کشف و پیشنهاد برای قیف فروش'],
  ['NAR · Accredited Buyer’s Representative','https://www.nar.realtor/education/designations-and-certifications/accredited-buyers-representative-abr','نمایندگی و کشف نیاز خریدار'],
@@ -69,10 +71,15 @@ function render(state){
  const d=days[selected-1], w=d.week;
  const index=Math.floor((d.number-1)/7);
  const caseFile=weeklyCase[index];
- const timePlan=d.summary?[['مطالعه و مرور',3],['حل کیس هفته',13],['آزمون',4]]:
-  d.roleplay?[['آماده‌سازی',3],['رول‌پلی و اجرای دوباره',12],['ثبت بازخورد',5]]:
-  [['مطالعه',5],['تمرین',10],['ثبت نتیجه',5]];
  const record=records.find(r=>r.day===d.number)||{};
+ const labelsForDay=d.summary?['مرور','کیس هفته','آزمون','پایان']:['مطالعه','تمرین','پایان'];
+ const end=labelsForDay.length-1;
+ if(step===null)step=!record.read_at?0:!record.task?1:d.summary&&record.quiz_score==null?2:end;
+ const panel=(i,html)=>'<section class="almas-step" '+(step===i?'':'hidden')+'>'+html+'</section>';
+ const back=step>0?'<button class="mp-btn mp-btn-light" type="button" data-academy-step="'+(step-1)+'">گام قبل</button>':'';
+ const advance=i=>'<button class="mp-btn" type="button" data-academy-step="'+i+'">ادامه ←</button>';
+ const taskLabel=d.summary?'پاسخ پرونده هفته':'نتیجه تمرین';
+
  const calendar=weeks.map((week,i)=>'<details class="academy-week" '+(i===index?'open':'')+'><summary>هفته '+n(i+1)+' · '+esc(week.title)+'</summary><div class="academy-days">'+week.days.map((_,slot)=>{
   const day=i*7+slot+1;
   const row=records.find(r=>r.day===day);
@@ -82,18 +89,34 @@ function render(state){
  const review=d.summary?'<section class="academy-review"><h4>مرور عملکرد هفته</h4><p>'+n(weekly.filter(r=>r.read_at).length)+' مطالعه و '+n(weekly.filter(r=>r.task).length)+' تکلیف ثبت شده است.</p><ol><li>یک رفتار که کیفیت تصمیم مشتری را بهتر کرد.</li><li>یک پرونده که نشان داد کدام مرحله قیف گیر می‌کند.</li><li>اقدام هفته بعد، مسئول و موعد مرور.</li></ol></section>':'';
  const quiz=d.summary?'<fieldset><legend>آزمون جمع‌بندی · ۲ سؤال</legend>'+w.quiz.map(([question,...options],i)=>
  '<div class="academy-question"><strong>'+esc(question)+'</strong>'+options.slice(0,3).map((text,j)=>'<label><input type="radio" name="answer'+i+'" value="'+j+'" '+(record.quiz_answers?.[i]===j?'checked':'')+'> '+esc(text)+'</label>').join('')+(record.quiz_score!=null?'<small>پاسخ پیشنهادی: '+esc(options[options[3]])+'</small>':'')+'</div>').join('')+'<button class="mp-btn" data-academy-save="quiz">ثبت آزمون</button>'+(record.quiz_score!=null?'<p>آخرین نمره: '+n(record.quiz_score)+' از ۲</p>':'')+'</fieldset>':'';
- return '<div class="academy"><h3>تقویم ۹۰ روزه فروش املاک عمان</h3><p>'+ (start?'تاریخ‌ها بر اساس برنامه شروع گروه نمایش داده می‌شوند.':'تاریخ شروع گروه هنوز تنظیم نشده است. روزها به ترتیب دوره قابل انتخاب‌اند.')+'</p>'+
- (error?'<p role="alert">'+esc(error)+'</p>':'')+metrics(records,seconds)+
- '<div class="academy-shortcuts"><button class="mp-btn mp-btn-light" data-mp="open-record">کارنامه و نشان‌های من</button><button class="mp-btn mp-btn-light" data-academy-today>رفتن به '+(start?'روز جاری':'روز اول')+'</button></div>'+
- '<details id="academyCalendar" class="academy-calendar" '+(showCalendar?'open':'')+'><summary>▦ انتخاب از تقویم ۹۰ روزه</summary>'+calendar+'</details>'+
- '<article class="academy-lesson" id="academyLesson" tabindex="-1"><div class="academy-listing"><span>⌂ دفتر معاملات عمان</span><b>حداکثر ۲۰ دقیقه</b></div><div class="academy-time">'+timePlan.map(([title,mins])=>'<span>'+title+' · '+n(mins)+' دقیقه</span>').join('')+'</div><h3>روز '+n(d.number)+' · '+esc(w.title)+'</h3><p dir="ltr" class="academy-technique">'+esc(w.skill)+'</p><p>'+esc(w.theory)+'</p><h4>مأموریت این روز</h4><p>'+esc(d.task)+'</p>'+
- '<button class="mp-btn mp-btn-light" data-academy-save="read" '+(record.read_at?'disabled':'')+'>'+(record.read_at?'مطالعه تأیید شد':'تأیید مطالعه')+'</button>'+
- '<details '+(d.roleplay?'open':'')+'><summary>کیس و رول‌پلی سه‌دور</summary><p>'+esc(w.scenario)+'</p><ol>'+w.roles.map(role=>'<li>'+esc(role)+'</li>').join('')+'</ol><p>مشاهده‌گر از هر نقش یک رفتار مؤثر و یک رفتار قابل اصلاح ثبت کند. دور حساس را دوباره اجرا کنید و شواهد تغییر را بنویسید.</p><p>سه معیار مشاهده: کشف مسئله، شفافیت پاسخ و توافق بر اقدام. هر معیار ۰ تا ۲ امتیاز دارد. ۰ یعنی دیده نشد، ۱ یعنی ناقص، ۲ یعنی مستقل و روشن. امتیاز هر دو اجرا و شاهد رفتاری را در تکلیف ثبت کنید.</p></details>'+
- (d.summary?'<section class="academy-casefile" tabindex="-1"><p>پرونده هفته · '+n(index+1)+'</p><h4>'+esc(caseFile[0])+'</h4><p>'+esc(caseFile[1])+'</p><p><strong>مأموریت</strong> '+esc(caseFile[2])+'</p><p>پاسخ را در چهار بخش کوتاه بنویس. تصمیم، شاهد، پیام یا اقدام، و مسئول و موعد. از نام یا اطلاعات شناسایی مشتری استفاده نکن.</p></section>':'')+
- '<label for="academyTask">'+(d.summary?'پاسخ کیس هفته':'تکلیف و شواهد تمرین')+'</label><textarea id="academyTask" minlength="10" maxlength="3000" rows="5" placeholder="موقعیت بی‌نام، اقدام، نتیجه و قدم بعدی">'+esc(record.task)+'</textarea><button class="mp-btn" data-academy-save="task">ثبت تکلیف</button>'+review+quiz+'<div class="academy-day-nav">'+(d.number>1?'<button type="button" class="mp-btn mp-btn-light" data-academy-day="'+(d.number-1)+'">روز قبل</button>':'')+(d.number<90?'<button type="button" class="mp-btn mp-btn-light" data-academy-day="'+(d.number+1)+'">روز بعد ←</button>':'')+'</div></article>'+
- '<details><summary>منابع و چارچوب‌های طراحی</summary><ul>'+sources.map(([title,url,use])=>'<li>'+esc(use)+' · <a target="_blank" rel="noopener noreferrer" href="'+url+'">'+esc(title)+'</a></li>').join('')+'</ul><p>کیس‌ها تألیفی و شبیه‌سازی‌شده‌اند. برای تکالیف میدانی نام و مشخصات مشتری را ثبت نکنید.</p></details></div>';
+ const roleplay='<details '+(d.roleplay?'open':'')+'><summary>کیس و رول‌پلی سه‌دور</summary><p>'+esc(w.scenario)+'</p><ol>'+w.roles.map(role=>'<li>'+esc(role)+'</li>').join('')+'</ol><p>برای هر نقش یک رفتار مؤثر و یک رفتار قابل اصلاح ثبت کنید و بخش حساس را دوباره اجرا کنید. کشف مسئله، شفافیت پاسخ و توافق بر اقدام را از صفر تا دو امتیاز بدهید.</p></details>';
+ const caseSection=d.summary?'<section class="academy-casefile" tabindex="-1"><h4>'+esc(caseFile[0])+'</h4><p>'+esc(caseFile[1])+'</p><p><strong>مأموریت</strong> '+esc(caseFile[2])+'</p></section>':'';
+ const points=reviewWeek(records,index).score;
+ return '<div class="academy almas-course">'+(error?'<p role="alert">'+esc(error)+'</p>':'')+
+  (showCalendar?'<details id="academyCalendar" class="academy-calendar" open><summary>انتخاب روز از تقویم</summary>'+calendar+'</details>':'')+
+  '<article class="academy-lesson" id="academyLesson" tabindex="-1"><div class="almas-day-heading"><span>روز '+n(d.number)+' از ۹۰</span><span>تا ۲۰ دقیقه</span></div>'+
+  '<h3>'+esc(w.title)+'</h3><div class="almas-progress" role="progressbar" aria-label="پیشرفت درس" aria-valuemin="0" aria-valuemax="'+end+'" aria-valuenow="'+step+'"><span style="width:'+(step/end*100)+'%"></span></div><p class="almas-step-counter">گام '+n(step+1)+' از '+n(end+1)+' · '+labelsForDay[step]+'</p>'+
+  panel(0,'<h4>'+labelsForDay[0]+'</h4><p dir="ltr" class="academy-technique">'+esc(w.skill)+'</p><p>'+esc(w.theory)+'</p>'+
+   (record.read_at?advance(1):'<button class="mp-btn" data-academy-save="read">مطالعه کردم، ادامه ←</button>'))+
+  panel(1,'<h4>'+labelsForDay[1]+'</h4><p>'+esc(d.task)+'</p>'+caseSection+roleplay+
+   '<label for="academyTask">'+taskLabel+'</label><textarea id="academyTask" maxlength="3000" rows="4" placeholder="نتیجه را کوتاه و بدون مشخصات مشتری بنویس">'+esc(draft??record.task)+'</textarea>'+
+   '<button class="mp-btn" data-academy-save="task">ثبت و ادامه ←</button>')+
+  (d.summary?panel(2,review+quiz):'')+
+  panel(end,'<h4>✓ برنامه این روز تکمیل شد</h4><p>'+n(points)+' امتیاز در این هفته ثبت کرده‌ای.</p>'+
+   (record.quiz_score!=null?'<p>نمره آزمون: '+n(record.quiz_score)+' از ۲</p>':'')+
+   (d.number<90?'<button type="button" class="mp-btn" data-academy-day="'+(d.number+1)+'">روز بعد ←</button>':'<button type="button" class="mp-btn" data-mp="open-record">مشاهده کارنامه</button>'))+
+  '<div class="academy-day-nav">'+back+'</div></article></div>';
 }
-function selection(day,calendar=false){selected=day;showCalendar=calendar;}
+function selection(day,calendar=false){selected=day;showCalendar=calendar;step=null;draft=undefined;}
+function moveStep(next,value){step=next;draft=value;}
+function resumeDay(records,start){
+ const limit=start?currentDay(start):90;
+ return days.slice(0,limit).find(d=>{
+  const row=records.find(r=>r.day===d.number);
+  return !row?.read_at||!row.task||(d.summary&&row.quiz_score==null);
+ })?.number||limit;
+}
+
 function weekEnd(day){return Math.min(90,Math.ceil(day/7)*7);}
 function patch(action,root){
  const day=days[selected-1];
@@ -111,5 +134,5 @@ function patch(action,root){
  }
  throw Error('فعالیت معتبر نیست.');
 }
-window.MasirCourse={render,history,metrics,selection,patch,currentDay,weekEnd};
+window.MasirCourse={render,history,metrics,selection,patch,currentDay,weekEnd,moveStep,resumeDay};
 })();

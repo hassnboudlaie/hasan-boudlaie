@@ -36,7 +36,7 @@ main{max-width:1250px;margin:0 auto;padding:34px clamp(18px,3vw,53px) 110px}.sec
 @media(max-width:680px){h1{font-size:26px}h2{font-size:20px}.topbar{height:auto;min-height:75px;padding:11px 15px;align-items:flex-start}.topbar .kicker{font-size:10px}.top-title{font-size:13px}.top-right{display:grid;gap:6px;justify-items:end}.demo-pill{font-size:9px;padding:2px 8px}.role-switch button{font-size:10px;padding:5px 6px}main{padding:18px 12px 125px}.hero{padding:26px 22px;min-height:285px}.hero p{font-size:12px}.hero-art{left:-100px;opacity:.16}.btn{font-size:12px;padding:9px 13px;min-height:44px}.stats{gap:7px}.stat{padding:12px 10px;display:block;text-align:center;border-radius:13px}.stat-icon{display:none}.stat strong{font-size:23px}.stat span{font-size:10px}.grid-2,.module-grid,.practice-layout{grid-template-columns:1fr}.panel{padding:18px}.module-grid{gap:11px}.module h3{font-size:17px}.experience-top{padding:18px}.experience-body{padding:20px 17px}.side-coach{position:static;padding:17px}.scene{font-size:14px;padding:16px}.choice{font-size:13px}.section-head{margin:23px 0 13px}.topbar .role-switch{max-width:180px}.foot-actions .btn{flex:1}.toast{right:14px;left:14px;bottom:85px;text-align:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
-<link rel="stylesheet" href="./portal.css?v=90.3">
+<link rel="stylesheet" href="./portal.css?v=90.4">
 </head>
 <body>
 <div class="app">
@@ -48,11 +48,16 @@ main{max-width:1250px;margin:0 auto;padding:34px clamp(18px,3vw,53px) 110px}.sec
 
 </aside>
 <div class="workspace">
- <header class="topbar"><div><div class="kicker">آزمایشگاه یادگیری و عملکرد · عمان</div><div class="top-title" id="topTitle">خانه یادگیری</div></div><div class="top-right"><div class="role-switch" aria-label="انتخاب نقش"><button data-role="advisor" id="advisorBtn">کارشناس فروش</button><button data-role="leader" id="leaderBtn">مدیر / سرپرست</button></div></div></header>
+ <header class="topbar"><button type="button" class="almas-home-link" data-page="home">الماس املاک عمان</button>
+ <details class="almas-menu"><summary>☰ منو</summary><nav aria-label="منوی آکادمی">
+ <button type="button" data-page="home">خانه</button><button type="button" data-mp="open-calendar">تقویم ۹۰ روزه</button>
+ <button type="button" data-mp="open-week-case">پرونده هفته</button><button type="button" data-mp="open-record">کارنامه و نشان‌ها</button>
+ <button type="button" data-page="paths">آزمایشگاه تمرین</button><button type="button" data-page="coach">کوچ همراه</button>
+ <button type="button" data-page="about">راهنما</button><span id="mpEntry" class="mp-entry"></span></nav></details></header>
  <main id="appMain" tabindex="-1" aria-live="polite"></main>
 </div>
 </div>
-<nav class="bottom-nav" id="navMobile" aria-label="ناوبری موبایل"></nav>
+
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function(){
@@ -152,20 +157,14 @@ function tagPri(m){return '<span class="priority '+(m.priority==='مهم'?'mid':
 function go(p,m){page=p;if(m){active=m;}if(p==='practice'){phase='decision';idx=0;selection=null;feedback=false;speechDone=false;help=false;}render();window.scrollTo({top:0,behavior:'smooth'});}
 function navHtml(){return Object.keys(labels).map(function(k){return '<button data-page="'+k+'" class="'+(page===k?'active':'')+'" aria-current="'+(page===k?'page':'false')+'"><span class="sym">'+labels[k][1]+'</span>'+labels[k][0]+'</button>';}).join('');}
 function home(){
- return `<section class="masir-home-hero">
-  <div class="masir-welcome"><span>مسیر · آکادمی املاک عمان</span>
-   <h1>معامله بعدی،<br>یک تمرین نزدیک‌تر.</h1>
-   <p>از اولین تماس تا پیگیری معامله، هر روز در حداکثر ۲۰ دقیقه یک موقعیت کاری را تمرین کن.</p>
-   <button class="masir-primary" type="button" data-mp="open-today">شروع برنامه امروز <span aria-hidden="true">←</span></button>
-  </div>
-  <div class="masir-town" aria-hidden="true"><i></i><i></i><i></i><i></i><span>⌂</span></div>
- </section>
- <div class="masir-home-actions">
-  <button type="button" data-mp="open-calendar"><span class="masir-icon" aria-hidden="true">▦</span><strong>تقویم ۹۰ روزه</strong><small>انتخاب هفته و روز</small></button>
-  <button type="button" data-mp="open-record"><span class="masir-icon" aria-hidden="true">✦</span><strong>کارنامه و نشان‌ها</strong><small>پیشرفت، امتیاز و مشوق</small></button>
-  <button type="button" data-page="paths"><span class="masir-icon" aria-hidden="true">◇</span><strong>آزمایشگاه تمرین</strong><small>سناریو، رول‌پلی و کوچ</small></button>
- </div>
- <section class="masir-week-preview"><span class="masir-icon" aria-hidden="true">▤</span><div><h2>پرونده هفته</h2><p>یک کیس املاک، یک تصمیم قابل دفاع و یک آزمون کوتاه.</p></div><button class="mp-btn mp-btn-light" type="button" data-mp="open-week-case">باز کردن پرونده</button></section>`;
+ return `<section class="almas-start">
+  <div class="almas-mark" aria-hidden="true">◆</div>
+  <p class="almas-brand">الماس املاک عمان</p>
+  <h1>آکادمی فروش املاک</h1>
+  <p class="almas-intro">هر روز یک تمرین کوتاه از کار واقعی تیم فروش.</p>
+  <button type="button" class="masir-primary" data-mp="open-today">شروع یا ادامه یادگیری <span aria-hidden="true">←</span></button>
+  <small>حداکثر ۲۰ دقیقه در روز</small>
+ </section>`;
 }
 function paths(){
  return '<span class="eyebrow">PERSONALIZED LEARNING PATH</span><h1>نقشه مسیر یادگیری</h1><p class="sub">شش سناریوی تمرین تکمیلی برای تیم فروش املاک. برنامه اصلی روزانه را از تقویم ۹۰ روزه دنبال کن.</p>'+
@@ -237,19 +236,12 @@ function about(){
 }
 function render(){
  document.getElementById('navDesktop').innerHTML=navHtml();
- document.getElementById('navMobile').innerHTML=
-  '<button type="button" data-page="home" aria-current="'+(page==='home'?'page':'false')+'"><span class="sym" aria-hidden="true">⌂</span>خانه</button>'+
-  '<button type="button" data-mp="open-today"><span class="sym" aria-hidden="true">◷</span>امروز</button>'+
-  '<button type="button" data-mp="open-calendar"><span class="sym" aria-hidden="true">▦</span>تقویم</button>'+
-  '<button type="button" data-mp="open-record"><span class="sym" aria-hidden="true">✦</span>کارنامه</button>';
- document.getElementById('advisorBtn').className=role==='advisor'?'selected':'';
- document.getElementById('leaderBtn').className=role==='leader'?'selected':'';
- document.getElementById('topTitle').textContent=labels[page][0];
  var main=document.getElementById('appMain');main.innerHTML=page==='home'?home():page==='paths'?paths():page==='practice'?practice():page==='coach'?coach():page==='progress'?progress():about();
 }
 document.addEventListener('click',function(e){
  var target=e.target.closest('[data-page],[data-practice],[data-role],[data-choice],[data-action],[data-coachquestion]');
  if(!target)return;
+ var menu=target.closest('.almas-menu');if(menu)menu.open=false;
  if(target.dataset.role){role=target.dataset.role;persist();render();return;}
  if(target.dataset.page){go(target.dataset.page);return;}
  if(target.dataset.practice){go('practice',target.dataset.practice);return;}
@@ -310,6 +302,6 @@ render();
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script>
 <script defer src="./academy90-data.js?v=1"></script>
 <script defer src="./academy90-weekly.js?v=1"></script>
-<script defer src="./academy90.js?v=3"></script>
-<script defer src="./portal.js?v=90.3"></script>
+<script defer src="./academy90.js?v=4"></script>
+<script defer src="./portal.js?v=90.4"></script>
 </body></html>
