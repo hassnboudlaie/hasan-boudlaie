@@ -2,10 +2,10 @@
 const KEY="ob-mba-classroom-demo-v1";const ss=n=>({id:n,title:"",outcomes:"",theory:"",model:"",slides:"",caseText:"",caseQuestion:"",roleplay:"",reflection:"",quizQuestion:"",quizOptions:["","","",""],quizAnswer:0,published:false,resources:[]});
 const courseBundle=window.OB_COURSE_CONTENT&&Array.isArray(window.OB_COURSE_CONTENT.sessions)?window.OB_COURSE_CONTENT:{version:1,sessions:[]};
 const seedLesson=n=>{const source=courseBundle.sessions.find(x=>x.id===n);return {...ss(n),...(source||{}),id:n}};
-const fresh=()=>({version:8,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
+const fresh=()=>({version:9,sessions:Array.from({length:16},(_,i)=>seedLesson(i+1)),active:1,poll:{question:"",options:["",""],open:false,show:false,votes:[]},attendance:{code:"",session:1,requests:[]},weights:[20,30,30,20],grades:{"demo-1":[null,null,null,null]},gradesPublished:false,groups:[],feedback:[],studentWork:{},projector:"poll"});
 const locallyEdited=x=>Boolean(x&&(x.title||x.outcomes||x.theory||x.model||x.slides||x.caseText||x.caseQuestion||x.roleplay||x.reflection||x.quizQuestion||x.published));
 function load(){const base=fresh();try{const raw=JSON.parse(localStorage.getItem(KEY));if(!raw||!Array.isArray(raw.sessions)||raw.sessions.length!==16)return base;
-const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
+const sessions=raw.sessions.map((old,i)=>{const n=i+1,seed=seedLesson(n);if(n<=2&&Number(raw.version||1)<2&&!locallyEdited(old))return seed;if(n===3&&Number(raw.version||1)<9&&!locallyEdited(old))return seed;const merged={...seed,...old,id:n};
 const seedResources=Array.isArray(seed.resources)?seed.resources:[];
 const oldResources=Array.isArray(old.resources)?old.resources:[];
 const migrated=Number(raw.version||1)<8;
@@ -15,7 +15,7 @@ if(n<=2&&Number(raw.version||1)<3){
  for(const key of managed)merged[key]=seed[key];
 }
 return merged});
-return {...base,...raw,version:8,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
+return {...base,...raw,version:9,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
 /* Auth-gated deep links to a session resource library or student quiz. */
 try{
@@ -210,7 +210,7 @@ else if(ui.tab==="examples")c=x?guidedPanel(s,x,"examples"):lessonSection("مث�
 else if(ui.tab==="case")c=caseWorkspace(s,x);
 else if(ui.tab==="activity")c=x?guidedActivity(s,x):quizPanel(s)+lessonSection("تمرین گروهی",s.roleplay);
 else if(ui.tab==="finalQuiz")c=window.OB_QUIZ?.studentHTML(s.id)||"";
-return '<div class="page lesson-page ob-reading-workspace"><header class="ob-lesson-header"><div><span class="ob-lesson-session-number">جلسه '+pf(s.id)+' از ۱۶</span><h2>'+esc(titleOf(s))+'</h2></div></header>'
+return '<div class="page lesson-page ob-reading-workspace"><header class="ob-lesson-header"><div><span class="ob-lesson-session-number">جلسه '+pf(s.id)+' از ۱۶</span><h2>'+esc(titleOf(s))+'</h2></div>'+button("جلسات درس","backSessions","btn secondary")+'</header>'
  +'<div class="ob-reading-layout"><aside class="ob-reading-aside"><div class="field section-picker"><label for="sectionSelect">بخش جلسه</label><select id="sectionSelect" data-action="sessionPicker">'+tabs.map(([id,l])=>'<option value="'+id+'" '+(ui.tab===id?"selected":"")+'>'+l+'</option>').join("")+'</select></div></aside><div class="ob-reading-content">'+(c||'<div class="empty-study"><h3>محتوا موجود نیست</h3></div>')+'</div></div></div>'}
 
 const types=[["simplify","ساده‌تر شدن اپ"],["add","افزودن امکان مفید"],["remove","حذف مورد غیرضروری"],["improve","بهبود ظاهر یا عملکرد"],["problem","گزارش مشکل"]];
