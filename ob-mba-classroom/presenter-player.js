@@ -87,7 +87,7 @@ function update({session:s,variant="fa",index=0}){
   select.value=String(n+1);
  }
  const progress=stage.querySelector(".presenter-progress>span");if(progress)progress.style.width=(100*(n+1)/Math.max(1,total)).toFixed(1)+"%";
- const downloadSection=document.querySelector(".presenter-bottom .presenter-files");if(downloadSection)downloadSection.outerHTML=downloads(s,mode);
+ const downloadSection=document.querySelector(".presenter-bottom .presenter-files, .presenter-bottom .ob-slide-real-downloads");if(downloadSection)downloadSection.outerHTML=downloads(s,mode);
  if((mode==="en"||s.id===3)&&n+1<total){
   // Best-effort one-slide prefetch; does not preload unrelated apps or sources.
   const img=new Image();img.src=sourceImage(s,n+1,mode);
