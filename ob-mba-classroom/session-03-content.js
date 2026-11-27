@@ -1,4 +1,4 @@
-/* Allameh MBA: session 03 approved instructional adaptation, independently from teacher/student records. */
+/* Allameh MBA session three: classroom content based on approved teaching outline. */
 (function(){
 "use strict";
 const course=window.OB_COURSE_CONTENT,enrichment=window.OB_LESSON_ENRICHMENT;
@@ -228,7 +228,7 @@ const third={
       "id": "session3-guide",
       "type": "article",
       "title": "جزوه تکمیلی جلسه سوم — هفت بخش",
-      "url": "./materials/readings/session-03-study-guide.html",
+      "url": "https://hassnboudlaie.github.io/hasan-boudlaie/ob-mba-classroom/materials/readings/session-03-study-guide.html",
       "topic": "شخصیت، Big Five، MBTI، تناسب شغلی، هیجان و هوش هیجانی",
       "note": "جزوه فارسی بازنویسی‌شده با منابع و مثال؛ در مرورگر قابل مطالعه و چاپ/PDF است."
     },
@@ -377,22 +377,31 @@ const expanded={
       "در دو ماه اخیر فشار زمانی بالا رفته و اعضای تیم از ابهام اولویت‌ها و پیام‌های متناقض شکایت کرده‌اند. داده‌ها برای نتیجه‌گیری قطعی درباره شایستگی هیچ‌یک کافی نیستند."
     ],
     "dataTable": [
-      {
-        "label": "داوطلب الف",
-        "values": [
-          "۸٪ خطا",
-          "۷۵٪ تحویل به‌موقع",
-          "پررنگ در جلسات"
-        ]
-      },
-      {
-        "label": "داوطلب ب",
-        "values": [
-          "۲٪ خطا",
-          "۹۴٪ تحویل به‌موقع",
-          "کم‌حرف‌تر در جلسات"
-        ]
-      }
+      [
+        "شاخص واقعی",
+        "داوطلب الف",
+        "داوطلب ب"
+      ],
+      [
+        "خطای تحویل سه ماه اخیر",
+        "۸ درصد",
+        "۲ درصد"
+      ],
+      [
+        "انجام تعهدات در موعد",
+        "۷۵ درصد",
+        "۹۴ درصد"
+      ],
+      [
+        "مشاهده رفتار در جلسات",
+        "پرانرژی و خوش‌بیان",
+        "کم‌حرف‌تر"
+      ],
+      [
+        "داده‌های گمشده",
+        "نمونه‌کار رهبری، همکاری",
+        "نمونه‌کار رهبری، همکاری"
+      ]
     ],
     "decision": "کدام شواهد برای انتخاب منصفانه سرپرست پروژه کافی نیست و چه داده‌هایی باید اضافه شود؟",
     "questions": [
