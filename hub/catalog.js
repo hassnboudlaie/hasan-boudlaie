@@ -176,5 +176,11 @@
   all.dataset.fa='همه ('+appLinks.length.toLocaleString('fa-IR')+')';
   all.textContent=lang()==='fa'?all.dataset.fa:all.dataset.en;
  }
- renderQuick();syncMenu();update();
+ function applyCategoryLink(){
+  const requested=location.hash.slice(1);
+  const category=buttons.find(button=>button.dataset.superFilter===requested);
+  if(category)setFilter(category.dataset.superFilter);
+ }
+ window.addEventListener('hashchange',applyCategoryLink);
+ renderQuick();syncMenu();update();applyCategoryLink();
 })();

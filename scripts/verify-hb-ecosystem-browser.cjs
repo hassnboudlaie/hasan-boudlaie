@@ -44,7 +44,7 @@ async function hubCheck(browser,name,w,h){
   page.on("pageerror",e=>errors.push(e.message));
   const rsp=await page.goto(base()+"hub/",{waitUntil:"domcontentloaded",timeout:30000});
   assert.equal(rsp.status(),200);
-  await page.locator("#superResultCount").filter({hasText:/19|۱۹/}).waitFor({timeout:25000});
+  await page.locator("#superResultCount").filter({hasText:/29|۲۹/}).waitFor({timeout:25000});
   const metric=await checkFont(page,name+" Hub "+w);
   if(w===320){
    const dimensions=await page.evaluate(()=>{
@@ -57,7 +57,7 @@ async function hubCheck(browser,name,w,h){
    console.log("MOBILE_LAYOUT_DIAG",JSON.stringify(dimensions));
    assert.ok(dimensions.innerWidth<=w+2,"320px layout viewport expanded to "+dimensions.innerWidth);
   }
-  assert.equal(await page.locator(".super-app-link").count(),19);
+  assert.equal(await page.locator(".super-app-link").count(),29);
   assert.ok(metric.overflow<=2,name+" Hub "+w+" overflow="+metric.overflow);
   const axe=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa","wcag22aa"]).analyze();
   const high=axe.violations.filter(v=>["serious","critical"].includes(v.impact));
@@ -69,12 +69,12 @@ async function hubCheck(browser,name,w,h){
   await page.locator("#superSearch").fill("مديريت مالي من");
   assert.equal(await page.locator(".super-app-link:visible").count(),1,"Arabic-variant Persian search must match My Finance");
   await page.locator("#superSearch").press("Escape");
-  assert.equal(await page.locator(".super-app-link:visible").count(),19,"Escape must clear search");
+  assert.equal(await page.locator(".super-app-link:visible").count(),29,"Escape must clear search");
   await page.locator("#superSearch").fill("not-a-real-app-name-9285");
   assert.equal(await page.locator(".super-app-link:visible").count(),0,"Search empty state failed");
   assert.equal(await page.locator("#superReset:visible").count(),1,"No reset action in empty state");
   await page.locator("#superReset").click();
-  assert.equal(await page.locator(".super-app-link:visible").count(),19,"Reset did not restore directory");
+  assert.equal(await page.locator(".super-app-link:visible").count(),29,"Reset did not restore directory");
   console.log("FILTER_DIAG",JSON.stringify(await page.evaluate(()=>{
    const b=document.querySelector('[data-super-filter="personal"]'),p=b?.parentElement;
    const r=b?.getBoundingClientRect(),pr=p?.getBoundingClientRect();
@@ -85,9 +85,9 @@ async function hubCheck(browser,name,w,h){
     targetAtMid:e?.outerHTML?.slice(0,170),clickedLabel:b?.textContent};
   })));
   await page.locator('[data-super-filter="personal"]').click();
-  assert.equal(await page.locator(".super-app-link:visible").count(),2);
+  assert.equal(await page.locator(".super-app-link:visible").count(),5);
   await page.locator('[data-super-filter="all"]').click();
-  assert.equal(await page.locator(".super-app-link:visible").count(),19);
+  assert.equal(await page.locator(".super-app-link:visible").count(),29);
   
   if(await page.locator(".menu-toggle").isVisible()){
    await page.locator(".menu-toggle").click();
@@ -106,7 +106,7 @@ async function hubCheck(browser,name,w,h){
   await page.locator('[data-super-filter="pinned"]').click();
   assert.equal(await page.locator('.super-app-link:visible').count(),1,"Saved filter must show the favorite");
   await page.reload({waitUntil:"domcontentloaded"});
-  await page.locator("#superResultCount").filter({hasText:/19|۱۹/}).waitFor();
+  await page.locator("#superResultCount").filter({hasText:/29|۲۹/}).waitFor();
   assert.equal(await page.locator('#hubPinnedList .hub-quick-link').count(),1,"Saved apps not persisted");
   assert.equal(await page.locator('.super-favorite[aria-pressed="true"]').count(),1);
   await page.locator('a.super-app-link[href="../okr-service/index.html"]').click();
@@ -126,7 +126,7 @@ async function hubCheck(browser,name,w,h){
   if(newViolations.length)console.error("HUB_JOURNEY_AXE",JSON.stringify(newViolations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.slice(0,12).map(n=>({target:n.target,summary:n.failureSummary}))}))));
   assert.equal(newViolations.length,0,"New controls accessibility failure");
   assert.deepEqual(errors,[],"Hub runtime errors");
-  console.log("PASS Hub",name,w,"19 apps, task descriptions, favorites, recents, keyboard, RTL, axe serious/critical=0");
+  console.log("PASS Hub",name,w,"29 apps, task descriptions, favorites, recents, keyboard, RTL, axe serious/critical=0");
  }finally{await ctx.close()}
 }
 const entries=["okr-system/","okr-service/","business-model-canvas/studio.html","small-business/",

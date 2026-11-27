@@ -1,7 +1,7 @@
 /* HB Hub v3. Offline shell only; no child-app API, state or navigation interception. */
-const NAME='hb-executive-hub-shell-v6-20261115';
-const FILES=['./','./index.html','./catalog.css?v=2','./catalog.js?v=5','./impeccable.css?v=20261115','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest?v=1',
-'../experience.css?v=2.0','../experience.js?v=2.0','../assets/fonts/Vazirmatn.woff2'];
+const NAME='hb-executive-hub-shell-v7-20261127';
+const FILES=['./','./index.html','./catalog.css?v=2','./catalog.js?v=6','./impeccable.css?v=20261115','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest?v=1',
+'../discovery.css?v=1','../experience.css?v=2.0','../experience.js?v=2.1','../assets/fonts/Vazirmatn.woff2'];
 const SCOPE=new URL(self.registration.scope);
 const ALLOWED=new Set(FILES.map(p=>new URL(p,SCOPE).pathname));
 self.addEventListener('install',event=>event.waitUntil(caches.open(NAME).then(cache=>cache.addAll(FILES.map(p=>new URL(p,SCOPE).href))).then(()=>self.skipWaiting())));
