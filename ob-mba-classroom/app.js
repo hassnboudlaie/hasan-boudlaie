@@ -94,7 +94,7 @@ const sourcePreview=s=>s.id===1?"https://drive.google.com/file/d/1smEaHwVPZbASf3
 
 const session03Paths={
  english:{ppt:"./materials/original/session-03-robbins.ppt",pdf:"./materials/original/session-03.pdf",thumb:"./materials/original/session-03/slide-01.webp"},
- persian:{ppt:"./materials/readings/personality-session-03.pptx",pdf:"./materials/readings/personality-session-03.pdf",thumb:"./materials/readings/personality-session-03-slides/slide-01.webp"},
+ persian:{ppt:"./materials/readings/personality-session-03.pptx",pdf:"./materials/readings/personality-session-03.pdf",thumb:"./materials/readings/session-03-fa/slide-01.webp"},
  assessment:"./materials/readings/personality-types-session-03.xls"
 };
 const fileAnchor=(href,label,download=false)=>'<a class="resource-link ob-session3-link" href="'+href+'" '+(download?'download':'target="_blank" rel="noopener noreferrer"')+'>'+label+'</a>';
