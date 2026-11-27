@@ -148,7 +148,9 @@
   }
 
   function loadOnOpen(panel, read, draw) {
+    if (!panel) return;
     const host = panel.querySelector("[data-usage]");
+    if (!host) return;
     async function refresh() {
       host.textContent = "در حال دریافت گزارش…";
       try {
@@ -212,6 +214,11 @@
           (student.student_number ? ' · ' + escape(student.student_number) : '') + '</option>').join("") +
         '</select></label><button class="btn primary" type="submit">مشاهده پرونده</button></form>';
       const select = controls.querySelector("select");
+      controls.querySelector("form").addEventListener("submit", event => {
+        event.preventDefault();
+        load(event.currentTarget.elements.student.value);
+      });
+      select.addEventListener("change", () => { if (select.value) load(select.value); });
       loadOnOpen(controls.querySelector("#classUsage"), () => call("classOverview", null, analyticsApi), (host, result) => {
         const roster = new Map(students.map(student => [student.id, student.full_name]));
         const visible = result.students.filter(student => roster.has(student.student_id));
@@ -226,10 +233,7 @@
           load(select.value);
         }));
       });
-      controls.querySelector("form").addEventListener("submit", event => {
-        event.preventDefault();
-        load(event.currentTarget.elements.student.value);
-      });
+
     } catch (error) {
       message(error, start);
     }
