@@ -86,9 +86,18 @@ assert.ok(attendanceApi.includes('input.first_name')&&attendanceApi.includes('in
 assert.ok(js.includes('guest-preview-banner')&&js.includes('isGuest()'),'Guest sees limited educational preview');
 assert.ok(caseJs.includes('window.OB_ACCESS?.role==="guest"'),'Guest cannot submit official assignments');
 assert.ok(gateJs.includes('course-content.js?v=7')&&sw.includes('course-content.js?v=7'),'Course content scripts load after approved access');
+const thirdContent=read('ob-mba-classroom/session-03-content.js');
+new Function('window',thirdContent)(publicCourse);
+const thirdCourse=publicCourse.OB_COURSE_CONTENT.sessions.find(x=>x.id===3);
+const thirdEnrichment=publicCourse.OB_LESSON_ENRICHMENT.sessions.find(x=>x.id===3);
+assert.ok(thirdCourse?.published&&thirdCourse.presentation.length===13&&thirdCourse.quizzes.length===10,'Session 3 has 13 slides and 10 substantive quiz questions');
+assert.ok(thirdEnrichment?.caseFramework.steps.length===6&&thirdEnrichment.caseFramework.steps.reduce((n,x)=>n+x.points,0)===20,'Session 3 six-step case rubric totals 20 points');
+assert.ok(gateJs.includes('session-03-content.js?v=1')&&sw.includes('session-03-content.js?v=1'),'Session 3 content loads after login and is in PWA shell');
+assert.ok(sw.includes('session-03-study-guide.html'),'Session 3 seven-part study guide is accessible offline');
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
-assert.ok(gateJs.includes('lesson-enrichment.js?v=2')&&sw.includes('lesson-enrichment.js?v=2'),'Enrichment script included in gated loader');
-assert.ok(gateJs.includes('guided-learning.js?v=4')&&html.includes('guided-learning.css?v=2')&&sw.includes('guided-learning.js?v=4')&&sw.includes('guided-learning.css?v=2'),'Guided assets loaded after authentication and cached');
+assert.ok(/lesson-enrichment\.js\?v=\d+/.test(gateJs)&&gateJs.match(/lesson-enrichment\.js\?v=\d+/)?.[0]===sw.match(/lesson-enrichment\.js\?v=\d+/)?.[0],'Current lesson-enrichment version is loaded and cached');
+assert.ok(/guided-learning\.js\?v=\d+/.test(gateJs)&&gateJs.match(/guided-learning\.js\?v=\d+/)?.[0]===sw.match(/guided-learning\.js\?v=\d+/)?.[0],'Current guided-learning version is loaded and cached');
+assert.ok(html.includes('guided-learning.css?v=2')&&sw.includes('guided-learning.css?v=2'),'Guided styling cached');
 assert.equal(publicCourse.OB_LESSON_ENRICHMENT.sessions.length,2,'Both source chapters enriched');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseFramework.steps.length===6&&s.caseFramework.steps.reduce((n,p)=>n+p.points,0)===20),'Both case rubrics have six stages and 20 points');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseStudy.tag.includes('فرضی')&&s.caseStudy.dataTable.length>=4),'Cases are honest data-led hypothetical scenarios');
@@ -97,7 +106,8 @@ assert.ok(publicCourse.OB_COURSE_CONTENT.sessions.every(s=>s.quizzes.length===5&
 assert.ok(caseSchema.includes('enable row level security')&&caseSchema.includes('mba_ob_case_reviews')&&caseSchema.includes('mba_ob_submit_case'),'Submission and grading are server-backed with protected data');
 assert.ok(caseJs.includes('caseSubmit')&&caseJs.includes('caseReview')&&caseJs.includes('caseHistory'),'Student submit and instructor history access are present');
 assert.ok(caseJs.includes('!rawScore')&&attendanceApi.includes('rawScore===null'),'Teacher and server both reject accidentally blank grade');
-assert.ok(gateJs.includes('case-portal.js?v=3')&&html.includes('case-portal.css?v=1')&&sw.includes('case-portal.js?v=3')&&sw.includes('./join-qr.svg'),'Case portal and QR bundled with PWA');
+assert.ok(/case-portal\.js\?v=\d+/.test(gateJs)&&gateJs.match(/case-portal\.js\?v=\d+/)?.[0]===sw.match(/case-portal\.js\?v=\d+/)?.[0],'Current case-portal version is loaded and cached');
+assert.ok(html.includes('case-portal.css?v=1')&&sw.includes('./join-qr.svg'),'Case styles and QR are installed');
 assert.ok(qrSvg.includes('viewBox="0 0 49 49"')&&qrSvg.includes('ob-mba-classroom'),'Projector QR links only to Allameh classroom');
 
 // Keep source-attached teaching resources aligned with the published app and uploaded file.
