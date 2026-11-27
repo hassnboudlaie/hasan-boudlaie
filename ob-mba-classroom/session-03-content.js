@@ -245,8 +245,56 @@ const third={
       "type": "link",
       "title": "انجام آزمون رایگان رغبت شغلی — O*NET Interest Profiler",
       "url": "https://onetinterestprofiler.org/",
-      "topic": "Holland / RIASEC — Person–Job Fit",
+      "topic": "آزمایشگاه خودشناسی | Holland / RIASEC — Person–Job Fit",
       "note": "O*NET (Occupational Information Network) پایگاه اطلاعات مشاغل با پشتیبانی وزارت کار آمریکاست. آزمون رایگان انگلیسی آن شامل ۳۰ سؤال و حدود ۱۰ تا ۲۰ دقیقه است. روی Get started بزنید؛ بر اساس علاقه خود، نه توانایی یا درآمد، پاسخ دهید و در پایان سه رغبت غالب و مشاغل پیشنهادی را بررسی کنید. این فعالیت برای خودشناسی و اکتشاف مسیر شغلی است، نه تشخیص شخصیت یا معیار قطعی استخدام."
+    },
+    {
+      "id": "self-awareness-big-five",
+      "type": "link",
+      "title": "آزمون رایگان پنج عامل بزرگ شخصیت — Big Five (IPIP-NEO-120)",
+      "url": "https://bigfive-test.com/fa/test",
+      "topic": "آزمایشگاه خودشناسی | Big Five / OCEAN",
+      "note": "فارسی، ۱۲۰ سؤال، حدود ۱۰ تا ۱۵ دقیقه؛ رایگان و بدون ثبت‌نام. پنج عامل و جنبه‌های شخصیت خود را مرور کنید و یک زمینه توسعه فردی انتخاب کنید. این نسخه IPIP است، نه آزمون رسمی NEO-PI-R."
+    },
+    {
+      "id": "self-awareness-16personalities",
+      "type": "link",
+      "title": "آزمون رایگان ۱۶ تیپ شخصیتی — 16Personalities",
+      "url": "https://www.16personalities.com/fa/آزمون-شخصیت",
+      "topic": "آزمایشگاه خودشناسی | Personality Preferences / MBTI",
+      "note": "فارسی، ۶۰ سؤال، حدود ۱۰ دقیقه؛ نتیجه پایه رایگان است. ترجیحات و سبک تعامل خود را بررسی و با Big Five مقایسه کنید. این ابزار آزمون رسمی MBTI نیست؛ گزارش‌های تکمیلی ممکن است پولی باشند."
+    },
+    {
+      "id": "self-awareness-emotion-recognition",
+      "type": "link",
+      "title": "آزمون تشخیص هیجانات — Emotional Intelligence Quiz | UC Berkeley",
+      "url": "https://greatergood.berkeley.edu/quizzes/embed/ei_quiz",
+      "topic": "آزمایشگاه خودشناسی | Emotion Recognition / EI",
+      "note": "انگلیسی، حدود ۵ تا ۱۰ دقیقه؛ آزمون تصویری رایگان مرکز Greater Good دانشگاه برکلی. هیجان‌ها را از روی چهره تشخیص دهید و بازخورد را مرور کنید. تنها تشخیص هیجان را می‌سنجد، نه کل هوش هیجانی."
+    },
+    {
+      "id": "self-awareness-disc",
+      "type": "link",
+      "title": "آزمون رایگان سبک رفتاری — DISC",
+      "url": "https://disc.institute/en/disc-test/",
+      "topic": "آزمایشگاه خودشناسی | Behavioral & Communication Styles",
+      "note": "انگلیسی، حدود ۱۰ تا ۱۲ دقیقه؛ طبق ارائه‌دهنده، نتیجه و PDF رایگان و بدون ثبت‌نام است. سبک‌های D، I، S و C را مرور کنید و یک راه برای بهبود ارتباط با سبک متفاوت بیابید. این نسخه مستقل و غیررسمی است و اعتبارسنجی مستقل آن تأیید نشده است."
+    },
+    {
+      "id": "self-awareness-empathy",
+      "type": "link",
+      "title": "آزمون همدلی — Empathy Quiz | UC Berkeley",
+      "url": "https://greatergood.berkeley.edu/quizzes/embed/empathy",
+      "topic": "آزمایشگاه خودشناسی | Empathy / Emotional Intelligence",
+      "note": "انگلیسی، رایگان؛ مرکز Greater Good دانشگاه برکلی. به پرسش‌ها بر اساس تجربه واقعی پاسخ دهید و درباره درک دیدگاه و احساس دیگران تأمل کنید. نتیجه خودگزارشی است و تشخیص قطعی نیست."
+    },
+    {
+      "id": "self-awareness-happiness-work",
+      "type": "link",
+      "title": "آزمون شادی در محیط کار — Happiness at Work | UC Berkeley",
+      "url": "https://greatergood.berkeley.edu/quizzes/embed/happiness_at_work",
+      "topic": "آزمایشگاه خودشناسی | Workplace Well-being / Emotions & Attitudes",
+      "note": "انگلیسی، رایگان؛ مرکز Greater Good دانشگاه برکلی. درباره معنا، روابط و تجربه مثبت در محیط کار تأمل کنید. مناسب افراد دارای تجربه کاری؛ یک اقدام کوچک برای بهبود بهزیستی شغلی انتخاب کنید."
     },
     {
       "id": "myers-briggs",
@@ -272,8 +320,7 @@ const third={
       "topic": "DISC",
       "note": "چارچوبی برای بازاندیشی در سبک رفتاری و تعامل؛ معادل یک تشخیص علمی جامع شخصیت نیست."
     }
-  ]
-};
+  ]};
 const expanded={
   "id": 3,
   "sourceChapter": "Session 3 — Personality & Individual Differences; updated MBA teaching adaptation; the exact original OB3ed.ppt and its PDF are preserved in materials/original/",
