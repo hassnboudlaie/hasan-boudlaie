@@ -37,7 +37,7 @@ assert.match(css,/min-height:44px/);
 assert.match(app,/function focusMainAfterRoute\(\)/,'Focus is managed after app route changes');
 assert.match(app,/aria-current="page"/,'Bottom navigation exposes current page');
 assert.ok(app.includes('const KEY="ob-mba-classroom-demo-v1"'),'Existing storage contract is preserved');
-assert.ok(/version:\\d+,sessions:/.test(app)&&app.includes('length:16')&&app.includes('const KEY="ob-mba-classroom-demo-v1"'),'Sixteen sessions and persistent local storage remain intact after lesson updates');
+assert.ok(/version:[0-9]+,sessions:/.test(app)&&app.includes('length:16')&&app.includes('const KEY="ob-mba-classroom-demo-v1"'),'Sixteen sessions and persistent local storage remain intact after lesson updates');
 assert.ok(/ob-mba-classroom-shell-v\d+/.test(sw),'New PWA cache version');
 assert.ok(sw.includes("'./impeccable.css?v=2'")&&sw.includes("'./assets/fonts/Vazirmatn.woff2'"),'Font and CSS offline-cached');
 assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom/assets/fonts/OFL-Vazirmatn.txt')),'Font license available');
