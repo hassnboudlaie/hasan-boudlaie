@@ -30,6 +30,34 @@ async function approved(token:unknown){
 }
 async function action(input:Record<string,unknown>){
  const mode=String(input.action||"");
+ if(mode==="issueRecovery"){
+  const token=input.token, number=normalizeNumber(input.student_number);
+  if(typeof token!=="string"||!/^[a-f0-9]{64}$/.test(token))return error("teacher_only",403);
+  const {data:session,error:e}=await db.from("mba_ob_sessions")
+   .select("role,revoked_at,expires_at").eq("token_hash",await sha(token)).maybeSingle();
+  if(e)throw Error("teacher_session_failed");
+  if(!session||session.role!=="teacher"||session.revoked_at||Date.parse(session.expires_at)<=Date.now())return error("teacher_only",403);
+  if(!/^\d{6,16}$/.test(number))return error("invalid_registration",400);
+  const {data:student,error:lookupError}=await db.from("mba_ob_students").select("id")
+   .eq("student_number",number).eq("approval_status","approved").is("disabled_at",null).is("merged_into",null).maybeSingle();
+  if(lookupError)throw Error("student_lookup_failed");
+  if(!student)return error("student_not_found",404);
+  const recovery=hex(), expires_at=new Date(Date.now()+60*60*1000).toISOString();
+  const {error:issueError}=await db.from("mba_ob_student_recovery_links")
+   .upsert({student_id:student.id,token_hash:await sha(recovery),expires_at});
+  if(issueError)throw Error("recovery_issue_failed");
+  return send({ok:true,recovery,expires_at});
+ }
+ if(mode==="redeemRecovery"){
+  const recovery=input.recovery,password=input.password;
+  if(typeof recovery!=="string"||!/^[a-f0-9]{64}$/.test(recovery))return error("invalid_recovery",400);
+  if(typeof password!=="string"||password.length<12||encoder.encode(password).length>72||!/[\p{L}]/u.test(password)||!/[0-9]/.test(password))
+   return error("password_policy",400);
+  const {data:id,error:e}=await db.rpc("mba_ob_redeem_student_recovery",{p_token_hash:await sha(recovery),p_password:password});
+  if(e)throw Error("recovery_failed");
+  if(typeof id!=="string")return error("invalid_recovery",400);
+  return send({ok:true});
+ }
  if(mode==="passwordStatus"||mode==="setPassword"){
   const user=await approved(input.token);
   if(!user)return error("session_expired",401);

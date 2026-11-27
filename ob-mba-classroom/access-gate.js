@@ -7,17 +7,19 @@ const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendan
 const DEVICE_API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-student-devices";
 const STORE="mba-ob-classroom-attendance-identity-v1",TRUST="mba-ob-teacher-trusted-device-v1";
 const gate=document.getElementById("entryGate"),site=document.getElementById("site");
-const message={invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این شماره دانشجویی قبلاً ثبت شده است. تأیید مجدد لازم نیست؛ با رمز شخصی خود وارد شوید. اگر رمز ندارید، ابتدا آن را از دستگاه قبلی فعال کنید.",
+const message={invalid_recovery:"این لینک منقضی شده یا قبلاً استفاده شده است. از مدرس لینک تازه بگیرید.",password_policy:"رمز باید دست‌کم ۱۲ نویسه و شامل حرف و عدد باشد. برای رمزهای بلند از حروف لاتین استفاده کنید.",password_mismatch:"دو رمز واردشده یکسان نیستند.",invalid_registration:"نام و کد دانشجویی را بررسی کنید.",already_registered:"این شماره دانشجویی قبلاً ثبت شده است. تأیید مجدد لازم نیست؛ با رمز شخصی خود وارد شوید. اگر رمز ندارید، ابتدا آن را از دستگاه قبلی فعال کنید.",
  invalid_credentials:"اطلاعات ورود صحیح نیست؛ شماره دانشجویی و رمز شخصی، یا اطلاعات ورود مدرس را بررسی کنید.",
  invalid_guest_registration:"نام و نام خانوادگی را کامل وارد کنید.",guest_registration_limit:"تعداد درخواست‌ها موقتاً زیاد است؛ با مدرس هماهنگ کنید.",
  invalid_national_id:"کد ملی معتبر نیست.",session_expired:"دسترسی این دستگاه منقضی شده است.",
  network_error:"اتصال اینترنت برای بررسی عضویت لازم است.",server_error:"اتصال به سامانه کلاس برقرار نشد."};
 const enc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const digit=s=>String(s||"").replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776)).replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).trim();
-let credential=null,trusted=null,selected="student",error="",loading=false,view="login",status=null,loaded=false,prefilledStudentNumber="";
+let recovery=new URLSearchParams(location.hash.slice(1)).get("recovery")||"";
+if(!/^[a-f0-9]{64}$/.test(recovery))recovery="";
+let credential=null,trusted=null,selected="student",error="",loading=false,view=recovery?"recover":"login",status=null,loaded=false,prefilledStudentNumber="";
 try{credential=JSON.parse(localStorage.getItem(STORE)||"null");trusted=localStorage.getItem(TRUST)}catch{}
-if(credential?.role==="teacher")selected="teacher";
-if(credential?.role==="guest")selected="guest";
+if(!recovery&&credential?.role==="teacher")selected="teacher";
+if(!recovery&&credential?.role==="guest")selected="guest";
 const fromStore=()=>{try{return JSON.parse(localStorage.getItem(STORE)||"null")}catch{return null}};
 function saveCred(c){credential=c;localStorage.setItem(STORE,JSON.stringify(c))}
 function forgetCred(){credential=null;localStorage.removeItem(STORE)}
@@ -55,13 +57,21 @@ function present(){
   +(credential?.name?'<div class="entrance-student">'+enc(credential.name)+(credential.student_number?' · '+enc(credential.student_number):"")+'</div>':"")
   +'<button class="entrance-primary" data-entrance="refresh" type="button">بررسی وضعیت</button>'
   +'<button class="entrance-secondary" data-entrance="reset" type="button">تغییر دستگاه یا حساب</button>';
+ }else if(view==="recover"){
+  inner='<h2>ساخت رمز شخصی</h2><p class="entrance-hint">پس از ثبت رمز، با شماره دانشجویی و رمز جدید وارد کلاس شوید.</p>'+
+   '<form id="entranceRecover" class="entrance-form"><label for="recoverPassword">رمز جدید (حداقل ۱۲ نویسه، شامل حرف و عدد)</label><input id="recoverPassword" name="password" type="password" minlength="12" maxlength="72" autocomplete="new-password" required>'+
+   '<label for="recoverConfirm">تکرار رمز جدید</label><input id="recoverConfirm" name="confirm" type="password" minlength="12" maxlength="72" autocomplete="new-password" required>'+
+   '<button class="entrance-primary" type="submit">ذخیره رمز شخصی</button></form>';
+ }else if(view==="recoveryHelp"){
+  inner='<h2>بازیابی دسترسی به حساب</h2><p class="entrance-hint">اگر مرورگر تأییدشده قبلی هنوز در دسترس است، در آن مرورگر از بخش «ورود در دستگاه‌های دیگر» رمز شخصی بسازید. در صورت فراموشی رمز یا دسترسی‌نداشتن به مرورگر قبلی، برای دریافت لینک یک‌بارمصرف با مدرس تماس بگیرید.</p>'+
+   '<button type="button" class="entrance-secondary" data-entrance="returning">بازگشت به ورود با رمز</button>';
  }else if(view==="returning"){
   inner='<h2>ورود دانشجوی تأییدشده</h2><p class="entrance-hint">پس از تأیید اولیه، می‌توانید بدون درخواست مجدد مدرس از دستگاه دیگری وارد شوید.</p>'+
    '<form id="entranceReturning" class="entrance-form"><label for="returningNumber">شماره دانشجویی</label><input id="returningNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" autocomplete="username" required value="'+enc(prefilledStudentNumber)+'" placeholder="شماره دانشجویی">'+
    '<label for="returningPassword">رمز شخصی</label><input id="returningPassword" name="password" type="password" minlength="12" maxlength="128" autocomplete="current-password" required placeholder="رمزی که قبلاً برای خودتان تعیین کردید">'+
    '<button class="entrance-primary" type="submit">ورود به کلاس بدون تأیید مجدد</button></form>'+
    '<button type="button" class="entrance-secondary" data-entrance="returnBack">بازگشت به ورود اولیه</button>'+
-   '<p class="entrance-hint">اگر هنوز رمز شخصی ندارید، از دستگاه تأییدشده قبلی وارد شوید و از بخش «ورود در دستگاه‌های دیگر» برای خود رمز تعریف کنید.</p>';
+   '<button type="button" class="entrance-secondary" data-entrance="recoveryHelp">فراموشی رمز یا دسترسی‌نداشتن به دستگاه قبلی</button>';
  }else if(selected==="student"){
   inner='<h2>ورود دانشجو</h2><form id="entranceStudent" class="entrance-form"><label for="studentNumber">کد دانشجویی</label><input id="studentNumber" name="student_number" dir="ltr" inputmode="numeric" pattern="[0-9۰-۹]{6,16}" minlength="6" maxlength="16" required autocomplete="off" placeholder="کد دانشجویی"><label for="studentName">نام و نام خانوادگی</label><input id="studentName" name="name" maxlength="90" autocomplete="name" required placeholder="نام و نام خانوادگی"><button class="entrance-primary" type="submit">درخواست عضویت جدید</button></form><button type="button" class="entrance-secondary" data-entrance="returning">قبلاً تأیید شده‌ام؛ ورود در دستگاه دیگر</button><p class="entrance-hint">تأیید مدرس فقط یک بار، هنگام عضویت اولیه لازم است؛ ثبت حضور در جلسه مستقل از ورود به اپ است.</p>';
  }else if(selected==="guest"){
@@ -80,6 +90,40 @@ function present(){
  +'<div class="entrance-card">'+(view==="login"?tabs:"")+inner+flash+'</div>'
  +'<p class="entrance-foot">مدیریت رفتار سازمانی · MBA</p><a class="entrance-install-link" href="./install.html" aria-label="نصب اپ مدیریت رفتار سازمانی روی گوشی"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg>نصب اپ روی گوشی</a></div></div>';
  gate.hidden=false;
+}
+function addTeacherRecovery(){
+ const actions=document.querySelector(".header-actions");
+ if(!actions||document.getElementById("obTeacherRecovery"))return;
+ const button=document.createElement("button");
+ button.id="obTeacherRecovery";button.type="button";button.className="btn secondary";
+ button.textContent="بازیابی حساب دانشجو";actions.append(button);
+ const dialog=document.createElement("dialog");
+ dialog.className="ob-device-dialog";dialog.setAttribute("aria-labelledby","obRecoveryTitle");
+ dialog.innerHTML='<div class="ob-device-inner"><h2 id="obRecoveryTitle">لینک بازیابی دانشجو</h2><p>هویت دانشجو و شماره‌اش را با فهرست کلاس تطبیق دهید. لینک را فقط خصوصی برای همان دانشجو بفرستید.</p>'+
+  '<form class="ob-device-form"><label for="obRecoverNumber">شماره دانشجویی</label><input id="obRecoverNumber" name="student_number" dir="ltr" inputmode="numeric" minlength="6" maxlength="16" required>'+
+  '<button type="submit" class="ob-device-submit">ساخت لینک یک‌بارمصرف</button></form>'+
+  '<p role="status"></p><input aria-label="لینک بازیابی" dir="ltr" type="url" readonly hidden><button type="button" data-recovery-close>بستن</button></div>';
+ document.body.append(dialog);
+ const form=dialog.querySelector("form"), field=dialog.querySelector('input[type="url"]'), status=dialog.querySelector('[role="status"]');
+ button.addEventListener("click",()=>{form.reset();field.value="";field.hidden=true;status.textContent="";dialog.showModal()});
+ dialog.querySelector("[data-recovery-close]").addEventListener("click",()=>dialog.close());
+ form.addEventListener("submit",async event=>{
+  event.preventDefault();
+  const submit=form.querySelector('[type="submit"]');
+  const student_number=digit(new FormData(form).get("student_number"));
+  field.value="";field.hidden=true;submit.disabled=true;
+  status.textContent="در حال ساخت لینک…";
+  try{
+   const {recovery}=await requestDevice("issueRecovery",{token:credential?.token,student_number});
+   if(!/^[a-f0-9]{64}$/.test(recovery))throw Error("server_error");
+   const url=new URL("./index.html",location.href);
+   url.hash="recovery="+recovery;
+   field.value=url.href;field.hidden=false;field.focus();field.select();
+   status.textContent="لینک تا یک ساعت اعتبار دارد. آن را کپی کنید و خصوصی بفرستید.";
+  }catch(error){
+   status.textContent=error.message==="student_not_found"?"دانشجوی تأییدشده‌ای با این شماره پیدا نشد.":"ساخت لینک انجام نشد. شماره و دسترسی مدرس را بررسی کنید.";
+  }finally{submit.disabled=false}
+ });
 }
 function unlock(role){
  if(loaded)return;
@@ -102,6 +146,7 @@ function unlock(role){
  gate.hidden=true;site.hidden=false;
  const roleMenu=document.querySelector(".demo-role-menu");
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
+ if(role==="teacher")addTeacherRecovery();
  // Education scripts load only after the server authorizes this device.
  const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=3","./session-03-content.js?v=3","./case-portal.js?v=6","./assignment-portal.js?v=4","./guided-learning.js?v=5","./presenter-player.js?v=3","./app.js?v=47"];
  (async()=>{for(const src of scripts)await new Promise((resolve,reject)=>{
@@ -140,6 +185,7 @@ gate.addEventListener("click",e=>{
  const act=b.dataset.entrance;
  if(act==="student"||act==="teacher"||act==="guest"){selected=act;view="login";error="";present()}
  else if(act==="returning"){selected="student";view="returning";error="";present()}
+ else if(act==="recoveryHelp"){view="recoveryHelp";error="";present()}
  else if(act==="returnBack"){selected="student";view="login";error="";present()}
  else if(act==="refresh"){check()}
  else if(act==="newDevice"){trusted=null;localStorage.removeItem(TRUST);present()}
@@ -153,7 +199,13 @@ gate.addEventListener("submit",e=>{
  e.preventDefault();loading=true;error="";const btn=form.querySelector('[type="submit"]');if(btn)btn.disabled=true;
  const d=new FormData(form);
  (async()=>{
-  if(form.id==="entranceReturning"){
+  if(form.id==="entranceRecover"){
+   const password=String(d.get("password")||"");
+   if(password!==d.get("confirm"))throw Error("password_mismatch");
+   await requestDevice("redeemRecovery",{recovery,password});
+   recovery="";history.replaceState(history.state,"",location.pathname+location.search);
+   forgetCred();selected="student";view="returning";
+  }else if(form.id==="entranceReturning"){
    const studentNumber=digit(d.get("student_number"));
    const data=await requestDevice("studentDeviceLogin",{student_number:studentNumber,password:String(d.get("password")||"")});
    saveCred({role:"student",token:data.token,name:data.name,student_number:data.student_number});unlock("student");
@@ -182,5 +234,5 @@ gate.addEventListener("submit",e=>{
   }
  })().catch(e=>{error=e.message;if(form.id==="entranceStudent"&&error==="already_registered"){prefilledStudentNumber=digit(d.get("student_number"));view="returning"}}).finally(()=>{loading=false;if(!loaded)present()});
 });
-present();check();
+present();if(!recovery)check();
 })();
