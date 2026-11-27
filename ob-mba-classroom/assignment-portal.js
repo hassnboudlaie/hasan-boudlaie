@@ -5,7 +5,8 @@ const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-assignme
 const STORE="mba-ob-classroom-attendance-identity-v1";
 const TEACHER_EMAIL="hasanboudlaie@gmail.com";
 const MAX_FILE=8*1024*1024;
-const messages={session_expired:"نشست شما منقضی شده؛ دوباره وارد اپ شوید.",student_only:"این بخش مخصوص دانشجویان تأییدشده است.",
+const sessionOneClosed=session=>Number(session)===1&&Date.now()>=Date.parse("2026-11-28T00:00:00+03:30");
+const messages={case_deadline_passed:"مهلت ثبت تکلیف جلسه اول به پایان رسیده است.",session_expired:"نشست شما منقضی شده؛ دوباره وارد اپ شوید.",student_only:"این بخش مخصوص دانشجویان تأییدشده است.",
  teacher_only:"این بخش فقط برای مدرس است.",invalid_session:"شماره جلسه معتبر نیست.",
  invalid_assignment:"عنوان، متن یا فایل تکلیف معتبر نیست.",invalid_attachment:"فقط PDF، DOCX، TXT، JPG یا PNG تا سقف ۸ مگابایت پذیرفته می‌شود.",
  invalid_file_signature:"محتوای فایل با نوع انتخاب‌شده تطبیق ندارد.",too_many_files:"حداکثر ۳ فایل ضمیمه کنید.",
@@ -59,7 +60,7 @@ function studentHTML(session,kind,{existingOnly=false}={}){
  return '<section class="as-student card" id="'+formId+'"'+(existingOnly?' data-as-existing-only':"")+'><div class="as-head"><div><span class="as-caption">Assignment Submission</span><h3>ارسال '+label(kind)+'</h3><p>پاسخ خود را بنویسید یا حداکثر سه فایل ضمیمه کنید.</p></div><span class="as-count">جلسه '+String(session).padStart(2,"0")+'</span></div>'+
  (guest?'<p class="as-alert">مهمان‌ها فقط امکان مشاهده دارند؛ ارسال تکلیف ویژه دانشجویان تأییدشده است.</p>':
  '<div class="as-live" data-as-status="'+id+'">'+(rec?statusHTML(rec,session,kind):'<span>در حال بررسی وضعیت ثبت…</span>')+'</div>'+
- (locked?'':('<form data-as-submit="1" data-session="'+session+'" data-kind="'+kind+'" class="as-form">'+
+ (sessionOneClosed(session)?'<p class="as-hint">مهلت ثبت تکلیف جلسه اول به پایان رسیده است.</p>':locked?'':('<form data-as-submit="1" data-session="'+session+'" data-kind="'+kind+'" class="as-form">'+
  '<label for="as-answer-'+id+'">پاسخ تشریحی دانشجو</label>'+
  '<textarea id="as-answer-'+id+'" name="answer" rows="7" maxlength="12000" placeholder="تحلیل خود را با استدلال، شواهد و مفاهیم درس بنویسید…">'+safe(rec?.status==="revision_requested"?rec.answer_text:"")+'</textarea>'+
  '<div class="as-file-control"><label for="as-file-'+id+'">بارگذاری فایل تکلیف (اختیاری)</label><input id="as-file-'+id+'" type="file" name="files" accept=".pdf,.docx,.txt,.jpg,.jpeg,.png" multiple><small>حداکثر ۳ فایل؛ هر فایل تا ۸ مگابایت. فرمت‌های PDF، Word (DOCX)، TXT و تصویر مجازند.</small></div>'+
@@ -90,6 +91,7 @@ async function submitForm(form){
  const files=Array.from(form.querySelector('input[type=file]')?.files||[]);
  const text=String(form.querySelector('textarea[name=answer]')?.value||"").trim();
  const notice=form.querySelector(".as-form-notice"),btn=form.querySelector(".as-submit");
+ if(sessionOneClosed(session)){if(notice)notice.textContent=messages.case_deadline_passed;return}
  if(text.length<8&&!files.length){if(notice)notice.textContent=messages.answer_or_file_required;return}
  if(files.length>3||files.some(f=>f.size>MAX_FILE)){if(notice)notice.textContent=messages.invalid_attachment;return}
  if(!user()?.token){if(notice)notice.textContent=messages.session_expired;return}
