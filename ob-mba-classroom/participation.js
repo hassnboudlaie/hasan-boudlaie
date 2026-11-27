@@ -79,10 +79,10 @@
       '</details>';
   }
 
-  function classroomSection({ quizzes, attendance, assignments, cases }) {
+  function classroomSection({ quizzes, attendance, assignments, cases, participation = [] }) {
     const caseItems = [...cases, ...assignments.filter(item => item.kind === "case")];
     const visible = quiz => !["not_ready", "unscheduled"].includes(quiz.status) ||
-      caseItems.some(item => item.session_no === quiz.session);
+      caseItems.some(item => item.session_no === quiz.session) || participation.some(item => item.session_no === quiz.session);
     const current = quizzes.filter(visible);
     const remaining = quizzes.filter(quiz => !visible(quiz));
     const work = assignments.filter(item => item.kind !== "case").sort((a,b) => a.session_no-b.session_no);
@@ -98,9 +98,12 @@
         (item.feedback ? '<p class="portfolio-copy">بازخورد مدرس · ' + escape(item.feedback) + '</p>' : '') +
         (teacher ? '<a class="btn" href="./index.html?view=caseReviews">مشاهده پاسخ‌ها و ارزیابی کیس</a>' : '') + '</div>').join("");
     }
+    function participationStatus(session) {
+      return participation.filter(item => item.session_no === session).map(item => '<div class="portfolio-session"><div class="portfolio-line"><strong>مشارکت گروهی جلسه ' + digits.format(session) + '</strong><span>امتیاز ' + digits.format(item.score) + (item.recoverable ? ' · قابل جبران' : '') + '</span></div><p class="portfolio-copy">' + escape(item.feedback) + '</p><p class="portfolio-meta">ثبت ' + date(item.recorded_at) + '</p></div>').join('');
+    }
     return '<section class="card" id="classroomHistory"><h2>فعالیت‌های کلاسی</h2><h3>وضعیت آزمون و تحلیل کیس هر جلسه</h3>' +
       (current.length ? current.map(quiz => '<section style="border:1px solid #9994;border-radius:12px;padding:.5rem;margin:.5rem 0"><h4 style="margin:.25rem .5rem">جلسه ' + digits.format(quiz.session) +
-        '</h4>' + quizRow(quiz).replace('<strong>جلسه ', '<strong>آزمون جلسه ') + caseStatus(quiz.session) + '</section>').join("") : '<p>هنوز آزمون برنامه‌ریزی‌شده یا ارسالی ثبت نشده است.</p>') +
+        '</h4>' + quizRow(quiz).replace('<strong>جلسه ', '<strong>آزمون جلسه ') + caseStatus(quiz.session) + participationStatus(quiz.session) + '</section>').join("") : '<p>هنوز آزمون برنامه‌ریزی‌شده یا ارسالی ثبت نشده است.</p>') +
       (remaining.length ? group("جلسات بدون آزمون زمان‌بندی‌شده", remaining, quizRow) : "") +
       (work.length ? group("سایر تکالیف کلاسی", work, item => '<article class="portfolio-record"><div class="portfolio-line"><strong>تکلیف جلسه ' +
         digits.format(item.session_no) + '</strong><span>' + escape(classroomStatus[item.status] || "") +
