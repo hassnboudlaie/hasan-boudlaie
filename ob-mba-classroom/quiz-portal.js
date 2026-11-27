@@ -42,7 +42,8 @@ function studentView(s){
  if(s.status==="unscheduled")return '<p class="quiz-locked">بانک ۱۰ سؤال آماده است. آزمون بعد از ثبت زمان پایان کلاس توسط مدرس فعال می‌شود.</p>';
  if(s.status==="upcoming")return '<p class="quiz-locked">آزمون هنوز شروع نشده است.</p>'+windowInfo;
  if(s.status==="closed")return '<p class="quiz-locked">مهلت این آزمون به پایان رسیده و پاسخ جدید پذیرفته نمی‌شود.</p>'+windowInfo;
- if(s.single_entry&&!s.entry_key)return windowInfo+'<p>دکمهٔ شروع، تنها فرصت آزمون‌دادن شما را فعال می‌کند. پس از شروع، در همین صفحه بمانید و هر ۱۰ پاسخ را ثبت نهایی کنید. با خروج، بستن یا تازه‌سازی صفحه، فرصت استفاده‌شده برنمی‌گردد. نمره و پاسخنامه تشریحی پس از ثبت نهایی نمایش داده می‌شود.</p><button type="button" class="quiz-submit" data-quiz-action="start" data-session="'+s.session+'">شروع آزمون</button><p role="status"></p>';
+ if((s.single_entry||singleEntry(s.session))&&!s.entry_key)return windowInfo+'<p>دکمهٔ شروع، تنها فرصت آزمون‌دادن شما را فعال می‌کند. پس از شروع، در همین صفحه بمانید و هر ۱۰ پاسخ را ثبت نهایی کنید. با خروج، بستن یا تازه‌سازی صفحه، فرصت استفاده‌شده برنمی‌گردد. نمره و پاسخنامه تشریحی پس از ثبت نهایی نمایش داده می‌شود.</p><button type="button" class="quiz-submit" data-quiz-action="start" data-session="'+s.session+'">شروع آزمون</button><p role="status"></p>';
+ if(!Array.isArray(s.questions)||s.questions.length!==10)return windowInfo+'<p class="quiz-error" role="alert">دریافت ۱۰ سؤال کامل نشد. با مدرس هماهنگ کنید.</p>';
  return windowInfo+'<form id="quizFinalForm" data-quiz-session="'+s.session+'" class="quiz-questions">'+s.questions.map((q,i)=>
  '<fieldset class="quiz-question"><legend><span class="quiz-question-no">سؤال '+digits(i+1)+'</span> '+safe(q.text)+'</legend>'+
  q.options.map((v,j)=>'<label class="quiz-option"><input type="radio" name="q'+i+'" value="'+j+'" required><span><b>'+["الف","ب","ج","د"][j]+'.</b> '+safe(v)+'</span></label>').join("")+'</fieldset>').join("")+
@@ -62,8 +63,7 @@ async function start(button){
   if(!target.isConnected)return;
   target.innerHTML=studentView(data);
   const form=target.querySelector("#quizFinalForm");
-  entryKeys.set(form,data.entry_key);
-  form.querySelector("input")?.focus();
+  if(form){entryKeys.set(form,data.entry_key);form.querySelector("input")?.focus()}
  }catch(e){
   if(!target.isConnected)return;
   if(["entry_used","already_submitted","quiz_closed"].includes(e?.message)){
