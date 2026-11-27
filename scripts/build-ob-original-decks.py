@@ -53,7 +53,7 @@ READINGS = ROOT / "ob-mba-classroom" / "materials" / "readings"
 for lang, pdf, directory, expected in [
     ("English original", SOURCE / "session-03.pdf", SOURCE / "session-03", 13),
     ("Persian supplementary", READINGS / "personality-session-03.pdf",
-     READINGS / "personality-session-03-slides", 51),
+     READINGS / "session-03-fa", 51),
 ]:
     if not pdf.exists():
         raise RuntimeError(f"Missing uploaded Session 03 PDF: {pdf}")
@@ -83,7 +83,7 @@ MANIFEST["sessions"]["3"]={
     "powerpoint":"materials/original/session-03-robbins.ppt",
     "persianSupplementary":{
         "slides":51,"format":"webp","aspect":"4:3",
-        "pagePattern":"materials/readings/personality-session-03-slides/slide-%02d.webp",
+        "pagePattern":"materials/readings/session-03-fa/slide-%02d.webp",
         "pdf":"materials/readings/personality-session-03.pdf",
         "powerpoint":"materials/readings/personality-session-03.pptx",
         "assessment":"materials/readings/personality-types-session-03.xls"
