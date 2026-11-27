@@ -1,0 +1,39 @@
+name: OB Session 03 Source-faithful Slide Images
+on:
+  push:
+    paths:
+      - "ob-mba-classroom/materials/original/session-03.pdf"
+      - "ob-mba-classroom/materials/readings/personality-session-03.pdf"
+      - "scripts/build-ob-session-03-images.py"
+      - ".github/workflows/ob-session-03-images.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish-real-slide-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install original slide renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Render the 13 English and 51 Persian slides
+        run: python scripts/build-ob-session-03-images.py
+      - name: Publish image assets to the original app
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ob-mba-classroom/materials/original/session-03/ ob-mba-classroom/materials/readings/session-03-fa/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish all 13 English and 51 Persian source-faithful slides for Session 3"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
