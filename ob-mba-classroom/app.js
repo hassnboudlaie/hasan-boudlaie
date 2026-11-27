@@ -17,6 +17,11 @@ if(n<=2&&Number(raw.version||1)<3){
 return merged});
 return {...base,...raw,version:9,sessions,poll:{...base.poll,...(raw.poll||{})},attendance:{...base.attendance,...(raw.attendance||{})},weights:Array.isArray(raw.weights)&&raw.weights.length===4?raw.weights:base.weights,feedback:Array.isArray(raw.feedback)?raw.feedback:[],studentWork:raw.studentWork&&typeof raw.studentWork==="object"?raw.studentWork:{}}}catch{return base}}
 let state=load();let ui={role:window.OB_ACCESS?.role==="teacher"?"teacher":"student",page:"home",session:1,tab:"theory",track:"concepts",edit:false,theme:localStorage.getItem("ob-mba-theme")==="dark"?"dark":"light",quizChoice:-1,quizIndex:0,slideIndex:0,presentationVariant:"fa",activityMode:"group"};
+const requestedSession=Number(new URLSearchParams(location.search).get("lesson"));
+if(Number.isInteger(requestedSession)&&requestedSession>=1&&requestedSession<=16&&window.OB_ACCESS?.role==="student"){
+ ui.page="session";ui.session=requestedSession;ui.tab="theory";
+}
+
 /* Auth-gated deep links to a session resource library or student quiz. */
 try{
  const params=new URLSearchParams(window.location.search);
