@@ -67,7 +67,7 @@ async function run(){
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
   await page.locator(".student-focus").waitFor();
-  assert.equal(await page.locator('#bottomNav a[href="./participation.html"]').count(),1,"Single direct student portfolio link");
+  assert.equal(await page.locator('#bottomNav a[href="./participation.html?v=4"]').count(),1,"Single direct student portfolio link");
    assert.equal(await page.locator('a.ob-console-row[href="./community.html"]').count(),1,"Community shortcut is available on the student dashboard");
   await noOverflow(page,config.name+" home");
   await save(page,config.name+"-01-home");
