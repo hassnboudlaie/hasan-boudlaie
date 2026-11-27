@@ -254,6 +254,30 @@ async function run(){
  await instructorPage.goto(url,{waitUntil:"domcontentloaded"});
  await instructorPage.locator(".page").waitFor();
  assert.equal(await instructorPage.locator("#roleSummary").textContent(),"مدرس","Verified teacher starts in teacher role");
+
+  // Session 03: test the actual, separately uploaded 13+51 source slides and XLS.
+  const sourcePage=await instructorCtx.newPage();
+  await sourcePage.goto(url,{waitUntil:"domcontentloaded"});
+  await sourcePage.locator('[data-action="editSession"][data-id="3"]').click();
+  await sourcePage.locator(".ob-session3-source-files").first().waitFor();
+  assert.ok(await sourcePage.locator('a[href="./materials/original/session-03-robbins.ppt"][download]').count()>0,"Session 3 editor offers English source PPT download");
+  assert.ok(await sourcePage.locator('a[href="./materials/readings/personality-session-03.pptx"][download]').count()>0,"Session 3 editor offers separate Persian PPTX");
+  assert.ok(await sourcePage.locator('a[href="./materials/readings/personality-types-session-03.xls"][download]').count()>0,"Separate Session 3 personality XLS is downloadable");
+  const sourceImage=sourcePage.locator(".ob-session3-thumbnail").first();
+  await sourcePage.waitForFunction(()=>Array.from(document.querySelectorAll(".ob-session3-thumbnail")).every(img=>img.complete&&img.naturalWidth>0),{timeout:15000});
+  assert.ok(await sourceImage.isVisible(),"Uploaded source slide thumbnail is visible in the teacher editor");
+  await sourcePage.locator(".ob-session3-source-files [data-action=openOriginalEnglish]").first().click();
+  assert.ok((await sourcePage.locator(".presenter-count").textContent()).includes("13"),"English source player includes all 13 slides");
+  await sourcePage.waitForFunction(()=>document.querySelector(".presenter-original-slide img")?.naturalWidth>0);
+  await sourcePage.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
+  assert.ok((await sourcePage.locator(".presenter-count").textContent()).includes("51"),"Persian supplementary viewer includes all 51 slides");
+  await sourcePage.waitForFunction(()=>document.querySelector(".presenter-original-slide img")?.naturalWidth>0);
+  await sourcePage.locator("#presenterPageSelect").selectOption("51");
+  await sourcePage.waitForFunction(()=>document.querySelector(".presenter-original-slide img")?.naturalWidth>0);
+  assert.ok((await sourcePage.locator(".presenter-original-slide img").getAttribute("src")).endsWith("/slide-51.webp"),"The final Persian source slide is present, not a placeholder");
+  await sourcePage.close();
+  console.log("PASS instructor Session 03 editor: exact PPT/PPTX/XLS and 13 English + 51 Persian original slide pages");
+
  await instructorPage.locator(".ob-console-settings > summary").click();
   assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher QR is available under clearly labeled class tools");
  await instructorPage.locator('[data-action="teacherCurrentPresentation"]').click();
