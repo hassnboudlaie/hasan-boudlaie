@@ -90,33 +90,43 @@ async function run(){
   await page.locator("#sectionSelect").selectOption("case");
   await page.locator('.case-linear-workspace').waitFor();
   assert.equal(await page.locator('.case-step').count(),6);
-  assert.equal(await page.locator('.case-step input[type="radio"]').count(),24);
+  assert.equal(await page.locator('.case-step input[type="radio"]').count(),4);
+  assert.equal(await page.locator('.case-step input[type="checkbox"]').count(),30);
+  assert.equal(await page.getByText('راهنمای شش مرحله تحلیل کیس با مثال',{exact:true}).count(),0);
   assert.ok(await page.locator('.gr-case-table').isVisible());
   await page.locator('[data-action="submitCase"]').waitFor();
   assert.equal(await page.locator('[data-action="submitCase"]').isDisabled(),true);
   assert.equal(await page.locator('#caseIntegratedReport .case-narrative').count(),0);
   const keys=["problem","evidence","levels","explain","intervention","measurement"],selected=[];
   for(let i=0;i<keys.length;i++){
-    const opt=page.locator('input[data-guided-key="case-'+keys[i]+'"]').nth(i%4);
-    selected.push(await opt.getAttribute("value"));await opt.check();
-    assert.equal(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').count(),1);
+    const opts=page.locator('input[data-guided-key="case-'+keys[i]+'"]'),chosen=[];
+    const count=i===0?1:2;
+    for(let j=0;j<count;j++){const opt=opts.nth(j);chosen.push(await opt.getAttribute("value"));await opt.check()}
+    selected.push(chosen);
+    assert.equal(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').count(),count);
+    if(i>0){assert.equal(await opts.nth(2).isDisabled(),true);await opts.nth(1).uncheck();assert.equal(await opts.nth(2).isEnabled(),true);await opts.nth(1).check()}
     if(i<5){assert.equal(await page.locator('#caseIntegratedReport .case-narrative').count(),0);assert.equal(await page.locator('[data-action="submitCase"]').isDisabled(),true)}
   }
   await page.locator('[data-guided-key="case-problem-note"]').fill("توضیح تکمیلی آزمایشی");
   assert.ok(await page.locator('#caseIntegratedReport .case-narrative').isVisible());
-  for(const answer of selected)assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes(answer));
+  for(const group of selected)for(const answer of group)assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes(answer));
   assert.equal(await page.locator('[data-action="submitCase"]').isEnabled(),true);
   await page.reload({waitUntil:"domcontentloaded"});
   await page.locator('.ob-home-session-directory button[data-page="sessions"]').click();
   await page.locator('[data-action="openSession"][data-id="1"]').click();
   await page.locator("#sectionSelect").selectOption("case");
-  for(let i=0;i<keys.length;i++)assert.equal(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').inputValue(),selected[i]);
+  for(let i=0;i<keys.length;i++)assert.deepEqual(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').evaluateAll(nodes=>nodes.map(el=>el.value)),selected[i]);
   assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("توضیح تکمیلی آزمایشی"));
   await noOverflow(page,config.name+" unified case");
   await save(page,config.name+"-04-case-workbook");
+  page.once("dialog",dialog=>dialog.dismiss());
+  await page.locator('[data-action="submitCase"]').click();
+  assert.equal(draftSent,null,"Cancelling explicit confirmation sends nothing");
+  page.once("dialog",dialog=>dialog.accept());
   await page.locator('[data-action="submitCase"]').click();
   await page.getByText("ارسال‌شده · در انتظار ارزیابی").waitFor();
   assert.ok(draftSent&&Object.keys(draftSent.answers).length===6,"All six analytical answers submitted to backend");
+  for(let i=1;i<keys.length;i++)assert.equal(draftSent.answers[keys[i]],selected[i].join("\n"),"Both selected responses are submitted in a single step");
   await noOverflow(page,config.name+" submission");
   await save(page,config.name+"-04b-submitted");
   assert.equal(await page.locator('#sectionSelect option[value="activity"]').count(),0,"No separate roleplay route");
@@ -259,11 +269,20 @@ async function run(){
   const sourcePage=await instructorCtx.newPage();
   await sourcePage.goto(url,{waitUntil:"domcontentloaded"});
   await sourcePage.locator('[data-action="editSession"][data-id="3"]').click();
-  await sourcePage.locator(".version-choices").first().waitFor();
+  await sourcePage.locator(".ob-session3-files-grid").first().waitFor();
+  const caseSection=sourcePage.locator('details.disclosure').filter({has:sourcePage.getByText("کیس، تحلیل و ثبت تکلیف",{exact:true})});
+  await caseSection.locator("summary").first().click();
+  assert.equal(await caseSection.locator('.case-step').count(),6);
+  assert.equal(await caseSection.locator('.case-step input[type="checkbox"]').count(),30);
+  for(const key of ["problem","evidence","levels","explain","intervention","measurement"])await caseSection.locator('input[data-guided-key="case-'+key+'"]').first().check();
+  assert.ok(await caseSection.locator('#caseIntegratedReport .case-narrative').isVisible());
+  assert.equal(await caseSection.locator('[data-action="confirmCasePreview"]').isEnabled(),true);
+  assert.equal(await caseSection.locator('[data-action="submitCase"]').count(),0);
+  await caseSection.locator('[data-action="confirmCasePreview"]').click();
   assert.ok(await sourcePage.locator('a[href="./materials/original/session-03-robbins.ppt"][download]').count()>0,"Session 3 editor offers English source PPT download");
   assert.ok(await sourcePage.locator('a[href="./materials/readings/personality-session-03.pptx"][download]').count()>0,"Session 3 editor offers separate Persian PPTX");
   assert.ok(await sourcePage.locator('a[href="./materials/readings/personality-types-session-03.xls"][download]').count()>0,"Separate Session 3 personality XLS is downloadable");
-  await sourcePage.locator(".version-choices [data-action=openOriginalEnglish]").first().click();
+  await sourcePage.locator(".ob-session3-files-grid [data-action=openOriginalEnglish]").first().click();
   assert.ok((await sourcePage.locator(".presenter-count").textContent()).includes("13"),"English source player includes all 13 slides");
   await sourcePage.waitForFunction(()=>document.querySelector(".presenter-original-slide img")?.naturalWidth>0);
   await sourcePage.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
