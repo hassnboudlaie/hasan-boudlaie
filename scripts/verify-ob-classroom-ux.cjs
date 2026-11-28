@@ -90,7 +90,7 @@ assert.ok(gateJs.includes('course-content.js?v=7')&&sw.includes('course-content.
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
 assert.ok(/lesson-enrichment\.js\?v=\d+/.test(gateJs)&&gateJs.match(/lesson-enrichment\.js\?v=\d+/)?.[0]===sw.match(/lesson-enrichment\.js\?v=\d+/)?.[0],'Current lesson-enrichment version is loaded and cached');
 assert.ok(/guided-learning\.js\?v=\d+/.test(gateJs)&&gateJs.match(/guided-learning\.js\?v=\d+/)?.[0]===sw.match(/guided-learning\.js\?v=\d+/)?.[0],'Current guided-learning version is loaded and cached');
-assert.ok(html.includes('guided-learning.css?v=3')&&sw.includes('guided-learning.css?v=3'),'Guided styling cached');
+assert.ok(html.includes('guided-learning.css?v=5')&&sw.includes('guided-learning.css?v=5'),'Guided styling cached');
 assert.equal(publicCourse.OB_LESSON_ENRICHMENT.sessions.length,2,'Both source chapters enriched');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseFramework.steps.length===6&&s.caseFramework.steps.reduce((n,p)=>n+p.points,0)===20),'Both case rubrics have six stages and 20 points');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseStudy.tag.includes('فرضی')&&s.caseStudy.dataTable.length>=4),'Cases are honest data-led hypothetical scenarios');
@@ -171,7 +171,13 @@ for(const id of [1,2,3]){
  work.guidedAnswers['case-problem-note']='توضیح تکمیلی آزمایشی';
  const result=caseModel.OB_CASE_EXPORT.build(id,x,work);
  assert.equal(result.completed,6,'Six valid answers are included for session '+id);
- const final=caseModel.OB_GUIDED.stepsOf(x,'case',work).at(-1).body;
+ const final=caseModel.OB_GUIDED.casePage(x,work);
+ assert.equal((final.match(/class="case-step"/g)||[]).length,6);
+ assert.equal((final.match(/type="radio"/g)||[]).length,24);
+ const pending=caseModel.OB_GUIDED.casePage(x,{guidedAnswers:{}});
+ assert.ok(!pending.includes('class="case-narrative"')&&pending.includes('0 از ۶ گام'));
+ for(let n=1;n<6;n++){const partial={guidedAnswers:Object.fromEntries(Object.entries(work.guidedAnswers).filter(([k])=>!k.endsWith('-note')).slice(0,n))};assert.ok(!caseModel.OB_GUIDED.casePage(x,partial).includes('class="case-narrative"'))}
+
  assert.ok(final.includes('caseIntegratedReport')&&final.includes('گام 6')&&final.includes('توضیح تکمیلی آزمایشی'),'Complete narrative is automatic on the final screen');
  for(const step of result.rows)assert.ok(final.includes(step.answer),'Chosen answer appears unchanged in the integrated report');
  const incomplete=caseModel.OB_CASE_EXPORT.build(id,x,{guidedAnswers:{'case-problem':'پاسخ متنی نامعتبر'}});
@@ -289,17 +295,13 @@ doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker
 assert.ok(app.innerHTML.includes('gr-shell')&&app.innerHTML.includes('واقعیت مشاهده‌شده')&&app.innerHTML.includes('تحلیل با مفهوم درس'),'Structured single-example reader visible');
 click('guidedNext');assert.ok(app.innerHTML.includes('data-stage-index="1"'),'Guided reader moves to next example');
 doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker"]'},value:'case'}});
-assert.ok(app.innerHTML.includes('اطلاعات کیس')&&app.innerHTML.includes('مرکز خدمات سپهر'),'Case starts with relevant organizational behavior facts');
-click('guidedNext');
-assert.ok(app.innerHTML.includes('Three Levels of OB'),'Concept toolkit matches Robbins chapter 1');
-click('guidedNext');click('guidedNext');
-assert.equal((app.innerHTML.match(/type="radio"/g)||[]).length,4,'Four selectable case options per stage');
-assert.equal((app.innerHTML.match(/<textarea/g)||[]).length,1,'Case analysis includes optional rationale');
+assert.ok(app.innerHTML.includes('متن و داده‌های کیس')&&app.innerHTML.includes('مرکز خدمات سپهر'),'Case starts with relevant facts');
+assert.equal((app.innerHTML.match(/type="radio"/g)||[]).length,24,'Six groups of four selectable choices');
 const sampleAnswer='پاسخ آزمایشی برای ماندگاری روی گوشی';
 doc.listeners.input({target:{matches(x){return x==='[data-guided-key]'},dataset:{guidedKey:'case-problem-note'},value:sampleAnswer}});
-click('guidedNext');click('guidedPrev');
-assert.ok(app.innerHTML.includes(sampleAnswer),'Case answer survives guided navigation');
-assert.ok(saved['ob-mba-classroom-demo-v1'].includes(sampleAnswer),'Guided case answer is persisted in original local store');
+click('sessionTab',{tab:'case'});
+assert.ok(app.innerHTML.includes(sampleAnswer),'Case note survives re-render');
+assert.ok(saved['ob-mba-classroom-demo-v1'].includes(sampleAnswer),'Case answer persisted');
 assert.ok(!app.innerHTML.includes('value="activity"')&&!app.innerHTML.includes('value="reflection"'),'Redundant activities removed from student navigation');
 fakeWindow.OB_QUIZ={studentHTML:session=>'<section class="quiz-portal">آزمون پایانی جلسه '+session+'</section>',refreshStudent(){},refreshTeacherPreview(){}};
 doc.listeners.change({target:{matches:x=>x==='[data-action="sessionPicker"]',value:'finalQuiz'}});
@@ -309,7 +311,7 @@ click('navigate',{page:'sessions'});
 click('openSession',{id:'2'});
 click('setTrack',{track:'practice'});
 doc.listeners.change({target:{matches(x){return x==='[data-action="sessionPicker"]'},value:'reflection'}});
-assert.ok(app.innerHTML.includes('data-guided-mode="case"')&&!app.innerHTML.includes('value="reflection"'),'Earlier reflection navigation resolves to the consolidated case workspace');
+assert.ok(app.innerHTML.includes('case-linear-workspace')&&!app.innerHTML.includes('value="reflection"'),'Earlier reflection navigation resolves to the consolidated case workspace');
 role('teacher');
 assert.ok(!app.innerHTML.includes('ابزارهای کلاس و تنظیمات'),'Student cannot change to teacher role via selector');
 fakeWindow.OB_ACCESS.role='teacher';

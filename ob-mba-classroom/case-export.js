@@ -28,7 +28,8 @@ function narrativeHTML(info){
  '<p class="meta">'+(complete?"این شش گام یک چارچوب قابل تکرار برای تحلیل کیس‌های دیگر است: از مسئله و شواهد به تحلیل، تبیین، اقدام و سنجش برسید.":"برای ساخت گزارش کامل، به گام‌های باقی‌مانده برگردید و پاسخ انتخاب کنید.")+'</p></section>';
 }
 function inlineReport(info){
- return '<section class="case-integrated-report" aria-label="گزارش یکپارچه تحلیل کیس"><h4>گزارش یکپارچه تحلیل شما</h4><p class="meta">'+info.completed+' از ۶ گام تکمیل شده</p>'+narrativeHTML(info)+'</section>';
+ const complete=info.completed===6&&info.rows.length===6;
+ return '<section class="case-integrated-report" aria-label="گزارش یکپارچه تحلیل کیس" data-case-complete="'+String(complete)+'"><h4>گزارش یکپارچه تحلیل شما</h4><p class="meta" role="status">'+info.completed+' از ۶ گام تکمیل شده</p>'+(complete?narrativeHTML(info):'<p>پس از انتخاب یک گزینه در هر شش گام، روایت کامل شما خودکار در همین قسمت نمایش داده می‌شود.</p>')+'</section>';
 }
 function reportHTML(info){
  return '<h1>'+esc(info.title)+'</h1><p class="meta"><strong>کیس:</strong> '+esc(info.caseTitle)+' | <strong>دانشجو:</strong> '+esc(info.student)+'</p><p class="meta">تکمیل‌شده: '+info.completed+' از ۶ گام</p>'+narrativeHTML(info);

@@ -87,36 +87,31 @@ async function run(){
   assert.equal(await page.locator(".gr-stage-tab").count(),3,"Three separate examples");
   await noOverflow(page,config.name+" examples");
   await page.locator("#sectionSelect").selectOption("case");
-  await page.locator('.gr-shell[data-guided-mode="case"]').waitFor();
-  assert.ok((await page.locator(".gr-case-table").count())===1,"Chapter case presents evidence table rather than an irrelevant case link");
-  assert.ok((await page.locator(".gr-case-table tr").count())>=5,"Case contains usable management data");
-  await save(page,config.name+"-03-case-source");
-  await page.locator('[data-action="guidedNext"]').click();
-  assert.ok(await page.getByText("Three Levels of OB").first().isVisible(),"Theory toolbox links case to Robbins");
-  await page.locator('[data-action="guidedNext"]').click();
-  await page.locator('[data-action="guidedNext"]').click();
-   assert.equal(await page.locator('.gr-stage input[type="radio"][data-guided-key]').count(),4,"Four visible case choices per stage");
-   const initialChoice=await page.locator('input[data-guided-key="case-problem"]').first().getAttribute("value");
-   await page.locator('input[data-guided-key="case-problem"]').first().check();
-   await page.locator('[data-guided-key="case-problem-note"]').fill("توضیح تکمیلی آزمایشی");
-  await page.locator('[data-action="guidedNext"]').click();
-  await page.locator('[data-action="guidedPrev"]').click();
-  assert.equal(await page.locator('input[data-guided-key="case-problem"]:checked').inputValue(),initialChoice,"Autosave across stages");
-  await noOverflow(page,config.name+" case worksheet");
-  await save(page,config.name+"-04-case-workbook");
+  await page.locator('.case-linear-workspace').waitFor();
+  assert.equal(await page.locator('.case-step').count(),6);
+  assert.equal(await page.locator('.case-step input[type="radio"]').count(),24);
+  assert.ok(await page.locator('.gr-case-table').isVisible());
+  await page.locator('[data-action="submitCase"]').waitFor();
+  assert.equal(await page.locator('[data-action="submitCase"]').isDisabled(),true);
+  assert.equal(await page.locator('#caseIntegratedReport .case-narrative').count(),0);
+  const keys=["problem","evidence","levels","explain","intervention","measurement"],selected=[];
+  for(let i=0;i<keys.length;i++){
+    const opt=page.locator('input[data-guided-key="case-'+keys[i]+'"]').nth(i%4);
+    selected.push(await opt.getAttribute("value"));await opt.check();
+    assert.equal(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').count(),1);
+    if(i<5){assert.equal(await page.locator('#caseIntegratedReport .case-narrative').count(),0);assert.equal(await page.locator('[data-action="submitCase"]').isDisabled(),true)}
+  }
+  await page.locator('[data-guided-key="case-problem-note"]').fill("توضیح تکمیلی آزمایشی");
+  assert.ok(await page.locator('#caseIntegratedReport .case-narrative').isVisible());
+  for(const answer of selected)assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes(answer));
+  assert.equal(await page.locator('[data-action="submitCase"]').isEnabled(),true);
   await page.reload({waitUntil:"domcontentloaded"});
   await page.locator('.student-focus button[data-action="openActive"]').click();
   await page.locator("#sectionSelect").selectOption("case");
-  assert.equal(await page.locator('input[data-guided-key="case-problem"]:checked').inputValue(),initialChoice,"Session text survives refresh");
-  const keys=["problem","evidence","levels","explain","intervention","measurement"];
-  for(let i=0;i<keys.length;i++){
-   await page.locator('[data-action="guidedJump"][data-index="'+(i+3)+'"]').click();
-    await page.locator('input[data-guided-key="case-'+keys[i]+'"]').nth(i%4).check();
-  }
-  await page.locator('[data-action="guidedJump"][data-index="9"]').click();
-  assert.ok(await page.locator('#caseIntegratedReport .case-narrative').isVisible(),"Six-step integrated report is displayed automatically");
-  assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("6 از ۶ گام تکمیل شده"),"All six case choices are reflected in the final narrative");
-  assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("توضیح تکمیلی آزمایشی"),"Optional rationale is reflected in the report");
+  for(let i=0;i<keys.length;i++)assert.equal(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').inputValue(),selected[i]);
+  assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("توضیح تکمیلی آزمایشی"));
+  await noOverflow(page,config.name+" unified case");
+  await save(page,config.name+"-04-case-workbook");
   await page.locator('[data-action="submitCase"]').click();
   await page.getByText("ارسال‌شده · در انتظار ارزیابی").waitFor();
   assert.ok(draftSent&&Object.keys(draftSent.answers).length===6,"All six analytical answers submitted to backend");
@@ -145,9 +140,7 @@ async function run(){
   assert.equal(await page.locator(".quiz-answer-review").count(),10,"Explanatory answer key released after deadline");
   assert.equal(await page.locator('#sectionSelect option[value="reflection"]').count(),0,"No separate duplicate assignment tab");
   await page.locator("#sectionSelect").selectOption("case");
-  assert.ok(await page.locator('.gr-shell[data-guided-mode="case"]').isVisible(),"Case analysis and submission use the same workspace");
-  const alternate=page.locator('details').filter({has:page.getByText("ارسال تحلیل متنی یا فایل",{exact:true})});
-  assert.equal(await alternate.getAttribute("open"),null,"Optional text or file submission starts collapsed");
+  assert.ok(await page.locator('.case-linear-workspace').isVisible(),"Case analysis and submission use the same workspace");
   assert.ok(await page.getByText("ارسال‌شده · در انتظار ارزیابی",{exact:true}).isVisible(),"Previously submitted case remains visible from the same workspace");
   await noOverflow(page,config.name+" assignment");
   await save(page,config.name+"-06-assignment");

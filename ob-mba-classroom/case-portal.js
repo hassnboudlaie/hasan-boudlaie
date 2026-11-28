@@ -51,9 +51,12 @@ function submittedReport(lesson){const rec=my.get(Number(lesson))?.submission;re
 function syncSubmitButton(lesson){
  const target=document.getElementById("caseSubmitStatus"),btn=target?.querySelector('[data-action="submitCase"]');
  const fieldsNode=document.getElementById("caseQuestionFields");
- if(!btn||!fieldsNode||Number(target.dataset.session)!==Number(lesson))return;
+ if(!fieldsNode||!target||Number(target.dataset.session)!==Number(lesson))return;
  const complete=fields.every(key=>fieldsNode.querySelector('input[type="radio"][data-guided-key="case-'+key+'"]:checked'));
- btn.disabled=!complete;btn.setAttribute("aria-disabled",String(!complete));
+ if(btn){btn.disabled=!complete;btn.setAttribute("aria-disabled",String(!complete))}
+ const ready=document.querySelector("#caseIntegratedReport [data-case-complete]");
+ const reportComplete=ready?.dataset.caseComplete==="true";
+ document.querySelectorAll(".case-result .gr-report-actions button").forEach(el=>{el.disabled=!reportComplete;el.setAttribute("aria-disabled",String(!reportComplete))});
 }
 function drawStudent(lesson){
  const target=document.getElementById("caseSubmitStatus");

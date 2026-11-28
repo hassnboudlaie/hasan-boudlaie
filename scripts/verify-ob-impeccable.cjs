@@ -41,6 +41,6 @@ assert.ok(/version:[0-9]+,sessions:/.test(app)&&app.includes('length:16')&&app.i
 assert.ok(/ob-mba-classroom-shell-v\d+/.test(sw),'New PWA cache version');
 assert.ok(sw.includes("./impeccable.css?v=2")&&sw.includes("./assets/fonts/Vazirmatn.woff2"),'Font and CSS offline-cached');
 assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom/assets/fonts/OFL-Vazirmatn.txt')),'Font license available');
-for(const file of ['learning-analytics.js','learning-analytics.css','learning-journey.js','learning-journey.css','student-devices.js','student-devices.css']){assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom',file)),'Missing '+file);assert.ok(sw.includes("'./"+file+"?v="+(file==="learning-analytics.js"?2:1)+"'"),'Offline missing '+file)}
+for(const file of ['learning-analytics.js','learning-analytics.css','learning-journey.js','learning-journey.css','student-devices.js','student-devices.css']){assert.ok(fs.existsSync(path.join(root,'ob-mba-classroom',file)),'Missing '+file);assert.ok(sw.includes("./"+file+"?v="+(file==="learning-analytics.js"?2:1)),'Offline missing '+file)}
 assert.match(app,/OB_ANALYTICS\?\.onRender/,'Analytics wired into approved app');
 console.log('PASS Allameh Impeccable typography, focus, RTL, offline font and storage-contract QA');
