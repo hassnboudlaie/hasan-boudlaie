@@ -48,6 +48,13 @@ function statusHTML(lesson){
  return common+feedback+email+(rec.status==="revision_requested"?'<p class="case-hint">شش پاسخ را اصلاح کنید و نسخه جدید را بفرستید.</p><button type="button" class="case-submit-btn" data-action="submitCase">ارسال نسخه اصلاح‌شده</button>':"")+(history?'<details class="case-history"><summary>سوابق ارزیابی</summary><ol>'+history+'</ol></details>':"");
 }
 function submittedReport(lesson){const rec=my.get(Number(lesson))?.submission;return rec&&rec.status!=="revision_requested"&&rec.answers?rec:null}
+function syncSubmitButton(lesson){
+ const target=document.getElementById("caseSubmitStatus"),btn=target?.querySelector('[data-action="submitCase"]');
+ const fieldsNode=document.getElementById("caseQuestionFields");
+ if(!btn||!fieldsNode||Number(target.dataset.session)!==Number(lesson))return;
+ const complete=fields.every(key=>fieldsNode.querySelector('input[type="radio"][data-guided-key="case-'+key+'"]:checked'));
+ btn.disabled=!complete;btn.setAttribute("aria-disabled",String(!complete));
+}
 function drawStudent(lesson){
  const target=document.getElementById("caseSubmitStatus");
  if(target&&Number(target.dataset.session)===lesson)target.innerHTML=statusHTML(lesson);
@@ -55,7 +62,16 @@ function drawStudent(lesson){
  if(report&&Number(report.dataset.session)===lesson&&rec&&window.OB_CASE_EXPORT){
   const enrichment=window.OB_LESSON_ENRICHMENT?.sessions?.find(x=>x.id===lesson);
   if(enrichment)report.innerHTML=window.OB_CASE_EXPORT.inlineReport(window.OB_CASE_EXPORT.build(lesson,enrichment,{},rec));
+  const fieldset=document.getElementById("caseQuestionFields");
+  if(fieldset){
+   fieldset.disabled=true;
+   for(const key of fields){const raw=String(rec.answers?.[key]||""),sep="\n\nتوضیح تکمیلی: ",idx=raw.indexOf(sep),v=idx<0?raw:raw.slice(0,idx);
+    fieldset.querySelectorAll('input[data-guided-key="case-'+key+'"]').forEach(el=>{el.checked=el.value===v});
+    const note=fieldset.querySelector('textarea[data-guided-key="case-'+key+'-note"]');if(note)note.value=idx<0?"":raw.slice(idx+sep.length);
+   }
+  }
  }
+ syncSubmitButton(lesson);
 }
 async function refreshStudent(lesson,force=false){
   if(window.OB_ACCESS?.role==="guest"){drawStudent(Number(lesson));return;}
@@ -162,5 +178,5 @@ document.addEventListener("click",async e=>{
   }catch(err){alert(explain(err))}
  }
 });
-window.OB_CASE={refreshStudent,submitCase,teacherHTML,refreshTeacher,submittedReport,setTeacherSession:n=>{teacherSession=[1,2,3].includes(Number(n))?Number(n):0},studentStatusMarkup:statusHTML};
+window.OB_CASE={refreshStudent,submitCase,teacherHTML,refreshTeacher,submittedReport,syncSubmitButton,setTeacherSession:n=>{teacherSession=[1,2,3].includes(Number(n))?Number(n):0},studentStatusMarkup:statusHTML};
 })();
