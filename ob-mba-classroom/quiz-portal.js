@@ -1,4 +1,4 @@
-/* Private classroom quizzes: one-time submission, server grading; sessions 1 and 2 release reviews after submission. */
+/* Private classroom quizzes: immediate score, answer review only after common deadline. */
 (()=>{
 "use strict";
 const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",KEY="mba-ob-classroom-attendance-identity-v1",MAIL="hasanboudlaie@gmail.com";
@@ -34,7 +34,7 @@ function studentView(s){
  const windowInfo=s.opens_at?'<p class="quiz-window-details"><strong>شروع:</strong> '+date(s.opens_at)+' <strong>پایان مهلت:</strong> '+date(lastMinute(s.session,s.closes_at))+'</p>':"";
  if(a){
   return '<div class="quiz-confirm"><h4>پاسخ‌ها ثبت نهایی شدند</h4><p>شناسه ثبت: <code dir="ltr">'+safe(a.id)+'</code></p><p>تاریخ: '+date(a.submitted_at)+'</p>'+
-  (a.score!=null?'<strong>نمره قطعی: '+digits(a.score)+' از ۲۰ · '+digits(a.correct_count)+' پاسخ درست از ۱۰ سؤال</strong><details class="quiz-review" open><summary>مشاهده پاسخنامه تشریحی و ارزیابی تک‌تک سؤال‌ها</summary>'+a.review.map(q=>'<div class="quiz-answer-review"><strong>سؤال '+digits(q.no)+': '+safe(q.text||"")+'</strong><p>پاسخ شما: '+safe(q.options?.[q.answer]||("گزینه "+digits(q.answer+1)))+'</p><p>پاسخ صحیح: '+safe(q.options?.[q.correct_index]||("گزینه "+digits(q.correct_index+1)))+'</p><p><strong>توضیح علمی:</strong> '+safe(q.explanation)+'</p></div>').join("")+'</details>':'<p>نمره و پاسخنامه پس از پایان مهلت آزمون نمایش داده می‌شوند.</p>')+
+  (a.score!=null?'<strong>نمره قطعی: '+digits(a.score)+' از ۲۰ · '+digits(a.correct_count)+' پاسخ درست از ۱۰ سؤال</strong>':'<p>نمره هنوز در دسترس نیست.</p>')+(a.review_released===true&&Array.isArray(a.review)&&a.review.length===10?'<details class="quiz-review" open><summary>مشاهده پاسخنامه تشریحی و ارزیابی تک‌تک سؤال‌ها</summary>'+a.review.map(q=>'<div class="quiz-answer-review"><strong>سؤال '+digits(q.no)+': '+safe(q.text||"")+'</strong><p>پاسخ شما: '+safe(q.options?.[q.answer]||("گزینه "+digits(q.answer+1)))+'</p><p>پاسخ صحیح: '+safe(q.options?.[q.correct_index]||("گزینه "+digits(q.correct_index+1)))+'</p><p><strong>توضیح علمی:</strong> '+safe(q.explanation)+'</p></div>').join("")+'</details>':'<p>برای حفظ اعتبار آزمون، کلید پاسخ و پاسخنامه تشریحی پس از پایان مهلت عمومی در همین بخش نمایش داده می‌شوند.</p>')+
   windowInfo+'<p>این تکلیف در پرونده آموزشی شما و صفحه ارزیابی مدرس ثبت شده است.</p><p class="quiz-mail-help">مرحله پایانی: حتماً رسید آزمون را برای استاد ارسال کنید تا از تکمیل آزمون شما مطلع شود. روی دکمه زیر بزنید و در Gmail دکمه ارسال (Send) را بزنید. آزمون شما قبلاً ثبت شده و نیازی به تکرار آن نیست.</p><a href="'+safe(emailHref(s.session,a.id))+'" target="_blank" rel="noopener noreferrer" class="quiz-mail">ارسال رسید آزمون به استاد</a></div>';
  }
  if(s.status==="not_ready")return '<p class="quiz-locked">سؤالات این جلسه هنوز با محتوای پاورپوینت نهایی تطبیق داده نشده‌اند؛ آزمون فعال نیست.</p>';
@@ -42,7 +42,7 @@ function studentView(s){
  if(s.status==="unscheduled")return '<p class="quiz-locked">بانک ۱۰ سؤال آماده است. آزمون بعد از ثبت زمان پایان کلاس توسط مدرس فعال می‌شود.</p>';
  if(s.status==="upcoming")return '<p class="quiz-locked">آزمون هنوز شروع نشده است.</p>'+windowInfo;
  if(s.status==="closed")return '<p class="quiz-locked">مهلت این آزمون به پایان رسیده و پاسخ جدید پذیرفته نمی‌شود.</p>'+windowInfo;
- if((s.single_entry||singleEntry(s.session))&&!s.entry_key)return windowInfo+'<p>دکمهٔ شروع، تنها فرصت آزمون‌دادن شما را فعال می‌کند. پس از شروع، در همین صفحه بمانید و هر ۱۰ پاسخ را ثبت نهایی کنید. با خروج، بستن یا تازه‌سازی صفحه، فرصت استفاده‌شده برنمی‌گردد. نمره و پاسخنامه تشریحی پس از ثبت نهایی نمایش داده می‌شود.</p><button type="button" class="quiz-submit" data-quiz-action="start" data-session="'+s.session+'">شروع آزمون</button><p role="status"></p>';
+ if((s.single_entry||singleEntry(s.session))&&!s.entry_key)return windowInfo+'<p>دکمهٔ شروع، تنها فرصت آزمون‌دادن شما را فعال می‌کند. پس از شروع، در همین صفحه بمانید و هر ۱۰ پاسخ را ثبت نهایی کنید. با خروج، بستن یا تازه‌سازی صفحه، فرصت استفاده‌شده برنمی‌گردد. نمره قطعی بلافاصله پس از ثبت نهایی و پاسخنامه تشریحی پس از پایان مهلت عمومی آزمون نمایش داده می‌شود.</p><button type="button" class="quiz-submit" data-quiz-action="start" data-session="'+s.session+'">شروع آزمون</button><p role="status"></p>';
  if(!Array.isArray(s.questions)||s.questions.length!==10)return windowInfo+'<p class="quiz-error" role="alert">دریافت ۱۰ سؤال کامل نشد. با مدرس هماهنگ کنید.</p>';
  return windowInfo+'<form id="quizFinalForm" data-quiz-session="'+s.session+'" class="quiz-questions">'+s.questions.map((q,i)=>
  '<fieldset class="quiz-question"><legend><span class="quiz-question-no">سؤال '+digits(i+1)+'</span> '+safe(q.text)+'</legend>'+
@@ -92,7 +92,7 @@ let previewCache=new Map();
 function previewMarkup(data){
  const n=Number(data?.question_count||0),rows=Array.isArray(data?.questions)?data.questions:[];
  if(!n)return '<p class="quiz-locked">برای این جلسه هنوز بانک آزمون تأییدشده ثبت نشده است. پس از تکمیل پاورپوینت جلسه، بانک ۱۰ سؤال طراحی می‌شود.</p>';
- return '<div class="quiz-preview-heading"><strong>پیش‌نمایش آزمون جلسه '+digits(data.session)+' · '+digits(n)+' سؤال از ۱۰</strong><small>فقط مدرس؛ کلید پاسخ و توضیح علمی برای دانشجو پیش از ثبت نهایی نمایش داده نمی‌شوند.</small></div>'+
+ return '<div class="quiz-preview-heading"><strong>پیش‌نمایش آزمون جلسه '+digits(data.session)+' · '+digits(n)+' سؤال از ۱۰</strong><small>فقط مدرس؛ کلید پاسخ و توضیح علمی برای دانشجو فقط پس از ثبت نهایی و پایان مهلت عمومی آزمون نمایش داده می‌شوند.</small></div>'+
  '<div class="quiz-preview-list">'+rows.map(q=>'<details class="quiz-preview-question"><summary><strong>سؤال '+digits(q.no)+'</strong> '+safe(q.text)+'</summary><div class="quiz-preview-options">'+q.options.map((option,j)=>
  '<p class="quiz-preview-option '+(j===q.correct_index?'is-correct':'')+'"><strong>'+["الف","ب","ج","د"][j]+'.</strong> '+safe(option)+(j===q.correct_index?' <span class="quiz-preview-key">پاسخ صحیح</span>':'')+'</p>').join("")+
  '</div><div class="quiz-preview-explanation"><strong>پاسخنامه تشریحی:</strong> '+safe(q.explanation)+'</div></details>').join("")+'</div>';

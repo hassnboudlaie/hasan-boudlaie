@@ -1,4 +1,4 @@
-/* MBA OB private per-session quizzes; correct answers are withheld until submission (sessions 1 and 2) or closing (other sessions). */
+/* MBA OB: immediate score after submission; answer keys and rationales only after the common deadline. */
 import {createClient} from "npm:@supabase/supabase-js@2.57.0";
 const db=createClient(Deno.env.get("SUPABASE_URL")!,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,{auth:{persistSession:false,autoRefreshToken:false}});
 const ORIGIN="https://hassnboudlaie.github.io",encoder=new TextEncoder();
@@ -28,7 +28,7 @@ async function windowFor(session:number){
 const publicQuestions=(q:any[])=>q.map(x=>({no:x.question_no,text:x.prompt,options:x.options}));
 const grade=(q:any[],answers:number[])=>q.reduce((n,x,i)=>n+(Number(x.correct_index)===answers[i]?1:0),0);
 const singleEntry=(session:number)=>session===1||session===2;
-const gradeReleased=(session:number,closes:number)=>singleEntry(session)||Date.now()>=closes;
+const reviewReleased=(closes:number)=>Number.isFinite(closes)&&closes>0&&Date.now()>=closes;
 async function entryFor(session:number,studentId:string){
  if(!singleEntry(session))return null;
  const {data,error}=await db.from("mba_ob_quiz_entries").select("started_at,key_hash")
@@ -43,20 +43,19 @@ async function responseForStudent(session:number,user:Ident){
  const now=Date.now(),opens=window?Date.parse(window.opens_at):0,closes=window?Date.parse(window.closes_at):0;
  const isReady=questions.length===10;
  const status=!isReady?"not_ready":!window?"unscheduled":now<opens?"upcoming":now>=closes?"closed":entry&&!attempt?"entry_used":"open";
- const showResult=Boolean(attempt&&gradeReleased(session,closes));
+ const showReview=Boolean(attempt&&window&&reviewReleased(closes));
  return reply({ok:true,session,status,opens_at:window?.opens_at||null,closes_at:window?.closes_at||null,
   single_entry:singleEntry(session),questions:status==="open"&&!attempt&&!singleEntry(session)?publicQuestions(questions):[],
-  attempt:attempt?{id:attempt.id,submitted_at:attempt.submitted_at,...(showResult?{score:attempt.score,correct_count:attempt.correct_count,review:questions.map((q,i)=>({no:q.question_no,answer:Number(attempt.answers[i]),correct_index:q.correct_index,text:q.prompt,options:q.options,explanation:q.explanation}))}:{})}:null});
+  attempt:attempt?{id:attempt.id,submitted_at:attempt.submitted_at,score:attempt.score,correct_count:attempt.correct_count,review_released:showReview,review:showReview?questions.map((q,i)=>({no:q.question_no,answer:Number(attempt.answers[i]),correct_index:q.correct_index,text:q.prompt,options:q.options,explanation:q.explanation})):[]}:null});
 }
 async function route(body:Record<string,unknown>){
  const u=await identity(body.token);if(!u)return fail("session_expired",401);
  const action=String(body.action||""),session=sessionNo(body.session);
  if(action==="my"){
   if(u.role!=="student")return fail("student_only",403);
-  const [a,w]=await Promise.all([db.from("mba_ob_quiz_attempts").select("session_no,id,submitted_at,score,correct_count").eq("student_id",u.id).order("session_no"),db.from("mba_ob_quiz_windows").select("session_no,closes_at")]);
-  if(a.error||w.error)throw Error("profile_failed");
-  const closeMap=new Map((w.data||[]).map(x=>[x.session_no,Date.parse(x.closes_at)]));
-  return reply({ok:true,attempts:(a.data||[]).map(x=>({session:x.session_no,id:x.id,submitted_at:x.submitted_at,score:gradeReleased(x.session_no,closeMap.get(x.session_no)??Infinity)?x.score:null,correct_count:gradeReleased(x.session_no,closeMap.get(x.session_no)??Infinity)?x.correct_count:null}))});
+  const a=await db.from("mba_ob_quiz_attempts").select("session_no,id,submitted_at,score,correct_count").eq("student_id",u.id).order("session_no");
+  if(a.error)throw Error("profile_failed");
+  return reply({ok:true,attempts:(a.data||[]).map(x=>({session:x.session_no,id:x.id,submitted_at:x.submitted_at,score:x.score,correct_count:x.correct_count}))});
  }
  if(action==="teacherStatus"){
   if(u.role!=="teacher")return fail("teacher_only",403);
@@ -118,7 +117,7 @@ async function route(body:Record<string,unknown>){
   const correct=grade(q,answers),score=correct*2;
   const {data,error}=await db.from("mba_ob_quiz_attempts").insert({student_id:u.id,session_no:session,answers,correct_count:correct,score}).select("id,submitted_at").single();
   if(error){if(error.code==="23505")return fail("already_submitted",409);if(error.message==="quiz_closed")return fail("quiz_closed",403);throw Error("attempt_save_failed")}
-  return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:singleEntry(session)?"ثبت نهایی شد. نمره قطعی و پاسخنامه تشریحی هم‌اکنون قابل مشاهده است.":"ثبت نهایی شد. پاسخنامه تحلیلی پس از پایان مهلت آزمون قابل مشاهده است."});
+  return reply({ok:true,receipt:{id:data.id,submitted_at:data.submitted_at,session},message:"ثبت نهایی شد. نمره قطعی هم‌اکنون و پاسخنامه تشریحی پس از پایان مهلت عمومی آزمون قابل مشاهده است."});
  }
  if(action==="teacherPreview"){
   // Only authenticated instructors can see the answer key and analytic rationale.

@@ -1,5 +1,5 @@
-const CACHE='ob-mba-classroom-shell-v74';
-const FILES=['./index.html','./style.css?v=21','./access-gate.js?v=50','./access-gate.css?v=2','./icon.svg'];
+const CACHE='ob-mba-classroom-shell-v75';
+const FILES=['./index.html','./style.css?v=21','./access-gate.js?v=51','./access-gate.css?v=2','./icon.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>Promise.allSettled(FILES.map(path=>cache.add(new Request(path,{cache:'reload'}))))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('ob-mba-classroom-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 const APP_SCOPE=new URL(self.registration.scope);
