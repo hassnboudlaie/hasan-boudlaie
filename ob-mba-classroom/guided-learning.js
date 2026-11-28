@@ -31,6 +31,8 @@ const caseSelect=(lessonId,item,work)=>{
  '<small>پاسخ‌ها در همین دستگاه ذخیره می‌شوند؛ پس از تکمیل هر شش مرحله، ثبت نهایی برای استاد را انجام دهید.</small></div>';
 };
 const originalDraft=(label,value)=>value?'<details class="gr-prior"><summary>'+escapeHtml(label)+'</summary><p>'+escapeHtml(value)+'</p></details>':"";
+const caseMethod=[["تعریف مسئله","Problem Definition","مشخص کنید فاصله میان وضع موجود و مطلوب چیست.","در یک انبار، درصد سفارش‌های دیررس از ۵٪ به ۱۵٪ رسیده است؛ مسئله افت تحویل به‌موقع است، نه الزاماً کم‌کاری کارکنان."],["داده‌ها و شواهد","Evidence & Data","واقعیت قابل سنجش را از فرضیه جدا کنید.","داده: درصد تأخیر و زمان پردازش؛ فرضیه: افزایش حجم سفارش یا اختلال در تخصیص کار."],["تحلیل با مفاهیم علمی","OB Analysis","مفاهیم مناسب را در سطح فرد، گروه یا سازمان به کار ببرید.","مهارت کارکنان، هماهنگی شیفت‌ها و فرایند تخصیص سفارش را بررسی کنید."],["تبیین و پیش‌بینی","Explanation & Prediction","توضیح‌های رقیب و پیامدهای احتمالی را ارزیابی کنید.","آیا تأخیر از ظرفیت ناکافی است یا تحویل نامنظم بین شیفت‌ها؟ اگر ادامه یابد، احتمال شکایت مشتری بیشتر می‌شود."],["اقدام اصلاحی","Managerial Intervention","یک اقدام متناسب با شواهد و علت محتمل پیشنهاد دهید.","اگر داده‌ها گلوگاه تحویل بین شیفت‌ها را تأیید کنند، یک فرایند تحویل استاندارد را آزمایشی اجرا کنید."],["سنجش و پیگیری","Measurement & Follow-through","شاخص، زمان و معیار موفقیت تعیین کنید.","در چهار هفته، درصد تأخیر و زمان پردازش را نسبت به خط مبنا بررسی کنید؛ هدف آزمایشی کاهش تأخیر به ۸٪ است."]];
+const caseMethodHTML=()=>'<section class="card stack case-method-guide" aria-label="راهنمای شش مرحله تحلیل کیس"><h4>شش مرحله تحلیل کیس با مثال</h4><p>مثال آموزشی مستقل: تأخیر تحویل سفارش در یک انبار (فرضی). همین روش را برای کیس اختصاصی جلسه به کار ببرید.</p><ol class="case-method-steps">'+caseMethod.map(v=>'<li><strong>'+escapeHtml(v[0])+' · '+escapeHtml(v[1])+'</strong><p>'+escapeHtml(v[2])+'</p><p><strong>مثال: </strong>'+escapeHtml(v[3])+'</p></li>').join("")+'</ol></section>';
 const stepsOf=(x,mode,work)=>{
  if(!x)return [];
  if(mode==="concepts")return cleanArray(x.concepts).map((c,i)=>({
@@ -57,7 +59,7 @@ const stepsOf=(x,mode,work)=>{
     body:part("موقعیت",c.facts[0],"gr-definition")+(window.OB_CASE_CHOICES?.[x.id]?part("راهنمای تحلیل کیس",window.OB_CASE_CHOICES[x.id].introduction,"gr-takeaway"):"")+'<h4 class="gr-section">اطلاعات کیس</h4>'+list(c.facts.slice(1))+table+part("یادداشت مدرس",c.teachingNote)},
    {kicker:"ابزار تحلیل",title:framework.title,sub:"Concept Toolkit · Robbins",
     body:part("هدف",framework.description,"gr-takeaway")+concepts+
-    '<h4 class="gr-section">شش مرحله تحلیل</h4>'+list(framework.steps.map(item=>item.title),true)},
+    caseMethodHTML()},
    {kicker:"تصمیم مدیریتی",title:"مسئله تصمیم‌گیری",sub:c.title,
     body:part("مأموریت شما",window.OB_CASE_CHOICES?.[x.id]?"با تکیه بر مفاهیم همین جلسه، در هر یک از شش مرحله یک برداشت مستدل‌تر را انتخاب کنید.":"برای هر یک از شش مرحله پاسخ شواهدمحور بنویسید و پس از بازبینی برای استاد ارسال کنید.","gr-definition")+part("خروجی نهایی","شش مرحله را تکمیل کنید، گزارش یکپارچه را پیش‌نمایش و در قالب Word یا PDF دریافت کنید و پاسخ‌ها را برای استاد ارسال کنید.")+
     part("معیار یک تحلیل خوب",assignment?.quality)+originalDraft("پیش‌نویس قبلی من",work?.case||"")},
@@ -97,5 +99,5 @@ function render({enrichment,mode,work,index=0,lessonId=1}){
  const rail='<nav class="gr-step-rail" aria-label="فهرست مراحل">'+steps.map((step,i)=>'<button type="button" data-action="guidedJump" data-index="'+i+'" class="gr-stage-tab '+(i===n?"active":"")+'" '+(i===n?'aria-current="step"':'')+' aria-label="رفتن به مرحله '+(i+1)+'">'+(i+1)+'</button>').join("")+'</nav>';
  return '<section class="gr-shell" data-guided-mode="'+escapeHtml(mode)+'" data-guided-session="'+lessonId+'"><div class="gr-header"><div><span class="gr-eyebrow">'+escapeHtml(stage.kicker||"")+'</span><h3 tabindex="-1" id="guidedStageTitle">'+escapeHtml(stage.title||"")+'</h3>'+(stage.sub?'<p class="gr-subtitle">'+escapeHtml(stage.sub)+'</p>':"")+'</div><div class="gr-step-count">'+(n+1)+' از '+steps.length+'</div></div><div class="gr-meter" role="progressbar" aria-valuemin="0" aria-valuemax="'+steps.length+'" aria-valuenow="'+(n+1)+'" aria-label="مراحل مشاهده‌شده"><span style="width:'+progress+'%"></span></div>'+rail+'<div class="gr-stage" data-stage-index="'+n+'">'+stage.body+'</div><div class="gr-actions">'+nav+'</div><div class="gr-autosave"><span data-save-status>پاسخ‌ها در همین دستگاه ذخیره می‌شوند</span>'+(mode==="case"||mode==="group"||mode==="roleplay"?'<button type="button" class="gr-export" data-action="guidedExport">دریافت پاسخ‌ها ↓</button>':"")+'</div></section>';
 }
-window.OB_GUIDED={render,stepsOf};
+window.OB_GUIDED={render,stepsOf,caseMethodHTML};
 })();

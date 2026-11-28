@@ -34,7 +34,9 @@ try{
  const sid=Number(params.get("session"));
  if(Number.isInteger(sid)&&sid>=1&&sid<=16){
   ui.session=sid;
-  if(params.get("tab")==="resources"){
+  if(params.get("view")==="edit"&&window.OB_ACCESS?.role==="teacher"){ui.page="edit";}
+  else if(params.get("tab")==="slides"||params.get("tab")==="case"){ui.page=window.OB_ACCESS?.role==="teacher"?"edit":"session";ui.tab=params.get("tab");}
+  else if(params.get("tab")==="resources"){
    ui.page=window.OB_ACCESS?.role==="teacher"?"resources":"session";
    ui.tab="resources";
   }else if(params.get("tab")==="finalQuiz"&&window.OB_ACCESS?.role==="student"){
@@ -103,28 +105,13 @@ const session03Paths={
  assessment:"./materials/readings/personality-types-session-03.xls"
 };
 const fileAnchor=(href,label,download=false)=>'<a class="resource-link ob-session3-link" href="'+href+'" '+(download?'download':'target="_blank" rel="noopener noreferrer"')+'>'+label+'</a>';
-const officialSession03Files=(withPreviews=false)=>{
- const en=session03Paths.english,fa=session03Paths.persian;
- const preview=(which,label)=>withPreviews?'<img class="ob-session3-thumbnail" src="'+which.thumb+'" loading="lazy" decoding="async" alt="اسلاید نخست فایل '+label+'، عین نسخه ارسالی مدرس" width="640" height="480">':"";
- return '<section class="card ob-session3-source-files" aria-label="فایل‌های اصلی و تکمیلی جلسه سوم">'+
- '<div class="ob-session3-source-head"><h3>فایل‌های واقعی جلسه سوم</h3><p>اصل محتوای ارسالی مدرس؛ اسلایدهای انگلیسی رابینز و اسلایدهای فارسی به‌صورت مستقل و بدون بازنویسی در دسترس‌اند.</p></div>'+
- '<div class="ob-session3-files-grid">'+
- '<div class="ob-session3-source-card">'+preview(en,"انگلیسی")+'<h4>انگلیسی اصلی · Robbins</h4><p>۱۳ اسلاید از فایل OB3ed.ppt</p>'+
- '<div class="ob-session3-actions">'+button("نمایش اسلایدهای اصلی انگلیسی","openOriginalEnglish","btn secondary")+fileAnchor(en.pdf,"نمایش / دریافت PDF")+fileAnchor(en.ppt,"دانلود PPT اصلی",true)+'</div></div>'+
- '<div class="ob-session3-source-card">'+preview(fa,"فارسی تکمیلی")+'<h4>اسلایدهای فارسی تکمیلی</h4><p>۵۱ اسلاید از فایل «شخصیت.pptx»</p>'+
- '<div class="ob-session3-actions">'+button("نمایش ۵۱ اسلاید فارسی","viewPresentation","btn")+fileAnchor(fa.pdf,"نمایش / دریافت PDF")+fileAnchor(fa.ppt,"دانلود PPTX",true)+'</div></div>'+
- '</div><div class="ob-session3-assessment"><strong>فایل جداگانه ارزیابی شخصیت</strong><span>«تیپ شخصیت.xls»؛ فایل اصلیِ تکمیلی، بدون تغییر</span>'+fileAnchor(session03Paths.assessment,"دانلود فایل XLS",true)+'</div></section>';
-};
 const knownLectureFiles=s=>[1,2,3].includes(s.id);
 const lectureFileCards=s=>{
- if(!knownLectureFiles(s))return '<div class="version-choices"><section class="language-version persian-version"><h3>اسلایدهای فارسی</h3><p>هنوز بارگذاری نشده است.</p></section><section class="language-version english-version"><h3>اسلایدهای انگلیسی</h3><p>هنوز بارگذاری نشده است.</p></section></div>';
- const n=pf(s.id),fa=s.id===3?"./materials/readings/personality-session-03":"./materials/session-"+n+"-robbins",en="./materials/original/session-"+n;
- return '<div class="version-choices"><section class="language-version persian-version"><div class="version-label"><span class="version-tag">FA</span><h3>اسلایدهای فارسی'+(s.id===3?' · فایل تکمیلی مدرس':'')+'</h3></div>'+
- button("نمایش اسلایدهای فارسی","viewPresentation","btn")+
- '<div class="lecture-downloads">'+fileAnchor(fa+".pdf","باز کردن PDF فارسی")+fileAnchor(fa+".pdf","دانلود PDF فارسی",true)+fileAnchor(fa+".pptx","دانلود PowerPoint فارسی",true)+'</div></section>'+
- '<section class="language-version english-version"><div class="version-label"><span class="version-tag">EN</span><h3>اسلایدهای اصلی انگلیسی · Robbins</h3></div>'+
- button("نمایش اسلایدهای انگلیسی","openOriginalEnglish","btn secondary")+
- '<div class="lecture-downloads">'+fileAnchor(en+".pdf","باز کردن PDF انگلیسی")+fileAnchor(en+".pdf","دانلود PDF انگلیسی",true)+fileAnchor(en+"-robbins.ppt","دانلود PowerPoint اصلی انگلیسی",true)+'</div></section></div>';
+ if(!knownLectureFiles(s))return '<section class="card ob-session3-source-files"><h3>اسلایدهای تدریس</h3><div class="ob-session3-files-grid"><div class="ob-session3-source-card"><h4>فارسی</h4><p>هنوز بارگذاری نشده است.</p></div><div class="ob-session3-source-card"><h4>انگلیسی</h4><p>هنوز بارگذاری نشده است.</p></div></div></section>';
+ const n=pf(s.id),count={1:16,2:14,3:13}[s.id],faCount=s.id===3?51:count,fa=s.id===3?"./materials/readings/personality-session-03":"./materials/session-"+n+"-robbins",en="./materials/original/session-"+n;
+ return '<section class="card ob-session3-source-files" aria-label="فایل‌های تدریس جلسه '+n+'" data-slide-session="'+s.id+'"><div class="ob-session3-source-head"><h3>فایل‌های تدریس جلسه '+n+'</h3></div><div class="ob-session3-files-grid">'+
+ '<div class="ob-session3-source-card english-version"><h4>انگلیسی اصلی · Robbins</h4><p>'+count+' اسلاید</p><div class="ob-session3-actions">'+button("نمایش اسلایدهای انگلیسی","openOriginalEnglish","btn secondary")+fileAnchor(en+".pdf","باز کردن PDF انگلیسی")+fileAnchor(en+".pdf","دانلود PDF انگلیسی",true)+fileAnchor(en+"-robbins.ppt","دانلود PowerPoint اصلی انگلیسی",true)+'</div></div>'+
+ '<div class="ob-session3-source-card persian-version"><h4>اسلایدهای فارسی'+(s.id===3?' · فایل تکمیلی مدرس':'')+'</h4><p>'+faCount+' اسلاید</p><div class="ob-session3-actions">'+button("نمایش اسلایدهای فارسی","viewPresentation","btn")+fileAnchor(fa+".pdf","باز کردن PDF فارسی")+fileAnchor(fa+".pdf","دانلود PDF فارسی",true)+fileAnchor(fa+".pptx","دانلود PowerPoint فارسی",true)+'</div></div></div></section>';
 };
 const originalEnglish=s=>s.originalUrl||s.id===3?'<section class="language-version english-version"><div class="version-label"><span class="version-tag">EN</span><h3>انگلیسی'+(s.id===3?' · فایل اصلی (۱۳ اسلاید)':'')+'</h3></div>'+button("نمایش اسلایدهای انگلیسی","openOriginalEnglish","btn secondary")+(s.id===3?'<div class="lecture-downloads">'+fileAnchor(session03Paths.english.pdf,"PDF اصلی")+fileAnchor(session03Paths.english.ppt,"دانلود PPT",true)+'</div>':"")+'</section>':"";
 const persianVersion=s=>'<section class="language-version persian-version"><div class="version-label"><span class="version-tag">FA</span><h3>فارسی'+(s.id===3?' · فایل تکمیلی (۵۱ اسلاید)':'')+'</h3></div>'+button("نمایش اسلایدهای فارسی","viewPresentation","btn")+(s.id===3?'<div class="lecture-downloads">'+fileAnchor(session03Paths.persian.pdf,"PDF تکمیلی")+fileAnchor(session03Paths.persian.ppt,"دانلود PPTX",true)+'</div>':lectureDownloads(s))+'</section>';
@@ -140,20 +127,13 @@ function updatePresentation(){
  if(!window.OB_PRESENTER?.update({session:current(),variant:ui.presentationVariant,index:ui.slideIndex}))render();
 }
 
-const guidedMode=()=>ui.tab==="theory"?"concepts":ui.tab==="examples"?"examples":ui.tab==="case"?"case":ui.tab==="activity"?ui.activityMode:null;
+const guidedMode=()=>ui.tab==="theory"?"concepts":ui.tab==="examples"?"examples":ui.tab==="case"?"case":null;
 const guidedPanel=(s,x,mode)=>{
  const w=studentWork(s);
  w.guidedSteps=w.guidedSteps||{};
  const index=Number.isInteger(w.guidedSteps[mode])?w.guidedSteps[mode]:0;
  return window.OB_GUIDED?.render({enrichment:x,mode,work:w,index,lessonId:s.id})||"";
 };
-const guidedActivity=(s,x)=>{
- const modes=[["group","تمرین گروهی"],["roleplay","نقش‌آفرینی"]];
- return '<div class="gr-mode-switch" role="group" aria-label="نوع فعالیت">'+modes.map(([value,label])=>'<button type="button" data-action="guidedMode" data-mode="'+value+'" aria-pressed="'+(ui.activityMode===value)+'" class="'+(ui.activityMode===value?'active':'')+'">'+label+'</button>').join("")+'</div>'+
- guidedPanel(s,x,ui.activityMode==="roleplay"?"roleplay":"group");
-};
-
-
 const RESOURCE_TYPES=[["video","ویدئو"],["book","کتاب"],["article","مقاله"],["link","لینک مفید"],["podcast","پادکست"],["document","فایل PDF / جزوه"],["presentation","اسلاید PowerPoint"],["other","سایر"]];
 const resourcesOf=s=>Array.isArray(s.resources)?s.resources:[];
 const safeResourceURL=value=>{try{const u=new URL(String(value||""));return ["https:","http:"].includes(u.protocol)?u.href:""}catch{return""}};
@@ -246,7 +226,6 @@ else if(ui.tab==="resources")c=sessionResources(s);
 else if(ui.tab==="slides")c=lectureFileCards(s);
 else if(ui.tab==="examples")c=x?guidedPanel(s,x,"examples"):lessonSection("مثال‌ها",s.model);
 else if(ui.tab==="case")c=caseWorkspace(s,x);
-else if(ui.tab==="activity")c=x?guidedActivity(s,x):quizPanel(s)+lessonSection("تمرین گروهی",s.roleplay);
 else if(ui.tab==="finalQuiz")c=window.OB_QUIZ?.studentHTML(s.id)||'<p role="alert">بخش آزمون بارگذاری نشد. پیش از شروع آزمون، صفحه را دوباره باز کنید.</p>';
 return '<div class="page lesson-page ob-reading-workspace"><header class="ob-lesson-header"><div><span class="ob-lesson-session-number">جلسه '+pf(s.id)+' از ۱۶</span><h2>'+esc(titleOf(s))+'</h2></div>'+button("جلسات درس","backSessions","btn secondary")+'</header>'
  +'<div class="ob-reading-layout"><aside class="ob-reading-aside"><div class="field section-picker"><label for="sectionSelect">بخش جلسه</label><select id="sectionSelect" data-action="sessionPicker">'+tabs.map(([id,l])=>'<option value="'+id+'" '+(ui.tab===id?"selected":"")+'>'+l+'</option>').join("")+'</select></div></aside><div class="ob-reading-content">'+(c||'<div class="empty-study"><h3>محتوا موجود نیست</h3></div>')+'</div></div></div>'}
@@ -283,7 +262,7 @@ const teacherCaseData=s=>{
  const rows=c.dataTable||[],table=rows.length?'<div class="gr-table-scroll"><table class="gr-case-table"><thead><tr>'+rows[0].map(v=>'<th scope="col">'+esc(v)+'</th>').join("")+'</tr></thead><tbody>'+rows.slice(1).map(row=>'<tr>'+row.map(v=>'<td>'+esc(v)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>':"";
  return '<section class="card stack"><h4>'+esc(c.title)+'</h4><small>'+esc(c.tag||"")+'</small>'+richList(c.facts||[],false)+table+richPart("مسئله تصمیم‌گیری",c.decision)+'</section>';
 };
-function teacherEditor(){const s=current();const fld=(label,name,value,rows=0,help="")=>'<div class="field"><label for="e-'+name+'">'+label+'</label>'+(rows?'<textarea id="e-'+name+'" name="'+name+'" rows="'+rows+'">'+esc(value)+'</textarea>':'<input id="e-'+name+'" name="'+name+'" class="input" value="'+esc(value)+'">')+(help?'<small>'+help+'</small>':"")+'</div>';const section=(name,inner,open=false)=>'<details class="disclosure" '+(open?'open':'')+'><summary>'+name+'</summary><div class="disclosure-body">'+inner+'</div></details>';return '<div class="page"><div class="page-head"><div><h2>ویرایش جلسه '+pf(s.id)+'</h2></div>'+tip(s)+'</div><form class="editor-form" data-form="session">'+section("عنوان و اهداف یادگیری",fld("عنوان جلسه","title",s.title)+fld("اهداف یادگیری","outcomes",s.outcomes,3),true)+section("اسلایدهای تدریس",lectureFileCards(s),true)+section("کیس، تحلیل و ثبت تکلیف",teacherCaseData(s)+(enriched(s)?.caseFramework?teacherCaseQuestions(s):fld("متن کیس","caseText",s.caseText,4)+fld("پرسش‌های تحلیل کیس","caseQuestion",s.caseQuestion,2))+button("مشاهده پاسخ‌ها و ارزیابی کیس","openCaseReviews","btn secondary"))+
+function teacherEditor(){const s=current();const fld=(label,name,value,rows=0,help="")=>'<div class="field"><label for="e-'+name+'">'+label+'</label>'+(rows?'<textarea id="e-'+name+'" name="'+name+'" rows="'+rows+'">'+esc(value)+'</textarea>':'<input id="e-'+name+'" name="'+name+'" class="input" value="'+esc(value)+'">')+(help?'<small>'+help+'</small>':"")+'</div>';const section=(name,inner,open=false)=>'<details class="disclosure" '+(open?'open':'')+'><summary>'+name+'</summary><div class="disclosure-body">'+inner+'</div></details>';return '<div class="page"><div class="page-head"><div><h2>ویرایش جلسه '+pf(s.id)+'</h2><small class="app-release">نسخه ۸۰</small></div>'+tip(s)+'</div><form class="editor-form" data-form="session">'+section("عنوان و اهداف یادگیری",fld("عنوان جلسه","title",s.title)+fld("اهداف یادگیری","outcomes",s.outcomes,3),true)+section("اسلایدهای تدریس",lectureFileCards(s),true)+section("کیس، تحلیل و ثبت تکلیف",teacherCaseData(s)+(enriched(s)?.caseFramework?'<h3>پرسش‌های تحلیل کیس</h3>'+teacherCaseQuestions(s)+(window.OB_GUIDED?.caseMethodHTML?.()||""):fld("متن کیس","caseText",s.caseText,4)+fld("پرسش‌های تحلیل کیس","caseQuestion",s.caseQuestion,2))+button("مشاهده پاسخ‌ها و ارزیابی کیس","openCaseReviews","btn secondary"))+
 section("آزمون جلسه "+pf(s.id),
  '<div class="teacher-inline-quiz"><div class="teacher-inline-quiz-intro"><strong>آزمون ۱۰سؤالی جلسه '+pf(s.id)+'</strong><p>این بخش مخصوص مدرس است؛ ده سؤال، چهار گزینه هر سؤال، پاسخ صحیح و توضیح علمی مستقیماً از بانک امن آزمون دریافت می‌شوند. دانشجو تنها در مسیر «آزمون پایان جلسه» و در بازه تعیین‌شده آزمون را انجام می‌دهد.</p></div><div data-quiz-teacher-preview="'+s.id+'" class="quiz-teacher-preview"><p>در حال دریافت آزمون از بانک سؤالات مدرس…</p></div><div class="btn-row">'+button("مدیریت زمان و مشاهده پاسخ دانشجویان","openSessionQuizAdmin","btn secondary")+'</div></div>',true)+section("منابع تکمیلی",sessionResources(s)+'<div class="btn-row">'+button("مدیریت منابع همین جلسه","manageResources","btn secondary")+'</div>')+'<div class="card stack"><div class="btn-row"><button type="submit" class="btn">ذخیره همه تغییرات</button>'+button("جلسه جاری","setActiveSession","btn secondary")+button("بازگشت به جلسات","backTeacherSessions")+'</div></div></form></div>'}
 function teacherGroups(){return '<div class="page"><h2>مدیریت گروه‌ها</h2><form class="card stack" data-form="group"><div class="field"><label for="groupName">نام گروه</label><input id="groupName" class="input" name="name" maxlength="80" placeholder="مثلاً گروه الف" required></div><button type="submit" class="btn">ایجاد گروه</button></form><div class="grid three">'+(state.groups.length?state.groups.map((g,i)=>'<div class="card stack"><h3>'+esc(g.name)+'</h3>'+button("حذف گروه","deleteGroup","btn danger sm",'data-index="'+i+'"')+'</div>').join(""):'<div class="card"><p>گروهی ثبت نشده است.</p></div>')+'</div></div>'}
