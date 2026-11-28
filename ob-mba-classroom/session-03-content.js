@@ -105,6 +105,18 @@ const third={
   "caseSourceLabel": "",
   "resources": [
     {
+  "id": "armin-trost-ebnmlfrdy6m",
+  "type": "video",
+  "title": "The Real Meaning of Diversity | معنای واقعی تنوع",
+  "author": "Armin Trost",
+  "url": "https://www.youtube.com/watch?v=EBnmLFRdy6M",
+  "topic": "جلسه سوم | تنوع و تفاوت‌های فردی (Diversity & Individual Differences)",
+  "optional": true,
+  "duration": "۶:۴۰",
+  "note": "تروست در توضیح ویدئو بر تفاوت میان تنوع بین گروه‌ها (Intergroup Variance) و درون گروه‌ها (Intragroup Variance) تأکید می‌کند. پیام اصلی این است که تنوع را نباید فقط از دریچه عضویت در گروه‌ها فهمید؛ ارزش‌گذاری فردیت و تفاوت‌های منحصربه‌فرد افراد نیز ضروری است. این دیدگاه برای پرهیز از کلیشه‌سازی و شناخت تفاوت‌های فردی در سازمان اهمیت دارد.",
+  "accessNote": "منتشرشده در ۲۷ دسامبر ۲۰۱۹؛ توضیح بر اساس عنوان و توضیحات رسمی نمایش‌داده‌شده در YouTube."
+},
+    {
   "id": "emotional-intelligence-instructor-zip",
   "type": "archive",
   "title": "هوش هیجانی | Emotional Intelligence",
