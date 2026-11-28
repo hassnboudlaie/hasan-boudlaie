@@ -105,6 +105,17 @@ const third={
   "caseSourceLabel": "",
   "resources": [
     {
+  "id": "emotional-intelligence-instructor-zip",
+  "type": "archive",
+  "title": "هوش هیجانی | Emotional Intelligence",
+  "url": "https://drive.google.com/file/d/1KSqiC6B_laYYsI1p8LiETabOFQOhTCsk/view?usp=sharing",
+  "fileType": "ZIP",
+  "fileSize": "۵٫۲۴ MB",
+  "topic": "هوش هیجانی و توسعه فردی",
+  "note": "فایل تکمیلی ارسالی مدرس. برای دریافت، فایل ZIP را در Google Drive باز و گزینه دانلود را انتخاب کنید؛ سپس فایل فشرده را استخراج کنید.",
+  "accessNote": "لینک فقط به همین فایل اختصاص دارد؛ دسترسی مشاهده و دانلود (Viewer)، بدون مجوز ویرایش یا دسترسی به پوشه مادر."
+},
+    {
   "id": "inside-out-2015-ei",
   "type": "film",
   "title": "انیمیشن درون و بیرون ۱ — Inside Out (2015)",
