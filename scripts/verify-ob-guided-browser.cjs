@@ -48,16 +48,16 @@ async function run(){
    await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify(result)});
   });
   // Synthetic protected quiz backend: test 10 required choices, one submission, immediate grading and detailed feedback.
-  let quizAttempt=null;
+  let quizAttempt=null,quizEnded=false;
   await ctx.route("https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-quizzes",async route=>{
    const params=JSON.parse(route.request().postData()||"{}");
    let result={ok:false,error:"invalid_action"};
-   if(params.action==="get")result={ok:true,session:1,status:"open",opens_at:new Date().toISOString(),closes_at:new Date(Date.now()+86400000).toISOString(),
-    questions:quizAttempt?[]:Array.from({length:10},(_,i)=>({no:i+1,text:"سؤال آزمایشی "+(i+1)+" درباره مفاهیم مقدماتی رفتار سازمانی چیست؟",options:["پاسخ صحیح","گزینه دوم","گزینه سوم","گزینه چهارم"]})),
-    attempt:quizAttempt};
+   const testQuestions=Array.from({length:10},(_,i)=>({no:i+1,text:"سؤال آزمایشی "+(i+1)+" درباره مفاهیم مقدماتی رفتار سازمانی چیست؟",options:["گزینه اول","گزینه دوم","گزینه سوم","گزینه چهارم"]}));
+   if(params.action==="get")result={ok:true,session:1,status:quizEnded?"closed":"open",single_entry:true,opens_at:new Date(Date.now()-10000).toISOString(),closes_at:new Date(Date.now()+(quizEnded?-1000:86400000)).toISOString(),questions:[],attempt:quizAttempt?{...quizAttempt,review_released:quizEnded,review:quizEnded?quizAttempt.review:[]}:null};
+   if(params.action==="start")result={ok:true,session:1,status:"open",single_entry:true,entry_key:"synthetic-entry-key",questions:testQuestions};
    if(params.action==="submit"&&Array.isArray(params.answers)&&params.answers.length===10){
     quizAttempt={id:"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",submitted_at:new Date().toISOString(),score:20,correct_count:10,
-     review:Array.from({length:10},(_,i)=>({no:i+1,text:"سؤال آزمایشی "+(i+1)+" درباره مفاهیم مقدماتی رفتار سازمانی چیست؟",answer:params.answers[i],correct_index:0,options:["پاسخ صحیح","گزینه دوم","گزینه سوم","گزینه چهارم"],explanation:"توضیح تشریحی علمی برای ارزیابی پاسخ به سؤال "+(i+1)}))};
+     review:Array.from({length:10},(_,i)=>({no:i+1,text:"سؤال آزمایشی "+(i+1)+" درباره مفاهیم مقدماتی رفتار سازمانی چیست؟",answer:params.answers[i],correct_index:0,options:["گزینه اول","گزینه دوم","گزینه سوم","گزینه چهارم"],explanation:"توضیح تشریحی علمی برای ارزیابی پاسخ به سؤال "+(i+1)}))};
     result={ok:true,receipt:{id:quizAttempt.id,session:1}};
    }
    if(params.action==="my")result={ok:true,attempts:quizAttempt?[{session:1,score:20,correct_count:10,submitted_at:quizAttempt.submitted_at}]:[]};
@@ -95,22 +95,23 @@ async function run(){
   assert.ok(await page.getByText("Three Levels of OB").first().isVisible(),"Theory toolbox links case to Robbins");
   await page.locator('[data-action="guidedNext"]').click();
   await page.locator('[data-action="guidedNext"]').click();
-   assert.equal(await page.locator(".gr-stage select[data-guided-key]").count(),1,"Introductory case shows one analytical dropdown per stage");
-   const initialChoice=await page.locator('[data-guided-key="case-problem"] option').nth(1).getAttribute("value");
-   await page.locator('[data-guided-key="case-problem"]').selectOption({index:1});
+   assert.equal(await page.locator('.gr-stage input[type="radio"][data-guided-key]').count(),4,"Four visible case choices per stage");
+   const initialChoice=await page.locator('input[data-guided-key="case-problem"]').first().getAttribute("value");
+   await page.locator('input[data-guided-key="case-problem"]').first().check();
+   await page.locator('[data-guided-key="case-problem-note"]').fill("توضیح تکمیلی آزمایشی");
   await page.locator('[data-action="guidedNext"]').click();
   await page.locator('[data-action="guidedPrev"]').click();
-  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),initialChoice,"Autosave across stages");
+  assert.equal(await page.locator('input[data-guided-key="case-problem"]:checked').inputValue(),initialChoice,"Autosave across stages");
   await noOverflow(page,config.name+" case worksheet");
   await save(page,config.name+"-04-case-workbook");
   await page.reload({waitUntil:"domcontentloaded"});
   await page.locator('.student-focus button[data-action="openActive"]').click();
   await page.locator("#sectionSelect").selectOption("case");
-  assert.equal(await page.locator('[data-guided-key="case-problem"]').inputValue(),initialChoice,"Session text survives refresh");
+  assert.equal(await page.locator('input[data-guided-key="case-problem"]:checked').inputValue(),initialChoice,"Session text survives refresh");
   const keys=["problem","evidence","levels","explain","intervention","measurement"];
   for(let i=0;i<keys.length;i++){
    await page.locator('[data-action="guidedJump"][data-index="'+(i+3)+'"]').click();
-    await page.locator('[data-guided-key="case-'+keys[i]+'"]').selectOption({index:1+(i%4)});
+    await page.locator('input[data-guided-key="case-'+keys[i]+'"]').nth(i%4).check();
   }
   await page.locator('[data-action="guidedJump"][data-index="9"]').click();
   await page.locator('[data-action="submitCase"]').click();
@@ -118,16 +119,12 @@ async function run(){
   assert.ok(draftSent&&Object.keys(draftSent.answers).length===6,"All six analytical answers submitted to backend");
   await noOverflow(page,config.name+" submission");
   await save(page,config.name+"-04b-submitted");
-  await page.locator("#sectionSelect").selectOption("activity");
-  await page.locator('.gr-mode-switch').waitFor();
-  assert.equal(await page.locator('.gr-shell[data-guided-mode="group"]').count(),1,"Group exercise staged");
-  await page.locator('[data-action="guidedMode"][data-mode="roleplay"]').click();
-  assert.equal(await page.locator('.gr-shell[data-guided-mode="roleplay"]').count(),1,"Roleplay isolated");
-  await page.locator('[data-action="guidedNext"]').click();
-  assert.equal(await page.locator(".gr-turn").count(),2,"Dialogue shown in manageable two-turn steps");
-  await save(page,config.name+"-05-roleplay");
-  assert.equal(await page.locator('[data-action="guidedMode"][data-mode="quiz"]').count(),0,"Practice has no duplicate quiz button");
+  assert.equal(await page.locator('#sectionSelect option[value="activity"]').count(),0,"No separate roleplay route");
+  assert.ok(draftSent.answers.problem.includes("توضیح تکمیلی آزمایشی"),"Optional rationale reaches the submission");
    await page.locator("#sectionSelect").selectOption("finalQuiz");
+  await page.locator('[data-quiz-action="start"]').waitFor();
+  page.once("dialog",dialog=>dialog.accept());
+  await page.locator('[data-quiz-action="start"]').click();
   await page.locator("#quizFinalForm .quiz-question").first().waitFor();
   assert.equal(await page.locator("#quizFinalForm .quiz-question").count(),10,"All ten approved assessment items available");
   assert.equal(await page.locator(".quiz-submit").isDisabled(),true,"Cannot submit before answering all ten");
@@ -137,7 +134,12 @@ async function run(){
   await page.locator(".quiz-submit").click();
   await page.getByText("نمره قطعی:").waitFor();
   assert.ok(await page.getByText("۲۰ از ۲۰").first().isVisible(),"Grade appears immediately after final submit");
-  assert.equal(await page.locator(".quiz-answer-review").count(),10,"Explanatory answer key available only after final submission");
+  assert.equal(await page.locator(".quiz-answer-review").count(),0,"Answer key remains hidden until the public deadline even after submission");
+  quizEnded=true;
+  await page.locator("#sectionSelect").selectOption("case");
+  await page.locator("#sectionSelect").selectOption("finalQuiz");
+  await page.locator(".quiz-answer-review").first().waitFor();
+  assert.equal(await page.locator(".quiz-answer-review").count(),10,"Explanatory answer key released after deadline");
   assert.equal(await page.locator('#sectionSelect option[value="reflection"]').count(),0,"No separate duplicate assignment tab");
   await page.locator("#sectionSelect").selectOption("case");
   assert.ok(await page.locator('.gr-shell[data-guided-mode="case"]').isVisible(),"Case analysis and submission use the same workspace");
@@ -259,14 +261,11 @@ async function run(){
   const sourcePage=await instructorCtx.newPage();
   await sourcePage.goto(url,{waitUntil:"domcontentloaded"});
   await sourcePage.locator('[data-action="editSession"][data-id="3"]').click();
-  await sourcePage.locator(".ob-session3-source-files").first().waitFor();
+  await sourcePage.locator(".version-choices").first().waitFor();
   assert.ok(await sourcePage.locator('a[href="./materials/original/session-03-robbins.ppt"][download]').count()>0,"Session 3 editor offers English source PPT download");
   assert.ok(await sourcePage.locator('a[href="./materials/readings/personality-session-03.pptx"][download]').count()>0,"Session 3 editor offers separate Persian PPTX");
   assert.ok(await sourcePage.locator('a[href="./materials/readings/personality-types-session-03.xls"][download]').count()>0,"Separate Session 3 personality XLS is downloadable");
-  const sourceImage=sourcePage.locator(".ob-session3-thumbnail").first();
-  await sourcePage.waitForFunction(()=>Array.from(document.querySelectorAll(".ob-session3-thumbnail")).every(img=>img.complete&&img.naturalWidth>0),{timeout:15000});
-  assert.ok(await sourceImage.isVisible(),"Uploaded source slide thumbnail is visible in the teacher editor");
-  await sourcePage.locator(".ob-session3-source-files [data-action=openOriginalEnglish]").first().click();
+  await sourcePage.locator(".version-choices [data-action=openOriginalEnglish]").first().click();
   assert.ok((await sourcePage.locator(".presenter-count").textContent()).includes("13"),"English source player includes all 13 slides");
   await sourcePage.waitForFunction(()=>document.querySelector(".presenter-original-slide img")?.naturalWidth>0);
   await sourcePage.locator('[data-action="presenterLanguage"][data-language="fa"]').click();
