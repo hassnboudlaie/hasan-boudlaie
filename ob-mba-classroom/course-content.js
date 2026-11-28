@@ -363,6 +363,16 @@ window.OB_COURSE_CONTENT={
  const second=window.OB_COURSE_CONTENT.sessions.find(s=>s.id===2);
  if(!second)return;
  second.resources=[{
+  "id": "armin-trost-ebnmlfrdy6m",
+  "type": "video",
+  "title": "ویدئوی منتخب آرمین تروست | Armin Trost",
+  "author": "Armin Trost",
+  "url": "https://www.youtube.com/watch?v=EBnmLFRdy6M",
+  "topic": "مطالعه تکمیلی جلسه دوم | مبانی رفتار فردی در سازمان (Individual Behavior)",
+  "optional": true,
+  "note": "ویدئوی منتخب مدرس برای مطالعه اختیاری. هنگام تماشا تلاش کنید نکات سخنران را با مفاهیم جلسه دوم، از جمله ارزش‌ها، نگرش‌ها، ادراک و رفتار فردی، مرتبط کنید و یک کاربرد مدیریتی برای آن بیابید. این راهنمای تماشا است، نه خلاصه تأییدشده ویدئو.",
+  "accessNote": "عنوان اصلی و محتوای دقیق این ویدئو هنوز از YouTube قابل تأیید نبوده است."
+},{
    id:"armin-trost-2019-culture",
    type:"video",
    title:"Don't change Culture by changing the Culture",
