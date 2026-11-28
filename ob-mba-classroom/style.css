@@ -731,3 +731,6 @@ html[data-theme=dark] .resource-cover img{background:#f7f7f5}
 /* Accessible theme control: constant high-contrast button in Chromium, WebKit and small screens. */
 .mast .header-actions #themeToggle{background:#123a46!important;color:#ffffff!important;border:2px solid #d6ebed!important;opacity:1!important;box-shadow:none}
 .mast .header-actions #themeToggle:focus-visible{outline:3px solid #ffdb83;outline-offset:3px}
+
+/* Explicit AA contrast for the small header theme control across browsers. */
+.header-actions .icon-btn{background:#e5eee9!important;color:#163d3b!important;border-color:#78928c!important}

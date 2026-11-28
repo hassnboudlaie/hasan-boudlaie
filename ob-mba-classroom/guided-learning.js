@@ -15,7 +15,7 @@ const caseSelect=(lessonId,item,work)=>{
  const cfg=window.OB_CASE_CHOICES?.[lessonId]?.steps?.[item.key];
  if(!cfg)return note("case-"+item.key,"تحلیل شما با استفاده از مفهوم جلسه",work,"معیار ارزیابی: "+item.rubric+" · "+item.points+" امتیاز");
  const key="case-"+item.key, current=String(work?.guidedAnswers?.[key]||"");
- if([1,2].includes(lessonId)){
+ if(cfg.options?.length){
   const valid=cfg.options.includes(current);
   return '<div class="gr-note gr-choice"><p class="gr-choice-hint">'+escapeHtml(cfg.hint)+'</p><fieldset style="border:0;padding:0;margin:0;min-width:0"><legend>یک گزینه را انتخاب کنید</legend>'+
   cfg.options.map((v,i)=>'<label class="gr-choice-option" style="display:flex;align-items:flex-start;gap:10px;padding:12px 8px;border-bottom:1px solid var(--line,#ddd);cursor:pointer"><input type="radio" name="gr-'+escapeHtml(key)+'" data-guided-key="'+escapeHtml(key)+'" value="'+escapeHtml(v)+'" '+(v===current?'checked':'')+' style="flex:none;margin-top:5px"><span>'+["الف","ب","پ","ت"][i]+' — '+escapeHtml(v)+'</span></label>').join("")+'</fieldset>'+
@@ -60,7 +60,7 @@ const stepsOf=(x,mode,work)=>{
     '<h4 class="gr-section">شش مرحله تحلیل</h4>'+list(framework.steps.map(item=>item.title),true)},
    {kicker:"تصمیم مدیریتی",title:"مسئله تصمیم‌گیری",sub:c.title,
     body:part("مأموریت شما",window.OB_CASE_CHOICES?.[x.id]?"با تکیه بر مفاهیم همین جلسه، در هر یک از شش مرحله یک برداشت مستدل‌تر را انتخاب کنید.":"برای هر یک از شش مرحله پاسخ شواهدمحور بنویسید و پس از بازبینی برای استاد ارسال کنید.","gr-definition")+part("خروجی نهایی","شش مرحله را تکمیل کنید، گزارش یکپارچه را پیش‌نمایش و در قالب Word یا PDF دریافت کنید و پاسخ‌ها را برای استاد ارسال کنید.")+
-    part("معیار یک تحلیل خوب",assignment?.quality)+originalDraft("پیش‌نویس قبلی من",work?.case||"")+([1,2].includes(x.id)?"":originalDraft("یادداشت تأمل قبلی من",work?.reflection||""))},
+    part("معیار یک تحلیل خوب",assignment?.quality)+originalDraft("پیش‌نویس قبلی من",work?.case||"")},
    ...itemSteps,
    {kicker:"ثبت تکلیف",title:"تحویل تمرین ساختارمند شش‌مرحله‌ای",sub:"Structured Case Exercise",
     body:'<div class="gr-case-submit"><h4>پیش‌نمایش و تحویل تحلیل شش‌مرحله‌ای</h4><p>هر مرحله یک پاسخ جداگانه دارد. پس از تکمیل می‌توانید گزارش یکپارچه را ببینید، Word یا PDF تهیه کنید و در سامانه استاد ثبت کنید. برای ارسال تحلیل متنی یا فایل، از گزینهٔ زیر همین مسیر استفاده کنید.</p><div class="gr-report-actions"><button type="button" class="gr-next" data-action="casePreview">پیش‌نمایش گزارش کامل</button><button type="button" class="gr-prev" data-action="caseDownloadWord">دریافت Word</button><button type="button" class="gr-prev" data-action="casePrintPDF">دریافت PDF</button></div><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}

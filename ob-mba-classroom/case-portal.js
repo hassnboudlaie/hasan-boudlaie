@@ -65,7 +65,7 @@ async function submitCase(lesson,work){
  for(const key of fields){
   const value=String(work?.guidedAnswers?.["case-"+key]||"").trim();
   if(value.length<8){if(node)node.innerHTML='<p class="case-error">شش بخش چارچوب را کامل کنید؛ بخش «'+esc(key)+'» هنوز پاسخ کافی ندارد.</p>';return false}
-  if([1,2].includes(Number(lesson))){
+  if(window.OB_CASE_CHOICES?.[Number(lesson)]?.steps){
    const options=window.OB_CASE_CHOICES?.[Number(lesson)]?.steps?.[key]?.options;
    if(!options?.includes(value)){if(node)node.innerHTML='<p class="case-error">برای هر شش مرحله یکی از چهار گزینه را انتخاب کنید.</p>';return false}
    const note=String(work?.guidedAnswers?.["case-"+key+"-note"]||"").trim().slice(0,1500);
@@ -81,7 +81,7 @@ async function submitCase(lesson,work){
   return false;
  }
 }
-const teacherHTML=()=>'<section class="page case-review-page"><div class="page-head"><div><h2>ارزیابی تحلیل کیس‌ها</h2><p>ثبت رسمی تکلیف و نمره هر دانشجو</p></div></div><div class="case-teacher-toolbar"><label for="caseLessonSelect">جلسه</label><select id="caseLessonSelect"><option value="0">همه جلسات</option><option value="1">جلسه ۱</option><option value="2">جلسه ۲</option></select><button type="button" class="btn secondary" data-case-action="refresh">تازه‌سازی</button><button type="button" class="btn secondary" data-case-action="download">خروجی CSV</button></div><div id="caseTeacherRoot" class="case-review-list"><p class="case-network-status">در حال دریافت تکالیف…</p></div></section>';
+const teacherHTML=()=>'<section class="page case-review-page"><div class="page-head"><div><h2>ارزیابی تحلیل کیس‌ها</h2><p>ثبت رسمی تکلیف و نمره هر دانشجو</p></div></div><div class="case-teacher-toolbar"><label for="caseLessonSelect">جلسه</label><select id="caseLessonSelect"><option value="0">همه جلسات</option><option value="1">جلسه ۱</option><option value="2">جلسه ۲</option><option value="3">جلسه ۳</option></select><button type="button" class="btn secondary" data-case-action="refresh">تازه‌سازی</button><button type="button" class="btn secondary" data-case-action="download">خروجی CSV</button></div><div id="caseTeacherRoot" class="case-review-list"><p class="case-network-status">در حال دریافت تکالیف…</p></div></section>';
 const frameworkFor=id=>(window.OB_LESSON_ENRICHMENT?.sessions||[]).find(s=>s.id===id)?.caseFramework?.steps||[];
 const studentFields=item=>{
  const steps=frameworkFor(item.session_no);
@@ -156,5 +156,5 @@ document.addEventListener("click",async e=>{
   }catch(err){alert(explain(err))}
  }
 });
-window.OB_CASE={refreshStudent,submitCase,teacherHTML,refreshTeacher,studentStatusMarkup:statusHTML};
+window.OB_CASE={refreshStudent,submitCase,teacherHTML,refreshTeacher,setTeacherSession:n=>{teacherSession=[1,2,3].includes(Number(n))?Number(n):0},studentStatusMarkup:statusHTML};
 })();
