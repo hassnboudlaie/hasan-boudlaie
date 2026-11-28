@@ -65,7 +65,12 @@ async function submitCase(lesson,work){
  for(const key of fields){
   const value=String(work?.guidedAnswers?.["case-"+key]||"").trim();
   if(value.length<8){if(node)node.innerHTML='<p class="case-error">شش بخش چارچوب را کامل کنید؛ بخش «'+esc(key)+'» هنوز پاسخ کافی ندارد.</p>';return false}
-  values[key]=value;
+  if(Number(lesson)===2){
+   const options=window.OB_CASE_CHOICES?.[2]?.steps?.[key]?.options;
+   if(!options?.includes(value)){if(node)node.innerHTML='<p class="case-error">برای هر شش مرحله یکی از چهار گزینه را انتخاب کنید.</p>';return false}
+   const note=String(work?.guidedAnswers?.["case-"+key+"-note"]||"").trim().slice(0,1500);
+   values[key]=value+(note?"\n\nتوضیح تکمیلی: "+note:"");
+  }else values[key]=value;
  }
  if(node){node.innerHTML='<p class="case-network-status">در حال ارسال پاسخ به سرور…</p>'}
  try{

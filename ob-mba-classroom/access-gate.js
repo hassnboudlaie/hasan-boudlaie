@@ -148,8 +148,8 @@ function unlock(role){
  if(role!=="teacher"&&roleMenu)roleMenu.hidden=true;
  if(role==="teacher")addTeacherRecovery();
  // Education scripts load only after the server authorizes this device.
- const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=3","./session-03-content.js?v=3","./case-portal.js?v=6","./assignment-portal.js?v=4","./guided-learning.js?v=5","./presenter-player.js?v=3"];
- const optionalScripts=["./session-case-choices.js?v=2","./case-export.js?v=1","./quiz-portal.js?v=8"];
+ const scripts=["./learning-analytics.js?v=2","./learning-journey.js?v=1","./student-devices.js?v=1","./course-content.js?v=7","./syllabus.js?v=1","./lesson-enrichment.js?v=3","./session-03-content.js?v=3","./case-portal.js?v=7","./assignment-portal.js?v=4","./guided-learning.js?v=6","./presenter-player.js?v=3"];
+ const optionalScripts=["./session-case-choices.js?v=3","./case-export.js?v=2","./quiz-portal.js?v=8"];
  const loadScript=src=>new Promise((resolve,reject)=>{
   const tag=document.createElement("script");tag.src=src;tag.onload=resolve;tag.onerror=reject;
   document.body.appendChild(tag);
@@ -158,7 +158,7 @@ function unlock(role){
  (async()=>{
   for(const src of scripts)await loadScript(src);
   await optionalReady;
-  await loadScript("./app.js?v=51");
+  await loadScript("./app.js?v=52");
  })().catch(()=>{loaded=false;error="server_error";present()});
 }
 async function check(){

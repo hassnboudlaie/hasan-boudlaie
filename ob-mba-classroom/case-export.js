@@ -7,7 +7,7 @@ const steps=x=>Array.isArray(x?.caseFramework?.steps)?x.caseFramework.steps:[];
 function build(lesson,enrichment,work){
  const st=steps(enrichment);
  let user={};try{user=JSON.parse(localStorage.getItem("mba-ob-classroom-attendance-identity-v1")||"{}")}catch{}
- const rows=st.map(s=>({title:s.title,english:s.en||"",answer:String(work?.guidedAnswers?.["case-"+s.key]||"").trim()}));
+ const rows=st.map(s=>({title:s.title,english:s.en||"",answer:(()=>{const v=String(work?.guidedAnswers?.["case-"+s.key]||"").trim(),note=String(work?.guidedAnswers?.["case-"+s.key+"-note"]||"").trim();return v+(note?"\n\nتوضیح تکمیلی: "+note:"")})()}));
  return {title:"گزارش تحلیل کیس · جلسه "+lesson,caseTitle:enrichment?.caseStudy?.title||"",student:user.name||user.full_name||"دانشجو",rows,completed:rows.filter(s=>s.answer.length>=8).length};
 }
 const pageCSS='body{font-family:Tahoma,Arial,sans-serif;direction:rtl;color:#183b43;max-width:850px;margin:40px auto;line-height:2;background:white;padding:0 22px}h1{font-size:27px;border-bottom:3px solid #12665e;padding-bottom:16px}h2{font-size:22px}article{margin:22px 0;padding:16px 22px;border:1px solid #cbdedb;border-radius:12px;break-inside:avoid}p{font-size:17px;white-space:pre-wrap}.meta{color:#4c6263}.missing{color:#9a6520}';
