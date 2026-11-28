@@ -158,7 +158,7 @@ function unlock(role){
  (async()=>{
   for(const src of scripts)await loadScript(src);
   await optionalReady;
-  await loadScript("./app.js?v=62");
+  await loadScript("./app.js?v=63");
  })().catch(()=>{loaded=false;error="server_error";present()});
 }
 async function check(){

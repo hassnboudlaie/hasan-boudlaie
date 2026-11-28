@@ -78,8 +78,8 @@ async function examine(browser,name,width,height){
   page.on("pageerror",error=>errors.push(error.message));
   const url="http://127.0.0.1:"+server.address().port+"/hasan-boudlaie/ob-mba-classroom/";
   await page.goto(url,{waitUntil:"domcontentloaded"});
-  await page.locator(".student-focus").waitFor({timeout:18000});
-  assert.equal(await page.locator("#objJourney").count(),1,"Five-stage independent-learning journey must be visible on approved student home");
+  await page.locator(".ob-home-session-directory").waitFor({timeout:18000});
+  assert.equal(await page.locator("#objJourney").count(),0,"No active-session journey pinned on home");
   assert.equal(await page.locator("[data-student-device-settings]").count(),1,"Approved student can set a cross-device password");
   assert.equal(await page.locator('#bottomNav a[href="./participation.html?v=4"]').count(),1,"Student portfolio has one direct entry");
   assert.equal(await page.locator(".ob-roadmap-item").count(),0,"Home does not duplicate the sessions directory");
@@ -105,8 +105,10 @@ async function examine(browser,name,width,height){
    assert.notEqual(appearance.bg,"rgb(255, 255, 255)","Dashboard cards must inherit dark theme instead of white panel");
    if(name==="chromium")await page.screenshot({path:path.join(OUTPUT,"academic-390-dark-learning.png"),fullPage:true});
   }
-  await page.locator('.student-focus button[data-action="openActive"]').click();
+  await page.locator('.ob-home-session-directory button[data-page="sessions"]').click();
+  await page.locator('[data-action="openSession"][data-id="1"]').click();
   await page.locator('.gr-shell[data-guided-mode="concepts"]').waitFor({timeout:15000});
+  assert.equal(await page.locator("#objJourney").count(),1,"Learning journey remains inside the selected lesson");
   assert.equal(await page.locator(".ob-reading-layout").isVisible(),true,"Guided lesson uses the new reading layout");
   const active=await page.evaluate(()=>document.activeElement?.id);
   assert.equal(active,"main",name+" "+width+" should focus main after SPA route");
@@ -307,8 +309,8 @@ async function verifyRepeatDevice(browser,name){
   const pageA=await a.newPage(),pageB=await b.newPage();
   const errors=[];pageA.on("pageerror",err=>errors.push("a:"+err.message));pageB.on("pageerror",err=>errors.push("b:"+err.message));
   await pageA.goto(base,{waitUntil:"domcontentloaded"});
-  await pageA.locator(".student-focus").waitFor({timeout:18000});
-  assert.equal(await pageA.locator("#objJourney").count(),1,"Five-step learning experience should render");
+  await pageA.locator(".ob-home-session-directory").waitFor({timeout:18000});
+  assert.equal(await pageA.locator("#objJourney").count(),0,"Home has no session-specific journey");
   await pageA.locator(".ob-utilities summary").click();
   await pageA.locator('[data-student-device-settings]').first().click();
   await pageA.locator('#obDeviceDialog[open]').waitFor();
@@ -324,7 +326,7 @@ async function verifyRepeatDevice(browser,name){
   await pageB.locator("#returningNumber").fill(student.student_number);
   await pageB.locator("#returningPassword").fill("LearnerPersonal12345");
   await pageB.locator("#entranceReturning button[type=submit]").click();
-  await pageB.locator(".student-focus").waitFor({timeout:18000});
+  await pageB.locator(".ob-home-session-directory").waitFor({timeout:18000});
   assert.equal(logins,1,"New device should exchange password for a new student session");
   assert.equal(registrations,0,"No re-registration, device review or instructor approval allowed");
   const idA=await pageA.evaluate(()=>window.OB_ACCESS.student_number);

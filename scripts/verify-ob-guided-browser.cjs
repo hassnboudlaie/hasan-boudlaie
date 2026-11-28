@@ -66,12 +66,13 @@ async function run(){
   const page=await ctx.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto(url,{waitUntil:"domcontentloaded"});
-  await page.locator(".student-focus").waitFor();
+  await page.locator(".ob-home-session-directory").waitFor();
   assert.equal(await page.locator('#bottomNav a[href="./participation.html?v=4"]').count(),1,"Single direct student portfolio link");
    assert.equal(await page.locator('a.ob-console-row[href="./community.html"]').count(),1,"Community shortcut is available on the student dashboard");
   await noOverflow(page,config.name+" home");
   await save(page,config.name+"-01-home");
-  await page.locator('.student-focus button[data-action="openActive"]').click();
+  await page.locator('.ob-home-session-directory button[data-page="sessions"]').click();
+  await page.locator('[data-action="openSession"][data-id="1"]').click();
   await page.locator('.gr-shell[data-guided-mode="concepts"]').waitFor();
   assert.equal(await page.locator('.gr-stage-tab').count(),7,"Seven source topics");
   assert.ok((await page.locator('.gr-part p').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize)))>=19,"Readable concept type >= 19px");
@@ -106,7 +107,8 @@ async function run(){
   for(const answer of selected)assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes(answer));
   assert.equal(await page.locator('[data-action="submitCase"]').isEnabled(),true);
   await page.reload({waitUntil:"domcontentloaded"});
-  await page.locator('.student-focus button[data-action="openActive"]').click();
+  await page.locator('.ob-home-session-directory button[data-page="sessions"]').click();
+  await page.locator('[data-action="openSession"][data-id="1"]').click();
   await page.locator("#sectionSelect").selectOption("case");
   for(let i=0;i<keys.length;i++)assert.equal(await page.locator('input[data-guided-key="case-'+keys[i]+'"]:checked').inputValue(),selected[i]);
   assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("توضیح تکمیلی آزمایشی"));
@@ -198,7 +200,7 @@ async function run(){
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),"dark","Optional dark mode still works");
   await noOverflow(page,config.name+" dark theme");
   await page.goto(url,{waitUntil:"domcontentloaded"});
-  await page.locator(".student-focus").waitFor();
+  await page.locator(".ob-home-session-directory").waitFor();
   assert.deepEqual(errors,[],config.name+" uncaught frontend JavaScript errors");
   await ctx.close();
   console.log("PASS "+config.name+": 7 concepts, chapter-aligned case, six-part submitted workbook, role-play, quiz, presentations, dark theme, RTL and overflow");
@@ -219,13 +221,13 @@ async function run(){
  await pendingPage.locator("#studentName").fill("دانشجوی تست");
  await pendingPage.locator("#entranceStudent button[type=submit]").click();
  await pendingPage.getByText("در انتظار تأیید مدرس").waitFor();
- assert.equal(await pendingPage.locator(".student-focus").count(),0,"Pending student cannot reach lesson UI");
+ assert.equal(await pendingPage.locator(".ob-home-session-directory").count(),0,"Pending student cannot reach lesson UI");
  assert.ok(await pendingPage.locator("#site").isHidden(),"App shell hidden before teacher approval");
  await pendingPage.getByText("بررسی وضعیت").click();
- assert.equal(await pendingPage.locator(".student-focus").count(),0,"Pending remains locked on status refresh");
+ assert.equal(await pendingPage.locator(".ob-home-session-directory").count(),0,"Pending remains locked on status refresh");
  admitted=true;
  await pendingPage.getByText("بررسی وضعیت").click();
- await pendingPage.locator(".student-focus").waitFor();
+ await pendingPage.locator(".ob-home-session-directory").waitFor();
  assert.ok(await pendingPage.locator("#entryGate").isHidden(),"Approved student enters class");
  await noOverflow(pendingPage,"mobile auth gate");
  await save(pendingPage,"android-390-07-approved-entry");
@@ -275,7 +277,8 @@ async function run(){
 
  await instructorPage.locator(".ob-console-settings > summary").click();
   assert.ok(await instructorPage.locator(".join-qr-card img[src='./join-qr.svg']").isVisible(),"Teacher QR is available under clearly labeled class tools");
- await instructorPage.locator('[data-action="teacherCurrentPresentation"]').click();
+ await instructorPage.locator('[data-action="editSession"][data-id="1"]').click();
+ await instructorPage.locator('[data-action="openOriginalEnglish"]').click();
  assert.ok(await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').isVisible(),"Teacher can choose original English in the classroom player");
  await instructorPage.locator('[data-action="presenterLanguage"][data-language="en"]').click();
  assert.ok(await instructorPage.locator('.presenter-original-slide img').isVisible(),"Teacher English deck opens inside the app");

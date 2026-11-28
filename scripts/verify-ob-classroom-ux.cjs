@@ -212,7 +212,7 @@ assert.equal(manifest.scope,'./','PWA stays within the MBA classroom');
 assert.equal(manifest.start_url,'./','Installed app starts on Allameh page');
 assert.ok(!html.includes('../hub/')&&!html.includes('اپ‌های من'),'No link back to HB Hub from classroom header');
 assert.ok(!installHtml.includes('../hub/')&&!attendanceHtml.includes('../hub/'),'Standalone pages do not navigate to other projects');
-assert.ok(js.includes('student-focus')&&js.includes('ob-utilities'),'Student home prioritizes the current session and secondary tools');
+assert.ok(js.includes('ob-home-session-directory')&&js.includes('ob-utilities')&&!js.includes('class="student-focus ob-study-feature"')&&!js.includes('class="ob-teacher-hero"'),'Home has one general session directory and no pinned current-session card');
 assert.ok(css.includes('welcome-head')&&css.includes('focus-bottom')&&css.includes('attendance-card'),'Reference-led premium dashboard styles are present');
 
 assert.equal(manifest.icons.some(i=>i.sizes==='512x512'),true,'PWA icon supports 512x512');
@@ -242,6 +242,7 @@ const fakeWindow={scrollTo(){},addEventListener(){},OB_CASE:{teacherHTML:()=>'<s
 new Function('window','document','Image',presenterJs)(fakeWindow,{getElementById(){return null}},function(){this.src=''});
 new Function('document','localStorage','window','crypto','setTimeout','clearTimeout',js)(doc,storage,fakeWindow,{getRandomValues(a){a[0]=54321}},()=>{},()=>{});
 assert.ok(app.innerHTML.includes('سایر امکانات کلاس'),'Student home uses progressive disclosure');
+assert.ok(app.innerHTML.includes('ob-home-session-directory')&&!app.innerHTML.includes('data-action="openActive"')&&!app.innerHTML.includes('مقدمه‌ای بر رفتار سازمانی'),'Student home never pins Session 1');
 assert.ok(!app.innerHTML.includes('یکی از دو مسیر را انتخاب کنید')&&!app.innerHTML.includes('در زمان مناسب'),'Student home avoids redundant instructions');
 assert.ok(app.innerHTML.includes('href="./community.html"')&&nav.innerHTML.includes('href="./participation.html?v=4"'),'Student dashboard links directly to club and participation');
 assert.ok(!app.innerHTML.includes('ob-roadmap-item'),'Official session directory is the only course list');
@@ -318,7 +319,8 @@ fakeWindow.OB_ACCESS.role='teacher';
 role('teacher');
 assert.ok(app.innerHTML.includes('ابزارهای کلاس و تنظیمات')&&app.innerHTML.includes('ورود به کلاس'),'Teacher tools and classroom QR are present');
 click('openCaseReviews');assert.ok(app.innerHTML.includes('ارزیابی تحلیل کیس‌ها'),'Teacher can inspect the real grading screen');
-click('editActive');
+assert.ok(!app.innerHTML.includes('ob-teacher-hero'),'Teacher home has no pinned current session');
+click('editSession',{id:'1'});
 assert.ok(app.innerHTML.includes('کیس، تحلیل و ثبت تکلیف')&&!app.innerHTML.includes('name="reflection"')&&!app.innerHTML.includes('name="roleplay"')&&!app.innerHTML.includes('name="published"')&&app.innerHTML.includes('باز کردن PDF فارسی')&&app.innerHTML.includes('دانلود PowerPoint اصلی انگلیسی'),'Teacher session includes actual bilingual files, no redundant editable fields');
 assert.ok(!app.innerHTML.includes('نظریه‌ها و مدل‌های علمی')&&!app.innerHTML.includes('name="theory"')&&!app.innerHTML.includes('name="model"'),'Redundant science and theory editor section is removed');
 click('navigate',{page:'grades'});
