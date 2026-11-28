@@ -105,6 +105,28 @@ const third={
   "caseSourceLabel": "",
   "resources": [
     {
+  "id": "inside-out-2015-ei",
+  "type": "film",
+  "title": "انیمیشن درون و بیرون ۱ — Inside Out (2015)",
+  "author": "Disney / Pixar",
+  "url": "https://www.disneyplus.com/browse/entity-d4b87168-7d0b-49bc-b138-457ab7723feb",
+  "infoUrl": "https://www.pixar.com/inside-out",
+  "topic": "هوش هیجانی | Self-Awareness, Emotion Recognition & Empathy",
+  "note": "با نقش شادی، غم، ترس، خشم و انزجار در تجربه و رفتار آشنا شوید. هنگام تماشا به کارکرد هیجان‌های ناخوشایند و اهمیت پذیرش احساسات و همدلی توجه کنید.",
+  "accessNote": "تماشای کامل در Disney+ بسته به کشور و اشتراک است. معرفی رسمی Pixar رایگان است. انیمیشن یک ابزار آموزشی استعاری است، نه مدل علمی کامل هیجان."
+},
+    {
+  "id": "inside-out-2-2024-ei",
+  "type": "film",
+  "title": "انیمیشن درون و بیرون ۲ — Inside Out 2 (2024)",
+  "author": "Disney / Pixar",
+  "url": "https://www.disneyplus.com/whats-on/entity-ec9f9fa3-fbae-4a25-b722-12c3b8ab0ef4",
+  "infoUrl": "https://www.pixar.com/inside-out-2",
+  "topic": "هوش هیجانی | Emotion Regulation, Anxiety & Self-Concept",
+  "note": "نقش اضطراب، حسادت، خجالت و ملال را در شکل‌گیری هویت و تصمیم‌گیری بررسی کنید. به ارتباط فشار عملکرد، مقایسه اجتماعی و تنظیم هیجان با رفتار در محیط کار توجه کنید.",
+  "accessNote": "تماشای کامل در Disney+ بسته به کشور و اشتراک است. معرفی رسمی Pixar رایگان است. مشاهده فیلم به‌تنهایی جایگزین تمرین مهارت‌های هوش هیجانی نیست."
+},
+    {
       "id": "session3-guide",
       "type": "article",
       "title": "جزوه تکمیلی جلسه سوم — هفت بخش",
