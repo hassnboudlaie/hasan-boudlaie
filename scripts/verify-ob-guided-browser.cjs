@@ -114,6 +114,9 @@ async function run(){
     await page.locator('input[data-guided-key="case-'+keys[i]+'"]').nth(i%4).check();
   }
   await page.locator('[data-action="guidedJump"][data-index="9"]').click();
+  assert.ok(await page.locator('#caseIntegratedReport .case-narrative').isVisible(),"Six-step integrated report is displayed automatically");
+  assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("6 از ۶ گام تکمیل شده"),"All six case choices are reflected in the final narrative");
+  assert.ok((await page.locator('#caseIntegratedReport').textContent()).includes("توضیح تکمیلی آزمایشی"),"Optional rationale is reflected in the report");
   await page.locator('[data-action="submitCase"]').click();
   await page.getByText("ارسال‌شده · در انتظار ارزیابی").waitFor();
   assert.ok(draftSent&&Object.keys(draftSent.answers).length===6,"All six analytical answers submitted to backend");

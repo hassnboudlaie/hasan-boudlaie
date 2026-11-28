@@ -90,7 +90,7 @@ assert.ok(gateJs.includes('course-content.js?v=7')&&sw.includes('course-content.
 const publicCourse={};new Function('window',courseScript)(publicCourse);new Function('window',enrichmentScript)(publicCourse);
 assert.ok(/lesson-enrichment\.js\?v=\d+/.test(gateJs)&&gateJs.match(/lesson-enrichment\.js\?v=\d+/)?.[0]===sw.match(/lesson-enrichment\.js\?v=\d+/)?.[0],'Current lesson-enrichment version is loaded and cached');
 assert.ok(/guided-learning\.js\?v=\d+/.test(gateJs)&&gateJs.match(/guided-learning\.js\?v=\d+/)?.[0]===sw.match(/guided-learning\.js\?v=\d+/)?.[0],'Current guided-learning version is loaded and cached');
-assert.ok(html.includes('guided-learning.css?v=2')&&sw.includes('guided-learning.css?v=2'),'Guided styling cached');
+assert.ok(html.includes('guided-learning.css?v=3')&&sw.includes('guided-learning.css?v=3'),'Guided styling cached');
 assert.equal(publicCourse.OB_LESSON_ENRICHMENT.sessions.length,2,'Both source chapters enriched');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseFramework.steps.length===6&&s.caseFramework.steps.reduce((n,p)=>n+p.points,0)===20),'Both case rubrics have six stages and 20 points');
 assert.ok(publicCourse.OB_LESSON_ENRICHMENT.sessions.every(s=>s.caseStudy.tag.includes('فرضی')&&s.caseStudy.dataTable.length>=4),'Cases are honest data-led hypothetical scenarios');
@@ -155,6 +155,31 @@ for(const [folder,pages] of [['materials/original/session-03',13],['materials/re
   assert.equal(image.subarray(0,4).toString('ascii'),'RIFF','Original page must be an actual WebP');
  }
 }
+
+const caseModel={};new Function('window',read('ob-mba-classroom/session-case-choices.js'))(caseModel);
+new Function('window','localStorage',read('ob-mba-classroom/case-export.js'))(caseModel,{getItem(){return '{}'}});
+new Function('window',guidedJs)(caseModel);
+for(const id of [1,2,3]){
+ const x=publicCourse.OB_LESSON_ENRICHMENT.sessions.find(s=>s.id===id);
+ const cfg=caseModel.OB_CASE_CHOICES[id].steps;
+ assert.equal(Object.keys(cfg).length,6);
+ const work={guidedAnswers:{}};
+ for(const step of x.caseFramework.steps){
+  assert.equal(cfg[step.key].options.length,4);
+  work.guidedAnswers['case-'+step.key]=cfg[step.key].options[0];
+ }
+ work.guidedAnswers['case-problem-note']='توضیح تکمیلی آزمایشی';
+ const result=caseModel.OB_CASE_EXPORT.build(id,x,work);
+ assert.equal(result.completed,6,'Six valid answers are included for session '+id);
+ const final=caseModel.OB_GUIDED.stepsOf(x,'case',work).at(-1).body;
+ assert.ok(final.includes('caseIntegratedReport')&&final.includes('گام 6')&&final.includes('توضیح تکمیلی آزمایشی'),'Complete narrative is automatic on the final screen');
+ for(const step of result.rows)assert.ok(final.includes(step.answer),'Chosen answer appears unchanged in the integrated report');
+ const incomplete=caseModel.OB_CASE_EXPORT.build(id,x,{guidedAnswers:{'case-problem':'پاسخ متنی نامعتبر'}});
+ assert.equal(incomplete.completed,0,'Old free text is not counted as a selected option');
+ const stored={answers:Object.fromEntries(result.rows.map(r=>[r.key,r.answer]))};
+ assert.equal(caseModel.OB_CASE_EXPORT.build(id,x,{},stored).completed,6,'Submitted report works without device-local draft');
+}
+
 const playerWindow={};new Function('window',presenterJs)(playerWindow);
 const originalView=playerWindow.OB_PRESENTER.render({session:thirdCourse,variant:'en',index:0});
 const persianView=playerWindow.OB_PRESENTER.render({session:thirdCourse,variant:'fa',index:0});
