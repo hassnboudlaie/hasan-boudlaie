@@ -50,7 +50,7 @@ const stepsOf=(x,mode,work)=>{
   const itemSteps=cleanArray(framework.steps).map((item,i)=>({
    kicker:"تحلیل کیس · مرحله "+(i+1),
    title:item.title,sub:item.en||"",
-   body:part("سؤال تحلیل",window.OB_CASE_CHOICES?.[x.id]?.steps?.[item.key]?.question||item.prompt,"gr-definition")+caseSelect(x.id,item,work)
+   body:'<details class="gr-case-reference"><summary>مرور داده‌های کیس در همین گام</summary>'+list(c.facts)+table+'</details>'+part("سؤال تحلیل",window.OB_CASE_CHOICES?.[x.id]?.steps?.[item.key]?.question||item.prompt,"gr-definition")+caseSelect(x.id,item,work)
   }));
   return [
    {kicker:"کیس جلسه "+x.id,title:c.title,sub:c.tag||"",
@@ -63,7 +63,7 @@ const stepsOf=(x,mode,work)=>{
     part("معیار یک تحلیل خوب",assignment?.quality)+originalDraft("پیش‌نویس قبلی من",work?.case||"")},
    ...itemSteps,
    {kicker:"ثبت تکلیف",title:"تحویل تمرین ساختارمند شش‌مرحله‌ای",sub:"Structured Case Exercise",
-    body:'<div class="gr-case-submit"><h4>پیش‌نمایش و تحویل تحلیل شش‌مرحله‌ای</h4><p>هر مرحله یک پاسخ جداگانه دارد. پس از تکمیل می‌توانید گزارش یکپارچه را ببینید، Word یا PDF تهیه کنید و در سامانه استاد ثبت کنید. برای ارسال تحلیل متنی یا فایل، از گزینهٔ زیر همین مسیر استفاده کنید.</p><div class="gr-report-actions"><button type="button" class="gr-next" data-action="casePreview">پیش‌نمایش گزارش کامل</button><button type="button" class="gr-prev" data-action="caseDownloadWord">دریافت Word</button><button type="button" class="gr-prev" data-action="casePrintPDF">دریافت PDF</button></div><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
+    body:'<div class="gr-case-submit"><h4>تحلیل نهایی و ثبت تکلیف</h4><p>انتخاب‌های شش گام شما در متن زیر کنار هم قرار گرفته‌اند. قبل از ثبت نهایی، تحلیل را از ابتدا تا انتها بخوانید؛ اگر لازم است به گام مربوط برگردید و انتخاب خود را اصلاح کنید.</p><div id="caseIntegratedReport" data-session="'+x.id+'">'+(window.OB_CASE_EXPORT?.inlineReport(window.OB_CASE_EXPORT.build(x.id,x,work,window.OB_CASE?.submittedReport?.(x.id)))||"گزارش در دسترس نیست.")+'</div><div class="gr-report-actions"><button type="button" class="gr-next" data-action="casePreview">پیش‌نمایش گزارش کامل</button><button type="button" class="gr-prev" data-action="caseDownloadWord">دریافت Word</button><button type="button" class="gr-prev" data-action="casePrintPDF">دریافت PDF</button></div><div id="caseSubmitStatus" data-session="'+x.id+'">'+(window.OB_CASE?.studentStatusMarkup(x.id)||"")+'</div></div>'}
   ];
  }
  if(mode==="group"){
@@ -93,7 +93,7 @@ function render({enrichment,mode,work,index=0,lessonId=1}){
  if(!steps.length)return '<div class="gr-empty">محتوای این بخش هنوز ثبت نشده است.</div>';
  const n=Math.max(0,Math.min(steps.length-1,Number(index)||0)),stage=steps[n];
  const progress=Math.round((n+1)/steps.length*100);
- const nav='<div class="gr-step-navigation"><button type="button" data-action="guidedPrev" class="gr-prev" '+(n===0?"disabled":"")+'>مرحله قبل</button><span aria-label="مرحله '+(n+1)+' از '+steps.length+'">'+(n+1)+' / '+steps.length+'</span><button type="button" data-action="guidedNext" class="gr-next" '+(n===steps.length-1?"disabled":"")+'>مرحله بعد</button></div>';
+ const nav='<div class="gr-step-navigation"><button type="button" data-action="guidedPrev" class="gr-prev" '+(n===0?"disabled":"")+'>مرحله قبل</button><span aria-label="مرحله '+(n+1)+' از '+steps.length+'">'+(n+1)+' / '+steps.length+'</span><button type="button" data-action="guidedNext" class="gr-next" '+(n===steps.length-1?"disabled":"")+'>'+(mode==="case"&&n===steps.length-2?"مشاهده تحلیل یکپارچه":"مرحله بعد")+'</button></div>';
  const rail='<nav class="gr-step-rail" aria-label="فهرست مراحل">'+steps.map((step,i)=>'<button type="button" data-action="guidedJump" data-index="'+i+'" class="gr-stage-tab '+(i===n?"active":"")+'" '+(i===n?'aria-current="step"':'')+' aria-label="رفتن به مرحله '+(i+1)+'">'+(i+1)+'</button>').join("")+'</nav>';
  return '<section class="gr-shell" data-guided-mode="'+escapeHtml(mode)+'" data-guided-session="'+lessonId+'"><div class="gr-header"><div><span class="gr-eyebrow">'+escapeHtml(stage.kicker||"")+'</span><h3 tabindex="-1" id="guidedStageTitle">'+escapeHtml(stage.title||"")+'</h3>'+(stage.sub?'<p class="gr-subtitle">'+escapeHtml(stage.sub)+'</p>':"")+'</div><div class="gr-step-count">'+(n+1)+' از '+steps.length+'</div></div><div class="gr-meter" role="progressbar" aria-valuemin="0" aria-valuemax="'+steps.length+'" aria-valuenow="'+(n+1)+'" aria-label="مراحل مشاهده‌شده"><span style="width:'+progress+'%"></span></div>'+rail+'<div class="gr-stage" data-stage-index="'+n+'">'+stage.body+'</div><div class="gr-actions">'+nav+'</div><div class="gr-autosave"><span data-save-status>پاسخ‌ها در همین دستگاه ذخیره می‌شوند</span>'+(mode==="case"||mode==="group"||mode==="roleplay"?'<button type="button" class="gr-export" data-action="guidedExport">دریافت پاسخ‌ها ↓</button>':"")+'</div></section>';
 }

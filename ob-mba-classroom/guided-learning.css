@@ -140,3 +140,6 @@ html[data-theme=dark] .gr-takeaway{background:#40382b;border-color:#735b3b}
 .ob-report-paper h1{font-size:27px;border-bottom:3px solid #176859;padding-bottom:15px}
 .ob-report-paper h2{font-size:22px}
 .ob-report-paper article p{white-space:pre-wrap}
+
+/* Continuous case report, built from the student's actual six choices. */
+.case-integrated-report{padding:18px;border:1px solid var(--line,#cbdedb);border-radius:14px;background:var(--panel,#fff);color:var(--text,#183b43);margin:14px 0;min-width:0}.case-narrative p{line-height:2;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 16px}.case-narrative .meta{color:var(--muted,#4c6263);font-size:.92em}.case-narrative .missing{border-inline-start:3px solid #c99745;padding-inline-start:10px}.gr-case-reference{margin:0 0 15px;padding:10px;border:1px solid var(--line,#ddd);border-radius:10px}.gr-case-reference summary{cursor:pointer;font-weight:700}

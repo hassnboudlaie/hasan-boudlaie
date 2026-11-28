@@ -47,9 +47,15 @@ function statusHTML(lesson){
  const email='<div class="case-email-followup"><strong>ارسال رسید به استاد</strong><p>تحلیل شما قبلاً در سامانه خصوصی استاد ثبت شده است. برای ارسال نسخه فایل، ابتدا Word/PDF را دریافت کنید، سپس پیش‌نویس Gmail را باز کنید، فایل را پیوست کنید و خودتان Send را بزنید.</p><a class="case-submit-btn case-email-link" href="'+esc(emailUrl)+'" target="_blank" rel="noopener noreferrer">ارسال رسید در Gmail استاد</a></div>';
  return common+feedback+email+(rec.status==="revision_requested"?'<p class="case-hint">شش پاسخ را اصلاح کنید و نسخه جدید را بفرستید.</p><button type="button" class="case-submit-btn" data-action="submitCase">ارسال نسخه اصلاح‌شده</button>':"")+(history?'<details class="case-history"><summary>سوابق ارزیابی</summary><ol>'+history+'</ol></details>':"");
 }
+function submittedReport(lesson){const rec=my.get(Number(lesson))?.submission;return rec&&rec.status!=="revision_requested"&&rec.answers?rec:null}
 function drawStudent(lesson){
  const target=document.getElementById("caseSubmitStatus");
  if(target&&Number(target.dataset.session)===lesson)target.innerHTML=statusHTML(lesson);
+ const report=document.getElementById("caseIntegratedReport"),rec=submittedReport(lesson);
+ if(report&&Number(report.dataset.session)===lesson&&rec&&window.OB_CASE_EXPORT){
+  const enrichment=window.OB_LESSON_ENRICHMENT?.sessions?.find(x=>x.id===lesson);
+  if(enrichment)report.innerHTML=window.OB_CASE_EXPORT.inlineReport(window.OB_CASE_EXPORT.build(lesson,enrichment,{},rec));
+ }
 }
 async function refreshStudent(lesson,force=false){
   if(window.OB_ACCESS?.role==="guest"){drawStudent(Number(lesson));return;}
@@ -156,5 +162,5 @@ document.addEventListener("click",async e=>{
   }catch(err){alert(explain(err))}
  }
 });
-window.OB_CASE={refreshStudent,submitCase,teacherHTML,refreshTeacher,setTeacherSession:n=>{teacherSession=[1,2,3].includes(Number(n))?Number(n):0},studentStatusMarkup:statusHTML};
+window.OB_CASE={refreshStudent,submitCase,teacherHTML,refreshTeacher,submittedReport,setTeacherSession:n=>{teacherSession=[1,2,3].includes(Number(n))?Number(n):0},studentStatusMarkup:statusHTML};
 })();
