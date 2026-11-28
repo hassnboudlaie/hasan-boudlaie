@@ -6,7 +6,7 @@
 const API="https://hxcjkewlaniahvuqwwbb.supabase.co/functions/v1/mba-ob-attendance";
 const KEY="mba-ob-classroom-attendance-identity-v1";
 const fields=["problem","evidence","levels","explain","intervention","measurement"];
-const errorNames={case_deadline_passed:"مهلت ثبت کیس جلسه اول به پایان رسیده است.",approval_required:"عضویت شما هنوز تأیید نشده است.",case_already_submitted:"این تکلیف قبلاً ارسال شده است.",
+const errorNames={case_deadline_passed:"مهلت ثبت کیس این جلسه به پایان رسیده است.",approval_required:"عضویت شما هنوز تأیید نشده است.",case_already_submitted:"این تکلیف قبلاً ارسال شده است.",
  incomplete_case_answer:"یکی از شش بخش تحلیل ناقص است.",invalid_case_answers:"پاسخ‌ها را در هر شش بخش کامل کنید.",
  invalid_case_review:"نمره یا توضیح ارزیابی معتبر نیست.",session_expired:"دوباره وارد حساب خود شوید.",
  case_submission_failed:"ثبت پاسخ در سرور انجام نشد.",case_review_failed:"ثبت نمره انجام نشد.",
@@ -39,7 +39,7 @@ function statusHTML(lesson){
  const state=my.get(lesson);
  if(!state)return '<p class="case-network-status">در حال بررسی وضعیت تکلیف…</p>';
  const rec=state.submission;
- if(!rec)return '<span class="case-status-pill">پیش‌نویس · ارسال‌نشده</span><p class="case-hint">پس از تکمیل شش مرحله، تکلیف را برای ارزیابی مدرس ارسال کنید.</p><button type="button" class="case-submit-btn" data-action="submitCase">ثبت نهایی و ارسال برای استاد</button>';
+ if(!rec)return '<span class="case-status-pill">پیش‌نویس · ارسال‌نشده</span><p class="case-hint">پس از تکمیل شش مرحله، تکلیف را برای ارزیابی مدرس ارسال کنید.</p><button type="button" class="case-submit-btn" data-action="submitCase">تأیید روایت و ارسال برای استاد</button>';
  const history=(state.history||[]).map(h=>'<li><strong>'+esc(h.decision==="reviewed"?"ارزیابی شده":"نیازمند اصلاح")+'</strong> · '+date(h.reviewed_at)+(h.score!==null?' · '+digit(h.score)+' از ۲۰':"")+'<p>'+esc(h.feedback)+'</p></li>').join("");
  const common='<span class="case-status-pill '+(rec.status==="reviewed"?"approved":rec.status==="revision_requested"?"revision":"pending")+'">'+esc(rec.status==="reviewed"?"ارزیابی‌شده":rec.status==="revision_requested"?"نیازمند اصلاح":"ارسال‌شده · در انتظار ارزیابی")+'</span><p class="case-hint">ثبت در سرور: '+date(rec.submitted_at)+'</p>';
  const feedback=rec.feedback?'<div class="case-feedback"><strong>بازخورد مدرس</strong><p>'+esc(rec.feedback)+'</p>'+(rec.score!==null?'<strong>نمره: '+digit(rec.score)+' از ۲۰</strong>':"")+'</div>':"";
@@ -52,8 +52,9 @@ function syncSubmitButton(lesson){
  const target=document.getElementById("caseSubmitStatus"),btn=target?.querySelector('[data-action="submitCase"]');
  const fieldsNode=document.getElementById("caseQuestionFields");
  if(!fieldsNode||!target||Number(target.dataset.session)!==Number(lesson))return;
- const complete=fields.every(key=>fieldsNode.querySelector('input[type="radio"][data-guided-key="case-'+key+'"]:checked'));
+ const complete=fields.every(key=>{const picked=Array.from(fieldsNode.querySelectorAll('input[data-guided-key="case-'+key+'"]:checked')).map(el=>el.value);return window.OB_CASE_SELECTIONS.valid(lesson,key,picked.join("\n"))});
  if(btn){btn.disabled=!complete;btn.setAttribute("aria-disabled",String(!complete))}
+ const testBtn=target.querySelector('[data-action="confirmCasePreview"]');if(testBtn)testBtn.disabled=!complete;
  const ready=document.querySelector("#caseIntegratedReport [data-case-complete]");
  const reportComplete=ready?.dataset.caseComplete==="true";
  document.querySelectorAll(".case-result .gr-report-actions button").forEach(el=>{el.disabled=!reportComplete;el.setAttribute("aria-disabled",String(!reportComplete))});
@@ -69,7 +70,7 @@ function drawStudent(lesson){
   if(fieldset){
    fieldset.disabled=true;
    for(const key of fields){const raw=String(rec.answers?.[key]||""),sep="\n\nتوضیح تکمیلی: ",idx=raw.indexOf(sep),v=idx<0?raw:raw.slice(0,idx);
-    fieldset.querySelectorAll('input[data-guided-key="case-'+key+'"]').forEach(el=>{el.checked=el.value===v});
+    fieldset.querySelectorAll('input[data-guided-key="case-'+key+'"]').forEach(el=>{el.checked=v.split("\n").includes(el.value)});
     const note=fieldset.querySelector('textarea[data-guided-key="case-'+key+'-note"]');if(note)note.value=idx<0?"":raw.slice(idx+sep.length);
    }
   }
@@ -84,25 +85,25 @@ async function refreshStudent(lesson,force=false){
  catch(e){const elem=document.querySelector("#caseSubmitStatus");if(elem)elem.textContent=explain(e)}
 }
 async function submitCase(lesson,work){
-  if(window.OB_ACCESS?.role==="guest")return false;
+  if(window.OB_ACCESS?.role!=="student")return false;
  const node=document.getElementById("caseSubmitStatus");
  const values={};
  for(const key of fields){
   const value=String(work?.guidedAnswers?.["case-"+key]||"").trim();
   if(value.length<8){if(node)node.innerHTML='<p class="case-error">شش بخش چارچوب را کامل کنید؛ بخش «'+esc(key)+'» هنوز پاسخ کافی ندارد.</p>';return false}
   if(window.OB_CASE_CHOICES?.[Number(lesson)]?.steps){
-   const options=window.OB_CASE_CHOICES?.[Number(lesson)]?.steps?.[key]?.options;
-   if(!options?.includes(value)){if(node)node.innerHTML='<p class="case-error">برای هر شش مرحله یکی از چهار گزینه را انتخاب کنید.</p>';return false}
-   const note=String(work?.guidedAnswers?.["case-"+key+"-note"]||"").trim().slice(0,1500);
+   if(!window.OB_CASE_SELECTIONS.valid(lesson,key,value)){if(node)node.innerHTML='<p class="case-error">گام اول یک پاسخ و پنج گام بعدی یک یا دو پاسخ معتبر نیاز دارند.</p>';return false}
+   const note=String(work?.guidedAnswers?.["case-"+key+"-note"]||"").trim().slice(0,1000);
    values[key]=value+(note?"\n\nتوضیح تکمیلی: "+note:"");
   }else values[key]=value;
  }
+ if(!confirm("آیا روایت شش‌مرحله‌ای خود را تأیید می‌کنید و برای استاد می‌فرستید؟"))return false;
  if(node){node.innerHTML='<p class="case-network-status">در حال ارسال پاسخ به سرور…</p>'}
  try{
   await request("caseSubmit",{session:Number(lesson),answers:values});
   await refreshStudent(lesson,true);return true;
  }catch(e){
-  if(node)node.innerHTML='<p class="case-error">'+esc(explain(e))+'</p><button type="button" class="case-submit-btn" data-action="submitCase">تلاش مجدد</button>';
+  if(node){node.innerHTML='<p class="case-error">'+esc(explain(e))+'</p><button type="button" class="case-submit-btn" data-action="submitCase">تلاش مجدد</button>';syncSubmitButton(lesson)}
   return false;
  }
 }
@@ -110,7 +111,8 @@ const teacherHTML=()=>'<section class="page case-review-page"><div class="page-h
 const frameworkFor=id=>(window.OB_LESSON_ENRICHMENT?.sessions||[]).find(s=>s.id===id)?.caseFramework?.steps||[];
 const studentFields=item=>{
  const steps=frameworkFor(item.session_no);
- return '<div class="case-response-list">'+steps.map(s=>'<div class="case-response-row"><strong>'+esc(s.title)+'</strong><p>'+esc(item.answers?.[s.key]||"—")+'</p><small>'+esc(s.rubric||"")+' · '+s.points+' امتیاز</small></div>').join("")+'</div>';
+ const enrichment=window.OB_LESSON_ENRICHMENT?.sessions?.find(s=>s.id===Number(item.session_no));const exp=window.OB_CASE_EXPORT;
+ return (enrichment&&exp?exp.inlineReport(exp.build(item.session_no,enrichment,{},item)):"")+'<div class="case-response-list">'+steps.map(s=>'<div class="case-response-row"><strong>'+esc(s.title)+'</strong><p style="white-space:pre-wrap">'+esc(item.answers?.[s.key]||"—")+'</p><small>'+esc(s.rubric||"")+' · '+s.points+' امتیاز</small></div>').join("")+'</div>';
 };
 function drawTeacher(){
  const target=document.querySelector("#caseTeacherRoot");if(!target)return;

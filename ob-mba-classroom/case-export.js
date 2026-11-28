@@ -4,7 +4,7 @@
 const esc=x=>String(x??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const xml=esc; // Numeric HTML entities are XML-compatible.
 const steps=x=>Array.isArray(x?.caseFramework?.steps)?x.caseFramework.steps:[];
-const method=[["problem","تعریف مسئله","Problem Definition","ابتدا باید مسئله را روشن کنیم.","مسئله از نگاه من:"],["evidence","داده‌ها و شواهد","Evidence & Data","سپس باید واقعیت‌ها را از برداشت‌ها جدا کنیم.","شواهد و برداشت من:"],["levels","تحلیل با مفاهیم رفتار سازمانی","OB Analysis","در گام سوم، با مفاهیم درس و سطح‌های مرتبط مسئله را تحلیل می‌کنیم.","تحلیل من:"],["explain","تبیین و بررسی پیامدها","Explanation & Prediction","در ادامه، توضیح‌های ممکن و پیامدهای وضعیت را بررسی می‌کنیم.","تبیین من:"],["intervention","انتخاب اقدام اصلاحی","Managerial Intervention","بر مبنای تحلیل، اقدام مدیریتی را پیشنهاد می‌کنیم.","اقدام پیشنهادی من:"],["measurement","سنجش و پیگیری","Measurement & Follow-through","در پایان باید مشخص کنیم چگونه اثربخشی اقدام را بسنجیم.","شیوه سنجش پیشنهادی من:"]];
+const method=[["problem","تعریف مسئله","Problem Definition","ابتدا باید مسئله را روشن کنیم.","مسئله از نگاه من:"],["evidence","شواهد و فرضیه‌ها","Evidence & Assumptions","سپس باید واقعیت‌ها را از برداشت‌ها جدا کنیم.","شواهد و برداشت من:"],["levels","تحلیل با مفاهیم رفتار سازمانی","OB Analysis","در گام سوم، با مفاهیم درس و سطح‌های مرتبط مسئله را تحلیل می‌کنیم.","تحلیل من:"],["explain","تبیین و بررسی پیامدها","Explanation & Prediction","در ادامه، توضیح‌های ممکن و پیامدهای وضعیت را بررسی می‌کنیم.","تبیین من:"],["intervention","انتخاب اقدام اصلاحی","Managerial Intervention","بر مبنای تحلیل، اقدام مدیریتی را پیشنهاد می‌کنیم.","اقدام پیشنهادی من:"],["measurement","سنجش و پیگیری","Measurement & Follow-through","در پایان باید مشخص کنیم چگونه اثربخشی اقدام را بسنجیم.","شیوه سنجش پیشنهادی من:"]];
 function build(lesson,enrichment,work,submitted=null){
  const st=steps(enrichment),cfg=window.OB_CASE_CHOICES?.[Number(lesson)]?.steps;
  let user={};try{user=JSON.parse(localStorage.getItem("mba-ob-classroom-attendance-identity-v1")||"{}")}catch{}
@@ -14,12 +14,12 @@ function build(lesson,enrichment,work,submitted=null){
   const split=raw.indexOf("\n\nتوضیح تکمیلی: ");
   const answer=split>=0?raw.slice(0,split):raw;
   const note=submitted?(split>=0?raw.slice(split+"\n\nتوضیح تکمیلی: ".length):""):String(work?.guidedAnswers?.["case-"+s.key+"-note"]||"").trim();
-  return {key:s.key,title:m[1],english:m[2],transition:m[3],lead:m[4],answer,note,valid:submitted?answer.length>=8:cfg?.[s.key]?cfg[s.key].options.includes(answer):answer.length>=8};
+  return {key:s.key,title:m[1],english:m[2],transition:m[3],lead:m[4],answer,note,valid:submitted?answer.length>=8:cfg?.[s.key]?window.OB_CASE_SELECTIONS.valid(lesson,s.key,answer):answer.length>=8};
  });
  return {title:"گزارش تحلیل کیس · جلسه "+lesson,caseTitle:enrichment?.caseStudy?.title||"",student:user.name||user.full_name||"دانشجو",rows,completed:rows.filter(s=>s.valid).length,submitted:Boolean(submitted)};
 }
 const pageCSS='body{font-family:Tahoma,Arial,sans-serif;direction:rtl;color:#183b43;max-width:850px;margin:40px auto;line-height:2;background:white;padding:0 22px}h1{font-size:27px;border-bottom:3px solid #12665e;padding-bottom:16px}h2{font-size:22px}p{font-size:17px;white-space:pre-wrap;overflow-wrap:anywhere}.meta{color:#4c6263}.missing{color:#9a6520}.case-narrative p{margin:0 0 16px}.case-narrative strong{color:#183b43}';
-const narrativeText=r=>r.transition+" "+r.lead+" "+(r.valid?r.answer:"این گام هنوز تکمیل نشده است.")+(r.valid&&r.note?" توضیح تکمیلی من: "+r.note:"");
+const narrativeText=r=>r.transition+" "+r.lead+" "+(r.valid?r.answer.split("\n").filter(Boolean).join(" همچنین "):"این گام هنوز تکمیل نشده است.")+(r.valid&&r.note?" توضیح تکمیلی من: "+r.note:"");
 function narrativeHTML(info){
  const complete=info.completed===6&&info.rows.length===6;
  return '<section class="case-narrative" aria-label="متن یکپارچه تحلیل شش‌مرحله‌ای"><p class="meta">'+(info.submitted?"نسخه ثبت‌شده در سامانه":"تحلیل بر اساس انتخاب‌های شما؛ هنوز به معنی تأیید علمی یا نمره مدرس نیست.")+'</p>'+
@@ -29,7 +29,7 @@ function narrativeHTML(info){
 }
 function inlineReport(info){
  const complete=info.completed===6&&info.rows.length===6;
- return '<section class="case-integrated-report" aria-label="گزارش یکپارچه تحلیل کیس" data-case-complete="'+String(complete)+'"><h4>گزارش یکپارچه تحلیل شما</h4><p class="meta" role="status">'+info.completed+' از ۶ گام تکمیل شده</p>'+(complete?narrativeHTML(info):'<p>پس از انتخاب یک گزینه در هر شش گام، روایت کامل شما خودکار در همین قسمت نمایش داده می‌شود.</p>')+'</section>';
+ return '<section class="case-integrated-report" aria-label="گزارش یکپارچه تحلیل کیس" data-case-complete="'+String(complete)+'"><h4>گزارش یکپارچه تحلیل شما</h4><p class="meta" role="status">'+info.completed+' از ۶ گام تکمیل شده</p>'+(complete?narrativeHTML(info):'<p>پس از تکمیل هر شش گام، روایت کامل شما خودکار در همین قسمت نمایش داده می‌شود.</p>')+'</section>';
 }
 function reportHTML(info){
  return '<h1>'+esc(info.title)+'</h1><p class="meta"><strong>کیس:</strong> '+esc(info.caseTitle)+' | <strong>دانشجو:</strong> '+esc(info.student)+'</p><p class="meta">تکمیل‌شده: '+info.completed+' از ۶ گام</p>'+narrativeHTML(info);
