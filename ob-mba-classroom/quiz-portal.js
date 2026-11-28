@@ -116,7 +116,7 @@ function teacherHTML(){
  '<label>تاریخ و ساعت پایان واقعی کلاس<input id="quizClassEnd" type="datetime-local"></label>'+
  '<button type="button" class="quiz-submit" data-quiz-action="schedule">فعال‌سازی آزمون برای ۲۴ ساعت پس از پایان کلاس</button><p id="quizTeacherNote" role="status"></p></div>'+
  '<div id="quizTeacherStatus">در حال دریافت وضعیت بانک سؤالات و آزمون‌ها…</div>'+
- '<section class="quiz-teacher-bank"><h3>پیش‌نمایش کامل آزمون و کلید پاسخ — مخصوص مدرس</h3><div id="quizTeacherPreview" data-quiz-teacher-preview="1">در حال دریافت سؤالات…</div></section>'+
+ '<section class="quiz-teacher-bank"><h3>پیش‌نمایش کامل آزمون و کلید پاسخ — مخصوص مدرس</h3><div id="quizTeacherPreview" data-quiz-teacher-preview="'+teacherSession+'">در حال دریافت سؤالات…</div></section>'+
  '<h3>پاسخ‌ها و ارزیابی دانشجویان</h3><div id="quizTeacherRoster">ابتدا جلسه را انتخاب کنید.</div></section>';
 }
 function drawTeacher(){
